@@ -1,0 +1,42 @@
+package com.eipl.amcs.report.task;
+
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.model.SubLedger;
+import com.eipl.amcs.utils.AppConstant;
+import javafx.concurrent.Task;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+public class SubLedgerFetchByCodeLoadTask extends Task<SubLedger> {
+    private String ledgerCode;
+
+    public SubLedgerFetchByCodeLoadTask(String ledgerCode) {
+        this.ledgerCode = ledgerCode;
+
+    }
+
+    public SubLedgerFetchByCodeLoadTask() {
+
+    }
+
+    @Override
+    protected SubLedger call() throws Exception {
+        try {
+            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER+"/ledger_fetch_by_code";
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+                    .queryParam("subLedgerCode", ledgerCode);
+            ResponseEntity<SubLedger> response = restTemplate.getForEntity(builder.toUriString(), SubLedger.class);
+            if (response == null || response.getStatusCode() != HttpStatus.OK)
+                return null;
+            return response.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}

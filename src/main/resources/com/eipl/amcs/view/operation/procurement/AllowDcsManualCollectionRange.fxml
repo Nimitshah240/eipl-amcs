@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.AllowDcsManualCollectionRangeController">
+    <children>
+        <VBox focusTraversable="true" prefHeight="500.0" prefWidth="550.0" spacing="5.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" focusTraversable="true">
+                    <children>
+                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%allowdcsmanualcollectionrange">
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0" />
+                    </children>
+                </HBox>
+                    <GridPane fx:id="gridMaster" hgap="10.0">
+                        <columnConstraints>
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="NEVER" />
+                            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="5.0" prefHeight="10.0" vgrow="NEVER" />
+                        </rowConstraints>
+               <children>
+                  <Label text="%fromdate" GridPane.columnIndex="1" />
+                  <Label text="%todate" GridPane.columnIndex="3" />
+                  <Label text="%fromshift" GridPane.columnIndex="2" />
+                  <Label text="%toshift" GridPane.columnIndex="4" />
+                  <Label text="%status" GridPane.columnIndex="5" />
+                  <Label text="%remarks" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="cboxFromShift" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxToShift" disable="false" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxStatus" disable="true" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <E_TextField fx:id="txtRemarks" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="293.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                  <HBox alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                     <children>
+                              <E_Button fx:id="btnSave" maxHeight="1.7976931348623157E308" minWidth="85.0" styleClass="button-primary" text="%save" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <DatePicker fx:id="dpToDate" disable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxType" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                  <Label text="%type" />
+                  <CheckBox fx:id="chkIsQualityManual" mnemonicParsing="false" selected="true" text="%isQuality" GridPane.rowIndex="3" />
+                  <CheckBox fx:id="chkIsWeightManual" mnemonicParsing="false" selected="true" text="%isWeight" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               </children>
+                    </GridPane>
+            <TableView fx:id="tableManualRequest" focusTraversable="false" prefHeight="350.0" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colFromDate" maxWidth="4500.0" prefWidth="100.0" styleClass="cell-center-aligned" text="%fromdate" />
+                  <TableColumn fx:id="colFromShift" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%fromshift" />
+                  <TableColumn fx:id="colToDate" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%todate" />
+                  <TableColumn fx:id="colToShift" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%toshift" />
+                  <TableColumn fx:id="colStatus" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%status" />
+                  <TableColumn fx:id="colIsQuality" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%isQuality" />
+                  <TableColumn fx:id="colIsWeight" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%isWeight" />
+                  <TableColumn fx:id="colType" maxWidth="4500.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%type" />
+                  <TableColumn fx:id="colRemarks" maxWidth="10000.0" prefWidth="120.0" text="%remarks" />
+               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+                <HBox fx:id="btnMainPanel" alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" prefWidth="200.0" spacing="15.0">
+                    <children>
+                  <E_Button fx:id="btnCancel" minWidth="75.0" text="%cancel" />
+                  <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="184.0" HBox.hgrow="ALWAYS" />
+                  <E_Button fx:id="btnGoMilkCollection" contentDisplay="RIGHT" minWidth="75.0" text="%gotomilkcollection" />
+                  <E_Button fx:id="btnRefresh" contentDisplay="RIGHT" minWidth="75.0" text="%refresh" />
+                    </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+                </HBox>
+            </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+        </VBox>
+    </children>
+</StackPane>

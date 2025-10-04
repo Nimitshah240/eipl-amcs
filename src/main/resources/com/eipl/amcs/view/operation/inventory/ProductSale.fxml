@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                    <children>
+                      <Label prefHeight="17.0" prefWidth="196.0" styleClass="header-text" text="%productsalelist" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="dpFromDate" prefWidth="130.0">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </DatePicker>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="%to" textAlignment="CENTER">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <padding>
+                                <Insets top="5.0" />
+                            </padding>
+                        </Label>
+                        <DatePicker fx:id="dpToDate" prefWidth="130.0">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </DatePicker>
+                        <Button fx:id="btnSearch" mnemonicParsing="false" text="%search">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                </HBox>
+                <TableView fx:id="tableProductSaleToMember" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colInvoiceNo" prefWidth="250.0" text="%invoiceno" />
+                        <TableColumn fx:id="colDate" prefWidth="125.0" text="%date" />
+                        <TableColumn fx:id="colConsumerType" prefWidth="150.0" text="%consumertype" />
+                        <TableColumn fx:id="colConsumerName" prefWidth="150.0" text="%consumername" />
+                        <TableColumn fx:id="colAmount" prefWidth="150.0" text="%amount" />
+                        <TableColumn fx:id="colNetPayable" prefWidth="125.0" text="%netpayable" />
+                        <TableColumn fx:id="colNoOfInstallment" prefWidth="150.0" text="%noofinstallment" />
+                        <TableColumn fx:id="colDeductionStartDate" prefWidth="150.0" text="%deductionstartdate" />
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
+                        <Button fx:id="btnEdit" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
+                        <Button fx:id="btnDelete" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Button fx:id="btnInstallments" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="true" styleClass="button-primary" text="%installments" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

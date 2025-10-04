@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.share.controller.MemberListShareController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+            <HBox alignment="TOP_RIGHT">
+               <children>
+                      <Label alignment="CENTER_RIGHT" styleClass="header-text" text="%member" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
+                  <E_TextField fx:id="txtCode">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </E_TextField>
+                  <Button fx:id="btnClear" mnemonicParsing="false" text="Clear">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+                <TableView fx:id="tableMember" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%code" />
+                        <TableColumn fx:id="colFirstName" prefWidth="300.0" text="%name" />
+<!--                        <TableColumn fx:id="colMiddleName" prefWidth="150.0" text="%middlename" />-->
+<!--                        <TableColumn fx:id="colLastName" prefWidth="150.0" text="%lastname" />-->
+                  <TableColumn fx:id="colNoOfShare" prefWidth="200.0" text="%noofshare" />
+                        <TableColumn fx:id="colShareAmount" prefWidth="100.0" text="%amount" />
+<!--                        <TableColumn fx:id="colMobileNo" prefWidth="125.0" styleClass="cell-center-aligned" text="%mobileno" />-->
+<!--                        <TableColumn fx:id="colMemberType" prefWidth="125.0" styleClass="cell-center-aligned" text="%membertype" />-->
+<!--                        <TableColumn fx:id="colIsActive" prefWidth="100.0" styleClass="cell-center-aligned" text="%isactive" />-->
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15">
+                    <children>
+<!--                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />-->
+<!--                        <Button fx:id="btnEdit" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />-->
+<!--                        <Button fx:id="btnDelete" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />-->
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <E_Button fx:id="btnShareHolder" text="%shareholder" />
+                  <E_Button fx:id="btnReport" prefHeight="30.0" prefWidth="80.0" text="%report" />
+<!--                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />-->
+<!--                        <Button fx:id="btnImport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%import" />-->
+<!--                  <Button fx:id="btnExport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%export" />-->
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

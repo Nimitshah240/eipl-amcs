@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.MeetingAddEditController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="570.0" spacing="20.0" styleClass="pane-white-drop-border">
+            <children>
+            <HBox>
+               <children>
+                      <Label fx:id="meeting" styleClass="header-text" text="%meeting" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
+                  <E_DatePicker fx:id="dpDate" disable="true" maxWidth="120.0" prefWidth="120.0" />
+               </children>
+            </HBox>
+                <GridPane fx:id="grid" hgap="10.0" prefHeight="41.0" prefWidth="520.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="34.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="34.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="34.0" prefWidth="100.0" />
+                  <ColumnConstraints />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label maxWidth="1.7976931348623157E308" text="%code" />
+                        <Label text="%meetingtype" GridPane.rowIndex="2" />
+                        <Label text="%subjectline" GridPane.rowIndex="4" />
+                        <Label text="%agendadetails" GridPane.rowIndex="6" />
+                        <E_DatePicker fx:id="dpMeetingDate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <E_TextField fx:id="txtMeetingTime" maxWidth="1.7976931348623157E308" promptText="HH:MM" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <E_ComboBox fx:id="cboxMeetingType" maxWidth="1.7976931348623157E308" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtSubjectLine" maxWidth="1.7976931348623157E308" GridPane.columnSpan="3" GridPane.rowIndex="5" />
+                  <Label maxWidth="1.7976931348623157E308" text="%meetingdate" GridPane.columnIndex="1" />
+                  <Label maxWidth="1.7976931348623157E308" text="%meetingtime" GridPane.columnIndex="2" />
+                  <TextArea fx:id="txtAgendaDetails" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="7" GridPane.rowSpan="2" />
+                  <E_TextField fx:id="txtCode" disable="true" GridPane.rowIndex="1" />
+                    </children>
+                </GridPane>
+                <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnSave" styleClass="button-primary" text="%save" />
+                        <Button fx:id="btnClose" text="%close" />
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+            </padding>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+</StackPane>

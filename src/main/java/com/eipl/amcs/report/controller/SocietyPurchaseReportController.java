@@ -1,0 +1,284 @@
+package com.eipl.amcs.report.controller;
+
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
+import com.eipl.amcs.master.global.convertor.ShiftConvertor;
+import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
+import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
+import com.eipl.amcs.master.operation.convertor.MemberConvertor;
+import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
+import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.task.MemberLoadTask;
+import com.eipl.amcs.master.org.convertor.DockConvertor;
+import com.eipl.amcs.report.dto.DairySaleRegister;
+import com.eipl.amcs.report.dto.MemberCollection;
+import com.eipl.amcs.report.dto.SocietyPurchase;
+import com.eipl.amcs.report.task.DairySaleRegisterTask;
+import com.eipl.amcs.report.task.SocietyPurchaseTask;
+import com.eipl.amcs.report.util.ReportGenerate;
+import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
+import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingNode;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+public class SocietyPurchaseReportController implements MyInitialization {
+
+    @FXML
+    private StackPane root;
+    @FXML
+    private Button btnGenerate, btnClose,btnGenerate1, btnClose1;
+    @FXML
+    private SwingNode reportNode;
+    @FXML
+    private DatePicker dpFromDate, dpToDate,dpFromDate1, dpToDate1;
+    @FXML
+    private ComboBox<Shift> cboxFromShift, cboxToShift,cboxFromShift1, cboxToShift1;
+    @FXML
+    private ComboBox<MilkType> cboxMilkType,cboxMilkType1;
+    @FXML
+    private ComboBox<Member> cboxMember,cboxMember1;
+
+
+    private ResourceBundle resourceBundle;
+
+
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+        dpFromDate.setValue(LocalDate.now());
+        dpFromDate.setConverter(new LocalDateConvertor());
+        dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
+            }
+        });
+        dpToDate.setValue(LocalDate.now());
+        dpToDate.setConverter(new LocalDateConvertor());
+        dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
+            }
+        });
+        dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
+            }
+        });
+        dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
+            }
+        });
+
+        dpFromDate1.setValue(LocalDate.now());
+        dpFromDate1.setConverter(new LocalDateConvertor());
+        dpFromDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate1.setValue(dpFromDate1.getConverter().fromString(dpFromDate1.getEditor().getText()));
+            }
+        });
+        dpToDate1.setValue(LocalDate.now());
+        dpToDate1.setConverter(new LocalDateConvertor());
+        dpToDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate1.setValue(dpToDate1.getConverter().fromString(dpToDate1.getEditor().getText()));
+            }
+        });
+        dpFromDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate1.setValue(dpFromDate1.getConverter().fromString(dpFromDate1.getEditor().getText()));
+            }
+        });
+        dpToDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate1.setValue(dpToDate1.getConverter().fromString(dpToDate1.getEditor().getText()));
+            }
+        });
+
+        loadData();
+        setupComboBox();
+        btnClose1.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
+        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnGenerate.setOnAction(e -> validateAndGenerateReport());
+        }
+
+    private StringBuilder errorMsg;
+
+    private void validateAndGenerateReport1() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_from_collection_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_collection_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_locale", MainApp.locale);
+        params.put("p_milk_type_code", cboxMilkType1.getValue().getCode());
+//        params.put("p_member_code", cboxMember1.getValue().getCode());
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE, params);
+        JasperViewer.viewReport(print, false);
+    }
+    private void validateAndGenerateReport() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_from_collection_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_collection_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_locale", MainApp.locale);
+        params.put("p_milk_type_code", cboxMilkType.getValue().getCode());
+        params.put("p_member_code", cboxMember.getValue().getCode());
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE_MEMBER_WISE, params);
+        JasperViewer.viewReport(print, false);
+    }
+
+//        errorMsg = new StringBuilder();
+//        if (!validate()) {
+//            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "societypurchase"),
+//                    errorMsg.toString());
+//            alert.createAlert();
+//            return;
+//        }
+//        SocietyPurchaseTask task = new SocietyPurchaseTask(MainApp.identityDto.getSociety().getCode(),
+//                dpFromDate.getValue().atTime(06,00,00),dpToDate.getValue().atTime(18,00,00));
+//
+//        task.setOnSucceeded(e -> {
+//            try {
+//                List<SocietyPurchase> list = task.get();
+//                if (list != null && !list.isEmpty()) {
+//                    Map<String, Object> params = new HashMap<>();
+//                    params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+//                    params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+//                    params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+//
+//                    JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE, params,
+//                            new JRBeanCollectionDataSource(list));
+//                    JasperViewer.viewReport(print, false);
+//                }
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            } catch (ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task).start();
+//    }
+//
+//    private boolean validate() {
+//        return true;
+//    }
+
+    @Override
+    public void loadData() {
+        var task1 = new ShiftLoadTask();
+        task1.setOnSucceeded(e -> {
+            try {
+                List<Shift> list = task1.get();
+                if (list != null) {
+                    cboxFromShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxFromShift.getSelectionModel().select(0);
+                    cboxToShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxToShift.getSelectionModel().select(1);
+                    cboxFromShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxFromShift1.getSelectionModel().select(0);
+                    cboxToShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxToShift1.getSelectionModel().select(1);
+                    cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+                    cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+                    cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+                    cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
+
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task1).start();
+
+        var task2 = new MilkTypeLoadTask();
+        task2.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task2.get();
+                if (list != null) {
+                    MilkType milkType = new MilkType();
+                    milkType.setCode(0);
+                    milkType.setName("All");
+                    List<MilkType> temp = new ArrayList<>();
+                    temp.add(0,milkType);
+                    temp.addAll(list);
+                    cboxMilkType.setItems(FXCollections.observableList(temp));
+                    cboxMilkType.getSelectionModel().select(0);
+                    cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+                    cboxMilkType1.setItems(FXCollections.observableList(temp));
+                    cboxMilkType1.getSelectionModel().select(0);
+                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+                    loadData1();
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task2).start();
+
+
+    }
+    @Override
+    public void setupComboBox() {
+        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+        cboxMember.setConverter(new MemberReportConvertor(cboxMember));
+        cboxMember.setCellFactory(new MemberCellFactory());
+    }
+
+
+    public void loadData1() {
+        MemberLoadTask task = new MemberLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Member> list = task.get();
+                if (list != null) {
+                    List<Member> list2 = new ArrayList<>();
+                    Member m = new Member();
+                    m.setCode("0");
+                    m.setCodeEx("0");
+                    m.setFirstName("All");
+                    list2.add(m);
+                    list2.addAll(list);
+                    cboxMember.setItems(FXCollections.observableList(list2));
+                    new AutoCompleteComboBoxListener<>(cboxMember);
+                    cboxMember.setConverter(new MemberConvertor(cboxMember));
+                    cboxMember.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();}
+
+}

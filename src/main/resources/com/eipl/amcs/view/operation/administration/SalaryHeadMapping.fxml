@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.StaffSalaryMappingController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%staffsalarymapping" />
+                <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <ComboBox fx:id="cboxStaff" editable="true" prefWidth="130.0" />
+                        <DatePicker fx:id="dpDate" prefWidth="120.0" />
+                    </children>
+                </HBox>
+                <TableView fx:id="tableStaffSalaryMapping" editable="true" prefHeight="287.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSalaryHead" prefWidth="125.0" styleClass="cell-center-aligned" text="%salaryhead" />
+                        <TableColumn fx:id="colHeadType" prefWidth="100.0" styleClass="cell-center-aligned" text="%headtype" />
+                        <TableColumn fx:id="colAmount" prefWidth="125.0" styleClass="cell-right-aligned" text="%amount" />
+                    </columns>
+                </TableView>
+                <HBox prefHeight="37.0" prefWidth="600.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnSave" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%save" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

@@ -1,0 +1,129 @@
+package com.eipl.amcs.master.org.service;
+
+import com.eipl.amcs.master.org.dto.DockDto;
+import com.eipl.amcs.master.org.model.Dock;
+import com.eipl.amcs.master.org.model.DockMilkType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.eipl.amcs.config.BeanConfig.dockMilkTypeRepository;
+import static com.eipl.amcs.config.BeanConfig.dockRepository;
+
+@Service
+public class DockServiceImpl implements DockService {
+//	@Autowired
+//	private DockRepository dockRepository;
+//	@Autowired
+//	private DockMilkTypeRepository dockMilkTypeRepository;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DockServiceImpl.class);
+
+	@Override
+	public List<DockDto> findAll() {
+		List<Dock> list = dockRepository.findAll(Sort.by("dockNo"));
+		if (list == null)
+			return null;
+		LOGGER.info("Docks findAll {} items fetched", list.size());
+		List<DockDto> listDto = new ArrayList<>();
+		list.forEach(item -> {
+			List<DockMilkType> l = dockMilkTypeRepository.findAllByDock(item);
+			if (l != null && !l.isEmpty())
+				listDto.add(new DockDto(item, l.stream().map(m -> m.getMilkType()).collect(Collectors.toList())));
+		});
+		return listDto;
+	}
+
+	@Override
+	public Dock save(Dock dock, String identityInfo) {
+		return dockRepository.customSave(dock, identityInfo);
+	}
+
+	@Override
+	@Transactional
+	public DockDto save(DockDto dockDto, String identityInfo) {
+		try {
+			Dock dock = dockDto.getDock();
+			dock.setInitData();
+			save(dock, identityInfo);
+
+			dockDto.getMilkTypes().forEach(item -> {
+				DockMilkType dockMilkType = new DockMilkType();
+				dockMilkType.setCode(dock.getDockNo() + item.getCode());
+				dockMilkType.setDock(dock);
+				dockMilkType.setMilkType(item);
+				dockMilkType.setInitData();
+				dockMilkTypeRepository.customSave(dockMilkType, identityInfo);
+			});
+		} catch (Exception e) {
+			LOGGER.error("Dock Save Ex", e);
+			return null;
+		}
+		return dockDto;
+	}
+
+	@Override
+	@Transactional
+	public DockDto update(DockDto dockDto, String identityInfo) {
+		try {
+			Dock dock = dockDto.getDock();
+			dock.setupdateData();
+			dockRepository.customUpdate(dock, identityInfo);
+
+			List<DockMilkType> list = dockMilkTypeRepository.findAllByDock(dock);
+			if(list != null) {
+				list.forEach(item -> {
+					dockMilkTypeRepository.customDelete(item, identityInfo);
+				});
+			}
+			
+			dockDto.getMilkTypes().forEach(item -> {
+				DockMilkType dockMilkType = new DockMilkType();
+				dockMilkType.setCode(dock.getDockNo() + item.getCode());
+				dockMilkType.setDock(dock);
+				dockMilkType.setMilkType(item);
+				dockMilkType.setInitData();
+				dockMilkTypeRepository.customSave(dockMilkType, identityInfo);
+			});
+		} catch (Exception e) {
+			LOGGER.error("Dock update ex", e);
+			return null;
+		}
+		return dockDto;
+	}
+
+	@Override
+	public Dock update(Dock dock) {
+		return dockRepository.save(dock);
+	}
+
+	@Override
+	public Optional<Dock> findById(String dockNo) {
+		return dockRepository.findById(dockNo);
+	}
+
+	@Override
+	public void delete(String dockNo, String identityInfo) {
+		dockRepository.customDelete(dockRepository.findById(dockNo).get(), identityInfo);
+	}
+
+	@Override
+	@Transactional
+	public void delete(Dock dock, String identityInfo) {
+//		dockMilkTypeRepository.deleteByDock(dock);
+		List<DockMilkType> list = dockMilkTypeRepository.findAllByDock(dock);
+		if(list != null) {
+			list.forEach(item -> {
+				dockMilkTypeRepository.customDelete(item, identityInfo);
+			});
+		}
+		dockRepository.customDelete(dock.getDockNo(), identityInfo);
+	}
+}

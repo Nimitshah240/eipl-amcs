@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ConsolidateProductSale" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="i18n" uuid="427473af-551d-47fb-b61d-826048149a62">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="eipl_amcs_db_dudhkha"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_society_code" class="java.lang.String"/>
+	<parameter name="p_society_payment_cycle_code" class="java.lang.String"/>
+	<parameter name="p_locale" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[call rpt_billing_prouct_sale_deduction($P{p_society_code},$P{p_society_payment_cycle_code},$P{p_locale})]]>
+	</queryString>
+	<field name="product_short_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="product_short_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="product_short_name"/>
+	</field>
+	<field name="netamount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="netamount"/>
+		<property name="com.jaspersoft.studio.field.label" value="netamount"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="16">
+			<textField isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" x="40" y="1" width="110" height="15" uuid="46b1bc3b-ae47-4ee4-bee1-22260a4d9ce2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Noto" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{kapaat}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="160" y="0" width="50" height="15" uuid="0b4398a9-8f66-41b1-a186-2f510d86ea2b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3ce49618-8e9a-475b-9521-3fdd6ab2f762"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{netamount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="0" width="110" height="15" uuid="06628a73-287a-4331-9ecb-e72055d3ce5b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4ef10749-c1f4-4662-9616-83b25ab6c371"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{product_short_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

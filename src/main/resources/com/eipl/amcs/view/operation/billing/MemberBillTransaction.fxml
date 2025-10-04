@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" maxWidth="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.billing.controller.MemberBillTransactionController">
+    <children>
+        <VBox fillWidth="false" spacing="20.0" styleClass="pane-white-drop-border">
+            <children>
+                <Label styleClass="header-text" text="%memberbilldetail" />
+                <GridPane fx:id="grid" maxWidth="1.7976931348623157E308">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="121.0" minWidth="-Infinity" percentWidth="30.0" prefWidth="121.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="121.0" minWidth="10.0" percentWidth="30.0" prefWidth="121.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" percentWidth="30.0" prefWidth="20.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="213.0" minWidth="10.0" percentWidth="20.0" prefWidth="213.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="137.0" minWidth="10.0" percentWidth="20.0" prefWidth="72.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%paymentcycle" GridPane.rowIndex="1" />
+                        <Label fx:id="lblMember" text="Member" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                        <Label text="%milkqty" GridPane.columnIndex="3" />
+                        <Label fx:id="lblQty" GridPane.columnIndex="4" />
+                        <Label text="%member" />
+                        <Label fx:id="lblPaymentCycle" text="Paymet Cycle" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                        <Label fx:id="lblAmount" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label text="%milkAmount" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                    </children>
+                </GridPane>
+                <TableView fx:id="tableMemberBillTransaction" editable="true" focusTraversable="false" maxWidth="1.7976931348623157E308" prefHeight="200.0">
+                    <columns>
+                        <TableColumn fx:id="colParticulars" minWidth="150.0" prefWidth="150.0" text="%particulars" />
+                        <TableColumn fx:id="colType" minWidth="75.0" prefWidth="75.0" text="%type" />
+                        <TableColumn fx:id="colPrevDue" minWidth="75.0" prefWidth="75.0" styleClass="cell-right-aligned" text="%prevdue" />
+                        <TableColumn fx:id="colValue" minWidth="85.0" prefWidth="85.0" styleClass="cell-right-aligned" text="%value" />
+                        <TableColumn fx:id="colTotalAmount" minWidth="90.0" prefWidth="90.0" styleClass="cell-right-aligned" text="%totalamount" />
+                        <TableColumn fx:id="colAdjusted" minWidth="100.0" prefWidth="100.0" styleClass="cell-right-aligned" text="%adjusted" />
+                        <TableColumn fx:id="colDue" minWidth="75.0" prefWidth="75.0" styleClass="cell-right-aligned" text="%due" />
+                    </columns>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </TableView>
+                <GridPane hgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%netpayable" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label text="%due" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" />
+                        <TextField fx:id="txtNetPayable" disable="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtDue" disable="true" GridPane.columnIndex="4" />
+                        <HBox alignment="CENTER_LEFT" spacing="15" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                            <children>
+                                <Button fx:id="btnUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%update" />
+                                <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                            </children>
+                        </HBox>
+                    </children>
+                </GridPane>
+            </children>
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+            </padding>
+        </VBox>
+    </children>
+</StackPane>

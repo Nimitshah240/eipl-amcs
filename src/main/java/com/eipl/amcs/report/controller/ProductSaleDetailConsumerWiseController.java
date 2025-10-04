@@ -1,0 +1,170 @@
+package com.eipl.amcs.report.controller;
+
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.inventory.convertor.ProductCellFactory;
+import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
+import com.eipl.amcs.master.inventory.convertor.ProductLocalCellFactory;
+import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
+import com.eipl.amcs.master.inventory.task.ProductSaleRateByProductLoadTask;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
+import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
+import com.eipl.amcs.operation.inventory.dto.SaleTxnDto;
+import com.eipl.amcs.report.util.ReportGenerate;
+import com.eipl.amcs.utils.AppConstant;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+public class ProductSaleDetailConsumerWiseController implements MyInitialization {
+
+    @FXML
+    private StackPane root;
+    @FXML
+    private Button btnGenerate;
+    @FXML
+    private DatePicker dpToDate, dpFromDate;
+    @FXML
+    private ComboBox<Product> cboxProductCode;
+    @FXML
+    private ComboBox<String> cboxFormat;
+
+    private ResourceBundle resourceBundle;
+    private List<Product> listProduct;
+    private ReceiptTxnDto receiptTxnDto;
+    private SaleTxnDto saleTxnDto;
+
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+        cboxFormat.getItems().addAll("Format 1", "Format 2", "Format 3");
+        cboxFormat.getSelectionModel().select(0);
+
+        dpFromDate.setValue(LocalDate.now());
+        dpFromDate.setConverter(new LocalDateConvertor());
+        dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
+            }
+        });
+        dpToDate.setValue(LocalDate.now());
+        dpToDate.setConverter(new LocalDateConvertor());
+
+        dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
+            }
+        });
+
+        loadData();
+        setupComboBox();
+
+        btnGenerate.setOnAction(e -> validateAndGenerate());
+    }
+
+    private void validateAndGenerate() {
+        switch (cboxFormat.getSelectionModel().getSelectedIndex() + 1) {
+            case 1:
+                validateAndGenerateReport();
+                break;
+            case 2:
+                validateAndGenerateReportTwo();
+                break;
+            case 3:
+                validateAndGenerateReportThree();
+                break;
+        }
+    }
+
+    @Override
+    public void setupComboBox() {
+        cboxProductCode.setConverter(new ProductConvertor(cboxProductCode));
+        if (MainApp.locale.equalsIgnoreCase("gu")) {
+            cboxProductCode.setCellFactory(new ProductLocalCellFactory());
+        } else {
+            cboxProductCode.setCellFactory(new ProductCellFactory());
+        }
+        new AutoCompleteComboBoxListener<>(cboxProductCode);
+    }
+
+    private StringBuilder errorMsg;
+
+    private void validateAndGenerateReport() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_product_code", cboxProductCode.getValue().getCode());
+        params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
+        params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
+        params.put("p_locale", MainApp.locale);
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRODUCT_SALE_DETAIL_CONSUMER_WISE, params);
+        JasperViewer.viewReport(print, false);
+    }
+
+    private void validateAndGenerateReportTwo() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_product_code", cboxProductCode.getValue().getCode());
+        params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
+        params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
+        params.put("p_locale", MainApp.locale);
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRODUCT_SALE_DETAILS, params);
+        JasperViewer.viewReport(print, false);
+    }    private void validateAndGenerateReportThree() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//        params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
+//        params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
+        params.put("p_locale", MainApp.locale);
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.CODE_WISE_PRODUCT_SALE_DETAIL, params);
+        JasperViewer.viewReport(print, false);
+    }
+
+    private boolean validate() {
+        return true;
+    }
+
+    @Override
+    public void loadData() {
+        var task1 = new ProductLoadTask();
+        task1.setOnSucceeded(e -> {
+            try {
+                List<Product> list = task1.get().stream().filter(ee -> ee.getCreatedBy() == null ||
+                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList());
+                if (list != null && !list.isEmpty()) {
+                    listProduct = new ArrayList<>();
+                    listProduct.add(new Product("0", "ALL", "બધા"));
+                    listProduct.addAll(1, list);
+                    cboxProductCode.setItems(FXCollections.observableList(listProduct));
+                    cboxProductCode.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task1).start();
+    }
+}

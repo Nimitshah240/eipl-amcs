@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.org.controller.SocietyController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%society" />
+                <TableView fx:id="tableSociety" editable="true" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%code" />
+                        <TableColumn fx:id="colCodeEx" prefWidth="120.0" styleClass="cell-center-aligned" text="%codeex" />
+                        <TableColumn fx:id="colName" prefWidth="230.0" text="%name" />
+                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname" />
+                        <TableColumn fx:id="colShortName" prefWidth="200.0" text="%shortname" />
+                        <TableColumn fx:id="colShortNameLocal" prefWidth="200.0" text="%shortnamelocal" />
+                        <TableColumn fx:id="colRegistrationCode" prefWidth="200.0" styleClass="cell-center-aligned" text="%registrationcode" />
+                        <TableColumn fx:id="colRegistrationDate" prefWidth="200.0" styleClass="cell-center-aligned" text="%registrationdate" />
+                        <TableColumn fx:id="colPhoneNo" prefWidth="150.0" text="%phoneno" />
+                        <TableColumn fx:id="colPinCode" prefWidth="120.0" text="%pincode" />
+                        <TableColumn fx:id="colContactPerson" prefWidth="200.0" text="%contactperson" />
+                        <TableColumn fx:id="colEmail" prefWidth="200.0" text="%email" />
+                        <TableColumn fx:id="colContactPersonMobileNo" prefWidth="200.0" text="%contactpersonmobileno" />
+                        <TableColumn fx:id="colBank" prefWidth="200.0" text="%bank" />
+                        <TableColumn fx:id="colBranch" prefWidth="200.0" text="%branch" />
+                        <TableColumn fx:id="colAcNo" prefWidth="150.0" styleClass="cell-center-aligned" text="%acno" />
+                        <TableColumn fx:id="colIfsc" prefWidth="120.0" styleClass="cell-center-aligned" text="%ifsc" />
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="5.0">
+                    <children>
+                        <Button fx:id="btnSave" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%update" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

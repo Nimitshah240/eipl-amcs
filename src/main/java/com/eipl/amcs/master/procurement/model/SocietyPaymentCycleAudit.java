@@ -1,0 +1,52 @@
+package com.eipl.amcs.master.procurement.model;
+
+import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.org.model.Society;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+
+@SuppressWarnings("serial")
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@Table(name = "society_payment_cycles_audit")
+public class SocietyPaymentCycleAudit extends BaseModelTxnAudit {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Size(max = 15)
+	private String code;
+	private LocalDateTime fromDate;
+	private LocalDateTime toDate;
+	private Integer intervalValue;
+	@Column(name = "is_billing")
+	private Boolean billing;
+	@Column(name = "lock_billing_process")
+	private Boolean lockBillingProcess;
+	@Size(max = 3)
+	private String unionCode;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+	private Society society;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+	private Shift fromShift;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+	private Shift toShift;
+
+	@Override
+	public String getTableName() {
+		return "society_payment_cycles_audit";
+	}
+
+}

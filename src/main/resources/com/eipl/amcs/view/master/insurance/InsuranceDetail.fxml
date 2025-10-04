@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.insurance.controller.InsuranceDetailController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="600.0" spacing="15.0">
+            <children>
+                <HBox prefHeight="51.0" prefWidth="600.0" spacing="5.0">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="%insurance" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                  <Label fx:id="lblInsurance" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-font-size: 18; -fx-text-fill: red;" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </Label>
+                        <HBox alignment="CENTER_RIGHT" nodeOrientation="LEFT_TO_RIGHT">
+                            <children>
+                                <TextField fx:id="txtMemberCode" promptText="Member Code">
+                                    <HBox.margin>
+                                        <Insets right="15.0" />
+                                    </HBox.margin>
+                                </TextField>
+                                <Button fx:id="btnSearch" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" prefWidth="80.0" text="%search">
+                                    <HBox.margin>
+                                        <Insets right="15.0" />
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <TableView fx:id="tableInsuranceDetail" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="317.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                  <TableColumn fx:id="colSrNo" minWidth="100.0" styleClass="cell-center-aligned" text="%srno" />
+                  <TableColumn fx:id="colMemberId" minWidth="100.0" styleClass="cell-center-aligned" text="%id" />
+                        <TableColumn fx:id="colMemberCode" minWidth="100.0" prefWidth="70.0" styleClass="cell-center-aligned" text="%membercode" />
+                        <TableColumn fx:id="colMemberName" minWidth="250.0" text="%membername" />
+                        <TableColumn fx:id="colAdharNo" minWidth="120.0" prefWidth="90.0" styleClass="cell-center-aligned" text="%adharno" />
+                        <TableColumn fx:id="colBirthDate" minWidth="100.0" prefWidth="75.0" styleClass="cell-center-aligned" text="%birthdate" />
+                        <TableColumn fx:id="colAge" minWidth="60.0" prefWidth="40.0" styleClass="cell-center-aligned" text="%age" />
+                        <TableColumn fx:id="colGender" minWidth="60.0" prefWidth="90.0" styleClass="cell-center-aligned" text="%gender" />
+                        <TableColumn fx:id="colNomineemembername" minWidth="250.0" prefWidth="75.0" text="%nomineemembername" />
+                        <TableColumn fx:id="colNomineeadharno" minWidth="150.0" prefWidth="100.0" styleClass="cell-center-aligned" text="%nomineeadharno" />
+                  <TableColumn fx:id="colDateOfJoiningScheme" minWidth="200.0" prefWidth="200.0" styleClass="cell-center-aligned" text="%dateofjoiningscheme" />
+<!--                        <TableColumn fx:id="colStatus" prefWidth="75.0" styleClass="cell-right-aligned" text="%status" />-->
+                    </columns>
+                </TableView>
+                <HBox prefWidth="600.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnAdd" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
+                        <Button fx:id="btnEdit" prefHeight="30.0" prefWidth="80.0" text="%edit" />
+                        <Button fx:id="btnDelete" prefHeight="30.0" prefWidth="80.0" text="%delete" />
+                        <Button fx:id="btnClose" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <E_Button fx:id="btnExport" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%export" />
+<!--                  <E_Button fx:id="btnReport" layoutX="530.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%report" />-->
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

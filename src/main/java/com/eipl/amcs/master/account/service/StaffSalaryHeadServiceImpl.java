@@ -1,0 +1,68 @@
+package com.eipl.amcs.master.account.service;
+
+import com.eipl.amcs.base.repository.NextCodeRepository;
+import com.eipl.amcs.master.account.model.StaffSalaryHead;
+import com.eipl.amcs.master.account.repository.StaffMemberRepository;
+import com.eipl.amcs.master.account.repository.StaffSalaryHeadRepository;
+import com.eipl.amcs.master.org.model.Society;
+import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Optional;
+
+import static com.eipl.amcs.MainApp.context;
+import static com.eipl.amcs.config.BeanConfig.staffSalaryHeadRepository;
+
+@Service
+public class StaffSalaryHeadServiceImpl implements StaffSalaryHeadService {
+
+//	private StaffSalaryHeadRepository staffSalaryHeadRepository;
+//	private NextCodeRepository nextCodeRepository;
+
+	private static final Logger log = LoggerFactory.getLogger(StaffSalaryHeadServiceImpl.class);
+
+
+
+	@Override
+	public List<StaffSalaryHead> findAll() {
+		List<StaffSalaryHead> list = staffSalaryHeadRepository.findAll(Sort.by("name"));
+		log.info("StaffSalaryHead findAll {} items fetched", list.size());
+		return list;
+	}
+
+	@Override
+	public StaffSalaryHead save(StaffSalaryHead staffSalaryHead, String identityInfo) {
+		staffSalaryHead.setInitData();
+		StaffSalaryHead staffSalaryHead1 = staffSalaryHeadRepository.save(staffSalaryHead);
+		staffSalaryHead1.setSociety(Hibernate.unproxy(staffSalaryHead1.getSociety(), Society.class));
+		return staffSalaryHead1;
+	}
+
+	@Override
+	public StaffSalaryHead update(StaffSalaryHead staffSalaryHead, String identityInfo) {
+		staffSalaryHead.setupdateData();
+		return staffSalaryHeadRepository.save(staffSalaryHead);
+	}
+
+	@Override
+	public Optional<StaffSalaryHead> findById(String staffMemberName) {
+		return Optional.empty();
+	}
+
+	@Override
+	public void delete(String staffMemberName, String identityInfo) {
+		staffSalaryHeadRepository.deleteById(Integer.valueOf(staffMemberName));
+	}
+
+	@Override
+	public void delete(StaffSalaryHead staffSalaryHead, String identityInfo) {
+      staffSalaryHeadRepository.delete(staffSalaryHead);
+	}
+
+}

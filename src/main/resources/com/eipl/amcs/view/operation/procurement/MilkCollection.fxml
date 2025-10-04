@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.MilkCollectionController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%milkcollection" />
+                <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <DatePicker fx:id="dpFromDate" prefWidth="120.0" />
+                        <ComboBox fx:id="cboxFromShift" editable="true" prefWidth="100.0" />
+                        <Label text="%to" />
+                        <DatePicker fx:id="dpToDate" prefWidth="120.0" />
+                        <ComboBox fx:id="cboxToShift" editable="true" prefWidth="100.0" />
+                        <ComboBox fx:id="cboxDock" editable="true" prefWidth="125.0" />
+                        <Button fx:id="btnSearch" mnemonicParsing="false" text="%search" />
+                    </children>
+                </HBox>
+                <TableView fx:id="tableCollection" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSampleNo" prefWidth="125.0" styleClass="cell-center-aligned" text="%sampleno" />
+                        <TableColumn fx:id="colMemberCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%membercode" />
+                        <TableColumn fx:id="colMemberName" prefWidth="200.0" text="%name" />
+                        <TableColumn fx:id="colDate" prefWidth="120.0" styleClass="cell-center-aligned" text="%date" />
+                        <TableColumn fx:id="colShift" prefWidth="100.0" styleClass="cell-center-aligned" text="%shift" />
+                        <TableColumn fx:id="colMilkType" prefWidth="100.0" styleClass="cell-center-aligned" text="%milktype" />
+                        <TableColumn fx:id="colQty" prefWidth="100.0" styleClass="cell-right-aligned" text="%qty" />
+                        <TableColumn fx:id="colFat" prefWidth="100.0" styleClass="cell-right-aligned" text="%fat" />
+                        <TableColumn fx:id="colSnf" prefWidth="100.0" styleClass="cell-right-aligned" text="%snf" />
+                        <TableColumn fx:id="colRate" prefWidth="100.0" styleClass="cell-right-aligned" text="%rate" />
+                        <TableColumn fx:id="colAmount" prefWidth="125.0" styleClass="cell-right-aligned" text="%amount" />
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnStartCollection" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" styleClass="button-primary" text="%start.collection" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnSync" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%sync" />
+                  <Button fx:id="btnImport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%import" />
+                        <Button fx:id="btnExport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%export" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

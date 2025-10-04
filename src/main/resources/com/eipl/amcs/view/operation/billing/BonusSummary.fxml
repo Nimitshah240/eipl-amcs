@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="700.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.billing.controller.BonusSummaryController">
+    <children>
+        <VBox spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%bonus.summary" />
+                <TableView fx:id="tableBonusSummary" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                  <TableColumn fx:id="colMilkType" prefWidth="120.0" text="%milktype" />
+                        <TableColumn fx:id="colFromDate" prefWidth="120.0" text="%fromdate" />
+                        <TableColumn fx:id="colToDate" prefWidth="120.0" text="%todate" />
+                        <TableColumn fx:id="colTotalQty" prefWidth="120.0" styleClass="cell-right-aligned" text="%totalqty" />
+                        <TableColumn fx:id="colTotalAmt" prefWidth="120.0" styleClass="cell-right-aligned" text="%totalamt" />
+                        <TableColumn fx:id="colBonusAmt" prefWidth="120.0" styleClass="cell-right-aligned" text="%bonusamt" />
+                        <TableColumn fx:id="colStatus" prefWidth="120.0" styleClass="cell-center-aligned" text="%status" />
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15.0">
+                    <children>
+                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
+                        <Button fx:id="btnEdit" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
+                  <Button fx:id="btnDelete" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                  <HBox alignment="TOP_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Button fx:id="btnGeneral" disable="false" mnemonicParsing="true" prefHeight="30.0" text="%generalreport" />
+                        <Button fx:id="btnReport" disable="true" mnemonicParsing="true" prefHeight="30.0" text="%bonusreport" />
+                        <Button fx:id="btnDisburse" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%disburse" />
+                     </children>
+                  </HBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

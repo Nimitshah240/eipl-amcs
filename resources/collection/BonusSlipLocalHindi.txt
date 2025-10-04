@@ -1,0 +1,9 @@
+{dcsshort}
+कोड  : {code}
+नाम  : {membername}
+दिनांक  : {fromdate}-{todate}
+लीटर   : {qty}
+रकम : {amount}
+बोनस  : {bonus}
+कपात  : {kapaat}
+कुल  : {total}

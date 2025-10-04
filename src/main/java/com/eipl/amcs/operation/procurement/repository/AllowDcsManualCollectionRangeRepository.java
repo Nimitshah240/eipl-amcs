@@ -1,0 +1,60 @@
+package com.eipl.amcs.operation.procurement.repository;
+
+import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public interface AllowDcsManualCollectionRangeRepository extends BaseRepository<AllowDcsManualCollectionRange, Long> {
+
+    List<AllowDcsManualCollectionRange> findByFromDateGreaterThanEqualAndToDateLessThanEqual(LocalDateTime fromDate, LocalDateTime toDate);
+
+    List<AllowDcsManualCollectionRange> findAllBySociety(String societyCode);
+
+    List<AllowDcsManualCollectionRange> findByFromDateAndFromShift(LocalDateTime fDate, Shift fromShift);
+
+    @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
+            "WHERE adr.fromDate <= :fromDate " +
+            "AND adr.toDate >= :toDate")
+    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDateTime fromDate, LocalDateTime toDate);
+
+    @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
+            "WHERE adr.fromDate <= :fromDate " +
+            "AND adr.toDate >= :toDate " +
+            "AND adr.xCol1 = :type")
+    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqualAndxCol1(LocalDateTime fromDate, LocalDateTime toDate, String type);
+
+    @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
+            "WHERE adr.fromDate <= :fromDate " +
+            "AND adr.toDate >= :toDate " +
+            "AND adr.weightManual = :weightManual " +
+            "AND adr.qualityManual = :qualityManual " +
+            "AND adr.status <= :status " +
+            "AND adr.xCol1 = :type")
+    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqualAndxCol1AndWeightManualAndQualityManualAndStatus(LocalDateTime fromDate, LocalDateTime toDate, String type, Boolean qualityManual, Boolean weightManual, Integer status);
+
+    @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
+            "WHERE adr.fromDate <= :fromDate " +
+            "AND adr.toDate >= :toDate " +
+            "AND adr.weightManual = :weightManual " +
+            "AND adr.qualityManual = :qualityManual " +
+            "AND adr.status <= :status " +
+            "AND adr.xCol1 = :type")
+    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqualAndxCol1AndWeightManualAndQualityManualAndFromShiftAndToShiftAndStatus(LocalDateTime fromDate, LocalDateTime toDate, String type, Boolean qualityManual, Boolean weightManual, Integer status);
+
+    @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
+            "WHERE :fromDate BETWEEN adr.fromDate AND adr.toDate " +
+            "and :toDate BETWEEN adr.fromDate AND adr.toDate " +
+//            "AND adr.fromShift >= :fromShift " +
+//            "AND adr.toShift >= :toShift " +
+            "AND adr.weightManual = :weightManual " +
+            "AND adr.qualityManual = :qualityManual " +
+            "AND adr.status <= :status " +
+            "AND adr.xCol1 = :type")
+    List<AllowDcsManualCollectionRange> findByFromDateBetweenAndToDateBetweenAndxCol1AndWeightManualAndQualityManualAndStatus(LocalDateTime fromDate, LocalDateTime toDate, String type, Boolean qualityManual, Boolean weightManual, Integer status);
+}

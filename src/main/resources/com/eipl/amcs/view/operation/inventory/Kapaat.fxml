@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.KapaatController">
+    <children>
+        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" focusTraversable="true">
+                    <children>
+                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%kapaat">
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                     <children>
+                        <E_DatePicker fx:id="dpFromDate" />
+                        <E_DatePicker fx:id="dpToDate" />
+                        <E_Button fx:id="btnSearch" prefWidth="80.0" text="%search" />
+                     </children></HBox>
+                    </children>
+                </HBox>
+            <TableView fx:id="tableData" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+               <columns>
+<!--                  <TableColumn fx:id="colInvoiceNo" prefWidth="150.0" text="%invoiceno" />-->
+                  <TableColumn fx:id="colDate" prefWidth="125.0" text="%date" />
+                  <TableColumn fx:id="colConsumerType" prefWidth="150.0" text="%consumertype" />
+                  <TableColumn fx:id="colConsumerName" prefWidth="150.0" text="%consumername" />
+                  <TableColumn fx:id="colAmount" prefWidth="150.0" text="%amount" />
+                  <TableColumn fx:id="colNetPayable" prefWidth="125.0" text="%netpayable" />
+<!--                  <TableColumn fx:id="colNoOfInstallment" prefWidth="150.0" text="%noofinstallment" />-->
+                  <TableColumn fx:id="colDeductionStartDate" prefWidth="150.0" text="%deductionstartdate" />
+               </columns>
+            </TableView>
+                <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
+                    <children>
+                  <E_Button fx:id="btnAdd" minWidth="75.0" text="%add" />
+                  <E_Button fx:id="btnDelete" minWidth="75.0" text="%delete" />
+                  <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
+                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+            </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+        </VBox>
+    </children>
+</StackPane>

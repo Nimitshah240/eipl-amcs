@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.SocietyPurchaseReportController">
+    <children>
+        <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%societypurchase" />
+                <HBox alignment="TOP_RIGHT" spacing="10.0" />
+            <GridPane hgap="8.0" vgap="8.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label text="%fromdate" />
+                  <DatePicker fx:id="dpFromDate1" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <GridPane.margin>
+                        <Insets left="2.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <DatePicker fx:id="dpToDate1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label text="%todate" GridPane.columnIndex="2" />
+                  <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="btnGenerate1" mnemonicParsing="true" prefWidth="80.0" styleClass="button-primary" text="%generate" />
+                        <Button fx:id="btnClose1" contentDisplay="RIGHT" mnemonicParsing="true" prefWidth="80.0" text="%close" />
+                     </children>
+                  </HBox>
+                  <Label text="%toshift" GridPane.columnIndex="3" />
+                  <Label text="%fromshift" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="cboxFromShift1" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxToShift1" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxMilkType1" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <Label text="%milktype" GridPane.columnIndex="4" />
+               </children>
+            </GridPane>
+            <Separator opacity="0.51" />
+            <Label styleClass="header-text" text="%societypurchasememberwise" />
+                <GridPane hgap="8.0" vgap="8.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%fromdate" />
+                        <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <GridPane.margin>
+                                <Insets left="2.0" />
+                            </GridPane.margin></DatePicker>
+
+                        <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="%todate" GridPane.columnIndex="2" />
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                            <children>
+                                <Button fx:id="btnGenerate" mnemonicParsing="true" prefWidth="80.0" styleClass="button-primary" text="%generate" />
+                                <Button fx:id="btnClose" contentDisplay="RIGHT" mnemonicParsing="true" prefWidth="80.0" text="%close" />
+                            </children>
+                        </HBox>
+                        <Label text="%toshift" GridPane.columnIndex="3" />
+                        <Label text="%fromshift" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="cboxFromShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxToShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label text="%milktype" GridPane.columnIndex="4" />
+                        <Label text="%member" GridPane.columnIndex="5" />
+                        <ComboBox fx:id="cboxMember" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                    </children>
+                </GridPane>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

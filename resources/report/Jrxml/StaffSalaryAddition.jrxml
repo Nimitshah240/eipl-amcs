@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StaffSalaryAddition" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5241e47c-e48d-4e5d-9801-798dbfcd7db8">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Amcs"/>
+	<parameter name="p_member_code" class="java.lang.String"/>
+	<parameter name="p_society_code" class="java.lang.String"/>
+	<parameter name="p_month" class="java.lang.String"/>
+	<parameter name="p_locale" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[call rpt_staff_Salary_addition($P{p_member_code},$P{p_society_code},$P{p_month},$P{p_locale});]]>
+	</queryString>
+	<field name="staff_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="staff_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="staff_member"/>
+	</field>
+	<field name="head_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="head_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="salary_head"/>
+	</field>
+	<field name="add_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="add_amount"/>
+	</field>
+	<field name="dates" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="dates"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="70" y="0" width="100" height="15" uuid="1966059f-5fd3-4f86-9f69-6289a01fead6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{add_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="15" uuid="844bc438-c691-4ef2-bd7f-9c2ad477034d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{head_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Asset" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="585" leftMargin="10" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="i18n" uuid="e39b1d73-7c36-46cd-a34e-2151168988c9">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<style name="noto" fontName="Noto" fontSize="10"/>
+	<subDataset name="Dataset1" uuid="30b8f901-761d-45ac-be28-97c52e95bc78">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<parameter name="p_dcs_code" class="java.lang.String"/>
+		<parameter name="p_from_date" class="java.lang.String"/>
+		<parameter name="p_to_date" class="java.lang.String"/>
+		<parameter name="p_language_code" class="java.lang.Integer"/>
+		<parameter name="locale" class="java.lang.String"/>
+		<parameter name="digit_config" class="java.lang.Integer"/>
+		<parameter name="p_asset_side" class="java.util.List"/>
+		<parameter name="p_balance_side" class="java.util.List"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="ledgerCode" class="java.lang.String"/>
+		<field name="ledgerName" class="java.lang.String"/>
+		<field name="debit" class="java.lang.Double"/>
+		<field name="credit" class="java.lang.Double"/>
+		<field name="balance" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="p_society_code" class="java.lang.String"/>
+	<parameter name="p_locale" class="java.lang.String"/>
+	<parameter name="p_asset_side" class="java.util.List"/>
+	<parameter name="p_liability_side" class="java.util.List"/>
+	<parameter name="p_society_name" class="java.lang.String"/>
+	<parameter name="p_from_date" class="java.time.LocalDate"/>
+	<parameter name="p_to_date" class="java.time.LocalDate"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="ledgerCode" class="java.lang.String"/>
+	<field name="ledgerName" class="java.lang.String"/>
+	<field name="balance" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="100" height="15" backcolor="#FFFFFF" uuid="947b8239-ece6-4118-90f6-4b30c34c8d3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{accounting.asset}+":-"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="20" width="150" height="15" backcolor="#EDEDFA" uuid="d38405d8-091b-4ef2-a13c-b20544269d7e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{accounting.ledger.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="20" width="100" height="15" backcolor="#EDEDFA" uuid="d4995eb0-089a-4d73-a61d-397f4c8c98ae">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{account.amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement style="noto" x="0" y="0" width="150" height="15" uuid="71872576-4054-4068-b635-1039909fdc15">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ledgerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" x="150" y="0" width="100" height="15" uuid="4cf9bd42-9fd6-4a51-8351-054aee1a4952">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[Math.abs($F{balance})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

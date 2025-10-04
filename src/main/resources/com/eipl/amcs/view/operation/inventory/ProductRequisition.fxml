@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="600.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductRequisitionController">
+    <children>
+        <VBox spacing="15.0">
+            <children>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <children>
+                      <Label styleClass="header-text" text="%productrequisition" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="dpFromDate" prefWidth="125.0" />
+                        <Label text="%to" />
+                        <DatePicker fx:id="dpToDate" prefWidth="125.0" />
+                        <Button fx:id="btnSearch" mnemonicParsing="false" text="%search" />
+                    </children>
+                </HBox>
+                <TableView fx:id="tableProductRequisition" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colChallanNo" prefWidth="200.0" styleClass="cell-center-aligned" text="%challanno" />
+                        <TableColumn fx:id="colRequisitionDate" prefWidth="150.0" styleClass="cell-center-aligned" text="%requisitiondate" />
+<!--                        <TableColumn fx:id="colChallanDate" prefWidth="150.0" styleClass="cell-center-aligned" text="%challandate" />-->
+                  <TableColumn fx:id="colStatus" prefWidth="196.0" styleClass="cell-center-aligned" text="%status" />
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15.0">
+                    <children>
+                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
+                        <Button fx:id="btnEdit" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
+                        <Button fx:id="btnDelete" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

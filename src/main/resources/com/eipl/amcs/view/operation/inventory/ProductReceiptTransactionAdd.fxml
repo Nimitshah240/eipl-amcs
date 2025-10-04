@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductReceiptTransactionAddController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white-drop-border">
+            <children>
+                <Label styleClass="header-text" text="%addproduct" />
+                <GridPane fx:id="grid" hgap="15.0" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%productname" />
+                        <E_ComboBox fx:id="cboxProduct" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <Label text="%unit" GridPane.columnIndex="1" />
+                        <E_ComboBox fx:id="cboxUnit" disable="true" editable="true" prefHeight="25.0" prefWidth="355.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="%rate" GridPane.columnIndex="2" />
+                        <E_TextField fx:id="txtRate" disable="true" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="%Quantity" GridPane.rowIndex="2" />
+                        <Label text="%amount" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="%discount" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label text="%tax" GridPane.rowIndex="4" />
+                        <Label text="%taxamount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="%totalamount" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label text="%remark" GridPane.rowIndex="6" />
+                        <E_TextField fx:id="txtQuantity" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtDiscount" disable="true" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <E_ComboBox fx:id="cboxTax" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <E_TextField fx:id="txtTaxAmount" disable="true" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <E_TextField fx:id="txtTotalAmount" disable="true" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <E_TextField fx:id="txtRemark" maxWidth="1.7976931348623157E308" prefHeight="92.0" prefWidth="348.0" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+                      <HBox alignment="CENTER_RIGHT" focusTraversable="true" prefHeight="25.0" prefWidth="201.0" spacing="15" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8">
+                          <children>
+                              <E_Button fx:id="btnSave" minWidth="80.0" mnemonicParsing="true" styleClass="button-primary" text="%save" />
+                              <E_Button fx:id="btnClose" minWidth="80.0" mnemonicParsing="true" text="%close" />
+                          </children>
+                     <GridPane.margin>
+                        <Insets top="15.0" />
+                     </GridPane.margin>
+                      </HBox>
+                    </children>
+                </GridPane>
+            </children>
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+            </padding>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+</StackPane>

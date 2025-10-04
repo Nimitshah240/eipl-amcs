@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           xmlns="http://javafx.com/javafx/11"
+           fx:controller="com.eipl.amcs.master.org.controller.DockController" styleClass="pane-center"
+           prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%dock"/>
+                <TableView fx:id="tableDock" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSociety" prefWidth="300.0" text="%society"/>
+                        <TableColumn fx:id="colDockNo" prefWidth="125.0" text="%dockno"
+                                     styleClass="cell-center-aligned"/>
+                        <TableColumn fx:id="colIsDefault" prefWidth="100.0" text="%isdefault"
+                                     styleClass="cell-center-aligned"/>
+                        <TableColumn fx:id="colMilkType" prefWidth="150.0" text="%milktype"/>
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
+                                styleClass="button-primary"
+                                text="%add"/>
+                        <Button fx:id="btnEdit" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" disable="true"
+                                text="%edit"/>
+                        <Button fx:id="btnDelete" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
+                                disable="true"
+                                text="%delete"/>
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
+                                text="%close"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

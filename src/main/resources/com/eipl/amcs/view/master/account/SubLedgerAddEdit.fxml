@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" minWidth="800.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.SubLedgerAddEditController">
+    <children>
+        <VBox spacing="20.0">
+            <children>
+                <Label styleClass="header-text" text="%subledger" />
+                <GridPane fx:id="gridMaster" hgap="10.0" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="22.0" percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxType" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <E_TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
+                        <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <Label text="%code" GridPane.rowIndex="1" />
+                        <Label text="%type" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Label text="%localname" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <E_TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="120.0" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                    </children>
+                </GridPane>
+            <HBox alignment="BOTTOM_LEFT">
+               <children>
+                  <CheckBox fx:id="chkSelectAll" alignment="TOP_LEFT" mnemonicParsing="false" text="SelectAll" />
+               </children>
+            </HBox>
+                <TableView fx:id="tableLedgerData" editable="true" focusTraversable="false" prefHeight="350.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colSelect" maxWidth="1.7976931348623157E308" minWidth="-1.0" text="%select" />
+                        <TableColumn fx:id="colCode" maxWidth="1.7976931348623157E308" minWidth="17.0" prefWidth="101.0" text="%code" />
+                        <TableColumn fx:id="colName" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="232.0" text="%name" />
+                        <TableColumn fx:id="colLocalName" maxWidth="1.7976931348623157E308" minWidth="250.0" prefWidth="347.0" text="%localname" />
+                    </columns>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </TableView>
+                <HBox fx:id="hboxMaster" alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
+                    <children>
+                        <E_Button fx:id="btnSaveUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%save" />
+                        <E_Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+            </padding>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+</StackPane>

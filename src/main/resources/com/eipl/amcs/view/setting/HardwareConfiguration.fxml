@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="700.0" styleClass="pane-center"
+           xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.setting.controller.HardwareDeviceConfigurationController">
+    <children>
+        <VBox fx:id="vbox" prefHeight="800.0" prefWidth="100.0" spacing="20.0">
+            <children>
+                <Label styleClass="header-text" text="%hardwaredevicecongiguration"/>
+                <GridPane fx:id="gridDirect" hgap="15.0" vgap="5.0" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="150.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <ComboBox fx:id="cboxWsPort" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="cboxWs" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="cboxAnalyserPort" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="cboxAnalyser" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="cboxDisplayPort" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <ComboBox fx:id="cboxDisplay" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                        <Label text="%ws" GridPane.rowIndex="1"/>
+                        <Label text="%milktestingequipment(ma1)" GridPane.rowIndex="2"/>
+                        <Label text="%externaldisplay" GridPane.rowIndex="6"/>
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="98.0" text="%comport"
+                               GridPane.columnIndex="1"/>
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="202.0" text="%selectdevice"
+                               GridPane.columnIndex="2"/>
+                        <Separator prefWidth="200.0" GridPane.columnSpan="5" GridPane.rowIndex="8"/>
+                        <ComboBox fx:id="cboxPrinter" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9"/>
+                        <Label text="%printer" GridPane.rowIndex="9"/>
+                        <Label text="%splitter" GridPane.rowIndex="7"/>
+                        <ComboBox fx:id="cboxSplitterPort" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                        <ComboBox fx:id="cboxSplitter" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                        <Label text="%milktestingequipment(ma2)" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="cboxAnalyserPort2" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="cboxAnalyser2" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <Label text="%milktestingequipment(ma3)" GridPane.rowIndex="4"/>
+                        <Label text="%milktestingequipment(ma4)" GridPane.rowIndex="5"/>
+                        <ComboBox fx:id="cboxAnalyserPort3" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <ComboBox fx:id="cboxAnalyserPort4" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <ComboBox fx:id="cboxAnalyser3" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                        <ComboBox fx:id="cboxAnalyser4" editable="true" maxWidth="1.7976931348623157E308"
+                                  GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                        <ComboBox fx:id="cboxQualityMachine" editable="true" prefWidth="125.0" GridPane.columnIndex="3"
+                                  GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="cboxQualityMachine2" editable="true" prefWidth="125.0" GridPane.columnIndex="3"
+                                  GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="cboxQualityMachine3" editable="true" prefWidth="125.0" GridPane.columnIndex="3"
+                                  GridPane.rowIndex="4"/>
+                        <ComboBox fx:id="cboxQualityMachine4" editable="true" prefWidth="125.0" GridPane.columnIndex="3"
+                                  GridPane.rowIndex="5"/>
+                        <ComboBox fx:id="cboxMilkType" editable="true" prefWidth="125.0" GridPane.columnIndex="4"
+                                  GridPane.rowIndex="2"/>
+                        <ComboBox fx:id="cboxMilkType2" editable="true" prefWidth="125.0" GridPane.columnIndex="4"
+                                  GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="cboxMilkType3" editable="true" prefWidth="125.0" GridPane.columnIndex="4"
+                                  GridPane.rowIndex="4"/>
+                        <ComboBox fx:id="cboxMilkType4" editable="true" prefWidth="125.0" GridPane.columnIndex="4"
+                                  GridPane.rowIndex="5"/>
+                        <Label alignment="CENTER" prefHeight="17.0" prefWidth="202.0" text="%milktype"
+                               GridPane.columnIndex="4"/>
+                        <Label text="%qualitysetting" GridPane.columnIndex="3"/>
+                    </children>
+                    <VBox.margin>
+                        <Insets top="20.0"/>
+                    </VBox.margin>
+                </GridPane>
+                <HBox prefWidth="200.0" spacing="15.0">
+                    <children>
+                        <Button fx:id="btnSave" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%save"/>
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
+                                text="%close"/>
+                    </children>
+                </HBox>
+            </children>
+            <StackPane.margin>
+                <Insets/>
+            </StackPane.margin>
+        </VBox>
+    </children>
+</StackPane>

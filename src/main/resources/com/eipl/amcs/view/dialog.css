@@ -1,0 +1,121 @@
+@font-face {
+	src: url('file:resources/fonts/Comfortaa-SemiBold.ttf');
+}
+@font-face {
+	src: url('file:resources/fonts/IconResources.ttf');
+}
+@font-face {
+	src: url('file:resources/fonts/SourceSansPro-Regular.ttf');
+}
+@font-face {
+	src: url('file:resources/fonts/SourceSansPro-SemiBold.ttf');
+}
+.root {
+    -fx-primary-color: #00A3DE;
+    -fx-background-color-offwhite: #f7f7fd;
+    -fx-background-color-white: #fcfcfc;
+    -fx-navbar-color: #eaecf0;
+    -fx-text-color: #132233;
+    -fx-text-light-color: #476677;
+
+    -fx-base: #d7dee8;
+
+    -fx-font-family: 'Source Sans Pro SemiBold';
+    -fx-font-size: 14.0px;
+    -fx-text-fill: -fx-text-color;
+}
+.dialog-pane {
+    -fx-background-color: -fx-background-color-white;
+    -fx-border-width: 1px;
+    -fx-background-insets: 1px;
+    -fx-border-color: -fx-text-color;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 1.0em;
+    -fx-border-radius: 5px 5px 0.0px 0px;
+    -fx-background-radius: 5px 5px 0.0px 0px;
+}
+
+.dialog-pane:header .header-panel {
+	-fx-background-color: -fx-background-color-offwhite;
+	-fx-border-width: 0.0 0.0 1.0 0.0;
+	-fx-border-color: -fx-text-light-color;
+	-fx-border-radius: 5px 5px 0.0px 0px;
+    -fx-background-radius: 5px 5px 0.0px 0px;
+}
+.dialog-pane:header .header-panel .label {
+    -fx-font-family: 'Comfortaa SemiBold';
+    -fx-font-size: 1.25em;
+    -fx-text-fill: -fx-primary-color;
+}
+.button {
+	-fx-border-radius: 2.0;
+	-fx-background-radius: 2.0;
+}
+.button-primary {
+    -fx-base: -fx-primary-color;
+	-fx-border-radius: 2.0;
+	-fx-background-radius: 2.0;
+}
+.text-field {
+	-fx-border-radius: 2.0;
+	-fx-background-radius: 2.0;
+}
+.check-box > .box {
+	-fx-body-color: -fx-background-color-offwhite;
+	-fx-border-radius: 2.0;
+	-fx-background-radius: 2.0;
+}
+.combo-box-base,
+.combo-box-base:editable {
+	-fx-border-radius: 2.0;
+	-fx-background-radius: 2.0;
+}
+
+.separator {
+    -fx-border-color: -fx-navbar-color;
+    -fx-stroke-width: 0.5;
+    -fx-opacity: 0.5;
+}
+
+.scroll-bar:horizontal ,
+.scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 2.0em;
+	-fx-padding:0.0 0.0 5.0 0.0;
+
+}
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 2.0em;
+	-fx-padding:0.0 5.0 0.0 0.0;
+
+}
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+	-fx-shape: " ";
+	-fx-padding:1.5;
+}
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+	-fx-background-radius: 2.0em;
+	-fx-border-radius:2.0em;
+}
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -fx-primary-color;
+	-fx-background-insets: 0.3, 0.0, 0.0;
+	-fx-background-radius: 2.0em;
+	-fx-padding: 0.0px;
+}

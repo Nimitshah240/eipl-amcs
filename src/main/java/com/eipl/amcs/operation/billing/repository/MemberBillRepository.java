@@ -1,0 +1,55 @@
+package com.eipl.amcs.operation.billing.repository;
+
+import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.operation.billing.model.MemberBill;
+import com.eipl.amcs.report.dto.PaymentForBank;
+import com.eipl.amcs.report.dto.PaymentRegisterForCash;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface MemberBillRepository extends BaseRepository<MemberBill, String> {
+
+	@EntityGraph(attributePaths = { "society", "union", "member", "paymentCycle" })
+	public List<MemberBill> findByPaymentCycle(SocietyPaymentCycle paymentCycle);
+	
+	@EntityGraph(attributePaths = { "society", "union", "member", "paymentCycle" })
+	public MemberBill findByMember(Member member);
+
+	@EntityGraph(attributePaths = { "society", "union", "member", "paymentCycle" })
+	public MemberBill findByMemberAndPaymentCycle(Member member,SocietyPaymentCycle paymentCycle);
+
+//	@Query(value = "CALL rpt_payment_register(:p_society_code,:p_society_payment_cycle_code);", nativeQuery = true)
+//	List<Map<String, Object>> findPaymentRegisterReport(@Param("p_society_code") String societyCode,
+//										@Param("p_society_payment_cycle_code") String societyPaymentCycleCode
+//												 );
+	@Query(value = "CALL rpt_payment_register(:p_society_code,:p_society_payment_cycle_code,:p_payment_mode);", nativeQuery = true)
+	List<PaymentRegisterForCash> findPaymentRegisterReport(@Param("p_society_code") String societyCode,
+										@Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
+										@Param("p_payment_mode") Integer paymentMode
+												 );
+//	rpt_payment_register_bank`(IN p_society_code varchar(10),IN p_society_payment_cycle_code varchar(15),IN p_payment_mode INT,IN p_bank_code varchar(4),IN p_locale varchar(50))
+
+
+	@Query(value = "CALL rpt_payment_register_bank_excel(:p_society_code,:p_society_payment_cycle_code,:p_payment_mode,:p_bank_code,:p_locale);", nativeQuery = true)
+	List<PaymentForBank> findPaymentRegisterReportExcel(@Param("p_society_code") String societyCode,
+														@Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
+														@Param("p_payment_mode") Integer paymentMode,
+														@Param("p_bank_code") String bankCode,
+														@Param("p_locale") String locale
+												 );
+//	@Query(value = "CALL rpt_payment_register_bank_2(:p_society_code,:p_society_payment_cycle_code,:p_payment_mode,:p_bank_code,:p_locale);", nativeQuery = true)
+//	List<Map<String,Object>> findPaymentRegisterReportExcel(@Param("p_society_code") String societyCode,
+//														@Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
+//														@Param("p_payment_mode") Integer paymentMode,
+//														@Param("p_bank_code") String bankCode,
+//														@Param("p_locale") String locale
+//												 );
+
+}

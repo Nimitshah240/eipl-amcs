@@ -1,0 +1,498 @@
+package com.eipl.amcs.operation.billing.controller;
+
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.alert.*;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
+import com.eipl.amcs.master.procurement.converter.SocietyPaymentCycleConvertor;
+import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
+import com.eipl.amcs.operation.billing.dto.FinalizeDto;
+import com.eipl.amcs.operation.billing.model.MemberBill;
+import com.eipl.amcs.operation.billing.model.MemberBillSummary;
+import com.eipl.amcs.operation.billing.task.MemberBillDisburseLoadTask;
+import com.eipl.amcs.operation.billing.task.MemberBillFinalizeLoadTask;
+import com.eipl.amcs.operation.billing.task.MemberBillLoadTask;
+import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+public class MemberBillController extends SocietyPaymentCycleEditController implements MyInitialization, PopupCallback {
+    @FXML
+    private StackPane root;
+    @FXML
+    private ComboBox<SocietyPaymentCycle> cboxPaymentCycle;
+    @FXML
+    private Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport;
+    @FXML
+    private DatePicker dpDisburseDate;
+    @FXML
+    private TableView<MemberBill> tableBill;
+    @FXML
+    private TableColumn<MemberBill, String> colMemberCode, colMemberName, colStatus, colPaymentMode;
+    @FXML
+    private TableColumn<MemberBill, Number> colMilkQty, colMilkAmount, colProductSale, colLocalSale, colLoan, colOtherAdd,
+            colOtherDed, colNetAmount;
+
+    private MemberBillSummary billSummary;
+    private List<MemberBill> memberBillList;
+    private ResourceBundle resourceBundle;
+
+    private ObjectProperty<MemberBill> propMemberBill;
+
+    public void setBillSummary(MemberBillSummary billSummary) {
+        this.billSummary = billSummary;
+        loadData();
+        if (billSummary != null && billSummary.getPaymentCycle().getLockBillingProcess()) {
+            btnGenerate.setDisable(true);
+            btnEdit.setDisable(true);
+            btnFinalize.setDisable(true);
+        }
+    }
+
+    public MemberBillController() {
+        propMemberBill = new SimpleObjectProperty<>();
+    }
+
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+
+        dpDisburseDate.setValue(LocalDate.now());
+        memberBillList = FXCollections.emptyObservableList();
+
+        setupTable();
+        setupComboBox();
+
+        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/billing/MemberBillSummary.fxml"))));
+
+        btnGenerate.setDisable(!(this.billSummary == null || billSummary.getStatus() < (short) 2));
+        btnGenerate.setOnAction(e -> {
+//            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_GENERATE"))
+//                throw new UnAuthorizedAccessException();
+
+            LocalDateTime currentDate = LocalDateTime.of(LocalDate.now(), LocalTime.NOON);
+            if (currentDate.isAfter(cboxPaymentCycle.getValue().getFromDate()) && currentDate.isBefore(cboxPaymentCycle.getValue().getToDate())) {
+                MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                        resourceBundle.getString("billing.not.allowedfor.paymentcycle"));
+                alert.createAlert();
+                return;
+            }
+
+            short generate = 0;
+            // check payment cycle data
+            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/checkBill")
+                    .queryParam("paymentCycleCode", cboxPaymentCycle.getValue().getCode());
+            ResponseEntity<MemberBillSummary> response = restTemplate.getForEntity(builder.toUriString(), MemberBillSummary.class);
+            if (response == null || response.getStatusCode() != HttpStatus.OK) {
+                MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                        resourceBundle.getString("error.occurred"));
+                alert.createAlert();
+                return;
+            }
+
+            if (response.getBody() == null)
+                generate = 1;
+            if (response.getBody() != null) {
+                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                        CommonUtils.getResourceString(resourceBundle, "member.bill.generated.confirmation"));
+                Optional<ButtonType> resp = alert.createConfirmationAlert();
+                if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                    generate = 1;
+                }
+            }
+
+            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), generate);
+        });
+        btnEdit.setOnAction(e -> {
+//            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_EDIT"))
+//                throw new UnAuthorizedAccessException();
+            MemberBill dto = propMemberBill.get();
+            if (dto != null)
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberBillTransaction", dto, this);
+        });
+
+        propMemberBill.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (memberBillList.get(0).getStatus() == 2)
+                    btnEdit.setDisable(true);
+                else
+                    btnEdit.setDisable(false);
+            } else {
+                btnEdit.setDisable(true);
+            }
+        });
+
+        btnFinalize.setOnAction(e -> {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                    CommonUtils.getResourceString(resourceBundle, "member.bill.finalize.confirmation"));
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                finalizeMemberBill();
+
+                btnGenerate.setDisable(true);
+                btnEdit.setDisable(true);
+
+            }
+        });
+
+        btnDisburse.setOnAction(e -> {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                    CommonUtils.getResourceString(resourceBundle, "member.bill.disburse.confirmation"));
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                disburseMemberBill();
+            }
+        });
+
+        btnExport.setOnAction(event -> {
+            List<MemberBill> list = memberBillList.stream().collect(Collectors.toList());
+            exportExcel(list);
+        });
+
+    }
+
+    private void exportExcel(List<MemberBill> list) {
+        boolean exported = true;
+        try {
+            FileChooser fileDialog = new FileChooser();
+            fileDialog.setTitle("Export Billing Data");
+            fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
+            File file = fileDialog.showSaveDialog(MainApp.stage);
+            if (file != null) {
+                HSSFWorkbook wb = new HSSFWorkbook();
+                HSSFSheet sheet = wb.createSheet("Sheet-1");
+                List<String> strColumns = Arrays.asList("M. Code", "M. Name", "Avg. FAT", "Avg. SNF",
+                        "Avg. CLR", "Qty", "Milk Amount", "LS Amount", "PS Amount",
+                        "Net payable");
+                List<String> strColumnTodisplay = null;
+                List<String> items = null;
+                strColumnTodisplay = new ArrayList<>(strColumns);
+                List<String> finalResultToDisplay = strColumnTodisplay.stream().collect(Collectors.toList());
+                // Create header column
+                HSSFRow row = sheet.createRow(0);
+                HSSFCell cell = null;
+                int cellValueHeading = 0;
+                for (String columnTitle : finalResultToDisplay) {
+                    cell = row.createCell(cellValueHeading);
+                    cell.setCellValue(columnTitle);
+                    cellValueHeading++;
+                }
+                int rowCnt = 1;
+                for (MemberBill item : list) {
+                    cellValueHeading = 0;
+                    row = sheet.createRow(rowCnt);
+                    for (String columnTitle : finalResultToDisplay) {
+                        switch (columnTitle) {
+                            case "M. Code":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getMember().getCode());
+                                break;
+                            case "M. Name":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getMember().toMemberName());
+//                                cell.setCellValue(NameConcatUtil.nameConcate(item.getMember()));
+                                break;
+                            case "Avg. FAT":
+                                cell = row.createCell(cellValueHeading++);
+                                if (item.getAvgFat() == null) {
+                                    cell.setCellValue(0);
+                                } else {
+                                    cell.setCellValue(String.valueOf(item.getAvgFat()));
+                                }
+                                break;
+                            case "Avg. SNF":
+                                cell = row.createCell(cellValueHeading++);
+                                if (item.getAvgSnf() == null) {
+                                    cell.setCellValue(0);
+                                } else {
+                                    cell.setCellValue(String.valueOf(item.getAvgSnf()));
+                                }
+                                break;
+                            case "Avg. CLR":
+                                cell = row.createCell(cellValueHeading++);
+                                if (item.getAvgClr() == null) {
+                                    cell.setCellValue(0);
+                                } else {
+                                    cell.setCellValue(String.valueOf(item.getAvgClr()));
+                                }
+                                break;
+                            case "Qty":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(String.valueOf(item.getMilkQty()));
+                                break;
+                            case "Milk Amount":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(String.valueOf(item.getMilkAmount()));
+                                break;
+                            case "LS Amount":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(String.valueOf(item.getLocalSaleAmount()));
+                                break;
+                            case "PS Amount":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(String.valueOf(item.getProductSaleAmount()));
+                                break;
+                            case "Net Payable":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(String.valueOf(item.getNetAmount()));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    rowCnt++;
+                }
+                try {
+                    wb.close();
+                } catch (IOException e1) {
+                    exported = false;
+                }
+                try {
+                    FileOutputStream out = new FileOutputStream(file);
+                    wb.write(out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    exported = false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            exported = false;
+        }
+        MyAlert alert;
+        if (exported) {
+            alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                    resourceBundle.getString("successful"));
+        } else {
+            alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                    resourceBundle.getString("error.occurred"));
+        }
+        alert.createAlert();
+    }
+
+    private void finalizeMemberBill() {
+        boolean cashNotAllow = "0".equalsIgnoreCase(MainApp.getProperty(AppConstant.Props.ALLOW_CASHPAYMENT, "1"));
+        long countCash = memberBillList.stream().filter(p -> p.getPaymnetMode() == 0).count();
+        if (cashNotAllow && countCash > 0) {
+            MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                    CommonUtils.getResourceString(resourceBundle, "member.bill.cashpayment.notallowed"));
+            alert.createAlert();
+            return;
+        }
+        long zeroAmountCount = memberBillList.stream().filter(p -> p.getMilkQty().doubleValue() > 0 && p.getMilkAmount().doubleValue() < 0).count();
+        if (zeroAmountCount > 0) {
+            MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                    CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
+            alert.createAlert();
+            return;
+        }
+
+        zeroAmountCount = memberBillList.stream().filter(p -> p.getNetAmount().doubleValue() < 0).count();
+        if (zeroAmountCount > 0) {
+            MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                    CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
+            alert.createAlert();
+            return;
+        }
+        FinalizeDto finalizeDto = new FinalizeDto();
+        finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
+        finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
+        saveLockData(finalizeDto, 0);
+        loadData();
+    }
+
+    private void saveLockData(FinalizeDto finalizeDto, Integer integer) {
+        if (integer == 0) {
+            var task = new MemberBillFinalizeLoadTask(finalizeDto);
+            task.setOnSucceeded(e -> {
+                try {
+                    reloadData(true);
+                    Object list = task.get();
+                    if (list != null) {
+                        MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                                CommonUtils.getResourceString(resourceBundle, "member.bill.finalize.successful"));
+                        alert.createAlert();
+                        btnFinalize.setDisable(true);
+                        return;
+                    }
+
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
+        } else {
+            var task = new MemberBillDisburseLoadTask(finalizeDto);
+            task.setOnSucceeded(e -> {
+                try {
+                    Object list = task.get();
+                    if (list != null) {
+                        System.out.println("thai jyu part two");
+                        MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                                CommonUtils.getResourceString(resourceBundle, "member.bill.disburse.successful"));
+                        alert.createAlert();
+                        return;
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
+        }
+    }
+
+    private void disburseMemberBill() {
+        if (cboxPaymentCycle.getValue().getLockBillingProcess()) {
+            long zeroAmountCount = memberBillList.stream().filter(p -> p.getMilkQty().doubleValue() > 0 && p.getMilkAmount().doubleValue() < 0).count();
+            if (zeroAmountCount > 0) {
+                MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                        CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
+                alert.createAlert();
+                return;
+            }
+            FinalizeDto finalizeDto = new FinalizeDto();
+            finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
+            finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
+            saveLockData(finalizeDto, 1);
+        } else {
+            MyAlert alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                    resourceBundle.getString("finalize.first"));
+            alert.createAlert();
+        }
+
+    }
+
+    @Override
+    public void loadData() {
+        var task = new SocietyPaymentCycleLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<SocietyPaymentCycle> list = task.get();
+                List<SocietyPaymentCycle> paymentCycleList = new ArrayList<>();
+                if (list != null) {
+                    for (SocietyPaymentCycle societyPaymentCycle : list) {
+                        if (!societyPaymentCycle.getBilling())
+                            paymentCycleList.add(societyPaymentCycle);
+                    }
+
+
+//                    cboxPaymentCycle.setItems(FXCollections.observableList(paymentCycleList.stream().filter(e1 -> e1.getFromDate().getYear() == LocalDate.now().getYear()).collect(Collectors.toList())));
+                    cboxPaymentCycle.setItems(FXCollections.observableList(paymentCycleList));
+                    new AutoCompleteComboBoxListener<>(cboxPaymentCycle);
+                    if (this.billSummary != null) {
+                        SocietyPaymentCycle cycle = cboxPaymentCycle.getItems().stream()
+                                .filter(p -> p.getCode().equals(this.billSummary.getPaymentCycle().getCode()))
+                                .findFirst().orElse(null);
+                        cboxPaymentCycle.getSelectionModel().select(cycle);
+                        loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(),
+                                cboxPaymentCycle.getValue().getToDate(), (short) 0);
+                    }
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    @Override
+    public void setupComboBox() {
+        cboxPaymentCycle.setConverter(new SocietyPaymentCycleConvertor(cboxPaymentCycle));
+        dpDisburseDate.setConverter(new LocalDateConvertor());
+        dpDisburseDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpDisburseDate.setValue(dpDisburseDate.getConverter().fromString(dpDisburseDate.getEditor().getText()));
+            }
+        });
+    }
+
+    @Override
+    public void setupTable() {
+        try {
+            colMemberCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCodeEx()));
+            colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
+            colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getPaymentStatus(data.getValue().getStatus())));
+            colMilkQty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkQty()));
+            colMilkAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkAmount()));
+            colProductSale.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProductSaleAmount()));
+            colLocalSale.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLocalSaleAmount()));
+            colLoan.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLoanAmount()));
+            colOtherAdd.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getOtherAddAmount()));
+            colOtherDed.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getOtherDedAmount()));
+            colNetAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
+            colPaymentMode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymnetMode() == (short) 0 ? "CASH" : "BANK"));
+//        colPaymentMode.setCellFactory(cell -> new TableCell<>() {
+//            @Override
+//            protected void updateItem(String item, boolean empty) {
+//                super.updateItem(item, empty);
+//            }
+//        });
+            propMemberBill.bind(tableBill.getSelectionModel().selectedItemProperty());
+        } catch (Exception e) {
+            System.out.println("MemberBill setuptable Exception");
+            e.printStackTrace();
+        }
+    }
+
+    public void loadData(SocietyPaymentCycle paymentCycle, Society society, LocalDateTime fromDate, LocalDateTime toDate, short generate) {
+        tableBill.setItems(null);
+        var task = new MemberBillLoadTask(paymentCycle, society, fromDate, toDate, generate);
+        task.setOnSucceeded(e -> {
+            try {
+                memberBillList = task.get();
+                if (memberBillList == null)
+                    return;
+                tableBill.setItems(FXCollections.observableList(memberBillList));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    @Override
+    public void reloadData(boolean flag) {
+        if (flag)
+            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), (short) 0);
+    }
+}

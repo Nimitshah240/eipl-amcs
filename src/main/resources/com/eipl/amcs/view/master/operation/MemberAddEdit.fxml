@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.operation.controller.MemberAddEditController">
+    <children>
+        <VBox fx:id="vbox" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%member" />
+                <GridPane hgap="10.0" prefWidth="540.0" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="23.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="21.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="20.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="50.0" minHeight="25.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="22.0" prefHeight="22.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="3.0" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="23.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="3.0" minHeight="3.0" prefHeight="3.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="13.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="37.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="24.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%address" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <GridPane hgap="10.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowIndex="20">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                        </GridPane>
+                        <Label alignment="BOTTOM_CENTER" styleClass="bold" text="%bankdetail" GridPane.rowIndex="14" GridPane.valignment="BOTTOM" />
+                        <Label alignment="BOTTOM_CENTER" styleClass="bold" text="%otherdetail" GridPane.rowIndex="10" GridPane.valignment="BOTTOM" />
+                        <Label text="%defaultmilktype" GridPane.columnIndex="4" />
+                        <Label text="%gender" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <Label text="%birthdate" GridPane.rowIndex="6" />
+                        <Label text="%state" GridPane.rowIndex="8" />
+                        <Label text="%district" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <Label text="%subdistrict" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                        <Label text="%village" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                        <Label text="%email" GridPane.rowIndex="12" />
+                        <Label text="%panno" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                        <Label text="%aadharcardno" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                        <Label text="%noofcow" GridPane.columnIndex="3" GridPane.rowIndex="12" />
+                        <Label text="%noofbuffalo" GridPane.columnIndex="4" GridPane.rowIndex="12" />
+                        <Label text="%membertype" GridPane.columnIndex="2" />
+                        <Label text="%codeex" />
+                        <Label text="%code" GridPane.columnIndex="1" />
+                        <Label text="%name" GridPane.rowIndex="2" />
+                        <Label text="%middlename" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="%lastname" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="lblLocalName" text="%localname" GridPane.rowIndex="4" />
+                        <Label fx:id="lblLocalMiddleName" text="%middlelocalname" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="lblLocalSurName" text="%locallastname" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label text="%hamlet" GridPane.columnIndex="4" GridPane.rowIndex="8" />
+                        <Label text="%pincode" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label text="%mobileno" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <Label text="%registrationdate" GridPane.columnIndex="3" />
+                        <TextField fx:id="txtCodeEx" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxMemberType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="dpRegistrationDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxDefaultMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtMiddleName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtLastName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <TextField fx:id="txtMiddleLocalName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="txtLocalLastName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <ComboBox fx:id="cboxGender" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <TextField fx:id="txtMobileNo" accessibleText="^(?:[0-9]{10}|)$" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                        <DatePicker fx:id="dpBirthDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+                        <TextField fx:id="txtPincode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+                        <TextArea fx:id="txtAddress" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+                        <TextField fx:id="txtCreditLimit" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+                        <ComboBox fx:id="cboxState" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="9" />
+                        <ComboBox fx:id="cboxDistrict" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <ComboBox fx:id="cboxSubDistrict" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                        <ComboBox fx:id="cboxVillage" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="9" />
+                        <ComboBox fx:id="cboxHamlet" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="9" />
+                        <TextField fx:id="txtEmail" maxWidth="1.7976931348623157E308" GridPane.rowIndex="13" />
+                        <TextField fx:id="txtPanNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                        <TextField fx:id="txtAadharCardNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="13" />
+                        <TextField fx:id="txtNoOfCow" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="13" />
+                        <TextField fx:id="txtNoOfBuffalo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="13" />
+                        <RadioButton fx:id="rbtnCash" mnemonicParsing="false" selected="true" text="%cash" GridPane.rowIndex="16">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="paymentType" />
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="rbtnBank" mnemonicParsing="false" text="%bank" toggleGroup="$paymentType" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+                        <Separator prefWidth="200.0" valignment="TOP" GridPane.columnSpan="5" GridPane.rowIndex="11">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </Separator>
+                        <Separator prefWidth="200.0" valignment="TOP" GridPane.columnSpan="5" GridPane.rowIndex="15" />
+                        <GridPane fx:id="gridBankDetail" hgap="10.0" GridPane.columnSpan="4" GridPane.rowIndex="17" GridPane.rowSpan="2">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label text="%bankname" />
+                                <Label fx:id="lblBranch" text="%branchname" GridPane.columnIndex="1" />
+                                <Label fx:id="lblAcno" text="%acno" GridPane.columnIndex="2" />
+                                <Label fx:id="lblIfsc" text="%ifsc" GridPane.columnIndex="3" />
+                                <ComboBox fx:id="cboxBank" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                                <ComboBox fx:id="cboxBranch" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <TextField fx:id="txtAcNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <TextField fx:id="txtIfsc" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            </children>
+                        </GridPane>
+
+                        <Label text="%creditlimit" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+<!--                  <E_TextField fx:id="txtGroupCode" GridPane.columnIndex="3" GridPane.rowIndex="3" />-->
+<!--                  <Label text="%groupcode" GridPane.columnIndex="3" GridPane.rowIndex="2" />-->
+                    </children>
+                </GridPane>
+                <Separator prefWidth="200.0" />
+                <HBox prefWidth="540.0" spacing="10.0">
+                    <children>
+                        <Button fx:id="btnSaveUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%save" />
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

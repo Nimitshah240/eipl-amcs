@@ -1,0 +1,46 @@
+package com.eipl.amcs.master.procurement.model;
+
+import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+
+@SuppressWarnings("serial")
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@Table(name = "society_milk_purchase_rate_applicability")
+public class SocietyMilkPurchaseRateApplicability extends BaseModelTxn {
+
+	@Id
+	@Size(max = 25)
+	private String code;
+	private LocalDateTime wefDate;
+	@Size(max = 3)
+	private String unionCode;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_shift_code"))
+	private Shift shift;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_rate_code"))
+	@JsonIgnoreProperties(value = {"shift", "shiftApplicable","rateType"})
+	private SocietyMilkPurchaseRate societyMilkPurchaseRate;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_society_code"))
+	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
+	private Society society;
+
+	@Override
+	public String getTableName() {
+		return "society_milk_purchase_rate_applicability";
+	}
+}

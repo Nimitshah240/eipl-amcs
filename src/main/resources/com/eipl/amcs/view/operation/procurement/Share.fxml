@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.LocalMilkSaleAddEditController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white-drop-border">
+            <children>
+                <HBox>
+                    <children>
+                        <Label styleClass="header-text" text="%share" />
+                        <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                <GridPane hgap="10.0" prefHeight="141.0" prefWidth="196.0" vgap="5.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" percentWidth="33.0" prefWidth="167.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" percentWidth="33.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="81.0" minWidth="10.0" percentWidth="33.0" prefWidth="77.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+
+                    <children>
+
+                        <E_DatePicker fx:id="dpShareDate" disable="false" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="%newmembercode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <E_TextField fx:id="txtNewMemberCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="%voucherno" />
+                        <E_TextField fx:id="txtVoucherNo" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <Label text="%oldmembername" GridPane.rowIndex="2" />
+                        <Label text="%sharecount" GridPane.rowIndex="4" />
+                        <Label text="%amount" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="%certificateno" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <E_ComboBox fx:id="cboxOldMemberName" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+
+
+                        <Label text="%date" GridPane.columnIndex="1" />
+                        <Label text="%oldmembercode" GridPane.columnIndex="2" />
+                      <HBox alignment="CENTER_RIGHT" focusTraversable="true" prefWidth="200.0" spacing="15" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                          <children>
+                              <E_Button fx:id="btnSaveUpdate" mnemonicParsing="true" styleClass="button-primary" text="%save" />
+                              <E_Button fx:id="btnClose" mnemonicParsing="true" text="%close" />
+                          </children>
+                      </HBox>
+                  <E_TextField fx:id="txtShareCount" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                  <E_TextField fx:id="txtOldMemberCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label text="%newmembername" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <E_TextField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <E_TextField fx:id="txtCertificateNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                  <E_ComboBox fx:id="cboxNewMemberName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                    </children>
+                </GridPane>
+            </children>
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+            </padding>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+</StackPane>

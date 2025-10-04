@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.MilkDispatchController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%milkdispatch" />
+                <TableView fx:id="tableMilkDispatch" prefHeight="402.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colChallanNo" prefWidth="170.0" styleClass="cell-center-aligned" text="%challanno" />
+                        <TableColumn fx:id="colFromDate" prefWidth="110.0" styleClass="cell-center-aligned" text="%fromdate" />
+                        <TableColumn fx:id="colFromShift" prefWidth="100.0" styleClass="cell-center-aligned" text="%fromshift" />
+                        <TableColumn fx:id="colToDate" prefWidth="110.0" styleClass="cell-center-aligned" text="%todate" />
+                        <TableColumn fx:id="colToShift" prefWidth="100.0" styleClass="cell-center-aligned" text="%toshift" />
+                        <TableColumn fx:id="colDestinationType" prefWidth="130.0" styleClass="cell-center-aligned" text="%destinationtype" />
+                    </columns>
+                </TableView>
+                <HBox alignment="CENTER" prefHeight="20.0" prefWidth="600.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnAdd" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
+                        <Button fx:id="btnEdit" prefHeight="30.0" prefWidth="80.0" text="%edit" />
+                        <Button fx:id="btnDelete" prefHeight="30.0" prefWidth="80.0" text="%delete" />
+                        <Button fx:id="btnClose" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="222.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Button fx:id="btnDispatchNote" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" text="%dispatchnote" />
+                            </children>
+                        </HBox>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" />
+                    </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

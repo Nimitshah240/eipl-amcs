@@ -1,0 +1,8 @@
+કોડ: {code}
+નામ: {membername}
+તારીખ: {date} - {shift}   દૂધ: {type}
+જથ્થો(લી): {qty}    ફેટ%: {fat}
+રેટ: {rate}     રુ: {amount}
+તારીખ : {dateRange}
+ટોટલ જથ્થો : {tQty} રુ : {tAmt}
+કિલો ફેટ રેટ: {kgfat}

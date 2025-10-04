@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_NumericField?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" minWidth="800.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleAddEditController">
+    <children>
+        <VBox spacing="20.0">
+            <children>
+                <Label styleClass="header-text" text="%productsale" />
+                <GridPane fx:id="gridMaster" hgap="10.0" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="22.0" percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="22.0" percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="0.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%consumername" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="%consumertype" GridPane.columnIndex="3" />
+                        <Label text="%date" />
+                        <E_TextField fx:id="txtInvoiceNo" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <E_NumericField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtConsumerName" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                        <Label text="%consumercode" GridPane.rowIndex="2" />
+                        <Label text="%invoiceno" GridPane.columnIndex="1" />
+                        <Label text="%creditlimit" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <E_NumericField fx:id="txtCreditLimit" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                    </children>
+                </GridPane>
+                <GridPane fx:id="gridProduct" hgap="5.0" style="-fx-background-fill: black;">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="18.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="12.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="14.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="22.0" percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%product" />
+                        <Label text="%quantityy" GridPane.columnIndex="1" />
+                        <E_NumericField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="%rate" GridPane.columnIndex="2" />
+                        <E_NumericField fx:id="txtRate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="%amount" GridPane.columnIndex="3" />
+                        <E_NumericField fx:id="txtAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <HBox spacing="2.0" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                            <children>
+                                <E_Button fx:id="btnProductSave" maxWidth="1.7976931348623157E308" minWidth="50.0" mnemonicParsing="true" text="%save" HBox.hgrow="ALWAYS" />
+                                <E_Button fx:id="btnDelete" minWidth="50.0" mnemonicParsing="true" text="%delete" />
+                            </children>
+                        </HBox>
+                        <Label text="%taxcode" GridPane.columnIndex="4" />
+                        <Label text="%netamount" GridPane.columnIndex="5" />
+                        <E_NumericField fx:id="txtNetAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                    </children>
+                </GridPane>
+                <TableView fx:id="tableProductSaleTransaction" focusTraversable="false" prefHeight="102.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colProduct" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="150.0" text="%product" />
+                        <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%quantity" />
+                        <TableColumn fx:id="colRate" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%rate" />
+                        <TableColumn fx:id="colAmount" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%amount" />
+                        <TableColumn fx:id="colTaxAmount" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="%taxamount" />
+                        <TableColumn fx:id="colActualAmount" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="%actualamount" />
+                    </columns>
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </TableView>
+                <GridPane hgap="5.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="25.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label text="%paymenttype" GridPane.rowIndex="1" />
+                        <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="4">
+                            <children>
+                                <RadioButton fx:id="rbtnCash" mnemonicParsing="false" text="%cash">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="transactionMode" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton fx:id="rbtnCredit" mnemonicParsing="false" text="%credit" toggleGroup="$transactionMode" />
+                            </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.rowIndex="5">
+                            <children>
+                                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" text="%dedstartdate" />
+                            </children>
+                        </HBox>
+                        <Label contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" text="%noofinstallment" GridPane.rowIndex="6" />
+                        <E_DatePicker fx:id="dpDeductionStartDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtNoOfInstallment" disable="true" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="%amount" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="%discount" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="%tax" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="%netpayable" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+
+                        <E_NumericField fx:id="txtTotalAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <E_NumericField fx:id="txtTotalDiscount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <E_NumericField fx:id="txtTotalAmountTax" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtNetPayable" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                    </children>
+                </GridPane>
+                <HBox fx:id="hboxMaster" alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
+                    <children>
+                        <E_Button fx:id="btnSaveUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%save" />
+                        <E_Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+                            <children>
+                                <E_Button fx:id="btnInstallments" mnemonicParsing="true" styleClass="button-primary" text="%installments" />
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+            </padding>
+        </VBox>
+    </children>
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+</StackPane>

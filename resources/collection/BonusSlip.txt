@@ -1,0 +1,9 @@
+{dcsshort}
+Code: {code}
+Name: {membername}
+Period : {fromdate}-{todate}
+Qty(L): {qty}
+Amt: {amount}
+Bonus:{bonus}
+Kapaat:{kapaat}
+Net Total : {total}
