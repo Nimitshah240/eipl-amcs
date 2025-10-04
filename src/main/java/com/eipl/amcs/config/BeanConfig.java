@@ -521,7 +521,7 @@ public class BeanConfig {
 
             cashAdvanceRepository = context.getBean(CashAdvanceRepository.class);
 
-            districtRepository = context.getBean(DistrictRepository.class);
+//            districtRepository = context.getBean(DistrictRepository.class);
 
             committeeMembersRepository = context.getBean(CommitteeMembersRepository.class);
             socRepository = context.getBean(SocietyRepository.class);
