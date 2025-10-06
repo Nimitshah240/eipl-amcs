@@ -16,15 +16,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.productRequisitionRepository;
-import static com.eipl.amcs.config.BeanConfig.productRequisitionTransactionRepository;
-
 @Service
 public class ProductRequisitionServiceImpl implements ProductRequisitionService {
-//    @Autowired
-//    private ProductRequisitionRepository productRequisitionRepository;
-//    @Autowired
-//    private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
+    @Autowired
+    private ProductRequisitionRepository productRequisitionRepository;
+    @Autowired
+    private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
 
     @Override
     public List<ProductRequisition> findAll() {

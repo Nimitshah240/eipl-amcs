@@ -21,17 +21,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-import static com.eipl.amcs.config.BeanConfig.productPurchaseRateRepository;
-
 @Service
 public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateService {
-//	@Autowired
-//	private ProductPurchaseRateRepository productPurchaseRateRepository;
-//	@Autowired
-//	private ProductRepository productRepository;
-//	@Autowired
-//	private NextCodeRepository nextCodeRepository;
+	@Autowired
+	private ProductPurchaseRateRepository productPurchaseRateRepository;
+	@Autowired
+	private ProductRepository productRepository;
+	@Autowired
+	private NextCodeRepository nextCodeRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductPurchaseRateServiceImpl.class);
 

@@ -12,12 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.saleTaxRepository;
-
 @Service
 public class ProductSaleTaxServiceImpl implements ProductSaleTaxService {
-//	@Autowired
-//	private ProductSaleTaxRepository saleTaxRepository;
+
+	@Autowired
+	private ProductSaleTaxRepository saleTaxRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductSaleTaxServiceImpl.class);
 

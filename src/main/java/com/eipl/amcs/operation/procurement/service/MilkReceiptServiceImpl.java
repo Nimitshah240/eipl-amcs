@@ -38,28 +38,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class MilkReceiptServiceImpl implements MilkReceiptService {
-//    @Autowired
-//    private MilkReceiptRepository milkReceiptRepository;
-//    @Autowired
-//    private MilkReceiptTransactionRepository milkReceiptTransactionRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
-//    @Autowired
-//    private ShiftRepository shiftRepository;
-//    @Autowired
-//    private SocietyRepository societyRepository;
-//    @Autowired
-//    private MilkCollectionRepository milkCollectionRepository;
-//    @Autowired
-//    private LocalMilkSaleRepository localMilkSaleRepository;
-//    @Autowired
-//    private MilkTypeRepository milkTypeRepository;
+    
+    @Autowired
+    private MilkReceiptRepository milkReceiptRepository;
+    @Autowired
+    private MilkReceiptTransactionRepository milkReceiptTransactionRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
+    @Autowired
+    private ShiftRepository shiftRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private MilkCollectionRepository milkCollectionRepository;
+    @Autowired
+    private LocalMilkSaleRepository localMilkSaleRepository;
+    @Autowired
+    private MilkTypeRepository milkTypeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(MilkReceiptServiceImpl.class);
 

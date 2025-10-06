@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.billHeadRepository;
 
 @Service
 public class BillHeadServiceImpl implements BillHeadService {
-//    @Autowired
-//    private BillHeadRepository billHeadRepository;
+    @Autowired
+    private BillHeadRepository billHeadRepository;
 
     @Override
     public List<BillHead> findAll() {

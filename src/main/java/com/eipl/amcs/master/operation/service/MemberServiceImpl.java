@@ -43,37 +43,37 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 
 @Service
 public class MemberServiceImpl implements MemberService {
-//    @Autowired
-//    private MemberRepository memberRepository;
-//    @Autowired
-//    private MemberDetailRepository memberDetailrepository;
-//    @Autowired
-//    private MemberCreditLimitRepository memberCreditLimitRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private MemberCreditLimitTransactionRepository memberCreditLimitTxnRepository;
-//    @Autowired
-//    private MilkCollectionRepository collectionRepository;
-//    @Autowired
-//    private SocietyRepository socRepository;
-//    @Autowired
-//    private SocietyPaymentCycleRepository paymentCycleRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private LedgerRepository ledgerRepository;
-//    @Autowired
-//    private LedgerSubLedgerMappingRepository mappingRepository;
-//    @Autowired
-//    private SubLedgerRepository subLedgerRepository;
-//    @Autowired
-//    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MemberDetailRepository memberDetailrepository;
+    @Autowired
+    private MemberCreditLimitRepository memberCreditLimitRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private MemberCreditLimitTransactionRepository memberCreditLimitTxnRepository;
+    @Autowired
+    private MilkCollectionRepository collectionRepository;
+    @Autowired
+    private SocietyRepository socRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository paymentCycleRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private LedgerRepository ledgerRepository;
+    @Autowired
+    private LedgerSubLedgerMappingRepository mappingRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
 
 
     @Override

@@ -18,15 +18,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.productDispatchRepository;
-import static com.eipl.amcs.config.BeanConfig.productDispatchTransactionRepository;
-
 @Service
 public class ProductDispatchServiceImpl implements ProductDispatchService {
-//    @Autowired
-//    private ProductDispatchRepository productDispatchRepository;
-//    @Autowired
-//    private ProductDispatchTransactionRepository productDispatchTransactionRepository;
+    @Autowired
+    private ProductDispatchRepository productDispatchRepository;
+    @Autowired
+    private ProductDispatchTransactionRepository productDispatchTransactionRepository;
 
     @Override
     public List<ProductDispatch> findAll() {

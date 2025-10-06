@@ -18,15 +18,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-import static com.eipl.amcs.config.BeanConfig.productSaleRateRepository;
-
 @Service
 public class ProductSaleRateServiceImpl implements ProductSaleRateService {
-//	@Autowired
-//	private ProductSaleRateRepository productSaleRateRepository;
-//	@Autowired
-//	private NextCodeRepository nextCodeRepository;
+	@Autowired
+	private ProductSaleRateRepository productSaleRateRepository;
+	@Autowired
+	private NextCodeRepository nextCodeRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductSaleRateServiceImpl.class);
 

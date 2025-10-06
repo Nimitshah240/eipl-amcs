@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="root" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.LaunchScreenController">
+    <children>
+        <StackPane maxHeight="450.0" maxWidth="800.0" prefHeight="150.0" prefWidth="200.0" styleClass="pane-white-drop">
+            <children>
+                <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="splash">
+                    <children>
+                        <Label fx:id="lbl" alignment="CENTER" styleClass="bold" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" />
+                    </children>
+                </AnchorPane>
+            </children>
+        </StackPane>
+    </children>
+</StackPane>

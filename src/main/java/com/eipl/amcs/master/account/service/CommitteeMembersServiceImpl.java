@@ -1,25 +1,25 @@
 package com.eipl.amcs.master.account.service;
 
+import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.master.account.model.CommitteeMembers;
 import com.eipl.amcs.master.account.model.Designation;
+import com.eipl.amcs.master.account.repository.CommitteeMembersRepository;
 import com.eipl.amcs.master.org.model.Society;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.committeeMembersRepository;
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-
 @Service
 public class CommitteeMembersServiceImpl implements CommitteeMembersService {
 
-//	private CommitteeMembersRepository committeeMembersRepository;
-//	private SocietyRepository socRepository;
-//	private NextCodeRepository nextCodeRepository;
-//	private DesignationRepository designationRepository;
+	@Autowired
+	private CommitteeMembersRepository committeeMembersRepository;
+	@Autowired
+	private NextCodeRepository nextCodeRepository;
 
 
 	private static final Logger log = LoggerFactory.getLogger(CommitteeMembersServiceImpl.class);

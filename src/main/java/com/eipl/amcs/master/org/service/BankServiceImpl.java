@@ -10,12 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.bankRepository;
 
 @Service
 public class BankServiceImpl implements BankService {
-//	@Autowired
-//	private BankRepository bankRepository;
+	@Autowired
+	private BankRepository bankRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(BankServiceImpl.class);
 

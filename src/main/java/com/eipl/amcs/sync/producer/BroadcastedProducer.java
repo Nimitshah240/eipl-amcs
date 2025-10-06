@@ -15,8 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Component
 public class BroadcastedProducer {
 
@@ -24,12 +22,12 @@ public class BroadcastedProducer {
     //
 //    @Autowired
 //    private KafkaTemplate<String, Broadcasted> kafkaTemplate;
-//    @Autowired
-//    private BroadcastedRepository broadcastedRepository;
-//    @Autowired
-//    private BroadcastedLogRepository logRepository;
-//    @Autowired
-//    private RestTemplate restTemplate;
+    @Autowired
+    private BroadcastedRepository broadcastedRepository;
+    @Autowired
+    private BroadcastedLogRepository logRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Value(value = "${sync.url}")
     private String syncUrl;

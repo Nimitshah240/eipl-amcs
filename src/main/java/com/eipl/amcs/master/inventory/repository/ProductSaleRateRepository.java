@@ -6,11 +6,13 @@ import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ProductSaleRateRepository extends BaseRepository<ProductSaleRate, String> {
 
 	@Override

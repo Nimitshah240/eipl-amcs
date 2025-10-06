@@ -1,7 +1,6 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.model.LedgerMappingTaxDetail;
-import com.eipl.amcs.master.account.repository.LedgerMappingProductGroupRepository;
 import com.eipl.amcs.master.account.repository.LedgerMappingTaxDetailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,18 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.ledgerMappingTaxDetailRepository;
-
 @Service
 public class LedgerMappingTaxDetailServiceImpl implements LedgerMappingTaxDetailService {
 
-//    private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
+    @Autowired
+    private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
 
     private static final Logger log = LoggerFactory.getLogger(LedgerMappingTaxDetailServiceImpl.class);
 

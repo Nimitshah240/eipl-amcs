@@ -1,25 +1,38 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.account.model.*;
+import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.repository.MilkQualityTypeRepository;
+import com.eipl.amcs.master.global.repository.MilkTypeRepository;
+import com.eipl.amcs.master.global.repository.ShiftRepository;
 import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.repository.DockRepository;
+import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateApplicabilityRepository;
+import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.dto.MemberWiseCollectionDto;
 import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
+import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
+import com.eipl.amcs.setting.repository.HardwareDeviceConfigRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;
@@ -32,30 +45,43 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Service
 public class MilkCollectionServiceImpl implements MilkCollectionService {
 
-//    MilkCollectionRepository milkCollectionRepository;
-//    SocietyPaymentCycleRepository paymentCycleRepository;
-//    HardwareDeviceConfigRepository hardwareRepository;
-//    MemberMilkPurchaseRateApplicabilityRepository memberRateAppRepository;
-//    ShiftRepository shiftRepository;
-//    SocietyRepository societyRepository;
-//    MemberMilkPurchaseRateRepository rateRepository;
-//    DockRepository dockRepository;
-//    MemberRepository memberRepository;
-//    MilkQualityTypeRepository milkQualityRepository;
-//    MilkTypeRepository milkTypeRepository;
-//
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    private NextCodeRepository nextCodeRepository;
-//    private FinancialYearRepository financialYearRepository;
-//    private SubLedgerRepository subLedgerRepository;
-//    private VoucherRepository voucherRepository;
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private MilkCollectionRepository milkCollectionRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository paymentCycleRepository;
+    @Autowired
+    private HardwareDeviceConfigRepository hardwareRepository;
+    @Autowired
+    private ShiftRepository shiftRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MilkTypeRepository milkTypeRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private MemberMilkPurchaseRateApplicabilityRepository memberRateAppRepository;
+    @Autowired
+    private MilkQualityTypeRepository milkQualityRepository;
+    @Autowired
+    private DockRepository dockRepository;
 
     private final DateTimeFormatter CODE_DATE_FMT = DateTimeFormatter.ofPattern("yyMMdd");
 
@@ -321,7 +347,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
         return dto;
     }
 
-        @Override
+    @Override
     public Number fetchNextSampleNo(LocalDateTime dt, String dockCode) {
         Dock dock = dockRepository.findById(dockCode)
                 .orElseThrow(() -> new EntityNotFoundException(Dock.class, "invalid.dock"));

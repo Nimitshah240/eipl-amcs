@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.config.BeanConfig.shareRepository;
 
 @Service
 public class ShareServiceImpl implements ShareService {
-//    @Autowired
-//    ShareRepository shareRepository;
+
+    @Autowired
+    ShareRepository shareRepository;
 
 
     @Override

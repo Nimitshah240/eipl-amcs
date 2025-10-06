@@ -5,9 +5,11 @@ import com.eipl.amcs.master.account.model.MeetingAgenda;
 import com.eipl.amcs.master.account.model.Mom;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface MomRepository extends BaseRepository<Mom, String> {
 
 	@Override

@@ -6,10 +6,12 @@ import com.eipl.amcs.operation.inventory.model.ProductSaleTax;
 import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ProductSaleTaxRepository extends BaseRepository<ProductSaleTax, String> {
 
 	@Override

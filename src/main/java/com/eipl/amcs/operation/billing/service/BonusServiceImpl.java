@@ -22,20 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class BonusServiceImpl implements BonusService {
 
-//    @Autowired
-//    BonusRepository bonusRepository;
-//    @Autowired
-//    BonusSummaryRepository bonusSummaryRepository;
-//    @Autowired
-//    MemberRepository memberRepository;
-//
-//    @Autowired
-//    NextCodeService nextCodeService;
+    @Autowired
+    BonusRepository bonusRepository;
+    @Autowired
+    BonusSummaryRepository bonusSummaryRepository;
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    NextCodeService nextCodeService;
 
     @Override
     public List<BonusSummary> findBonusSummaryBetWeen() {

@@ -29,42 +29,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class ProductReceiptServiceImpl implements ProductReceiptService {
-//    @Autowired
-//    private ProductReceiptRepository productReceiptRepository;
-//    @Autowired
-//    private ProductReceiptTransactionRepository receiptTransRepository;
-//    @Autowired
-//    private ProductReceiptTaxRepository receiptTaxRepository;
-//    @Autowired
-//    private ProductStockRepository stockRepository;
-//    @Autowired
-//    private ProductStockTransactionRepository stockTxnRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    @Autowired
-//    private FinancialYearRepository financialYearRepository;
-//    @Autowired
-//    private SubLedgerRepository subLedgerRepository;
-//    @Autowired
-//    private VoucherRepository voucherRepository;
-//    @Autowired
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    @Autowired
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private LedgerMappingProductGroupRepository ledgerMappingProductGroupRepository;
-//    @Autowired
-//    private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
-//    @Autowired
-//    private ProductRepository productRepository;
+    @Autowired
+    private ProductReceiptRepository productReceiptRepository;
+    @Autowired
+    private ProductReceiptTransactionRepository receiptTransRepository;
+    @Autowired
+    private ProductReceiptTaxRepository receiptTaxRepository;
+    @Autowired
+    private ProductStockRepository stockRepository;
+    @Autowired
+    private ProductStockTransactionRepository stockTxnRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private LedgerMappingProductGroupRepository ledgerMappingProductGroupRepository;
+    @Autowired
+    private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public List<ProductReceipt> findAll(LocalDate fromDt, LocalDate toDt) {

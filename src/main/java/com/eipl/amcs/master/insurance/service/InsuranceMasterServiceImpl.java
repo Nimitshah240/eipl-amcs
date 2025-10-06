@@ -15,17 +15,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class InsuranceMasterServiceImpl implements InsuranceMasterService {
 
-////    @Autowired
-//    private InsuranceMasterRepository insuranceMasterRepository;
-////    @Autowired
-//    private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
-////    @Autowired
-//    private InsuranceDetailRepository insuranceDetailRepository;
+    @Autowired
+    private InsuranceMasterRepository insuranceMasterRepository;
+    @Autowired
+    private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
+    @Autowired
+    private InsuranceDetailRepository insuranceDetailRepository;
 
     private static final Logger log = LoggerFactory.getLogger(InsuranceMasterServiceImpl.class);
 
@@ -60,6 +59,7 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
 //        }
         return insuranceDetailRepository.customSave(insuranceDetail, identityInfo);
     }
+
     @Override
     public InsuranceDetail saveDetailsFinalize(InsuranceDetail insuranceDetail, String identityInfo) {
         insuranceDetail.setInitData();

@@ -13,16 +13,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-import static com.eipl.amcs.config.BeanConfig.shareRateRepository;
-
 @Service
 public class ShareRateServiceImpl implements ShareRateService {
-//    @Autowired
-//    ShareRateRepository shareRateRepository;
-//
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
+
+    @Autowired
+    ShareRateRepository shareRateRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
 
     @Override
     public List<ShareRate> findAll() {

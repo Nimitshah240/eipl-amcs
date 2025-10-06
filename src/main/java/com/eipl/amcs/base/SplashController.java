@@ -2,7 +2,6 @@ package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.service.IdentityService;
-import com.eipl.amcs.config.BeanConfig;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -69,14 +68,7 @@ public class SplashController implements MyInitialization {
 
     public SplashController() {
         try {
-            formulaRepository = context.getBean(FormulaRepository.class);
-            societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
-            memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
-            milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
-            milkTypeService = context.getBean(MilkTypeService.class);
-            rateTypeService = context.getBean(RateTypeService.class);
-            shiftService = context.getBean(ShiftService.class);
-            identityService = context.getBean(IdentityService.class);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +78,15 @@ public class SplashController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         createAndSetLocale();
-        BeanConfig.settingBean();
+
+        formulaRepository = context.getBean(FormulaRepository.class);
+        societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
+        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
+        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
+        milkTypeService = context.getBean(MilkTypeService.class);
+        rateTypeService = context.getBean(RateTypeService.class);
+        shiftService = context.getBean(ShiftService.class);
+        identityService = context.getBean(IdentityService.class);
 
         var task = new AppInitTask();
         task.setOnSucceeded(e -> {
@@ -148,6 +148,8 @@ public class SplashController implements MyInitialization {
 
 
             try {
+                MainApp.systemId = MainApp.getProperty(AppConstant.Props.SYSTEM_ID, "ABC");
+                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/auth/Login.fxml")));
 
                 RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
                 String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
@@ -158,6 +160,20 @@ public class SplashController implements MyInitialization {
                         MainApp.identityDto.getIdentity().getToken(), contentRate);
                 ResponseEntity<RealTimeResponse> response;
                 RealTimeResponse responseRate;
+
+//----------------------------------------------------------------------------------------------------------
+//                CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+//                    // Long-running task
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        Thread.currentThread().interrupt();
+//                    }
+//                    return "Task Completed!";
+//                });
+
+//                future.thenAccept(result -> System.out.println("Result: " + result));
+//----------------------------------------------------------------------------------------------------------
 
                 //shift
                 List<Shift> shiftList = shiftService.findAll();
@@ -532,8 +548,6 @@ public class SplashController implements MyInitialization {
                 e.printStackTrace();
             }
 
-            MainApp.systemId = MainApp.getProperty(AppConstant.Props.SYSTEM_ID, "ABC");
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/auth/Login.fxml")));
 
         }
 // -- MERGING ------------------------------------------
@@ -615,8 +629,9 @@ public class SplashController implements MyInitialization {
         @Override
         protected Boolean call() throws Exception {
             try {
-                EmcsAppContext.initializeEmcsAppContext();
-                return EmcsAppContext.getContext() != null;
+//                EmcsAppContext.initializeEmcsAppContext();
+//                return EmcsAppContext.getContext() != null;
+                return true;
             } catch (Exception e) {
                 LOGGER.error("AppInitTask: ", e);
             }

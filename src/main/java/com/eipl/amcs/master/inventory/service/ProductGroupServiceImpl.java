@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.productGroupRepository;
-
 @Service
 public class ProductGroupServiceImpl implements ProductGroupService {
-//	@Autowired
-//	private ProductGroupRepository productGroupRepository;
+	@Autowired
+	private ProductGroupRepository productGroupRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductGroupServiceImpl.class);
 

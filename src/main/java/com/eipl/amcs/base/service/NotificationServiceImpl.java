@@ -1,7 +1,6 @@
 package com.eipl.amcs.base.service;
 
 import com.eipl.amcs.base.Notification;
-import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,17 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.notificationRepository;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-//    private NotificationRepository notificationRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
 
 

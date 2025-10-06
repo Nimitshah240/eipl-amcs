@@ -1,27 +1,23 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.model.LedgerMappingBillHead;
-import com.eipl.amcs.master.account.repository.LedgerGroupRepository;
 import com.eipl.amcs.master.account.repository.LedgerMappingBillHeadRepository;
-import com.eipl.amcs.master.account.repository.LedgerTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.ledgerMappingBillHeadRepository;
 
 @Service
 public class LedgerMappingBillHeadServiceImpl implements LedgerMappingBillHeadService {
 
-//    private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
+    @Autowired
+    private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
 
     private static final Logger log = LoggerFactory.getLogger(LedgerMappingBillHeadServiceImpl.class);
 

@@ -77,88 +77,86 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Service
 public class BroadcastedService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastedService.class);
 
-//    @Autowired
-//    private BroadcastedProducer producer;
-//    @Autowired
-//    private BroadcastedRepository broadcastedRepository;
-//    @Autowired
-//    private SubscribedRepository subscribedRepository;
-//    @Autowired
-//    private BroadcastedLogRepository logRepository;
-//    @Autowired
-//    private SocietyRepository societyRepository;
-//    @Autowired
-//    private ProductRequisitionService productRequisitionService;
-//    @Autowired
-//    private ProductRequisitionTransactionService productRequisitionTransactionService;
-//    @Autowired
-//    private ProductDispatchTransactionService productDispatchTransactionService;
-//    @Autowired
-//    private ProductDispatchService productDispatchService;
-//    @Autowired
-//    private NotificationRepository notificationRepository;
-//    @Autowired
-//    private ProductGroupRepository productGroupRepository;
-//    @Autowired
-//    private ProductRepository productRepository;
-//    @Autowired
-//    private ManualRequestRepository manualRequestRepository;
-//    @Autowired
-//    private DpuIncentiveRequestRepository dpuIncentiveRequestRepository;
-//    @Autowired
-//    private AllowDcsManualCollectionRangeRepository allowDcsManualCollectionRangeRepository;
-//    @Autowired
-//    private MilkCollectionService milkCollectionService;
-//    @Autowired
-//    private MemberRepository memberRepository;
-//    @Autowired
-//    private MemberDetailRepository memberDetailRepository;
-//    @Autowired
-//    private MilkDispatchRepository dispatchRepository;
-//    @Autowired
-//    private MilkDispatchTransactionRepository milkDispatchTransactionRepository;
-//    @Autowired
-//    private SocietyPaymentCycleRepository paymentCycleRepository;
-//    @Autowired
-//    private ProductRequisitionRepository productRequisitionRepository;
-//    @Autowired
-//    private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
-//    @Autowired
-//    private ProductDispatchRepository productDispatchRepository;
-//    @Autowired
-//    private CustomerRepository customerRepository;
-//    @Autowired
-//    private ShiftRepository shiftRepository;
-//    @Autowired
-//    private MilkTypeRepository milkTypeRepository;
-//    @Autowired
-//    private MilkQualityTypeRepository milkQualityTypeRepository;
-//    @Autowired
-//    private MilkReceiptRepository milkReceiptRepository;
-//    @Autowired
-//    private MilkReceiptTransactionRepository milkReceiptTransactionRepository;
-//    @Autowired
-//    private MilkDispatchService milkDispatchService;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
-//
-//    @Autowired
-//    private InsuranceDetailRepository insuranceDetailRepository;
-//
-//    @Autowired
-//    private InsuranceMasterRepository insuranceMasterRepository;
-//
-//    @Autowired
-//    private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
+    @Autowired
+    private BroadcastedProducer producer;
+    @Autowired
+    private BroadcastedRepository broadcastedRepository;
+    @Autowired
+    private SubscribedRepository subscribedRepository;
+    @Autowired
+    private BroadcastedLogRepository logRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private ProductRequisitionService productRequisitionService;
+    @Autowired
+    private ProductRequisitionTransactionService productRequisitionTransactionService;
+    @Autowired
+    private ProductDispatchTransactionService productDispatchTransactionService;
+    @Autowired
+    private ProductDispatchService productDispatchService;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private ProductGroupRepository productGroupRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ManualRequestRepository manualRequestRepository;
+    @Autowired
+    private DpuIncentiveRequestRepository dpuIncentiveRequestRepository;
+    @Autowired
+    private AllowDcsManualCollectionRangeRepository allowDcsManualCollectionRangeRepository;
+    @Autowired
+    private MilkCollectionService milkCollectionService;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MemberDetailRepository memberDetailRepository;
+    @Autowired
+    private MilkDispatchRepository dispatchRepository;
+    @Autowired
+    private MilkDispatchTransactionRepository milkDispatchTransactionRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository paymentCycleRepository;
+    @Autowired
+    private ProductRequisitionRepository productRequisitionRepository;
+    @Autowired
+    private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
+    @Autowired
+    private ProductDispatchRepository productDispatchRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private ShiftRepository shiftRepository;
+    @Autowired
+    private MilkTypeRepository milkTypeRepository;
+    @Autowired
+    private MilkQualityTypeRepository milkQualityTypeRepository;
+    @Autowired
+    private MilkReceiptRepository milkReceiptRepository;
+    @Autowired
+    private MilkReceiptTransactionRepository milkReceiptTransactionRepository;
+    @Autowired
+    private MilkDispatchService milkDispatchService;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
+
+    @Autowired
+    private InsuranceDetailRepository insuranceDetailRepository;
+
+    @Autowired
+    private InsuranceMasterRepository insuranceMasterRepository;
+
+    @Autowired
+    private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
 
 
     ObjectMapper mapper = new ObjectMapper();

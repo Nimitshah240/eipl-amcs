@@ -3,8 +3,11 @@ package com.eipl.amcs.master.org.service;
 import com.eipl.amcs.master.org.dto.DockDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.DockMilkType;
+import com.eipl.amcs.master.org.repository.DockMilkTypeRepository;
+import com.eipl.amcs.master.org.repository.DockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +17,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.config.BeanConfig.dockMilkTypeRepository;
-import static com.eipl.amcs.config.BeanConfig.dockRepository;
-
 @Service
 public class DockServiceImpl implements DockService {
-//	@Autowired
-//	private DockRepository dockRepository;
-//	@Autowired
-//	private DockMilkTypeRepository dockMilkTypeRepository;
+
+	@Autowired
+	private DockRepository dockRepository;
+	@Autowired
+	private DockMilkTypeRepository dockMilkTypeRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DockServiceImpl.class);
 

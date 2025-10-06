@@ -3,8 +3,11 @@ package com.eipl.amcs;
 import com.eipl.amcs.auth.dto.IdentityDto;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.FxmlLoaderUtil;
+import com.eipl.amcs.base.LaunchScreenController;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.model.SentBoxCountTask;
+import com.eipl.amcs.config.AppConfig;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.FinancialYear;
@@ -40,6 +43,7 @@ import java.net.URLClassLoader;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,7 +96,7 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         try {
-            context = SpringApplication.run(MainApp.class, args);
+            context = SpringApplication.run(AppConfig.class, args);
             launch(args);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -177,20 +181,8 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-
-//        try {
-//            InetAddress inetAddress = InetAddress.getByName("localhost");
-//            int port = 13690;
-//            SocketAddress socketAddress = new InetSocketAddress(inetAddress, port);
-//            socket.bind(socketAddress);
-//            socket.connect(socketAddress);
-//        } catch (Exception e) {
-//            System.exit(0);
-//        }
-
         MainApp.stage = stage;
         LOGGER.info("MainApp init start");
-        createAndSetLocale();
         // Application screen load
         Parent root = FXMLLoader.load(getClass().getResource("view/EmcsApp.fxml"));
         Scene scene = new Scene(root);
@@ -201,6 +193,26 @@ public class MainApp extends Application {
         stage.getIcons().add(new Image(getClass().getResource("view/images/logo-small.png").toExternalForm()));
         stage.show();
 
+        //----------------------------------------------------------------------------------------------------------
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                EmcsAppContext.initializeEmcsAppContext();
+                context = EmcsAppContext.getContext();
+            } catch (Exception e) {
+                Thread.currentThread().interrupt();
+            }
+            return "Task Completed!";
+        });
+
+        future.thenAccept(result -> {
+            Platform.runLater(() -> {
+                System.out.println("Result: " + result);
+                MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/Splash.fxml")));
+            });
+        });
+
+
+        createAndSetLocale();
         loadProperties();
 
 
@@ -216,7 +228,7 @@ public class MainApp extends Application {
 
         fxmlLoaderUtil = new FxmlLoaderUtil();
         // Splash screen load
-        MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/Splash.fxml")));
+        MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/LaunchScreen.fxml")));
 
         contentPane.centerProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

@@ -32,27 +32,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-//    @Autowired
-//    private CustomerRepository customerRepository;
-//    @Autowired
-//    private CustomerDetailsRepository customerDetailrepository;
-//    @Autowired
-//    private SocietyRepository socRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private LedgerRepository ledgerRepository;
-//    @Autowired
-//    private LedgerSubLedgerMappingRepository mappingRepository;
-//    @Autowired
-//    private SubLedgerRepository subLedgerRepository;
-//    @Autowired
-//    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerDetailsRepository customerDetailrepository;
+    @Autowired
+    private SocietyRepository socRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private LedgerRepository ledgerRepository;
+    @Autowired
+    private LedgerSubLedgerMappingRepository mappingRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
 
     @Override
     public List<Customer> findAll() {

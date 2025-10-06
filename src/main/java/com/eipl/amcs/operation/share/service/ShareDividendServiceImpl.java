@@ -17,15 +17,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-import static com.eipl.amcs.config.BeanConfig.shareDividendRepository;
 
 @Service
 public class ShareDividendServiceImpl implements ShareDividendService {
-//    @Autowired
-//    ShareDividendRepository shareDividendRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    ShareDividendRepository shareDividendRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
 
 
     @Override

@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.societyMilkPurchaseRateApplicabilityRepository;
-
 @Service
 public class SocietyMilkPurchaseRateApplicabilityServiceImpl implements SocietyMilkPurchaseRateApplicabilityService {
 
-//	@Autowired
-//	private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
+	@Autowired
+	private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(SocietyMilkPurchaseRateApplicabilityServiceImpl.class);
 

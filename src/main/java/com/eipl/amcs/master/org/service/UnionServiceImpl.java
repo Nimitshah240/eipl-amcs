@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.unionRepository;
 
 @Service
 public class UnionServiceImpl implements UnionService {
-//	@Autowired
-//	private UnionRepository unionRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(UnionServiceImpl.class);
+    @Autowired
+    private UnionRepository unionRepository;
 
-	@Override
-	public List<Union> findAll() {
-		List<Union> list = unionRepository.findAll(Sort.by("name"));
-		log.info("Unions findAll {} items fetched", list.size());
-		return list;
-	}
+    private static final Logger log = LoggerFactory.getLogger(UnionServiceImpl.class);
+
+    @Override
+    public List<Union> findAll() {
+        List<Union> list = unionRepository.findAll(Sort.by("name"));
+        log.info("Unions findAll {} items fetched", list.size());
+        return list;
+    }
 }

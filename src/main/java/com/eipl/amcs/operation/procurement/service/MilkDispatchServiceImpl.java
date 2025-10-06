@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -37,39 +38,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class MilkDispatchServiceImpl implements MilkDispatchService {
-//    @Autowired
-//    private MilkDispatchRepository dispatchRepository;
-//    @Autowired
-//    private MilkDispatchTransactionRepository milkDispatchTransactionRepository;
-//    //	@Autowired
-////	private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
-//    @Autowired
-//    private ShiftRepository shiftRepository;
-//    @Autowired
-//    private SocietyRepository societyRepository;
-//    @Autowired
-//    private MilkCollectionRepository milkCollectionRepository;
-//    @Autowired
-//    private LocalMilkSaleRepository localMilkSaleRepository;
-//    @Autowired
-//    private MilkTypeRepository milkTypeRepository;
+    @Autowired
+    private MilkDispatchRepository dispatchRepository;
+    @Autowired
+    private MilkDispatchTransactionRepository milkDispatchTransactionRepository;
+    @Autowired
+    private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
+    @Autowired
+    private ShiftRepository shiftRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private MilkCollectionRepository milkCollectionRepository;
+    @Autowired
+    private LocalMilkSaleRepository localMilkSaleRepository;
+    @Autowired
+    private MilkTypeRepository milkTypeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(MilkDispatchServiceImpl.class);
 
     @Override
     // @Cacheable(value = "MilkDispatchsCache")
     public List<MilkDispatch> findAll() {
-        List<MilkDispatch> list = dispatchRepository.findAll(Sort.by("fromDate","toDate").descending());
+        List<MilkDispatch> list = dispatchRepository.findAll(Sort.by("fromDate", "toDate").descending());
         for (MilkDispatch milkDispatch : list) {
-            milkDispatch.setFromShift(Hibernate.unproxy(milkDispatch.getFromShift(),Shift.class));
-            milkDispatch.setToShift(Hibernate.unproxy(milkDispatch.getToShift(),Shift.class));
-            milkDispatch.setSociety(Hibernate.unproxy(milkDispatch.getSociety(),Society.class));
+            milkDispatch.setFromShift(Hibernate.unproxy(milkDispatch.getFromShift(), Shift.class));
+            milkDispatch.setToShift(Hibernate.unproxy(milkDispatch.getToShift(), Shift.class));
+            milkDispatch.setSociety(Hibernate.unproxy(milkDispatch.getSociety(), Society.class));
             milkDispatch.setUnion(Hibernate.unproxy(milkDispatch.getUnion(), Union.class));
         }
         log.info("MilkDispatchs findAll {} items fetched", list.size());
@@ -115,7 +113,7 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
                 String[] code = list.getTxnCode().split("T");
                 txnCnt = Integer.parseInt(code[1]);
                 list.setupdateData();
-                milkDispatchTransactionRepository.customUpdate(list,identityInfo);
+                milkDispatchTransactionRepository.customUpdate(list, identityInfo);
             }
         }
         return milkDispatch;
@@ -158,7 +156,7 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
         SocietyMilkPurchaseRate rate = null;
         if (appList != null) {
             rate = appList.get(0).getSocietyMilkPurchaseRate();
-            rate.setShift(Hibernate.unproxy(rate.getShift(),Shift.class));
+            rate.setShift(Hibernate.unproxy(rate.getShift(), Shift.class));
         }
         return rate;
     }
@@ -202,7 +200,7 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
             dto.setMilkBalance(dto.getMilkCollection().subtract(dto.getMilkSale()));
             dto.setAmount(listCollection != null && !listCollection.isEmpty() ?
                     BigDecimal.valueOf(listCollection.stream().filter(p -> p.getMilkType().getCode() == milkType.getCode())
-                    .mapToDouble(m -> m.getAmount().doubleValue()).sum()).setScale(3, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+                            .mapToDouble(m -> m.getAmount().doubleValue()).sum()).setScale(3, RoundingMode.HALF_UP) : BigDecimal.ZERO);
             dto.setFat(BigDecimal.valueOf(kgFatSum / dto.getMilkCollection().doubleValue() * 100));
             list.add(dto);
         }

@@ -15,12 +15,14 @@ import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
+import com.eipl.amcs.master.geo.service.DistrictService;
 import com.eipl.amcs.master.global.convertor.UnitConvertor;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
 import com.eipl.amcs.master.inventory.convertor.ProductGroupConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
+import com.eipl.amcs.master.inventory.service.ProductService;
 import com.eipl.amcs.master.inventory.task.ProductGroupByIdLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductNumberLoadTask;
@@ -28,6 +30,7 @@ import com.eipl.amcs.master.inventory.task.ProductSaveTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.CustomerCodeLoadTask;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -39,6 +42,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -46,6 +50,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class ProductAddEditController implements MyInitialization {
     @FXML
@@ -65,6 +71,12 @@ public class ProductAddEditController implements MyInitialization {
     private StringBuilder errorMsg = null;
     private Product dto = null;
     private List<Unit> unitList = new ArrayList<>();
+
+    private ProductService productService;
+
+    public ProductAddEditController() {
+        productService = context.getBean(ProductService.class);
+    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -183,33 +195,52 @@ public class ProductAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        var task = new ProductSaveTask(dto, (short) 0);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
+//        MERGING ---------------------------------------------------------------------------
 
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                        resourceBundle.getString("product.insert.successful"));
-                alert.createAlert();
-                this.callback.reloadData(true);
-                this.stage.close();
+        Product product = productService.save(dto, null);
+        if (product != null) {
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                    resourceBundle.getString("product.insert.successful"));
+            alert.createAlert();
+            this.callback.reloadData(true);
+            this.stage.close();
+        } else {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                    "Fail");
+            alert.createAlert();
+        }
 
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+//        MERGING ---------------------------------------------------------------------------
+
+
+
+//        var task = new ProductSaveTask(dto, (short) 0);
+//        task.setOnSucceeded(e -> {
+//            try {
+//                Object obj = task.get();
+//                if (obj instanceof ApiError) {
+//                    ApiError error = (ApiError) obj;
+//                    StringBuilder sb = new StringBuilder();
+//
+//                    for (ApiValidationError subError : error.getSubErrors()) {
+//                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+//                    }
+//                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
+//                            sb.toString());
+//                    alert.createAlert();
+//                    return;
+//                }
+//                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
+//                        resourceBundle.getString("product.insert.successful"));
+//                alert.createAlert();
+//                this.callback.reloadData(true);
+//                this.stage.close();
+//
+//            } catch (InterruptedException | ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task).start();
     }
 
     @Override

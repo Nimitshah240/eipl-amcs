@@ -1,6 +1,5 @@
 package com.eipl.amcs.base.service;
 
-import com.eipl.amcs.auth.repository.UserRepository;
 import com.eipl.amcs.base.Identity;
 import com.eipl.amcs.base.repository.IdentityRepository;
 import org.slf4j.Logger;
@@ -8,19 +7,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.identityRepository;
 
 @Service
 public class IdentityDetailsServiceImpl implements IdentityDetailsService {
 
-/*
+    @Autowired
     private IdentityRepository identityRepository;
-*/
+
 
     private static final Logger log = LoggerFactory.getLogger(IdentityDetailsServiceImpl.class);
 

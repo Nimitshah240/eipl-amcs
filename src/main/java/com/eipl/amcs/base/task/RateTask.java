@@ -1,20 +1,22 @@
 package com.eipl.amcs.base.task;
 
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
-import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
-import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
-import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateApplicability;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.service.MilkQualityTypeService;
+import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.global.service.RateTypeService;
+import com.eipl.amcs.master.global.service.ShiftService;
 import com.eipl.amcs.master.operation.model.Formula;
-import com.eipl.amcs.master.procurement.dto.*;
+import com.eipl.amcs.master.operation.repository.FormulaRepository;
+import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
+import com.eipl.amcs.master.procurement.dto.SocietyMilkPurchaseRateDto;
+import com.eipl.amcs.master.procurement.model.*;
 import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
+import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
 import com.eipl.amcs.utils.AppConstant;
@@ -22,6 +24,7 @@ import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -35,9 +38,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 public class RateTask extends Task<Void> {
+
+    @Autowired
+    private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
+    @Autowired
+    private ShiftService shiftService;
+    @Autowired
+    private RateTypeService rateTypeService;
+    @Autowired
+    private MilkTypeService milkTypeService;
+    @Autowired
+    private MilkQualityTypeService milkQualityTypeService;
+    @Autowired
+    private FormulaRepository formulaRepository;
+    @Autowired
+    private MemberMilkPurchaseRateService memberMilkPurchaseRateService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RateTask.class);
 
     @Override
@@ -193,7 +210,7 @@ public class RateTask extends Task<Void> {
 
                     url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
                     List<String> listRateDetails = new ArrayList<>();
-                    for (MilkType milkType :milkTypeList) {
+                    for (MilkType milkType : milkTypeList) {
                         Map<String, String> contentRateDetail = new HashMap<>();
                         contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
                         contentRateDetail.put("milkQualityTypeCode", "1");

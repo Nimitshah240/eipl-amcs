@@ -46,31 +46,45 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Service
 public class MemberBillServiceImpl implements MemberBillService {
 
-//    @Autowired
-//    private MemberBillSummaryRepository summaryRepository;
-//    @Autowired
-//    private MemberBillRepository billRepository;
-//    @Autowired
-//    private MemberBillTransactionRepository transactionRepository;
-//    @Autowired
-//    private SocietyPaymentCycleRepository paymentCycleRepository;
-//    @Autowired
-//    private MemberRepository memberRepository;
-//    @Autowired
-//    private MemberDetailRepository memberDetailRepository;
-//    @Autowired
-//    private BillHeadRepository billHeadRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private SocietyRepository societyRepository;
-//    @Autowired
-//    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private MemberBillSummaryRepository summaryRepository;
+    @Autowired
+    private MemberBillRepository billRepository;
+    @Autowired
+    private MemberBillTransactionRepository transactionRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository paymentCycleRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MemberDetailRepository memberDetailRepository;
+    @Autowired
+    private BillHeadRepository billHeadRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
 
     @Override
     public List<MemberBillSummary> findMemberBillSummaryBetWeen(LocalDate fromDate, LocalDate toDate) {
@@ -85,6 +99,7 @@ public class MemberBillServiceImpl implements MemberBillService {
         }
         return memberBillSummaryList;
     }
+
     @Override
     public List<MemberBillSummary> findMemberBillSummaryBetWeenFromDateAndToDate(LocalDate fromDate, LocalDate toDate) {
         List<SocietyPaymentCycle> list = paymentCycleRepository.findByFromDateBetween(
@@ -638,7 +653,8 @@ public class MemberBillServiceImpl implements MemberBillService {
     @Override
     public Boolean disburse(SocietyPaymentCycle paymentCycle, List<String> memberList, String identityHeader) {
         paymentCycle.setBilling(true);
-        paymentCycleRepository.customUpdate(paymentCycle, "");List<MemberBill> memberBillList = billRepository.findByPaymentCycle(paymentCycle);
+        paymentCycleRepository.customUpdate(paymentCycle, "");
+        List<MemberBill> memberBillList = billRepository.findByPaymentCycle(paymentCycle);
         String voucherNo = nextCodeRepository.getNextCode("Voucher", "code", memberBillList.get(0).getSociety().getCode(), 1);
 
         for (MemberBill memberBill : memberBillList) {
@@ -659,7 +675,7 @@ public class MemberBillServiceImpl implements MemberBillService {
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(memberBill.getDisbursedDate());
 
             voucherNo = nextCodeService.getNextCode("Voucher", "code",
-                    memberBill.getSociety().getCode()+"/"+financialYear.get().getCode()+"/", 6);
+                    memberBill.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 6);
             memberBill.setVoucherNo(voucherNo);
             createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo);
 
@@ -672,31 +688,14 @@ public class MemberBillServiceImpl implements MemberBillService {
             billRepository.save(memberBill);
         }
         //for (String string : memberList) {
-            //Member member = memberRepository.getById(string);
-            //MemberBill mb = billRepository.findByMember(member);
-            //mb.setStatus((short) 6);
-            //mb.setDisbursedDate(LocalDate.now());
-            //save(mb);
+        //Member member = memberRepository.getById(string);
+        //MemberBill mb = billRepository.findByMember(member);
+        //mb.setStatus((short) 6);
+        //mb.setDisbursedDate(LocalDate.now());
+        //save(mb);
         //}
         return true;
     }
-
-//    @Autowired
-//    private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
-//    @Autowired
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private FinancialYearRepository financialYearRepository;
-//    @Autowired
-//    private SubLedgerRepository subLedgerRepository;
-//    @Autowired
-//    private VoucherRepository voucherRepository;
-//    @Autowired
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    @Autowired
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
 
     private String createVoucher(MemberBill memberBill, List<LedgerMappingBillHead> ledgerMappingBillHeads, String identityInfo, String voucherNo) {
         try {
@@ -726,11 +725,11 @@ public class MemberBillServiceImpl implements MemberBillService {
             // Debit Txn
             LedgerMappingEvent ledgerMapping = null;
             // cash
-            if(memberBill.getPaymentMode() == 0) {
-                ledgerMapping = eventsList.stream().filter(p->p.getEvents().getCode() == 20)
+            if (memberBill.getPaymentMode() == 0) {
+                ledgerMapping = eventsList.stream().filter(p -> p.getEvents().getCode() == 20)
                         .findFirst().orElse(null);
             } else {
-                ledgerMapping = eventsList.stream().filter(p->p.getEvents().getCode() == 21)
+                ledgerMapping = eventsList.stream().filter(p -> p.getEvents().getCode() == 21)
                         .findFirst().orElse(null);
             }
             VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, memberBill.getNetAmount(), false,

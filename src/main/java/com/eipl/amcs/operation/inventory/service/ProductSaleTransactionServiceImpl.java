@@ -16,64 +16,65 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Service
 public class ProductSaleTransactionServiceImpl implements ProductSaleTransactionService {
-//	@Autowired
-//	private ProductSaleTransactionRepository saleTransRepository;
-//
-//	@Autowired
-//	private ProductSaleRepository productSaleRepository;
-//	@Autowired
-//	private ProductSaleTaxRepository productSaleTaxRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductSaleTransactionServiceImpl.class);
+    @Autowired
+    private ProductSaleTransactionRepository saleTransRepository;
+    @Autowired
+    private ProductSaleRepository productSaleRepository;
+    @Autowired
+    private ProductSaleTaxRepository productSaleTaxRepository;
+    @Autowired
+    private ProductSaleTaxRepository saleTaxRepository;
 
-	@Override
-	public List<ProductSaleTransaction> findAll() {
-		List<ProductSaleTransaction> list = saleTransRepository.findAll(Sort.by("invoiceTransactionNo"));
-		log.info("ProductSaleToMemberTransactions findAll {} items fetched", list.size());
-		return list;
-	}
 
-	@Override
-	public ProductSaleTransaction save(ProductSaleTransaction productSaleToMemberTransaction) {
-		return saleTransRepository.save(productSaleToMemberTransaction);
-	}
+    private static final Logger log = LoggerFactory.getLogger(ProductSaleTransactionServiceImpl.class);
 
-	@Override
-	public ProductSaleTransaction update(ProductSaleTransaction productSaleToMemberTransaction) {
-		return saleTransRepository.save(productSaleToMemberTransaction);
-	}
+    @Override
+    public List<ProductSaleTransaction> findAll() {
+        List<ProductSaleTransaction> list = saleTransRepository.findAll(Sort.by("invoiceTransactionNo"));
+        log.info("ProductSaleToMemberTransactions findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public Optional<ProductSaleTransaction> findById(String code) {
-		return saleTransRepository.findById(code);
-	}
+    @Override
+    public ProductSaleTransaction save(ProductSaleTransaction productSaleToMemberTransaction) {
+        return saleTransRepository.save(productSaleToMemberTransaction);
+    }
 
-	@Override
-	public void delete(String code) {
-		saleTransRepository.deleteById(code);
-	}
+    @Override
+    public ProductSaleTransaction update(ProductSaleTransaction productSaleToMemberTransaction) {
+        return saleTransRepository.save(productSaleToMemberTransaction);
+    }
 
-	@Override
-	@Transactional
-	public void delete(ProductSaleTransaction productSaleToMemberTransaction) {
-		saleTransRepository.deleteById(productSaleToMemberTransaction.getInvoiceTxnNo());
-	}
+    @Override
+    public Optional<ProductSaleTransaction> findById(String code) {
+        return saleTransRepository.findById(code);
+    }
 
-	@Override
-	public List<SaleTxnTaxDto> findByProductSale(String code) {
-		List<ProductSaleTransaction> listTrans = saleTransRepository
-				.findByProductSale(productSaleRepository.findById(code).orElse(null));
-		List<SaleTxnTaxDto> listDto = new ArrayList<>();
-		for (int i = 0; i < listTrans.size(); i++) {
-			SaleTxnTaxDto dto = new SaleTxnTaxDto();
-			dto.setTransaction(listTrans.get(i));
-			dto.setSaleTaxList(saleTaxRepository.findByproductSaleTransaction(listTrans.get(i)));
-			listDto.add(dto);
-		}
-		return listDto;
-	}
+    @Override
+    public void delete(String code) {
+        saleTransRepository.deleteById(code);
+    }
+
+    @Override
+    @Transactional
+    public void delete(ProductSaleTransaction productSaleToMemberTransaction) {
+        saleTransRepository.deleteById(productSaleToMemberTransaction.getInvoiceTxnNo());
+    }
+
+    @Override
+    public List<SaleTxnTaxDto> findByProductSale(String code) {
+        List<ProductSaleTransaction> listTrans = saleTransRepository
+                .findByProductSale(productSaleRepository.findById(code).orElse(null));
+        List<SaleTxnTaxDto> listDto = new ArrayList<>();
+        for (int i = 0; i < listTrans.size(); i++) {
+            SaleTxnTaxDto dto = new SaleTxnTaxDto();
+            dto.setTransaction(listTrans.get(i));
+            dto.setSaleTaxList(saleTaxRepository.findByproductSaleTransaction(listTrans.get(i)));
+            listDto.add(dto);
+        }
+        return listDto;
+    }
 }

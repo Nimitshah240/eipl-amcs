@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.dtlRepository;
 
 @Service
 public class MemberMilkPurchaseRateDetailServiceImpl implements MemberMilkPurchaseRateDetailService {
 
-//	@Autowired
-//	private MemberMilkPurchaseRateDetailRepository dtlRepository;
+	@Autowired
+	private MemberMilkPurchaseRateDetailRepository dtlRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(MemberMilkPurchaseRateDetailServiceImpl.class);
 

@@ -14,18 +14,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.productRequisitionRepository;
-import static com.eipl.amcs.config.BeanConfig.productRequisitionTransactionRepository;
-
 @Service
 public class ProductRequisitionTransactionServiceImpl implements ProductRequisitionTransactionService {
-//    @Autowired
-//    private ProductRequisitionRepository productRequisitionRepository;
 
-//    @Autowired
-//    private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
-//    @Autowired
-//    private ProductRequisitionTransactionService productRequisitionTransactionService;
+    @Autowired
+    private ProductRequisitionRepository productRequisitionRepository;
+    @Autowired
+    private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
+    @Autowired
+    private ProductRequisitionTransactionService productRequisitionTransactionService;
 
     @Override
     public List<ProductRequisitionTransaction> findAll() {

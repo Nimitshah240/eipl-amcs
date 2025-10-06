@@ -1,28 +1,23 @@
 package com.eipl.amcs.master.account.service;
 
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
 import com.eipl.amcs.master.account.repository.*;
-import com.eipl.amcs.master.operation.repository.MemberRepository;
-import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.voucherTypeLedgerConfigRepository;
 
 @Service
 public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConfigService {
 
-//    private VoucherTypeLedgerConfigRepository voucherTypeLedgerConfigRepository;
+    @Autowired
+    private VoucherTypeLedgerConfigRepository voucherTypeLedgerConfigRepository;
 
     private static final Logger log = LoggerFactory.getLogger(VoucherTypeLedgerConfigServiceImpl.class);
 

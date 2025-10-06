@@ -21,15 +21,18 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class MeetingAgendaServiceImpl implements MeetingAgendaService {
 
-//    private MeetingAgendaRepository meetingAgendaRepository;
-//    private MomRepository momRepository;
-//    private MomActionRepository momActionRepository;
-//    private NextCodeService nextCodeService;
+    @Autowired
+    private MeetingAgendaRepository meetingAgendaRepository;
+    @Autowired
+    private MomRepository momRepository;
+    @Autowired
+    private MomActionRepository momActionRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
 
     private static final Logger log = LoggerFactory.getLogger(MeetingAgendaServiceImpl.class);
 

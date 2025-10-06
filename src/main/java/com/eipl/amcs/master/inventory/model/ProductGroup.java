@@ -2,6 +2,7 @@ package com.eipl.amcs.master.inventory.model;
 
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.master.global.model.Unit;
+import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,4 +34,10 @@ public class ProductGroup extends BaseModel {
 	public String getTableName() {
 		return "product_groups";
 	}
+
+	@Override
+	public String toString() {
+		return CommonUtils.getLocalString(this.name, this.nameLocal);
+	}
+
 }

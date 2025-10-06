@@ -1,7 +1,6 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.model.SubLedgerLedgerConfig;
-import com.eipl.amcs.master.account.repository.StaffSalaryRepository;
 import com.eipl.amcs.master.account.repository.SubLedgerLedgerConfigRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,19 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.subLedgerLedgerConfigRepository;
 
 @Service
 public class SubLedgerLedgerConfigServiceImpl implements SubLedgerLedgerConfigService {
 
-//    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
+    @Autowired
+    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
 
     private static final Logger log = LoggerFactory.getLogger(SubLedgerLedgerConfigServiceImpl.class);
 

@@ -9,13 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.productDispatchTransactionRepository;
-
 @Service
 public class ProductDispatchTransactionServiceImpl implements ProductDispatchTransactionService{
 
-//    @Autowired
-//    private ProductDispatchTransactionRepository productDispatchTransactionRepository;
+    @Autowired
+    private ProductDispatchTransactionRepository productDispatchTransactionRepository;
 
 
     @Override

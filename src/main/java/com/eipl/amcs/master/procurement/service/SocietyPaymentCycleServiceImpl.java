@@ -23,16 +23,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-import static com.eipl.amcs.config.BeanConfig.societyPaymentCycleRepository;
 
 @Service
 public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleService {
 
-//    @Autowired
-//    private SocietyPaymentCycleRepository societyPaymentCycleRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository societyPaymentCycleRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
 
     @PersistenceContext
     EntityManager entityManager;

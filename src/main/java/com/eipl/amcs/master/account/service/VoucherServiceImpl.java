@@ -15,26 +15,31 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Service
 public class VoucherServiceImpl implements VoucherService {
 
-//    private NextCodeService nextCodeService;
-//    private MemberRepository memberRepository;
-//    private ProductSaleInstallmentRepository installmentRepository;
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    private FinancialYearRepository financialYearRepository;
-//    private SubLedgerRepository subLedgerRepository;
-//    private VoucherRepository voucherRepository;
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
 
     private static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
 

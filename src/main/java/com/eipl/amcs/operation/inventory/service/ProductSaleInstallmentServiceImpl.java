@@ -16,14 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.installmentRepository;
-
 @Service
 public class ProductSaleInstallmentServiceImpl implements ProductSaleInstallmentService {
-//	@Autowired
-//	private ProductSaleInstallmentRepository installmentRepository;
-//	@Autowired
-//	private SocietyPaymentCycleRepository paymentCycleRepository;
+	@Autowired
+	private ProductSaleInstallmentRepository installmentRepository;
+	@Autowired
+	private SocietyPaymentCycleRepository paymentCycleRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductSaleInstallmentServiceImpl.class);
 

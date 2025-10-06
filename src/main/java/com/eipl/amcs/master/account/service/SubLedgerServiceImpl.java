@@ -1,38 +1,36 @@
 package com.eipl.amcs.master.account.service;
 
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerSubLedgerMapping;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.master.account.repository.LedgerSubLedgerMappingRepository;
-import com.eipl.amcs.master.account.repository.SubLedgerOpeningBalanceRepository;
 import com.eipl.amcs.master.account.repository.SubLedgerRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
-import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class SubLedgerServiceImpl implements SubLedgerService {
 
-//    private LedgerRepository ledgerRepository;
-//    private SubLedgerRepository subLedgerRepository;
-//    private SocietyRepository societyRepository;
-//    private LedgerSubLedgerMappingRepository ledgerSubLedgerMappingRepository;
-//    private SubLedgerService subLedgerService;
+    @Autowired
+    private LedgerRepository ledgerRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private LedgerSubLedgerMappingRepository ledgerSubLedgerMappingRepository;
+
 
     private static final Logger log = LoggerFactory.getLogger(SubLedgerServiceImpl.class);
 

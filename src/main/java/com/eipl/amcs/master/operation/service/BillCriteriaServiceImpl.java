@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.billCriteriaRepository;
 
 @Service
 public class BillCriteriaServiceImpl implements BillCriteriaService {
-//    @Autowired
-//    private BillCriteriaRepository billCriteriaRepository;
+    @Autowired
+    private BillCriteriaRepository billCriteriaRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BillCriteriaController.class);
 

@@ -61,18 +61,7 @@ public class ProductController {
 
 	@PostMapping
 	public ResponseEntity<Product> createProduct(@RequestHeader Map<String, String> headers, @RequestBody Product dto) {
-//        try {
-//            LOGGER.info("Product save method");
-//            dto = service.save(dto);
-//            if (dto == null)
-//                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-//            return new ResponseEntity<>(dto, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            LOGGER.error(e.getMessage());
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
 		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-
 	}
 
 	@PutMapping

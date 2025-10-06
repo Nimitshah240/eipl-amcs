@@ -21,19 +21,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class LocalMilkSaleRateServiceImpl implements LocalMilkSaleRateService {
 
-//	@Autowired
-//	private LocalMilkSaleRateRepository localMilkSaleRateRepository;
-//	@Autowired
-//	private NextCodeRepository nextCodeRepository;
-//	@Autowired
-//	private MilkTypeRepository milkTypeRepository;
-//	@Autowired
-//	private MilkClassRepository milkClassRepository;
+	@Autowired
+	private LocalMilkSaleRateRepository localMilkSaleRateRepository;
+	@Autowired
+	private NextCodeRepository nextCodeRepository;
+	@Autowired
+	private MilkTypeRepository milkTypeRepository;
+	@Autowired
+	private MilkClassRepository milkClassRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(LocalMilkSaleRateServiceImpl.class);
 

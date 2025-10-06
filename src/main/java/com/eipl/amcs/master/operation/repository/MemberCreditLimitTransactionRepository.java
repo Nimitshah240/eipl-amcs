@@ -3,9 +3,11 @@ package com.eipl.amcs.master.operation.repository;
 import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.operation.model.MemberCreditLimitTransaction;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface MemberCreditLimitTransactionRepository extends BaseRepository<MemberCreditLimitTransaction, String> {
 
 	@Override

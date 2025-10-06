@@ -10,19 +10,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.bmcRunningHoursRepository;
-import static com.eipl.amcs.config.BeanConfig.nextCodeService;
-
 @Service
 public class BmcRunningHoursServiceImpl implements BmcRunningHoursService {
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    private final BmcRunningHoursRepository bmcRunningHoursRepository;
-
-//    @Autowired
-//    public BmcRunningHoursServiceImpl(BmcRunningHoursRepository repository) {
-//        this.bmcRunningHoursRepository = bmcRunningHoursRepository;
-//    }
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private BmcRunningHoursRepository bmcRunningHoursRepository;
 
     @Override
     public List<BmcRunningHours> getAllBmcRunningHours() {

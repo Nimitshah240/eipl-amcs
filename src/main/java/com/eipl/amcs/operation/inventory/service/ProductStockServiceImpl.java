@@ -13,16 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.productRepository;
-import static com.eipl.amcs.config.BeanConfig.stockRepository;
-
 @Service
 public class ProductStockServiceImpl implements ProductStockService {
-//	@Autowired
-//	private ProductStockRepository stockRepository;
 
-//	@Autowired
-//	private ProductRepository productRepository;
+	@Autowired
+	private ProductStockRepository stockRepository;
+	@Autowired
+	private ProductRepository productRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductStockServiceImpl.class);
 

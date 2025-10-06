@@ -28,32 +28,33 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
-//    @Autowired
-//    private LocalMilkSaleRepository localMilkSaleRepository;
-//    @Autowired
-//    private SocietyPaymentCycleRepository societyPaymentCycleRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private MemberCreditLimitRepository creditLimitRepository;
-//    @Autowired
-//    private MemberCreditLimitTransactionRepository memberCreditLimitTxnRepository;
-//    @Autowired
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    @Autowired
-//    private FinancialYearRepository financialYearRepository;
-//    @Autowired
-//    private SubLedgerRepository subLedgerRepository;
-//    @Autowired
-//    private VoucherRepository voucherRepository;
-//    @Autowired
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    @Autowired
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private LocalMilkSaleRepository localMilkSaleRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository societyPaymentCycleRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private MemberCreditLimitRepository creditLimitRepository;
+    @Autowired
+    private MemberCreditLimitTransactionRepository memberCreditLimitTxnRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private MemberCreditLimitRepository memberCreditLimitRepository;
 
     @Override
     public List<LocalMilkSale> findAll(LocalDateTime fromDt, LocalDateTime toDt) {

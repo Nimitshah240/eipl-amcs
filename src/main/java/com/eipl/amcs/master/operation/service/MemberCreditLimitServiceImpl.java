@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.memberCreditLimitRepository;
-
 @Service
 public class MemberCreditLimitServiceImpl implements MemberCreditLimitService {
-//	@Autowired
-//	private MemberCreditLimitRepository memberCreditLimitRepository;
+	@Autowired
+	private MemberCreditLimitRepository memberCreditLimitRepository;
 
 	@Override
 	public Optional<MemberCreditLimit> findByConsumerCodeAndConsumerType(String consumerCode, Short consumerType) {

@@ -1,20 +1,21 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.model.LedgerType;
+import com.eipl.amcs.master.account.repository.LedgerTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.typeRepository;
-
 @Service
 public class LedgerTypeServiceImpl implements LedgerTypeService {
 
-//	private LedgerTypeRepository typeRepository;
+    @Autowired
+    private LedgerTypeRepository typeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(LedgerTypeServiceImpl.class);
 

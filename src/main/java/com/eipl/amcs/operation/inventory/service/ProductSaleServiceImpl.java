@@ -46,60 +46,60 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class ProductSaleServiceImpl implements ProductSaleService {
-//    @Autowired
-//    private ProductSaleRepository productSaleRepository;
-//    @Autowired
-//    private ProductSaleTransactionRepository saleTransRepository;
-//    @Autowired
-//    private ProductSaleTaxRepository saleTaxRepository;
-//    @Autowired
-//    private ProductStockRepository stockRepository;
-//    @Autowired
-//    private ProductStockTransactionRepository stockTxnRepository;
-//    @Autowired
-//    private ProductSaleInstallmentRepository installmentRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private MemberRepository memberRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private MemberCreditLimitRepository memberCreditLimitRepository;
-//    @Autowired
-//    private MemberCreditLimitTransactionRepository memberCreditLimitTxnRepository;
-//    @Autowired
-//    private SocietyRepository societyRepository;
-//    @Autowired
-//    private UnionRepository unionRepository;
-//    @Autowired
-//    private SocietyPaymentCycleRepository paymentCycleRepository;
-//    @Autowired
-//    private DockRepository dockRepository;
-//
-//    @Autowired
-//    private VoucherRepository voucherRepository;
-//    @Autowired
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    @Autowired
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
-//    @Autowired
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    @Autowired
-//    private LedgerMappingProductGroupRepository ledgerMappingProductGroupRepository;
-//    @Autowired
-//    private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
-//    @Autowired
-//    private FinancialYearRepository financialYearRepository;
-//    @Autowired
-//    private SubLedgerRepository subLedgerRepository;
-//
-//    @Autowired
-//    private ProductRepository productRepository;
+
+    @Autowired
+    private ProductSaleRepository productSaleRepository;
+    @Autowired
+    private ProductSaleTransactionRepository saleTransRepository;
+    @Autowired
+    private ProductSaleTaxRepository saleTaxRepository;
+    @Autowired
+    private ProductStockRepository stockRepository;
+    @Autowired
+    private ProductStockTransactionRepository stockTxnRepository;
+    @Autowired
+    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private MemberCreditLimitRepository memberCreditLimitRepository;
+    @Autowired
+    private MemberCreditLimitTransactionRepository memberCreditLimitTxnRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
+    @Autowired
+    private UnionRepository unionRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository paymentCycleRepository;
+    @Autowired
+    private DockRepository dockRepository;
+
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private LedgerMappingProductGroupRepository ledgerMappingProductGroupRepository;
+    @Autowired
+    private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public List<ProductSale> findAll(LocalDate fromDt, LocalDate toDt) {

@@ -20,22 +20,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class GeneralConfigServiceImpl implements GeneralConfigService {
-//    @Autowired
-//    private GeneralConfigRepository generalConfigRepository;
-//    @Autowired
-//    private GeneralConfigAuditRepository auditRepository;
-//    @Autowired
-//    private NextCodeRepository nextCodeRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-//    @Autowired
-//    private BroadcastedRepository broadcastedRepository;
-//    @Autowired
-//    private SocietyRepository societyRepository;
+    @Autowired
+    private GeneralConfigRepository generalConfigRepository;
+    @Autowired
+    private GeneralConfigAuditRepository auditRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private BroadcastedRepository broadcastedRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
 
     //    private final EntityManager entityManager;
     private ObjectMapper objMapper;

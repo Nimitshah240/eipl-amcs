@@ -1,22 +1,27 @@
 package com.eipl.amcs.master.account.service;
 
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
+import com.eipl.amcs.master.account.repository.LedgerOpeningBalanceRepository;
 import com.eipl.amcs.master.org.model.Society;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.ledgerOpeningBalanceRepository;
-import static com.eipl.amcs.config.BeanConfig.nextCodeService;
-
 @Service
 public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceService {
+    @Autowired
+    private LedgerOpeningBalanceRepository ledgerOpeningBalanceRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+
 
     private static final Logger log = LoggerFactory.getLogger(LedgerOpeningBalanceServiceImpl.class);
 
@@ -36,7 +41,7 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
         String code = nextCodeService.getNextCode("LedgerOpeningBalance", "code", ledgerOpeningBalance.getSociety().getCode(), 0);
         ledgerOpeningBalance.setCode(code);
         ledgerOpeningBalance.setInitData();
-        ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(),Society.class));
+        ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(), Society.class));
         ledgerOpeningBalance = ledgerOpeningBalanceRepository.customSave(ledgerOpeningBalance, identityInfo);
         return ledgerOpeningBalance;
     }
@@ -45,7 +50,7 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
     @Override
     public LedgerOpeningBalance update(LedgerOpeningBalance ledgerOpeningBalance, String identityInfo) {
         ledgerOpeningBalance.setupdateData();
-        ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(),Society.class));
+        ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(), Society.class));
         return ledgerOpeningBalanceRepository.customUpdate(ledgerOpeningBalance, identityInfo);
     }
 
@@ -58,14 +63,14 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
     @Override
     public void delete(String code, String identityInfo) {
         LedgerOpeningBalance l = ledgerOpeningBalanceRepository.findById(code).orElseThrow();
-        l.setSociety(Hibernate.unproxy(l.getSociety(),Society.class));
+        l.setSociety(Hibernate.unproxy(l.getSociety(), Society.class));
         ledgerOpeningBalanceRepository.customDelete(l, identityInfo);
     }
 
 
     @Override
     public void delete(LedgerOpeningBalance ledgerOpening, String identityInfo) {
-        ledgerOpening.setSociety(Hibernate.unproxy(ledgerOpening.getSociety(),Society.class));
+        ledgerOpening.setSociety(Hibernate.unproxy(ledgerOpening.getSociety(), Society.class));
         ledgerOpeningBalanceRepository.customDelete(ledgerOpening, identityInfo);
     }
 
@@ -95,7 +100,7 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
                     String code = nextCodeService.getNextCode("LedgerOpeningBalance", "code", item.getSociety().getCode(), 0);
                     item.setCode(code);
                     item.setInitData();
-                    item.setSociety(Hibernate.unproxy(item.getSociety(),Society.class));
+                    item.setSociety(Hibernate.unproxy(item.getSociety(), Society.class));
                     led = ledgerOpeningBalanceRepository.customSave(item, header);
                     list.add(led);
                 }

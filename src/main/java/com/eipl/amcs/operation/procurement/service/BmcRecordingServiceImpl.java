@@ -9,20 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.bmcRecordingRepository;
-import static com.eipl.amcs.config.BeanConfig.nextCodeService;
 
 @Service
 public class BmcRecordingServiceImpl implements BmcRecordingService {
 
-//    private final BmcRecordingRepository bmcRecordingRepository;
-//    @Autowired
-//    private NextCodeService nextCodeService;
-
-//    @Autowired
-//    public BmcRecordingServiceImpl(BmcRecordingRepository bmcRecordingRepository) {
-//        this.bmcRecordingRepository = bmcRecordingRepository;
-//    }
+    @Autowired
+    private  BmcRecordingRepository bmcRecordingRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
 
     @Override
     public List<BmcRecording> getAllBmcRecordings() {

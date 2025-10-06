@@ -1,17 +1,22 @@
 package com.eipl.amcs.master.account.service;
 
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.master.account.dto.CashAdvanceDto;
 import com.eipl.amcs.master.account.model.*;
+import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
+import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.util.CommonUtil;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;
@@ -20,21 +25,29 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
-
 @Service
 public class CashAdvanceServiceImpl implements CashAdvanceService {
 
-//    private CashAdvanceRepository cashAdvanceRepository;
-//    private NextCodeService nextCodeService;
-//    private MemberRepository memberRepository;
-//    private ProductSaleInstallmentRepository installmentRepository;
-//    private LedgerMappingEventRepository ledgerMappingEventRepository;
-//    private FinancialYearRepository financialYearRepository;
-//    private SubLedgerRepository subLedgerRepository;
-//    private VoucherRepository voucherRepository;
-//    private VoucherTransactionRepository voucherTxnRepository;
-//    private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private CashAdvanceRepository cashAdvanceRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
+    @Autowired
+    private VoucherSubLedgerRepository voucherSubLedgerRepository;
 
     private static final Logger log = LoggerFactory.getLogger(CashAdvanceServiceImpl.class);
 
@@ -67,7 +80,8 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
             installmentRepository.customSave(productSaleInstallment, identityInfo);
             i++;
         }
-        createAutoPosting(cashAdvance, cashAdvance.getVoucherNo());cashAdvanceRepository.save(cashAdvance);
+        createAutoPosting(cashAdvance, cashAdvance.getVoucherNo());
+        cashAdvanceRepository.save(cashAdvance);
         return null;
 
     }
@@ -111,7 +125,8 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
                 voucherTxnRepository.delete(voucherTransaction);
             }
             voucherRepository.delete(voucher.get());
-        }cashAdvanceRepository.deleteById(cashAdvanceNo);
+        }
+        cashAdvanceRepository.deleteById(cashAdvanceNo);
     }
 
 
@@ -141,7 +156,8 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
                 voucherTxnRepository.delete(voucherTransaction);
             }
             voucherRepository.delete(voucher.get());
-        }cashAdvanceRepository.delete(cashAdvance.getCashAdvance());
+        }
+        cashAdvanceRepository.delete(cashAdvance.getCashAdvance());
     }
 
 
@@ -154,7 +170,7 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
 
             if (voucherCode == null) {
                 voucherCode = nextCodeService.getNextCode("Voucher", "code",
-                        cashAdvance.getSociety().getCode()+"/"+financialYear.get().getCode()+"/", 6);
+                        cashAdvance.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 6);
                 if (voucherCode == null) return;
 
 
@@ -190,8 +206,8 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
                     txn.setVoucher(voucher);
                     voucherTxnRepository.save(txn);
                     tc++;
-                    if (eventsList.get(0).getDebitSubLedger()!=null?eventsList.get(0).getDebitSubLedger():false) {
-                        Optional<SubLedger> sl = subLedgerRepository.findByReferenceCodeAndType(cashAdvance.getMember().getCode(),(short) 0);
+                    if (eventsList.get(0).getDebitSubLedger() != null ? eventsList.get(0).getDebitSubLedger() : false) {
+                        Optional<SubLedger> sl = subLedgerRepository.findByReferenceCodeAndType(cashAdvance.getMember().getCode(), (short) 0);
                         if (sl.isPresent()) {
                             VoucherSubLedger vSubLedger = new VoucherSubLedger();
                             vSubLedger.setCode(txn.getCode() + "S1");

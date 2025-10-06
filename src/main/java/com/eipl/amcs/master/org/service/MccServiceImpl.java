@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.mccRepository;
 
 @Service
 public class MccServiceImpl implements MccService {
 
-//	@Autowired
-//	private MccRepository mccRepository;
+	@Autowired
+	private MccRepository mccRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(MccServiceImpl.class);
 

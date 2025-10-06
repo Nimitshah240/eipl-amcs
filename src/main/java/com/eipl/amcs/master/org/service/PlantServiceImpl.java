@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.plantRepository;
 
 @Service
 public class PlantServiceImpl implements PlantService {
-//	@Autowired
-//	private PlantRepository plantRepository;
+
+	@Autowired
+	private PlantRepository plantRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(PlantServiceImpl.class);
 

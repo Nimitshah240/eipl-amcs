@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.receiptTaxRepository;
 
 @Service
 public class ProductReceiptTaxServiceImpl implements ProductReceiptTaxService {
-//	@Autowired
-//	private ProductReceiptTaxRepository receiptTaxRepository;
+
+	@Autowired
+	private ProductReceiptTaxRepository receiptTaxRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductReceiptTaxServiceImpl.class);
 

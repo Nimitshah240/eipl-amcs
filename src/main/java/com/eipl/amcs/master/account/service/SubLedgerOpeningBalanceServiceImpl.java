@@ -1,29 +1,28 @@
 package com.eipl.amcs.master.account.service;
 
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
+import com.eipl.amcs.master.account.repository.SubLedgerOpeningBalanceRepository;
 import com.eipl.amcs.master.org.model.Society;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.nextCodeService;
-import static com.eipl.amcs.config.BeanConfig.subLedgerOpeningBalanceRepository;
-
 @Service
 public class SubLedgerOpeningBalanceServiceImpl implements SubLedgerOpeningBalanceService {
 
-//    private SubLedgerOpeningBalanceRepository subLedgerOpeningBalanceRepository;
-//    private NextCodeService nextCodeService;
-    //	@Autowired
-//	private MemberRepository memberRepository;
-//    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private SubLedgerOpeningBalanceRepository subLedgerOpeningBalanceRepository;
+    @Autowired
+    private NextCodeService nextCodeService;
 
     private static final Logger log = LoggerFactory.getLogger(SubLedgerOpeningBalanceServiceImpl.class);
 
@@ -45,14 +44,14 @@ public class SubLedgerOpeningBalanceServiceImpl implements SubLedgerOpeningBalan
         String code = nextCodeService.getNextCode("SubLedgerOpeningBalance", "code", subLedgerOpeningBalance.getSociety().getCode(), 0);
         subLedgerOpeningBalance.setCode(code);
         subLedgerOpeningBalance.setInitData();
-        subLedgerOpeningBalanceRepository.customSave(subLedgerOpeningBalance,identityInfo);
+        subLedgerOpeningBalanceRepository.customSave(subLedgerOpeningBalance, identityInfo);
         return null;
     }
 
 
     @Override
     public SubLedgerOpeningBalance update(SubLedgerOpeningBalance subLedgerOpeningBalance, String identityInfo) {
-        return subLedgerOpeningBalanceRepository.customUpdate(subLedgerOpeningBalance,identityInfo);
+        return subLedgerOpeningBalanceRepository.customUpdate(subLedgerOpeningBalance, identityInfo);
     }
 
 
@@ -64,14 +63,14 @@ public class SubLedgerOpeningBalanceServiceImpl implements SubLedgerOpeningBalan
     @Override
     public void delete(String code, String identityInfo) {
         SubLedgerOpeningBalance balance = subLedgerOpeningBalanceRepository.findById(code).orElseThrow();
-        balance.setSociety(Hibernate.unproxy(balance.getSociety(),Society.class));
-        subLedgerOpeningBalanceRepository.customDelete(balance,identityInfo);
+        balance.setSociety(Hibernate.unproxy(balance.getSociety(), Society.class));
+        subLedgerOpeningBalanceRepository.customDelete(balance, identityInfo);
     }
 
 
     @Override
     public void delete(SubLedgerOpeningBalance ledgerOpening, String identityInfo) {
-        subLedgerOpeningBalanceRepository.customDelete(ledgerOpening,identityInfo);
+        subLedgerOpeningBalanceRepository.customDelete(ledgerOpening, identityInfo);
     }
 
     @Override
@@ -108,9 +107,9 @@ public class SubLedgerOpeningBalanceServiceImpl implements SubLedgerOpeningBalan
             }
         });
         for (SubLedgerOpeningBalance subLedgerOpeningBalance : list) {
-            subLedgerOpeningBalance.setSubLedger(Hibernate.unproxy(subLedgerOpeningBalance.getSubLedger(),SubLedger.class));
-            subLedgerOpeningBalance.setSociety(Hibernate.unproxy(subLedgerOpeningBalance.getSociety(),Society.class));
-            subLedgerOpeningBalance.setLedger(Hibernate.unproxy(subLedgerOpeningBalance.getLedger(),Ledger.class));
+            subLedgerOpeningBalance.setSubLedger(Hibernate.unproxy(subLedgerOpeningBalance.getSubLedger(), SubLedger.class));
+            subLedgerOpeningBalance.setSociety(Hibernate.unproxy(subLedgerOpeningBalance.getSociety(), Society.class));
+            subLedgerOpeningBalance.setLedger(Hibernate.unproxy(subLedgerOpeningBalance.getLedger(), Ledger.class));
         }
         return list;
     }

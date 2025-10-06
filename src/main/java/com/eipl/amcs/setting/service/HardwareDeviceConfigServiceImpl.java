@@ -10,15 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.hardwareRepository;
-import static com.eipl.amcs.config.BeanConfig.nextCodeRepository;
-
 @Service
 public class HardwareDeviceConfigServiceImpl implements HardwareDeviceConfigService {
-//	@Autowired
-//	private HardwareDeviceConfigRepository hardwareRepository;
-//	@Autowired
-//	private NextCodeRepository nextCodeRepository;
+
+	@Autowired
+	private HardwareDeviceConfigRepository hardwareRepository;
+	@Autowired
+	private NextCodeRepository nextCodeRepository;
 
 	@Override
 	public List<HardwareDeviceConfig> findAll() {

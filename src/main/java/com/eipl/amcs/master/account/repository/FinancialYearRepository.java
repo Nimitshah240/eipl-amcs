@@ -4,11 +4,13 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface FinancialYearRepository extends BaseRepository<FinancialYear, String> {
 
 	@Override

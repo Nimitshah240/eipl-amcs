@@ -4,12 +4,14 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface LocalMilkSaleRepository extends BaseRepository<LocalMilkSale, String> {
 
 	@Override

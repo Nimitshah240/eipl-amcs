@@ -10,12 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.routeRepository;
-
 @Service
 public class RouteServiceImpl implements RouteService {
-//	@Autowired
-//	private RouteRepository routeRepository;
+
+	@Autowired
+	private RouteRepository routeRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(RouteServiceImpl.class);
 

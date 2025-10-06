@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.bmcRepository;
 
 @Service
 public class BmcServiceImpl implements BmcService {
-//	@Autowired
-//	private BmcRepository bmcRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(BmcServiceImpl.class);
+    @Autowired
+    private BmcRepository bmcRepository;
 
-	@Override
-	public List<Bmc> findAll() {
-		List<Bmc> list = bmcRepository.findAll(Sort.by("name"));
-		log.info("Bmcs findAll {} items fetched", list.size());
-		return list;
-	}
+    private static final Logger log = LoggerFactory.getLogger(BmcServiceImpl.class);
+
+    @Override
+    public List<Bmc> findAll() {
+        List<Bmc> list = bmcRepository.findAll(Sort.by("name"));
+        log.info("Bmcs findAll {} items fetched", list.size());
+        return list;
+    }
 }

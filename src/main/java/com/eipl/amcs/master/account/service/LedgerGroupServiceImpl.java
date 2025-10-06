@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.account.service;
 
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.LedgerGroup;
 import com.eipl.amcs.master.account.model.LedgerType;
-import com.eipl.amcs.master.account.repository.*;
+import com.eipl.amcs.master.account.repository.LedgerGroupRepository;
+import com.eipl.amcs.master.account.repository.LedgerTypeRepository;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,19 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
-
-import static com.eipl.amcs.MainApp.context;
-import static com.eipl.amcs.config.BeanConfig.ledgerGroupRepository;
-import static com.eipl.amcs.config.BeanConfig.typeRepository;
 
 @Service
 public class LedgerGroupServiceImpl implements LedgerGroupService {
 
-//    private LedgerGroupRepository ledgerGroupRepository;
-//    private LedgerTypeRepository typeRepository;
+    @Autowired
+    private LedgerGroupRepository ledgerGroupRepository;
+    @Autowired
+    private LedgerTypeRepository typeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(LedgerGroupServiceImpl.class);
 

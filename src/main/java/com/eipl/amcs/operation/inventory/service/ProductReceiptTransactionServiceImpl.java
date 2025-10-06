@@ -16,16 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.eipl.amcs.config.BeanConfig.*;
 
 @Service
 public class ProductReceiptTransactionServiceImpl implements ProductReceiptTransactionService {
-//	@Autowired
-//	private ProductReceiptTransactionRepository receiptTransRepository;
-//	@Autowired
-//	private ProductReceiptRepository productReceiptRepository;
-//	@Autowired
-//	private ProductReceiptTaxRepository receiptTaxRepository;
+	@Autowired
+	private ProductReceiptTransactionRepository receiptTransRepository;
+	@Autowired
+	private ProductReceiptRepository productReceiptRepository;
+	@Autowired
+	private ProductReceiptTaxRepository receiptTaxRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(ProductReceiptTransactionServiceImpl.class);
 

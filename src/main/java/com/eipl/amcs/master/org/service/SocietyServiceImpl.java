@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eipl.amcs.config.BeanConfig.societyRepository;
-
 @Service
 public class SocietyServiceImpl implements SocietyService {
-//	@Autowired
-//	private SocietyRepository societyRepository;
+	@Autowired
+	private SocietyRepository societyRepository;
 
 	private static final Logger log = LoggerFactory.getLogger(SocietyServiceImpl.class);
 
