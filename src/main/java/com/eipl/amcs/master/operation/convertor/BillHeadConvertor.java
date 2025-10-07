@@ -1,7 +1,6 @@
 package com.eipl.amcs.master.operation.convertor;
 
 import com.eipl.amcs.master.operation.model.BillHead;
-import com.eipl.amcs.master.operation.model.Member;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 

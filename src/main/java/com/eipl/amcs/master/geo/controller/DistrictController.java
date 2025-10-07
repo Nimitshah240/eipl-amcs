@@ -5,8 +5,6 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.service.DistrictService;
-import com.eipl.amcs.master.geo.service.StateService;
-import com.eipl.amcs.master.geo.task.DistrictLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -16,12 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -46,7 +42,7 @@ public class DistrictController implements MyInitialization {
         return root;
     }
 
-    public DistrictController(){
+    public DistrictController() {
         districtService = context.getBean(DistrictService.class);
     }
 
@@ -80,17 +76,5 @@ public class DistrictController implements MyInitialization {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-//        var task = new DistrictLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<District> list = task.get();
-//                if (list != null)
-//                    tableDistricts.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
     }
 }

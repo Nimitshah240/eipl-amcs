@@ -4,12 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.operation.model.BillHead;
-import com.eipl.amcs.master.operation.task.BillHeadDeleteTask;
-import com.eipl.amcs.master.operation.task.BillHeadLoadTask;
+import com.eipl.amcs.master.operation.service.BillHeadService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,7 +27,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class BillHeadController implements MyInitialization, PopupCallback {
     @FXML
@@ -46,7 +47,12 @@ public class BillHeadController implements MyInitialization, PopupCallback {
 
     private ResourceBundle resourceBundle;
 
+    private BillHeadService service;
+    private NextCodeService nextCodeService;
+
     public BillHeadController() {
+        service = context.getBean(BillHeadService.class);
+        nextCodeService = context.getBean(NextCodeService.class);
         this.propBillHeadDto = new SimpleObjectProperty<>();
     }
 
@@ -55,14 +61,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         return root;
     }
 
-
-    /**
-     * @param url
-     * @param resourceBundle
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - set actions on add,edit and delete btn.
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -111,11 +109,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         }
     }
 
-    /**
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - added line to bind the selected bill head to the propBillHeadDto
-     */
     @Override
     public void setupTable() {
         try {
@@ -134,26 +127,15 @@ public class BillHeadController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        tableBillHead.setItems(null);
-        var task = new BillHeadLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<BillHead> list = task.get();
-                if (list != null) tableBillHead.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            tableBillHead.setItems(null);
+            List<BillHead> list = service.findAll();
+            if (list != null) tableBillHead.setItems(FXCollections.observableList(list));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    /**
-     * Delete bill head data which don't have isDefault = true.
-     * This method calls the billHeadDeleteLoadTask to delete bill head and then reload new data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void deleteData() {
         try {
@@ -163,22 +145,8 @@ public class BillHeadController implements MyInitialization, PopupCallback {
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
                 BillHead billHead = propBillHeadDto.get();
                 if (billHead != null) {
-                    var task = new BillHeadDeleteTask(billHead.getCode());
-                    task.setOnSucceeded(e -> {
-                        try {
-                            Boolean respDelete = task.get();
-                            if (respDelete == null || respDelete.booleanValue() == false) {
-                                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
-                                        resourceBundle.getString("error.occurred"));
-                                alert1.createAlert();
-                                return;
-                            }
-                            loadData();
-                        } catch (InterruptedException | ExecutionException ex) {
-                            ex.printStackTrace();
-                        }
-                    });
-                    new Thread(task).start();
+                    service.delete(billHead.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
                 }
             }
         } catch (Exception e) {
@@ -186,12 +154,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         }
     }
 
-    /**
-     * This method helps to reload data after saving or updating bill head.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void reloadData(boolean flag) {
         if (flag) loadData();

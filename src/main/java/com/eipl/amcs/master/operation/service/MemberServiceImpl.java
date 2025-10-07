@@ -44,12 +44,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-
 @Service
 public class MemberServiceImpl implements MemberService {
-
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberRepository repository;
     @Autowired
     private MemberDetailRepository memberDetailrepository;
     @Autowired
@@ -78,20 +76,20 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> findAll() {
-        return memberRepository.findAll(Sort.by("code"));
+        return repository.findAll(Sort.by("code"));
     }
 
     @Override
     public List<Member> findAllBySociety(String societyCode) {
         Society society = socRepository.findById(societyCode)
                 .orElseThrow(() -> new EntityNotFoundException(Society.class, "societycode", "invalid.society"));
-        return memberRepository.findAllBySociety(society, Sort.by("code"));
+        return repository.findAllBySociety(society, Sort.by("code"));
     }
 
     @Override
     @Transactional
     public MemberDto save(MemberDto memberDto, String identityInfo) {
-        Optional<Member> memberData = memberRepository.findById(memberDto.getMember().getCode());
+        Optional<Member> memberData = repository.findById(memberDto.getMember().getCode());
         if (memberData.isPresent()) {
             throw new BusinessValidationFailException(Member.class,
                     CommonUtil.getFieldError("Member", "code", memberDto.getMember().getCode(), "code.not.valid"));
@@ -101,7 +99,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = memberDto.getMember();
         member.setInitData();
-        memberDtoNew.setMember(memberRepository.customSave(member, identityInfo));
+        memberDtoNew.setMember(repository.customSave(member, identityInfo));
 
         MemberDetail memberDetail = memberDto.getMemberDetail();
 
@@ -153,7 +151,7 @@ public class MemberServiceImpl implements MemberService {
         List<MemberImportDto> list = new ArrayList<>();
         dtoList.forEach(item -> {
             try {
-                Optional<Member> memberData = memberRepository.findById(item.getMember().getCode());
+                Optional<Member> memberData = repository.findById(item.getMember().getCode());
                 if (memberData.isPresent()) {
                     Member memberOld = memberData.get();
                     memberOld.setFirstName(item.getMember().getFirstName());
@@ -173,7 +171,7 @@ public class MemberServiceImpl implements MemberService {
                     memberOld.setMobileNo(!item.getMember().getMobileNo().equalsIgnoreCase("") ? item.getMember().getMobileNo() : memberOld.getMobileNo());
                     memberOld.setxCol1(item.getMember().getxCol1());
                     memberOld.setupdateData();
-                    memberRepository.customUpdate(memberOld, header);
+                    repository.customUpdate(memberOld, header);
 
                     MemberDetail memberDetailOld = memberDetailrepository.findById(item.getMemberDetail().getCode())
                             .get();
@@ -220,7 +218,7 @@ public class MemberServiceImpl implements MemberService {
 //                        }
 //                    }
 
-                    Member memberNew = memberRepository.customSave(member, header);
+                    Member memberNew = repository.customSave(member, header);
 
                     MemberDetail memberDetail = item.getMemberDetail();
                     memberDetail.setCode(member.getCode());
@@ -275,11 +273,11 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public MemberDto update(MemberDto memberDto, String identityInfo) {
         MemberDto dtoNew = new MemberDto();
-        Optional<Member> old = memberRepository.findById(memberDto.getMember().getCode());
+        Optional<Member> old = repository.findById(memberDto.getMember().getCode());
 
         Member member = memberDto.getMember();
         member.setupdateData();
-        dtoNew.setMember(memberRepository.customUpdate(member, identityInfo));
+        dtoNew.setMember(repository.customUpdate(member, identityInfo));
 
         MemberDetail memberDetail = memberDto.getMemberDetail();
         memberDetail.setupdateData();
@@ -303,12 +301,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Optional<Member> findById(String code) {
-        return memberRepository.findById(code);
+        return repository.findById(code);
     }
 
     @Override
     public MemberDetail findDetailByMemberCode(String code) {
-        Member member = memberRepository.findById(code)
+        Member member = repository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(Member.class, "invalid.membercode"));
         MemberDetail dtl = memberDetailrepository.findByMember(member)
                 .orElseThrow(() -> new EntityNotFoundException(MemberDetail.class, "invalid.membercode"));
@@ -318,7 +316,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void delete(String code, String identityInfo) {
-        Member member = memberRepository.findById(code)
+        Member member = repository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(Member.class, "invalid.membercode"));
         MemberDetail detail = memberDetailrepository.findByMember(member)
                 .orElseThrow(() -> new EntityNotFoundException(MemberDetail.class, "invalid.membercode"));
@@ -330,12 +328,12 @@ public class MemberServiceImpl implements MemberService {
         detail.setBank(Hibernate.unproxy(detail.getBank(), Bank.class));
         detail.setBranch(Hibernate.unproxy(detail.getBranch(), Branch.class));
         memberDetailrepository.customDelete(detail, identityInfo);
-        memberRepository.customDelete(member, identityInfo);
+        repository.customDelete(member, identityInfo);
     }
 
     @Override
     public MemberSocietyInfoDto findMemberInformation(String code, LocalDateTime date, Integer count, String paymentCycle) {
-        Member member = memberRepository.findById(code).orElseThrow(() -> new BusinessValidationFailException(Member.class,
+        Member member = repository.findById(code).orElseThrow(() -> new BusinessValidationFailException(Member.class,
                 CommonUtil.getFieldError("member", "code", code, "member.notfound")));
         MemberSocietyInfoDto dto = new MemberSocietyInfoDto();
 
@@ -359,7 +357,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member findByMemberCode(String code) {
-        Optional<Member> member = memberRepository.findById(code);
+        Optional<Member> member = repository.findById(code);
         if (member.isPresent()) {
             member.get().setSociety(Hibernate.unproxy(member.get().getSociety(), Society.class));
             return member.get();

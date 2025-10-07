@@ -1,5 +1,6 @@
 package com.eipl.amcs.util;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
 import com.udojava.evalex.Expression;
@@ -12,7 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Map;
+
 import com.eipl.amcs.utils.AppConstant;
 
 public class CommonUtil {
@@ -62,6 +65,20 @@ public class CommonUtil {
         if (headers == null)
             return null;
         return headers.get(AppConstant.HEADER_IDENTITY);
+    }
+
+    public static String setIdentityHeader() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SOCIETY");
+        sb.append("#");
+        sb.append(MainApp.identityDto.getSociety().getCode());
+        sb.append("#");
+        sb.append(MainApp.systemId);
+        sb.append("#");
+        sb.append(MainApp.getProperty(AppConstant.Props.VERSION, "1.0"));
+        sb.append("#");
+        sb.append(MainApp.locale);
+        return new String(Base64.getEncoder().encode(sb.toString().getBytes()));
     }
 
     public static LocalDateTime getLocalDateTimeFromDateAndShift(LocalDate date, Shift shift) {
@@ -126,6 +143,7 @@ public class CommonUtil {
             return null;
         return val.setScale(SCALE, RATE_ROUND);
     }
+
     private static BigDecimal convertQuantity(String mode, String qty) {
         if ("0".equalsIgnoreCase(mode))
             return new BigDecimal(qty).multiply(new BigDecimal("1"))
@@ -133,9 +151,6 @@ public class CommonUtil {
 
         return new BigDecimal(qty).divide(new BigDecimal("1"), 3, RoundingMode.HALF_UP);
     }
-
-
-
 
 
     public static BigDecimal fetchEffectiveRate(BigDecimal kgRate, SocietyMilkPurchaseRateBased basedSnf) {
@@ -171,7 +186,7 @@ public class CommonUtil {
 
             Expression expression = new Expression(formula);
             expression.setPrecision(10);
-            return expression.eval().setScale(2,RoundingMode.HALF_UP);
+            return expression.eval().setScale(2, RoundingMode.HALF_UP);
         } catch (Exception e) {
             return BigDecimal.ZERO;
         }

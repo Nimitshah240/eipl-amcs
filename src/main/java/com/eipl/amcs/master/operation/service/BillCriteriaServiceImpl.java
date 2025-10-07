@@ -16,13 +16,13 @@ import java.util.Optional;
 @Service
 public class BillCriteriaServiceImpl implements BillCriteriaService {
     @Autowired
-    private BillCriteriaRepository billCriteriaRepository;
+    private BillCriteriaRepository repository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BillCriteriaController.class);
 
     @Override
     public List<BillCriteria> findAll() {
-        return billCriteriaRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
     public BillCriteria saveBillCriteria(BillCriteria billCriteria, String identityInfo) {
         try {
             billCriteria.setInitData();
-            return billCriteriaRepository.customSave(billCriteria, identityInfo);
+            return repository.customSave(billCriteria, identityInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +82,7 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
     public BillCriteria updateBillCriteria(BillCriteria billCriteria, String identityInfo) {
         try {
             billCriteria.setupdateData();
-            return billCriteriaRepository.customUpdate(billCriteria, identityInfo);
+            return repository.customUpdate(billCriteria, identityInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -100,7 +100,7 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
     public void delete(String billCriteriaCode, String identityInfo) {
         try {
             LOGGER.info("Deleting BillCriteria with id: {}", billCriteriaCode);
-            billCriteriaRepository.customDelete(billCriteriaRepository.findById(billCriteriaCode).get(), identityInfo);
+            repository.customDelete(repository.findById(billCriteriaCode).get(), identityInfo);
         } catch (Exception e) {
             LOGGER.error(e.toString());
             throw new RuntimeException(e);

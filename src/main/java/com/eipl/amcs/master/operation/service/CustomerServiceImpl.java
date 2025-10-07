@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerRepository repository;
     @Autowired
     private CustomerDetailsRepository customerDetailrepository;
     @Autowired
@@ -55,20 +55,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> findAll() {
-        return customerRepository.findAll(Sort.by("code"));
+        return repository.findAll(Sort.by("code"));
     }
 
     @Override
     public List<Customer> findAllBySociety(String societyCode) {
         Society society = socRepository.findById(societyCode)
                 .orElseThrow(() -> new EntityNotFoundException(Society.class, "societycode", "invalid.society"));
-        return customerRepository.findAllBySociety(society, Sort.by("code"));
+        return repository.findAllBySociety(society, Sort.by("code"));
     }
 
     @Override
     @Transactional
     public CustomerDto save(CustomerDto customerDto, String identityInfo) {
-        Optional<Customer> customerData = customerRepository.findById(customerDto.getCustomer().getCode());
+        Optional<Customer> customerData = repository.findById(customerDto.getCustomer().getCode());
         if (customerData.isPresent()) {
             throw new BusinessValidationFailException(Customer.class, CommonUtil.getFieldError("Customer", "code",
                     customerDto.getCustomer().getCode(), "code.not.valid"));
@@ -76,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerDto customerDtoNew = new CustomerDto();
         Customer customer = customerDto.getCustomer();
         customer.setInitData();
-        customerDtoNew.setCustomer(customerRepository.customSave(customer, identityInfo));
+        customerDtoNew.setCustomer(repository.customSave(customer, identityInfo));
         CustomerDetails customerDetail = customerDto.getCustomerDetail();
         customerDetail.setCode(customer.getCode());
         customerDetail.setInitData();
@@ -124,12 +124,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerDto update(CustomerDto customerDto, String identityInfo) {
-        Optional<Customer> old = customerRepository.findById(customerDto.getCustomer().getCode());
+        Optional<Customer> old = repository.findById(customerDto.getCustomer().getCode());
         CustomerDto dtoNew = new CustomerDto();
 
         Customer customer = customerDto.getCustomer();
         customer.setupdateData();
-        dtoNew.setCustomer(customerRepository.customUpdate(customer, identityInfo));
+        dtoNew.setCustomer(repository.customUpdate(customer, identityInfo));
 
         CustomerDetails customerDetail = customerDto.getCustomerDetail();
         customerDetail.setupdateData();
@@ -149,13 +149,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Optional<Customer> findById(String code) {
-        return customerRepository.findById(code);
+        return repository.findById(code);
     }
 
     @Override
     @Transactional
     public Customer findByCustomerCode(String code) {
-        Customer customer = customerRepository.findByCode(code);
+        Customer customer = repository.findByCode(code);
         if (code.endsWith("0001") && customer == null) {
             try {
                 customer = new Customer();
@@ -171,7 +171,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setName("Retail Sale Consumer");
                 customer.setNameLocal("Retail Sale Consumer");
                 customer.setActive(true);
-                customer = customerRepository.save(customer);
+                customer = repository.save(customer);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -181,7 +181,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDetails findDetailByCustomerCode(String code) {
-        Customer customer = customerRepository.findById(code)
+        Customer customer = repository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(Customer.class, "invalid.customercode"));
         return customerDetailrepository.findByCustomer(customer);
     }
@@ -189,11 +189,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void delete(String code, String identityInfo) {
-        Customer customer = customerRepository.findById(code)
+        Customer customer = repository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(Customer.class, "invalid.customercode"));
         CustomerDetails detail = customerDetailrepository.findByCustomer(customer);
         customerDetailrepository.customDelete(detail, identityInfo);
-        customerRepository.customDelete(customer, identityInfo);
+        repository.customDelete(customer, identityInfo);
     }
 
     @Override

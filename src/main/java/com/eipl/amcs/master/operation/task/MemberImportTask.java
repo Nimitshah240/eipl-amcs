@@ -5,8 +5,8 @@ import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.dto.MemberDetail;
-import com.eipl.amcs.master.operation.dto.MemberDto;
+import com.eipl.amcs.master.operation.model.MemberDetail;
+import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -31,7 +31,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
     private List<MemberType> memberTypeList;
     private List<Bank> bankList;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MemberImportTask.class);
 
     public MemberImportTask(File file, List<MilkType> milkTypeList, List<Gender> genderList, List<MemberType> memberTypeList, List<Bank> bankList) {
         this.file = file;
@@ -291,7 +290,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
             }
             return list;
         } catch (Exception e) {
-            LOGGER.error("Member Import Error", e);
             e.printStackTrace();
         }
         return null;

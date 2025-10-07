@@ -59,7 +59,7 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
     private TextField txtValue;
 
     @FXML
-    private Button btnSave, btnClose, btnGenerate, btnReport,btnView;
+    private Button btnSave, btnClose, btnGenerate, btnReport, btnView;
     private final ObjectProperty<Share> propShareIssue;
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
@@ -139,7 +139,7 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
             setValuesInObject();
             saveData();
         });
-        btnView.setOnAction(e-> {
+        btnView.setOnAction(e -> {
             ShareDividendListController controller = (ShareDividendListController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/share/ListOfShareDividend.fxml"));
 //            controller.setMember(null);
             MainApp.getContentPane().setCenter(controller.getRoot());

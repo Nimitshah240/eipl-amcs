@@ -112,6 +112,20 @@ public class Member extends BaseModel {
 
     }
 
+
+    public String toMemberNameWithExCode() {
+        if (middleName == null) {
+            middleName = "";
+        }
+        if (lastName == null) {
+            lastName = "";
+        }
+        return codeEx + "-" + CommonUtils.getLocalString(firstName, getFirstNameLocal()) + " " +
+                CommonUtils.getLocalString(middleName, getMiddleNameLocal()) + " " +
+                CommonUtils.getLocalString(lastName, getLastNameLocal());
+
+    }
+
     public String toMemberName(String locale) {
         if (locale.equalsIgnoreCase("en")) {
             if (middleName == null)
@@ -119,8 +133,7 @@ public class Member extends BaseModel {
             if (lastName == null)
                 lastName = "";
             return firstName + " " + middleName + " " + lastName;
-        }
-        if (locale.equalsIgnoreCase("gu")) {
+        } else if (locale.equalsIgnoreCase("gu") || locale.equalsIgnoreCase("hi")) {
             if (middleNameLocal == null)
                 middleNameLocal = "";
             if (lastNameLocal == null)
@@ -135,18 +148,5 @@ public class Member extends BaseModel {
 //            return firstNameLocal + " " + middleNameLocal + " " + lastNameLocal;
 //        }
         return "";
-    }
-
-    public String toMemberNameWithExCode() {
-        if (middleName == null) {
-            middleName = "";
-        }
-        if (lastName == null) {
-            lastName = "";
-        }
-        return codeEx +"-" + CommonUtils.getLocalString(firstName, getFirstNameLocal()) + " " +
-                CommonUtils.getLocalString(middleName, getMiddleNameLocal()) + " " +
-                CommonUtils.getLocalString(lastName, getLastNameLocal());
-
     }
 }

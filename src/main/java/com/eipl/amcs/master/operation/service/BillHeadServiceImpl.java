@@ -9,15 +9,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class BillHeadServiceImpl implements BillHeadService {
     @Autowired
-    private BillHeadRepository billHeadRepository;
+    private BillHeadRepository repository;
 
     @Override
     public List<BillHead> findAll() {
-        return billHeadRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
@@ -57,7 +56,7 @@ public class BillHeadServiceImpl implements BillHeadService {
     public BillHead saveBillHead(BillHead billHead, String identityInfo) {
         try {
             billHead.setInitData();
-            return billHeadRepository.customSave(billHead, identityInfo);
+            return repository.customSave(billHead, identityInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -76,7 +75,7 @@ public class BillHeadServiceImpl implements BillHeadService {
     public BillHead updateBillHead(BillHead billHead, String identityInfo) {
         try {
             billHead.setupdateData();
-            return billHeadRepository.customUpdate(billHead, identityInfo);
+            return repository.customUpdate(billHead, identityInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -93,7 +92,7 @@ public class BillHeadServiceImpl implements BillHeadService {
     @Override
     public void delete(String billHeadCode, String identityInfo) {
         try {
-            billHeadRepository.customDelete(billHeadRepository.findById(billHeadCode).get(), identityInfo);
+            repository.customDelete(repository.findById(billHeadCode).get(), identityInfo);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

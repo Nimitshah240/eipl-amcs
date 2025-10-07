@@ -2,11 +2,9 @@ package com.eipl.amcs.master.geo.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.geo.model.*;
-//import com.eipl.amcs.master.geo.dto.Village;
-import com.eipl.amcs.master.geo.service.DistrictService;
+import com.eipl.amcs.master.geo.model.Hamlet;
+import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.geo.service.HamletService;
-import com.eipl.amcs.master.geo.task.HamletLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -81,17 +78,5 @@ public class HamletController implements MyInitialization {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-//        var task = new HamletLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Hamlet> list = task.get();
-//                if (list != null)
-//                    tableHamlets.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
     }
 }

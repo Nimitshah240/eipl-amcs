@@ -3,22 +3,14 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.model.CustomerDto;
-import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.task.CustomerDeleteTask;
-import com.eipl.amcs.master.operation.task.CustomerLoadTask;
-import com.eipl.amcs.master.operation.task.MemberDeleteTask;
-import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.master.operation.service.CustomerService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -31,11 +23,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class CustomerController implements MyInitialization {
 
@@ -48,6 +40,9 @@ public class CustomerController implements MyInitialization {
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
 
+    private CustomerService service;
+    private NextCodeService nextCodeService;
+
     @Override
     public Node getRoot() {
         return root;
@@ -57,6 +52,8 @@ public class CustomerController implements MyInitialization {
     private ObjectProperty<Customer> propCustomer;
 
     public CustomerController() {
+        service = context.getBean(CustomerService.class);
+        nextCodeService = context.getBean(NextCodeService.class);
         propCustomer = new SimpleObjectProperty<>();
     }
 
@@ -85,7 +82,7 @@ public class CustomerController implements MyInitialization {
                 MainApp.getContentPane().setCenter((controller).getRoot());
             }
         });
-        btnDelete.setOnAction(e ->{
+        btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_CUSTOMER_DELETE"))
                 throw new UnAuthorizedAccessException();
             deleteData();
@@ -104,34 +101,28 @@ public class CustomerController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
-        colType.setCellValueFactory(data->new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getType().shortValue())));
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
-        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-//        colType.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()==3?"Customer":data.getValue().getType()==4?"Institute":"Consumer"));
-        colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
-        colMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMobileNo()));
-        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
-        propCustomer.bind(tableCustomer.getSelectionModel().selectedItemProperty());
-    }catch (Exception e) {
+        try {
+            colType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getType().shortValue())));
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+            colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+            colMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMobileNo()));
+            colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
+            propCustomer.bind(tableCustomer.getSelectionModel().selectedItemProperty());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        tableCustomer.setItems(null);
-        CustomerLoadTask task = new CustomerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Customer> list = task.get();
-                if (list != null)
-                    tableCustomer.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            tableCustomer.setItems(null);
+            List<Customer> list = service.findAllBySociety(MainApp.identityDto.getSociety().getCode());
+            if (list != null) tableCustomer.setItems(FXCollections.observableList(list));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -142,22 +133,11 @@ public class CustomerController implements MyInitialization {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             Customer dto = propCustomer.get();
             if (dto != null) {
-                var task = new CustomerDeleteTask(dto.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                Optional<Customer> customerData = service.findById(dto.getCode());
+                if (customerData != null || customerData.isPresent()) {
+                    service.delete(customerData.get().getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                }
             }
         }
     }

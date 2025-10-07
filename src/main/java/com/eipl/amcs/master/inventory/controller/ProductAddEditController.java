@@ -197,7 +197,7 @@ public class ProductAddEditController implements MyInitialization {
     public void saveData() {
 //        MERGING ---------------------------------------------------------------------------
 
-        Product product = productService.save(dto, null);
+        Product product = productService.save(dto, CommonUtil.setIdentityHeader());
         if (product != null) {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
                     resourceBundle.getString("product.insert.successful"));
@@ -211,7 +211,6 @@ public class ProductAddEditController implements MyInitialization {
         }
 
 //        MERGING ---------------------------------------------------------------------------
-
 
 
 //        var task = new ProductSaveTask(dto, (short) 0);

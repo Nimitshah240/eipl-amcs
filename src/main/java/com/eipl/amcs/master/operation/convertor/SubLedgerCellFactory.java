@@ -1,6 +1,5 @@
 package com.eipl.amcs.master.operation.convertor;
 
-import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.SubLedger;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
