@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
-import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
+import com.eipl.amcs.master.inventory.service.ProductGroupService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,7 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class ProductGroupController implements MyInitialization {
 
@@ -32,6 +33,13 @@ public class ProductGroupController implements MyInitialization {
     TableColumn<ProductGroup, Unit> colBaseUnit;
     @FXML
     Button btnClose;
+
+    private ProductGroupService productGroupService;
+
+
+    public ProductGroupController() {
+        productGroupService = context.getBean(ProductGroupService.class);
+    }
 
     @Override
     public Node getRoot() {
@@ -62,16 +70,12 @@ public class ProductGroupController implements MyInitialization {
 
     @Override
     public void loadData() {
-        ProductGroupLoadTask task = new ProductGroupLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<ProductGroup> list = task.get();
-                if (list != null)
-                    tableProductGroup.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<ProductGroup> list = productGroupService.findAll();
+            if (list != null)
+                tableProductGroup.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
