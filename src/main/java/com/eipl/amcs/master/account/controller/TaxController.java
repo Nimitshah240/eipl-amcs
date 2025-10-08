@@ -3,14 +3,9 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.master.account.model.BasicTax;
-import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.master.account.dto.TaxDto;
-import com.eipl.amcs.master.account.task.TaxLoadTask;
-import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
+import com.eipl.amcs.master.account.service.TaxService;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,7 +20,8 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class TaxController implements MyInitialization, PopupCallback {
     @FXML
@@ -41,9 +37,11 @@ public class TaxController implements MyInitialization, PopupCallback {
     private Stage stage;
 
     private final ObjectProperty<TaxDto> propTaxDto;
+    private TaxService taxService;
 
     public TaxController() {
         propTaxDto = new SimpleObjectProperty<>();
+        taxService = context.getBean(TaxService.class);
     }
 
     public void setStage(Stage stage) {
@@ -94,17 +92,13 @@ public class TaxController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        var task = new TaxLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<TaxDto> list = task.get();
-                if (list != null) {
-                    tableTax.setItems(FXCollections.observableList(list));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<TaxDto> list = taxService.findAll();
+            if (list != null) {
+                tableTax.setItems(FXCollections.observableList(list));
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

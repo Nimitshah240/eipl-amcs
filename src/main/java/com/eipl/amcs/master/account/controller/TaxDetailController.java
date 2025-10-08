@@ -1,13 +1,10 @@
 package com.eipl.amcs.master.account.controller;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.master.account.model.BasicTax;
-import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.master.account.dto.TaxDto;
-import com.eipl.amcs.master.account.task.TaxLoadTask;
+import com.eipl.amcs.master.account.model.BasicTax;
+import com.eipl.amcs.master.account.model.TaxDetail;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,9 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 public class TaxDetailController implements MyInitialization, PopupCallback {
 
@@ -45,7 +40,7 @@ public class TaxDetailController implements MyInitialization, PopupCallback {
 
     public void setDto(TaxDto dto) {
         this.dto = dto;
-        if(dto != null)
+        if (dto != null)
             tableTaxDetail.setItems(FXCollections.observableList(dto.getTaxDetails()));
     }
 
@@ -69,7 +64,7 @@ public class TaxDetailController implements MyInitialization, PopupCallback {
     public void setupTable() {
         colPercentage.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getPercentage()));
         colBasicTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBasicTax()));
-        colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getType()==1? resourceBundle.getString("addition"):resourceBundle.getString("deduction")));
+        colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getType() == 1 ? resourceBundle.getString("addition") : resourceBundle.getString("deduction")));
 //        colIsDefault.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDock().getIsDefault() != 0 ? resourceBundle.getString("yes") : resourceBundle.getString("no")));
 
     }
