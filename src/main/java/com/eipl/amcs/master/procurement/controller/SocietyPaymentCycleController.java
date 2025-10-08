@@ -5,15 +5,13 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleDeleteTask;
-import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadByDateTask;
-import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
+import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,10 +24,13 @@ import javafx.scene.layout.StackPane;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class SocietyPaymentCycleController implements MyInitialization, PopupCallback {
     @FXML
@@ -54,9 +55,11 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
 
     private ResourceBundle resourceBundle;
     private ObjectProperty<SocietyPaymentCycle> propPaymentCycle;
+    private SocietyPaymentCycleService societyPaymentCycleService;
 
     public SocietyPaymentCycleController() {
         propPaymentCycle = new SimpleObjectProperty<>();
+        societyPaymentCycleService = context.getBean(SocietyPaymentCycleService.class);
     }
 
     @Override
@@ -140,29 +143,23 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
     public void loadData() {
         tableSocietyPaymentCycles.setItems(null);
         if (dpFromDate.getValue() == null) {
-            var task = new SocietyPaymentCycleLoadTask();
-            task.setOnSucceeded(e -> {
-                try {
-                    List<SocietyPaymentCycle> list = task.get();
-                    if (list != null)
-                        tableSocietyPaymentCycles.setItems(FXCollections.observableList(list));
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
-            });
-            new Thread(task).start();
+            try {
+                List<SocietyPaymentCycle> list = societyPaymentCycleService.findAll();
+                if (list != null)
+                    tableSocietyPaymentCycles.setItems(FXCollections.observableList(list));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } else {
-            var task = new SocietyPaymentCycleLoadByDateTask(dpFromDate.getValue(), dpToDate.getValue());
-            task.setOnSucceeded(e -> {
-                try {
-                    List<SocietyPaymentCycle> list = task.get();
-                    if (list != null)
-                        tableSocietyPaymentCycles.setItems(FXCollections.observableList(list));
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
-            });
-            new Thread(task).start();
+            try {
+                LocalDateTime fromDt = LocalDateTime.of(LocalDate.parse(dpFromDate.getValue().toString()), LocalTime.MIN);
+                LocalDateTime toDt = LocalDateTime.of(LocalDate.parse(dpToDate.getValue().toString()), LocalTime.MAX);
+                List<SocietyPaymentCycle> list = societyPaymentCycleService.findAll(fromDt, toDt);
+                if (list != null)
+                    tableSocietyPaymentCycles.setItems(FXCollections.observableList(list));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -171,27 +168,17 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
         SocietyPaymentCycle dto = propPaymentCycle.get();
         if (dto == null)
             return;
-
         MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
                 resourceBundle.getString("alert.delete"));
         Optional<ButtonType> resp = alert.createConfirmationAlert();
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
-            var task = new SocietyPaymentCycleDeleteTask(dto.getCode());
-            task.setOnSucceeded(e -> {
-                try {
-                    Boolean respDelete = task.get();
-                    if (respDelete == null || respDelete.booleanValue() == false) {
-                        MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
-                                resourceBundle.getString("error.occurred"));
-                        alert1.createAlert();
-                        return;
-                    }
-                    loadData();
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
-            });
-            new Thread(task).start();
+            try {
+                societyPaymentCycleService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
+
+                loadData();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

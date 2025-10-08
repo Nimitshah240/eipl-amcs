@@ -68,7 +68,7 @@ public class SocietyMilkPurchaseRateApplicabilityController implements MyInitial
             e.printStackTrace();
         }
     }
-
+// task API not available
     @Override
     public void loadData() {
         var task = new SocietyMilkPurchaseRateApplicabilityLoadTask();

@@ -6,8 +6,6 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -15,12 +13,16 @@ import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
-import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
-import com.eipl.amcs.master.global.task.RateTypeLoadTask;
-import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.procurement.dto.*;
-import com.eipl.amcs.master.procurement.task.MemberMilkPurchaseRateSaveTask;
+import com.eipl.amcs.master.global.service.MilkQualityTypeService;
+import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.global.service.RateTypeService;
+import com.eipl.amcs.master.global.service.ShiftService;
+import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
+import com.eipl.amcs.master.procurement.dto.PurchaseRateGenerate;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateDetail;
+import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,9 +49,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateDetail;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class MemberMilkPurchaseRateAddEditController implements MyInitialization {
 
@@ -88,6 +89,20 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
     @Override
     public Node getRoot() {
         return root;
+    }
+
+    private MemberMilkPurchaseRateService memberMilkPurchaseRateService;
+    private ShiftService shiftService;
+    private MilkTypeService milkTypeService;
+    private MilkQualityTypeService milkQualityTypeService;
+    private RateTypeService rateTypeService;
+
+    public MemberMilkPurchaseRateAddEditController() {
+        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
+        shiftService = context.getBean(ShiftService.class);
+        milkTypeService = context.getBean(MilkTypeService.class);
+        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
+        rateTypeService = context.getBean(RateTypeService.class);
     }
 
     @Override
@@ -167,41 +182,17 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
 
     @Override
     public void saveData() {
-        var task = new MemberMilkPurchaseRateSaveTask(dto);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
+        try {
+            memberMilkPurchaseRateService.savePurchaseRate(dto);
 
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getMessage() + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-
-                if (obj instanceof String) {
-                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
-                            resourceBundle.getString("rate.insert.successful"));
-                    alert.createAlert();
-
-                    // Close window
-                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/procurement/MemberMilkPurchaseRate.fxml")));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        task.setOnFailed(e -> {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
-                    task.getException().getMessage());
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
+                    resourceBundle.getString("rate.insert.successful"));
             alert.createAlert();
-        });
-        new Thread(task).start();
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/procurement/MemberMilkPurchaseRate.fxml")));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void loadRateFromExcel() {
@@ -271,55 +262,28 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
 
     @Override
     public void loadData() {
-        var task = new ShiftLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Shift> list = task.get();
-                if (list != null) {
-                    cboxShiftApp.setItems(FXCollections.observableList(list));
-                    List<Shift> listShift = CommonUtils.removeAllShift(list);
-                    cboxShift.setItems(FXCollections.observableList(listShift));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        // ASYNC
+        try {
+            List<Shift> list = shiftService.findAll();
+            if (list != null) {
+                cboxShiftApp.setItems(FXCollections.observableList(list));
+                List<Shift> listShift = CommonUtils.removeAllShift(list);
+                cboxShift.setItems(FXCollections.observableList(listShift));
             }
-        });
-        new Thread(task).start();
 
-        var task2 = new MilkTypeLoadTask();
-        task2.setOnSucceeded(e -> {
-            try {
-                listMilkType = task2.get();
-                if (listMilkType != null)
-                    cboxMilkType.setItems(FXCollections.observableList(listMilkType));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task2).start();
+            listMilkType = milkTypeService.findAll();
+            if (listMilkType != null)
+                cboxMilkType.setItems(FXCollections.observableList(listMilkType));
 
-        var task3 = new MilkQualityTypeLoadTask();
-        task3.setOnSucceeded(e -> {
-            try {
-                listMilkQualityType = task3.get();
-                if (listMilkQualityType != null)
-                    cboxMilkQualityType.setItems(FXCollections.observableList(listMilkQualityType));
-                cboxMilkQualityType.getSelectionModel().select(0);
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task3).start();
+            listMilkQualityType = milkQualityTypeService.findAll();
+            if (listMilkQualityType != null)
+                cboxMilkQualityType.setItems(FXCollections.observableList(listMilkQualityType));
+            cboxMilkQualityType.getSelectionModel().select(0);
 
-        var task4 = new RateTypeLoadTask();
-        task4.setOnSucceeded(e -> {
-            try {
-                listRateType = task4.get();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task4).start();
+            listRateType = rateTypeService.findAll();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 

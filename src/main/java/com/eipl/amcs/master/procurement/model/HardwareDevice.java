@@ -49,6 +49,10 @@ public class HardwareDevice extends BaseModel {
 	private String unionCode;
 
 	@Override
+	public String toString() {
+		return deviceName;
+	}
+	@Override
 	public String getTableName() {
 		return "hardware_devices";
 	}

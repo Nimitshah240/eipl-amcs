@@ -8,13 +8,12 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.global.service.ShiftService;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleSaveTask;
+import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,7 +32,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class SocietyPaymentCycleGenerateController implements MyInitialization {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocietyPaymentCycleGenerateController.class);
@@ -62,6 +62,13 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
     private StringBuilder errorMsg = null;
     private PopupCallback callback;
     private List<SocietyPaymentCycle> listPaymentCycle;
+    private ShiftService shiftService;
+    private SocietyPaymentCycleService societyPaymentCycleService;
+
+    public SocietyPaymentCycleGenerateController() {
+        shiftService = context.getBean(ShiftService.class);
+        societyPaymentCycleService = context.getBean(SocietyPaymentCycleService.class);
+    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -168,22 +175,18 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
 
     @Override
     public void loadData() {
-        var task = new ShiftLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Shift> list = new ArrayList<>(task.get());
-                if (list != null || list.isEmpty()) {
-                    list.removeIf(p -> p.getName().equalsIgnoreCase("all"));
-                    cboxFromShift.setItems(FXCollections.observableList(list));
-                    cboxToShift.setItems(FXCollections.observableList(list));
-                    cboxFromShift.getSelectionModel().select(0);
-                    cboxToShift.getSelectionModel().select(list.size() - 1);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<Shift> list = new ArrayList<>(shiftService.findAll());
+            if (list != null || list.isEmpty()) {
+                list.removeIf(p -> p.getName().equalsIgnoreCase("all"));
+                cboxFromShift.setItems(FXCollections.observableList(list));
+                cboxToShift.setItems(FXCollections.observableList(list));
+                cboxFromShift.getSelectionModel().select(0);
+                cboxToShift.getSelectionModel().select(list.size() - 1);
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void setupTable() {
@@ -228,32 +231,21 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
 
     @Override
     public void saveData() {
-        var task = new SocietyPaymentCycleSaveTask(listPaymentCycle, (short) 0);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
+        try {
+            societyPaymentCycleService.save(listPaymentCycle, CommonUtil.setIdentityHeader());
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                    resourceBundle.getString("societypaymentcycle.insert.successful"));
+            alert.createAlert();
 
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
-                        resourceBundle.getString("societypaymentcycle.insert.successful"));
-                alert.createAlert();
-                this.callback.reloadData(true);
-                this.stage.close();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                    "Error Avi");
+            alert.createAlert();
+            ex.printStackTrace();
+        } finally {
+            this.callback.reloadData(true);
+            this.stage.close();
+        }
     }
 }
 

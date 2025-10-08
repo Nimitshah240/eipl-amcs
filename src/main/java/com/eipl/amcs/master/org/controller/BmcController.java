@@ -7,6 +7,7 @@ import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.service.BmcService;
+import com.eipl.amcs.master.org.service.BranchService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,6 +20,8 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class BmcController implements MyInitialization {
 
@@ -50,7 +53,7 @@ public class BmcController implements MyInitialization {
     private BmcService bmcService;
 
     public BmcController() {
-        bmcService = MainApp.context.getBean(BmcService.class);
+        bmcService = context.getBean(BmcService.class);;
     }
 
     @Override

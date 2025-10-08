@@ -5,14 +5,13 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
-import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateDeleteTask;
-import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateLoadTask;
+import com.eipl.amcs.master.procurement.service.LocalMilkSaleRateService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -29,7 +28,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class LocalMilkSaleRateController implements MyInitialization, PopupCallback {
     @FXML
@@ -49,9 +49,11 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
 
     private ResourceBundle resourceBundle;
     private ObjectProperty<LocalMilkSaleRate> propLocalMilkSaleRate;
+    private LocalMilkSaleRateService localMilkSaleRateService;
 
     public LocalMilkSaleRateController() {
         propLocalMilkSaleRate = new SimpleObjectProperty<>();
+        localMilkSaleRateService = context.getBean(LocalMilkSaleRateService.class);
     }
 
     @Override
@@ -94,17 +96,13 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
     @Override
     public void loadData() {
         tableLocalMilkSaleRates.setItems(null);
-        var task = new LocalMilkSaleRateLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<LocalMilkSaleRate> list = task.get();
-                if (list != null)
-                    tableLocalMilkSaleRates.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<LocalMilkSaleRate> list = localMilkSaleRateService.findAll();
+            if (list != null)
+                tableLocalMilkSaleRates.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -115,22 +113,15 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             LocalMilkSaleRate dto = propLocalMilkSaleRate.get();
             if (dto != null) {
-                var task = new LocalMilkSaleRateDeleteTask(dto.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksalerate"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    Optional<LocalMilkSaleRate> localMilkSaleRateData = localMilkSaleRateService.findById(dto.getCode());
+                    if (localMilkSaleRateData == null || !localMilkSaleRateData.isPresent())
+                        return;
+                    localMilkSaleRateService.delete(localMilkSaleRateData.get(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }

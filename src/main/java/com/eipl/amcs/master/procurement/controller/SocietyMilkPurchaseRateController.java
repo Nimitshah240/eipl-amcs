@@ -7,7 +7,7 @@ import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.dto.RateViewDto;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.task.SocietyMilkPurchaseRateLoadTask;
+import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,6 +25,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class SocietyMilkPurchaseRateController implements MyInitialization {
     @FXML
@@ -45,9 +47,11 @@ public class SocietyMilkPurchaseRateController implements MyInitialization {
     Button btnAdd, btnClose, btnView;
 
     private ObjectProperty<SocietyMilkPurchaseRate> propRate;
+    private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
 
     public SocietyMilkPurchaseRateController() {
         propRate = new SimpleObjectProperty<>();
+        societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
     }
 
     @Override
@@ -100,16 +104,12 @@ public class SocietyMilkPurchaseRateController implements MyInitialization {
 
     @Override
     public void loadData() {
-        var task = new SocietyMilkPurchaseRateLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<SocietyMilkPurchaseRate> list = task.get();
-                if (list != null)
-                    tableSocietyMilkPurchaseRates.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<SocietyMilkPurchaseRate> list = societyMilkPurchaseRateService.findAll();
+            if (list != null)
+                tableSocietyMilkPurchaseRates.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
