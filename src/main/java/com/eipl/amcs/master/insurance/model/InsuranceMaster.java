@@ -32,119 +32,6 @@ public class InsuranceMaster extends BaseModel {
     private String unionCode;
     private String originatingOrgCode;
     private String originatingOrgType;
-
-    public Integer getInsuranceMasterCode() {
-        return insuranceMasterCode;
-    }
-
-    public void setInsuranceMasterCode(Integer insuranceMasterCode) {
-        this.insuranceMasterCode = insuranceMasterCode;
-    }
-
-    public LocalDate getInsuranceStartDate() {
-        return insuranceStartDate;
-    }
-
-    public void setInsuranceStartDate(LocalDate insuranceStartDate) {
-        this.insuranceStartDate = insuranceStartDate;
-    }
-
-    public LocalDate getInsuranceEndDate() {
-        return insuranceEndDate;
-    }
-
-    public void setInsuranceEndDate(LocalDate insuranceEndDate) {
-        this.insuranceEndDate = insuranceEndDate;
-    }
-
-    public LocalDate getDcsEditStartDate() {
-        return dcsEditStartDate;
-    }
-
-    public void setDcsEditStartDate(LocalDate dcsEditStartDate) {
-        this.dcsEditStartDate = dcsEditStartDate;
-    }
-
-    public LocalDate getDcsEditEndDate() {
-        return dcsEditEndDate;
-    }
-
-    public void setDcsEditEndDate(LocalDate dcsEditEndDate) {
-        this.dcsEditEndDate = dcsEditEndDate;
-    }
-
-    public Integer getMemberMinAge() {
-        return memberMinAge;
-    }
-
-    public void setMemberMinAge(Integer memberMinAge) {
-        this.memberMinAge = memberMinAge;
-    }
-
-    public Integer getMemberMaxAge() {
-        return memberMaxAge;
-    }
-
-    public void setMemberMaxAge(Integer memberMaxAge) {
-        this.memberMaxAge = memberMaxAge;
-    }
-
-    public LocalDate getInsuranceFinalDate() {
-        return insuranceFinalDate;
-    }
-
-    public void setInsuranceFinalDate(LocalDate insuranceFinalDate) {
-        this.insuranceFinalDate = insuranceFinalDate;
-    }
-
-    public String getInsuranceDescription() {
-        return insuranceDescription;
-    }
-
-    public void setInsuranceDescription(String insuranceDescription) {
-        this.insuranceDescription = insuranceDescription;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getUnionCode() {
-        return unionCode;
-    }
-
-    public void setUnionCode(String unionCode) {
-        this.unionCode = unionCode;
-    }
-
-    public String getOriginatingOrgCode() {
-        return originatingOrgCode;
-    }
-
-    public void setOriginatingOrgCode(String originatingOrgCode) {
-        this.originatingOrgCode = originatingOrgCode;
-    }
-
-    public String getOriginatingOrgType() {
-        return originatingOrgType;
-    }
-
-    public void setOriginatingOrgType(String originatingOrgType) {
-        this.originatingOrgType = originatingOrgType;
-    }
-
-    public Integer getOriginatingType() {
-        return originatingType;
-    }
-
-    public void setOriginatingType(Integer originatingType) {
-        this.originatingType = originatingType;
-    }
-
     private Integer originatingType;
     private String xCol4;
     private String xCol5;
@@ -169,7 +56,6 @@ public class InsuranceMaster extends BaseModel {
     public String getTableName() {
         return "insurance_master";
     }
-
 
     @Override
     public Object getId() {

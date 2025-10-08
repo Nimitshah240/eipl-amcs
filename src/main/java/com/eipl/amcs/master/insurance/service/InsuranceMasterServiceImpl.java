@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,14 +53,10 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
         insuranceDetail.setxCol1(UUID.randomUUID().toString());
         insuranceDetail.setOriginatingOrgType("VLC");
         insuranceDetail.setCreatedBy(insuranceDetail.getDcsCode());
+        insuranceDetail.setCreatedAt(LocalDateTime.now());
         insuranceDetail.setUpdatedBy(null);
-//        String memberCode = insuranceDetail.getMemberCode();
-//        if (memberCode != null && memberCode.length() >= 4) {
-//            insuranceDetail.setMemberCode(memberCode.substring(memberCode.length() - 4));
-//        }
         return insuranceDetailRepository.customSave(insuranceDetail, identityInfo);
     }
-
     @Override
     public InsuranceDetail saveDetailsFinalize(InsuranceDetail insuranceDetail, String identityInfo) {
         insuranceDetail.setInitData();
@@ -85,11 +82,8 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
         insuranceDetail.setIsDelete(false);
         insuranceDetail.setOriginatingOrgType("VLC");
         insuranceDetail.setUpdatedBy(insuranceDetail.getDcsCode());
-        insuranceDetail.setCreatedBy(insuranceDetail.getDcsCode());
-//        String memberCode = insuranceDetail.getMemberCode();
-//        if (memberCode != null && memberCode.length() >= 4) {
-//            insuranceDetail.setMemberCode(memberCode.substring(memberCode.length() - 4));
-//        }
+        insuranceDetail.setSysUpdatedBy("VLC");
+        insuranceDetail.setStatus("PUBLISH");
         return insuranceDetailRepository.customUpdate(insuranceDetail, identityInfo);
     }
 
@@ -97,10 +91,6 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
     public InsuranceDetail updateDetailsFinalize(InsuranceDetail insuranceDetail, String identityInfo) {
         insuranceDetail.setupdateData();
         insuranceDetail.setIsDelete(false);
-//        if (insuranceDetail.getDcsCode() != null && insuranceDetail.getMemberCode() != null) {
-//            String updatedMemberCode = insuranceDetail.getDcsCode() + insuranceDetail.getMemberCode();
-//            insuranceDetail.setMemberCode(updatedMemberCode);
-//        }
         return insuranceDetailRepository.customUpdate(insuranceDetail, identityInfo);
     }
 
@@ -117,10 +107,6 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
         insuranceDetail.setOriginatingOrgType("VLC");
         insuranceDetail.setOriginatingOrgCode(insuranceDetail.getDcsCode());
         insuranceDetail.setIsDelete(true);
-//        if (insuranceDetail.getDcsCode() != null && insuranceDetail.getMemberCode() != null) {
-//            String updatedMemberCode = insuranceDetail.getDcsCode() + insuranceDetail.getMemberCode();
-//            insuranceDetail.setMemberCode(updatedMemberCode);
-//        }
         return insuranceDetailRepository.customUpdate(insuranceDetail, identityInfo);
     }
 

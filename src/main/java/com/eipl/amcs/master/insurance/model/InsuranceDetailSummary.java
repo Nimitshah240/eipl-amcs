@@ -39,24 +39,8 @@ public class InsuranceDetailSummary extends BaseModelTxn {
     private String xCol5;
     private String dcsName;
 
-
-//    public String getxCol4() {
-//        return xCol4;
-//    }
-
-    public String getXCol4() {
-        return xCol4;
-    }
-
     public void setxCol4(String xCol4) {
         this.xCol4 = xCol4;
-    }
-
-//    public String getxCol5() {
-//        return xCol5;
-//    }
-    public String getXCol5() {
-        return xCol5;
     }
 
     public void setxCol5(String xCol5) {
@@ -67,7 +51,6 @@ public class InsuranceDetailSummary extends BaseModelTxn {
     public String getTableName() {
         return "tbl_insurance_detail_summary";
     }
-
 
     @Override
     public Object getId() {

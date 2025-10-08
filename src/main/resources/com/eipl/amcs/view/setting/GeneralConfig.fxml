@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.setting.controller.GeneralConfigController">
+<AnchorPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.eipl.amcs.setting.controller.GeneralConfigController">
     <children>
-        <StackPane layoutX="10.0" layoutY="10.0" styleClass="pane-center" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <StackPane layoutX="10.0" layoutY="10.0" styleClass="pane-center" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
 
                 <VBox fx:id="vbox">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%configurations" />
+                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
+                               styleClass="header-text" text="%configurations"/>
                         <StackPane VBox.vgrow="ALWAYS">
                             <children>
                                 <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
@@ -35,157 +26,340 @@
                                                     <children>
                                                         <AnchorPane StackPane.alignment="TOP_LEFT">
                                                             <children>
-                                                                <GridPane layoutX="10.0" layoutY="14.0" prefWidth="760.0" vgap="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="14.0">
+                                                                <GridPane layoutX="10.0" layoutY="14.0"
+                                                                          prefWidth="760.0" vgap="10.0"
+                                                                          AnchorPane.leftAnchor="10.0"
+                                                                          AnchorPane.rightAnchor="10.0"
+                                                                          AnchorPane.topAnchor="14.0">
                                                                     <columnConstraints>
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES"
+                                                                                           minWidth="10.0"
+                                                                                           prefWidth="100.0"/>
                                                                     </columnConstraints>
                                                                     <rowConstraints>
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                      <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="28.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="28.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints maxHeight="28.0"
+                                                                                        minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
                                                                     </rowConstraints>
                                                                     <children>
-                                                                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                                        <HBox alignment="CENTER_LEFT" prefHeight="100.0"
+                                                                              prefWidth="200.0" spacing="15.0">
                                                                             <children>
-                                                                                <Label text="%ltrtokg" />
-                                                                                <TextField fx:id="txtLtrToKg" prefWidth="100.0" />
-                                                            <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="%backuppath" HBox.hgrow="ALWAYS" />
-                                                            <HBox>
-                                                               <children>
-                                                                  <TextField fx:id="txtBackupPath" disable="true" />
-                                                                  <Button fx:id="btnBrowse" mnemonicParsing="false" text="Browse" />
-                                                               </children>
-                                                            </HBox>
+                                                                                <Label text="%ltrtokg"/>
+                                                                                <TextField fx:id="txtLtrToKg"
+                                                                                           prefWidth="100.0"/>
+                                                                                <Label alignment="CENTER_RIGHT"
+                                                                                       maxWidth="1.7976931348623157E308"
+                                                                                       text="%backuppath"
+                                                                                       HBox.hgrow="ALWAYS"/>
+                                                                                <HBox>
+                                                                                    <children>
+                                                                                        <TextField fx:id="txtBackupPath"
+                                                                                                   disable="true"/>
+                                                                                        <Button fx:id="btnBrowse"
+                                                                                                mnemonicParsing="false"
+                                                                                                text="Browse"/>
+                                                                                    </children>
+                                                                                </HBox>
                                                                             </children>
                                                                         </HBox>
-                                                                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="40.0" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.rowIndex="1">
+                                                                        <HBox alignment="CENTER_LEFT" layoutX="10.0"
+                                                                              layoutY="40.0" prefHeight="100.0"
+                                                                              prefWidth="200.0" spacing="15.0"
+                                                                              GridPane.rowIndex="1">
                                                                             <children>
-                                                                                <Label text="%clrformula" />
-                                                                                <Label text="%constant1" />
-                                                                                <TextField fx:id="txtClrConst1" prefWidth="50.0" />
-                                                                                <Label layoutX="117.0" layoutY="17.0" text="%constant2" />
-                                                                                <TextField fx:id="txtClrConst2" prefWidth="50.0" />
-                                                            <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                                                            <Button fx:id="btnBackup" mnemonicParsing="false" text="Manual Backup" />
+                                                                                <Label text="%clrformula"/>
+                                                                                <Label text="%constant1"/>
+                                                                                <TextField fx:id="txtClrConst1"
+                                                                                           prefWidth="50.0"/>
+                                                                                <Label layoutX="117.0" layoutY="17.0"
+                                                                                       text="%constant2"/>
+                                                                                <TextField fx:id="txtClrConst2"
+                                                                                           prefWidth="50.0"/>
+                                                                                <Label maxWidth="1.7976931348623157E308"
+                                                                                       HBox.hgrow="ALWAYS"/>
+                                                                                <Button fx:id="btnBackup"
+                                                                                        mnemonicParsing="false"
+                                                                                        text="Manual Backup"/>
                                                                             </children>
                                                                         </HBox>
-                                                                        <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="70.0" prefHeight="100.0" prefWidth="200.0" spacing="19.0" GridPane.rowIndex="2">
+                                                                        <HBox alignment="CENTER_LEFT" layoutX="10.0"
+                                                                              layoutY="70.0" prefHeight="100.0"
+                                                                              prefWidth="200.0" spacing="19.0"
+                                                                              GridPane.rowIndex="2">
                                                                             <children>
-                                                                                <Label text="%defaultsnf" />
-                                                                                <ComboBox fx:id="cboxDefaultSnf" editable="true" prefWidth="100.0">
+                                                                                <Label text="%defaultsnf"/>
+                                                                                <ComboBox fx:id="cboxDefaultSnf"
+                                                                                          editable="true"
+                                                                                          prefWidth="100.0">
                                                                                     <HBox.margin>
-                                                                                        <Insets left="10.0" />
+                                                                                        <Insets left="10.0"/>
                                                                                     </HBox.margin>
                                                                                 </ComboBox>
-                                                                                <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                                                                <Label layoutX="117.0" layoutY="17.0" text="%defaultsnfvalue" />
-                                                                                <TextField fx:id="txtDefaultSnfValue" prefWidth="100.0" />
+                                                                                <Separator orientation="VERTICAL"
+                                                                                           prefHeight="200.0"/>
+                                                                                <Label layoutX="117.0" layoutY="17.0"
+                                                                                       text="%defaultsnfvalue"/>
+                                                                                <TextField fx:id="txtDefaultSnfValue"
+                                                                                           prefWidth="100.0"/>
                                                                             </children>
                                                                         </HBox>
-                                                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.rowIndex="3">
+                                                                        <HBox prefHeight="100.0" prefWidth="200.0"
+                                                                              spacing="15.0" GridPane.rowIndex="3">
                                                                             <children>
-                                                                                <Label text="%weightsetting" />
-                                                                                <ComboBox fx:id="cboxWeightSetting" editable="true" prefWidth="100.0" />
-                                                                                <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="13.0" />
+                                                                                <Label text="%weightsetting"/>
+                                                                                <ComboBox fx:id="cboxWeightSetting"
+                                                                                          editable="true"
+                                                                                          prefWidth="100.0"/>
+                                                                                <Separator orientation="VERTICAL"
+                                                                                           prefHeight="28.0"
+                                                                                           prefWidth="13.0"/>
                                                                                 <Label text="%qualitysetting">
                                                                                     <HBox.margin>
-                                                                                        <Insets />
+                                                                                        <Insets/>
                                                                                     </HBox.margin>
                                                                                 </Label>
-                                                                                <ComboBox fx:id="cboxQualitySetting" editable="true" prefWidth="100.0">
+                                                                                <ComboBox fx:id="cboxQualitySetting"
+                                                                                          editable="true"
+                                                                                          prefWidth="100.0">
                                                                                     <HBox.margin>
-                                                                                        <Insets left="15.0" />
+                                                                                        <Insets left="15.0"/>
                                                                                     </HBox.margin>
                                                                                 </ComboBox>
-                                                            <ComboBox fx:id="cboxQualityMachine" editable="true" prefWidth="125.0" />
+                                                                                <ComboBox fx:id="cboxQualityMachine"
+                                                                                          editable="true"
+                                                                                          prefWidth="125.0"/>
                                                                             </children>
                                                                         </HBox>
-                                                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0" GridPane.rowIndex="4">
+                                                                        <HBox prefHeight="100.0" prefWidth="200.0"
+                                                                              spacing="8.0" GridPane.rowIndex="4">
                                                                             <children>
-                                                                                <Label text="%samplemilksize" />
-                                                                                <TextField fx:id="txtSampleSize" prefWidth="100.0" />
-                                                            <Label text="%hr" />
-                                                            <TextField fx:id="txtHrs" prefWidth="110.0" />
+                                                                                <Label text="%samplemilksize"/>
+                                                                                <TextField fx:id="txtSampleSize"
+                                                                                           prefWidth="100.0"/>
+                                                                                <Label text="%hr"/>
+                                                                                <TextField fx:id="txtHrs"
+                                                                                           prefWidth="110.0"/>
                                                                             </children>
                                                                         </HBox>
-                                                                        <CheckBox fx:id="chkAcceptOtherMilk" mnemonicParsing="false" text="%acceptmilktype" GridPane.rowIndex="6" />
-                                                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.rowIndex="7">
+                                                                        <CheckBox fx:id="chkAcceptOtherMilk"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%acceptmilktype"
+                                                                                  GridPane.rowIndex="6"/>
+                                                                        <HBox prefHeight="100.0" prefWidth="200.0"
+                                                                              spacing="15.0" GridPane.rowIndex="7">
                                                                             <children>
-                                                                                <Label text="%allowmultipleentry" />
-                                                                                <CheckBox fx:id="chkAllowMultiEntry" mnemonicParsing="false" text="%samemilktype">
+                                                                                <Label text="%allowmultipleentry"/>
+                                                                                <CheckBox fx:id="chkAllowMultiEntry"
+                                                                                          mnemonicParsing="false"
+                                                                                          text="%samemilktype">
                                                                                     <HBox.margin>
-                                                                                        <Insets left="30.0" />
+                                                                                        <Insets left="30.0"/>
                                                                                     </HBox.margin>
                                                                                 </CheckBox>
-                                                                                <CheckBox fx:id="chkAllowMultiEntryDiffType" mnemonicParsing="false" text="%differentmilktype">
+                                                                                <CheckBox
+                                                                                        fx:id="chkAllowMultiEntryDiffType"
+                                                                                        mnemonicParsing="false"
+                                                                                        text="%differentmilktype">
                                                                                     <HBox.margin>
-                                                                                        <Insets left="30.0" />
+                                                                                        <Insets left="30.0"/>
                                                                                     </HBox.margin>
                                                                                 </CheckBox>
-                                                            <CheckBox fx:id="chkAllowZeroDispatch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%zerodispatch" />
+                                                                                <CheckBox fx:id="chkAllowZeroDispatch"
+                                                                                          maxWidth="1.7976931348623157E308"
+                                                                                          mnemonicParsing="false"
+                                                                                          text="%zerodispatch"/>
                                                                             </children>
                                                                         </HBox>
-                                                                        <GridPane GridPane.rowIndex="8" GridPane.rowSpan="4">
+                                                                        <GridPane GridPane.rowIndex="8"
+                                                                                  GridPane.rowSpan="4">
                                                                             <columnConstraints>
-                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" percentWidth="20.0" />
-                                                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="438.0" minWidth="10.0" percentWidth="20.0" />
-                                                                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
-                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   maxWidth="313.0"
+                                                                                                   minWidth="10.0"
+                                                                                                   percentWidth="20.0"/>
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   maxWidth="438.0"
+                                                                                                   minWidth="10.0"
+                                                                                                   percentWidth="20.0"/>
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   percentWidth="20.0"/>
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   minWidth="10.0"
+                                                                                                   percentWidth="20.0"
+                                                                                                   prefWidth="100.0"/>
+                                                                                <ColumnConstraints hgrow="SOMETIMES"
+                                                                                                   minWidth="10.0"
+                                                                                                   percentWidth="20.0"
+                                                                                                   prefWidth="100.0"/>
                                                                             </columnConstraints>
                                                                             <rowConstraints>
-                                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                vgrow="SOMETIMES"/>
+                                                                                <RowConstraints minHeight="10.0"
+                                                                                                vgrow="SOMETIMES"/>
                                                                             </rowConstraints>
                                                                             <children>
-                                                                                <Label text="%membercollectionquantitymode" />
-                                                                                <Label text="%localmilksalequantitymode" GridPane.rowIndex="2" />
-                                                                                <Label text="%dispatchquantitymode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                                <Label text="%bmccollectionquantitymode" GridPane.columnIndex="1" />
-                                                                                <ComboBox fx:id="cboxMemberCollectionQtyMode" editable="true" prefWidth="110.0" GridPane.rowIndex="1" />
-                                                                                <ComboBox fx:id="cboxBmcCollectionQtyMode" editable="true" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                <ComboBox fx:id="cboxLocalMilkSaleQtyMode" editable="true" prefWidth="110.0" GridPane.rowIndex="3" />
-                                                                                <ComboBox fx:id="cboxDispatchMilkQtyMode" editable="true" prefWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                            <Label text="%sliplanguage" GridPane.columnIndex="2" />
-                                                            <ComboBox fx:id="cboxSlipLanguage" editable="true" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                            <Label text="%samplemilk" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                            <TextField fx:id="txtSampleMilk" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                                            <TextField fx:id="txtSpace" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                                            <Label text="%space" GridPane.columnIndex="3" />
-                                                            <Label text="%receiptquantitymode" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                            <ComboBox fx:id="cboxReceiptMilkQtyMode" editable="true" prefWidth="110.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                                            <TextField fx:id="txtCollectionSlip" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                            <Label text="%collectionslip" GridPane.columnIndex="4" />
+                                                                                <Label text="%membercollectionquantitymode"/>
+                                                                                <Label text="%localmilksalequantitymode"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <Label text="%dispatchquantitymode"
+                                                                                       GridPane.columnIndex="1"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <Label text="%bmccollectionquantitymode"
+                                                                                       GridPane.columnIndex="1"/>
+                                                                                <ComboBox
+                                                                                        fx:id="cboxMemberCollectionQtyMode"
+                                                                                        editable="true"
+                                                                                        prefWidth="110.0"
+                                                                                        GridPane.rowIndex="1"/>
+                                                                                <ComboBox
+                                                                                        fx:id="cboxBmcCollectionQtyMode"
+                                                                                        editable="true"
+                                                                                        prefWidth="110.0"
+                                                                                        GridPane.columnIndex="1"
+                                                                                        GridPane.rowIndex="1"/>
+                                                                                <ComboBox
+                                                                                        fx:id="cboxLocalMilkSaleQtyMode"
+                                                                                        editable="true"
+                                                                                        prefWidth="110.0"
+                                                                                        GridPane.rowIndex="3"/>
+                                                                                <ComboBox
+                                                                                        fx:id="cboxDispatchMilkQtyMode"
+                                                                                        editable="true"
+                                                                                        prefWidth="110.0"
+                                                                                        GridPane.columnIndex="1"
+                                                                                        GridPane.rowIndex="3"/>
+                                                                                <Label text="%sliplanguage"
+                                                                                       GridPane.columnIndex="2"/>
+                                                                                <ComboBox fx:id="cboxSlipLanguage"
+                                                                                          editable="true"
+                                                                                          prefWidth="110.0"
+                                                                                          GridPane.columnIndex="2"
+                                                                                          GridPane.rowIndex="1"/>
+                                                                                <Label text="%applicationlanguage"
+                                                                                       GridPane.columnIndex="4"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <ComboBox fx:id="cboxApplicationLanguage"
+                                                                                          editable="true"
+                                                                                          prefWidth="110.0"
+                                                                                          GridPane.columnIndex="4"
+                                                                                          GridPane.rowIndex="3"/>
+                                                                                <Label text="%samplemilk"
+                                                                                       GridPane.columnIndex="3"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <TextField fx:id="txtSampleMilk"
+                                                                                           maxWidth="110.0"
+                                                                                           minWidth="110.0"
+                                                                                           prefWidth="110.0"
+                                                                                           GridPane.columnIndex="3"
+                                                                                           GridPane.rowIndex="3"/>
+                                                                                <TextField fx:id="txtSpace"
+                                                                                           maxWidth="110.0"
+                                                                                           minWidth="110.0"
+                                                                                           prefWidth="110.0"
+                                                                                           GridPane.columnIndex="3"
+                                                                                           GridPane.rowIndex="1"/>
+                                                                                <Label text="%space"
+                                                                                       GridPane.columnIndex="3"/>
+                                                                                <Label text="%receiptquantitymode"
+                                                                                       GridPane.columnIndex="2"
+                                                                                       GridPane.rowIndex="2"/>
+                                                                                <ComboBox fx:id="cboxReceiptMilkQtyMode"
+                                                                                          editable="true"
+                                                                                          prefWidth="110.0"
+                                                                                          GridPane.columnIndex="2"
+                                                                                          GridPane.rowIndex="3"/>
+                                                                                <TextField fx:id="txtCollectionSlip"
+                                                                                           maxWidth="110.0"
+                                                                                           minWidth="110.0"
+                                                                                           prefWidth="110.0"
+                                                                                           GridPane.columnIndex="4"
+                                                                                           GridPane.rowIndex="1"/>
+                                                                                <Label text="%collectionslip"
+                                                                                       GridPane.columnIndex="4"/>
                                                                             </children>
                                                                         </GridPane>
-                                                      <HBox alignment="CENTER_LEFT" spacing="15.0" GridPane.rowIndex="5">
-                                                         <children>
-                                                            <Label text="%avgparameterbasedonprev" />
-                                                            <TextField fx:id="txtAvgPBasedOnPrevShift" prefWidth="100.0" />
-                                                            <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="13.0" />
-                                                            <CheckBox fx:id="chkAvgParam" mnemonicParsing="false" text="%avgparametercaptureifmachineisoff" />
-                                                            <TextField fx:id="txtAvgPIfMachineOff" disable="true" prefWidth="100.0" />
-                                                         </children>
-                                                      </HBox>
+                                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
+                                                                              GridPane.rowIndex="5">
+                                                                            <children>
+                                                                                <Label text="%avgparameterbasedonprev"/>
+                                                                                <TextField
+                                                                                        fx:id="txtAvgPBasedOnPrevShift"
+                                                                                        prefWidth="100.0"/>
+                                                                                <Separator orientation="VERTICAL"
+                                                                                           prefHeight="28.0"
+                                                                                           prefWidth="13.0"/>
+                                                                                <CheckBox fx:id="chkAvgParam"
+                                                                                          mnemonicParsing="false"
+                                                                                          text="%avgparametercaptureifmachineisoff"/>
+                                                                                <TextField fx:id="txtAvgPIfMachineOff"
+                                                                                           disable="true"
+                                                                                           prefWidth="100.0"/>
+                                                                            </children>
+                                                                        </HBox>
 
 
                                                                     </children>
                                                                 </GridPane>
-                                                                <HBox alignment="CENTER_RIGHT" layoutX="659.0" layoutY="458.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                                                <HBox alignment="CENTER_RIGHT" layoutX="659.0"
+                                                                      layoutY="458.0" spacing="15.0"
+                                                                      AnchorPane.bottomAnchor="0.0"
+                                                                      AnchorPane.rightAnchor="0.0">
                                                                     <children>
-                                                                        <Button fx:id="btnSave" styleClass="button-primary" text="%save" />
-                                                                        <Button fx:id="btnClose" text="%close" />
+                                                                        <Button fx:id="btnSave"
+                                                                                styleClass="button-primary"
+                                                                                text="%save"/>
+                                                                        <Button fx:id="btnClose" text="%close"/>
                                                                     </children>
                                                                 </HBox>
                                                             </children>
@@ -200,26 +374,49 @@
                                                     <children>
                                                         <AnchorPane>
                                                             <children>
-                                                                <GridPane layoutX="14.0" layoutY="14.0" prefHeight="79.0" prefWidth="326.0">
+                                                                <GridPane layoutX="14.0" layoutY="14.0"
+                                                                          prefHeight="79.0" prefWidth="326.0">
                                                                     <columnConstraints>
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES"
+                                                                                           minWidth="10.0"
+                                                                                           prefWidth="100.0"/>
+                                                                        <ColumnConstraints hgrow="SOMETIMES"
+                                                                                           minWidth="10.0"
+                                                                                           prefWidth="100.0"/>
                                                                     </columnConstraints>
                                                                     <rowConstraints>
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
                                                                     </rowConstraints>
                                                                     <children>
-                                                                        <Label text="%productpurchaserate" />
-                                                                        <Label text="%productsalerate" GridPane.rowIndex="1" />
-                                                                        <CheckBox fx:id="chkPurchaseRate" mnemonicParsing="false" text="%inclusivetax" GridPane.columnIndex="1" />
-                                                                        <CheckBox fx:id="chkSaleRate" mnemonicParsing="false" text="%inclusivetax" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                        <Label text="%productpurchaserate"/>
+                                                                        <Label text="%productsalerate"
+                                                                               GridPane.rowIndex="1"/>
+                                                                        <CheckBox fx:id="chkPurchaseRate"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%inclusivetax"
+                                                                                  GridPane.columnIndex="1"/>
+                                                                        <CheckBox fx:id="chkSaleRate"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%inclusivetax"
+                                                                                  GridPane.columnIndex="1"
+                                                                                  GridPane.rowIndex="1"/>
                                                                     </children>
                                                                 </GridPane>
-                                                                <HBox alignment="CENTER_RIGHT" layoutX="-7.0" layoutY="105.0" maxWidth="1.7976931348623157E308" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                                                <HBox alignment="CENTER_RIGHT" layoutX="-7.0"
+                                                                      layoutY="105.0" maxWidth="1.7976931348623157E308"
+                                                                      spacing="15.0" AnchorPane.bottomAnchor="0.0"
+                                                                      AnchorPane.leftAnchor="0.0"
+                                                                      AnchorPane.rightAnchor="0.0">
                                                                     <children>
-                                                                        <Button fx:id="btnSave1" styleClass="button-primary" text="%save" />
-                                                                        <Button fx:id="btnClose1" text="%close" />
+                                                                        <Button fx:id="btnSave1"
+                                                                                styleClass="button-primary"
+                                                                                text="%save"/>
+                                                                        <Button fx:id="btnClose1" text="%close"/>
                                                                     </children>
                                                                 </HBox>
                                                             </children>
@@ -234,33 +431,77 @@
                                                     <children>
                                                         <AnchorPane>
                                                             <children>
-                                                                <HBox alignment="CENTER_RIGHT" layoutX="655.0" layoutY="531.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                                                <HBox alignment="CENTER_RIGHT" layoutX="655.0"
+                                                                      layoutY="531.0" spacing="15.0"
+                                                                      AnchorPane.bottomAnchor="0.0"
+                                                                      AnchorPane.leftAnchor="0.0"
+                                                                      AnchorPane.rightAnchor="0.0">
                                                                     <children>
-                                                                        <Button fx:id="btnSave2" styleClass="button-primary" text="%save" />
-                                                                        <Button fx:id="btnClose2" text="%close" />
+                                                                        <Button fx:id="btnSave2"
+                                                                                styleClass="button-primary"
+                                                                                text="%save"/>
+                                                                        <Button fx:id="btnClose2" text="%close"/>
                                                                     </children>
                                                                 </HBox>
-                                                                <GridPane layoutY="13.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="121.0" prefWidth="354.0" vgap="10.0">
+                                                                <GridPane layoutY="13.0"
+                                                                          maxHeight="1.7976931348623157E308"
+                                                                          maxWidth="1.7976931348623157E308"
+                                                                          prefHeight="121.0" prefWidth="354.0"
+                                                                          vgap="10.0">
                                                                     <columnConstraints>
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES"
+                                                                                           minWidth="10.0"
+                                                                                           prefWidth="100.0"/>
+                                                                        <ColumnConstraints hgrow="SOMETIMES"
+                                                                                           minWidth="10.0"
+                                                                                           prefWidth="100.0"/>
                                                                     </columnConstraints>
                                                                     <rowConstraints>
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints minHeight="10.0"
+                                                                                        prefHeight="30.0"
+                                                                                        vgrow="SOMETIMES"/>
+                                                                        <RowConstraints/>
                                                                     </rowConstraints>
                                                                     <children>
-                                                                        <Label maxWidth="1.7976931348623157E308" text="%allowcashpayment" />
-                                                                        <CheckBox fx:id="chkPaymentMode" mnemonicParsing="false" GridPane.columnIndex="1" />
-                                                                        <Label maxWidth="1.7976931348623157E308" text="%paymenttransfer" GridPane.rowIndex="1" />
-                                                                        <Label maxWidth="1.7976931348623157E308" styleClass="label-bold" text="%paymentoption" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                                                                        <Label maxWidth="1.7976931348623157E308" text="%payableconfig" GridPane.rowIndex="3" />
-                                                                        <ComboBox fx:id="cboxPaymentMode" editable="true" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                        <ComboBox fx:id="cboxPaymentOption" editable="true" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                        <TextField fx:id="txtDecimalValue" maxWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                                        <Label text="%decimalvalue" GridPane.rowIndex="4" />
+                                                                        <Label maxWidth="1.7976931348623157E308"
+                                                                               text="%allowcashpayment"/>
+                                                                        <CheckBox fx:id="chkPaymentMode"
+                                                                                  mnemonicParsing="false"
+                                                                                  GridPane.columnIndex="1"/>
+                                                                        <Label maxWidth="1.7976931348623157E308"
+                                                                               text="%paymenttransfer"
+                                                                               GridPane.rowIndex="1"/>
+                                                                        <Label maxWidth="1.7976931348623157E308"
+                                                                               styleClass="label-bold"
+                                                                               text="%paymentoption"
+                                                                               GridPane.columnSpan="2147483647"
+                                                                               GridPane.rowIndex="2"/>
+                                                                        <Label maxWidth="1.7976931348623157E308"
+                                                                               text="%payableconfig"
+                                                                               GridPane.rowIndex="3"/>
+                                                                        <ComboBox fx:id="cboxPaymentMode"
+                                                                                  editable="true" prefWidth="141.0"
+                                                                                  GridPane.columnIndex="1"
+                                                                                  GridPane.rowIndex="1"/>
+                                                                        <ComboBox fx:id="cboxPaymentOption"
+                                                                                  editable="true" prefWidth="141.0"
+                                                                                  GridPane.columnIndex="1"
+                                                                                  GridPane.rowIndex="3"/>
+                                                                        <TextField fx:id="txtDecimalValue"
+                                                                                   maxWidth="110.0"
+                                                                                   GridPane.columnIndex="1"
+                                                                                   GridPane.rowIndex="4"/>
+                                                                        <Label text="%decimalvalue"
+                                                                               GridPane.rowIndex="4"/>
                                                                     </children>
                                                                 </GridPane>
                                                             </children>
