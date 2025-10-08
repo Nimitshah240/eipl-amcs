@@ -3,6 +3,7 @@ package com.eipl.amcs.master.org.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.CheckComboBox;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -12,9 +13,10 @@ import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.org.convertor.SocietyConvertor;
-import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
+import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.service.DockService;
 import com.eipl.amcs.master.org.task.DockNumberLoadTask;
 import com.eipl.amcs.master.org.task.DockSaveTask;
 import com.eipl.amcs.master.org.task.SocietyLoadTask;
@@ -57,6 +59,14 @@ public class DockAddEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private DockMilkTypeDto dto = null;
+
+    private DockService dockService;
+    private NextCodeService nextCodeService;
+
+    public DockAddEditController() {
+        dockService = MainApp.context.getBean(DockService.class);
+        nextCodeService = MainApp.context.getBean(NextCodeService.class);
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;

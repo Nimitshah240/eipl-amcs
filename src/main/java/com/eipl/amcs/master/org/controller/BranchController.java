@@ -4,11 +4,11 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
-import com.eipl.amcs.master.geo.model.*;
-//import com.eipl.amcs.master.geo.dto.Village;
+import com.eipl.amcs.master.geo.model.SubDistrict;
+import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.org.task.BranchLoadTask;
+import com.eipl.amcs.master.org.service.BranchService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 public class BranchController implements MyInitialization {
 
@@ -45,6 +44,12 @@ public class BranchController implements MyInitialization {
     @FXML
     private StackPane root;
     private ResourceBundle resourceBundle;
+
+    private BranchService branchService;
+
+    public BranchController() {
+        branchService = MainApp.context.getBean(BranchService.class);
+    }
 
     @Override
     public Node getRoot() {
@@ -76,20 +81,15 @@ public class BranchController implements MyInitialization {
         }
     }
 
-
     @Override
     public void loadData() {
-        var task = new BranchLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Branch> list = task.get();
-                if (list != null)
-                    tableBranch.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+      try {
+          List<Branch> list = branchService.findAll();
+          if (list != null)
+              tableBranch.setItems(FXCollections.observableList(list));
+      } catch (RuntimeException e) {
+          throw new RuntimeException(e);
+      }
     }
 }
 

@@ -2,12 +2,11 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-//import com.eipl.amcs.master.geo.dto.*;
+import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.task.BmcLoadTask;
-import javafx.beans.property.SimpleObjectProperty;
+import com.eipl.amcs.master.org.service.BmcService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -20,8 +19,6 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import com.eipl.amcs.master.geo.model.*;
 
 public class BmcController implements MyInitialization {
 
@@ -49,6 +46,13 @@ public class BmcController implements MyInitialization {
     @FXML
     private StackPane root;
 
+
+    private BmcService bmcService;
+
+    public BmcController() {
+        bmcService = MainApp.context.getBean(BmcService.class);
+    }
+
     @Override
     public Node getRoot() {
         return root;
@@ -65,33 +69,29 @@ public class BmcController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
-        colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
-        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-        colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
-        colCity.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCity()));
-        colPhoneNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhoneNo()));
-        colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
-        colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
-    }catch (Exception e) {
+        try {
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+            colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
+            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+            colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+            colCity.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCity()));
+            colPhoneNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhoneNo()));
+            colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
+            colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        var task = new BmcLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Bmc> list = task.get();
-                if (list != null)
-                    tableBmc.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<Bmc> list = bmcService.findAll();
+            if (list != null)
+                tableBmc.setItems(FXCollections.observableList(list));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

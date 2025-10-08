@@ -6,7 +6,7 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.task.UnionLoadTask;
+import com.eipl.amcs.master.org.service.UnionService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,7 +21,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class UnionController implements MyInitialization {
 
@@ -41,6 +42,12 @@ public class UnionController implements MyInitialization {
     private StackPane root;
     private ResourceBundle resourceBundle;
 
+    private UnionService service;
+
+    public UnionController() {
+        service = context.getBean(UnionService.class);
+    }
+
     @Override
     public Node getRoot() {
         return root;
@@ -58,39 +65,34 @@ public class UnionController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
-        colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
-        colRegistrationCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
-        colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
-
-        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-        colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
-        colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
-        colPhoneNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhoneNo()));
-        colCity.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCity()));
-        colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
-        colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
-        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
-                resourceBundle.getString("active") : resourceBundle.getString("inactive")));
-    }catch (Exception e) {
+        try {
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+            colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
+            colRegistrationCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+            colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
+            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+            colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+            colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
+            colPhoneNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhoneNo()));
+            colCity.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCity()));
+            colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
+            colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
+            colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
+                    resourceBundle.getString("active") : resourceBundle.getString("inactive")));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        var task = new UnionLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Union> list = task.get();
-                if (list != null)
-                    tableUnion.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<Union> list = service.findAll();
+            if (list != null)
+                tableUnion.setItems(FXCollections.observableList(list));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

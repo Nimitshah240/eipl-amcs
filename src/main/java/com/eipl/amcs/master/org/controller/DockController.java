@@ -9,6 +9,7 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.service.DockService;
 import com.eipl.amcs.master.org.task.DockDeleteTask;
 import com.eipl.amcs.master.org.task.DockLoadTask;
 import javafx.beans.property.ObjectProperty;
@@ -43,6 +44,9 @@ public class DockController implements MyInitialization, PopupCallback {
     private StackPane root;
     private ResourceBundle resourceBundle;
     private final ObjectProperty<DockMilkTypeDto> propDockMilkTypeDto;
+
+    private DockService dockService;
+    private DockService dockMilkTypeRepository;
 
     public DockController() {
         propDockMilkTypeDto = new SimpleObjectProperty<>();
@@ -81,24 +85,24 @@ public class DockController implements MyInitialization, PopupCallback {
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "DockAddEdit", dto, this);
         });
-        btnDelete.setOnAction(e ->{
+        btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_DOCK_DELETE"))
                 throw new UnAuthorizedAccessException();
-                deleteData();
-    });
+            deleteData();
+        });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
     }
 
     @Override
     public void setupTable() {
-        try{
-        colIsDefault.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDock().getIsDefault() != 0 ? resourceBundle.getString("yes") : resourceBundle.getString("no")));
-        colDockNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDock().getDockNo()));
-        colSociety.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDock().getSociety()));
-        colMilkType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMilkTypesAsString()));
+        try {
+            colIsDefault.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDock().getIsDefault() != 0 ? resourceBundle.getString("yes") : resourceBundle.getString("no")));
+            colDockNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDock().getDockNo()));
+            colSociety.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDock().getSociety()));
+            colMilkType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMilkTypesAsString()));
 
-        propDockMilkTypeDto.bind(tableDock.getSelectionModel().selectedItemProperty());
-    }catch (Exception e) {
+            propDockMilkTypeDto.bind(tableDock.getSelectionModel().selectedItemProperty());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
