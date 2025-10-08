@@ -8,6 +8,7 @@ import com.eipl.amcs.master.geo.model.SubDistrict;
 import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.master.org.service.BankService;
 import com.eipl.amcs.master.org.service.BranchService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +23,8 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class BranchController implements MyInitialization {
 
@@ -48,7 +51,7 @@ public class BranchController implements MyInitialization {
     private BranchService branchService;
 
     public BranchController() {
-        branchService = MainApp.context.getBean(BranchService.class);
+        branchService = context.getBean(BranchService.class);;
     }
 
     @Override

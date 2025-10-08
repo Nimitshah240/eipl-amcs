@@ -109,6 +109,8 @@ public class CommonUtils {
                 return "Milk Analyser";
             case 2:
                 return "Display";
+            case 3:
+                return "Splitter";
             default:
                 throw new IllegalStateException("Unexpected value: " + deviceType);
         }
