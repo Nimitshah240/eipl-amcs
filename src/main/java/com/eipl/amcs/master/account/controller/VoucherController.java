@@ -3,18 +3,14 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.dto.VoucherDto;
+import com.eipl.amcs.master.account.model.Voucher;
+import com.eipl.amcs.master.account.service.VoucherService;
 import com.eipl.amcs.master.account.task.VoucherDeleteTask;
-import com.eipl.amcs.master.account.task.VoucherLoadTask;
-import com.eipl.amcs.master.global.model.Unit;
-import com.eipl.amcs.master.operation.controller.MemberAddEditController;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -33,22 +29,27 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.MainApp.context;
+
 public class VoucherController implements MyInitialization, PopupCallback {
     @FXML
     AnchorPane root;
     @FXML
     TableView<VoucherDto> tableVoucher;
     @FXML
-    TableColumn<VoucherDto, String> colType, colVoucherDate,  colVoucherNo, colRefNo, colRemarks;
+    TableColumn<VoucherDto, String> colType, colVoucherDate, colVoucherNo, colRefNo, colRemarks;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnLedger;
 
     private ResourceBundle resourceBundle;
 
     private final ObjectProperty<VoucherDto> propVoucherDto;
+    private VoucherService voucherService;
 
     public VoucherController() {
         propVoucherDto = new SimpleObjectProperty<>();
+        voucherService = context.getBean(VoucherService.class);
+
     }
 
     @Override
@@ -132,16 +133,12 @@ public class VoucherController implements MyInitialization, PopupCallback {
     @Override
     public void loadData() {
         tableVoucher.setItems(null);
-        var task = new VoucherLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<VoucherDto> list = task.get();
-                if (list != null) tableVoucher.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<VoucherDto> list = voucherService.findAll();
+            if (list != null) tableVoucher.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
