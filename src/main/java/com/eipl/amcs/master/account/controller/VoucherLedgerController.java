@@ -4,8 +4,10 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.account.dto.VoucherDto;
+import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
-import com.eipl.amcs.master.account.task.VoucherTransactionLoadTask;
+import com.eipl.amcs.master.account.repository.VoucherRepository;
+import com.eipl.amcs.master.account.service.VoucherService;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -22,9 +24,11 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class VoucherLedgerController implements MyInitialization, PopupCallback {
     @FXML
@@ -46,6 +50,8 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
     private static final Logger LOGGER = LoggerFactory.getLogger(VoucherLedgerController.class);
     private ObjectProperty<VoucherTransaction> propTransaction1;
     private ObjectProperty<VoucherTransaction> propTransaction2;
+    private VoucherRepository repository;
+    private VoucherService service;
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -68,6 +74,8 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
     public VoucherLedgerController() {
         propTransaction1 = new SimpleObjectProperty<>();
         propTransaction2 = new SimpleObjectProperty<>();
+        service = context.getBean(VoucherService.class);
+        repository = context.getBean(VoucherRepository.class);
     }
 
     @Override
@@ -88,39 +96,38 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
             }
         });
 
-        table2.setOnMouseClicked(e->{
+        table2.setOnMouseClicked(e -> {
             table1.getSelectionModel().clearSelection();
         });
-        table1.setOnMouseClicked(e->{
+        table1.setOnMouseClicked(e -> {
             table2.getSelectionModel().clearSelection();
         });
 
     }
 
-
     @Override
     public void loadData() {
-        var task = new VoucherTransactionLoadTask(voucherDto.getVoucher().getCode());
-        task.setOnSucceeded(e -> {
-            try {
-                listVoucherTransaction = new ArrayList<>(task.get());
+        try {
+            Optional<Voucher> voucher = repository.findById(voucherDto.getVoucher().getCode());
+            if (voucher.isPresent()) {
+                List<VoucherTransaction> list = service.findAllTransaction(voucher.get());
+                if (list == null || list.isEmpty())
+                    return;
+                listVoucherTransaction = new ArrayList<>(list);
                 table1.setItems(FXCollections.observableList(listVoucherTransaction.stream().filter
                         (e1 -> !e1.getCreditDebit()).collect(Collectors.toList())));
                 table2.setItems(FXCollections.observableList(listVoucherTransaction.stream().filter
                         (VoucherTransaction::getCreditDebit).collect(Collectors.toList())));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void setupTable() {
         colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
         colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colType.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("debit")));
-//        colVoucherType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getVoucher().getVoucherType().getName()));
-//        colCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getCode()));
         propTransaction1.bind(table1.getSelectionModel().selectedItemProperty());
     }
 
@@ -128,8 +135,6 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
         colName1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
         colAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colType1.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("credit")));
-//        colVoucherType1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getVoucher().getVoucherType().getName()));
-//        colCode1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getCode()));
         propTransaction2.bind(table2.getSelectionModel().selectedItemProperty());
     }
 

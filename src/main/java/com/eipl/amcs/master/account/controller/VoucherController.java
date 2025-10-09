@@ -9,8 +9,9 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Voucher;
+import com.eipl.amcs.master.account.repository.VoucherRepository;
 import com.eipl.amcs.master.account.service.VoucherService;
-import com.eipl.amcs.master.account.task.VoucherDeleteTask;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,7 +28,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -45,11 +45,12 @@ public class VoucherController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<VoucherDto> propVoucherDto;
     private VoucherService voucherService;
+    private VoucherRepository voucherRepository;
 
     public VoucherController() {
         propVoucherDto = new SimpleObjectProperty<>();
         voucherService = context.getBean(VoucherService.class);
-
+        voucherRepository = context.getBean(VoucherRepository.class);
     }
 
     @Override
@@ -105,15 +106,6 @@ public class VoucherController implements MyInitialization, PopupCallback {
                 MainApp.getContentPane().setCenter((controller).getRoot());
             }
         });
-//        btnEdit.setOnAction(e -> {
-//            Voucher dto = propVoucherDto.get().getVoucher();
-//            if (dto != null) {
-//                VoucherAddEditController controller = (VoucherAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherAddEdit.fxml"));
-//                controller.setVoucher(dto);
-//                MainApp.getContentPane().setCenter(controller.getRoot());
-//            }
-//        });
-
     }
 
 
@@ -148,21 +140,15 @@ public class VoucherController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             Voucher dto = propVoucherDto.get().getVoucher();
             if (dto != null) {
-                var task = new VoucherDeleteTask(dto.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("voucher"), resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    Optional<Voucher> voucher = voucherRepository.findById(dto.getCode());
+                    voucherService.delete(voucher.get(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("voucher"), resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                }
             }
         }
     }

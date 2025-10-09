@@ -9,19 +9,21 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.cellfactory.LedgerBalanceCellFactory;
 import com.eipl.amcs.controls.cellfactory.RightAlignCellFactory;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.master.account.dto.*;
-import com.eipl.amcs.master.account.model.FinancialYear;
-import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.account.task.LedgerSubLedgerMappingDtoLoadTask;
-import com.eipl.amcs.master.account.task.SubLedgerLoadTask;
-import com.eipl.amcs.master.account.task.YearClosingDtoSaveTask;
+import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
+import com.eipl.amcs.master.account.dto.YearClosingDto;
+import com.eipl.amcs.master.account.model.*;
+import com.eipl.amcs.master.account.repository.FinancialYearRepository;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
+import com.eipl.amcs.master.account.service.FinancialYearService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.SubLedgerService;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.LedgerClose;
 import com.eipl.amcs.report.dto.ProductStockValuation;
-import com.eipl.amcs.report.task.*;
+import com.eipl.amcs.report.task.NextFinYearDateTask;
+import com.eipl.amcs.report.task.ProfitLossTask;
+import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.NumberUtil;
 import com.eipl.amcs.utils.TableExportUtil;
 import javafx.beans.property.ObjectProperty;
@@ -43,18 +45,17 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
-import com.eipl.amcs.master.account.model.SocietyYearClosing;
-import com.eipl.amcs.master.account.model.SubLedger;
-import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class FinancialYearClosingController implements MyInitialization, PopupCallback {
 
@@ -158,6 +159,11 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     private Stage stage;
 
     private Boolean flag = true;
+    private LedgerService ledgerService;
+    private SubLedgerService subLedgerService;
+    private FinancialYearService financialYearService;
+    private FinancialYearRepository financialYearRepository;
+    private LedgerRepository ledgerRepository;
 
     @Override
     public Node getRoot() {
@@ -168,7 +174,11 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         propObjLedger = new SimpleObjectProperty<>();
         ledgerOpeningBalanceList = new ArrayList<>();
         subLedgerOpeningBalanceList = new ArrayList<>();
-
+        ledgerService = context.getBean(LedgerService.class);
+        subLedgerService = context.getBean(SubLedgerService.class);
+        financialYearService = MainApp.context.getBean(FinancialYearService.class);
+        financialYearRepository = MainApp.context.getBean(FinancialYearRepository.class);
+        ledgerRepository = MainApp.context.getBean(LedgerRepository.class);
     }
 
     public void setData() {
@@ -450,51 +460,30 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     }
 
     public void loadLedger() {
-        var task = new LedgerLoadTask();
         if (listLedger != null)
             listLedger.clear();
-        task.setOnSucceeded(ee -> {
-            try {
-                listLedger = task.get();
 
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            listLedger = ledgerService.findAllByIsActive();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
 
     public void loadSubLedger() {
-        var task = new SubLedgerLoadTask();
         if (listSubLedger != null)
             listSubLedger.clear();
-        task.setOnSucceeded(ee -> {
-            try {
-                listSubLedger = task.get();
+        try {
+            listSubLedger = subLedgerService.findAll();
 
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
-    }
-
-    public void loadLedgerSubLedgerMapping(Ledger ledger) {
-        ledgerSubLedgerDto = new LedgerSubLedgerDto();
-        var task = new LedgerSubLedgerMappingDtoLoadTask(new Ledger(), null);
-        if (ledgerSubLedgerDto != null)
-            task.setOnSucceeded(ee -> {
-                try {
-                    ledgerSubLedgerDto = task.get();
-                    listSubLedger = ledgerSubLedgerDto.getSubLedgerList();
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void closeReview() {
+//    NIMIT LOCHO CHE AIYA
         NextFinYearDateTask financialYear = new NextFinYearDateTask(MainApp.getFinancialYear().getEndDate().plusDays(1));
         financialYear.setOnSucceeded(e -> {
             try {
@@ -504,74 +493,44 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                             resources.getString("alert.yearclose.nextyearnotfound"));
                     alert.createAlert();
                 } else {
-                    FinancialYearsCodeTask nextFinYearDateTask = new FinancialYearsCodeTask(MainApp.getFinancialYear().getCode());
-                    nextFinYearDateTask.setOnSucceeded(ee -> {
-                        try {
-                            Boolean financialYearCode = nextFinYearDateTask.get();
-                            if (financialYearCode) {
-                                ledgerOpeningBalanceList.clear();
-                                for (LedgerClose arr : ledgerCloses) {
-                                    LedgerOpeningBalance balance = new LedgerOpeningBalance();
-                                    balance.setSociety(MainApp.identityDto.getSociety());
-                                    balance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                                    balance.setBalance(new BigDecimal(arr.getBalance()));
-                                    balance.setCreditDebit(arr.isCreditDebit());
-                                    balance.setAutoManual(true);
-                                    balance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
+                    try {
+                        Boolean financialYearCode = financialYearRepository.fetchByCode(MainApp.getFinancialYear().getCode()) <= 0;
+                        if (financialYearCode) {
+                            ledgerOpeningBalanceList.clear();
+                            for (LedgerClose arr : ledgerCloses) {
+                                LedgerOpeningBalance balance = new LedgerOpeningBalance();
+                                balance.setSociety(MainApp.identityDto.getSociety());
+                                balance.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                balance.setBalance(new BigDecimal(arr.getBalance()));
+                                balance.setCreditDebit(arr.isCreditDebit());
+                                balance.setAutoManual(true);
+                                balance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
 
-                                    balance.setLedger(listLedger.stream().filter(p -> p.getCode().equals(arr.getLedgerCode())).findAny().orElse(null));
+                                balance.setLedger(listLedger.stream().filter(p -> p.getCode().equals(arr.getLedgerCode())).findAny().orElse(null));
 
-                                    ledgerOpeningBalanceList.add(balance);
-                                }
-
-                                SubLedgerOpeningTask subLedgerOpeningTask = new SubLedgerOpeningTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-                                subLedgerOpeningTask.setOnSucceeded(s -> {
-                                    try {
-                                        subLedgerOpeningBalanceList = subLedgerOpeningTask.get();
-                                        for (Object[] arr : subLedgerOpeningBalanceList) {
-                                            SubLedgerOpeningBalance subLedgerOpeningBalance = new SubLedgerOpeningBalance();
-                                            subLedgerOpeningBalance.setBalance(BigDecimal.valueOf((Double) arr[2]));
-                                            subLedgerOpeningBalance.setCreditDebit((double) arr[2] < 0 ? false : true);
-                                            subLedgerOpeningBalance.setSociety(MainApp.identityDto.getSociety());
-                                            subLedgerOpeningBalance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
-                                            subLedgerOpeningBalance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                                            subLedgerOpeningBalance.setAutoManual(true);
-                                            LedgerFetchByCodeLoadTask loadFetchByCodeLedgerTask = new LedgerFetchByCodeLoadTask((String) arr[3]);
-                                            loadFetchByCodeLedgerTask.setOnSucceeded(eee -> {
-                                                try {
-                                                    ledgerFetchByCode = loadFetchByCodeLedgerTask.get();
-                                                    SubLedgerFetchByCodeLoadTask loadFetchByCodeSubLedgerTask = new SubLedgerFetchByCodeLoadTask((String) arr[0]);
-                                                    loadFetchByCodeSubLedgerTask.setOnSucceeded(eeq -> {
-                                                        try {
-                                                            subLedgerFetchByCode = loadFetchByCodeSubLedgerTask.get();
-                                                            subLedgerOpeningBalance.setSubLedger(subLedgerFetchByCode);
-                                                            subLedgerOpeningBalance.setLedger(ledgerFetchByCode);
-                                                            listSubLdgrOpening.add(subLedgerOpeningBalance);
-                                                        } catch (InterruptedException | ExecutionException ex) {
-                                                            ex.printStackTrace();
-                                                        }
-                                                    });
-                                                    new Thread(loadFetchByCodeSubLedgerTask).start();
-                                                } catch (InterruptedException | ExecutionException ex) {
-                                                    ex.printStackTrace();
-                                                }
-                                            });
-                                            new Thread(loadFetchByCodeLedgerTask).start();
-                                        }
-
-                                    } catch (InterruptedException | ExecutionException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                });
-                                new Thread(subLedgerOpeningTask).start();
-
+                                ledgerOpeningBalanceList.add(balance);
                             }
-                            saveData();
-                        } catch (InterruptedException | ExecutionException ex) {
-                            ex.printStackTrace();
+
+                            subLedgerOpeningBalanceList = ledgerRepository.fetchSubLedgerOpeningBalanceSecond(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
+                            for (Object[] arr : subLedgerOpeningBalanceList) {
+                                SubLedgerOpeningBalance subLedgerOpeningBalance = new SubLedgerOpeningBalance();
+                                subLedgerOpeningBalance.setBalance(BigDecimal.valueOf((Double) arr[2]));
+                                subLedgerOpeningBalance.setCreditDebit((double) arr[2] < 0 ? false : true);
+                                subLedgerOpeningBalance.setSociety(MainApp.identityDto.getSociety());
+                                subLedgerOpeningBalance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
+                                subLedgerOpeningBalance.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                subLedgerOpeningBalance.setAutoManual(true);
+                                ledgerFetchByCode = ledgerService.findById((String) arr[3]).get();
+                                subLedgerFetchByCode = subLedgerService.findById((String) arr[0]).get();
+                                subLedgerOpeningBalance.setSubLedger(subLedgerFetchByCode);
+                                subLedgerOpeningBalance.setLedger(ledgerFetchByCode);
+                                listSubLdgrOpening.add(subLedgerOpeningBalance);
+                            }
                         }
-                    });
-                    new Thread(nextFinYearDateTask).start();
+                        saveData();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -584,93 +543,70 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     protected void loadReview() {
         if (listBSLiability == null || listBSLiability.isEmpty() || listBSAsset == null || listBSAsset.isEmpty())
             loadBS();
-        LedgerCloseTask ledgerCloseTask = new LedgerCloseTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
         if (ledgerCloses != null)
             ledgerCloses.clear();
-        ledgerCloseTask.setOnSucceeded(ee -> {
-            try {
-                ledgerCloses = ledgerCloseTask.get();
 
-                if (ledgerCloses != null) {
-//                    tableReview.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e->e.getBalance()!=0.00).collect(Collectors.toList())));
-                    tableReview.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e -> e.isCreditDebit()).collect(Collectors.toList())));
-                    tableReview1.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e -> !e.isCreditDebit()).collect(Collectors.toList())));
+        try {
+            List<Object[]> list = ledgerRepository.fetchLedgerClosing(MainApp.identityDto.getSociety().getCode(), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), MainApp.locale);
+            if (list != null && !list.isEmpty()) {
+                for (Object[] arr : list) {
+                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (((BigDecimal) arr[2]).doubleValue() < 0 ? false : true), ((BigDecimal) arr[2]).doubleValue());
+                    ledgerCloses.add(bal);
                 }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
             }
-        });
-        new Thread(ledgerCloseTask).start();
-    }
-
-    protected void loadFetchByCodeLedger(String code) {
-        LedgerFetchByCodeLoadTask loadFetchByCodeLedgerTask = new LedgerFetchByCodeLoadTask(code);
-        loadFetchByCodeLedgerTask.setOnSucceeded(ee -> {
-            try {
-                ledgerFetchByCode = loadFetchByCodeLedgerTask.get();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+            if (ledgerCloses != null) {
+                tableReview.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e -> e.isCreditDebit()).collect(Collectors.toList())));
+                tableReview1.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e -> !e.isCreditDebit()).collect(Collectors.toList())));
             }
-        });
-        new Thread(loadFetchByCodeLedgerTask).start();
-    }
-
-    protected void loadFetchByCodeSubLedger(String code) {
-        SubLedgerFetchByCodeLoadTask loadFetchByCodeSubLedgerTask = new SubLedgerFetchByCodeLoadTask(code);
-        if (subLedgerFetchByCode != null)
-            loadFetchByCodeSubLedgerTask.setOnSucceeded(ee -> {
-                try {
-                    subLedgerFetchByCode = loadFetchByCodeSubLedgerTask.get();
-
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        new Thread(loadFetchByCodeSubLedgerTask).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     protected void loadBS() {
-        BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
-                MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-        balanceSheetTask.setOnSucceeded(ee -> {
-            try {
-                listBSLiability = balanceSheetTask.get();
-                listBSAsset = balanceSheetTask.get();
-                if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty())
-                    loadPL();
-                double diff = 0;
-                if (listPLExpense != null && listPLIncome != null) {
-                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
-                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
-                } else if (listPLIncome != null) {
-                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum() - 0;
-                } else if (listPLExpense != null) {
-                    diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
-                }
-
-                listBSLiability = listBSLiability.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
-                if (listBSLiability != null) {
-                    if (diff > 0) {
-                        listBSLiability.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 1));
-                    }
-                    listBSLiability.add(new LedgerBalance("", resources.getString("total"), 0, 0,
-                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
-                    tableBSLiability.setItems(FXCollections.observableArrayList(listBSLiability));
-                }
-                listBSAsset = listBSAsset.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
-                if (listBSAsset != null) {
-                    if (diff < 0) {
-                        listBSAsset.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 0));
-                    }
-                    listBSAsset.add(new LedgerBalance("", resources.getString("total"), 0, 0,
-                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
-                    tableBSAsset.setItems(FXCollections.observableArrayList(listBSAsset));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<Object[]> list = ledgerRepository.fetchBalanceSheet(MainApp.identityDto.getSociety().getCode(),
+                    CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), 0, MainApp.locale);
+            if (list != null && !list.isEmpty()) {
+                List<LedgerBalance> listResp = new ArrayList<>();
+                list.forEach(item -> {
+                    listBSLiability.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+                });
             }
-        });
-        new Thread(balanceSheetTask).start();
+            listBSAsset = listBSLiability;
+            if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty())
+                loadPL();
+            double diff = 0;
+            if (listPLExpense != null && listPLIncome != null) {
+                diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
+                        - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+            } else if (listPLIncome != null) {
+                diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum() - 0;
+            } else if (listPLExpense != null) {
+                diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+            }
+
+            listBSLiability = listBSLiability.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
+            if (listBSLiability != null) {
+                if (diff > 0) {
+                    listBSLiability.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 1));
+                }
+                listBSLiability.add(new LedgerBalance("", resources.getString("total"), 0, 0,
+                        NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
+                tableBSLiability.setItems(FXCollections.observableArrayList(listBSLiability));
+            }
+            listBSAsset = listBSAsset.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+            if (listBSAsset != null) {
+                if (diff < 0) {
+                    listBSAsset.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 0));
+                }
+                listBSAsset.add(new LedgerBalance("", resources.getString("total"), 0, 0,
+                        NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
+                tableBSAsset.setItems(FXCollections.observableArrayList(listBSAsset));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
@@ -679,8 +615,6 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         profitLossTask.setOnSucceeded(e -> {
             try {
                 listPLIncome = profitLossTask.get();
-//                listPLExpense = profitLossTask.get();
-
 
                 for (LedgerBalance ledgerBalance : listPLIncome) {
                     ledgerBalance.setLedgerName(ledgerBalance.getLedgerName());
@@ -730,43 +664,35 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     }
 
     protected void loadTrading() {
-        TradingTask tradingTask = new TradingTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-        tradingTask.setOnSucceeded(e -> {
-            try {
-                listTrading = tradingTask.get();
-                for (LedgerBalance ledgerBalance : listTrading) {
-                    ledgerBalance.setLedgerName((ledgerBalance.getLedgerName()));
-                }
-                if (listTrading != null && !listTrading.isEmpty()) {
-                    tableTrading.setItems(FXCollections.observableArrayList(listTrading));
-                    lblTotalTrading.setText(String
-                            .valueOf(String.format("%.2f", (listTrading.stream().mapToDouble(m -> m.getBalance()).sum()))));
-                    lblTrading.setStyle("-fx-text-fill: #006400;");
-                    tableTrading.setItems(FXCollections.observableArrayList(listTrading));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            listTrading = fetchTrading(MainApp.identityDto.getSociety().getCode(), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), MainApp.locale);
+            for (LedgerBalance ledgerBalance : listTrading) {
+                ledgerBalance.setLedgerName((ledgerBalance.getLedgerName()));
             }
-        });
-        new Thread(tradingTask).start();
+            if (listTrading != null && !listTrading.isEmpty()) {
+                tableTrading.setItems(FXCollections.observableArrayList(listTrading));
+                lblTotalTrading.setText(String
+                        .valueOf(String.format("%.2f", (listTrading.stream().mapToDouble(m -> m.getBalance()).sum()))));
+                lblTrading.setStyle("-fx-text-fill: #006400;");
+                tableTrading.setItems(FXCollections.observableArrayList(listTrading));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
     //stock valuation
     private void loadStockValuation() {
-        StockValuationTask stockValuationTask = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-        stockValuationTask.setOnSucceeded(e -> {
-            try {
-                listStockValuation = stockValuationTask.get();
-                tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
-                lblStockValuation.setText(String
-                        .valueOf(listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum()));
-                tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(stockValuationTask).start();
+        try {
+            listStockValuation = fetchStockValuation(CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), MainApp.identityDto.getSociety().getCode(), MainApp.locale);
+            tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
+            lblStockValuation.setText(String
+                    .valueOf(listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum()));
+            tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -963,29 +889,73 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         }
         YearClosingDto yearClosingDto = new YearClosingDto(ledgerOpeningBalanceList, listSubLdgrOpening, societyYearClosingDto);
 
-        var task = new YearClosingDtoSaveTask(yearClosingDto);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
+        try {
+            financialYearService.saveDto(yearClosingDto, CommonUtil.setIdentityHeader());
+            MyAlert alert = new InformationAlert(MainApp.getStage(), MainApp.getBundle().getString("yearclosing"),
+                    MainApp.getBundle().getString("yearclosing.insert.successful"));
+            alert.createAlert();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), MainApp.getBundle().getString("yearclosing"),
+                    "Error");
+            alert.createAlert();
+        }
+    }
 
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + MainApp.getBundle().getString(subError.getMessage()) + "\n");
+    private List<LedgerBalance> fetchTrading(String societyCode, java.sql.Date fromDate, Date toDate, String locale) {
+        double stockValuation = 0;
+        try {
+            List<ProductStockValuation> listStockValuation = fetchStockValuation(toDate, societyCode, locale);
+            if (listStockValuation != null)
+                stockValuation = listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum();
+
+            List<Object[]> list = ledgerRepository.fetchTrading(societyCode, fromDate, toDate, locale);
+            if (list == null || list.isEmpty()) {
+                List<LedgerBalance> listResp = new ArrayList<>();
+                listResp.add(new LedgerBalance("", "stockvaluation", 0, stockValuation, stockValuation));
+                return listResp;
+            } else if (list != null && !list.isEmpty()) {
+                List<LedgerBalance> listResp = new ArrayList<>();
+                list.forEach(item -> {
+                    listResp.add(new LedgerBalance((String) item[0], (String) item[1], Double.parseDouble(item[3].toString()), Double.parseDouble(item[2].toString()), Double.parseDouble(item[4].toString())));
+                });
+                listResp.add(new LedgerBalance("", "stockvaluation", 0, stockValuation, stockValuation));
+                return listResp;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<ProductStockValuation> fetchStockValuation(Date endDate, String societyCode, String locale) {
+        List<ProductStockValuation> list = new ArrayList<>();
+        List<Object[]> listCurrentStock = ledgerRepository.fetchCurrentStockByProduct(endDate, societyCode, locale);
+        listCurrentStock.forEach(item -> {
+            double stockValue = 0;
+            List<Object[]> listReceipt = ledgerRepository.fetchProductReceipt((String) item[0], endDate);
+            if (listReceipt != null && !listReceipt.isEmpty()) {
+
+                double stock = Double.parseDouble(item[2].toString());
+                for (Object[] arrReceipt : listReceipt) {
+                    if (stock <= 0) {
+                        break;
                     }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), MainApp.getBundle().getString("yearclosing"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
+                    if (Double.parseDouble(arrReceipt[1].toString()) >= stock) {
+                        stockValue = stockValue + (stock * Double.parseDouble(arrReceipt[1].toString()));
+                        break;
+                    } else {
+                        stockValue = Double.parseDouble(arrReceipt[1].toString()) * Double.parseDouble(arrReceipt[0].toString());
+                        stock -= Double.parseDouble(arrReceipt[1].toString());
+                    }
                 }
-                MyAlert alert = new InformationAlert(MainApp.getStage(), MainApp.getBundle().getString("yearclosing"),
-                        MainApp.getBundle().getString("yearclosing.insert.successful"));
-                alert.createAlert();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+                list.add(new ProductStockValuation((String) item[0], (String) item[1], Double.parseDouble(item[2].toString()), stockValue, (String) item[3]));
+            } else {
+                list.add(new ProductStockValuation((String) item[0], (String) item[1], 0, 0, (String) item[3]));
             }
         });
-        new Thread(task).start();
+        return list;
     }
+
 }

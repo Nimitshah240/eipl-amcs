@@ -2,10 +2,9 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.dto.ProductGroupMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingProductGroup;
-import com.eipl.amcs.master.account.dto.ProductGroupMappingDto;
-import com.eipl.amcs.master.account.dto.VoucherTypeMappingDto;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -29,16 +28,15 @@ public class LedgerMappingProductGroupLoadTask extends Task<ProductGroupMappingD
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_GROUP;
             ResponseEntity<ProductGroup[]> response = restTemplate.getForEntity(url, ProductGroup[].class);
-            if(response == null || response.getStatusCode() != HttpStatus.OK)
+            if (response == null || response.getStatusCode() != HttpStatus.OK)
                 return null;
             List<ProductGroup> productGroupList = new ArrayList<>(Arrays.asList(response.getBody()));
 
             // ledger
             url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
             ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
-            if(respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
+            if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
                 return null;
-
             url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_PRODUCT_GROUP;
             ResponseEntity<LedgerMappingProductGroup[]> respPgLedMap = restTemplate.getForEntity(url, LedgerMappingProductGroup[].class);
             if (respPgLedMap == null || respPgLedMap.getStatusCode() != HttpStatus.OK)
@@ -47,7 +45,7 @@ public class LedgerMappingProductGroupLoadTask extends Task<ProductGroupMappingD
 
             List<LedgerMappingProductGroup> listMapping = new ArrayList<>(mapping);
             for (LedgerMappingProductGroup mp : listMapping) {
-                productGroupList.removeIf(p->p.getCode().toString().equalsIgnoreCase(mp.getProductGroup().getCode().toString()));
+                productGroupList.removeIf(p -> p.getCode().toString().equalsIgnoreCase(mp.getProductGroup().getCode().toString()));
             }
             for (ProductGroup productGroup : productGroupList) {
                 LedgerMappingProductGroup mp = new LedgerMappingProductGroup();
@@ -55,9 +53,9 @@ public class LedgerMappingProductGroupLoadTask extends Task<ProductGroupMappingD
                 listMapping.add(mp);
             }
             List<Ledger> list = new ArrayList<>(Arrays.asList(respLedger.getBody()));
-            list.add(0, new Ledger( "None"));
+            list.add(0, new Ledger("None"));
             return new ProductGroupMappingDto(listMapping, list);
-            
+
         } catch (Exception e) {
             LOGGER.error("LedgerMappingProductGroup fetch", e);
         }

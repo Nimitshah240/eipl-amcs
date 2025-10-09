@@ -2,7 +2,6 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -21,6 +20,18 @@ public class LedgerTypeLoadTask extends Task<List<LedgerType>> {
     @Override
     protected List<LedgerType> call() throws Exception {
         try {
+
+
+
+
+//            private LedgerTypeService ledgerTypeService;
+//            List<LedgerType> list = ledgerTypeService.findAll();
+
+
+
+
+
+
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_TYPE;
             ResponseEntity<LedgerType[]> response = restTemplate.getForEntity(url, LedgerType[].class);

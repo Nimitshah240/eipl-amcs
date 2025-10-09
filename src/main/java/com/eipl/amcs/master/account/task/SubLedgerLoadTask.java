@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.model.SubLedger;
+import com.eipl.amcs.master.account.service.SubLedgerService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -21,6 +22,19 @@ public class SubLedgerLoadTask extends Task<List<SubLedger>> {
     @Override
     protected List<SubLedger> call() throws Exception {
         try {
+
+
+//            private SubLedgerService subLedgerService;
+//            List<SubLedger> list = subLedgerService.findAll();
+
+
+
+
+
+
+
+
+
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER;
             ResponseEntity<SubLedger[]> response = restTemplate.getForEntity(url, SubLedger[].class);

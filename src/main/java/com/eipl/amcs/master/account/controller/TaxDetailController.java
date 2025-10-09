@@ -65,7 +65,5 @@ public class TaxDetailController implements MyInitialization, PopupCallback {
         colPercentage.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getPercentage()));
         colBasicTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBasicTax()));
         colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getType() == 1 ? resourceBundle.getString("addition") : resourceBundle.getString("deduction")));
-//        colIsDefault.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDock().getIsDefault() != 0 ? resourceBundle.getString("yes") : resourceBundle.getString("no")));
-
     }
 }

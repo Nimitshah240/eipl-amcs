@@ -9,10 +9,9 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.converter.LedgerGroupConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerGroup;
-import com.eipl.amcs.master.account.task.LedgerDeleteTask;
-import com.eipl.amcs.master.account.task.LedgerGroupLoadTask;
-import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.operation.billing.model.MemberBill;
+import com.eipl.amcs.master.account.service.LedgerGroupService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,8 +32,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class LedgerController implements MyInitialization {
 
@@ -56,7 +56,12 @@ public class LedgerController implements MyInitialization {
 
     private final ObjectProperty<Ledger> propLedger;
 
+    private LedgerGroupService ledgerGroupService;
+    private LedgerService ledgerService;
+
     public LedgerController() {
+        ledgerService = context.getBean(LedgerService.class);
+        ledgerGroupService = context.getBean(LedgerGroupService.class);
         propLedger = new SimpleObjectProperty<>();
     }
 
@@ -64,7 +69,6 @@ public class LedgerController implements MyInitialization {
 
     private List<Ledger> ledgerList = new ArrayList<>();
     private List<LedgerGroup> ledgerGroupList = new ArrayList<>();
-
 
     @Override
     public Node getRoot() {
@@ -227,58 +231,33 @@ public class LedgerController implements MyInitialization {
 
     @Override
     public void setupTable() {
-//        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colLedgerGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerGroup()));
-
         propLedger.bind(tableLedger.getSelectionModel().selectedItemProperty());
-//        colSubLedger.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isHasSubLedger() ? "Yes" : "No"));
-//        colSubLedger.setCellFactory(new Callback<TableColumn<Ledger, String>, TableCell<Ledger, String>>() {
-//            @Override
-//            public TableCell<Ledger, String> call(TableColumn<Ledger, String> ledgerStringTableColumn) {
-//                return new TableCell<>(){
-//                    @Override
-//                    protected void updateItem(String s, boolean b) {
-//                        super.updateItem(s, b);
-//                    }
-//                };
-//            }
-//        });
-
-//        colEntryType.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getEntryType()));
-
     }
 
     @Override
     public void loadData() {
         tableLedger.setItems(null);
-        LedgerLoadTask task = new LedgerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                ledgerList = task.get();
-                if (ledgerList != null)
-                    tableLedger.setItems(FXCollections.observableList(ledgerList));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            ledgerList = ledgerService.findAllByIsActive();
+            if (ledgerList != null)
+                tableLedger.setItems(FXCollections.observableList(ledgerList));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void loadLedgerGroups() {
         cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
-        LedgerGroupLoadTask task = new LedgerGroupLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                ledgerGroupList = task.get();
-                if (ledgerGroupList != null)
-                    cboxLedgerGroup.setItems(FXCollections.observableList(ledgerGroupList));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            ledgerGroupList = ledgerGroupService.findAll();
+            if (ledgerGroupList != null)
+                cboxLedgerGroup.setItems(FXCollections.observableList(ledgerGroupList));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -289,22 +268,15 @@ public class LedgerController implements MyInitialization {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             Ledger dto = propLedger.get();
             if (dto != null) {
-                var task = new LedgerDeleteTask(dto.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    ledgerService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                    ex.printStackTrace();
+                }
             }
         }
     }

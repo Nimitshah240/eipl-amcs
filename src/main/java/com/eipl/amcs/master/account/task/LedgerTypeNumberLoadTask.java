@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class LedgerTypeNumberLoadTask extends Task<String> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerTypeLoadTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerTypeNumberLoadTask.class);
     private final String society;
 
     public LedgerTypeNumberLoadTask(String society) {

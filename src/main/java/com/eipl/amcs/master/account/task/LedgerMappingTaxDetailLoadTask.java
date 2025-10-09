@@ -3,7 +3,12 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.dto.*;
+import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
+import com.eipl.amcs.master.account.service.LedgerMappingTaxDetailService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.TaxService;
 import com.eipl.amcs.utils.AppConstant;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingTaxDetail;
 import com.eipl.amcs.master.account.model.TaxDetail;
@@ -33,12 +40,12 @@ public class LedgerMappingTaxDetailLoadTask extends Task<TaxDetailMappingDto> {
                 return null;
             List<TaxDto> taxDetailList = new ArrayList<>(Arrays.asList(response.getBody()));
 
-
             // ledger
             url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
             ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
             if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
                 return null;
+
 
             // mapping
             url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_TAX_DETAIL;
@@ -46,6 +53,7 @@ public class LedgerMappingTaxDetailLoadTask extends Task<TaxDetailMappingDto> {
             if (respTaxDLedMap == null || respTaxDLedMap.getStatusCode() != HttpStatus.OK)
                 return null;
             List<LedgerMappingTaxDetail> mapping = respTaxDLedMap.getBody() != null ? Arrays.asList(respTaxDLedMap.getBody()) : new ArrayList<>();
+
 
             List<LedgerMappingTaxDetail> listMapping = new ArrayList<>(mapping);
 //            for (LedgerMappingTaxDetail mp : listMapping) {

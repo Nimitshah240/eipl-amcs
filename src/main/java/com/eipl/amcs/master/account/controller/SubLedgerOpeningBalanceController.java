@@ -8,8 +8,12 @@ import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
-import com.eipl.amcs.master.account.task.*;
+import com.eipl.amcs.master.account.service.FinancialYearService;
+import com.eipl.amcs.master.account.service.SubLedgerOpeningBalanceService;
+import com.eipl.amcs.master.account.service.SubLedgerService;
+import com.eipl.amcs.master.account.task.SubLedgerOpeningBalanceImportTask;
 import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import com.eipl.amcs.utils.FocusUtils;
@@ -71,8 +75,14 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     private ResourceBundle resourceBundle;
 
     private final ObjectProperty<SubLedgerOpeningBalance> propSubLedgerOpeningBalance;
+    private FinancialYearService financialYearService;
+    private SubLedgerService subLedgerService;
+    private SubLedgerOpeningBalanceService subLedgerOpeningBalanceService;
 
     public SubLedgerOpeningBalanceController() {
+        financialYearService = MainApp.context.getBean(FinancialYearService.class);
+        subLedgerOpeningBalanceService = MainApp.context.getBean(SubLedgerOpeningBalanceService.class);
+        subLedgerService = MainApp.context.getBean(SubLedgerService.class);
         propSubLedgerOpeningBalance = new SimpleObjectProperty<>();
     }
 
@@ -135,13 +145,14 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
 
     @Override
     public void saveData() {
-        setValuesInObject();
-        var task = new SubLedgerOpeningBalanceSaveTask(subLedgerOpeningBalance, (short) 0);
-        task.setOnSucceeded(e -> {
+        try {
+            setValuesInObject();
+            subLedgerOpeningBalanceService.save(subLedgerOpeningBalance, CommonUtil.setIdentityHeader());
             loadData();
             clearControls();
-        });
-        new Thread(task).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -158,43 +169,29 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         subLedgerOpeningBalance.setBalance(new BigDecimal(txtBalance.getText()));
         subLedgerOpeningBalance.setFinancialYearsCode(cboxFinancialYear.getValue().getCode());
         subLedgerOpeningBalance.setSubLedger(cboxSubLedger.getValue());
-        subLedgerOpeningBalance.setCreditDebit(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("debit"))?false:true);
+        subLedgerOpeningBalance.setCreditDebit(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("debit")) ? false : true);
 
     }
 
     private void loadImportPreReq() {
-        var task = new FinancialYearLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                financialYearList = task.get();
-                var task1 = new SubLedgerLoadTask();
-                task1.setOnSucceeded(ew -> {
-                    try {
-                        subledgerList = task1.get();
-                        File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("subledgeropeningbalance"));
-                        if (file == null) {
-                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
-                                    resourceBundle.getString("select.file"));
-                            alert.createAlert();
-                            return;
-                        }
-                        MainApp.paneDrop.setVisible(true);
-                        MainApp.lblMessage.setText("Preparing SubLedgerOpeningBalance...");
-                        startImport(file);
-
-                        new Thread(task1).start();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task1).start();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+//            NIMIT ASYNC HERE
+            financialYearList = financialYearService.findAll();
+            subledgerList = subLedgerService.findAll();
+            File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("subledgeropeningbalance"));
+            if (file == null) {
+                MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
+                        resourceBundle.getString("select.file"));
+                alert.createAlert();
+                return;
             }
-        });
-        new Thread(task).start();
+            MainApp.paneDrop.setVisible(true);
+            MainApp.lblMessage.setText("Preparing SubLedgerOpeningBalance...");
+            startImport(file);
 
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
@@ -222,34 +219,28 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     }
 
     private void startImportProcess() {
-        var task = new SubLedgerOpeningBalanceListSaveTask(listSubLedgerOpeningBalance);
-        task.setOnSucceeded(e -> {
-            try {
-                MainApp.paneDrop.setVisible(false);
-                List<SubLedgerOpeningBalance> list = task.get();
-                if (list == null || list.isEmpty()) {
-                    MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
-                            resourceBundle.getString("error.occurred"));
-                    alert.createAlert();
-                    return;
-                }
-                StringBuilder builder = new StringBuilder();
-                builder.append("Import success: ");
-//                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-                builder.append("\n");
-                builder.append("Import fail: ");
-//               builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-                builder.append("\n");
-
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
-                        builder.toString());
+        try {
+            MainApp.paneDrop.setVisible(false);
+            List<SubLedgerOpeningBalance> list = subLedgerOpeningBalanceService.importSubLedgerBalance(listSubLedgerOpeningBalance, CommonUtil.setIdentityHeader());
+            if (list == null || list.isEmpty()) {
+                MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
+                        resourceBundle.getString("error.occurred"));
                 alert.createAlert();
-                loadData();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+                return;
             }
-        });
-        new Thread(task).start();
+            StringBuilder builder = new StringBuilder();
+            builder.append("Import success: ");
+            builder.append("\n");
+            builder.append("Import fail: ");
+            builder.append("\n");
+
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
+                    builder.toString());
+            alert.createAlert();
+            loadData();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -257,8 +248,8 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         colFinancialYear.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFinancialYearsCode()));
         colBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBalance()));
         colSubLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSubLedger().getName()));
-        colType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit()?
-                resourceBundle.getString("credit"):resourceBundle.getString("debit")));
+        colType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit() ?
+                resourceBundle.getString("credit") : resourceBundle.getString("debit")));
 
         propSubLedgerOpeningBalance.bind(tableData.getSelectionModel().selectedItemProperty());
     }
@@ -267,65 +258,50 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     @Override
     public void loadData() {
         tableData.setItems(null);
-        SubLedgerOpeningBalanceLoadTask task = new SubLedgerOpeningBalanceLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<SubLedgerOpeningBalance> list = task.get();
-                if (list != null)
-                    tableData.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<SubLedgerOpeningBalance> list = subLedgerOpeningBalanceService.findAll();
+            if (list != null)
+                tableData.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void loadFinancialYear() {
-        var task = new FinancialYearLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<FinancialYear> list = task.get();
-                if (list != null) {
-                    cboxFinancialYear.getItems().addAll(FXCollections.observableList(list));
-                    cboxFinancialYear.getSelectionModel().select(0);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<FinancialYear> list = financialYearService.findAll();
+            if (list != null) {
+                cboxFinancialYear.getItems().addAll(FXCollections.observableList(list));
+                cboxFinancialYear.getSelectionModel().select(0);
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public void loadSubLedger() {
-        var task = new SubLedgerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                subledgerList = task.get();
-                if (subledgerList != null) {
-                    if (cboxSubLedger.getItems() != null) {
-                        cboxSubLedger.getItems().clear();
-                        cboxSubLedger.getItems().addAll(FXCollections.observableList(
-                                subledgerList.stream().filter(p -> p.getType() == cboxSubLedgerType.getValue().getKey()).collect(Collectors.toList())));
-                    }
-                    else{
-                        cboxSubLedger.getItems().addAll(FXCollections.observableList(
-                                subledgerList.stream().filter(p -> p.getType() == cboxSubLedgerType.getValue().getKey()).collect(Collectors.toList())));
-                    }
-                } else {
 
+    public void loadSubLedger() {
+        try {
+            subledgerList = subLedgerService.findAll();
+            if (subledgerList != null) {
+                if (cboxSubLedger.getItems() != null) {
+                    cboxSubLedger.getItems().clear();
+                    cboxSubLedger.getItems().addAll(FXCollections.observableList(
+                            subledgerList.stream().filter(p -> p.getType() == cboxSubLedgerType.getValue().getKey()).collect(Collectors.toList())));
+                } else {
+                    cboxSubLedger.getItems().addAll(FXCollections.observableList(
+                            subledgerList.stream().filter(p -> p.getType() == cboxSubLedgerType.getValue().getKey()).collect(Collectors.toList())));
                 }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
 
     @Override
     public void deleteData() {
@@ -335,22 +311,15 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             SubLedgerOpeningBalance subLedgerOpeningBalance = propSubLedgerOpeningBalance.get();
             if (subLedgerOpeningBalance != null) {
-                var task = new SubLedgerOpeningBalanceDeleteTask(subLedgerOpeningBalance.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    subLedgerOpeningBalanceService.delete(subLedgerOpeningBalance.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                }
             }
         }
     }

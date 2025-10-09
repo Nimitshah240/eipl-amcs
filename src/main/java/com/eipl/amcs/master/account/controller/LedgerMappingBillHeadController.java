@@ -8,9 +8,12 @@ import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.dto.BillHeadMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingBillHead;
-import com.eipl.amcs.master.account.task.LedgerMappingBillHeadLoadTask;
-import com.eipl.amcs.master.account.task.LedgerMappingBillHeadSaveTask;
+import com.eipl.amcs.master.account.service.LedgerMappingBillHeadService;
+import com.eipl.amcs.master.account.service.LedgerService;
 import com.eipl.amcs.master.operation.convertor.LedgerCellFactory;
+import com.eipl.amcs.master.operation.model.BillHead;
+import com.eipl.amcs.master.operation.service.BillHeadService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -26,7 +29,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 public class LedgerMappingBillHeadController implements MyInitialization {
 
@@ -46,7 +49,16 @@ public class LedgerMappingBillHeadController implements MyInitialization {
     @FXML
     Button btnSave, btnClose;
 
+    private LedgerMappingBillHeadService ledgerMappingBillHeadService;
     private ResourceBundle resourceBundle;
+    private BillHeadService billHeadService;
+    private LedgerService ledgerService;
+
+    public LedgerMappingBillHeadController() {
+        ledgerMappingBillHeadService = MainApp.context.getBean(LedgerMappingBillHeadService.class);
+        billHeadService = MainApp.context.getBean(BillHeadService.class);
+        ledgerService = MainApp.context.getBean(LedgerService.class);
+    }
 
     @Override
     public Node getRoot() {
@@ -75,13 +87,11 @@ public class LedgerMappingBillHeadController implements MyInitialization {
             item.setSociety(MainApp.identityDto.getSociety());
             item.setBillCriteria(null);
         }
-        LedgerMappingBillHeadSaveTask task = new LedgerMappingBillHeadSaveTask(tableBillHeadData.getItems());
-        task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
-                    resourceBundle.getString("save.successful"));
-            alert.createAlert();
-        });
-        new Thread(task).start();
+
+        ledgerMappingBillHeadService.save(tableBillHeadData.getItems(), CommonUtil.setIdentityHeader());
+        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
+                resourceBundle.getString("save.successful"));
+        alert.createAlert();
     }
 
     @Override
@@ -247,25 +257,40 @@ public class LedgerMappingBillHeadController implements MyInitialization {
 
     @Override
     public void loadData() {
-        LedgerMappingBillHeadLoadTask task = new LedgerMappingBillHeadLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                BillHeadMappingDto dto = task.get();
-                if (dto == null)
-                    return;
 
-                ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
-                typeList = new ArrayList<>();
-                typeList.add(resourceBundle.getString("debit"));
-                typeList.add(resourceBundle.getString("credit"));
-                setupTable();
-                tableBillHeadData.setItems(FXCollections.observableList(dto.getListMapping()));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
+        CompletableFuture<List<BillHead>> billHeadListFuture = CompletableFuture.supplyAsync(() -> billHeadService.findAll());
+        CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> ledgerService.findAllByIsActive());
+        CompletableFuture<List<LedgerMappingBillHead>> ledgerMappingBillHeadListFuture = CompletableFuture.supplyAsync(() -> ledgerMappingBillHeadService.findAll());
+        CompletableFuture.allOf(billHeadListFuture, ledgerListFuture, ledgerMappingBillHeadListFuture)
+                .whenCompleteAsync((result, ex) -> {
+                    try {
+                        List<BillHead> billHeadList = billHeadListFuture.get();
+                        List<Ledger> ledgerList1 = ledgerListFuture.get();
+                        List<LedgerMappingBillHead> listMapping = ledgerMappingBillHeadListFuture.get();
+                        if (!billHeadList.isEmpty() && !listMapping.isEmpty() && !ledgerList1.isEmpty()) {
+                            for (LedgerMappingBillHead mp : listMapping) {
+                                billHeadList.removeIf(p -> p.getCode().equalsIgnoreCase(mp.getBillHead().getCode()));
+                            }
+                            for (BillHead billHead : billHeadList) {
+                                LedgerMappingBillHead mp = new LedgerMappingBillHead();
+                                mp.setBillHead(billHead);
+                                listMapping.add(mp);
+                            }
+                            List<Ledger> list = new ArrayList<>(ledgerList1);
+                            list.add(0, new Ledger("None"));//"0",
+                            BillHeadMappingDto dto = new BillHeadMappingDto(listMapping, list);
 
-        new Thread(task).start();
+                            ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
+                            typeList = new ArrayList<>();
+                            typeList.add(resourceBundle.getString("debit"));
+                            typeList.add(resourceBundle.getString("credit"));
+                            setupTable();
+                            tableBillHeadData.setItems(FXCollections.observableList(dto.getListMapping()));
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
 }

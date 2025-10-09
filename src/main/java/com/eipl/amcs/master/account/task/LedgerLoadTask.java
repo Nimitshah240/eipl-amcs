@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.service.LedgerService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -20,6 +21,16 @@ public class LedgerLoadTask extends Task<List<Ledger>> {
     @Override
     protected List<Ledger> call() throws Exception {
         try {
+
+//            private LedgerService ledgerService;
+//            List<Ledger> list = ledgerService.findAllByIsActive();
+
+
+
+
+
+
+
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
             ResponseEntity<Ledger[]> response = restTemplate.getForEntity(url, Ledger[].class);

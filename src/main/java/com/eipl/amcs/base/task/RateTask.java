@@ -6,10 +6,7 @@ import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.service.MilkQualityTypeService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
-import com.eipl.amcs.master.global.service.RateTypeService;
-import com.eipl.amcs.master.global.service.ShiftService;
+import com.eipl.amcs.master.global.service.*;
 import com.eipl.amcs.master.operation.model.Formula;
 import com.eipl.amcs.master.operation.repository.FormulaRepository;
 import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
@@ -38,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.eipl.amcs.MainApp.context;
+
 public class RateTask extends Task<Void> {
 
     @Autowired
@@ -56,6 +55,17 @@ public class RateTask extends Task<Void> {
     private MemberMilkPurchaseRateService memberMilkPurchaseRateService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RateTask.class);
+
+    public RateTask(){
+        formulaRepository = context.getBean(FormulaRepository.class);
+        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
+        milkTypeService = context.getBean(MilkTypeService.class);
+        rateTypeService = context.getBean(RateTypeService.class);
+        shiftService = context.getBean(ShiftService.class);
+        societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
+    }
+
+
 
     @Override
     protected Void call() throws Exception {
