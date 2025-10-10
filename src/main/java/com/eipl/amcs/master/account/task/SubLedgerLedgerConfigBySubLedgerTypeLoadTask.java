@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.task;
 import java.util.Arrays;
 import java.util.List;
 
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -20,7 +21,7 @@ import javafx.concurrent.Task;
 
 public class SubLedgerLedgerConfigBySubLedgerTypeLoadTask extends Task<List<SubLedgerLedgerConfig>> {
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask.class);
+			.getLogger(ProductPurchaseRateByProductTask.class);
 
 	private final Integer code;
 

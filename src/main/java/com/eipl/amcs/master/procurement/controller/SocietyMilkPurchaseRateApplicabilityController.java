@@ -71,6 +71,7 @@ public class SocietyMilkPurchaseRateApplicabilityController implements MyInitial
 // task API not available
     @Override
     public void loadData() {
+//        NO API AVIALABLE
         var task = new SocietyMilkPurchaseRateApplicabilityLoadTask();
         task.setOnSucceeded(e -> {
             try {

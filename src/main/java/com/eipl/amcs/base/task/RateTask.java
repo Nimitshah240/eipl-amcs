@@ -56,13 +56,14 @@ public class RateTask extends Task<Void> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RateTask.class);
 
-    public RateTask(){
+    public RateTask() {
         formulaRepository = context.getBean(FormulaRepository.class);
         milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
         milkTypeService = context.getBean(MilkTypeService.class);
         rateTypeService = context.getBean(RateTypeService.class);
         shiftService = context.getBean(ShiftService.class);
         societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
+        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
     }
 
 
@@ -81,18 +82,8 @@ public class RateTask extends Task<Void> {
                     MainApp.identityDto.getIdentity().getToken(), contentRate);
             ResponseEntity<RealTimeResponse> response;
             RealTimeResponse responseRate;
-//            ResponseEntity<RealTimeResponse> response = restTemplate.exchange(url, HttpMethod.POST,
-//                    new HttpEntity<>(requestPayload), RealTimeResponse.class);
-//            if (response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            RealTimeResponse responseRate = response.getBody();
-//            if (responseRate == null || !"success".equalsIgnoreCase(responseRate.getStatus()))
-//                return null;
 
             //shift
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHIFT;
-//            ResponseEntity<Shift[]> responseShift = restTemplate.getForEntity(url, Shift[].class);
-
             List<Shift> shiftList = shiftService.findAll();
             Map<Integer, Shift> mapShift = new HashMap<>();
             for (Shift shift : shiftList) {
@@ -100,8 +91,6 @@ public class RateTask extends Task<Void> {
             }
 
             // ratetype
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.RATE_TYPE;
-//            ResponseEntity<RateType[]> responseRateType = restTemplate.getForEntity(url, RateType[].class);
             List<RateType> rateTypeList = rateTypeService.findAll();
             Map<Integer, RateType> mapRateType = new HashMap<>();
             for (RateType rateType : rateTypeList) {
@@ -109,8 +98,6 @@ public class RateTask extends Task<Void> {
             }
 
             // milktype
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_TYPE;
-//            ResponseEntity<MilkType[]> responseMilkType = restTemplate.getForEntity(url, MilkType[].class);
             List<MilkType> milkTypeList = milkTypeService.findAll();
             Map<Integer, MilkType> mapMilkType = new HashMap<>();
             for (MilkType milkType : milkTypeList) {
@@ -118,8 +105,6 @@ public class RateTask extends Task<Void> {
             }
 
             // milk quality type
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILKQUALITYTYPE;
-//            ResponseEntity<MilkQualityType[]> responseMilkQuality = restTemplate.getForEntity(url, MilkQualityType[].class);
             List<MilkQualityType> milkQualityTypeList = milkQualityTypeService.findAll();
             Map<Integer, MilkQualityType> mapMilkQuality = new HashMap<>();
             for (MilkQualityType milkQualityType : milkQualityTypeList) {
@@ -127,8 +112,6 @@ public class RateTask extends Task<Void> {
             }
 
             // Formula
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.FORMULA;
-//            ResponseEntity<Formula[]> responseFormula = restTemplate.getForEntity(url, Formula[].class);
             List<Formula> formulaList = formulaRepository.findAll();
             Map<String, Formula> mapFormula = new HashMap<>();
             for (Formula formula : formulaList) {
@@ -136,13 +119,10 @@ public class RateTask extends Task<Void> {
             }
 
             Map<String, Object> data = new HashMap<>();
-//            Map<String, Object> data = responseRate.getData();
             MemberMilkPurchaseRateDto memberRateDto = new MemberMilkPurchaseRateDto();
-//            MemberMilkPurchaseRateDto memberRateDto = new MemberMilkPurchaseRateDto();
 //            // Rate
             Map<String, Object> purchaseRate = new HashMap<>();
-//            Map<String, Object> purchaseRate = (Map) data.get("purchaseRate");
-//            Map<String, Object> temp  = new HashMap<>();
+
             int a = 1;
             while (a == 1 || purchaseRate != null) {
                 url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
@@ -272,6 +252,9 @@ public class RateTask extends Task<Void> {
 //                        if (respMemberRateSave == null || respMemberRateSave.getStatusCode() != HttpStatus.CREATED)
 //                            return null;
                         String responseRateSave = memberMilkPurchaseRateService.savePurchaseRate(memberRateDto);
+                        if (responseRateSave == null)
+                            return null;
+
                         LOGGER.info("Member milk rate save: {}", responseRateSave);
                         if (responseRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
                             url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
@@ -327,14 +310,7 @@ public class RateTask extends Task<Void> {
             content.put("rateType", "BMC");
             payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                     MainApp.identityDto.getIdentity().getToken(), content);
-//            socRateResponse = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(payload), RealTimeResponse.class);
             updateMessage("Society rate check...");
-//            if (socRateResponse.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            socRateResp = socRateResponse.getBody();
-//            if (socRateResp == null || !"success".equalsIgnoreCase(socRateResp.getStatus()))
-//                return null;
-//            data = socRateResp.getData();
             SocietyMilkPurchaseRateDto socRateDto = new SocietyMilkPurchaseRateDto();
             // Rate
             Map<String, Object> sRate = (Map) data.get("purchaseRate");
@@ -453,13 +429,9 @@ public class RateTask extends Task<Void> {
                     try {
 
                         // Save society Rate
-//                        url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY_MILK_PURCHASE_RATE;
-//                        ResponseEntity<String> respSocietyRateSave =
-//                                restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(socRateDto), String.class);
-//                        if (respSocietyRateSave == null || respSocietyRateSave.getStatusCode() != HttpStatus.CREATED)
-//                            return null;
-//                        String societyRateSave = respSocietyRateSave.getBody();
                         String societyRateSave = societyMilkPurchaseRateService.savePurchaseRate(socRateDto);
+                        if (societyRateSave == null)
+                            return null;
                         LOGGER.info("Society milk rate save: {}", societyRateSave);
                         if (societyRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
                             url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;

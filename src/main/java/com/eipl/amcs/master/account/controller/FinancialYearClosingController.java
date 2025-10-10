@@ -20,8 +20,6 @@ import com.eipl.amcs.master.account.service.SubLedgerService;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.LedgerClose;
 import com.eipl.amcs.report.dto.ProductStockValuation;
-import com.eipl.amcs.report.task.NextFinYearDateTask;
-import com.eipl.amcs.report.task.ProfitLossTask;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.NumberUtil;
@@ -51,7 +49,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -483,61 +481,51 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     }
 
     public void closeReview() {
-//    NIMIT LOCHO CHE AIYA
-        NextFinYearDateTask financialYear = new NextFinYearDateTask(MainApp.getFinancialYear().getEndDate().plusDays(1));
-        financialYear.setOnSucceeded(e -> {
-            try {
-                List<FinancialYear> list = financialYear.get();
-                if (financialYear == null) {
-                    MyAlert alert = new WarningAlert(MainApp.stage, resources.getString("yearend.title"),
-                            resources.getString("alert.yearclose.nextyearnotfound"));
-                    alert.createAlert();
-                } else {
-                    try {
-                        Boolean financialYearCode = financialYearRepository.fetchByCode(MainApp.getFinancialYear().getCode()) <= 0;
-                        if (financialYearCode) {
-                            ledgerOpeningBalanceList.clear();
-                            for (LedgerClose arr : ledgerCloses) {
-                                LedgerOpeningBalance balance = new LedgerOpeningBalance();
-                                balance.setSociety(MainApp.identityDto.getSociety());
-                                balance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                                balance.setBalance(new BigDecimal(arr.getBalance()));
-                                balance.setCreditDebit(arr.isCreditDebit());
-                                balance.setAutoManual(true);
-                                balance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
+        try {
+            List<LocalDate> list = financialYearRepository.fetchByDate(MainApp.getFinancialYear().getEndDate().plusDays(1));
+            if (list == null) {
+                MyAlert alert = new WarningAlert(MainApp.stage, resources.getString("yearend.title"),
+                        resources.getString("alert.yearclose.nextyearnotfound"));
+                alert.createAlert();
+            } else {
+                Boolean financialYearCode = financialYearRepository.fetchByCode(MainApp.getFinancialYear().getCode()) <= 0;
+                if (financialYearCode) {
+                    ledgerOpeningBalanceList.clear();
+                    for (LedgerClose arr : ledgerCloses) {
+                        LedgerOpeningBalance balance = new LedgerOpeningBalance();
+                        balance.setSociety(MainApp.identityDto.getSociety());
+                        balance.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                        balance.setBalance(new BigDecimal(arr.getBalance()));
+                        balance.setCreditDebit(arr.isCreditDebit());
+                        balance.setAutoManual(true);
+                        balance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
 
-                                balance.setLedger(listLedger.stream().filter(p -> p.getCode().equals(arr.getLedgerCode())).findAny().orElse(null));
+                        balance.setLedger(listLedger.stream().filter(p -> p.getCode().equals(arr.getLedgerCode())).findAny().orElse(null));
 
-                                ledgerOpeningBalanceList.add(balance);
-                            }
+                        ledgerOpeningBalanceList.add(balance);
+                    }
 
-                            subLedgerOpeningBalanceList = ledgerRepository.fetchSubLedgerOpeningBalanceSecond(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-                            for (Object[] arr : subLedgerOpeningBalanceList) {
-                                SubLedgerOpeningBalance subLedgerOpeningBalance = new SubLedgerOpeningBalance();
-                                subLedgerOpeningBalance.setBalance(BigDecimal.valueOf((Double) arr[2]));
-                                subLedgerOpeningBalance.setCreditDebit((double) arr[2] < 0 ? false : true);
-                                subLedgerOpeningBalance.setSociety(MainApp.identityDto.getSociety());
-                                subLedgerOpeningBalance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
-                                subLedgerOpeningBalance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                                subLedgerOpeningBalance.setAutoManual(true);
-                                ledgerFetchByCode = ledgerService.findById((String) arr[3]).get();
-                                subLedgerFetchByCode = subLedgerService.findById((String) arr[0]).get();
-                                subLedgerOpeningBalance.setSubLedger(subLedgerFetchByCode);
-                                subLedgerOpeningBalance.setLedger(ledgerFetchByCode);
-                                listSubLdgrOpening.add(subLedgerOpeningBalance);
-                            }
-                        }
-                        saveData();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    subLedgerOpeningBalanceList = ledgerRepository.fetchSubLedgerOpeningBalanceSecond(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
+                    for (Object[] arr : subLedgerOpeningBalanceList) {
+                        SubLedgerOpeningBalance subLedgerOpeningBalance = new SubLedgerOpeningBalance();
+                        subLedgerOpeningBalance.setBalance(BigDecimal.valueOf((Double) arr[2]));
+                        subLedgerOpeningBalance.setCreditDebit((double) arr[2] < 0 ? false : true);
+                        subLedgerOpeningBalance.setSociety(MainApp.identityDto.getSociety());
+                        subLedgerOpeningBalance.setFinancialYearsCode(MainApp.getFinancialYear().getCode());
+                        subLedgerOpeningBalance.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                        subLedgerOpeningBalance.setAutoManual(true);
+                        ledgerFetchByCode = ledgerService.findById((String) arr[3]).get();
+                        subLedgerFetchByCode = subLedgerService.findById((String) arr[0]).get();
+                        subLedgerOpeningBalance.setSubLedger(subLedgerFetchByCode);
+                        subLedgerOpeningBalance.setLedger(ledgerFetchByCode);
+                        listSubLdgrOpening.add(subLedgerOpeningBalance);
                     }
                 }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+                saveData();
             }
-
-        });
-        new Thread(financialYear).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     protected void loadReview() {
@@ -586,8 +574,8 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                 diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
             }
 
-            listBSLiability = listBSLiability.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
             if (listBSLiability != null) {
+                listBSLiability = listBSLiability.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
                 if (diff > 0) {
                     listBSLiability.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 1));
                 }
@@ -595,8 +583,9 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                         NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
                 tableBSLiability.setItems(FXCollections.observableArrayList(listBSLiability));
             }
-            listBSAsset = listBSAsset.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+
             if (listBSAsset != null) {
+                listBSAsset = listBSAsset.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
                 if (diff < 0) {
                     listBSAsset.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 0));
                 }
@@ -611,56 +600,102 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
 
 
     protected void loadPL() {
-        ProfitLossTask profitLossTask = new ProfitLossTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-        profitLossTask.setOnSucceeded(e -> {
-            try {
-                listPLIncome = profitLossTask.get();
 
-                for (LedgerBalance ledgerBalance : listPLIncome) {
-                    ledgerBalance.setLedgerName(ledgerBalance.getLedgerName());
-                }
-                listPLIncome = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
-                listPLExpense = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
-                if (listPLExpense != null)
-                    tablePLExpense.setItems(FXCollections.observableArrayList(listPLExpense));
-                if (listPLIncome != null)
-                    tablePLIncome.setItems(FXCollections.observableArrayList(listPLIncome));
-                if (listPLExpense != null && listPLIncome != null) {
-                    double diff = listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()
-                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
-                    lblPl.setText(diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
-                    if (diff > 0) {
-                        lblPl.setStyle("-fx-text-fill: #006400;");
-                    } else {
-                        lblPl.setStyle("-fx-text-fill: #888c91;");
-                    }
-                    lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
-                } else if (listPLIncome != null) {
-                    double diff = listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() - 0;
-                    lblPl.setText(
-                            diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
-                    if (diff > 0) {
-                        lblPl.setStyle("-fx-text-fill: #006400;");
-                    } else {
-                        lblPl.setStyle("-fx-text-fill: #888c91;");
-                    }
-                    lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
-                } else if (listPLExpense != null) {
-                    double diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
-                    lblPl.setText(
-                            diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
-                    if (diff > 0) {
-                        lblPl.setStyle("-fx-text-fill: #006400;");
-                    } else {
-                        lblPl.setStyle("-fx-text-fill: #888c91;");
-                    }
-                    lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        CompletableFuture<List<LedgerBalance>> ledgerBalanceListFuture = CompletableFuture.supplyAsync(() -> {
+            List<Object[]> list = ledgerRepository.fetchProfitLoss(MainApp.identityDto.getSociety().getCode(), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), 0, MainApp.locale);
+            List<LedgerBalance> listResp = new ArrayList<>();
+            if (list != null && !list.isEmpty()) {
+                list.forEach(item -> {
+                    listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+                });
             }
+            listResp.add(new LedgerBalance("", "trading", 0, 0, 0));
+            return listResp;
         });
-        new Thread(profitLossTask).start();
+
+
+        CompletableFuture<List<LedgerBalance>> ledgerBalanceListFuture1 = CompletableFuture.supplyAsync(() -> {
+            double tradingProfit = 0;
+            List<LedgerBalance> listTrading = fetchTrading(MainApp.identityDto.getSociety().getCode(), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), MainApp.locale);
+            if (listTrading != null) tradingProfit = listTrading.stream().mapToDouble(m -> m.getBalance()).sum();
+
+            List<Object[]> list = ledgerRepository.fetchProfitLoss(MainApp.identityDto.getSociety().getCode(), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), 1, MainApp.locale);
+            List<LedgerBalance> listResp = new ArrayList<>();
+
+            if (list != null && !list.isEmpty()) {
+                list.forEach(item -> {
+                    listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+                });
+            }
+            if (tradingProfit > 0)
+                listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+
+            return listResp;
+        });
+
+
+        CompletableFuture.allOf(ledgerBalanceListFuture, ledgerBalanceListFuture1)
+                .whenCompleteAsync((result, ex) -> {
+                    try {
+                        List<LedgerBalance> list = new ArrayList<>();
+
+                        List<LedgerBalance> listExpense = ledgerBalanceListFuture.get();
+                        listExpense.forEach(item -> item.setIncomeExpense(0));
+                        list.addAll(listExpense);
+
+                        List<LedgerBalance> listExpense1 = ledgerBalanceListFuture1.get();
+                        listExpense1.forEach(item -> item.setIncomeExpense(1));
+                        list.addAll(listExpense);
+
+                        listPLIncome = list;
+
+                        for (LedgerBalance ledgerBalance : listPLIncome) {
+                            ledgerBalance.setLedgerName(ledgerBalance.getLedgerName());
+                        }
+                        listPLIncome = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
+                        listPLExpense = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+                        if (listPLExpense != null)
+                            tablePLExpense.setItems(FXCollections.observableArrayList(listPLExpense));
+                        if (listPLIncome != null)
+                            tablePLIncome.setItems(FXCollections.observableArrayList(listPLIncome));
+                        if (listPLExpense != null && listPLIncome != null) {
+                            double diff = listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()
+                                    - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
+                            lblPl.setText(diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
+                            if (diff > 0) {
+                                lblPl.setStyle("-fx-text-fill: #006400;");
+                            } else {
+                                lblPl.setStyle("-fx-text-fill: #888c91;");
+                            }
+                            lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
+                        } else if (listPLIncome != null) {
+                            double diff = listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() - 0;
+                            lblPl.setText(
+                                    diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
+                            if (diff > 0) {
+                                lblPl.setStyle("-fx-text-fill: #006400;");
+                            } else {
+                                lblPl.setStyle("-fx-text-fill: #888c91;");
+                            }
+                            lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
+                        } else if (listPLExpense != null) {
+                            double diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
+                            lblPl.setText(
+                                    diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
+                            if (diff > 0) {
+                                lblPl.setStyle("-fx-text-fill: #006400;");
+                            } else {
+                                lblPl.setStyle("-fx-text-fill: #888c91;");
+                            }
+                            lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println(e);
+                        throw new RuntimeException(e);
+                    }
+                });
+        System.out.println("Nimit : outside");
     }
 
     protected void loadTrading() {

@@ -7,7 +7,6 @@ import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.service.BmcService;
-import com.eipl.amcs.master.org.service.BranchService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

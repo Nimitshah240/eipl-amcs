@@ -24,7 +24,6 @@ public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConf
     @Override
     public List<VoucherTypeLedgerConfig> findAll() {
         List<VoucherTypeLedgerConfig> list = voucherTypeLedgerConfigRepository.findAll(Sort.by("code"));
-        log.info("LedgerTypes findAll {} items fetched", list.size());
         return list;
     }
 

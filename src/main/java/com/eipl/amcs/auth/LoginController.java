@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -67,6 +68,7 @@ public class LoginController implements MyInitialization {
 
         btnLogin.setOnAction(e -> {
 // ------------- MERGING ----------------------
+            CompletableFuture future = CompletableFuture.runAsync(() -> createAndSetLocale());
 
             LoginDto dto = new LoginDto(txtUsername.getText(), txtPassword.getText(), MainApp.identityDto.getSociety());
             User user = userService.authenticate(dto);
@@ -77,13 +79,11 @@ public class LoginController implements MyInitialization {
                 alert.createAlert();
                 FocusUtils.requestFocus(txtUsername);
             } else {
-                createAndSetLocale();
                 MainApp.setUser(user);
                 MainApp.setFinancialYear(cboxFinancialYear.getValue());
                 Rectangle2D rect = Screen.getPrimary().getVisualBounds();
                 MainApp.getContentPane().setMaxWidth(rect.getWidth());
                 MainApp.getContentPane().setMaxHeight(rect.getHeight());
-
                 MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
             }

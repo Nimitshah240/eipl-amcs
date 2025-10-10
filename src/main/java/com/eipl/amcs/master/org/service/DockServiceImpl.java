@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.org.service;
 
-import com.eipl.amcs.master.org.dto.DockDto;
+import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.DockMilkType;
 import com.eipl.amcs.master.org.repository.DockMilkTypeRepository;
@@ -28,16 +28,16 @@ public class DockServiceImpl implements DockService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DockServiceImpl.class);
 
 	@Override
-	public List<DockDto> findAll() {
+	public List<DockMilkTypeDto> findAll() {
 		List<Dock> list = dockRepository.findAll(Sort.by("dockNo"));
 		if (list == null)
 			return null;
 		LOGGER.info("Docks findAll {} items fetched", list.size());
-		List<DockDto> listDto = new ArrayList<>();
+		List<DockMilkTypeDto> listDto = new ArrayList<>();
 		list.forEach(item -> {
 			List<DockMilkType> l = dockMilkTypeRepository.findAllByDock(item);
 			if (l != null && !l.isEmpty())
-				listDto.add(new DockDto(item, l.stream().map(m -> m.getMilkType()).collect(Collectors.toList())));
+				listDto.add(new DockMilkTypeDto(item, l.stream().map(m -> m.getMilkType()).collect(Collectors.toList())));
 		});
 		return listDto;
 	}
@@ -49,13 +49,13 @@ public class DockServiceImpl implements DockService {
 
 	@Override
 	@Transactional
-	public DockDto save(DockDto dockDto, String identityInfo) {
+	public DockMilkTypeDto save(DockMilkTypeDto DockMilkTypeDto, String identityInfo) {
 		try {
-			Dock dock = dockDto.getDock();
+			Dock dock = DockMilkTypeDto.getDock();
 			dock.setInitData();
 			save(dock, identityInfo);
 
-			dockDto.getMilkTypes().forEach(item -> {
+			DockMilkTypeDto.getMilkTypes().forEach(item -> {
 				DockMilkType dockMilkType = new DockMilkType();
 				dockMilkType.setCode(dock.getDockNo() + item.getCode());
 				dockMilkType.setDock(dock);
@@ -67,14 +67,14 @@ public class DockServiceImpl implements DockService {
 			LOGGER.error("Dock Save Ex", e);
 			return null;
 		}
-		return dockDto;
+		return DockMilkTypeDto;
 	}
 
 	@Override
 	@Transactional
-	public DockDto update(DockDto dockDto, String identityInfo) {
+	public DockMilkTypeDto update(DockMilkTypeDto DockMilkTypeDto, String identityInfo) {
 		try {
-			Dock dock = dockDto.getDock();
+			Dock dock = DockMilkTypeDto.getDock();
 			dock.setupdateData();
 			dockRepository.customUpdate(dock, identityInfo);
 
@@ -85,7 +85,7 @@ public class DockServiceImpl implements DockService {
 				});
 			}
 			
-			dockDto.getMilkTypes().forEach(item -> {
+			DockMilkTypeDto.getMilkTypes().forEach(item -> {
 				DockMilkType dockMilkType = new DockMilkType();
 				dockMilkType.setCode(dock.getDockNo() + item.getCode());
 				dockMilkType.setDock(dock);
@@ -97,7 +97,7 @@ public class DockServiceImpl implements DockService {
 			LOGGER.error("Dock update ex", e);
 			return null;
 		}
-		return dockDto;
+		return DockMilkTypeDto;
 	}
 
 	@Override

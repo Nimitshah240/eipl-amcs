@@ -150,13 +150,30 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
     @Override
     public void loadData() {
         try {
-            CompletableFuture<List<VoucherType>> voucherTypeListFuture = CompletableFuture.supplyAsync(() -> voucherTypeService.findAll());
-            CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> ledgerService.findAllByIsActive());
-            CompletableFuture<List<VoucherTypeLedgerConfig>> voucherTypeLedgerConfigListFuture = CompletableFuture.supplyAsync(() -> voucherTypeLedgerConfigService.findAll());
+            CompletableFuture<List<VoucherType>> voucherTypeListFuture = CompletableFuture.supplyAsync(() -> {
+                System.out.println("Nimit : fetching... voucher");
+                List<VoucherType> v = voucherTypeService.findAll();
+                System.out.println("Nimit : fetched... voucher");
+                return v;
+            });
+            CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> {
+                System.out.println("Nimit : fetching... ledger");
+                List<Ledger> l = ledgerService.findAllByIsActive();
+                System.out.println("Nimit : fetched... ledger");
+                return l;
+            });
+            CompletableFuture<List<VoucherTypeLedgerConfig>> voucherTypeLedgerConfigListFuture = CompletableFuture.supplyAsync(() -> {
+                System.out.println("Nimit : fetching... voucher type");
+                List<VoucherTypeLedgerConfig> vl = voucherTypeLedgerConfigService.findAll();
+                System.out.println("Nimit : fetched... voucher type");
+                return vl;
+
+            });
 
             CompletableFuture.allOf(voucherTypeListFuture, ledgerListFuture, voucherTypeLedgerConfigListFuture)
                     .whenCompleteAsync((result, ex) -> {
                         try {
+                            System.out.println("Nimit : inside");
 
                             List<VoucherType> voucherTypeList = voucherTypeListFuture.get();
                             List<Ledger> ledgerList1 = ledgerListFuture.get();
@@ -190,6 +207,7 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
                             throw new RuntimeException(e);
                         }
                     });
+            System.out.println("Nimit : outside");
         } catch (Exception ex) {
             System.out.println(ex);
         }

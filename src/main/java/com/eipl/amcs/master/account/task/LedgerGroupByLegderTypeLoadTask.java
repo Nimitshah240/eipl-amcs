@@ -4,6 +4,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.LedgerGroup;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LedgerGroupByLegderTypeLoadTask extends Task<List<LedgerGroup>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductPurchaseRateByProductTask.class);
 
     private final Integer code;
     public LedgerGroupByLegderTypeLoadTask(Integer code) {
