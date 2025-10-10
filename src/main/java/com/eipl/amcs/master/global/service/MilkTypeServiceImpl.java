@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 public class MilkTypeServiceImpl implements MilkTypeService {
 
-	@Autowired
-	private MilkTypeRepository milkTypeRepository;
+    @Autowired
+    private MilkTypeRepository milkTypeRepository;
 
     private static final Logger log = LoggerFactory.getLogger(MilkTypeServiceImpl.class);
 

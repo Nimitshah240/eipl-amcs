@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GenderRepository  extends BaseRepository<Gender, Integer> {
+public interface GenderRepository extends BaseRepository<Gender, Integer> {
 
-	@Override
-	List<Gender> findAll(Sort sort);
+    @Override
+    List<Gender> findAll(Sort sort);
 }

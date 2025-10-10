@@ -12,19 +12,19 @@ import java.util.List;
 
 @Service
 public class ProductGroupServiceImpl implements ProductGroupService {
-	@Autowired
-	private ProductGroupRepository productGroupRepository;
+    @Autowired
+    private ProductGroupRepository productGroupRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductGroupServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ProductGroupServiceImpl.class);
 
-	@Override
-	public List<ProductGroup> findAll() {
-		List<ProductGroup> list = productGroupRepository.findAll(Sort.by("name"));
-		log.info("ProductGroups findAll {} items fetched", list.size());
-		return list;
-	}
-	
-	@Override
+    @Override
+    public List<ProductGroup> findAll() {
+        List<ProductGroup> list = productGroupRepository.findAll(Sort.by("name"));
+        log.info("ProductGroups findAll {} items fetched", list.size());
+        return list;
+    }
+
+    @Override
     public ProductGroup findByProductGroupCode(String code) {
         ProductGroup productGroup = productGroupRepository.findByCode(Integer.valueOf(code));
         return productGroup;

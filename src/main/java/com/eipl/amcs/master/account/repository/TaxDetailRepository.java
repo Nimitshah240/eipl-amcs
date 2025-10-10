@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface TaxDetailRepository extends BaseRepository<TaxDetail, String> {
 
-	@EntityGraph(attributePaths = {"basicTax", "tax"})
-	List<TaxDetail> findAll();
-	
-	@EntityGraph(attributePaths = {"basicTax", "tax"})
-	List<TaxDetail> findByTax(Tax tax);
+    @EntityGraph(attributePaths = {"basicTax", "tax"})
+    List<TaxDetail> findAll();
 
-	@Override
-	Optional<TaxDetail> findById(String s);
+    @EntityGraph(attributePaths = {"basicTax", "tax"})
+    List<TaxDetail> findByTax(Tax tax);
+
+    @Override
+    Optional<TaxDetail> findById(String s);
 }

@@ -21,33 +21,33 @@ import java.time.LocalDateTime;
 @Table(name = "member_milk_purchase_rate")
 public class MemberMilkPurchaseRate extends BaseModel {
 
-	@Id
-	@Size(max = 15)
-	private String code;
-	@Size(max = 255)
-	private String description;
-	private Short rateGenMethodCode; // 1-Excel, (1-Manual,2-Auto,3-Excel)
-	@Size(max = 3)
-	private String unionCode;
-	private LocalDateTime wefDate;
+    @Id
+    @Size(max = 15)
+    private String code;
+    @Size(max = 255)
+    private String description;
+    private Short rateGenMethodCode; // 1-Excel, (1-Manual,2-Auto,3-Excel)
+    @Size(max = 3)
+    private String unionCode;
+    private LocalDateTime wefDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_shift_code"))
-	private Shift shift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shift_applicable_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_shift_applicable_code"))
-	private Shift shiftApplicable;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rate_type_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_rate_type_code"))
-	private RateType rateType;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_society_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_shift_code"))
+    private Shift shift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shift_applicable_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_shift_applicable_code"))
+    private Shift shiftApplicable;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rate_type_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_rate_type_code"))
+    private RateType rateType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    private Society society;
 
-	@Override
-	public String getTableName() {
-		return "member_milk_purchase_rate";
-	}
+    @Override
+    public String getTableName() {
+        return "member_milk_purchase_rate";
+    }
 }

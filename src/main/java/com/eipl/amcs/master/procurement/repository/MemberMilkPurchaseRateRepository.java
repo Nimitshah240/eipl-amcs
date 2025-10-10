@@ -14,16 +14,17 @@ import java.util.Optional;
 @Repository
 public interface MemberMilkPurchaseRateRepository extends JpaRepository<MemberMilkPurchaseRate, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "society", "rateType" })
-	List<MemberMilkPurchaseRate> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "society", "rateType"})
+    List<MemberMilkPurchaseRate> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "society", "rateType" })
-	Optional<MemberMilkPurchaseRate> findTop1BySocietyAndWefDateGreaterThanOrderByWefDateDesc(Society society, LocalDateTime wefDate);
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "society", "rateType" })
-	Optional<MemberMilkPurchaseRate> findTop1BySocietyAndWefDateGreaterThanEqualOrderByWefDateDesc(Society society, LocalDateTime wefDate);
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "society", "rateType"})
+    Optional<MemberMilkPurchaseRate> findTop1BySocietyAndWefDateGreaterThanOrderByWefDateDesc(Society society, LocalDateTime wefDate);
 
-	@Override
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "society", "rateType" })
-	Optional<MemberMilkPurchaseRate> findById(String code);
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "society", "rateType"})
+    Optional<MemberMilkPurchaseRate> findTop1BySocietyAndWefDateGreaterThanEqualOrderByWefDateDesc(Society society, LocalDateTime wefDate);
+
+    @Override
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "society", "rateType"})
+    Optional<MemberMilkPurchaseRate> findById(String code);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface DesignationRepository extends BaseRepository<Designation, Integer> {
 
-	@Override
-	List<Designation> findAll(Sort sort);
+    @Override
+    List<Designation> findAll(Sort sort);
 
 }

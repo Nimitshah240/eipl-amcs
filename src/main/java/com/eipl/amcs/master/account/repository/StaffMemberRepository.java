@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface StaffMemberRepository extends BaseRepository<StaffMember, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "bank", "branch", "society", "designation", "gender"})
-	List<StaffMember> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"bank", "branch", "society", "designation", "gender"})
+    List<StaffMember> findAll(Sort sort);
 
 }

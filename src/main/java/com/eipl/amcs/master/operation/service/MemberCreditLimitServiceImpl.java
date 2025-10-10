@@ -9,11 +9,11 @@ import java.util.Optional;
 
 @Service
 public class MemberCreditLimitServiceImpl implements MemberCreditLimitService {
-	@Autowired
-	private MemberCreditLimitRepository repository;
+    @Autowired
+    private MemberCreditLimitRepository repository;
 
-	@Override
-	public Optional<MemberCreditLimit> findByConsumerCodeAndConsumerType(String consumerCode, Short consumerType) {
-		return repository.findByConsumerCodeAndConsumerType(consumerCode, consumerType);
-	}
+    @Override
+    public Optional<MemberCreditLimit> findByConsumerCodeAndConsumerType(String consumerCode, Short consumerType) {
+        return repository.findByConsumerCodeAndConsumerType(consumerCode, consumerType);
+    }
 }

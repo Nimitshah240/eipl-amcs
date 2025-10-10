@@ -5,6 +5,6 @@ import com.eipl.amcs.master.global.model.Gender;
 import java.util.List;
 
 public interface GenderService {
-	 List<Gender> findAll();
+    List<Gender> findAll();
 
 }

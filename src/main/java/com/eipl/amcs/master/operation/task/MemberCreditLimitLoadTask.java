@@ -2,7 +2,6 @@ package com.eipl.amcs.master.operation.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.dto.MemberCreditLimit;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -14,16 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class MemberCreditLimitLoadTask extends Task<MemberCreditLimit> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberCreditLimitLoadTask.class);
 
     private final String code;
     private final Short type;
 
-    public MemberCreditLimitLoadTask(String code,Short type) {
+    public MemberCreditLimitLoadTask(String code, Short type) {
         this.code = code;
         this.type = type;
     }
@@ -32,7 +28,7 @@ public class MemberCreditLimitLoadTask extends Task<MemberCreditLimit> {
     protected MemberCreditLimit call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + "membercreditlimit"+"/codeAndType";
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + "membercreditlimit" + "/codeAndType";
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
                     .queryParam("code", code)
                     .queryParam("type", type);

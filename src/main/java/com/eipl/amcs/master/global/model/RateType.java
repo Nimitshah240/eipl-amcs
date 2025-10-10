@@ -17,19 +17,19 @@ import javax.validation.constraints.Size;
 @Table(name = "rate_types")
 public class RateType extends BaseModel {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer code;
-	@Size(max = 50)
-	private String rateType;
-	
-	@Override
-	public String getTableName() {
-		return "rate_types";
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
+    @Size(max = 50)
+    private String rateType;
 
-	@Override
-	public String toString() {
-		return CommonUtils.getLocalString(this.rateType, null);
-	}
+    @Override
+    public String getTableName() {
+        return "rate_types";
+    }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.rateType, null);
+    }
 }

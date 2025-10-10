@@ -19,25 +19,25 @@ import java.time.LocalDate;
 @Table(name = "society_year_closing")
 public class SocietyYearClosing extends BaseModelTxn {
 
-	@Id
-	@Size(max = 50)
-	private String code;
+    @Id
+    @Size(max = 50)
+    private String code;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "financial_years_code", foreignKey = @ForeignKey(name = "fk_society_year_closing_financial_years_code"))
-	private FinancialYear financialYear;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "financial_years_code", foreignKey = @ForeignKey(name = "fk_society_year_closing_financial_years_code"))
+    private FinancialYear financialYear;
 
-	private LocalDate closingDate;
+    private LocalDate closingDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_year_closing_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_year_closing_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
 
-	private String unionCode;
+    private String unionCode;
 
-	@Override
-	public String getTableName() {
-		return "society_year_closing";
-	}
+    @Override
+    public String getTableName() {
+        return "society_year_closing";
+    }
 }

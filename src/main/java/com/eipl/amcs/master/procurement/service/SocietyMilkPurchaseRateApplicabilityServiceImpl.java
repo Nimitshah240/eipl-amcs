@@ -13,15 +13,15 @@ import java.util.List;
 @Service
 public class SocietyMilkPurchaseRateApplicabilityServiceImpl implements SocietyMilkPurchaseRateApplicabilityService {
 
-	@Autowired
-	private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
+    @Autowired
+    private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(SocietyMilkPurchaseRateApplicabilityServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SocietyMilkPurchaseRateApplicabilityServiceImpl.class);
 
-	@Override
-	public List<SocietyMilkPurchaseRateApplicability> findAll() {
-		List<SocietyMilkPurchaseRateApplicability> list = societyMilkPurchaseRateApplicabilityRepository.findAll(Sort.by("code"));
-		log.info("SocietyMilkPurchaseRateApplicability findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<SocietyMilkPurchaseRateApplicability> findAll() {
+        List<SocietyMilkPurchaseRateApplicability> list = societyMilkPurchaseRateApplicabilityRepository.findAll(Sort.by("code"));
+        log.info("SocietyMilkPurchaseRateApplicability findAll {} items fetched", list.size());
+        return list;
+    }
 }

@@ -14,15 +14,15 @@ import java.util.List;
 @Service
 public class MemberMilkPurchaseRateDetailServiceImpl implements MemberMilkPurchaseRateDetailService {
 
-	@Autowired
-	private MemberMilkPurchaseRateDetailRepository dtlRepository;
+    @Autowired
+    private MemberMilkPurchaseRateDetailRepository dtlRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(MemberMilkPurchaseRateDetailServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(MemberMilkPurchaseRateDetailServiceImpl.class);
 
-	@Override
-	public List<MemberMilkPurchaseRateDetail> findAll() {
-		List<MemberMilkPurchaseRateDetail> list = dtlRepository.findAll(Sort.by("code"));
-		log.info("MemberMilkPurchaseRateDetails findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<MemberMilkPurchaseRateDetail> findAll() {
+        List<MemberMilkPurchaseRateDetail> list = dtlRepository.findAll(Sort.by("code"));
+        log.info("MemberMilkPurchaseRateDetails findAll {} items fetched", list.size());
+        return list;
+    }
 }

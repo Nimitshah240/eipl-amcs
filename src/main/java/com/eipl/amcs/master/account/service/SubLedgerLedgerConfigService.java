@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubLedgerLedgerConfigService {
-	List<SubLedgerLedgerConfig> findAll();
+    List<SubLedgerLedgerConfig> findAll();
 
-	List<SubLedgerLedgerConfig> findBySubLedgerType(Integer code);
+    List<SubLedgerLedgerConfig> findBySubLedgerType(Integer code);
 
 
     String save(List<SubLedgerLedgerConfig> subLedgerLedgerConfig, String subLedgerTypeCode, String identityInfo);

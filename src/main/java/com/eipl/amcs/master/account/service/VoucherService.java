@@ -10,7 +10,9 @@ import java.util.Optional;
 
 public interface VoucherService {
     List<VoucherDto> findAll();
+
     List<VoucherTransaction> findAllTransaction(Voucher voucher);
+
     List<VoucherSubLedger> findAllVoucherSubLedger(VoucherTransaction voucherTransaction);
 
     Voucher save(VoucherDto dto, String identityInfo);

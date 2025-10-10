@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface LedgerTypeRepository extends BaseRepository<LedgerType, Integer> {
 
-	@Override
-	List<LedgerType> findAll(Sort sort);
+    @Override
+    List<LedgerType> findAll(Sort sort);
 
-	@Override
-	Optional<LedgerType> findById(Integer integer);
+    @Override
+    Optional<LedgerType> findById(Integer integer);
 }

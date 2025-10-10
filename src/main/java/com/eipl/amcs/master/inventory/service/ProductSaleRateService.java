@@ -8,20 +8,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductSaleRateService {
-	List<ProductSaleRate> findAll();
+    List<ProductSaleRate> findAll();
 
-	ProductSaleRate save(ProductSaleRate productSaleRate, String identityInfo);
+    ProductSaleRate save(ProductSaleRate productSaleRate, String identityInfo);
 
-	ProductSaleRate update(ProductSaleRate productSaleRate, String identityInfo);
+    ProductSaleRate update(ProductSaleRate productSaleRate, String identityInfo);
 
-	Optional<ProductSaleRate> findById(String code);
+    Optional<ProductSaleRate> findById(String code);
 
-	ProductSaleRate findByProduct(Product product, LocalDate date);
+    ProductSaleRate findByProduct(Product product, LocalDate date);
 
-	void delete(String code, String identityInfo);
+    void delete(String code, String identityInfo);
 
-	void delete(ProductSaleRate productSaleRate, String identityInfo);
+    void delete(ProductSaleRate productSaleRate, String identityInfo);
 
-	LocalDate checkWefDate(String str1, String str2);
+    LocalDate checkWefDate(String str1, String str2);
 
 }

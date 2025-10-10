@@ -2,7 +2,6 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;

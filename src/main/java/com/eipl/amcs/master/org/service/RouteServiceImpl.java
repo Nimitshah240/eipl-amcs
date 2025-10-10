@@ -13,22 +13,22 @@ import java.util.List;
 @Service
 public class RouteServiceImpl implements RouteService {
 
-	@Autowired
-	private RouteRepository routeRepository;
+    @Autowired
+    private RouteRepository routeRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(RouteServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(RouteServiceImpl.class);
 
-	@Override
-	public List<Route> findAll() {
-		List<Route> list = routeRepository.findAll(Sort.by("name"));
-		log.info("Routes findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Route> findAll() {
+        List<Route> list = routeRepository.findAll(Sort.by("name"));
+        log.info("Routes findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public Route save(Route obj) {
-		routeRepository.save(obj);
-		return null;
-	}
+    @Override
+    public Route save(Route obj) {
+        routeRepository.save(obj);
+        return null;
+    }
 
 }

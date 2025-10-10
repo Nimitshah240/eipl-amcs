@@ -19,26 +19,26 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "member_credit_limit_audit")
 public class MemberCreditLimitAudit extends BaseModelTxnAudit {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Size(max=15)
-	private String code;
-	@Digits(integer = 10, fraction = 2)
-	private BigDecimal balance;
-	private Short consumerType;
-	@Size(max = 25)
-	private String consumerCode;
-	@Size(max=3)
-	private String unionCode;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	
-	@Override
-	public String getTableName() {
-		return "member_credit_limit_audit";
-	}
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Size(max = 15)
+    private String code;
+    @Digits(integer = 10, fraction = 2)
+    private BigDecimal balance;
+    private Short consumerType;
+    @Size(max = 25)
+    private String consumerCode;
+    @Size(max = 3)
+    private String unionCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+
+    @Override
+    public String getTableName() {
+        return "member_credit_limit_audit";
+    }
 }

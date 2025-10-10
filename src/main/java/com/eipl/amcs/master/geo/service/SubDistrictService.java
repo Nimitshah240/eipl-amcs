@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface SubDistrictService {
 
-	List<SubDistrict> findAll();
+    List<SubDistrict> findAll();
 
-	List<SubDistrict> findAll(String districtCode);
+    List<SubDistrict> findAll(String districtCode);
 
 }

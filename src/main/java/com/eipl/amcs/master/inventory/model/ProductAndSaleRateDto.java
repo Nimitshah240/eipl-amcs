@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductAndSaleRateDto {
-	public Product product;
-	public ProductSaleRate productSaleRate;
+    public Product product;
+    public ProductSaleRate productSaleRate;
 }

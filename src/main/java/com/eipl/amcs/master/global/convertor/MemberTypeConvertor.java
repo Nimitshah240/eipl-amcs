@@ -1,6 +1,5 @@
 package com.eipl.amcs.master.global.convertor;
 
-import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;

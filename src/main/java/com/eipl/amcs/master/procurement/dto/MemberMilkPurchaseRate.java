@@ -4,10 +4,8 @@ import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.utils.CommonUtils;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 public class MemberMilkPurchaseRate extends BaseModel {
 
@@ -99,6 +97,6 @@ public class MemberMilkPurchaseRate extends BaseModel {
 
     @Override
     public String toString() {
-        return this.wefDate.toString().replace("T"," ");
+        return this.wefDate.toString().replace("T", " ");
     }
 }

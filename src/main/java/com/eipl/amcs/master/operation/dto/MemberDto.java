@@ -1,4 +1,5 @@
 package com.eipl.amcs.master.operation.dto;
+
 import com.eipl.amcs.master.operation.model.Member;
 
 public class MemberDto {

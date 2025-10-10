@@ -4,7 +4,6 @@ import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.MeetingAgenda;
 import com.eipl.amcs.master.account.model.Mom;
 import com.eipl.amcs.master.account.model.MomAction;
-import com.eipl.amcs.master.account.repository.LedgerTypeRepository;
 import com.eipl.amcs.master.account.repository.MeetingAgendaRepository;
 import com.eipl.amcs.master.account.repository.MomActionRepository;
 import com.eipl.amcs.master.account.repository.MomRepository;
@@ -16,11 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
-
-import static com.eipl.amcs.MainApp.context;
 
 @Service
 public class MeetingAgendaServiceImpl implements MeetingAgendaService {

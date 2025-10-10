@@ -1,11 +1,10 @@
 package com.eipl.amcs.master.org.dto;
 
 import com.eipl.amcs.base.model.BaseModel;
-//import com.eipl.amcs.master.geo.dto.*;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.utils.CommonUtils;
 
 public class Bmc extends BaseModel {
     private String code;

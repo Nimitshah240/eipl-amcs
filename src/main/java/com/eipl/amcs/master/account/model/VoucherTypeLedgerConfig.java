@@ -19,52 +19,53 @@ import javax.persistence.*;
 @Table(name = "voucher_type_ledger_config")
 public class VoucherTypeLedgerConfig extends BaseModelTxn {
 
-	@Id
-	private String code;
-	private Boolean creditDebit;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	private String unionCode;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_ledger_code"))
-	@JsonIgnoreProperties(value = {"ledgerGroup", "society","union"})
-	private Ledger ledger;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_voucher_type"))
-	private VoucherType voucherType;
-	@Override
-	public String getTableName() {
-		return "voucher_type_ledger_config";
-	}
+    @Id
+    private String code;
+    private Boolean creditDebit;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    private String unionCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_ledger_code"))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger ledger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_voucher_type"))
+    private VoucherType voucherType;
 
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public String getTableName() {
+        return "voucher_type_ledger_config";
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		VoucherTypeLedgerConfigAudit audit = new VoucherTypeLedgerConfigAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-		audit.setCode(this.getCode());
-		audit.setCreditDebit(this.getCreditDebit());
-		audit.setSociety(this.getSociety());
-		audit.setUnionCode(this.getUnionCode());
-		audit.setLedger(this.getLedger());
-		audit.setVoucherType(this.getVoucherType());
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        VoucherTypeLedgerConfigAudit audit = new VoucherTypeLedgerConfigAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
+        audit.setCode(this.getCode());
+        audit.setCreditDebit(this.getCreditDebit());
+        audit.setSociety(this.getSociety());
+        audit.setUnionCode(this.getUnionCode());
+        audit.setLedger(this.getLedger());
+        audit.setVoucherType(this.getVoucherType());
 
-		return audit;
-	}
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
+
+        return audit;
+    }
 }

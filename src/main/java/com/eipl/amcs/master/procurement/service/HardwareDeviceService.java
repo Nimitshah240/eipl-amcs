@@ -5,6 +5,6 @@ import com.eipl.amcs.master.procurement.model.HardwareDevice;
 import java.util.List;
 
 public interface HardwareDeviceService {
-	 List<HardwareDevice> findAll();
+    List<HardwareDevice> findAll();
 
 }

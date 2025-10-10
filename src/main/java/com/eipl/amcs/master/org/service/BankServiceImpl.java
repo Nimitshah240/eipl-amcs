@@ -13,15 +13,15 @@ import java.util.List;
 
 @Service
 public class BankServiceImpl implements BankService {
-	@Autowired
-	private BankRepository bankRepository;
+    @Autowired
+    private BankRepository bankRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(BankServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BankServiceImpl.class);
 
-	@Override
-	public List<Bank> findAll() {
-		List<Bank> list = bankRepository.findAll(Sort.by("name"));
-		log.info("Banks findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Bank> findAll() {
+        List<Bank> list = bankRepository.findAll(Sort.by("name"));
+        log.info("Banks findAll {} items fetched", list.size());
+        return list;
+    }
 }

@@ -2,7 +2,6 @@ package com.eipl.amcs.master.procurement.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;

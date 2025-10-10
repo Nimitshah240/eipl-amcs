@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface DockRepository extends BaseRepository<Dock, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society" })
-	List<Dock> findAll(Sort sort);
-	
-	@EntityGraph(attributePaths = { "society" })
-	Optional<Dock> findById(String dockNumber);
+    @Override
+    @EntityGraph(attributePaths = {"society"})
+    List<Dock> findAll(Sort sort);
+
+    @EntityGraph(attributePaths = {"society"})
+    Optional<Dock> findById(String dockNumber);
 
 }

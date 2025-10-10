@@ -17,21 +17,21 @@ import javax.validation.constraints.Size;
 @Table(name = "genders")
 public class Gender extends BaseModel {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer code;
-	@Size(max = 25)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
+    @Size(max = 25)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
 
-	@Override
-	public String getTableName() {
-		return "genders";
-	}
+    @Override
+    public String getTableName() {
+        return "genders";
+    }
 
-	@Override
-	public String toString() {
-		return CommonUtils.getLocalString(this.name, this.nameLocal);
-	}
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 }

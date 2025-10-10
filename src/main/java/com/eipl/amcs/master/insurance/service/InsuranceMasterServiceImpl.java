@@ -57,6 +57,7 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
         insuranceDetail.setUpdatedBy(null);
         return insuranceDetailRepository.customSave(insuranceDetail, identityInfo);
     }
+
     @Override
     public InsuranceDetail saveDetailsFinalize(InsuranceDetail insuranceDetail, String identityInfo) {
         insuranceDetail.setInitData();

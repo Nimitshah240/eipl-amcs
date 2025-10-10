@@ -5,6 +5,6 @@ import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicabilit
 import java.util.List;
 
 public interface MemberMilkPurchaseRateApplicabilityService {
-	 List<MemberMilkPurchaseRateApplicability> findAll();
+    List<MemberMilkPurchaseRateApplicability> findAll();
 
 }

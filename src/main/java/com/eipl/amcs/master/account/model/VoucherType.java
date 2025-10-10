@@ -2,6 +2,7 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -57,5 +58,10 @@ public class VoucherType extends BaseModel {
 		audit.setXCol3(this.getXCol3());
 
 		return audit;
+	}
+
+	@Override
+	public String toString() {
+		return CommonUtils.getLocalString(this.name, this.nameLocal);
 	}
 }

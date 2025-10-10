@@ -5,6 +5,6 @@ import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateDetail;
 import java.util.List;
 
 public interface SocietyMilkPurchaseRateDetailService {
-	 List<SocietyMilkPurchaseRateDetail> findAll();
+    List<SocietyMilkPurchaseRateDetail> findAll();
 
 }

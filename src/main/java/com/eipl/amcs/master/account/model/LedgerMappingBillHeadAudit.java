@@ -32,8 +32,8 @@ public class LedgerMappingBillHeadAudit extends BaseModelTxnAudit {
     private Ledger ledger;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bill_head_code", foreignKey =@ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    @JsonIgnoreProperties(value = { "society", "union"})
+    @JoinColumn(name = "bill_head_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"society", "union"})
     private BillHead billHead;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,7 +43,7 @@ public class LedgerMappingBillHeadAudit extends BaseModelTxnAudit {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_criteria_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    @JsonIgnoreProperties(value = {"formulaCode","union","society"})
+    @JsonIgnoreProperties(value = {"formulaCode", "union", "society"})
     private BillCriteria billCriteria;
 
     private String unionCode;

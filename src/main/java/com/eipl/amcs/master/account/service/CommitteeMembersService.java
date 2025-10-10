@@ -13,6 +13,6 @@ public interface CommitteeMembersService {
 
     CommitteeMembers update(CommitteeMembers committeeMembers, String identityInfo);
 
-    void  delete(String memberCode,String identityInfo);
+    void delete(String memberCode, String identityInfo);
 
 }

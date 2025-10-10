@@ -52,7 +52,8 @@ public class BmcController implements MyInitialization {
     private BmcService bmcService;
 
     public BmcController() {
-        bmcService = context.getBean(BmcService.class);;
+        bmcService = context.getBean(BmcService.class);
+        ;
     }
 
     @Override

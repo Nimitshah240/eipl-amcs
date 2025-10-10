@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ShiftRepository  extends BaseRepository<Shift, Integer> {
+public interface ShiftRepository extends BaseRepository<Shift, Integer> {
 
-	@Override
-	List<Shift> findAll(Sort sort);
+    @Override
+    List<Shift> findAll(Sort sort);
 }

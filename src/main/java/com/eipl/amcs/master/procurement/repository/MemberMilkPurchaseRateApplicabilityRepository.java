@@ -14,18 +14,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemberMilkPurchaseRateApplicabilityRepository  extends JpaRepository<MemberMilkPurchaseRateApplicability, String> {
+public interface MemberMilkPurchaseRateApplicabilityRepository extends JpaRepository<MemberMilkPurchaseRateApplicability, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "shift", "memberMilkPurchaseRate", "society"})
-	List<MemberMilkPurchaseRateApplicability> findAll(Sort sort);
-	
-	@Query("SELECT app FROM MemberMilkPurchaseRateApplicability app LEFT JOIN FETCH app.shift LEFT JOIN FETCH app.memberMilkPurchaseRate rate "
-			+ "LEFT JOIN FETCH app.society WHERE app.wefDate <= ?1 AND (rate.shift = ?2 OR rate.shiftApplicable = ?3) AND app.society = ?4 "
-			+ "ORDER BY app.wefDate DESC")
-	List<MemberMilkPurchaseRateApplicability> findRateApplicabilityTop2(LocalDateTime date, Shift shift, Shift shiftApp, Society society);
-	
-	@Override
-	@EntityGraph(attributePaths = { "shift", "memberMilkPurchaseRate", "society"})
-	Optional<MemberMilkPurchaseRateApplicability> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"shift", "memberMilkPurchaseRate", "society"})
+    List<MemberMilkPurchaseRateApplicability> findAll(Sort sort);
+
+    @Query("SELECT app FROM MemberMilkPurchaseRateApplicability app LEFT JOIN FETCH app.shift LEFT JOIN FETCH app.memberMilkPurchaseRate rate "
+            + "LEFT JOIN FETCH app.society WHERE app.wefDate <= ?1 AND (rate.shift = ?2 OR rate.shiftApplicable = ?3) AND app.society = ?4 "
+            + "ORDER BY app.wefDate DESC")
+    List<MemberMilkPurchaseRateApplicability> findRateApplicabilityTop2(LocalDateTime date, Shift shift, Shift shiftApp, Society society);
+
+    @Override
+    @EntityGraph(attributePaths = {"shift", "memberMilkPurchaseRate", "society"})
+    Optional<MemberMilkPurchaseRateApplicability> findById(String id);
 }

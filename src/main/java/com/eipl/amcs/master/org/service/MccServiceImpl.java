@@ -14,15 +14,15 @@ import java.util.List;
 @Service
 public class MccServiceImpl implements MccService {
 
-	@Autowired
-	private MccRepository mccRepository;
+    @Autowired
+    private MccRepository mccRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(MccServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(MccServiceImpl.class);
 
-	@Override
-	public List<Mcc> findAll() {
-		List<Mcc> list = mccRepository.findAll(Sort.by("name"));
-		log.info("Mccs findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Mcc> findAll() {
+        List<Mcc> list = mccRepository.findAll(Sort.by("name"));
+        log.info("Mccs findAll {} items fetched", list.size());
+        return list;
+    }
 }

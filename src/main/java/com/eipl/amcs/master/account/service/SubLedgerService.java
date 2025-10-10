@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SubLedgerService {
-	 List<SubLedger> findAll();
+    List<SubLedger> findAll();
 
 
-	SubLedger save(SubLedger subLedger, String identityInfo);
+    SubLedger save(SubLedger subLedger, String identityInfo);
 
-	SubLedger update(SubLedger subLedger, String identityInfo);
-
-
-	Optional<SubLedger> findById(String subLedgerTypeNo);
-
-	void delete(String subLedgerNo, String identityInfo);
-
-	void delete(SubLedger subLedger, String identityInfo);
+    SubLedger update(SubLedger subLedger, String identityInfo);
 
 
-	List<LedgerSubLedgerMapping> fetchMapping(String societyCode, String ledgerCode, String subLedgerCode);
+    Optional<SubLedger> findById(String subLedgerTypeNo);
+
+    void delete(String subLedgerNo, String identityInfo);
+
+    void delete(SubLedger subLedger, String identityInfo);
+
+
+    List<LedgerSubLedgerMapping> fetchMapping(String societyCode, String ledgerCode, String subLedgerCode);
 }

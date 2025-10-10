@@ -41,7 +41,7 @@ public class FinancialYearController implements MyInitialization {
         return root;
     }
 
-    public FinancialYearController(){
+    public FinancialYearController() {
         financialYearService = MainApp.context.getBean(FinancialYearService.class);
     }
 

@@ -20,9 +20,9 @@ public class HardwareDeviceConvertor extends StringConverter<HardwareDevice> {
 
     @Override
     public String toString(HardwareDevice object) {
-       if(object == null)
-           return null;
-       return object.toString();
+        if (object == null)
+            return null;
+        return object.toString();
     }
 
 }

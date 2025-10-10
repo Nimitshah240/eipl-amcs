@@ -13,9 +13,10 @@ import java.util.Optional;
 public interface SubLedgerLedgerConfigRepository extends BaseRepository<SubLedgerLedgerConfig, String> {
 
     @Override
-    @EntityGraph(attributePaths = {"ledger","society"})
+    @EntityGraph(attributePaths = {"ledger", "society"})
     List<SubLedgerLedgerConfig> findAll(Sort sort);
-    @EntityGraph(attributePaths = {"ledger","society"})
+
+    @EntityGraph(attributePaths = {"ledger", "society"})
     List<SubLedgerLedgerConfig> findBySubLedgerType(Integer type);
 
 

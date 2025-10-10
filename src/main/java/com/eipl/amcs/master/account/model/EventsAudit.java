@@ -18,26 +18,26 @@ import javax.validation.constraints.Size;
 @Table(name = "event_audit")
 public class EventsAudit extends BaseModelAudit {
 
-	@Id
-	private Integer code;
-	@Size(max = 200)
-	private String eventName;
-	private String description;
-	private Boolean ledgerCredit;
-	private Boolean ledgerDebit;
-	private Boolean subLedgerCredit;
-	private Boolean subLedgerDebit;
+    @Id
+    private Integer code;
+    @Size(max = 200)
+    private String eventName;
+    private String description;
+    private Boolean ledgerCredit;
+    private Boolean ledgerDebit;
+    private Boolean subLedgerCredit;
+    private Boolean subLedgerDebit;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey =@ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	private String unionCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    private String unionCode;
 
-	@Override
-	public String getTableName() {
-		return "event_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "event_audit";
+    }
 
 
 }

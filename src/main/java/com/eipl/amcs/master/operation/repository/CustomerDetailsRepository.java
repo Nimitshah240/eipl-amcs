@@ -9,13 +9,13 @@ import java.util.Optional;
 
 public interface CustomerDetailsRepository extends BaseRepository<CustomerDetails, String> {
 
-	@EntityGraph(attributePaths = { "union", "customer", "bank", "branch", "state", "district", "subDistrict",
-			"village", "hamlet" })
-	CustomerDetails findByCustomer(Customer customer);
+    @EntityGraph(attributePaths = {"union", "customer", "bank", "branch", "state", "district", "subDistrict",
+            "village", "hamlet"})
+    CustomerDetails findByCustomer(Customer customer);
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "customer", "bank", "branch", "state", "district", "subDistrict",
-			"village", "hamlet" })
-	Optional<CustomerDetails> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"union", "customer", "bank", "branch", "state", "district", "subDistrict",
+            "village", "hamlet"})
+    Optional<CustomerDetails> findById(String id);
 
 }

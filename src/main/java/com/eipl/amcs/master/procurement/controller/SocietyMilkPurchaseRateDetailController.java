@@ -69,7 +69,7 @@ public class SocietyMilkPurchaseRateDetailController implements MyInitialization
         }
     }
 
-//  task API NOT available
+    //  task API NOT available
     @Override
     public void loadData() {
         var task = new SocietyMilkPurchaseRateDetailLoadTask();

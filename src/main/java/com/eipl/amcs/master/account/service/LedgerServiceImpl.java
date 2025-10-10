@@ -24,13 +24,13 @@ import java.util.Optional;
 public class LedgerServiceImpl implements LedgerService {
 
     @Autowired
-	private LedgerRepository ledgerRepository;
+    private LedgerRepository ledgerRepository;
     @Autowired
     private SubLedgerRepository subLedgerRepository;
     @Autowired
-	private LedgerSubLedgerMappingRepository ledgerSubLedgerMappingRepository;
+    private LedgerSubLedgerMappingRepository ledgerSubLedgerMappingRepository;
     @Autowired
-	private SocietyRepository societyRepository;
+    private SocietyRepository societyRepository;
 
     private static final Logger log = LoggerFactory.getLogger(LedgerServiceImpl.class);
 

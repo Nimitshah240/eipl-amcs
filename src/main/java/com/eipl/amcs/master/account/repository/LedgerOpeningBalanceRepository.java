@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface LedgerOpeningBalanceRepository extends BaseRepository<LedgerOpeningBalance, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {"society","ledger"})
-	List<LedgerOpeningBalance> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "ledger"})
+    List<LedgerOpeningBalance> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = {"society","ledger"})
-	Optional<LedgerOpeningBalance> findById(String s);
+    @Override
+    @EntityGraph(attributePaths = {"society", "ledger"})
+    Optional<LedgerOpeningBalance> findById(String s);
 }

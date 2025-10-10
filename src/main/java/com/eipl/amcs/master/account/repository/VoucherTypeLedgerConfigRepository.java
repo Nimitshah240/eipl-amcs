@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface VoucherTypeLedgerConfigRepository extends BaseRepository<VoucherTypeLedgerConfig, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "voucherType", "ledger", "society" })
-	List<VoucherTypeLedgerConfig> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"voucherType", "ledger", "society"})
+    List<VoucherTypeLedgerConfig> findAll(Sort sort);
 
 
-	@Override
-	Optional<VoucherTypeLedgerConfig> findById(String s);
+    @Override
+    Optional<VoucherTypeLedgerConfig> findById(String s);
 }

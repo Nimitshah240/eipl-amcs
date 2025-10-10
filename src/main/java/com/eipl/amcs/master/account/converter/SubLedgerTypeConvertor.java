@@ -1,6 +1,5 @@
 package com.eipl.amcs.master.account.converter;
 
-import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.model.SubLedger;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;

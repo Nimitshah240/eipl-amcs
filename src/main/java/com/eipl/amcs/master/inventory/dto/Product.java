@@ -35,7 +35,7 @@ public class Product extends BaseModel {
     @JsonIgnore
     private StringProperty amount;
 
-    public Product(String code, String name,String nameLocal) {
+    public Product(String code, String name, String nameLocal) {
         this.code = code;
         this.name = name;
         this.nameLocal = nameLocal;

@@ -1,7 +1,6 @@
 package com.eipl.amcs.master.operation.dto;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.org.model.Society;
 

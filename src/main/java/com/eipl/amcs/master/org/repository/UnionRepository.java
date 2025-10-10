@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface UnionRepository extends BaseRepository<Union, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet" })
-	List<Union> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    List<Union> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet" })
-	Optional<Union> findById(String code);
+    @Override
+    @EntityGraph(attributePaths = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    Optional<Union> findById(String code);
 }

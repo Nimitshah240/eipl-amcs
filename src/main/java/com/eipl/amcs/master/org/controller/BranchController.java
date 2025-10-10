@@ -50,7 +50,8 @@ public class BranchController implements MyInitialization {
     private BranchService branchService;
 
     public BranchController() {
-        branchService = context.getBean(BranchService.class);;
+        branchService = context.getBean(BranchService.class);
+        ;
     }
 
     @Override
@@ -70,7 +71,7 @@ public class BranchController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
+        try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colBank.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBank()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
@@ -78,20 +79,20 @@ public class BranchController implements MyInitialization {
             colIfsc.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIfsc()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-      try {
-          List<Branch> list = branchService.findAll();
-          if (list != null)
-              tableBranch.setItems(FXCollections.observableList(list));
-      } catch (RuntimeException e) {
-          throw new RuntimeException(e);
-      }
+        try {
+            List<Branch> list = branchService.findAll();
+            if (list != null)
+                tableBranch.setItems(FXCollections.observableList(list));
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

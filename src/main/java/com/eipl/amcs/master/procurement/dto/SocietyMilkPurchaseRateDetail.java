@@ -3,9 +3,9 @@ package com.eipl.amcs.master.procurement.dto;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 
 public class SocietyMilkPurchaseRateDetail extends BaseModelTxn {
     private String code;

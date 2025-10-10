@@ -9,24 +9,25 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SocietyPaymentCycleService {
-	List<SocietyPaymentCycle> findAll();
-	List<SocietyPaymentCycle> findAll(LocalDateTime fromDt, LocalDateTime toDt);
+    List<SocietyPaymentCycle> findAll();
 
-	String save(List<SocietyPaymentCycle> societyPaymentCycle, String identityInfo) throws BusinessValidationFailException;
+    List<SocietyPaymentCycle> findAll(LocalDateTime fromDt, LocalDateTime toDt);
 
-	SocietyPaymentCycle update(String code, SocietyPaymentCycle societyPaymentCycle, String identityInfo);
+    String save(List<SocietyPaymentCycle> societyPaymentCycle, String identityInfo) throws BusinessValidationFailException;
 
-	Optional<SocietyPaymentCycle> findById(String code);
+    SocietyPaymentCycle update(String code, SocietyPaymentCycle societyPaymentCycle, String identityInfo);
 
-	void delete(String code, String identityInfo) throws EntityNotFoundException;
+    Optional<SocietyPaymentCycle> findById(String code);
 
-	void delete(SocietyPaymentCycle societyPaymentCycle);
+    void delete(String code, String identityInfo) throws EntityNotFoundException;
 
-	boolean checkDateRangeConflict(String str1, String str2, LocalDateTime fromDate, LocalDateTime toDate);
+    void delete(SocietyPaymentCycle societyPaymentCycle);
 
-	SocietyPaymentCycle fetchCurrentPaymentCycle(LocalDateTime date, String code);
-	
-	List<SocietyPaymentCycle> findByToDateGreaterThanEqualOrderByToDate(LocalDateTime date,int limit);
+    boolean checkDateRangeConflict(String str1, String str2, LocalDateTime fromDate, LocalDateTime toDate);
+
+    SocietyPaymentCycle fetchCurrentPaymentCycle(LocalDateTime date, String code);
+
+    List<SocietyPaymentCycle> findByToDateGreaterThanEqualOrderByToDate(LocalDateTime date, int limit);
 
 
 }

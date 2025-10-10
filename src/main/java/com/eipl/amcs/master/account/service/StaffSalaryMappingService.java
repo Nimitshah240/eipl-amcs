@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StaffSalaryMappingService {
-	 List<StaffSalaryMapping> findAll();
+    List<StaffSalaryMapping> findAll();
 
-	String save(List<StaffSalaryMapping> staffSalaryMapping, String identityInfo);
+    String save(List<StaffSalaryMapping> staffSalaryMapping, String identityInfo);
 
-	List<StaffSalaryMapping> update(List<StaffSalaryMapping> staffSalaryMapping, String identityInfo);
+    List<StaffSalaryMapping> update(List<StaffSalaryMapping> staffSalaryMapping, String identityInfo);
 
-	Optional<StaffSalaryMapping> findById(String staffMemberName);
+    Optional<StaffSalaryMapping> findById(String staffMemberName);
 
-	void  delete(String code, String identityInfo);
+    void delete(String code, String identityInfo);
 
-	void delete(StaffSalaryMapping staffSalaryMapping, String identityInfo);
+    void delete(StaffSalaryMapping staffSalaryMapping, String identityInfo);
 
 
 }

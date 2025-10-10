@@ -1,9 +1,6 @@
 package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
-
-import static com.eipl.amcs.MainApp.context;
-
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.cellfactory.RightAlignCellFactory;
@@ -28,6 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class SubLedgerOpeningBalanceViewController implements MyInitialization {
 

@@ -15,14 +15,15 @@ import javax.persistence.*;
 @Table(name = "designation")
 public class Designation extends BaseModelTxn {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer code;
-	private String name;
-	// 0 - Staff, 1 - Commitee(from nddb)
-	private Integer type;
-	@Override
-	public String getTableName() {
-		return "designation";
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
+    private String name;
+    // 0 - Staff, 1 - Commitee(from nddb)
+    private Integer type;
+
+    @Override
+    public String getTableName() {
+        return "designation";
+    }
 }

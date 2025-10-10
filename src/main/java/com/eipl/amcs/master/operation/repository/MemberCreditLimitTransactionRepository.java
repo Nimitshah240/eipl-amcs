@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface MemberCreditLimitTransactionRepository extends BaseRepository<MemberCreditLimitTransaction, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {"society"})
-	Optional<MemberCreditLimitTransaction> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"society"})
+    Optional<MemberCreditLimitTransaction> findById(String id);
 }

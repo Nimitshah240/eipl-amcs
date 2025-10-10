@@ -13,14 +13,14 @@ import java.util.Optional;
 @Repository
 public interface BranchRepository extends BaseRepository<Branch, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "bank", "state", "district", "subDistrict", "village" })
-	List<Branch> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"bank", "state", "district", "subDistrict", "village"})
+    List<Branch> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "bank", "state", "district", "subDistrict", "village" })
-	List<Branch> findByBank(Bank bank, Sort sort);
+    @EntityGraph(attributePaths = {"bank", "state", "district", "subDistrict", "village"})
+    List<Branch> findByBank(Bank bank, Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "bank", "state", "district", "subDistrict", "village" })
-	Optional<Branch> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"bank", "state", "district", "subDistrict", "village"})
+    Optional<Branch> findById(String id);
 }

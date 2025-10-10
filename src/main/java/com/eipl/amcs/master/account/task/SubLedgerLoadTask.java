@@ -2,9 +2,7 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.model.SubLedger;
-import com.eipl.amcs.master.account.service.SubLedgerService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -26,13 +24,6 @@ public class SubLedgerLoadTask extends Task<List<SubLedger>> {
 
 //            private SubLedgerService subLedgerService;
 //            List<SubLedger> list = subLedgerService.findAll();
-
-
-
-
-
-
-
 
 
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

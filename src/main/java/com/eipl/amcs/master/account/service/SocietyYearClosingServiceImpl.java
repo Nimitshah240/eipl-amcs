@@ -40,7 +40,7 @@ public class SocietyYearClosingServiceImpl implements SocietyYearClosingService 
         societyYearClosing.setInitData();
         societyYearClosing.setSociety(Hibernate.unproxy(societyYearClosing.getSociety(), Society.class));
         societyYearClosing.setFinancialYear(Hibernate.unproxy(societyYearClosing.getFinancialYear(), FinancialYear.class));
-        SocietyYearClosing obj =  closingRepository.save(societyYearClosing);
+        SocietyYearClosing obj = closingRepository.save(societyYearClosing);
         obj.setSociety(Hibernate.unproxy(obj.getSociety(), Society.class));
         obj.setFinancialYear(Hibernate.unproxy(obj.getFinancialYear(), FinancialYear.class));
         return obj;

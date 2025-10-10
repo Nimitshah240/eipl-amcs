@@ -15,17 +15,17 @@ import java.util.Optional;
 @Repository
 public interface ProductPurchaseRateRepository extends BaseRepository<ProductPurchaseRate, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "union", "product" })
-	Optional<ProductPurchaseRate> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"society", "union", "product"})
+    Optional<ProductPurchaseRate> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "union", "product" })
-	List<ProductPurchaseRate> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "union", "product"})
+    List<ProductPurchaseRate> findAll(Sort sort);
 
-	@Query(nativeQuery = true, value = "SELECT wef_Date FROM product_purchase_rate ppr WHERE ppr.product_code = ?1 ORDER BY ppr.wef_Date DESC LIMIT 1")
-	LocalDate checkWefDate(String str);
+    @Query(nativeQuery = true, value = "SELECT wef_Date FROM product_purchase_rate ppr WHERE ppr.product_code = ?1 ORDER BY ppr.wef_Date DESC LIMIT 1")
+    LocalDate checkWefDate(String str);
 
-	@EntityGraph(attributePaths = { "society", "union", "product" })
-	ProductPurchaseRate findTop1ByProductAndWefDateLessThanEqualOrderByWefDateDesc(Product product, LocalDate date);
+    @EntityGraph(attributePaths = {"society", "union", "product"})
+    ProductPurchaseRate findTop1ByProductAndWefDateLessThanEqualOrderByWefDateDesc(Product product, LocalDate date);
 }

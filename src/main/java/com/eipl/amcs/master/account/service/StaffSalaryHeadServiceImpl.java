@@ -1,6 +1,5 @@
 package com.eipl.amcs.master.account.service;
 
-import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.master.account.model.StaffSalaryHead;
 import com.eipl.amcs.master.account.repository.StaffSalaryHeadRepository;
 import com.eipl.amcs.master.org.model.Society;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 
 
 @Service

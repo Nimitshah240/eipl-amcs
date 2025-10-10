@@ -17,23 +17,23 @@ import javax.validation.constraints.Size;
 @Table(name = "units")
 public class Unit extends BaseModel {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer code;
-	@Size(max = 25)
-	private String name;
-	@Size(max = 100)
-	private String nameLocal;
-	@Size(max = 10)
-	private String shortName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
+    @Size(max = 25)
+    private String name;
+    @Size(max = 100)
+    private String nameLocal;
+    @Size(max = 10)
+    private String shortName;
 
-	@Override
-	public String getTableName() {
-		return "units";
-	}
+    @Override
+    public String getTableName() {
+        return "units";
+    }
 
-	@Override
-	public String toString() {
-		return CommonUtils.getLocalString(this.name, this.nameLocal);
-	}
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 }

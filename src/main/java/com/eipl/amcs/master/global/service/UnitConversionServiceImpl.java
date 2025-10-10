@@ -2,7 +2,6 @@ package com.eipl.amcs.master.global.service;
 
 import com.eipl.amcs.master.global.model.UnitConversion;
 import com.eipl.amcs.master.global.repository.UnitConversionRepository;
-import com.eipl.amcs.master.global.repository.UnitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

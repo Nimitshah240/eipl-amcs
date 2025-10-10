@@ -23,17 +23,17 @@ public class LedgerSubLedgerMapping extends BaseModelTxn {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_ledgers_sub_ledgers_mapping_ledger_code"))
-    @JsonIgnoreProperties(value={"ledgerGroup","society","union"})
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_ledger_code", foreignKey = @ForeignKey(name = "fk_ledgers_sub_ledgers_mapping_sub_ledger_code"))
-    @JsonIgnoreProperties(value={"society","union"})
+    @JsonIgnoreProperties(value = {"society", "union"})
     private SubLedger subLedger;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_ledgers_sub_ledgers_mapping_society_code"))
-    @JsonIgnoreProperties(value = {"hamlet","village","subDistrict","district","state","route","bmc","mcc","plant","union","branch","bank"})
+    @JsonIgnoreProperties(value = {"hamlet", "village", "subDistrict", "district", "state", "route", "bmc", "mcc", "plant", "union", "branch", "bank"})
     private Society society;
 
     private String unionCode;

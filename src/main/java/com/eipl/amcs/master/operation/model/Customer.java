@@ -23,71 +23,71 @@ import java.time.LocalDate;
 @Table(name = "customers")
 public class Customer extends BaseModel {
 
-	@Id
-	@Size(max = 15)
-	private String code;
-	@Size(max = 200)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
-	@Digits(integer = 10, fraction = 2)
-	private BigDecimal creditLimit;
-	@Size(max = 255)
-	private String mobileNo;
-	private Integer paymentMode;
-	private LocalDate registrationDate;
-	@Size(max = 255)
-	private String registrationNo;
-	private Integer type;
+    @Id
+    @Size(max = 15)
+    private String code;
+    @Size(max = 200)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
+    @Digits(integer = 10, fraction = 2)
+    private BigDecimal creditLimit;
+    @Size(max = 255)
+    private String mobileNo;
+    private Integer paymentMode;
+    private LocalDate registrationDate;
+    @Size(max = 255)
+    private String registrationNo;
+    private Integer type;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_customer_society_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_customer_union_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet" })
-	private Union union;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_customer_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_customer_union_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    private Union union;
 
-	@Override
-	public String getTableName() {
-		return "customers";
-	}
+    @Override
+    public String getTableName() {
+        return "customers";
+    }
 
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		CustomerAudit audit = new CustomerAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        CustomerAudit audit = new CustomerAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCode(this.getCode());
-		audit.setName(this.getName());
-		audit.setNameLocal(this.getNameLocal());
-		audit.setCreditLimit(this.getCreditLimit());
-		audit.setMobileNo(this.getMobileNo());
-		audit.setPaymentMode(this.getPaymentMode());
-		audit.setRegistrationDate(this.getRegistrationDate());
-		audit.setRegistrationNo(this.getRegistrationNo());
-		audit.setType(this.getType());
-		audit.setSociety(this.getSociety());
-		audit.setUnion(this.getUnion());
+        audit.setCode(this.getCode());
+        audit.setName(this.getName());
+        audit.setNameLocal(this.getNameLocal());
+        audit.setCreditLimit(this.getCreditLimit());
+        audit.setMobileNo(this.getMobileNo());
+        audit.setPaymentMode(this.getPaymentMode());
+        audit.setRegistrationDate(this.getRegistrationDate());
+        audit.setRegistrationNo(this.getRegistrationNo());
+        audit.setType(this.getType());
+        audit.setSociety(this.getSociety());
+        audit.setUnion(this.getUnion());
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setActive(this.isActive());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setActive(this.isActive());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
 
-		return audit;
-	}
+        return audit;
+    }
 
 }

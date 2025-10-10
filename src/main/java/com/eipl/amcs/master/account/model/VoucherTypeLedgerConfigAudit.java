@@ -18,23 +18,24 @@ import javax.persistence.*;
 @Table(name = "voucher_type_ledger_config_audit")
 public class VoucherTypeLedgerConfigAudit extends BaseModelTxnAudit {
 
-	@Id
-	private String code;
-	private Boolean creditDebit;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	private String unionCode;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = {"ledgerGroup", "society","union"})
-	private Ledger ledger;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private VoucherType voucherType;
-	@Override
-	public String getTableName() {
-		return "voucher_types_audit";
-	}
+    @Id
+    private String code;
+    private Boolean creditDebit;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    private String unionCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger ledger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private VoucherType voucherType;
+
+    @Override
+    public String getTableName() {
+        return "voucher_types_audit";
+    }
 }

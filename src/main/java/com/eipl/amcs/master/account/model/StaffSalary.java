@@ -30,15 +30,15 @@ public class StaffSalary extends BaseModel {
 
     private LocalDate month;
 
-   @Column(name= "type_of_head")
+    @Column(name = "type_of_head")
     private int typeOfHead;
 
-   @Column(name= "value")
-   private double value;
+    @Column(name = "value")
+    private double value;
 
-   @Size(max = 255)
-   @Column(name = "voucher_no")
-   private String voucherNo;
+    @Size(max = 255)
+    @Column(name = "voucher_no")
+    private String voucherNo;
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_staff_salary_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society societyCode;
@@ -47,7 +47,6 @@ public class StaffSalary extends BaseModel {
     private StaffMember staffMemberCode;
 
     private String unionCode;
-
 
 
     @Override

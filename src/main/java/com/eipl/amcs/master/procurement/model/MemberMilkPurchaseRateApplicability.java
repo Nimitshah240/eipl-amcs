@@ -19,25 +19,25 @@ import java.time.LocalDateTime;
 @Table(name = "member_milk_purchase_rate_applicability")
 public class MemberMilkPurchaseRateApplicability extends BaseModelTxn {
 
-	@Id
-	@Size(max = 25)
-	private String code;
-	private LocalDateTime wefDate;
-	@Size(max = 3)
-	private String unionCode;
+    @Id
+    @Size(max = 25)
+    private String code;
+    private LocalDateTime wefDate;
+    @Size(max = 3)
+    private String unionCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_app_shift_code"))
-	private Shift shift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_app_rate_code"))
-	private MemberMilkPurchaseRate memberMilkPurchaseRate;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_app_society_code"))
-	private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_app_shift_code"))
+    private Shift shift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_app_rate_code"))
+    private MemberMilkPurchaseRate memberMilkPurchaseRate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_app_society_code"))
+    private Society society;
 
-	@Override
-	public String getTableName() {
-		return "member_milk_purchase_rate_applicability";
-	}
+    @Override
+    public String getTableName() {
+        return "member_milk_purchase_rate_applicability";
+    }
 }

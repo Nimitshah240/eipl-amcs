@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 public class HardwareDeviceServiceImpl implements HardwareDeviceService {
 
-	@Autowired
-	private HardwareDeviceRepository hardwareDeviceRepository;
+    @Autowired
+    private HardwareDeviceRepository hardwareDeviceRepository;
 
     private static final Logger log = LoggerFactory.getLogger(HardwareDeviceServiceImpl.class);
 

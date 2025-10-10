@@ -13,21 +13,21 @@ import java.util.Optional;
 @Repository
 public interface LedgerGroupRepository extends BaseRepository<LedgerGroup, Integer> {
 
-	@Override
-	@EntityGraph(attributePaths = { "ledgerType" })
-	List<LedgerGroup> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"ledgerType"})
+    List<LedgerGroup> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "ledgerType" })
-	List<LedgerGroup> findAllByActive(Boolean active,Sort sort);
+    @EntityGraph(attributePaths = {"ledgerType"})
+    List<LedgerGroup> findAllByActive(Boolean active, Sort sort);
 
-	@EntityGraph(attributePaths = { "ledgerType" })
-	List<LedgerGroup> findByLedgerType(LedgerType ledgerType);
+    @EntityGraph(attributePaths = {"ledgerType"})
+    List<LedgerGroup> findByLedgerType(LedgerType ledgerType);
 
-	@Override
-	@EntityGraph(attributePaths = { "ledgerType" })
-	Optional<LedgerGroup> findById(Integer integer);
+    @Override
+    @EntityGraph(attributePaths = {"ledgerType"})
+    Optional<LedgerGroup> findById(Integer integer);
 
 
-	@EntityGraph(attributePaths = { "ledgerType" })
-	List<LedgerGroup> findByLedgerTypeAndActive(LedgerType ledgerType, boolean b);
+    @EntityGraph(attributePaths = {"ledgerType"})
+    List<LedgerGroup> findByLedgerTypeAndActive(LedgerType ledgerType, boolean b);
 }

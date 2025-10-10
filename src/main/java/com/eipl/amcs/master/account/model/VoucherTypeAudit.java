@@ -19,15 +19,15 @@ import javax.validation.constraints.Size;
 @Table(name = "voucher_types_audit")
 public class VoucherTypeAudit extends BaseModelAudit {
 
-	@Id
-	private Integer code;
-	@Size(max = 100)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
+    @Id
+    private Integer code;
+    @Size(max = 100)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
 
-	@Override
-	public String getTableName() {
-		return "voucher_types_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "voucher_types_audit";
+    }
 }

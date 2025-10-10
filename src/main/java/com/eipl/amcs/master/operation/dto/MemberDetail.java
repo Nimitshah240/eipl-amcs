@@ -2,15 +2,11 @@ package com.eipl.amcs.master.operation.dto;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.model.BaseModel;
-import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.model.*;
-//import com.eipl.amcs.master.geo.dto.Village;
-import com.eipl.amcs.master.geo.model.District;
-import com.eipl.amcs.master.geo.model.Hamlet;
 import com.eipl.amcs.master.global.model.Gender;
+import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.operation.model.Member;
 
 import java.time.LocalDate;
 

@@ -18,26 +18,26 @@ import javax.validation.constraints.Size;
 @Table(name = "product_groups")
 public class ProductGroup extends BaseModel {
 
-	@Id
+    @Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer code;
-	@Size(max = 100)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
+    private Integer code;
+    @Size(max = 100)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "base_unit", foreignKey = @ForeignKey(name = "fk_product_groups_units_base_unit"))
-	private Unit unit;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "base_unit", foreignKey = @ForeignKey(name = "fk_product_groups_units_base_unit"))
+    private Unit unit;
 
-	@Override
-	public String getTableName() {
-		return "product_groups";
-	}
+    @Override
+    public String getTableName() {
+        return "product_groups";
+    }
 
-	@Override
-	public String toString() {
-		return CommonUtils.getLocalString(this.name, this.nameLocal);
-	}
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 
 }

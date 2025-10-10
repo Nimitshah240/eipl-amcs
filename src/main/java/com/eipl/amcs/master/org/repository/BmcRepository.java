@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface BmcRepository extends BaseRepository<Bmc, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "mcc", "state", "district", "subDistrict", "village", "hamlet" })
-	List<Bmc> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"union", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
+    List<Bmc> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "mcc", "state", "district", "subDistrict", "village", "hamlet" })
-	Optional<Bmc> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"union", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
+    Optional<Bmc> findById(String id);
 }

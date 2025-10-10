@@ -19,34 +19,34 @@ import java.time.LocalDateTime;
 @Table(name = "society_payment_cycles_audit")
 public class SocietyPaymentCycleAudit extends BaseModelTxnAudit {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Size(max = 15)
-	private String code;
-	private LocalDateTime fromDate;
-	private LocalDateTime toDate;
-	private Integer intervalValue;
-	@Column(name = "is_billing")
-	private Boolean billing;
-	@Column(name = "lock_billing_process")
-	private Boolean lockBillingProcess;
-	@Size(max = 3)
-	private String unionCode;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Size(max = 15)
+    private String code;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
+    private Integer intervalValue;
+    @Column(name = "is_billing")
+    private Boolean billing;
+    @Column(name = "lock_billing_process")
+    private Boolean lockBillingProcess;
+    @Size(max = 3)
+    private String unionCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Shift fromShift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Shift toShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Shift fromShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Shift toShift;
 
-	@Override
-	public String getTableName() {
-		return "society_payment_cycles_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "society_payment_cycles_audit";
+    }
 
 }

@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface DockMilkTypeRepository extends BaseRepository<DockMilkType, String> {
 
-	@EntityGraph(attributePaths = { "dock", "milkType" })
-	List<DockMilkType> findAllByDock(Dock dock);
+    @EntityGraph(attributePaths = {"dock", "milkType"})
+    List<DockMilkType> findAllByDock(Dock dock);
 
-	void deleteByDock(Dock dock);
-	
-	@Override
-	@EntityGraph(attributePaths = { "dock", "milkType" })
-	Optional<DockMilkType> findById(String id);
+    void deleteByDock(Dock dock);
+
+    @Override
+    @EntityGraph(attributePaths = {"dock", "milkType"})
+    Optional<DockMilkType> findById(String id);
 }

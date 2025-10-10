@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface SubLedgerOpeningBalanceRepository extends BaseRepository<SubLedgerOpeningBalance, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {"society","ledger","subLedger"})
-	List<SubLedgerOpeningBalance> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "ledger", "subLedger"})
+    List<SubLedgerOpeningBalance> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = {"society","ledger","subLedger"})
-	Optional<SubLedgerOpeningBalance> findById(String s);
+    @Override
+    @EntityGraph(attributePaths = {"society", "ledger", "subLedger"})
+    Optional<SubLedgerOpeningBalance> findById(String s);
 }

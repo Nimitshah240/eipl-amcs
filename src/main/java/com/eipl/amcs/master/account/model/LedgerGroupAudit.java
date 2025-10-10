@@ -16,19 +16,19 @@ import javax.validation.constraints.Size;
 @Table(name = "ledger_groups_audit")
 public class LedgerGroupAudit extends BaseModelAudit {
 
-	@Id
-	private Integer code;
-	@Size(max = 100)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
+    @Id
+    private Integer code;
+    @Size(max = 100)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private LedgerType ledgerType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private LedgerType ledgerType;
 
-	@Override
-	public String getTableName() {
-		return "ledger_groups_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "ledger_groups_audit";
+    }
 }

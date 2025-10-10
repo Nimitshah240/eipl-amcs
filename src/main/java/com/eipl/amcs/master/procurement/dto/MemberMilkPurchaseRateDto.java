@@ -1,14 +1,13 @@
 package com.eipl.amcs.master.procurement.dto;
 
-import lombok.AllArgsConstructor;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
 
 import java.util.List;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 
 @NoArgsConstructor
 @Setter

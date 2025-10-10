@@ -3,7 +3,6 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.service.LedgerService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -24,11 +23,6 @@ public class LedgerLoadTask extends Task<List<Ledger>> {
 
 //            private LedgerService ledgerService;
 //            List<Ledger> list = ledgerService.findAllByIsActive();
-
-
-
-
-
 
 
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

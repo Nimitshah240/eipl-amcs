@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface CashAdvanceRepository extends BaseRepository<CashAdvance, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {"society", "societyPaymentCycle","member"})
-	List<CashAdvance> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "societyPaymentCycle", "member"})
+    List<CashAdvance> findAll(Sort sort);
 
 }

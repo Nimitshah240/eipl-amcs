@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LedgerMappingEventService {
-	List<LedgerMappingEvent> findAll();
+    List<LedgerMappingEvent> findAll();
 
-	String save(List<LedgerMappingEvent> ledgerMappingEvent, String identityInfo);
+    String save(List<LedgerMappingEvent> ledgerMappingEvent, String identityInfo);
 
-	Optional<LedgerMappingEvent> findById(String ledgerTypeNo);
+    Optional<LedgerMappingEvent> findById(String ledgerTypeNo);
 }
