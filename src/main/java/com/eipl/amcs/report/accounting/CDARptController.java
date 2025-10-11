@@ -2,17 +2,10 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
-import com.eipl.amcs.master.operation.convertor.MemberConvertor;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -23,13 +16,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -37,15 +28,13 @@ import java.util.concurrent.ExecutionException;
 
 public class CDARptController implements MyInitialization {
     @FXML
+    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
+    @FXML
     private Button btnClose;
-
     @FXML
     private Button btnGenerate;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-    @FXML
-    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
     private List<MilkType> listMilkType;
@@ -108,10 +97,10 @@ public class CDARptController implements MyInitialization {
             params.put("society_code", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal() + " -(" + MainApp.identityDto.getSociety().getCode() + ")");
             params.put("union_code", MainApp.identityDto.getUnion().getNameLocal() == null ? MainApp.identityDto.getUnion().getName() : MainApp.identityDto.getUnion().getNameLocal() + " -(" + MainApp.identityDto.getUnion().getCode() + ")");
         }
-        params.put("from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning")?"- M":"- E"));
-        params.put("to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftTo.getValue().getName().equals("Morning")?"- M":"- E"));
-        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
-        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
+        params.put("from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "- M" : "- E"));
+        params.put("to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "- M" : "- E"));
+        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_ltr_kg", cboxQuantityMode.getSelectionModel().getSelectedIndex());
         params.put("p_milk_type", cboxMilkType.getValue().getCode());
         params.put("p_locale", MainApp.locale);

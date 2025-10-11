@@ -34,6 +34,7 @@ public class RptSocietyFinancialDetailsController implements MyInitialization {
 
     @FXML
     private AnchorPane root;
+
     @Override
     public Node getRoot() {
         return root;
@@ -42,7 +43,7 @@ public class RptSocietyFinancialDetailsController implements MyInitialization {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dpAsOnDate.setValue(LocalDate.now());
-        btnGenerate.setOnAction(e->{
+        btnGenerate.setOnAction(e -> {
             validateAndGenerateReport();
         });
         btnClose.setOnAction(e -> {
@@ -56,7 +57,7 @@ public class RptSocietyFinancialDetailsController implements MyInitialization {
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
 
         params.put("p_locale", MainApp.locale);
-        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK, params);;
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK, params);
 
 
         JasperViewer.viewReport(print, false);

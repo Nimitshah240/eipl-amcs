@@ -72,7 +72,7 @@ public class RptLedgerBookSummaryController implements MyInitialization {
         if (MainApp.locale.equals("en")) {
             params.put("p_society_name", MainApp.identityDto.getSociety().getName());
         } else {
-            params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName(): MainApp.identityDto.getSociety().getNameLocal());
+            params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
         }
         params.put("p_ledger_code", cboxLedgerName.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));

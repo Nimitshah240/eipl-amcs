@@ -56,7 +56,7 @@ public class RptCashBookController implements MyInitialization {
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_locale", MainApp.locale);
-        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_CASH_BOOK, params);;
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_CASH_BOOK, params);
         JasperViewer.viewReport(print, false);
     }
 }
