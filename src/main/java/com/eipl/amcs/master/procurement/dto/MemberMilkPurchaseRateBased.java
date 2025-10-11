@@ -4,9 +4,9 @@ import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Formula;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
 
 public class MemberMilkPurchaseRateBased extends BaseModelTxn {
     private String code; // Purchase Rate Code + AI

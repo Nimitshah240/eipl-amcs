@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface HardwareDeviceRepository  extends JpaRepository<HardwareDevice, String> {
+public interface HardwareDeviceRepository extends JpaRepository<HardwareDevice, String> {
 
-	@Override
-	Optional<HardwareDevice> findById(String id);
+    @Override
+    Optional<HardwareDevice> findById(String id);
 }

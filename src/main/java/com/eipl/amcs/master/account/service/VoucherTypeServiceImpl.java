@@ -23,7 +23,6 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
     @Override
     public List<VoucherType> findAll() {
         List<VoucherType> list = voucherTypeRepository.findAll(Sort.by("code"));
-        log.info("VoucherTypes findAll {} items fetched", list.size());
         return list;
     }
 

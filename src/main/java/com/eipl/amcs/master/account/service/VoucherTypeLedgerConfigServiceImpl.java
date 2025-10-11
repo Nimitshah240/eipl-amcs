@@ -1,7 +1,7 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
-import com.eipl.amcs.master.account.repository.*;
+import com.eipl.amcs.master.account.repository.VoucherTypeLedgerConfigRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConf
     @Override
     public List<VoucherTypeLedgerConfig> findAll() {
         List<VoucherTypeLedgerConfig> list = voucherTypeLedgerConfigRepository.findAll(Sort.by("code"));
-        log.info("LedgerTypes findAll {} items fetched", list.size());
         return list;
     }
 

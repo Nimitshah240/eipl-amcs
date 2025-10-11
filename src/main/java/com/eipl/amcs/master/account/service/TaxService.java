@@ -5,5 +5,5 @@ import com.eipl.amcs.master.account.dto.TaxDto;
 import java.util.List;
 
 public interface TaxService {
-	List<TaxDto> findAll();
+    List<TaxDto> findAll();
 }

@@ -20,27 +20,27 @@ import java.time.LocalDateTime;
 @Table(name = "society_milk_purchase_rate_applicability")
 public class SocietyMilkPurchaseRateApplicability extends BaseModelTxn {
 
-	@Id
-	@Size(max = 25)
-	private String code;
-	private LocalDateTime wefDate;
-	@Size(max = 3)
-	private String unionCode;
+    @Id
+    @Size(max = 25)
+    private String code;
+    private LocalDateTime wefDate;
+    @Size(max = 3)
+    private String unionCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_shift_code"))
-	private Shift shift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_rate_code"))
-	@JsonIgnoreProperties(value = {"shift", "shiftApplicable","rateType"})
-	private SocietyMilkPurchaseRate societyMilkPurchaseRate;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_shift_code"))
+    private Shift shift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_rate_code"))
+    @JsonIgnoreProperties(value = {"shift", "shiftApplicable", "rateType"})
+    private SocietyMilkPurchaseRate societyMilkPurchaseRate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_app_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
 
-	@Override
-	public String getTableName() {
-		return "society_milk_purchase_rate_applicability";
-	}
+    @Override
+    public String getTableName() {
+        return "society_milk_purchase_rate_applicability";
+    }
 }

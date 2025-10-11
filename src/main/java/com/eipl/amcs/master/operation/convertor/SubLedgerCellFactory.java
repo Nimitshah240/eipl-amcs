@@ -17,7 +17,7 @@ public class SubLedgerCellFactory implements Callback<ListView<SubLedger>, ListC
                 if (item == null || empty) {
                     setText(null);
                 } else {
-                    setText(item.getCode()+" "+item.getName());
+                    setText(item.getCode() + " " + item.getName());
                 }
             }
         };

@@ -1,6 +1,5 @@
 package com.eipl.amcs.master.global.convertor;
 
-import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;

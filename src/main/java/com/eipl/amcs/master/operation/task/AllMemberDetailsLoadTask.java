@@ -23,11 +23,12 @@ public class AllMemberDetailsLoadTask extends Task<List<MemberDetail>> {
 
     public AllMemberDetailsLoadTask() {
     }
+
     @Override
     protected List<MemberDetail> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER+ "/member-details";
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/member-details";
             Map<String, Object> uriVariables = new HashMap<>();
             ResponseEntity<MemberDetail[]> response = restTemplate.exchange(url, HttpMethod.GET, null, MemberDetail[].class, uriVariables);
             if (response == null || response.getStatusCode() != HttpStatus.OK)

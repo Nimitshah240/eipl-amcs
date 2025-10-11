@@ -3,9 +3,9 @@ package com.eipl.amcs.master.procurement.dto;
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 
 import java.time.LocalDateTime;
-import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 
 public class SocietyMilkPurchaseRateApplicability extends BaseModel {
     private String code;

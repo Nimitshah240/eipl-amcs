@@ -3,15 +3,12 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.LedgerType;
-import com.eipl.amcs.master.account.task.LedgerTypeDeleteTask;
-import com.eipl.amcs.master.account.task.LedgerTypeLoadTask;
-import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
+import com.eipl.amcs.master.account.service.LedgerTypeService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,7 +26,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class LedgerTypeController implements MyInitialization, PopupCallback {
 
@@ -44,17 +42,20 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<LedgerType, String> colProfitAndLoss, colBalanceSheet;
     @FXML
-    Button btnClose,btnAdd,btnEdit,btnDelete;
+    Button btnClose, btnAdd, btnEdit, btnDelete;
 
     private ResourceBundle resourceBundle;
+    private LedgerTypeService ledgerTypeService;
 
     @Override
     public Node getRoot() {
         return root;
     }
+
     private final ObjectProperty<LedgerType> propLedgerType;
 
     public LedgerTypeController() {
+        ledgerTypeService = context.getBean(LedgerTypeService.class);
         propLedgerType = new SimpleObjectProperty<>();
     }
 
@@ -78,7 +79,7 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
-        btnDelete.setOnAction(e ->{
+        btnDelete.setOnAction(e -> {
             deleteData();
         });
         btnEdit.setOnAction(e -> {
@@ -103,22 +104,15 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        tableLedgerType.setItems(null);
-        LedgerTypeLoadTask task = new LedgerTypeLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<LedgerType> list = task.get();
-                if (list != null)
-                    tableLedgerType.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            tableLedgerType.setItems(null);
+            List<LedgerType> list = ledgerTypeService.findAll();
+            if (list != null)
+                tableLedgerType.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
-
-
-
 
 
     @Override
@@ -129,22 +123,15 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             LedgerType dto = propLedgerType.get();
             if (dto != null) {
-                var task = new LedgerTypeDeleteTask(dto.getCode().toString());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    ledgerTypeService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                }
             }
         }
     }

@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface VillageRepository extends BaseRepository<Village, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "subDistrict" })
-	List<Village> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"subDistrict"})
+    List<Village> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "subDistrict" })
-	List<Village> findBySubDistrict(SubDistrict subDistrict, Sort sort);
+    @EntityGraph(attributePaths = {"subDistrict"})
+    List<Village> findBySubDistrict(SubDistrict subDistrict, Sort sort);
 }

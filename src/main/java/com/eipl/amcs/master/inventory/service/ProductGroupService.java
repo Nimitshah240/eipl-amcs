@@ -5,8 +5,8 @@ import com.eipl.amcs.master.inventory.model.ProductGroup;
 import java.util.List;
 
 public interface ProductGroupService {
-	List<ProductGroup> findAll();
+    List<ProductGroup> findAll();
 
-	ProductGroup findByProductGroupCode(String code);
+    ProductGroup findByProductGroupCode(String code);
 
 }

@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.VoucherType;
-import com.eipl.amcs.master.account.task.VoucherTypeDeleteTask;
-import com.eipl.amcs.master.account.task.VoucherTypeLoadTask;
+import com.eipl.amcs.master.account.service.VoucherTypeService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,7 +26,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class VoucherTypeController implements MyInitialization, PopupCallback {
 
@@ -42,6 +43,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
     Button btnClose, btnAdd, btnEdit, btnDelete;
 
     private ResourceBundle resourceBundle;
+    private VoucherTypeService voucherTypeService;
 
     @Override
     public Node getRoot() {
@@ -51,6 +53,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
     private final ObjectProperty<VoucherType> propVoucherType;
 
     public VoucherTypeController() {
+        voucherTypeService = context.getBean(VoucherTypeService.class);
         propVoucherType = new SimpleObjectProperty<>();
     }
 
@@ -96,18 +99,14 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        tableVoucherType.setItems(null);
-        VoucherTypeLoadTask task = new VoucherTypeLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<VoucherType> list = task.get();
-                if (list != null)
-                    tableVoucherType.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            tableVoucherType.setItems(null);
+            List<VoucherType> list = voucherTypeService.findAll();
+            if (list != null)
+                tableVoucherType.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
@@ -119,22 +118,15 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             VoucherType dto = propVoucherType.get();
             if (dto != null) {
-                var task = new VoucherTypeDeleteTask(dto.getCode().toString());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    voucherTypeService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                    ex.printStackTrace();
+                }
             }
         }
     }

@@ -19,27 +19,27 @@ import javax.validation.constraints.Size;
 @Table(name = "mom")
 public class Mom extends BaseModelTxn {
 
-	@Id
-	private String code;
-	private Integer status;
-	@Size(max = 500)
-	private String mom;
-	private  short meetingType;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "meeting_agenda_code", foreignKey = @ForeignKey(name = "fk_mom_meeting_agenda_code"))
-	@JsonIgnoreProperties(value = {"union","society"})
-	private MeetingAgenda meetingAgenda;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_mom_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_mom_union_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","state","district","subDistrict","village","hamlet"})
-	private Union union;
+    @Id
+    private String code;
+    private Integer status;
+    @Size(max = 500)
+    private String mom;
+    private short meetingType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_agenda_code", foreignKey = @ForeignKey(name = "fk_mom_meeting_agenda_code"))
+    @JsonIgnoreProperties(value = {"union", "society"})
+    private MeetingAgenda meetingAgenda;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_mom_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_mom_union_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    private Union union;
 
-	@Override
-	public String getTableName() {
-		return "mom";
-	}
+    @Override
+    public String getTableName() {
+        return "mom";
+    }
 }

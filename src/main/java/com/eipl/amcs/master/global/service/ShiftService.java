@@ -5,6 +5,6 @@ import com.eipl.amcs.master.global.model.Shift;
 import java.util.List;
 
 public interface ShiftService {
-	 List<Shift> findAll();
+    List<Shift> findAll();
 
 }

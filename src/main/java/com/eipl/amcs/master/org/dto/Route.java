@@ -1,11 +1,11 @@
 package com.eipl.amcs.master.org.dto;
 
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.master.org.model.Bmc;
+import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.utils.CommonUtils;
 
 import java.time.LocalTime;
-import com.eipl.amcs.master.org.model.Bmc;
-import com.eipl.amcs.master.org.model.Union;
 
 public class Route extends BaseModel {
     private String code;

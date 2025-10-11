@@ -7,10 +7,20 @@ public class LedgerBalance {
     private double credit;
     private double balance;
     private int incomeExpense;
+
+    public LedgerBalance(String ledgerCode, String ledgerName, double debit, double credit, double balance) {
+        this.ledgerCode = ledgerCode;
+        this.ledgerName = ledgerName;
+        this.debit = debit;
+        this.credit = credit;
+        this.balance = balance;
+    }
+
     @Override
     public String toString() {
-        return this.getLedgerCode()+ "-" + this.getLedgerName();
+        return this.getLedgerCode() + "-" + this.getLedgerName();
     }
+
     public LedgerBalance() {
     }
 

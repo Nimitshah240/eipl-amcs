@@ -71,7 +71,7 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     public List<LedgerGroup> findByLedgerType(Integer code) {
         LedgerType ledgerType = typeRepository.findById(code).get();
         if (ledgerType != null)
-            return ledgerGroupRepository.findByLedgerTypeAndActive(ledgerType,true);
+            return ledgerGroupRepository.findByLedgerTypeAndActive(ledgerType, true);
         else
             return null;
     }

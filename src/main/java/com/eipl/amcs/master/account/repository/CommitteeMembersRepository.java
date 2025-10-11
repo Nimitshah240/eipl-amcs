@@ -13,11 +13,11 @@ import java.util.Optional;
 @Repository
 public interface CommitteeMembersRepository extends BaseRepository<CommitteeMembers, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society","designation"})
-	List<CommitteeMembers> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "designation"})
+    List<CommitteeMembers> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "society","designation"})
-	Optional<CommitteeMembers> findById(String s);
+    @Override
+    @EntityGraph(attributePaths = {"society", "designation"})
+    Optional<CommitteeMembers> findById(String s);
 }

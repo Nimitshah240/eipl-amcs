@@ -12,29 +12,29 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
-	List<Member> findAll();
-	 
-	Member findByMemberCode(String code);
+    List<Member> findAll();
 
-	MemberDto save(MemberDto memberDto, String identityInfo);
-	 
-	MemberDto update(MemberDto member, String identityInfo);
+    Member findByMemberCode(String code);
 
-	Optional<Member> findById(String code);
-	
-	MemberDetail findDetailByMemberCode(String code);
-		
-	void delete(String code, String identityInfo);
+    MemberDto save(MemberDto memberDto, String identityInfo);
 
-	MemberSocietyInfoDto findMemberInformation(String code, LocalDateTime date, Integer count, String paymentCycle);
+    MemberDto update(MemberDto member, String identityInfo);
 
-	List<MemberImportDto> importMembers(List<MemberDto> dtoList, String header);
-	
-	MemberDetail findDetailByMember(Member member);
+    Optional<Member> findById(String code);
 
-	List<Member> findAllBySociety(String societyCode);
+    MemberDetail findDetailByMemberCode(String code);
 
-	MemberRegister findMemberRegisterData(String societyCode, LocalDateTime dt, String memberType);
+    void delete(String code, String identityInfo);
+
+    MemberSocietyInfoDto findMemberInformation(String code, LocalDateTime date, Integer count, String paymentCycle);
+
+    List<MemberImportDto> importMembers(List<MemberDto> dtoList, String header);
+
+    MemberDetail findDetailByMember(Member member);
+
+    List<Member> findAllBySociety(String societyCode);
+
+    MemberRegister findMemberRegisterData(String societyCode, LocalDateTime dt, String memberType);
 
     List<MemberDetail> findAllMemberDetails();
 }

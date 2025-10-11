@@ -3,11 +3,11 @@ package com.eipl.amcs.master.account.model;
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -85,5 +85,10 @@ public class SubLedger extends BaseModel {
         audit.setXCol3(this.getXCol3());
 
         return audit;
+    }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }

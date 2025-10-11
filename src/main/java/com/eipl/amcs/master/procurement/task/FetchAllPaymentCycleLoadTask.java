@@ -2,7 +2,7 @@ package com.eipl.amcs.master.procurement.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -19,12 +19,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FetchAllPaymentCycleLoadTask extends Task<List<SocietyPaymentCycle>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductPurchaseRateByProductTask.class);
 
     private final LocalDate date;
     private final Integer limit;
 
-    public FetchAllPaymentCycleLoadTask(LocalDate date,Integer limit) {
+    public FetchAllPaymentCycleLoadTask(LocalDate date, Integer limit) {
         this.date = date;
         this.limit = limit;
     }

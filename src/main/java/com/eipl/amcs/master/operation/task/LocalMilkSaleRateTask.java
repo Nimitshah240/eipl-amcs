@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LocalMilkSaleRateTask extends Task<LocalMilkSaleRate> {

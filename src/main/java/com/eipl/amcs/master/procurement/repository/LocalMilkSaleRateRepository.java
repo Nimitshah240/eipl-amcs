@@ -17,22 +17,22 @@ import java.util.Optional;
 @Repository
 public interface LocalMilkSaleRateRepository extends BaseRepository<LocalMilkSaleRate, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "milkType", "milkClass", "society" })
-	Optional<LocalMilkSaleRate> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"milkType", "milkClass", "society"})
+    Optional<LocalMilkSaleRate> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "milkType", "milkClass", "society" })
-	List<LocalMilkSaleRate> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"milkType", "milkClass", "society"})
+    List<LocalMilkSaleRate> findAll(Sort sort);
 
-	@Query(value = "SELECT wefDate FROM LocalMilkSaleRate lsr WHERE lsr.society = ?1 AND lsr.milkType = ?2 AND lsr.milkClass = ?3 ORDER BY lsr.wefDate desc")
-	LocalDate fetchLatestDate(String str1, Integer i1, Integer i2);
+    @Query(value = "SELECT wefDate FROM LocalMilkSaleRate lsr WHERE lsr.society = ?1 AND lsr.milkType = ?2 AND lsr.milkClass = ?3 ORDER BY lsr.wefDate desc")
+    LocalDate fetchLatestDate(String str1, Integer i1, Integer i2);
 
-	@EntityGraph(attributePaths = { "milkType", "milkClass", "society" })
-	Optional<LocalMilkSaleRate> findTop1BySocietyAndMilkTypeAndMilkClassAndWefDateGreaterThan(Society society,
-			MilkType milktype, MilkClass milkClass, LocalDate wefDate);
+    @EntityGraph(attributePaths = {"milkType", "milkClass", "society"})
+    Optional<LocalMilkSaleRate> findTop1BySocietyAndMilkTypeAndMilkClassAndWefDateGreaterThan(Society society,
+                                                                                              MilkType milktype, MilkClass milkClass, LocalDate wefDate);
 
-	@EntityGraph(attributePaths = { "milkType", "milkClass", "society" })
-	LocalMilkSaleRate findTop1RateByWefDateLessThanEqualAndMilkTypeAndMilkClassOrderByWefDate(LocalDate date,
-			MilkType milkType, MilkClass milkClass);
+    @EntityGraph(attributePaths = {"milkType", "milkClass", "society"})
+    LocalMilkSaleRate findTop1RateByWefDateLessThanEqualAndMilkTypeAndMilkClassOrderByWefDate(LocalDate date,
+                                                                                              MilkType milkType, MilkClass milkClass);
 }

@@ -8,7 +8,11 @@ import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
-import com.eipl.amcs.master.account.task.*;
+import com.eipl.amcs.master.account.service.FinancialYearService;
+import com.eipl.amcs.master.account.service.LedgerOpeningBalanceService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.task.LedgerOpeningBalanceImportTask;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
@@ -30,6 +34,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class LedgerOpeningBalanceController implements MyInitialization {
 
@@ -63,10 +69,17 @@ public class LedgerOpeningBalanceController implements MyInitialization {
     private List<FinancialYear> financialYearList;
 
     private ResourceBundle resourceBundle;
+    private FinancialYearService financialYearService;
+    private LedgerService ledgerService;
+    private LedgerOpeningBalanceService ledgerOpeningBalanceService;
+
 
     private final ObjectProperty<LedgerOpeningBalance> propLedgerOpeningBalance;
 
     public LedgerOpeningBalanceController() {
+        financialYearService = context.getBean(FinancialYearService.class);
+        ledgerService = context.getBean(LedgerService.class);
+        ledgerOpeningBalanceService = context.getBean(LedgerOpeningBalanceService.class);
         propLedgerOpeningBalance = new SimpleObjectProperty<>();
     }
 
@@ -123,37 +136,22 @@ public class LedgerOpeningBalanceController implements MyInitialization {
     }
 
     private void loadImportPreReq() {
-        var task = new FinancialYearLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                financialYearList = task.get();
-                var task1 = new LedgerLoadTask();
-                task1.setOnSucceeded(ew -> {
-                    try {
-                        ledgerList = task1.get();
-                        File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("ledgeropeningbalance"));
-                        if (file == null) {
-                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
-                                    resourceBundle.getString("select.file"));
-                            alert.createAlert();
-                            return;
-                        }
-
-                        MainApp.paneDrop.setVisible(true);
-                        MainApp.lblMessage.setText("Preparing LedgerOpeningBalance...");
-                        startImport(file);
-
-                        new Thread(task1).start();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task1).start();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            financialYearList = financialYearService.findAll();
+            ledgerList = ledgerService.findAllByIsActive();
+            File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("ledgeropeningbalance"));
+            if (file == null) {
+                MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
+                        resourceBundle.getString("select.file"));
+                alert.createAlert();
+                return;
             }
-        });
-        new Thread(task).start();
+            MainApp.paneDrop.setVisible(true);
+            MainApp.lblMessage.setText("Preparing LedgerOpeningBalance...");
+            startImport(file);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
     }
 
@@ -182,45 +180,40 @@ public class LedgerOpeningBalanceController implements MyInitialization {
 
 
     private void startImportProcess() {
-        var task = new LedgerOpeningBalanceListSaveTask(listLedgerOpeningBalance);
-        task.setOnSucceeded(e -> {
-            try {
-                MainApp.paneDrop.setVisible(false);
-                List<LedgerOpeningBalance> list = task.get();
-                if (list == null || list.isEmpty()) {
-                    MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
-                            resourceBundle.getString("error.occurred"));
-                    alert.createAlert();
-                    return;
-                }
-                StringBuilder builder = new StringBuilder();
-                builder.append("Import success: ");
-//                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-                builder.append("\n");
-                builder.append("Import fail: ");
-//               builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-                builder.append("\n");
-
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
-                        builder.toString());
+        try {
+            MainApp.paneDrop.setVisible(false);
+            List<LedgerOpeningBalance> list = ledgerOpeningBalanceService.importLedgerBalance(listLedgerOpeningBalance, CommonUtil.setIdentityHeader());
+            if (list == null || list.isEmpty()) {
+                MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
+                        resourceBundle.getString("error.occurred"));
                 alert.createAlert();
-                loadData();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+                return;
             }
-        });
-        new Thread(task).start();
+            StringBuilder builder = new StringBuilder();
+            builder.append("Import success: ");
+            builder.append("\n");
+            builder.append("Import fail: ");
+            builder.append("\n");
+
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
+                    builder.toString());
+            alert.createAlert();
+            loadData();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void saveData() {
-        setValuesInObject();
-        var task = new LedgerOpeningBalanceSaveTask(ledgerOpeningBalance, (short) 0);
-        task.setOnSucceeded(e -> {
+        try {
+            setValuesInObject();
+            ledgerOpeningBalanceService.save(ledgerOpeningBalance, CommonUtil.setIdentityHeader());
             loadData();
             clearControls();
-        });
-        new Thread(task).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -260,57 +253,44 @@ public class LedgerOpeningBalanceController implements MyInitialization {
 
     @Override
     public void loadData() {
-        tableData.setItems(null);
-        LedgerOpeningBalanceLoadTask task = new LedgerOpeningBalanceLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<LedgerOpeningBalance> list = task.get();
-                if (list != null)
-                    tableData.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            tableData.setItems(null);
+            List<LedgerOpeningBalance> list = ledgerOpeningBalanceService.findAll();
+            if (list != null)
+                tableData.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void loadFinancialYear() {
-        var task = new FinancialYearLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<FinancialYear> list = task.get();
-                if (list != null) {
-                    cboxFinancialYear.getItems().addAll(FXCollections.observableList(list));
-                    cboxFinancialYear.getSelectionModel().select(0);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<FinancialYear> list = financialYearService.findAll();
+            if (list != null) {
+                cboxFinancialYear.getItems().addAll(FXCollections.observableList(list));
+                cboxFinancialYear.getSelectionModel().select(0);
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void loadLedger() {
-        var task = new LedgerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Ledger> list = task.get();
-                if (list != null) {
-                    cboxLedger.getItems().addAll(FXCollections.observableList(list));
-                    cboxLedger.getSelectionModel().select(0);
-                    new AutoCompleteComboBoxListener<>(cboxLedger);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<Ledger> list = ledgerService.findAllByIsActive();
+            if (list != null) {
+                cboxLedger.getItems().addAll(FXCollections.observableList(list));
+                cboxLedger.getSelectionModel().select(0);
+                new AutoCompleteComboBoxListener<>(cboxLedger);
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
 
     @Override
     public void deleteData() {
@@ -320,22 +300,15 @@ public class LedgerOpeningBalanceController implements MyInitialization {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             LedgerOpeningBalance ledgerOpeningBalance = propLedgerOpeningBalance.get();
             if (ledgerOpeningBalance != null) {
-                var task = new LedgerOpeningBalanceDeleteTask(ledgerOpeningBalance.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    ledgerOpeningBalanceService.delete(ledgerOpeningBalance.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                    ex.printStackTrace();
+                }
             }
         }
     }

@@ -14,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ProductSaleRateByProductLoadTask extends Task<ProductSaleRate> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleRateByProductLoadTask.class);

@@ -21,35 +21,35 @@ import java.time.LocalDate;
 @Table(name = "customers_audit")
 public class CustomerAudit extends BaseModelAudit {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Size(max = 15)
-	private String code;
-	@Size(max = 200)
-	private String name;
-	@Size(max = 15)
-	private String nameLocal;
-	@Digits(integer = 10, fraction = 2)
-	private BigDecimal creditLimit;
-	@Size(max = 255)
-	private String mobileNo;
-	private Integer paymentMode;
-	private LocalDate registrationDate;
-	@Size(max = 255)
-	private String registrationNo;
-	private Integer type;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Size(max = 15)
+    private String code;
+    @Size(max = 200)
+    private String name;
+    @Size(max = 15)
+    private String nameLocal;
+    @Digits(integer = 10, fraction = 2)
+    private BigDecimal creditLimit;
+    @Size(max = 255)
+    private String mobileNo;
+    private Integer paymentMode;
+    private LocalDate registrationDate;
+    @Size(max = 255)
+    private String registrationNo;
+    private Integer type;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Union union;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Union union;
 
-	@Override
-	public String getTableName() {
-		return "customers_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "customers_audit";
+    }
 
 }

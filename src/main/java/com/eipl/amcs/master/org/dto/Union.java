@@ -2,9 +2,9 @@ package com.eipl.amcs.master.org.dto;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.geo.model.*;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.utils.CommonUtils;
 
 import java.time.LocalDate;
 

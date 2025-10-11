@@ -68,7 +68,14 @@ public class SplashController implements MyInitialization {
 
     public SplashController() {
         try {
-
+            formulaRepository = context.getBean(FormulaRepository.class);
+            societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
+            memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
+            milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
+            milkTypeService = context.getBean(MilkTypeService.class);
+            rateTypeService = context.getBean(RateTypeService.class);
+            shiftService = context.getBean(ShiftService.class);
+            identityService = context.getBean(IdentityService.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -76,25 +83,12 @@ public class SplashController implements MyInitialization {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        createAndSetLocale();
-
-        formulaRepository = context.getBean(FormulaRepository.class);
-        societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
-        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
-        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
-        milkTypeService = context.getBean(MilkTypeService.class);
-        rateTypeService = context.getBean(RateTypeService.class);
-        shiftService = context.getBean(ShiftService.class);
-        identityService = context.getBean(IdentityService.class);
-
         var task = new AppInitTask();
         task.setOnSucceeded(e -> {
             try {
                 File appProperty = new File("resources/app.properties");
                 var resp = task.get();
                 if (resp && appProperty.exists()) {
-//                    checkHealth();
                     initializeIdentity();
                 } else {
                     MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Activation.fxml")));
@@ -107,26 +101,6 @@ public class SplashController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-//    private void checkHealth() {
-//        lbl.setText("Please wait...");
-//        var task = new HealthCheckTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                String resp = task.get();
-//                if (resp == null || !"OK".equalsIgnoreCase(resp))
-//                    lbl.setText("Could not connect to server!");
-//                else
-//
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        task.setOnFailed(e -> {
-//            lbl.setText("Could not connect to server!");
-//        });
-//        new Thread(task).start();
-//    }
 
     private void initializeIdentity() {
 

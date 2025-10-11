@@ -3,28 +3,23 @@ package com.eipl.amcs.master.insurance.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
-import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
 import com.eipl.amcs.master.global.model.Gender;
-import com.eipl.amcs.master.global.task.GenderLoadTask;
-import com.eipl.amcs.master.insurance.dto.InsuranceDetail;
-import com.eipl.amcs.master.insurance.dto.InsuranceDetailSummary;
-import com.eipl.amcs.master.insurance.dto.InsuranceMaster;
-import com.eipl.amcs.master.insurance.task.InsuranceDetailCodeTask;
-import com.eipl.amcs.master.insurance.task.InsuranceDetailGetSerialNoTask;
-import com.eipl.amcs.master.insurance.task.InsuranceDetailSaveTask;
-import com.eipl.amcs.master.operation.controller.MemberAddEditController;
+import com.eipl.amcs.master.global.service.GenderService;
+import com.eipl.amcs.master.insurance.model.InsuranceDetail;
+import com.eipl.amcs.master.insurance.model.InsuranceDetailSummary;
+import com.eipl.amcs.master.insurance.model.InsuranceMaster;
+import com.eipl.amcs.master.insurance.service.InsuranceMasterService;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.EncryptionUtil;
@@ -32,7 +27,6 @@ import com.eipl.amcs.utils.FocusUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -44,10 +38,10 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.function.UnaryOperator;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class InsuranceDetailAddEditController implements MyInitialization {
     @FXML
@@ -78,6 +72,16 @@ public class InsuranceDetailAddEditController implements MyInitialization {
     public String yearOfDetailFromPortal = String.valueOf(LocalDate.now().getYear() % 100);
     public List<InsuranceDetail> insuranceDetailList = null;
 
+    private InsuranceMasterService insuranceMasterService;
+    private GenderService genderService;
+    private NextCodeService nextCodeService;
+
+    public InsuranceDetailAddEditController() {
+        genderService = context.getBean(GenderService.class);
+        insuranceMasterService = context.getBean(InsuranceMasterService.class);
+        nextCodeService = context.getBean(NextCodeService.class);
+    }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -100,8 +104,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
                 cboxGender.setDisable(true);
                 txtAdharNo.setDisable(true);
                 dpBirthDate.setDisable(true);
-//                if (insuranceDetail.getOriginatingOrgType().equalsIgnoreCase("PORTAL"))
-//                    txtMemberName.setDisable(true);
             } else {
                 txtMemberName.setDisable(false);
                 cboxGender.setDisable(false);
@@ -116,8 +118,7 @@ public class InsuranceDetailAddEditController implements MyInitialization {
                 String yearOfDetailFromPortal = insuranceDetailList.get(0).getMemberId().substring(0, 2);
             }
             loadData();
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -137,7 +138,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
             }
         });
         dpBirthDate.setOnAction(e -> {
-//            txtAge.setText(String.valueOf(Period.between(dpBirthDate.getValue(), LocalDate.now()).getYears()));
             if (dpBirthDate.getValue() != null && insuranceMaster.getInsuranceStartDate() != null) {
                 int age = Period.between(dpBirthDate.getValue(), insuranceMaster.getInsuranceStartDate()).getYears();
                 txtAge.setText(String.valueOf(age));
@@ -190,14 +190,9 @@ public class InsuranceDetailAddEditController implements MyInitialization {
             insuranceDetail.setDelete(false);
             insuranceDetail.setSrNo(insuranceDetailSrNo);
             insuranceDetail.setOriginatingOrgCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-//            insuranceDetail.setOriginatingOrgType("VLC");
             insuranceDetail.setOriginatingType(0);
-//            int year = LocalDate.now().getYear();
-//            insuranceDetail.setMemberId((year % 100) + MainApp.identityDto.getSociety().getCodeEx() + insuranceDetailSrNo);
-//            memberId from portal side
             insuranceDetail.setMemberId(yearOfDetailFromPortal + MainApp.identityDto.getSociety().getCodeEx() + insuranceDetailSrNo);
             insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + CommonUtils.getMemberShortCode(txtMemberCode.getText()));
-//            insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + txtMemberCode.getText());
             setValuesInObject();
             saveData();
         }
@@ -244,65 +239,14 @@ public class InsuranceDetailAddEditController implements MyInitialization {
         return errorMsg.length() == 0;
     }
 
-    private void fetchMemberDetails() {
-        memberCode = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtMemberCode.getText()));
-        var task = new MemberByIdLoadTask(memberCode);
-        task.setOnSucceeded(e -> {
-            try {
-//                member = task.get();
-                if (task.get() != null) {
-                    Member member = task.get();
-                    txtMemberName.setText((member.getFirstName() != null ? member.getFirstName() : " ") + ' ' + (member.getMiddleName() != null ? member.getMiddleName() : " ") + ' ' + (member.getLastName() != null ? member.getLastName() : " "));
-//                    txtMemberName.setText(member.toMemberName());
-                } else {
-                    txtMemberName.clear();
-//                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-//                            resourceBundle.getString("membernotfound"));
-                    MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-                            resourceBundle.getString("alert.cancel"));
-                    alert.createAlert();
-                    Optional<ButtonType> resp = alert.createConfirmationAlert();
-                    if (resp.isPresent() && resp.get() == ButtonType.OK) {
-                        this.stage.close();
-                        MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-                        controller.setMember(null);
-                        MainApp.getContentPane().setCenter(controller.getRoot());
-
-                    }
-                    txtMemberCode.setText("");
-                    FocusUtils.requestFocus(txtMemberCode);
-                }
-//                txtMemberName.setText((member.getFirstName() != null ? member.getFirstName() : " ") + ' ' + (member.getMiddleName() != null ? member.getMiddleName() : " ") + ' ' + (member.getLastName() != null ? member.getLastName() : " "));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
-    }
-
     private void getNextCode() {
-        var task = new InsuranceDetailCodeTask();
-        task.setOnSucceeded(event -> {
-            try {
-                insuranceDetailCode = task.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
-        new Thread(task).start();
-
-
-        var task1 = new InsuranceDetailGetSerialNoTask();
-        task1.setOnSucceeded(event -> {
-            try {
-                insuranceDetailSrNo = task1.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        });
-        new Thread(task1).start();
-
-
+        try {
+//            NIMIT ASYNC
+            insuranceDetailCode = nextCodeService.getNextCode("InsuranceDetail", "insuranceDetailCode", "VLC" + "-" + MainApp.identityDto.getIdentity().getSocietyRefCode() + "-", 1);
+            insuranceDetailSrNo = nextCodeService.getNextCode("InsuranceDetail", "srNo", MainApp.identityDto.getIdentity().getSocietyRefCode(), 4);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -315,15 +259,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
         insuranceDetail.setNomineeMemberName(txtNomineeMemberName.getText());
         insuranceDetail.setNomineeAdharNo(EncryptionUtil.encrypt(txtNomineeAdharNo.getText()));
         insuranceDetail.setMemberName(txtMemberName.getText());
-//        insuranceDetail.setMemberCode(MainApp.identityDto.getIdentity().getSocietyRefCode()+txtMemberCode.getText());
-//        String societyRefCode = MainApp.identityDto.getIdentity().getSocietyRefCode();
-//        String memberCodeText = txtMemberCode.getText();
-//        while (memberCodeText.length() < 4) {
-//            memberCodeText = "0" + memberCodeText;
-//        }
-//        insuranceDetail.setMemberCode(societyRefCode + memberCodeText);
-
-//        insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + CommonUtils.getMemberShortCode(txtMemberCode.getText()));
         insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + CommonUtils.getMemberShortCode(txtMemberCode.getText()));
         insuranceDetail.setAdharNo(EncryptionUtil.encrypt(txtAdharNo.getText()));
         insuranceDetail.setDob(EncryptionUtil.encrypt(dpBirthDate.getValue().format(AppConstant.Formatter5)));
@@ -337,74 +272,29 @@ public class InsuranceDetailAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-//        trimMemberCode();
-        var task = new InsuranceDetailSaveTask(insuranceDetail, 0);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(CommonUtils.getResourceString(resourceBundle, resourceBundle.getString(subError.getMessage())) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-                        resourceBundle.getString("insurance.insert.successful"));
-                alert.createAlert();
-                this.callback.reloadData(true);
-                this.stage.close();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            insuranceMasterService.saveDetails(insuranceDetail, CommonUtil.setIdentityHeader());
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
+                    resourceBundle.getString("insurance.insert.successful"));
+            alert.createAlert();
+            this.callback.reloadData(true);
+            this.stage.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void updateData() {
-//        trimMemberCode();
-        var task = new InsuranceDetailSaveTask(insuranceDetail, 1);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-                        resourceBundle.getString("insurance.update.successful"));
-                alert.createAlert();
-                this.callback.reloadData(true);
-                this.stage.close();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
-    }
-
-    private void trimMemberCode() {
-        if (insuranceDetail != null && insuranceDetail.getMemberCode() != null) {
-            String trimmed = insuranceDetail.getMemberCode().trim();
-            if (trimmed.length() > 4) {
-                trimmed = trimmed.substring(trimmed.length() - 4); // Get last 4 characters
-            }
-            insuranceDetail.setMemberCode(trimmed);
+        try {
+            insuranceMasterService.updateDetails(insuranceDetail, CommonUtil.setIdentityHeader());
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
+                    resourceBundle.getString("insurance.update.successful"));
+            alert.createAlert();
+            this.callback.reloadData(true);
+            this.stage.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -413,7 +303,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
 
         if (this.insuranceDetail != null) {
             if (!insuranceDetail.getMemberCode().contains("0000")) {
-//                txtMemberCode.setDisable(true);
                 txtMemberCode.setDisable(false);
             }
             dpBirthDate.setValue(AppConstant.parseDateWithMultipleFormats(EncryptionUtil.decrypt(insuranceDetail.getDob())));
@@ -430,20 +319,14 @@ public class InsuranceDetailAddEditController implements MyInitialization {
     }
 
     public void loadData() {
-        GenderLoadTask task = new GenderLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                genderList = task.get();
-                cboxGender.setItems(FXCollections.observableList(genderList));
-                cboxGender.getSelectionModel().select(0);
-                if (insuranceDetail != null)
-                    loadControls();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            } catch (ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            genderList = genderService.findAll();
+            cboxGender.setItems(FXCollections.observableList(genderList));
+            cboxGender.getSelectionModel().select(0);
+            if (insuranceDetail != null)
+                loadControls();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

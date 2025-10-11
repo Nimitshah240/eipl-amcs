@@ -3,7 +3,6 @@ package com.eipl.amcs.master.operation.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;

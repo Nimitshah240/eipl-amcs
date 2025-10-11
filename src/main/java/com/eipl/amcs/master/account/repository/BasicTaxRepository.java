@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface BasicTaxRepository extends BaseRepository<BasicTax, Integer> {
 
-	@Override
-	List<BasicTax> findAll(Sort sort);
+    @Override
+    List<BasicTax> findAll(Sort sort);
 
 }

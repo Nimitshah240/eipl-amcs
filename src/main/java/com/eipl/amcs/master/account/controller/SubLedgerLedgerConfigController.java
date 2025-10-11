@@ -7,10 +7,10 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.SubLedgerLedgerConfig;
-import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.account.task.SubLedgerLedgerConfigBySubLedgerTypeLoadTask;
-import com.eipl.amcs.master.account.task.SubLedgerLedgerConfigSaveTask;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.SubLedgerLedgerConfigService;
 import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,7 +26,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class SubLedgerLedgerConfigController implements MyInitialization, PopupCallback {
 
@@ -53,6 +54,13 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
     private StringBuilder errorMsg = null;
 
     private ResourceBundle resourceBundle;
+    private LedgerService ledgerService;
+    private SubLedgerLedgerConfigService subLedgerLedgerConfigService;
+
+    public SubLedgerLedgerConfigController() {
+        ledgerService = context.getBean(LedgerService.class);
+        subLedgerLedgerConfigService = context.getBean(SubLedgerLedgerConfigService.class);
+    }
 
     @Override
     public Node getRoot() {
@@ -85,32 +93,27 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
     }
 
     private void loadConfig() {
-        // TODO Auto-generated method stub
-        chkSelect.setSelected(false);
-        for (Ledger ledger : listLedger) {
-            ledger.selectedProperty().set(false);
-        }
-        var task = new SubLedgerLedgerConfigBySubLedgerTypeLoadTask((int) cboxType.getValue().getKey());
-        task.setOnSucceeded(e -> {
-            try {
-                list = task.get();
-                if (list != null) {
-                    for (Ledger ledger : listLedger) {
-                        if (list.stream().anyMatch(ee -> ee.getLedger().getCode().equals(ledger.getCode())))
-                            ledger.selectedProperty().set(true);
-                    }
-                } else {
-                    for (Ledger ledger : listLedger) {
-                        ledger.selectedProperty().set(false);
-                    }
-                }
-                tableData.setItems(FXCollections.observableList(listLedger));
-            } catch (InterruptedException | ExecutionException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+        try {
+            chkSelect.setSelected(false);
+            for (Ledger ledger : listLedger) {
+                ledger.selectedProperty().set(false);
             }
-        });
-        new Thread(task).start();
+
+            list = subLedgerLedgerConfigService.findBySubLedgerType((int) cboxType.getValue().getKey());
+            if (list != null) {
+                for (Ledger ledger : listLedger) {
+                    if (list.stream().anyMatch(ee -> ee.getLedger().getCode().equals(ledger.getCode())))
+                        ledger.selectedProperty().set(true);
+                }
+            } else {
+                for (Ledger ledger : listLedger) {
+                    ledger.selectedProperty().set(false);
+                }
+            }
+            tableData.setItems(FXCollections.observableList(listLedger));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
     @Override
@@ -137,21 +140,18 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
         this.stage = stage;
     }
 
+
     @Override
     public void loadData() {
-        tableData.setItems(null);
-        var task = new LedgerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                listLedger = task.get();
-                if (listLedger != null) {
-                    tableData.setItems(FXCollections.observableList(listLedger));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            tableData.setItems(null);
+            listLedger = ledgerService.findAllByIsActive();
+            if (listLedger != null) {
+                tableData.setItems(FXCollections.observableList(listLedger));
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void setValuesInObject() {
@@ -171,12 +171,9 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
     @Override
     public void saveData() {
         setValuesInObject();
-        var task = new SubLedgerLedgerConfigSaveTask(list, String.valueOf(cboxType.getValue().getKey()));
-        task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
-                    resourceBundle.getString("save.successful"));
-            alert.createAlert();
-        });
-        new Thread(task).start();
+        subLedgerLedgerConfigService.save(list, String.valueOf(cboxType.getValue().getKey()), CommonUtil.setIdentityHeader());
+        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
+                resourceBundle.getString("save.successful"));
+        alert.createAlert();
     }
 }

@@ -91,31 +91,24 @@ public class CustomerServiceImpl implements CustomerService {
         subLedger.setName(customer.getName());
         subLedger.setNameLocal(customer.getNameLocal());
         subLedger.setSociety(customer.getSociety());
-        subLedger.setUnionCode(customer.getSociety().getUnion()!=null?customer.getSociety().getUnion().getCode():null);
+        subLedger.setUnionCode(customer.getSociety().getUnion() != null ? customer.getSociety().getUnion().getCode() : null);
         subLedger.setInitData();
-        subLedgerRepository.customSave(subLedger,identityInfo);
+        subLedgerRepository.customSave(subLedger, identityInfo);
 //        subLedgerRepository.save(subLedger);
 
         List<SubLedgerLedgerConfig> listConfig = subLedgerLedgerConfigRepository.findBySubLedgerType(1);
-        if(listConfig != null && !listConfig.isEmpty()) {
+        if (listConfig != null && !listConfig.isEmpty()) {
             for (Ledger ledger : listConfig.stream().map(m -> m.getLedger()).collect(Collectors.toList())) {
                 LedgerSubLedgerMapping mapping = new LedgerSubLedgerMapping();
                 mapping.setCode(subLedger.getCode() + "-" + ledger.getCode());
                 mapping.setSubLedger(subLedger);
                 mapping.setLedger(ledger);
                 mapping.setSociety(customer.getSociety());
-                mapping.setUnionCode(customer.getSociety().getUnion()!=null?customer.getSociety().getUnion().getCode():null);
-                mappingRepository.customSave(mapping,identityInfo);
+                mapping.setUnionCode(customer.getSociety().getUnion() != null ? customer.getSociety().getUnion().getCode() : null);
+                mappingRepository.customSave(mapping, identityInfo);
 //                mappingRepository.save(mapping);
             }
         }
-
-
-
-
-
-
-
 
 
         return customerDtoNew;
@@ -135,8 +128,8 @@ public class CustomerServiceImpl implements CustomerService {
         customerDetail.setupdateData();
         dtoNew.setCustomerDetail(customerDetailrepository.customUpdate(customerDetail, identityInfo));
 
-        Optional<SubLedger> sl  = subLedgerRepository.findByReferenceCodeAndType(old.get().getCode(),old.get().getType().shortValue());
-        if(sl.isPresent()) {
+        Optional<SubLedger> sl = subLedgerRepository.findByReferenceCodeAndType(old.get().getCode(), old.get().getType().shortValue());
+        if (sl.isPresent()) {
             sl.get().setName(customer.getName());
             sl.get().setType(customer.getType().shortValue());
             sl.get().setNameLocal(customer.getNameLocal());

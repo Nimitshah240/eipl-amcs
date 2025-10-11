@@ -23,63 +23,63 @@ import java.time.LocalDate;
 @Table(name = "product_sale_rate")
 public class ProductSaleRate extends BaseModelTxn {
 
-	@Id
-	@Size(max = 25)
-	private String code;
-	@Digits(integer = 8, fraction = 2)
-	private BigDecimal rate;
-	private LocalDate wefDate;
-	@Digits(integer = 8, fraction = 2)
-	private BigDecimal secretaryCommissionRate;
-	private String purchaseCode;
+    @Id
+    @Size(max = 25)
+    private String code;
+    @Digits(integer = 8, fraction = 2)
+    private BigDecimal rate;
+    private LocalDate wefDate;
+    @Digits(integer = 8, fraction = 2)
+    private BigDecimal secretaryCommissionRate;
+    private String purchaseCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_product_sale_rate_society_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet", "union",
-			"plant", "mcc", "bmc", "route" })
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_code", foreignKey = @ForeignKey(name = "fk_product_sale_rate_product_code"))
-	@JsonIgnoreProperties(value = { "conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging" })
-	private Product product;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_product_sale_rate_union_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet" })
-	private Union union;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_product_sale_rate_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet", "union",
+            "plant", "mcc", "bmc", "route"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_code", foreignKey = @ForeignKey(name = "fk_product_sale_rate_product_code"))
+    @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging"})
+    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_product_sale_rate_union_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    private Union union;
 
-	@Override
-	public String getTableName() {
-		return "product_sale_rate";
-	}
-	
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public String getTableName() {
+        return "product_sale_rate";
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		ProductSaleRateAudit audit = new ProductSaleRateAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-		audit.setCode(this.getCode());
-		audit.setRate(this.getRate());
-		audit.setWefDate(this.getWefDate());
-		audit.setSecretaryCommissionRate(this.getSecretaryCommissionRate());
-		audit.setPurchaseCode(this.getPurchaseCode());
-		audit.setSociety(this.getSociety());
-		audit.setProduct(this.getProduct());
-		audit.setUnion(this.getUnion());
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        ProductSaleRateAudit audit = new ProductSaleRateAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
-		
-		return audit;
-	}
+        audit.setCode(this.getCode());
+        audit.setRate(this.getRate());
+        audit.setWefDate(this.getWefDate());
+        audit.setSecretaryCommissionRate(this.getSecretaryCommissionRate());
+        audit.setPurchaseCode(this.getPurchaseCode());
+        audit.setSociety(this.getSociety());
+        audit.setProduct(this.getProduct());
+        audit.setUnion(this.getUnion());
+
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
+
+        return audit;
+    }
 }

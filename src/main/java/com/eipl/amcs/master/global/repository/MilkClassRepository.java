@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MilkClassRepository  extends BaseRepository<MilkClass, Integer> {
+public interface MilkClassRepository extends BaseRepository<MilkClass, Integer> {
 
-	@Override
-	List<MilkClass> findAll(Sort sort);
-	
-	MilkClass findByCode(Integer code);
+    @Override
+    List<MilkClass> findAll(Sort sort);
+
+    MilkClass findByCode(Integer code);
 }

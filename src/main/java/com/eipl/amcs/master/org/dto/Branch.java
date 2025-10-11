@@ -3,9 +3,9 @@ package com.eipl.amcs.master.org.dto;
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
-import com.eipl.amcs.master.geo.model.*;
+import com.eipl.amcs.master.geo.model.SubDistrict;
+import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.org.model.Bank;
-//import com.eipl.amcs.master.geo.dto.Village;
 import com.eipl.amcs.utils.CommonUtils;
 
 public class Branch extends BaseModel {

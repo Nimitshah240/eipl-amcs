@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UnitRepository  extends BaseRepository<Unit, Integer> {
+public interface UnitRepository extends BaseRepository<Unit, Integer> {
 
-	@Override
-	List<Unit> findAll(Sort sort);
+    @Override
+    List<Unit> findAll(Sort sort);
 }

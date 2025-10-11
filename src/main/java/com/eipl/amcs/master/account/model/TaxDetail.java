@@ -17,22 +17,22 @@ import javax.validation.constraints.Size;
 @Table(name = "tax_detail")
 public class TaxDetail extends BaseModelTxn {
 
-	@Id
-	@Size(max = 10)
-	private String code;
-	private Short type; // 1-Addition, 2-Deduction
-	private Double percentage;
+    @Id
+    @Size(max = 10)
+    private String code;
+    private Short type; // 1-Addition, 2-Deduction
+    private Double percentage;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "basic_tax_code", foreignKey = @ForeignKey(name = "fk_tax_detail_basic_tax_code"))
-	private BasicTax basicTax;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tax_code", foreignKey = @ForeignKey(name = "fk_tax_detail_tax_code"))
-	@JsonIgnoreProperties(value = {"union"})
-	private Tax tax;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "basic_tax_code", foreignKey = @ForeignKey(name = "fk_tax_detail_basic_tax_code"))
+    private BasicTax basicTax;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(name = "fk_tax_detail_tax_code"))
+    @JsonIgnoreProperties(value = {"union"})
+    private Tax tax;
 
-	@Override
-	public String getTableName() {
-		return "tax_detail";
-	}
+    @Override
+    public String getTableName() {
+        return "tax_detail";
+    }
 }

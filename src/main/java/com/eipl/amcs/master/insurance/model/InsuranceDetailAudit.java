@@ -44,6 +44,7 @@ public class InsuranceDetailAudit extends BaseModelTxnAudit {
     private String xCol4;
     private String xCol5;
     private LocalDate dateOfJoiningScheme;
+    private String sysUpdatedBy;
 
     @Override
     public String getTableName() {

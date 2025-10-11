@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface HamletService {
 
-	List<Hamlet> findAll();
+    List<Hamlet> findAll();
 
-	List<Hamlet> findAll(String villageCode);
+    List<Hamlet> findAll(String villageCode);
 
 }

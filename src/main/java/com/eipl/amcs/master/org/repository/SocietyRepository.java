@@ -12,14 +12,14 @@ import java.util.Optional;
 @Repository
 public interface SocietyRepository extends BaseRepository<Society, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	List<Society> findAll(Sort sort);
-	
-	@Override
-	@EntityGraph(attributePaths = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	Optional<Society> findById(String code);
+    @Override
+    @EntityGraph(attributePaths = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    List<Society> findAll(Sort sort);
+
+    @Override
+    @EntityGraph(attributePaths = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    Optional<Society> findById(String code);
 
 }

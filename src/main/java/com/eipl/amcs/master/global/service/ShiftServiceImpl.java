@@ -12,16 +12,16 @@ import java.util.List;
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
-	@Autowired
-	private ShiftRepository shiftRepository;
+    @Autowired
+    private ShiftRepository shiftRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ShiftServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ShiftServiceImpl.class);
 
-	@Override
-	public List<Shift> findAll() {
-		List<Shift> list = shiftRepository.findAll();
-		log.info("Shift findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Shift> findAll() {
+        List<Shift> list = shiftRepository.findAll();
+        log.info("Shift findAll {} items fetched", list.size());
+        return list;
+    }
 
 }

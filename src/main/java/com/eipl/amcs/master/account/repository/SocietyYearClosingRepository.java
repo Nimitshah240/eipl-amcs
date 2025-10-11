@@ -11,6 +11,6 @@ import java.util.List;
 public interface SocietyYearClosingRepository extends BaseRepository<SocietyYearClosing, String> {
 
     @Override
-    @EntityGraph(attributePaths = {"financialYear","society"})
+    @EntityGraph(attributePaths = {"financialYear", "society"})
     List<SocietyYearClosing> findAll();
 }

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UnitConversionRepository  extends BaseRepository<UnitConversion, Integer> {
+public interface UnitConversionRepository extends BaseRepository<UnitConversion, Integer> {
 
-	@Override
-	@EntityGraph(attributePaths = { "fromUnit", "toUnit" })
-	List<UnitConversion> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"fromUnit", "toUnit"})
+    List<UnitConversion> findAll(Sort sort);
 }

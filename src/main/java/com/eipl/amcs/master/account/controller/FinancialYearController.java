@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.account.model.FinancialYear;
-import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
+import com.eipl.amcs.master.account.service.FinancialYearService;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,7 +19,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 public class FinancialYearController implements MyInitialization {
 
@@ -35,10 +34,15 @@ public class FinancialYearController implements MyInitialization {
     Button btnClose;
 
     private ResourceBundle resourceBundle;
+    private FinancialYearService financialYearService;
 
     @Override
     public Node getRoot() {
         return root;
+    }
+
+    public FinancialYearController() {
+        financialYearService = MainApp.context.getBean(FinancialYearService.class);
     }
 
     @Override
@@ -63,23 +67,19 @@ public class FinancialYearController implements MyInitialization {
 
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public void loadData() {
-        FinancialYearLoadTask task = new FinancialYearLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<FinancialYear> list = task.get();
-                if (list != null)
-                    tableFinancialYear.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<FinancialYear> list = financialYearService.findAll();
+            if (list != null)
+                tableFinancialYear.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

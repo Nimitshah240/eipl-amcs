@@ -6,18 +6,11 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.SubLedger;
-import com.eipl.amcs.master.account.model.VoucherType;
-import com.eipl.amcs.master.account.task.SubLedgerDeleteTask;
-import com.eipl.amcs.master.account.task.SubLedgerLoadTask;
-import com.eipl.amcs.master.account.task.VoucherTypeDeleteTask;
-import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
-import com.eipl.amcs.operation.procurement.controller.MilkDispatchAddEditController;
-import com.eipl.amcs.operation.procurement.task.MilkDispatchDeleteTask;
+import com.eipl.amcs.master.account.service.SubLedgerService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -28,11 +21,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class SubLedgerController implements MyInitialization {
 
@@ -45,14 +40,17 @@ public class SubLedgerController implements MyInitialization {
     @FXML
     TableColumn<SubLedger, String> colType;
     @FXML
-    Button btnClose,btnAdd,btnDelete,btnEdit;
+    Button btnClose, btnAdd, btnDelete, btnEdit;
     private ResourceBundle resourceBundle;
 
     private final ObjectProperty<SubLedger> propSubLedger;
+    private SubLedgerService subLedgerService;
 
     public SubLedgerController() {
+        subLedgerService = context.getBean(SubLedgerService.class);
         propSubLedger = new SimpleObjectProperty<>();
     }
+
     @Override
     public Node getRoot() {
         return root;
@@ -75,7 +73,7 @@ public class SubLedgerController implements MyInitialization {
             //  MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml")));
 
         });
-        btnDelete.setOnAction(e ->{
+        btnDelete.setOnAction(e -> {
             deleteData();
         });
         btnEdit.setOnAction(e -> {
@@ -113,18 +111,14 @@ public class SubLedgerController implements MyInitialization {
 
     @Override
     public void loadData() {
-        tableSubLedger.setItems(null);
-        SubLedgerLoadTask task = new SubLedgerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<SubLedger> list = task.get();
-                if (list != null)
-                    tableSubLedger.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            tableSubLedger.setItems(null);
+            List<SubLedger> list = subLedgerService.findAll();
+            if (list != null)
+                tableSubLedger.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -135,22 +129,15 @@ public class SubLedgerController implements MyInitialization {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             SubLedger dto = propSubLedger.get();
             if (dto != null) {
-                var task = new SubLedgerDeleteTask(dto.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("subledger"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    subLedgerService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("subledger"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                }
             }
         }
     }

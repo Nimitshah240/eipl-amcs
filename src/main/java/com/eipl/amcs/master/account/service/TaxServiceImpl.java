@@ -2,7 +2,8 @@ package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.repository.*;
+import com.eipl.amcs.master.account.repository.TaxDetailRepository;
+import com.eipl.amcs.master.account.repository.TaxRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxWidth="175.0" prefHeight="400.0" prefWidth="175.0" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.NavbarController">
+    <children>
+        <ImageView fitHeight="60.0" fitWidth="160.0" focusTraversable="true" layoutX="7.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="29.0">
+            <image>
+                <Image url="@images/logo.png" />
+            </image>
+        </ImageView>
+        <VBox fx:id="menuVbox" prefHeight="200.0" prefWidth="100.0" spacing="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
+            <children>
+                <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="36.0" styleClass="nav-button" text="%dashboard" />
+            </children>
+        </VBox>
+      <HBox alignment="TOP_RIGHT" layoutX="93.0" layoutY="369.0" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="84.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="5.0">
+         <children>
+              <Label fx:id="lblVersion" styleClass="label-light" text="Version: 4.4">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+         </children>
+      </HBox>
+    </children>
+</AnchorPane>

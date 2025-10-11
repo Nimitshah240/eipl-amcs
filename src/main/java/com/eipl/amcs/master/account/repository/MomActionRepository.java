@@ -12,12 +12,12 @@ import java.util.List;
 @Repository
 public interface MomActionRepository extends BaseRepository<MomAction, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {"society", "union","meetingAgenda","mom"})
-	List<MomAction> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "union", "meetingAgenda", "mom"})
+    List<MomAction> findAll(Sort sort);
 
 
-	@EntityGraph(attributePaths = {"society", "union","meetingAgenda","mom"})
-	List<MomAction> findByMom(Mom mom);
+    @EntityGraph(attributePaths = {"society", "union", "meetingAgenda", "mom"})
+    List<MomAction> findByMom(Mom mom);
 
 }

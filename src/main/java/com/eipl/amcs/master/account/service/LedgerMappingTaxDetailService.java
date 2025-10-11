@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LedgerMappingTaxDetailService {
-	List<LedgerMappingTaxDetail> findAll();
+    List<LedgerMappingTaxDetail> findAll();
 
-	String save(List<LedgerMappingTaxDetail> ledgerMappingTaxDetail, String identityInfo);
+    String save(List<LedgerMappingTaxDetail> ledgerMappingTaxDetail, String identityInfo);
 
-	Optional<LedgerMappingTaxDetail> findById(String ledgerTypeNo);
+    Optional<LedgerMappingTaxDetail> findById(String ledgerTypeNo);
 }

@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface MeetingAgendaRepository extends BaseRepository<MeetingAgenda, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {"society", "union"})
-	List<MeetingAgenda> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "union"})
+    List<MeetingAgenda> findAll(Sort sort);
 
 }

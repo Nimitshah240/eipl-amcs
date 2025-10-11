@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface RouteRepository extends BaseRepository<Route, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "bmc" })
-	List<Route> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"union", "bmc"})
+    List<Route> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "bmc" })
-	Optional<Route> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"union", "bmc"})
+    Optional<Route> findById(String id);
 }

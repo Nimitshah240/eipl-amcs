@@ -1,4 +1,5 @@
 package com.eipl.amcs.master.procurement.dto;
+
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 

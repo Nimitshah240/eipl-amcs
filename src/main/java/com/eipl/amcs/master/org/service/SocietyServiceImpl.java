@@ -12,21 +12,21 @@ import java.util.List;
 
 @Service
 public class SocietyServiceImpl implements SocietyService {
-	@Autowired
-	private SocietyRepository societyRepository;
+    @Autowired
+    private SocietyRepository societyRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(SocietyServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SocietyServiceImpl.class);
 
-	@Override
-	public List<Society> findAll() {
-		List<Society> list = societyRepository.findAll(Sort.by("name"));
-		log.info("Societys findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Society> findAll() {
+        List<Society> list = societyRepository.findAll(Sort.by("name"));
+        log.info("Societys findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public Society save(Society obj) {
-		societyRepository.save(obj);
-		return null;
-	}
+    @Override
+    public Society save(Society obj) {
+        societyRepository.save(obj);
+        return null;
+    }
 }

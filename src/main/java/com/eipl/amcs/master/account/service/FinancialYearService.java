@@ -6,8 +6,8 @@ import com.eipl.amcs.master.account.model.FinancialYear;
 import java.util.List;
 
 public interface FinancialYearService {
-	
-	 List<FinancialYear> findAll();
+
+    List<FinancialYear> findAll();
 
     YearClosingDto saveDto(YearClosingDto dto, String identityHeader);
 }

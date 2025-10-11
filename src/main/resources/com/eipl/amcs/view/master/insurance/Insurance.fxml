@@ -41,6 +41,7 @@
                     <children>
                         <E_Button fx:id="btnView" prefHeight="30.0" prefWidth="120.0" styleClass="button-primary" text="%viewinsurance" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
+                        <E_Button fx:id="btnExport" prefHeight="30.0" prefWidth="80.0" styleClass="button" text="%export" />
                         <E_Button fx:id="btnFinalize" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%finalize" />
                     </children>
                 </HBox>

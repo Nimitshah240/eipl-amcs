@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.org.service;
 
-import com.eipl.amcs.master.org.dto.DockDto;
+import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 
 import java.util.List;
@@ -8,19 +8,19 @@ import java.util.Optional;
 
 public interface DockService {
 
-	List<DockDto> findAll();
+    List<DockMilkTypeDto> findAll();
 
-	Dock save(Dock dock, String identityInfo);
-	
-	DockDto save(DockDto dockDto, String identityInfo);
+    Dock save(Dock dock, String identityInfo);
 
-	Dock update(Dock dock);
-	
-	DockDto update(DockDto dockDto, String identityInfo);
+    DockMilkTypeDto save(DockMilkTypeDto DockMilkTypeDto, String identityInfo);
 
-	Optional<Dock> findById(String dockNo);
-	
-	void delete(String dockNo, String identityInfo);
+    Dock update(Dock dock);
 
-	void delete(Dock dock, String identityInfo);
+    DockMilkTypeDto update(DockMilkTypeDto DockMilkTypeDto, String identityInfo);
+
+    Optional<Dock> findById(String dockNo);
+
+    void delete(String dockNo, String identityInfo);
+
+    void delete(Dock dock, String identityInfo);
 }

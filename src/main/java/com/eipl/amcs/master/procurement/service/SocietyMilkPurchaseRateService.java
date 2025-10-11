@@ -9,13 +9,13 @@ import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
 import java.util.List;
 
 public interface SocietyMilkPurchaseRateService {
-	List<SocietyMilkPurchaseRate> findAll();
+    List<SocietyMilkPurchaseRate> findAll();
 
-	List<String> fetchRateDetails(String code, Integer milkTypeCode, Integer milkQualityTypeCode);
-	
-	MilkDispatchRateAndDetailsDto fetchRateAndDetails(String code);
+    List<String> fetchRateDetails(String code, Integer milkTypeCode, Integer milkQualityTypeCode);
 
-	String savePurchaseRate(SocietyMilkPurchaseRateDto dto) throws BusinessValidationFailException;
+    MilkDispatchRateAndDetailsDto fetchRateAndDetails(String code);
 
-	List<SocietyMilkPurchaseRateBased> fetchRateBased(String code);
+    String savePurchaseRate(SocietyMilkPurchaseRateDto dto) throws BusinessValidationFailException;
+
+    List<SocietyMilkPurchaseRateBased> fetchRateBased(String code);
 }

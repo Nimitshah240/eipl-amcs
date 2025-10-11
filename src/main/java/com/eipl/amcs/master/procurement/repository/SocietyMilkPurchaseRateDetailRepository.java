@@ -15,16 +15,16 @@ import java.util.Optional;
 @Repository
 public interface SocietyMilkPurchaseRateDetailRepository extends JpaRepository<SocietyMilkPurchaseRateDetail, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "milkType", "milkQualityType", "societyMilkPurchaseRate" })
-	List<SocietyMilkPurchaseRateDetail> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"milkType", "milkQualityType", "societyMilkPurchaseRate"})
+    List<SocietyMilkPurchaseRateDetail> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "milkType", "milkQualityType", "societyMilkPurchaseRate" })
-	List<SocietyMilkPurchaseRateDetail> findBySocietyMilkPurchaseRateAndMilkTypeAndMilkQualityType(
-			SocietyMilkPurchaseRate societyMilkPurchaseRate, MilkType milkType, MilkQualityType milkQualityType,
-			Sort sort);
+    @EntityGraph(attributePaths = {"milkType", "milkQualityType", "societyMilkPurchaseRate"})
+    List<SocietyMilkPurchaseRateDetail> findBySocietyMilkPurchaseRateAndMilkTypeAndMilkQualityType(
+            SocietyMilkPurchaseRate societyMilkPurchaseRate, MilkType milkType, MilkQualityType milkQualityType,
+            Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "milkType", "milkQualityType", "societyMilkPurchaseRate" })
-	Optional<SocietyMilkPurchaseRateDetail> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"milkType", "milkQualityType", "societyMilkPurchaseRate"})
+    Optional<SocietyMilkPurchaseRateDetail> findById(String id);
 }

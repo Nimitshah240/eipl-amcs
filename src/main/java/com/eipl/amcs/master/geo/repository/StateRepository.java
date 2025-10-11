@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StateRepository extends BaseRepository<State, String> {
 
-	@Override
-	List<State> findAll(Sort sort);
+    @Override
+    List<State> findAll(Sort sort);
 
 }

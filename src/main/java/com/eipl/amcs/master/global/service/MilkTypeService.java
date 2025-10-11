@@ -5,6 +5,6 @@ import com.eipl.amcs.master.global.model.MilkType;
 import java.util.List;
 
 public interface MilkTypeService {
-	 List<MilkType> findAll();
+    List<MilkType> findAll();
 
 }

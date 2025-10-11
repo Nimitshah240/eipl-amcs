@@ -8,10 +8,10 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
+import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.service.DockService;
-import com.eipl.amcs.master.org.task.DockDeleteTask;
-import com.eipl.amcs.master.org.task.DockLoadTask;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,7 +28,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class DockController implements MyInitialization, PopupCallback {
 
@@ -46,10 +47,10 @@ public class DockController implements MyInitialization, PopupCallback {
     private final ObjectProperty<DockMilkTypeDto> propDockMilkTypeDto;
 
     private DockService dockService;
-    private DockService dockMilkTypeRepository;
 
     public DockController() {
         propDockMilkTypeDto = new SimpleObjectProperty<>();
+        dockService = context.getBean(DockService.class);
     }
 
     @Override
@@ -109,17 +110,13 @@ public class DockController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        var task = new DockLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<DockMilkTypeDto> list = task.get();
-                if (list != null)
-                    tableDock.setItems(FXCollections.observableList(list));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<DockMilkTypeDto> list = dockService.findAll();
+            if (list != null)
+                tableDock.setItems(FXCollections.observableList(list));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -130,22 +127,18 @@ public class DockController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             DockMilkTypeDto dto = propDockMilkTypeDto.get();
             if (dto != null) {
-                var task = new DockDeleteTask(dto.getDock().getDockNo());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                new Thread(task).start();
+                try {
+                    Optional<Dock> dockData = dockService.findById(dto.getDock().getDockNo());
+                    if (dockData == null || !dockData.isPresent())
+                        return;
+                    dockService.delete(dockData.get(), CommonUtil.setIdentityHeader());
+                    loadData();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                }
             }
         }
     }

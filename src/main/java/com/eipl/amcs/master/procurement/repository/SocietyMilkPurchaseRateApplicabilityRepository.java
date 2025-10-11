@@ -15,20 +15,20 @@ import java.util.Optional;
 
 @Repository
 public interface SocietyMilkPurchaseRateApplicabilityRepository
-		extends JpaRepository<SocietyMilkPurchaseRateApplicability, String> {
+        extends JpaRepository<SocietyMilkPurchaseRateApplicability, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "shift", "societyMilkPurchaseRate", "society" })
-	List<SocietyMilkPurchaseRateApplicability> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"shift", "societyMilkPurchaseRate", "society"})
+    List<SocietyMilkPurchaseRateApplicability> findAll(Sort sort);
 
-//	@EntityGraph(attributePaths = { "shift", "societyMilkPurchaseRate","society"})
-	@Query("SELECT app FROM SocietyMilkPurchaseRateApplicability app LEFT JOIN FETCH app.shift LEFT JOIN FETCH app.societyMilkPurchaseRate rate "
-			+ "LEFT JOIN FETCH app.society LEFT JOIN FETCH rate.rateType WHERE app.wefDate <= ?1 AND (rate.shift = ?2 OR rate.shiftApplicable = ?3) AND app.society = ?4 "
-			+ "ORDER BY app.wefDate DESC")
-	List<SocietyMilkPurchaseRateApplicability> findRateApplicabilityTop2(LocalDateTime date, Shift shift,
-			Shift shiftApp, Society society);
-	
-	@Override
-	@EntityGraph(attributePaths = { "shift", "societyMilkPurchaseRate", "society" })
-	Optional<SocietyMilkPurchaseRateApplicability> findById(String id);
+    //	@EntityGraph(attributePaths = { "shift", "societyMilkPurchaseRate","society"})
+    @Query("SELECT app FROM SocietyMilkPurchaseRateApplicability app LEFT JOIN FETCH app.shift LEFT JOIN FETCH app.societyMilkPurchaseRate rate "
+            + "LEFT JOIN FETCH app.society LEFT JOIN FETCH rate.rateType WHERE app.wefDate <= ?1 AND (rate.shift = ?2 OR rate.shiftApplicable = ?3) AND app.society = ?4 "
+            + "ORDER BY app.wefDate DESC")
+    List<SocietyMilkPurchaseRateApplicability> findRateApplicabilityTop2(LocalDateTime date, Shift shift,
+                                                                         Shift shiftApp, Society society);
+
+    @Override
+    @EntityGraph(attributePaths = {"shift", "societyMilkPurchaseRate", "society"})
+    Optional<SocietyMilkPurchaseRateApplicability> findById(String id);
 }

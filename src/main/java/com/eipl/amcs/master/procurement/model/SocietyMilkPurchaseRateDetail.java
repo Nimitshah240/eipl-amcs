@@ -20,28 +20,28 @@ import java.math.BigDecimal;
 @Table(name = "society_milk_purchase_rate_details")
 public class SocietyMilkPurchaseRateDetail extends BaseModelTxn {
 
-	@Id
-	@Size(max = 25)
-	private String code;
-	@Digits(integer = 2, fraction = 2)
-	private BigDecimal fat;
-	@Digits(integer = 2, fraction = 2)
-	private BigDecimal snf;
-	@Digits(integer = 3, fraction = 2)
-	private BigDecimal rate;
+    @Id
+    @Size(max = 25)
+    private String code;
+    @Digits(integer = 2, fraction = 2)
+    private BigDecimal fat;
+    @Digits(integer = 2, fraction = 2)
+    private BigDecimal snf;
+    @Digits(integer = 3, fraction = 2)
+    private BigDecimal rate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_milk_type_code"))
-	private MilkType milkType;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_milk_quality_type_code"))
-	private MilkQualityType milkQualityType;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_rate_code"))
-	private SocietyMilkPurchaseRate societyMilkPurchaseRate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_milk_type_code"))
+    private MilkType milkType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_milk_quality_type_code"))
+    private MilkQualityType milkQualityType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_rate_code"))
+    private SocietyMilkPurchaseRate societyMilkPurchaseRate;
 
-	@Override
-	public String getTableName() {
-		return "society_milk_purchase_rate_details";
-	}
+    @Override
+    public String getTableName() {
+        return "society_milk_purchase_rate_details";
+    }
 }

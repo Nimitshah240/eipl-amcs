@@ -19,8 +19,10 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.sql.Date;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -621,4 +623,10 @@ public class CommonUtils {
         return customerTypeList;
     }
 
+    public static Date convertToSqlDate(LocalDate localDate) {
+        if (localDate == null) {
+            return null;
+        }
+        return Date.valueOf(localDate);
+    }
 }

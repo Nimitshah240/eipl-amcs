@@ -13,16 +13,16 @@ import java.util.Optional;
 @Repository
 public interface SocietyMilkPurchaseRateRepository extends JpaRepository<SocietyMilkPurchaseRate, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "rateType" })
-	List<SocietyMilkPurchaseRate> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "rateType"})
+    List<SocietyMilkPurchaseRate> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "rateType" })
-	Optional<SocietyMilkPurchaseRate> findByWefDateGreaterThanEqual(LocalDateTime wefDate);
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "rateType"})
+    Optional<SocietyMilkPurchaseRate> findByWefDateGreaterThanEqual(LocalDateTime wefDate);
 
-	@Override
-	@EntityGraph(attributePaths = { "shift", "shiftApplicable", "rateType" })
-	Optional<SocietyMilkPurchaseRate> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "rateType"})
+    Optional<SocietyMilkPurchaseRate> findById(String id);
 
-	Optional<SocietyMilkPurchaseRate> findTop1ByWefDateGreaterThanEqual(LocalDateTime wefDate);
+    Optional<SocietyMilkPurchaseRate> findTop1ByWefDateGreaterThanEqual(LocalDateTime wefDate);
 }

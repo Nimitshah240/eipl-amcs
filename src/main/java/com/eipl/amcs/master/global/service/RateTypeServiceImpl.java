@@ -10,12 +10,12 @@ import java.util.List;
 @Service
 public class RateTypeServiceImpl implements RateTypeService {
 
-	@Autowired
-	private RateTypeRepository rateTypeRepository;
+    @Autowired
+    private RateTypeRepository rateTypeRepository;
 
-	@Override
-	public List<RateType> findAll() {
-		return rateTypeRepository.findAll();
-	}
+    @Override
+    public List<RateType> findAll() {
+        return rateTypeRepository.findAll();
+    }
 
 }

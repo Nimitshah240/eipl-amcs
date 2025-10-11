@@ -12,15 +12,15 @@ import java.util.Optional;
 @Repository
 public interface LedgerMappingEventRepository extends BaseRepository<LedgerMappingEvent, String> {
 
-	@Override
-	@EntityGraph(attributePaths = {  "society","voucherType","creditLedger","debitLedger","events" })
-	List<LedgerMappingEvent> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "voucherType", "creditLedger", "debitLedger", "events"})
+    List<LedgerMappingEvent> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = {  "society","voucherType","creditLedger","debitLedger","events" })
-	Optional<LedgerMappingEvent> findById(String code);
+    @Override
+    @EntityGraph(attributePaths = {"society", "voucherType", "creditLedger", "debitLedger", "events"})
+    Optional<LedgerMappingEvent> findById(String code);
 
-	@EntityGraph(attributePaths = {  "society","voucherType","creditLedger","debitLedger","events" })
-	List<LedgerMappingEvent> findByEventcode(int eventCode);
+    @EntityGraph(attributePaths = {"society", "voucherType", "creditLedger", "debitLedger", "events"})
+    List<LedgerMappingEvent> findByEventcode(int eventCode);
 
 }

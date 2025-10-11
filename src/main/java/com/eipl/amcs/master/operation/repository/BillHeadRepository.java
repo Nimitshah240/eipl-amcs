@@ -11,11 +11,11 @@ import java.util.Optional;
 @Repository
 public interface BillHeadRepository extends BaseRepository<BillHead, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "union" })
-	List<BillHead> findAll();
+    @Override
+    @EntityGraph(attributePaths = {"society", "union"})
+    List<BillHead> findAll();
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "union" })
-	Optional<BillHead> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"society", "union"})
+    Optional<BillHead> findById(String id);
 }

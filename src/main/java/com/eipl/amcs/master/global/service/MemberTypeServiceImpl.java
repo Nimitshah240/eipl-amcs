@@ -2,7 +2,6 @@ package com.eipl.amcs.master.global.service;
 
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.repository.MemberTypeRepository;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

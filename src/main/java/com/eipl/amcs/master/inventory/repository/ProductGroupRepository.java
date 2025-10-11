@@ -12,14 +12,14 @@ import java.util.Optional;
 @Repository
 public interface ProductGroupRepository extends BaseRepository<ProductGroup, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "unit" })
-	List<ProductGroup> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"unit"})
+    List<ProductGroup> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "unit" })
-	public ProductGroup findByCode(Integer Code);
-	
-	@Override
-	@EntityGraph(attributePaths = { "unit" })
-	Optional<ProductGroup> findById(String id);
+    @EntityGraph(attributePaths = {"unit"})
+    public ProductGroup findByCode(Integer Code);
+
+    @Override
+    @EntityGraph(attributePaths = {"unit"})
+    Optional<ProductGroup> findById(String id);
 }

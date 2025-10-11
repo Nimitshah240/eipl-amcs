@@ -19,56 +19,56 @@ import java.math.BigDecimal;
 @Table(name = "ledger_opening_balance")
 public class LedgerOpeningBalance extends BaseModelTxn {
 
-	@Id
-	private String code;
-	private BigDecimal balance;
-	private Boolean creditDebit;
-	private Boolean autoManual;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_ledger_opening_balance_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	private String financialYearsCode;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ledgers_code", foreignKey = @ForeignKey(name = "fk_ledger_opening_balance_ledgers_code"))
-	@JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
-	private Ledger ledger;
-	private String unionCode;
+    @Id
+    private String code;
+    private BigDecimal balance;
+    private Boolean creditDebit;
+    private Boolean autoManual;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_ledger_opening_balance_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    private String financialYearsCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ledgers_code", foreignKey = @ForeignKey(name = "fk_ledger_opening_balance_ledgers_code"))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger ledger;
+    private String unionCode;
 
-	@Override
-	public String getTableName() {
-		return "ledger_opening_balance";
-	}
+    @Override
+    public String getTableName() {
+        return "ledger_opening_balance";
+    }
 
 
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		LedgerOpeningBalanceAudit audit = new LedgerOpeningBalanceAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        LedgerOpeningBalanceAudit audit = new LedgerOpeningBalanceAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCode(this.getCode());
-		audit.setBalance(this.getBalance());
-		audit.setCreditDebit(this.getCreditDebit());
-		audit.setAutoManual(this.getAutoManual());
-		audit.setFinancialYearsCode(this.getFinancialYearsCode());
-		audit.setLedger(this.getLedger());
-		audit.setUnionCode(this.getUnionCode());
-		audit.setSociety(this.getSociety());
+        audit.setCode(this.getCode());
+        audit.setBalance(this.getBalance());
+        audit.setCreditDebit(this.getCreditDebit());
+        audit.setAutoManual(this.getAutoManual());
+        audit.setFinancialYearsCode(this.getFinancialYearsCode());
+        audit.setLedger(this.getLedger());
+        audit.setUnionCode(this.getUnionCode());
+        audit.setSociety(this.getSociety());
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
 
-		return audit;
-	}
+        return audit;
+    }
 }

@@ -21,30 +21,30 @@ import java.time.LocalDate;
 @Table(name = "cash_advance")
 public class CashAdvance extends BaseModelTxn {
 
-	@Id
+    @Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String code;
-	private BigDecimal amount;
-	private Integer noOfInstallment;
-	private LocalDate date;
-	private LocalDate installmentDate;
-	private String unionCode;
-	private String voucherNo;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_cash_advance_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_cash_advance_society_payment_cycle_code"))
-	@JsonIgnoreProperties(value = {"society","fromShift","toShift","milkType"})
-	private SocietyPaymentCycle societyPaymentCycle;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_cash_advance_member_code"))
-	@JsonIgnoreProperties(value = {"memberType","society","milkType"})
-	private Member member;
+    private String code;
+    private BigDecimal amount;
+    private Integer noOfInstallment;
+    private LocalDate date;
+    private LocalDate installmentDate;
+    private String unionCode;
+    private String voucherNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_cash_advance_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_cash_advance_society_payment_cycle_code"))
+    @JsonIgnoreProperties(value = {"society", "fromShift", "toShift", "milkType"})
+    private SocietyPaymentCycle societyPaymentCycle;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_cash_advance_member_code"))
+    @JsonIgnoreProperties(value = {"memberType", "society", "milkType"})
+    private Member member;
 
-	@Override
-	public String getTableName() {
-		return "cash_advance";
-	}
+    @Override
+    public String getTableName() {
+        return "cash_advance";
+    }
 }

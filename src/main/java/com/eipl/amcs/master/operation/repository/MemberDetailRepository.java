@@ -12,18 +12,18 @@ import java.util.Optional;
 @Repository
 public interface MemberDetailRepository extends BaseRepository<MemberDetail, String> {
 
-	@EntityGraph(attributePaths = { "state", "gender", "bank", "branch", "district", "subDistrict", "village",
-			"hamlet" })
-	Optional<MemberDetail> findByMember(Member member);
+    @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
+            "hamlet"})
+    Optional<MemberDetail> findByMember(Member member);
 
-	@Override
-	@EntityGraph(attributePaths = { "state", "gender", "bank", "branch", "district", "subDistrict", "village",
-			"hamlet" })
-	Optional<MemberDetail> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
+            "hamlet"})
+    Optional<MemberDetail> findById(String id);
 
 
-	@Override
-	@EntityGraph(attributePaths = { "state", "gender", "bank", "branch", "district", "subDistrict", "village",
-			"hamlet" })
-	List<MemberDetail> findAll();
+    @Override
+    @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
+            "hamlet"})
+    List<MemberDetail> findAll();
 }

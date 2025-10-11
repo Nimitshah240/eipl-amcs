@@ -5,11 +5,15 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.dto.EventMappingDto;
+import com.eipl.amcs.master.account.model.Events;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingEvent;
 import com.eipl.amcs.master.account.model.VoucherType;
-import com.eipl.amcs.master.account.task.LedgerMappingEventLoadTask;
-import com.eipl.amcs.master.account.task.LedgerMappingEventSaveTask;
+import com.eipl.amcs.master.account.service.EventService;
+import com.eipl.amcs.master.account.service.LedgerMappingEventService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.VoucherTypeService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,8 +28,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class LedgerMappingEventController implements MyInitialization {
 
@@ -40,12 +48,23 @@ public class LedgerMappingEventController implements MyInitialization {
     @FXML
     TableColumn<LedgerMappingEvent, VoucherType> colVoucherTypes;
     @FXML
-    TableColumn<LedgerMappingEvent, Boolean> colDebitSubLedger, colCreditSubLedger,colAction;
+    TableColumn<LedgerMappingEvent, Boolean> colDebitSubLedger, colCreditSubLedger, colAction;
 
     @FXML
     Button btnSave, btnClose;
 
     private ResourceBundle resourceBundle;
+    private LedgerMappingEventService ledgerMappingEventService;
+    private EventService eventService;
+    private LedgerService ledgerService;
+    private VoucherTypeService voucherTypeService;
+
+    public LedgerMappingEventController() {
+        ledgerMappingEventService = context.getBean(LedgerMappingEventService.class);
+        eventService = context.getBean(EventService.class);
+        ledgerService = context.getBean(LedgerService.class);
+        voucherTypeService = context.getBean(VoucherTypeService.class);
+    }
 
     @Override
     public Node getRoot() {
@@ -71,13 +90,10 @@ public class LedgerMappingEventController implements MyInitialization {
             item.setSociety(MainApp.identityDto.getSociety());
             item.setUnionCode(MainApp.identityDto.getUnion().getCode());
         }
-        LedgerMappingEventSaveTask task = new LedgerMappingEventSaveTask(tableData.getItems());
-        task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
-                    resourceBundle.getString("save.successful"));
-            alert.createAlert();
-        });
-        new Thread(task).start();
+        ledgerMappingEventService.save(tableData.getItems(), CommonUtil.setIdentityHeader());
+        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
+                resourceBundle.getString("save.successful"));
+        alert.createAlert();
     }
 
     @Override
@@ -237,22 +253,46 @@ public class LedgerMappingEventController implements MyInitialization {
 
     @Override
     public void loadData() {
-        LedgerMappingEventLoadTask task = new LedgerMappingEventLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                EventMappingDto dto = task.get();
-                if (dto == null) return;
 
-                ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
-                voucherList = FXCollections.observableArrayList(dto.getVoucherTypeList());
-                setupTable();
-                tableData.setItems(FXCollections.observableList(dto.getListMapping()));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
+        CompletableFuture<List<VoucherType>> voucherTypeListFuture = CompletableFuture.supplyAsync(() -> voucherTypeService.findAll());
+        CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> ledgerService.findAllByIsActive());
+        CompletableFuture<List<LedgerMappingEvent>> ledgerMappingEventListFuture = CompletableFuture.supplyAsync(() -> ledgerMappingEventService.findAll());
+        CompletableFuture<List<Events>> eventListFuture = CompletableFuture.supplyAsync(() -> eventService.findAll());
 
-        new Thread(task).start();
+        CompletableFuture.allOf(voucherTypeListFuture, ledgerListFuture, ledgerMappingEventListFuture, eventListFuture)
+                .whenCompleteAsync((result, ex) -> {
+                    try {
+
+                        List<VoucherType> voucherTypeList = voucherTypeListFuture.get();
+                        List<Ledger> ledgerList1 = ledgerListFuture.get();
+                        List<LedgerMappingEvent> ledgerMappingEventList = ledgerMappingEventListFuture.get();
+                        List<Events> eventsList = eventListFuture.get();
+
+                        if (!ledgerMappingEventList.isEmpty() && !eventsList.isEmpty() && !voucherTypeList.isEmpty() && !ledgerList1.isEmpty()) {
+
+                            List<LedgerMappingEvent> listMapping = new ArrayList<>(ledgerMappingEventList);
+                            for (LedgerMappingEvent mp : listMapping) {
+                                eventsList.removeIf(p -> p.getCode().toString().equalsIgnoreCase(mp.getEvents().getCode().toString()));
+                            }
+                            for (Events event : eventsList) {
+                                LedgerMappingEvent mp = new LedgerMappingEvent();
+                                mp.setEvents(event);
+                                listMapping.add(mp);
+                            }
+                            List<Ledger> list = new ArrayList<>(ledgerList1);
+                            list.add(0, new Ledger("None")); //"0",
+
+                            EventMappingDto dto = new EventMappingDto(listMapping, list, (voucherTypeList));
+
+                            ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
+                            voucherList = FXCollections.observableArrayList(dto.getVoucherTypeList());
+                            setupTable();
+                            tableData.setItems(FXCollections.observableList(dto.getListMapping()));
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
 }

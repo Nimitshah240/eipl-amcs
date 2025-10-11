@@ -4,36 +4,34 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
-import com.eipl.amcs.master.account.dto.ProductGroupMappingDto;
 import com.eipl.amcs.master.account.dto.VoucherTypeMappingDto;
-import com.eipl.amcs.master.account.task.VoucherTypeLedgerConfigLoadTask;
-import com.eipl.amcs.master.account.task.VoucherTypeLedgerConfigSaveTask;
-import com.eipl.amcs.master.inventory.model.ProductGroup;
+import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.model.VoucherType;
+import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.VoucherTypeLedgerConfigService;
+import com.eipl.amcs.master.account.service.VoucherTypeService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
-//import net.ucanaccess.console.Main;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
+
+import static com.eipl.amcs.MainApp.context;
 
 public class VoucherTypeLedgerConfigController implements MyInitialization {
 
@@ -49,6 +47,16 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
     Button btnSave, btnClose;
 
     private ResourceBundle resourceBundle;
+
+    private VoucherTypeService voucherTypeService;
+    private VoucherTypeLedgerConfigService voucherTypeLedgerConfigService;
+    private LedgerService ledgerService;
+
+    public VoucherTypeLedgerConfigController() {
+        voucherTypeService = context.getBean(VoucherTypeService.class);
+        voucherTypeLedgerConfigService = context.getBean(VoucherTypeLedgerConfigService.class);
+        ledgerService = context.getBean(LedgerService.class);
+    }
 
     @Override
     public Node getRoot() {
@@ -70,17 +78,18 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
 
     @Override
     public void saveData() {
-        for (VoucherTypeLedgerConfig item : tableData.getItems()) {
-            item.setSociety(MainApp.identityDto.getSociety());
-            item.setUnionCode(MainApp.identityDto.getUnion().getCode());
-        }
-        VoucherTypeLedgerConfigSaveTask task = new VoucherTypeLedgerConfigSaveTask(tableData.getItems());
-        task.setOnSucceeded(e -> {
+        try {
+            for (VoucherTypeLedgerConfig item : tableData.getItems()) {
+                item.setSociety(MainApp.identityDto.getSociety());
+                item.setUnionCode(MainApp.identityDto.getUnion().getCode());
+            }
+            voucherTypeLedgerConfigService.save(tableData.getItems(), CommonUtil.setIdentityHeader());
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
                     resourceBundle.getString("save.successful"));
             alert.createAlert();
-        });
-        new Thread(task).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -93,12 +102,12 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
             VoucherTypeLedgerConfig obj = event.getRowValue();
             obj.setLedger(event.getNewValue());
         });
-        colType.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getCreditDebit()!=null?
-                cell.getValue().getCreditDebit()==false?resourceBundle.getString("debit"):resourceBundle.getString("credit"):""));
+        colType.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getCreditDebit() != null ?
+                cell.getValue().getCreditDebit() == false ? resourceBundle.getString("debit") : resourceBundle.getString("credit") : ""));
         colType.setCellFactory(ComboBoxTableCell.forTableColumn(converterString, FXCollections.observableList(typeList)));
         colType.setOnEditCommit(event -> {
             VoucherTypeLedgerConfig obj = event.getRowValue();
-            obj.setCreditDebit(event.getNewValue().equalsIgnoreCase(resourceBundle.getString("debit"))?false:true);
+            obj.setCreditDebit(event.getNewValue().equalsIgnoreCase(resourceBundle.getString("debit")) ? false : true);
         });
     }
 
@@ -120,7 +129,7 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
     };
     private StringConverter<String> converterString = new StringConverter<>() {
         @Override
-        public String toString(String  object) {
+        public String toString(String object) {
             if (object == null)
                 return null;
             return object;
@@ -140,25 +149,68 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
 
     @Override
     public void loadData() {
-        VoucherTypeLedgerConfigLoadTask task = new VoucherTypeLedgerConfigLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                VoucherTypeMappingDto dto = task.get();
-                if (dto == null)
-                    return;
+        try {
+            CompletableFuture<List<VoucherType>> voucherTypeListFuture = CompletableFuture.supplyAsync(() -> {
+                System.out.println("Nimit : fetching... voucher");
+                List<VoucherType> v = voucherTypeService.findAll();
+                System.out.println("Nimit : fetched... voucher");
+                return v;
+            });
+            CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> {
+                System.out.println("Nimit : fetching... ledger");
+                List<Ledger> l = ledgerService.findAllByIsActive();
+                System.out.println("Nimit : fetched... ledger");
+                return l;
+            });
+            CompletableFuture<List<VoucherTypeLedgerConfig>> voucherTypeLedgerConfigListFuture = CompletableFuture.supplyAsync(() -> {
+                System.out.println("Nimit : fetching... voucher type");
+                List<VoucherTypeLedgerConfig> vl = voucherTypeLedgerConfigService.findAll();
+                System.out.println("Nimit : fetched... voucher type");
+                return vl;
 
-                ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
-                typeList = new ArrayList<>();
-                typeList.add(resourceBundle.getString("debit"));
-                typeList.add(resourceBundle.getString("credit"));
-                setupTable();
-                tableData.setItems(FXCollections.observableList(dto.getListMapping()));
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
+            });
 
-        new Thread(task).start();
+            CompletableFuture.allOf(voucherTypeListFuture, ledgerListFuture, voucherTypeLedgerConfigListFuture)
+                    .whenCompleteAsync((result, ex) -> {
+                        try {
+                            System.out.println("Nimit : inside");
+
+                            List<VoucherType> voucherTypeList = voucherTypeListFuture.get();
+                            List<Ledger> ledgerList1 = ledgerListFuture.get();
+                            List<VoucherTypeLedgerConfig> voucherTypeLedgerConfigList = voucherTypeLedgerConfigListFuture.get();
+
+                            List<VoucherTypeLedgerConfig> listMapping = new ArrayList<>(voucherTypeLedgerConfigList);
+                            for (VoucherTypeLedgerConfig mp : listMapping) {
+                                voucherTypeList.removeIf(p -> p.getCode().toString().equalsIgnoreCase(mp.getVoucherType().getCode().toString()));
+                            }
+                            for (VoucherType voucherType : voucherTypeList) {
+                                VoucherTypeLedgerConfig mp = new VoucherTypeLedgerConfig();
+                                mp.setVoucherType(voucherType);
+                                listMapping.add(mp);
+                            }
+
+                            List<Ledger> list = new ArrayList<>(ledgerList1);
+                            list.add(0, new Ledger("None"));//"0",
+
+                            VoucherTypeMappingDto dto = new VoucherTypeMappingDto(listMapping, list);
+                            if (dto == null)
+                                return;
+
+                            ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
+                            typeList = new ArrayList<>();
+                            typeList.add(resourceBundle.getString("debit"));
+                            typeList.add(resourceBundle.getString("credit"));
+                            setupTable();
+                            tableData.setItems(FXCollections.observableList(dto.getListMapping()));
+                        } catch (Exception e) {
+                            System.out.println(e);
+                            throw new RuntimeException(e);
+                        }
+                    });
+            System.out.println("Nimit : outside");
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
 }

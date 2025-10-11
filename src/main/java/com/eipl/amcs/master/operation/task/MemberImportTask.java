@@ -13,8 +13,6 @@ import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,13 +62,13 @@ public class MemberImportTask extends Task<List<MemberDto>> {
 //                Cell cellCode = row.getCell(0);
                     String code = val;
                     if (code == null && code.isEmpty()) {
-                        i+=1;
+                        i += 1;
                         continue;
                     }
                     String exCode = CommonUtils.getMemberShortCode(code);
                     code = MainApp.identityDto.getSociety().getCode() + exCode;
                     if (code.equalsIgnoreCase(MainApp.identityDto.getSociety().getCode() + "0000")) {
-                        i+=1;
+                        i += 1;
                         continue;
                     }
 

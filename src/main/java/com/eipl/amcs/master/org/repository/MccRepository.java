@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface MccRepository extends BaseRepository<Mcc, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "plant", "state", "district", "subDistrict", "village", "hamlet" })
-	List<Mcc> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"union", "plant", "state", "district", "subDistrict", "village", "hamlet"})
+    List<Mcc> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "plant", "state", "district", "subDistrict", "village", "hamlet" })
-	Optional<Mcc> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"union", "plant", "state", "district", "subDistrict", "village", "hamlet"})
+    Optional<Mcc> findById(String id);
 
 }

@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface HamletRepository extends BaseRepository<Hamlet, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "village" })
-	List<Hamlet> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"village"})
+    List<Hamlet> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "village" })
-	List<Hamlet> findByVillage(Village village, Sort sort);
+    @EntityGraph(attributePaths = {"village"})
+    List<Hamlet> findByVillage(Village village, Sort sort);
 }

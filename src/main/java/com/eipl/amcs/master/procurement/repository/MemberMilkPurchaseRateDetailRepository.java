@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemberMilkPurchaseRateDetailRepository  extends JpaRepository<MemberMilkPurchaseRateDetail, String> {
+public interface MemberMilkPurchaseRateDetailRepository extends JpaRepository<MemberMilkPurchaseRateDetail, String> {
 
-	@EntityGraph(attributePaths = { "milkType", "milkQualityType", "memberMilkPurchaseRate"})
-	List<MemberMilkPurchaseRateDetail> findByMemberMilkPurchaseRateAndMilkTypeAndMilkQualityType(MemberMilkPurchaseRate rate, 
-			MilkType milkType, MilkQualityType milkQualityType, Sort sort);
-	
-	@Override
-	@EntityGraph(attributePaths = { "milkType", "milkQualityType", "memberMilkPurchaseRate"})
-	Optional<MemberMilkPurchaseRateDetail> findById(String id);
+    @EntityGraph(attributePaths = {"milkType", "milkQualityType", "memberMilkPurchaseRate"})
+    List<MemberMilkPurchaseRateDetail> findByMemberMilkPurchaseRateAndMilkTypeAndMilkQualityType(MemberMilkPurchaseRate rate,
+                                                                                                 MilkType milkType, MilkQualityType milkQualityType, Sort sort);
+
+    @Override
+    @EntityGraph(attributePaths = {"milkType", "milkQualityType", "memberMilkPurchaseRate"})
+    Optional<MemberMilkPurchaseRateDetail> findById(String id);
 }

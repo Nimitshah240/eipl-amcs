@@ -23,76 +23,76 @@ import java.time.LocalDateTime;
 @Table(name = "society_payment_cycles")
 public class SocietyPaymentCycle extends BaseModelTxn {
 
-	@Id
-	@Size(max = 15)
-	private String code;
-	private LocalDateTime fromDate;
-	private LocalDateTime toDate;
-	private Integer intervalValue;
-	@Column(name = "is_billing")
-	private Boolean billing;
-	@Column(name = "lock_billing_process")
-	private Boolean lockBillingProcess;
-	@Size(max = 3)
-	private String unionCode;
+    @Id
+    @Size(max = 15)
+    private String code;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
+    private Integer intervalValue;
+    @Column(name = "is_billing")
+    private Boolean billing;
+    @Column(name = "lock_billing_process")
+    private Boolean lockBillingProcess;
+    @Size(max = 3)
+    private String unionCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_society_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_from_shift"))
-	private Shift fromShift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_to_shift"))
-	private Shift toShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_from_shift"))
+    private Shift fromShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_to_shift"))
+    private Shift toShift;
 
-	@Override
-	public String getTableName() {
-		return "society_payment_cycles";
-	}
+    @Override
+    public String getTableName() {
+        return "society_payment_cycles";
+    }
 
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		SocietyPaymentCycleAudit audit = new SocietyPaymentCycleAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        SocietyPaymentCycleAudit audit = new SocietyPaymentCycleAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCode(this.getCode());
-		audit.setFromDate(this.getFromDate());
-		audit.setToDate(this.getToDate());
-		audit.setIntervalValue(this.getIntervalValue());
-		audit.setBilling(this.billing);
-		audit.setLockBillingProcess(this.lockBillingProcess);
-		audit.setUnionCode(this.getUnionCode());
-		audit.setSociety(this.getSociety());
-		audit.setFromShift(this.getFromShift());
-		audit.setToShift(this.getToShift());
+        audit.setCode(this.getCode());
+        audit.setFromDate(this.getFromDate());
+        audit.setToDate(this.getToDate());
+        audit.setIntervalValue(this.getIntervalValue());
+        audit.setBilling(this.billing);
+        audit.setLockBillingProcess(this.lockBillingProcess);
+        audit.setUnionCode(this.getUnionCode());
+        audit.setSociety(this.getSociety());
+        audit.setFromShift(this.getFromShift());
+        audit.setToShift(this.getToShift());
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
 
-		return audit;
-	}
+        return audit;
+    }
 
-	public String toDateShiftString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getFromDate().toLocalDate().format(AppConstant.DATE_FORMATTER));
-		sb.append(CommonUtils.getShiftShort(getFromShift()));
-		sb.append(" - ");
-		sb.append(getToDate().toLocalDate().format(AppConstant.DATE_FORMATTER));
-		sb.append(CommonUtils.getShiftShort(getToShift()));
-		return sb.toString();
-	}
+    public String toDateShiftString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getFromDate().toLocalDate().format(AppConstant.DATE_FORMATTER));
+        sb.append(CommonUtils.getShiftShort(getFromShift()));
+        sb.append(" - ");
+        sb.append(getToDate().toLocalDate().format(AppConstant.DATE_FORMATTER));
+        sb.append(CommonUtils.getShiftShort(getToShift()));
+        return sb.toString();
+    }
 }

@@ -17,5 +17,6 @@ public interface SubLedgerOpeningBalanceService {
     void delete(String ledgerOpeningBalance, String identityInfo);
 
     void delete(SubLedgerOpeningBalance ledgerOpeningBalance, String identityInfo);
+
     List<SubLedgerOpeningBalance> importSubLedgerBalance(List<SubLedgerOpeningBalance> dtoList, String header);
 }

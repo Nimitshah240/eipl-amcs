@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LedgerTypeService {
-	List<LedgerType> findAll();
+    List<LedgerType> findAll();
 
 
-	LedgerType save(LedgerType ledgerType, String identityInfo);
+    LedgerType save(LedgerType ledgerType, String identityInfo);
 
-	LedgerType update(LedgerType ledgerType, String identityInfo);
+    LedgerType update(LedgerType ledgerType, String identityInfo);
 
 
-	Optional<LedgerType> findById(String ledgerTypeNo);
+    Optional<LedgerType> findById(String ledgerTypeNo);
 
-	void delete(Integer ledgerTypeNo, String identityInfo);
+    void delete(Integer ledgerTypeNo, String identityInfo);
 
-	void delete(LedgerType ledgerType, String identityInfo);
+    void delete(LedgerType ledgerType, String identityInfo);
 
 
 }

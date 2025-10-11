@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LedgerMappingProductGroupService {
-	List<LedgerMappingProductGroup> findAll();
+    List<LedgerMappingProductGroup> findAll();
 
-	String save(List<LedgerMappingProductGroup> ledgerMappingProductGroup, String identityInfo);
+    String save(List<LedgerMappingProductGroup> ledgerMappingProductGroup, String identityInfo);
 
-	Optional<LedgerMappingProductGroup> findById(String ledgerTypeNo);
+    Optional<LedgerMappingProductGroup> findById(String ledgerTypeNo);
 }

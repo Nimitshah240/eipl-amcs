@@ -14,24 +14,24 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends BaseRepository<Product, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-			"union", "society" })
-	Optional<Product> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
+            "union", "society"})
+    Optional<Product> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-			"union", "society" })
-	List<Product> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
+            "union", "society"})
+    List<Product> findAll(Sort sort);
 
-	@Query(value = "SELECT p FROM Product p where p.name =?1 and p.code= ?2")
-	List<Product> checkName(String str, String Code);
+    @Query(value = "SELECT p FROM Product p where p.name =?1 and p.code= ?2")
+    List<Product> checkName(String str, String Code);
 
-	@EntityGraph(attributePaths = { "conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-			"union", "society" })
-	List<Product> findAllBySociety(Society society, Sort by);
-	
-	@EntityGraph(attributePaths = { "conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-			"union" })
-	List<Product> findAllBySocietyIsNull(Sort by);
+    @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
+            "union", "society"})
+    List<Product> findAllBySociety(Society society, Sort by);
+
+    @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
+            "union"})
+    List<Product> findAllBySocietyIsNull(Sort by);
 }

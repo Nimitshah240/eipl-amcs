@@ -1,19 +1,18 @@
 package com.eipl.amcs.master.org.dto;
 
 import com.eipl.amcs.base.model.BaseModel;
-//import com.eipl.amcs.master.geo.dto.*;
+import com.eipl.amcs.master.geo.model.*;
+import com.eipl.amcs.master.org.model.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Bmc;
-import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Plant;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.model.Union;
-
 import com.eipl.amcs.utils.CommonUtils;
 
 import java.time.LocalDate;
-import com.eipl.amcs.master.geo.model.*;
 
 public class Society extends BaseModel {
     private String code;

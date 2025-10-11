@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -14,9 +15,11 @@ import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.VoucherRepository;
 import com.eipl.amcs.master.account.repository.VoucherTransactionRepository;
+import com.eipl.amcs.master.account.service.LedgerService;
 import com.eipl.amcs.master.account.service.VoucherService;
-import com.eipl.amcs.master.account.task.*;
+import com.eipl.amcs.master.account.service.VoucherTypeService;
 import com.eipl.amcs.master.operation.convertor.LedgerCellFactory;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -31,8 +34,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -41,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.eipl.amcs.MainApp.context;
@@ -92,6 +92,10 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
     private VoucherService voucherService;
     private VoucherRepository voucherRepository;
     private VoucherTransactionRepository voucherTransactionRepository;
+    private VoucherTypeService voucherTypeService;
+    private NextCodeService nextCodeService;
+    private LedgerService ledgerService;
+
 
     public VoucherAddEditController() {
         propVoucherTransactionDto = new SimpleObjectProperty<>();
@@ -99,7 +103,9 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
         voucherService = context.getBean(VoucherService.class);
         voucherRepository = context.getBean(VoucherRepository.class);
         voucherTransactionRepository = context.getBean(VoucherTransactionRepository.class);
-
+        voucherTypeService = context.getBean(VoucherTypeService.class);
+        nextCodeService = context.getBean(NextCodeService.class);
+        ledgerService = context.getBean(LedgerService.class);
     }
 
     private Voucher voucher;
@@ -126,8 +132,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
     }
 
     private void loadTransaction(Voucher voucher) {
-
-
         try {
             Optional<Voucher> voucher1 = voucherRepository.findById(voucher.getCode());
             if (voucher1.isPresent()) {
@@ -156,10 +160,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    private void loadVoucherSubLedger(VoucherTransaction voucherTransaction) {
-
     }
 
     @Override
@@ -262,17 +262,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
                 alert.createAlert();
             }
         });
-//        btnEdit.setOnAction(e -> {
-//            voucherTransaction = propVoucherTransactionDto.get();
-//            cboxLedger.setValue(voucherTransaction.getLedger());
-//            cboxType.setValue(voucherTransaction.getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit"));
-//            txtAmount.setText(voucherTransaction.getAmount().toString());
-//            txtNarration.setText(voucherTransaction.getNarration());
-//            tableData.setItems(null);
-//            voucherTransactionList.remove(voucherTransaction);
-//            tableData.setItems(FXCollections.observableList(voucherTransactionList));
-//            gridTransaction.setDisable(false);
-//        });
         btnSave.setOnAction(e -> {
             saveData();
         });
@@ -418,18 +407,14 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
     }
 
     private void setVoucherNo() {
-        var task = new VoucherNumberLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                String no = task.get();
-                if (no != null) {
-                    txtVoucherNo.setText(no);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            String no = nextCodeService.getNextCode("Voucher", "code", MainApp.identityDto.getSociety().getCode() + "/" + MainApp.getFinancialYear().getCode() + "/", 6);
+            if (no != null) {
+                txtVoucherNo.setText(no);
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -465,14 +450,11 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
         dto.setVoucherTransactions(voucherTransactionList);
         dto.setVoucherSubLedgers(voucherSubLedgerList);
 
-        var task = new VoucherSaveTask(dto, (short) 0);
-        task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
-                    resourceBundle.getString("insert.successful"));
-            alert.createAlert();
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Voucher.fxml")));
-        });
-        new Thread(task).start();
+        voucherService.save(dto, CommonUtil.setIdentityHeader());
+        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
+                resourceBundle.getString("insert.successful"));
+        alert.createAlert();
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Voucher.fxml")));
     }
 
     private void setValuesInObject() {
@@ -492,72 +474,55 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
 
     @Override
     public void setupTable() {
-//        colLedgerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getCode()));
         colLedger.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getName()));
-//        colNarration.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarration()));
         colAmount.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAmount().toString()));
         colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit")));
-//        propVoucherTransactionDto1.bind(tableData1.getSelectionModel().selectedItemProperty());
-//        colLedgerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getCode()));
         colLedger1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getName()));
-//        colNarration.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarration()));
         colAmount1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAmount().toString()));
         colType1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit")));
-
-
     }
-
 
     @Override
     public void loadData() {
         tableData.setItems(null);
-        var task = new VoucherTransactionLoadTask(voucher != null ? voucher.getCode() : null);
-        task.setOnSucceeded(e -> {
-            try {
-                voucherTransactionList = task.get();
+        try {
+            Optional<Voucher> vouchers = voucherRepository.findById(voucher != null ? voucher.getCode() : null);
+            if (vouchers.isPresent()) {
+                List<VoucherTransaction> voucherTransactionList = voucherService.findAllTransaction(vouchers.get());
                 if (voucherTransactionList != null)
                     tableData.setItems(FXCollections.observableList(voucherTransactionList));
                 else {
                     voucherTransactionList = new ArrayList<>();
                 }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void loadLedger() {
-        var task = new LedgerLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<Ledger> list = task.get();
-                if (list != null) {
-                    cboxLedger.setItems(FXCollections.observableList(list));
-                    cboxLedger.getSelectionModel().select(0);
-                    if (cboxLedger.getValue().getHasSubLedger())
-                        btnSubLedger.setDisable(false);
-                    new AutoCompleteComboBoxListener<>(cboxLedger);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        try {
+            List<Ledger> list = ledgerService.findAllByIsActive();
+            if (list != null) {
+                cboxLedger.setItems(FXCollections.observableList(list));
+                cboxLedger.getSelectionModel().select(0);
+                if (cboxLedger.getValue().getHasSubLedger())
+                    btnSubLedger.setDisable(false);
+                new AutoCompleteComboBoxListener<>(cboxLedger);
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void loadVoucherType() {
-        var task = new VoucherTypeLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<VoucherType> list = task.get();
-                cboxVoucherType.setItems(FXCollections.observableList(list));
-                cboxVoucherType.getSelectionModel().select(7);
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            List<VoucherType> list = voucherTypeService.findAll();
+            cboxVoucherType.setItems(FXCollections.observableList(list));
+            cboxVoucherType.getSelectionModel().select(7);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 

@@ -5,6 +5,7 @@ import com.eipl.amcs.master.account.model.SocietyYearClosing;
 import java.util.List;
 
 public interface SocietyYearClosingService {
-	 List<SocietyYearClosing> findAll();
-	SocietyYearClosing save(SocietyYearClosing societyYearClosing, String identityInfo);
+    List<SocietyYearClosing> findAll();
+
+    SocietyYearClosing save(SocietyYearClosing societyYearClosing, String identityInfo);
 }

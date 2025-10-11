@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface PlantRepository extends BaseRepository<Plant, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "state", "district", "subDistrict", "village", "hamlet" })
-	List<Plant> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"union", "state", "district", "subDistrict", "village", "hamlet"})
+    List<Plant> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "union", "state", "district", "subDistrict", "village", "hamlet" })
-	Optional<Plant> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"union", "state", "district", "subDistrict", "village", "hamlet"})
+    Optional<Plant> findById(String id);
 }

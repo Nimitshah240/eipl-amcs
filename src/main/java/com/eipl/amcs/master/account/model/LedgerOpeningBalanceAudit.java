@@ -18,24 +18,24 @@ import java.math.BigDecimal;
 @Table(name = "ledger_opening_balance_audit")
 public class LedgerOpeningBalanceAudit extends BaseModelTxnAudit {
 
-	@Id
-	private String code;
-	private BigDecimal balance;
-	private Boolean creditDebit;
-	private Boolean autoManual;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey =@ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-	private String financialYearsCode;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ledgers_code", foreignKey =@ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
-	private Ledger ledger;
-	private String unionCode;
+    @Id
+    private String code;
+    private BigDecimal balance;
+    private Boolean creditDebit;
+    private Boolean autoManual;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    private String financialYearsCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ledgers_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger ledger;
+    private String unionCode;
 
-	@Override
-	public String getTableName() {
-		return "ledger_opening_balance_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "ledger_opening_balance_audit";
+    }
 }

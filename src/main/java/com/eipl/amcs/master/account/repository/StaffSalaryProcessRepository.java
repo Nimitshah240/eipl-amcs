@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface StaffSalaryProcessRepository extends BaseRepository<StaffSalaryProcess, String> {
 
-	@Override
-	List<StaffSalaryProcess> findAll(Sort sort);
+    @Override
+    List<StaffSalaryProcess> findAll(Sort sort);
 
 }

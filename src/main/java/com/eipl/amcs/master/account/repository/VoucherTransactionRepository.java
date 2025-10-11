@@ -16,10 +16,11 @@ public interface VoucherTransactionRepository extends BaseRepository<VoucherTran
     @Override
     @EntityGraph(attributePaths = {"ledger", "voucher"})
     List<VoucherTransaction> findAll(Sort sort);
-	@Override
-	@EntityGraph(attributePaths = {"ledger","voucher"})
-	Optional<VoucherTransaction> findById(String integer);
 
-	@EntityGraph(attributePaths = {"ledger","voucher"})
-	List<VoucherTransaction> findByVoucher(Voucher voucher);
+    @Override
+    @EntityGraph(attributePaths = {"ledger", "voucher"})
+    Optional<VoucherTransaction> findById(String integer);
+
+    @EntityGraph(attributePaths = {"ledger", "voucher"})
+    List<VoucherTransaction> findByVoucher(Voucher voucher);
 }

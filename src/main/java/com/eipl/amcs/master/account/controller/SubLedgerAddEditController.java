@@ -2,17 +2,18 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerSubLedgerMapping;
 import com.eipl.amcs.master.account.model.SubLedger;
-import com.eipl.amcs.master.account.task.*;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.SubLedgerService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import javafx.beans.property.ObjectProperty;
@@ -29,7 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 public class SubLedgerAddEditController implements MyInitialization {
     @FXML
@@ -58,12 +59,18 @@ public class SubLedgerAddEditController implements MyInitialization {
     private StringBuilder errorMsg = null;
     private SubLedger subLedger = null;
 
+    private NextCodeService nextCodeService;
+    private LedgerService ledgerService;
+    private SubLedgerService subLedgerService;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
     public SubLedgerAddEditController() {
+        nextCodeService = MainApp.context.getBean(NextCodeService.class);
+        ledgerService = MainApp.context.getBean(LedgerService.class);
+        subLedgerService = MainApp.context.getBean(SubLedgerService.class);
         propDto = new SimpleObjectProperty<>();
     }
 
@@ -127,34 +134,49 @@ public class SubLedgerAddEditController implements MyInitialization {
         txtLocalName.setText(subLedger.getNameLocal());
     }
 
-    public void loadLedger(){
-        var task = new LedgerLoadTask();
-        task.setOnSucceeded(ee -> {
-            try {
-                listLedger = task.get();
-                if (listLedger != null) {
-                    tableLedgerData.setItems(FXCollections.observableList(listLedger));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+    public void loadLedger() {
+        try {
+            listLedger = ledgerService.findAllByIsActive();
+            if (listLedger != null) {
+                tableLedgerData.setItems(FXCollections.observableList(listLedger));
             }
-        });
-        new Thread(task).start();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
+
     private void loadLedgerDetail() {
-        var task = new LedgerSubLedgerMappingDtoLoadTask(null, subLedger);
-        task.setOnSucceeded(e -> {
-            try {
-                LedgerSubLedgerDto dto = task.get();
-                if (dto != null) {
-                    listLedger = dto.getLedgerList();
-                    tableLedgerData.setItems(FXCollections.observableList(dto.getLedgerList()));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            LedgerSubLedgerDto dto = new LedgerSubLedgerDto();
+            CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> ledgerService.findAllByIsActive());
+            CompletableFuture<List<LedgerSubLedgerMapping>> ledgerSubLedgerMappingListFuture = CompletableFuture.supplyAsync(() -> ledgerService.fetchMapping(MainApp.identityDto.getSociety().getCode(), null, subLedger.getCode()));
+            CompletableFuture.allOf(ledgerListFuture, ledgerSubLedgerMappingListFuture)
+                    .whenCompleteAsync((result, ex) -> {
+                        try {
+                            if (!ledgerListFuture.get().isEmpty())
+                                dto.setLedgerList(ledgerListFuture.get());
+
+                            if (!ledgerSubLedgerMappingListFuture.get().isEmpty())
+                                dto.setLedgerSubLedgerMappingList(ledgerSubLedgerMappingListFuture.get());
+
+                            for (Ledger ldr : dto.getLedgerList()) {
+                                if (dto.getLedgerSubLedgerMappingList().stream()
+                                        .anyMatch(p -> p.getLedger().getCode().equals(ldr.getCode())))
+                                    ldr.selectedProperty().set(true);
+                            }
+
+                            if (dto != null) {
+                                listLedger = dto.getLedgerList();
+                                tableLedgerData.setItems(FXCollections.observableList(dto.getLedgerList()));
+                            }
+                        } catch (Exception exs) {
+                            System.out.println(exs);
+                            throw new RuntimeException(exs);
+                        }
+                    });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void validateAndSave() {
@@ -178,21 +200,17 @@ public class SubLedgerAddEditController implements MyInitialization {
     }
 
     private void getNextSubLedgerCode() {
-        var task = new SubLedgerNumberLoadTask(MainApp.identityDto.getSociety().getCode());
-        task.setOnSucceeded(e -> {
-            try {
-                String nextCode = task.get();
-                if (nextCode == null || nextCode.isEmpty()) return;
-                txtCode.setText(nextCode);
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            String nextCode = nextCodeService.getNextCode("SubLedger", "code", MainApp.identityDto.getSociety().getCode(), 0);
+            if (nextCode == null || nextCode.isEmpty()) return;
+            txtCode.setText(nextCode);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private SubLedger setValuesInObject() {
-        subLedger.setCode(cboxType.getValue().getKey()<=2?"M"+txtCode.getText():"C"+txtCode.getText());
+        subLedger.setCode(cboxType.getValue().getKey() <= 2 ? "M" + txtCode.getText() : "C" + txtCode.getText());
         subLedger.setName(txtName.getText());
         subLedger.setNameLocal(txtLocalName.getText());
         subLedger.setSociety(MainApp.identityDto.getSociety());
@@ -212,33 +230,17 @@ public class SubLedgerAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        var task = new SubLedgerSaveTask(subLedger, (short) 0);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("subledger"), sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-                if (listLedger != null) saveMapping();
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("subledger"), resourceBundle.getString("subledger.insert.successful"));
-                alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SubLedger.fxml")));
-
-//                this.stage.close();
-
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            subLedgerService.save(subLedger, CommonUtil.setIdentityHeader());
+            if (listLedger != null) saveMapping();
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("subledger"), resourceBundle.getString("subledger.insert.successful"));
+            alert.createAlert();
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SubLedger.fxml")));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("subledger"), "Error");
+            alert.createAlert();
+        }
     }
 
     private void saveMapping() {
@@ -253,46 +255,22 @@ public class SubLedgerAddEditController implements MyInitialization {
                 ledgerSubLedgerMappingList.add(o);
             }
         }
-        var task = new LedgerSubLedgerMappingSaveTask(ledgerSubLedgerMappingList, (short) 0);
-        task.setOnSucceeded(e -> {
-
-        });
-        new Thread(task).start();
+        ledgerService.save(ledgerSubLedgerMappingList, CommonUtil.setIdentityHeader());
     }
+
 
     @Override
     public void updateData() {
-        var task = new SubLedgerSaveTask(subLedger, (short) 1);
-        task.setOnSucceeded(e -> {
-            try {
-                Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"), sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-                if (listLedger != null) saveMapping();
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledger"), resourceBundle.getString("ledger.update.successful"));
-                alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SubLedger.fxml")));
-
-
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+        try {
+            subLedgerService.update(subLedger, CommonUtil.setIdentityHeader());
+            if (listLedger != null) saveMapping();
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledger"), resourceBundle.getString("ledger.update.successful"));
+            alert.createAlert();
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SubLedger.fxml")));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"), "Error");
+            alert.createAlert();
+        }
     }
-
-    @Override
-    public void setupComboBox() {
-    }
-
-
 }

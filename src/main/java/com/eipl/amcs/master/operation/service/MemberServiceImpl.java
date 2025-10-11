@@ -1,4 +1,3 @@
-
 package com.eipl.amcs.master.operation.service;
 
 import com.eipl.amcs.base.repository.NextCodeRepository;
@@ -142,7 +141,6 @@ public class MemberServiceImpl implements MemberService {
 //        }
 
 
-
         return memberDtoNew;
     }
 
@@ -188,7 +186,6 @@ public class MemberServiceImpl implements MemberService {
                 } else {
                     Member member = item.getMember();
                     member.setInitData();
-
 
 
 //                    SubLedger subLedger = new SubLedger();
@@ -284,7 +281,6 @@ public class MemberServiceImpl implements MemberService {
         dtoNew.setMemberDetail(memberDetailrepository.customUpdate(memberDetail, identityInfo));
 
 
-
 //        Optional<SubLedger> sl  = subLedgerRepository.findByReferenceCodeAndType(member.getCode(),old.get().getMemberType().getCode().shortValue());
 //        if(sl.isPresent()) {
 //            sl.get().setName(member.getFirstName() + " " + member.getMiddleName() + " " + member.getLastName());
@@ -293,7 +289,6 @@ public class MemberServiceImpl implements MemberService {
 //            sl.get().setupdateData();
 //            subLedgerRepository.customUpdate(sl.get(), identityInfo);
 //        }
-
 
 
         return dtoNew;

@@ -14,15 +14,15 @@ import java.util.List;
 @Service
 public class PlantServiceImpl implements PlantService {
 
-	@Autowired
-	private PlantRepository plantRepository;
+    @Autowired
+    private PlantRepository plantRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(PlantServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(PlantServiceImpl.class);
 
-	@Override
-	public List<Plant> findAll() {
-		List<Plant> list = plantRepository.findAll(Sort.by("name"));
-		log.info("Plants findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Plant> findAll() {
+        List<Plant> list = plantRepository.findAll(Sort.by("name"));
+        log.info("Plants findAll {} items fetched", list.size());
+        return list;
+    }
 }

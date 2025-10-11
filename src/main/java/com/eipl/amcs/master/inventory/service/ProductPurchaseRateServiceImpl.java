@@ -23,77 +23,77 @@ import java.util.Optional;
 
 @Service
 public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateService {
-	@Autowired
-	private ProductPurchaseRateRepository productPurchaseRateRepository;
-	@Autowired
-	private ProductRepository productRepository;
-	@Autowired
-	private NextCodeRepository nextCodeRepository;
+    @Autowired
+    private ProductPurchaseRateRepository productPurchaseRateRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private NextCodeRepository nextCodeRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductPurchaseRateServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ProductPurchaseRateServiceImpl.class);
 
-	@Override
-	public List<ProductPurchaseRate> findAll() {
-		List<ProductPurchaseRate> list = productPurchaseRateRepository.findAll(Sort.by("wefDate").descending());
-		log.info("ProductPurchaseRates findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<ProductPurchaseRate> findAll() {
+        List<ProductPurchaseRate> list = productPurchaseRateRepository.findAll(Sort.by("wefDate").descending());
+        log.info("ProductPurchaseRates findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public ProductPurchaseRate save(ProductPurchaseRate productPurchaseRate, String identityInfo) {
+    @Override
+    public ProductPurchaseRate save(ProductPurchaseRate productPurchaseRate, String identityInfo) {
 
-		LocalDate chk = checkWefDate(productPurchaseRate.getProduct().getCode());
-		if (chk == null || chk.isBefore(productPurchaseRate.getWefDate())) {
+        LocalDate chk = checkWefDate(productPurchaseRate.getProduct().getCode());
+        if (chk == null || chk.isBefore(productPurchaseRate.getWefDate())) {
 
-		} else {
-			FieldError wefdateNotValid = CommonUtil.getFieldError("productpurchaserate", "wefdate",
-					productPurchaseRate.getCode(), "wefdate.not.valid");
-			throw new BusinessValidationFailException(getClass(), wefdateNotValid);
-		}
-		String code = nextCodeRepository.getNextCode("ProductPurchaseRate", "code",
-				productPurchaseRate.getSociety().getCode(), 0);
-		productPurchaseRate.setCode(code);
-		ProductPurchaseRate newData = productPurchaseRateRepository.customSave(productPurchaseRate, identityInfo);
-		newData.setProduct(productPurchaseRate.getProduct());
-		newData.setUnion(productPurchaseRate.getUnion());
-		newData.setSociety(productPurchaseRate.getSociety());
-		productPurchaseRate.setInitData();
-		return newData;
-	}
+        } else {
+            FieldError wefdateNotValid = CommonUtil.getFieldError("productpurchaserate", "wefdate",
+                    productPurchaseRate.getCode(), "wefdate.not.valid");
+            throw new BusinessValidationFailException(getClass(), wefdateNotValid);
+        }
+        String code = nextCodeRepository.getNextCode("ProductPurchaseRate", "code",
+                productPurchaseRate.getSociety().getCode(), 0);
+        productPurchaseRate.setCode(code);
+        ProductPurchaseRate newData = productPurchaseRateRepository.customSave(productPurchaseRate, identityInfo);
+        newData.setProduct(productPurchaseRate.getProduct());
+        newData.setUnion(productPurchaseRate.getUnion());
+        newData.setSociety(productPurchaseRate.getSociety());
+        productPurchaseRate.setInitData();
+        return newData;
+    }
 
-	@Override
-	public ProductPurchaseRate update(ProductPurchaseRate productPurchaseRate, String identityInfo) {
-		ProductPurchaseRate newData = productPurchaseRateRepository.customUpdate(productPurchaseRate, identityInfo);
-		newData.setProduct(productPurchaseRate.getProduct());
-		newData.setUnion(productPurchaseRate.getUnion());
-		newData.setSociety(productPurchaseRate.getSociety());
-		productPurchaseRate.setupdateData();
-		return newData;
-	}
+    @Override
+    public ProductPurchaseRate update(ProductPurchaseRate productPurchaseRate, String identityInfo) {
+        ProductPurchaseRate newData = productPurchaseRateRepository.customUpdate(productPurchaseRate, identityInfo);
+        newData.setProduct(productPurchaseRate.getProduct());
+        newData.setUnion(productPurchaseRate.getUnion());
+        newData.setSociety(productPurchaseRate.getSociety());
+        productPurchaseRate.setupdateData();
+        return newData;
+    }
 
-	@Override
-	public Optional<ProductPurchaseRate> findById(String code) {
-		return productPurchaseRateRepository.findById(code);
-	}
+    @Override
+    public Optional<ProductPurchaseRate> findById(String code) {
+        return productPurchaseRateRepository.findById(code);
+    }
 
-	@Override
-	public void delete(String code, String identityInfo) {
-		productPurchaseRateRepository.customDelete(productPurchaseRateRepository.findById(code).get(), identityInfo);
-	}
+    @Override
+    public void delete(String code, String identityInfo) {
+        productPurchaseRateRepository.customDelete(productPurchaseRateRepository.findById(code).get(), identityInfo);
+    }
 
-	@Override
-	@Transactional
+    @Override
+    @Transactional
 //    @CacheEvict(value = { "productPurchaseRatesCache" }, allEntries = true)
-	public void delete(ProductPurchaseRate productPurchaseRate, String identityInfo) {
-		productPurchaseRateRepository.customDelete(productPurchaseRate.getCode(), identityInfo);
-	}
+    public void delete(ProductPurchaseRate productPurchaseRate, String identityInfo) {
+        productPurchaseRateRepository.customDelete(productPurchaseRate.getCode(), identityInfo);
+    }
 
-	@Override
-	public LocalDate checkWefDate(String str) {
-		return productPurchaseRateRepository.checkWefDate(str);
-	}
+    @Override
+    public LocalDate checkWefDate(String str) {
+        return productPurchaseRateRepository.checkWefDate(str);
+    }
 
-	@Override
+    @Override
     public ProductPurchaseRate findProductRate(Product product, LocalDate date) {
         ProductPurchaseRate rate = productPurchaseRateRepository.findTop1ByProductAndWefDateLessThanEqualOrderByWefDateDesc(product, date);
         rate.setUnion(Hibernate.unproxy(rate.getUnion(), Union.class));

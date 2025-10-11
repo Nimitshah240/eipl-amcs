@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface DistrictRepository extends BaseRepository<District, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "state" })
-	List<District> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"state"})
+    List<District> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "state" })
-	List<District> findByState(State state, Sort sort);
+    @EntityGraph(attributePaths = {"state"})
+    List<District> findByState(State state, Sort sort);
 }

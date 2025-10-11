@@ -14,6 +14,12 @@ public class DockMilkTypeDto {
     public DockMilkTypeDto() {
     }
 
+    public DockMilkTypeDto(Dock dock, List<MilkType> milkTypes) {
+        super();
+        this.dock = dock;
+        this.milkTypes = milkTypes;
+    }
+
     public Dock getDock() {
         return dock;
     }

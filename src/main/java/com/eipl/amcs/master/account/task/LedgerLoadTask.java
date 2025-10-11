@@ -20,6 +20,11 @@ public class LedgerLoadTask extends Task<List<Ledger>> {
     @Override
     protected List<Ledger> call() throws Exception {
         try {
+
+//            private LedgerService ledgerService;
+//            List<Ledger> list = ledgerService.findAllByIsActive();
+
+
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
             ResponseEntity<Ledger[]> response = restTemplate.getForEntity(url, Ledger[].class);

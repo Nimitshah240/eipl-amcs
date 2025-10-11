@@ -2,7 +2,6 @@ package com.eipl.amcs.master.procurement.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.global.service.MilkTypeService;
 import com.eipl.amcs.master.procurement.model.HardwareDevice;
 import com.eipl.amcs.master.procurement.service.HardwareDeviceService;
 import com.eipl.amcs.utils.CommonUtils;

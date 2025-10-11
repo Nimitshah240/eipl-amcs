@@ -14,16 +14,16 @@ import java.util.List;
 @Service
 public class BasicTaxServiceImpl implements BasicTaxService {
 
-	@Autowired
-	private BasicTaxRepository basicTaxRepository;
+    @Autowired
+    private BasicTaxRepository basicTaxRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(BasicTaxServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BasicTaxServiceImpl.class);
 
-	@Override
-	public List<BasicTax> findAll() {
-		List<BasicTax> list = basicTaxRepository.findAll(Sort.by("name"));
-		log.info("BasicTaxes findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<BasicTax> findAll() {
+        List<BasicTax> list = basicTaxRepository.findAll(Sort.by("name"));
+        log.info("BasicTaxes findAll {} items fetched", list.size());
+        return list;
+    }
 
 }

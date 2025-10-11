@@ -5,7 +5,7 @@ import com.eipl.amcs.master.geo.model.State;
 import java.util.List;
 
 public interface StateService {
-	
-	 List<State> findAll();
+
+    List<State> findAll();
 
 }

@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import java.util.Optional;
 
 public interface MemberCreditLimitRepository extends BaseRepository<MemberCreditLimit, String> {
-	
-	@EntityGraph(attributePaths = { "society" })
-	Optional<MemberCreditLimit> findByConsumerCodeAndConsumerType(String code, Short type);
 
-	@Override
-	@EntityGraph(attributePaths = { "society" })
-	Optional<MemberCreditLimit> findById(String id);
+    @EntityGraph(attributePaths = {"society"})
+    Optional<MemberCreditLimit> findByConsumerCodeAndConsumerType(String code, Short type);
+
+    @Override
+    @EntityGraph(attributePaths = {"society"})
+    Optional<MemberCreditLimit> findById(String id);
 }

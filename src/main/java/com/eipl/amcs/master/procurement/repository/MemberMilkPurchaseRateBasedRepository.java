@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface MemberMilkPurchaseRateBasedRepository extends JpaRepository<MemberMilkPurchaseRateBased, String> {
 
-    @EntityGraph(attributePaths = {"formula" , "milkType", "milkQualityType"})
+    @EntityGraph(attributePaths = {"formula", "milkType", "milkQualityType"})
     List<MemberMilkPurchaseRateBased> findByMemberMilkPurchaseRate(MemberMilkPurchaseRate rate);
 }

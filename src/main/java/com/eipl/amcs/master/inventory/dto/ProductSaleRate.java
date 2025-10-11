@@ -1,13 +1,12 @@
 package com.eipl.amcs.master.inventory.dto;
 
 import com.eipl.amcs.base.model.BaseModelTxn;
-import com.eipl.amcs.master.org.model.Dock;
+import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import com.eipl.amcs.master.inventory.model.Product;
 
 public class ProductSaleRate extends BaseModelTxn {
 

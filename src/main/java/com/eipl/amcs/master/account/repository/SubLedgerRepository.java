@@ -21,7 +21,8 @@ public interface SubLedgerRepository extends BaseRepository<SubLedger, String> {
     Optional<SubLedger> findById(String code);
 
     @EntityGraph(attributePaths = {"society"})
-    Optional<SubLedger> findByReferenceCodeAndType(String code,short type);
+    Optional<SubLedger> findByReferenceCodeAndType(String code, short type);
+
     @EntityGraph(attributePaths = {"society"})
     Optional<SubLedger> findByTypeAndReferenceCode(short type, String refrenceCode);
 }

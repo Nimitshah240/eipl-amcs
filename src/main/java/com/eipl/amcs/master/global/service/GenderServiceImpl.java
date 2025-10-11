@@ -12,16 +12,16 @@ import java.util.List;
 @Service
 public class GenderServiceImpl implements GenderService {
 
-	@Autowired
-	private GenderRepository genderRepository;
+    @Autowired
+    private GenderRepository genderRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(GenderServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(GenderServiceImpl.class);
 
-	@Override
-	public List<Gender> findAll() {
-		List<Gender> list = genderRepository.findAll();
-		log.info("Gender findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<Gender> findAll() {
+        List<Gender> list = genderRepository.findAll();
+        log.info("Gender findAll {} items fetched", list.size());
+        return list;
+    }
 
 }

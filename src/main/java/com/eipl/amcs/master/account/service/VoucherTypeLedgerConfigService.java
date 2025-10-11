@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VoucherTypeLedgerConfigService {
-	List<VoucherTypeLedgerConfig> findAll();
+    List<VoucherTypeLedgerConfig> findAll();
 
-	String save(List<VoucherTypeLedgerConfig> ledgerMappingProductGroup, String identityInfo);
+    String save(List<VoucherTypeLedgerConfig> ledgerMappingProductGroup, String identityInfo);
 
-	Optional<VoucherTypeLedgerConfig> findById(String ledgerTypeNo);
+    Optional<VoucherTypeLedgerConfig> findById(String ledgerTypeNo);
 }

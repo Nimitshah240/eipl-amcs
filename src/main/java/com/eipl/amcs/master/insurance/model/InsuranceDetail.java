@@ -49,7 +49,7 @@ public class InsuranceDetail extends BaseModelTxn {
     private String xCol4;
     private String xCol5;
     protected String xCol1;
-
+    private String sysUpdatedBy;
 
     @Override
     public String getTableName() {
@@ -100,26 +100,12 @@ public class InsuranceDetail extends BaseModelTxn {
         audit.setOriginatingType(this.getOriginatingType());
         audit.setXCol4(this.getXCol4());
         audit.setXCol5(this.getXCol5());
-
+        audit.setSysUpdatedBy(this.getSysUpdatedBy());
         return audit;
-    }
-
-//    public String getxCol5() {
-//        return xCol5;
-//    }
-    public String getXCol5() {
-        return xCol5;
     }
 
     public void setxCol5(String xCol5) {
         this.xCol5 = xCol5;
-    }
-
-//    public String getxCol4() {
-//        return xCol4;
-//    }
-    public String getXCol4() {
-        return xCol4;
     }
 
     public void setxCol4(String xCol4) {
@@ -144,4 +130,3 @@ public class InsuranceDetail extends BaseModelTxn {
         isDelete = delete;
     }
 }
-

@@ -1,7 +1,7 @@
 package com.eipl.amcs.master.org.bootcontroller;
 
 import com.eipl.amcs.base.service.NextCodeService;
-import com.eipl.amcs.master.org.dto.DockDto;
+import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.service.DockService;
 import com.eipl.amcs.util.CommonUtil;
@@ -28,13 +28,13 @@ public class DockController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DockController.class);
 
 	@GetMapping
-	public ResponseEntity<List<DockDto>> index() {
+	public ResponseEntity<List<DockMilkTypeDto>> index() {
 		try {
-			List<DockDto> list = service.findAll();
+			List<DockMilkTypeDto> list = service.findAll();
 			if (list == null || list.isEmpty())
 				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<List<DockDto>>(list, HttpStatus.OK);
+			return new ResponseEntity<List<DockMilkTypeDto>>(list, HttpStatus.OK);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -57,8 +57,8 @@ public class DockController {
 	}
 
 	@PostMapping
-	public ResponseEntity<DockDto> createDockWithMilkType(@RequestHeader Map<String, String> headers,
-			@RequestBody DockDto dto) {
+	public ResponseEntity<DockMilkTypeDto> createDockWithMilkType(@RequestHeader Map<String, String> headers,
+			@RequestBody DockMilkTypeDto dto) {
 		try {
 			LOGGER.info("Dock save method");
 			dto = service.save(dto, CommonUtil.getIdentityHeader(headers));
@@ -73,8 +73,8 @@ public class DockController {
 	}
 
 	@PutMapping
-	public ResponseEntity<DockDto> updateDockWithMilkType(@RequestHeader Map<String, String> headers,
-			@RequestBody DockDto dto) {
+	public ResponseEntity<DockMilkTypeDto> updateDockWithMilkType(@RequestHeader Map<String, String> headers,
+			@RequestBody DockMilkTypeDto dto) {
 		try {
 			LOGGER.info("Dock save method");
 			dto = service.update(dto, CommonUtil.getIdentityHeader(headers));

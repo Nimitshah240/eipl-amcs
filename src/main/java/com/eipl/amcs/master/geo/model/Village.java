@@ -18,26 +18,26 @@ import javax.validation.constraints.Size;
 @Table(name = "villages")
 public class Village extends BaseModel {
 
-	@Id
-	@Size(max = 6)
-	private String code;
-	@Size(max = 100)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
+    @Id
+    @Size(max = 6)
+    private String code;
+    @Size(max = 100)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sub_district_code", foreignKey = @ForeignKey(name = "fk_villages_sub_districts_code"))
-	@JsonIgnoreProperties(value = {"district"})
-	private SubDistrict subDistrict;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_district_code", foreignKey = @ForeignKey(name = "fk_villages_sub_districts_code"))
+    @JsonIgnoreProperties(value = {"district"})
+    private SubDistrict subDistrict;
 
-	@Override
-	public String getTableName() {
-		return "villages";
-	}
+    @Override
+    public String getTableName() {
+        return "villages";
+    }
 
-	@Override
-	public String toString() {
-		return CommonUtils.getLocalString(this.name, this.nameLocal);
-	}
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 }

@@ -15,16 +15,16 @@ import java.util.Optional;
 @Repository
 public interface LedgerSubLedgerMappingRepository extends BaseRepository<LedgerSubLedgerMapping, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "ledger","subLedger", "society" })
-	List<LedgerSubLedgerMapping> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"ledger", "subLedger", "society"})
+    List<LedgerSubLedgerMapping> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "ledger","subLedger", "society" })
-	List<LedgerSubLedgerMapping> findBySocietyAndLedger(Society society, Ledger ledger);
+    @EntityGraph(attributePaths = {"ledger", "subLedger", "society"})
+    List<LedgerSubLedgerMapping> findBySocietyAndLedger(Society society, Ledger ledger);
 
-	@EntityGraph(attributePaths = { "ledger","subLedger", "society" })
-	List<LedgerSubLedgerMapping> findBySocietyAndSubLedger(Society society, SubLedger subLedger);
+    @EntityGraph(attributePaths = {"ledger", "subLedger", "society"})
+    List<LedgerSubLedgerMapping> findBySocietyAndSubLedger(Society society, SubLedger subLedger);
 
-	@Override
-	Optional<LedgerSubLedgerMapping> findById(String s);
+    @Override
+    Optional<LedgerSubLedgerMapping> findById(String s);
 }

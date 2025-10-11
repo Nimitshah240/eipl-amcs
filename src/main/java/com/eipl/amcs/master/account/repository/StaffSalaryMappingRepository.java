@@ -12,7 +12,7 @@ import java.util.List;
 public interface StaffSalaryMappingRepository extends BaseRepository<StaffSalaryMapping, Integer> {
 
     @Override
-    @EntityGraph(attributePaths = { "staffMember", "society", "staffSalaryHead" })
+    @EntityGraph(attributePaths = {"staffMember", "society", "staffSalaryHead"})
     List<StaffSalaryMapping> findAll(Sort sort);
 
 }

@@ -13,16 +13,16 @@ import java.util.List;
 @Service
 public class MilkClassServiceImpl implements MilkClassService {
 
-	@Autowired
-	private MilkClassRepository milkClassRepository;
+    @Autowired
+    private MilkClassRepository milkClassRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(MilkClassServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(MilkClassServiceImpl.class);
 
-	@Override
-	public List<MilkClass> findAll() {
-		List<MilkClass> list = milkClassRepository.findAll();
-		log.info("MilkClass findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public List<MilkClass> findAll() {
+        List<MilkClass> list = milkClassRepository.findAll();
+        log.info("MilkClass findAll {} items fetched", list.size());
+        return list;
+    }
 
 }
