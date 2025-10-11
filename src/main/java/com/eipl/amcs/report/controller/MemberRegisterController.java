@@ -2,24 +2,11 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MemberType;
-import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberTypeLoadTask;
-import com.eipl.amcs.operation.billing.model.BonusSummary;
-import com.eipl.amcs.report.dto.MemberRegister;
-import com.eipl.amcs.report.dto.ShiftReportCode;
-import com.eipl.amcs.report.task.MemberRegisterReportLoadTask;
-import com.eipl.amcs.report.task.ShiftReportCodeTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -30,14 +17,15 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class MemberRegisterController implements MyInitialization {

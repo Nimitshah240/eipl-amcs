@@ -3,7 +3,6 @@ package com.eipl.amcs.report.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.report.dto.MemberCollection;
-import com.eipl.amcs.report.dto.MemberCollection;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpStatus;
@@ -16,10 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MemberCollectionTask extends Task<List<MemberCollection>> {
-    private String societyCode;
-    private LocalDateTime from_date;
-    private LocalDateTime to_date;
-    private String qty_mode;
+    private final String societyCode;
+    private final LocalDateTime from_date;
+    private final LocalDateTime to_date;
+    private final String qty_mode;
 
     public MemberCollectionTask(String societyCode, LocalDateTime fromDate, LocalDateTime toDate, String qtyMode) {
         this.societyCode = societyCode;

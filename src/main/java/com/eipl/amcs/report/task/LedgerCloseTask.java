@@ -2,8 +2,6 @@ package com.eipl.amcs.report.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.report.dto.DairySaleRegister;
-import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.LedgerClose;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -13,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

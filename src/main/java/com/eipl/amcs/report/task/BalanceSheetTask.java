@@ -1,18 +1,14 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.report.dto.LedgerBalance;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BalanceSheetTask extends Task<List<LedgerBalance>> {
@@ -36,39 +32,28 @@ public class BalanceSheetTask extends Task<List<LedgerBalance>> {
     @Override
     protected List<LedgerBalance> call() throws Exception {
         try {
-            List<LedgerBalance> list = new ArrayList<>();
+            LedgerRepository ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
 
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BALANCESHEET;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("societyCode", societyCode)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString())
-                    .queryParam("locale", locale)
-                    .queryParam("liabilityAsset", 0); // Expense
-
-            ResponseEntity<LedgerBalance[]> response = restTemplate.getForEntity(builder.toUriString(), LedgerBalance[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            List<Object[]> listObject = ledgerRepository.fetchBalanceSheet(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 0, locale);
+            List<LedgerBalance> listResp = new ArrayList<>();
+            if (listObject == null || listObject.isEmpty())
                 return null;
-            if (response.getBody() != null) {
-                List<LedgerBalance> listExpense = Arrays.asList(response.getBody());
-                listExpense.forEach(item -> item.setIncomeExpense(0));
-                list.addAll(listExpense);
-            }
+            listObject.forEach(item -> {
+                listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+            });
 
-            UriComponentsBuilder builder2 = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("societyCode", societyCode)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString())
-                    .queryParam("locale", locale)
-                    .queryParam("liabilityAsset", 1); // Income
-            ResponseEntity<LedgerBalance[]> response2 = restTemplate.getForEntity(builder2.toUriString(), LedgerBalance[].class);
-            if (response2 == null || response2.getStatusCode() != HttpStatus.OK ||response2.getBody()==null)
+            listResp.forEach(item -> item.setIncomeExpense(0));
+            List<LedgerBalance> list = new ArrayList<>(listResp);
+
+            listResp.clear();
+            List<Object[]> listObject1 = ledgerRepository.fetchBalanceSheet(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 1, locale);
+            if (listObject1 == null || listObject1.isEmpty())
                 return null;
-            List<LedgerBalance> listIncome = Arrays.asList(response2.getBody());
-            listIncome.forEach(item -> item.setIncomeExpense(1));
-            list.addAll(listIncome);
+            listObject1.forEach(item -> {
+                listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+            });
+            listResp.forEach(item -> item.setIncomeExpense(1));
+            list.addAll(listResp);
 
             return list;
         } catch (Exception e) {

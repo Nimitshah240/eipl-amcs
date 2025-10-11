@@ -2,7 +2,6 @@ package com.eipl.amcs.report.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.report.dto.MemberRegister;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -13,13 +12,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class MemberRegisterReportLoadTask extends Task<List<MemberRegister>> {
-    private String societyCode;
-    private LocalDate fromDate;
-    private Integer memberType;
+    private final String societyCode;
+    private final LocalDate fromDate;
+    private final Integer memberType;
 
     public MemberRegisterReportLoadTask(String societyCode, Integer memberType, LocalDate fromDate) {
         this.societyCode = societyCode;

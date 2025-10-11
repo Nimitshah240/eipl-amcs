@@ -14,11 +14,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PaymentRegisterReportLoadTask extends Task<List<PaymentRegisterForCash>> {
-    private String societyCode;
-    private String societyPaymentCycleCode;
-    private Integer paymentMode;
+    private final String societyCode;
+    private final String societyPaymentCycleCode;
+    private final Integer paymentMode;
 
-    public PaymentRegisterReportLoadTask(String societyCode,String societyPaymentCycleCode,Integer paymentMode) {
+    public PaymentRegisterReportLoadTask(String societyCode, String societyPaymentCycleCode, Integer paymentMode) {
         this.societyCode = societyCode;
         this.societyPaymentCycleCode = societyPaymentCycleCode;
         this.paymentMode = paymentMode;

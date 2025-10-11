@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MilkDispatchChallanTask extends Task<List<MilkDispatchChallan>> {
 
-    private String challanNo;
+    private final String challanNo;
 
     public MilkDispatchChallanTask(String challanNo) {
         this.challanNo = challanNo;

@@ -2,17 +2,12 @@ package com.eipl.amcs.report.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 
 public class FinancialYearsCodeTask extends Task<Boolean> {
 
@@ -36,7 +31,7 @@ public class FinancialYearsCodeTask extends Task<Boolean> {
             ResponseEntity<Boolean> response = restTemplate.getForEntity(builder.toUriString(), Boolean.class);
             if (response == null || response.getStatusCode() != HttpStatus.OK)
                 return null;
-            return  response.getBody();
+            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

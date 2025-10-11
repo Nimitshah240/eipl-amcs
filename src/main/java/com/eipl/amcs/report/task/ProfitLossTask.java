@@ -1,18 +1,16 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.report.dto.LedgerBalance;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.report.dto.ProductStockValuation;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ProfitLossTask extends Task<List<LedgerBalance>> {
@@ -20,6 +18,7 @@ public class ProfitLossTask extends Task<List<LedgerBalance>> {
     private LocalDate fromDate;
     private LocalDate toDate;
     private String locale;
+    private LedgerRepository ledgerRepository;
 
 
     public ProfitLossTask(String societyCode, LocalDate fromDate, LocalDate toDate, String locale) {
@@ -37,34 +36,16 @@ public class ProfitLossTask extends Task<List<LedgerBalance>> {
     protected List<LedgerBalance> call() throws Exception {
         try {
             List<LedgerBalance> list = new ArrayList<>();
-
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PROFITLOSS;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("societyCode", societyCode)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString())
-                    .queryParam("locale", locale)
-                    .queryParam("incomeExpense", 0); // Expense
-
-            ResponseEntity<LedgerBalance[]> response = restTemplate.getForEntity(builder.toUriString(), LedgerBalance[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
+            List<LedgerBalance> listExpense = fetchProfitLoss(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 0, locale);
+            if (listExpense == null || listExpense.isEmpty())
                 return null;
-            List<LedgerBalance> listExpense = Arrays.asList(response.getBody());
             listExpense.forEach(item -> item.setIncomeExpense(0));
             list.addAll(listExpense);
 
-            UriComponentsBuilder builder2 = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("societyCode", societyCode)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString())
-                    .queryParam("locale", locale)
-                    .queryParam("incomeExpense", 1); // Income
-            ResponseEntity<LedgerBalance[]> response2 = restTemplate.getForEntity(builder2.toUriString(), LedgerBalance[].class);
-            if (response2 == null || response2.getStatusCode() != HttpStatus.OK)
+            List<LedgerBalance> listIncome = fetchProfitLoss(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 1, locale);
+            if (listIncome == null || listIncome.isEmpty())
                 return null;
-            List<LedgerBalance> listIncome = Arrays.asList(response2.getBody());
             listIncome.forEach(item -> item.setIncomeExpense(1));
             list.addAll(listIncome);
 
@@ -74,4 +55,94 @@ public class ProfitLossTask extends Task<List<LedgerBalance>> {
         }
         return null;
     }
+
+    public List<LedgerBalance> fetchProfitLoss(String societyCode, Date fromDate, Date toDate, int incomeExpense, String locale) {
+        double tradingProfit = 0;
+        try {
+            if (incomeExpense == 1 && tradingProfit == 0) {
+                List<LedgerBalance> listTrading = fetchTrading(societyCode, fromDate, toDate, locale);
+                if (listTrading != null) tradingProfit = listTrading.stream().mapToDouble(m -> m.getBalance()).sum();
+            }
+            List<Object[]> list = ledgerRepository.fetchProfitLoss(societyCode, fromDate, toDate, incomeExpense, locale);
+            List<LedgerBalance> listResp = new ArrayList<>();
+
+            if (list != null && !list.isEmpty()) {
+                list.forEach(item -> {
+                    listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+                });
+                if (incomeExpense == 1 && tradingProfit > 0)
+                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                else if (incomeExpense == 0 && tradingProfit < 0)
+                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+            } else {
+                if (incomeExpense == 1 && tradingProfit > 0) {
+                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                } else if (incomeExpense == 0 && tradingProfit < 0) {
+                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                }
+            }
+            return listResp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private List<LedgerBalance> fetchTrading(String societyCode, Date fromDate, Date toDate, String locale) {
+        double stockValuation = 0;
+        try {
+            List<ProductStockValuation> listStockValuation = fetchStockValuation(toDate, societyCode, locale);
+            if (listStockValuation != null)
+                stockValuation = listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum();
+
+            List<Object[]> list = ledgerRepository.fetchTrading(societyCode, fromDate, toDate, locale);
+            if (list == null || list.isEmpty()) {
+                List<LedgerBalance> listResp = new ArrayList<>();
+                listResp.add(new LedgerBalance("", "stockvaluation", 0, stockValuation, stockValuation));
+                return listResp;
+            } else if (list != null && !list.isEmpty()) {
+                List<LedgerBalance> listResp = new ArrayList<>();
+                list.forEach(item -> {
+                    listResp.add(new LedgerBalance((String) item[0], (String) item[1], Double.parseDouble(item[3].toString()), Double.parseDouble(item[2].toString()), Double.parseDouble(item[4].toString())));
+                });
+                listResp.add(new LedgerBalance("", "stockvaluation", 0, stockValuation, stockValuation));
+                return listResp;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<ProductStockValuation> fetchStockValuation(Date endDate, String societyCode, String locale) {
+        List<ProductStockValuation> list = new ArrayList<>();
+        List<Object[]> listCurrentStock = ledgerRepository.fetchCurrentStockByProduct(endDate, societyCode, locale);
+        listCurrentStock.forEach(item -> {
+            double stockValue = 0;
+            List<Object[]> listReceipt = ledgerRepository.fetchProductReceipt((String) item[0], endDate);
+            if (listReceipt != null && !listReceipt.isEmpty()) {
+
+                double stock = Double.parseDouble(item[2].toString());
+                for (Object[] arrReceipt : listReceipt) {
+                    if (stock <= 0) {
+                        break;
+                    }
+                    if (Double.parseDouble(arrReceipt[1].toString()) >= stock) {
+                        stockValue = stockValue + (stock * Double.parseDouble(arrReceipt[1].toString()));
+                        break;
+                    } else {
+                        stockValue = Double.parseDouble(arrReceipt[1].toString()) * Double.parseDouble(arrReceipt[0].toString());
+                        stock -= Double.parseDouble(arrReceipt[1].toString());
+                    }
+                }
+                list.add(new ProductStockValuation((String) item[0], (String) item[1], Double.parseDouble(item[2].toString()), stockValue, (String) item[3]));
+            } else {
+                list.add(new ProductStockValuation((String) item[0], (String) item[1], 0, 0, (String) item[3]));
+            }
+        });
+        return list;
+    }
+
 }
