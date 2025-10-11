@@ -20,12 +20,10 @@ import java.util.List;
 
 public class SubLedgerOpeningBalanceImportTask extends Task<List<SubLedgerOpeningBalance>> {
 
-    private File file;
-
-    private List<SubLedger> subledgerList;
-    private List<FinancialYear> financialYearList;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SubLedgerOpeningBalanceImportTask.class);
+    private final File file;
+    private final List<SubLedger> subledgerList;
+    private final List<FinancialYear> financialYearList;
 
     public SubLedgerOpeningBalanceImportTask(File file, List<SubLedger> subledgerList, List<FinancialYear> financialYear) {
         this.file = file;

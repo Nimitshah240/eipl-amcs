@@ -11,7 +11,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 public class CustomerSaveTask extends Task<Object> {
     private final CustomerDto dto;
     private final short update;
-    private CustomerService service;
 
     public CustomerSaveTask(CustomerDto dto, short update) {
         this.dto = dto;
@@ -22,6 +21,8 @@ public class CustomerSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
+            CustomerService service = EmcsAppContext.getContext().getBean(CustomerService.class);
+
             CustomerDto dtoNew = null;
 
             if (this.update == 0) {

@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.inventory.task;
 
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.inventory.service.ProductSaleRateService;
@@ -17,9 +18,6 @@ public class ProductSaleRateByProductLoadTask extends Task<ProductSaleRate> {
     private final String code;
     private final LocalDate date;
 
-    private ProductSaleRateService service;
-    private ProductRepository repository;
-
     public ProductSaleRateByProductLoadTask(String code, LocalDate date) {
         this.code = code;
         this.date = date;
@@ -28,6 +26,8 @@ public class ProductSaleRateByProductLoadTask extends Task<ProductSaleRate> {
     @Override
     protected ProductSaleRate call() throws Exception {
         try {
+            ProductSaleRateService service = EmcsAppContext.getContext().getBean(ProductSaleRateService.class);
+            ProductRepository repository = EmcsAppContext.getContext().getBean(ProductRepository.class);
 
             ProductSaleRate list = service.findByProduct(repository.findById(code).get(), date);
             list.setUnion(Hibernate.unproxy(list.getUnion(), Union.class));

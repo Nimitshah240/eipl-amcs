@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.account.task;
 
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.service.FinancialYearService;
 import javafx.concurrent.Task;
@@ -11,12 +12,10 @@ import java.util.List;
 public class FinancialYearLoadTask extends Task<List<FinancialYear>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(FinancialYearLoadTask.class);
 
-    private FinancialYearService financialYearService;
-
     @Override
     protected List<FinancialYear> call() throws Exception {
         try {
-
+            FinancialYearService financialYearService = EmcsAppContext.getContext().getBean(FinancialYearService.class);
             List<FinancialYear> list = financialYearService.findAll();
             return list;
         } catch (Exception e) {

@@ -26,7 +26,7 @@ import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateByProductLoadTask;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.dto.MemberCreditLimit;
+import com.eipl.amcs.master.operation.model.MemberCreditLimit;
 import com.eipl.amcs.master.operation.task.CustomerByIdLoadTask;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.master.operation.task.MemberCreditLimitLoadTask;

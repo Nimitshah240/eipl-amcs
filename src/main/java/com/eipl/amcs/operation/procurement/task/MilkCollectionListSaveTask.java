@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.procurement.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.operation.dto.MemberDto;
+import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;

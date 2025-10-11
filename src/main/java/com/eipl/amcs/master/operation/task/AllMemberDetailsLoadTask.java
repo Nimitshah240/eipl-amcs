@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.operation.task;
 
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.service.MemberService;
 import javafx.concurrent.Task;
@@ -15,11 +16,10 @@ public class AllMemberDetailsLoadTask extends Task<List<MemberDetail>> {
     public AllMemberDetailsLoadTask() {
     }
 
-    private MemberService service;
-
     @Override
     protected List<MemberDetail> call() throws Exception {
         try {
+            MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
             List<MemberDetail> list = service.findAllMemberDetails();
             if (list == null || list.isEmpty())
                 return null;

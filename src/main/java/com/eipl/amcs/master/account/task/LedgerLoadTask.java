@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.account.task;
 
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.service.LedgerService;
 import javafx.concurrent.Task;
@@ -10,12 +11,11 @@ import java.util.List;
 
 public class LedgerLoadTask extends Task<List<Ledger>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LedgerLoadTask.class);
-    private LedgerService ledgerService;
 
     @Override
     protected List<Ledger> call() throws Exception {
         try {
-
+            LedgerService ledgerService = EmcsAppContext.getContext().getBean(LedgerService.class);
             List<Ledger> list = ledgerService.findAllByIsActive();
             return list;
         } catch (Exception e) {

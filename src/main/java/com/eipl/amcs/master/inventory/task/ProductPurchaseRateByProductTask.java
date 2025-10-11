@@ -1,11 +1,13 @@
 package com.eipl.amcs.master.inventory.task;
 
 import com.eipl.amcs.base.service.NextCodeService;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
+import com.eipl.amcs.master.inventory.service.ProductService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +21,6 @@ public class ProductPurchaseRateByProductTask extends Task<ProductPurchaseRate> 
     private final String code;
     private final LocalDate date;
 
-    @Autowired
-    private ProductPurchaseRateService service;
-    @Autowired
-    private NextCodeService nextCodeService;
-    @Autowired
-    private ProductRepository productRepository;
 
     public ProductPurchaseRateByProductTask(String code, LocalDate date) {
         this.code = code;
@@ -34,6 +30,8 @@ public class ProductPurchaseRateByProductTask extends Task<ProductPurchaseRate> 
     @Override
     protected ProductPurchaseRate call() throws Exception {
         try {
+            ProductPurchaseRateService service = EmcsAppContext.getContext().getBean(ProductPurchaseRateService.class);
+            ProductRepository productRepository = EmcsAppContext.getContext().getBean(ProductRepository.class);
 
             Product product = productRepository.findById(code)
                     .orElseThrow(() -> new EntityNotFoundException(Product.class, ""));

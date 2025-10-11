@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.operation.task;
 
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.service.CustomerService;
 import javafx.concurrent.Task;
@@ -15,12 +16,10 @@ public class CustomerByIdLoadTask extends Task<Customer> {
         this.code = code;
     }
 
-    private CustomerService service;
-
     @Override
     protected Customer call() throws Exception {
         try {
-
+            CustomerService service = EmcsAppContext.getContext().getBean(CustomerService.class);
             return service.findByCustomerCode(code);
         } catch (Exception e) {
             LOGGER.error("MemberById fetch", e);
