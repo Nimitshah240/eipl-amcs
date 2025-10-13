@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -59,8 +58,8 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.sql.Date;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -272,7 +271,7 @@ public class GeneralBonusReportController implements MyInitialization {
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.BONUS_SUMMARY, params);
                 JasperViewer.viewReport(print, false);
                 break;
-             case 8:
+            case 8:
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.BONUS, params);
                 JasperViewer.viewReport(print, false);
                 break;
@@ -650,7 +649,7 @@ public class GeneralBonusReportController implements MyInitialization {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
 //                            cell.setCellValue(item.get(columnTitle).toString());
-                            cell.setCellValue((Double) item.get(columnTitle));
+                            cell.setCellValue((Double.parseDouble(item.get(columnTitle).toString())));
                             sheet.autoSizeColumn(cellValueHeading);
                             cell.setCellStyle(style);
                             sum = sum.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -659,7 +658,7 @@ public class GeneralBonusReportController implements MyInitialization {
                         } else if (columnTitle.equalsIgnoreCase("kapat")) {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
-                            cell.setCellValue((Double) item.get(columnTitle));
+                            cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                             sheet.autoSizeColumn(cellValueHeading);
                             cell.setCellStyle(style);
                             sum1 = sum1.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -667,7 +666,7 @@ public class GeneralBonusReportController implements MyInitialization {
                         } else if (columnTitle.equalsIgnoreCase("total_amount")) {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
-                            cell.setCellValue((Double) item.get(columnTitle));
+                            cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                             sheet.autoSizeColumn(cellValueHeading);
                             cell.setCellStyle(style);
                             sum2 = sum2.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -811,7 +810,7 @@ public class GeneralBonusReportController implements MyInitialization {
                             if (columnTitle.equalsIgnoreCase("bonus_amount")) {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
-                                cell.setCellValue((Double) item.get(columnTitle));
+                                cell.setCellValue(Double.parseDouble(String.valueOf(item.get(columnTitle))));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 finalAmount = finalAmount.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -820,14 +819,14 @@ public class GeneralBonusReportController implements MyInitialization {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
                                 if (item.get(columnTitle) != null)
-                                    cell.setCellValue((Double) item.get(columnTitle));
+                                    cell.setCellValue((Double.valueOf(item.get(columnTitle).toString())));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 kapat = kapat.add(new BigDecimal(item.get(columnTitle).toString()));
                             } else if (columnTitle.equalsIgnoreCase("total_amount")) {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
-                                cell.setCellValue((Double) item.get(columnTitle));
+                                cell.setCellValue((Double.valueOf(item.get(columnTitle).toString())));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 totalamount = totalamount.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -969,7 +968,7 @@ public class GeneralBonusReportController implements MyInitialization {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
 //                                cell.setCellValue(item.get(columnTitle).toString());
-                                cell.setCellValue((Double) item.get(columnTitle));
+                                cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 finalAmount = finalAmount.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -979,7 +978,7 @@ public class GeneralBonusReportController implements MyInitialization {
                                 cell = row.createCell(cellValueHeading++);
 //                                cell.setCellValue(item.get(columnTitle).toString());
 //                                if(item.get(columnTitle)!=null){
-                                cell.setCellValue((Double) item.get(columnTitle));
+                                cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 kapat = kapat.add(new BigDecimal(item.get(columnTitle).toString()));
@@ -988,7 +987,7 @@ public class GeneralBonusReportController implements MyInitialization {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
 //                                cell.setCellValue(item.get(columnTitle).toString());
-                                cell.setCellValue((Double) item.get(columnTitle));
+                                cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 totalamount = totalamount.add(new BigDecimal(item.get(columnTitle).toString()));

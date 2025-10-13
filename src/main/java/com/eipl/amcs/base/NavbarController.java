@@ -10,7 +10,7 @@ import com.eipl.amcs.base.task.SentboxSaveTask;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.operation.inventory.dto.ProductDispatch;
+import com.eipl.amcs.operation.inventory.model.ProductDispatch;
 import com.eipl.amcs.operation.inventory.model.ProductDispatchTransaction;
 import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
