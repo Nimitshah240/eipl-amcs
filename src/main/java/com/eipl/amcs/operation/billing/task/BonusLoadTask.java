@@ -5,6 +5,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.model.Bonus;
+import com.eipl.amcs.operation.billing.service.BonusService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -34,16 +35,18 @@ public class BonusLoadTask extends Task<List<Bonus>> {
     @Override
     protected List<Bonus> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loaddata";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("milkType", milkType)
-                    .queryParam("toDate", toDate.toString());
-            ResponseEntity<Bonus[]> response = restTemplate.getForEntity(builder.toUriString(), Bonus[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return Arrays.asList(response.getBody());
+            BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
+            service.loadData(fromDate, toDate,milkType);
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loaddata";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("fromDate", fromDate.toString())
+//                    .queryParam("milkType", milkType)
+//                    .queryParam("toDate", toDate.toString());
+//            ResponseEntity<Bonus[]> response = restTemplate.getForEntity(builder.toUriString(), Bonus[].class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);
         }

@@ -3,6 +3,8 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
+import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -25,13 +27,21 @@ public class MilkDataEntrySaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_SUMMARY_DATA_ENTRY;
-            ResponseEntity<MilkSummaryDataEntry> response = this.update == 0 ?
-                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MilkSummaryDataEntry.class) :
-                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MilkSummaryDataEntry.class);
-            if (response == null || response.getStatusCode() != HttpStatus.CREATED) return null;
-            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
+            MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
+            if(this.update == 0){
+                service.saveMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
+            }else{
+                service.updateMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
+            }
+
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_SUMMARY_DATA_ENTRY;
+//            ResponseEntity<MilkSummaryDataEntry> response = this.update == 0 ?
+//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MilkSummaryDataEntry.class) :
+//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MilkSummaryDataEntry.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.CREATED) return null;
+//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

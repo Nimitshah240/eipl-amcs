@@ -4,8 +4,10 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.operation.billing.model.MemberBill;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
+import com.eipl.amcs.operation.billing.service.MemberBillService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -38,28 +40,39 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
     @Override
     protected List<MemberBill> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            SocietyPaymentCycleService paymentCycleService = EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
+            MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             if (generate == 0) {
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/fetchBill";
-                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                        .queryParam("paymentCycleCode", paymentCycle.getCode());
-                ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
-                if (response == null || response.getStatusCode() != HttpStatus.OK)
-                    return null;
-                return Arrays.asList(response.getBody());
-            } else {
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/bill";
-                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                        .queryParam("paymentCycleCode", paymentCycle.getCode())
-                        .queryParam("societyCode", society.getCode())
-                        .queryParam("fromDate", fromDate.toString())
-                        .queryParam("toDate", toDate.toString())
-                        .queryParam("generate", generate);
-                ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
-                if (response == null || response.getStatusCode() != HttpStatus.OK)
-                    return null;
-                return Arrays.asList(response.getBody());
+                paymentCycleService.findById(paymentCycle.getCode());
+                service.fetchTableData(paymentCycle);
+            }else{
+                paymentCycleService.findById(paymentCycle.getCode());
+                SocietyPaymentCycle prevPaymentCycle = paymentCycleService.fetchCurrentPaymentCycle(paymentCycle.getFromDate().minusDays(3), null);
+                service.findMemberBill(society.getCode(), paymentCycle, prevPaymentCycle);
             }
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            if (generate == 0) {
+//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/fetchBill";
+//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                        .queryParam("paymentCycleCode", paymentCycle.getCode());
+//                ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
+//                if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                    return null;
+//                return Arrays.asList(response.getBody());
+//            } else {
+//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/bill";
+//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                        .queryParam("paymentCycleCode", paymentCycle.getCode())
+//                        .queryParam("societyCode", society.getCode())
+//                        .queryParam("fromDate", fromDate.toString())
+//                        .queryParam("toDate", toDate.toString())
+//                        .queryParam("generate", generate);
+//                ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
+//                if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                    return null;
+//                return Arrays.asList(response.getBody());
+//            }
         } catch (Exception e) {
             LOGGER.error("Memberbill fetch", e);
         }

@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.operation.billing.model.MemberBillTransaction;
+import com.eipl.amcs.operation.billing.service.MemberBillService;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -29,12 +30,15 @@ public class MemberBillTransactionSaveTask extends Task<List<MemberBillTransacti
     @Override
     protected List<MemberBillTransaction> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING+"/savetrans";
-            ResponseEntity<MemberBillTransaction[]> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberBillTransaction[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-                return null;
-            return Arrays.asList(response.getBody());
+            MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
+            service.saveTrans(dto);
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING+"/savetrans";
+//            ResponseEntity<MemberBillTransaction[]> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberBillTransaction[].class);
+//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+//                return null;
+//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }
