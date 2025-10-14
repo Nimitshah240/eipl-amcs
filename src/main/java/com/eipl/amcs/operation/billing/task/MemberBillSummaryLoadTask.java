@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.billing.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.operation.billing.model.BonusSummary;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.billing.service.MemberBillService;
 import com.eipl.amcs.utils.AppConstant;
@@ -24,7 +25,7 @@ public class MemberBillSummaryLoadTask extends Task<List<MemberBillSummary>> {
         try {
 
             MemberBillService service =  EmcsAppContext.getContext().getBean(MemberBillService.class);
-            service.findMemberBillSummaryBetWeen(MainApp.getFinancialYear().getStartDate(),
+            List<MemberBillSummary> summaryList = service.findMemberBillSummaryBetWeen(MainApp.getFinancialYear().getStartDate(),
                     MainApp.getFinancialYear().getEndDate());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
@@ -36,6 +37,7 @@ public class MemberBillSummaryLoadTask extends Task<List<MemberBillSummary>> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return Arrays.asList(response.getBody());
+             return summaryList;
         } catch (Exception e) {
             LOGGER.error("Memberbill summary fetch", e);
         }

@@ -39,7 +39,7 @@ public class MemberWiseBonusListLoadTask extends Task<List<Map<String,Object>>> 
     protected List<Map<String,Object>>  call() throws Exception {
         try {
             BonusService service =  EmcsAppContext.getContext().getBean(BonusService.class);
-            service.loadDataBonusSummary(fromDate, toDate);
+            List<Map<String,Object>> loadDataBonusSummaryResult = service.loadDataBonusSummary(fromDate, toDate);
 //
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loadbonussummary";
@@ -51,6 +51,7 @@ public class MemberWiseBonusListLoadTask extends Task<List<Map<String,Object>>> 
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return Arrays.asList(response.getBody());
+            return loadDataBonusSummaryResult;
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);
         }

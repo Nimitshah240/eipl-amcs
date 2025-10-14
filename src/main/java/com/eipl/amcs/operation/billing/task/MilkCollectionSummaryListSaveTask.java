@@ -28,15 +28,13 @@ public class MilkCollectionSummaryListSaveTask extends Task<List<CollectionImpor
     protected List<CollectionImportDto> call() throws Exception {
         try {
 
-            MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
-            service.importCollectionSummaryData(dtoList, CommonUtil.setIdentityHeader());
+            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_SUMMARY_DATA_ENTRY + "/import";
+            ResponseEntity<CollectionImportDto[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), CollectionImportDto[].class);
+            if (response == null || response.getStatusCode() != HttpStatus.OK)
+                return null;
+            return Arrays.asList(response.getBody());
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_SUMMARY_DATA_ENTRY + "/import";
-//            ResponseEntity<CollectionImportDto[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), CollectionImportDto[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

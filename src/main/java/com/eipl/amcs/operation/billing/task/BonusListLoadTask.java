@@ -30,7 +30,7 @@ public class BonusListLoadTask extends Task<BonusDto> {
     protected BonusDto call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            service.findBySummary(code);
+            BonusDto bonus = service.findBySummary(code);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS;
 //            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
@@ -39,6 +39,7 @@ public class BonusListLoadTask extends Task<BonusDto> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return response.getBody();
+            return bonus;
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);
         }

@@ -30,7 +30,7 @@ public class MemberBillDisburseLoadTask extends Task<Object> {
             SocietyPaymentCycle paymentCycle = dto.getPaymentCycle();
             List<String> memberList = dto.getMemberCodeList();
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
-            service.disburse(paymentCycle, memberList, CommonUtil.setIdentityHeader());
+            Object response = service.disburse(paymentCycle, memberList, CommonUtil.setIdentityHeader());
 //
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING +"/disburse";
@@ -39,6 +39,7 @@ public class MemberBillDisburseLoadTask extends Task<Object> {
 //            if (response == null)
 //                return null;
 //            return response.getBody();
+            return response;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

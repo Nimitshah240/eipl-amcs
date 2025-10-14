@@ -42,13 +42,13 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
         try {
             SocietyPaymentCycleService paymentCycleService = EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
+            List<MemberBill> memberListResult;
             if (generate == 0) {
-                paymentCycleService.findById(paymentCycle.getCode());
-                service.fetchTableData(paymentCycle);
+                memberListResult = service.fetchTableData(paymentCycle);
             }else{
                 paymentCycleService.findById(paymentCycle.getCode());
                 SocietyPaymentCycle prevPaymentCycle = paymentCycleService.fetchCurrentPaymentCycle(paymentCycle.getFromDate().minusDays(3), null);
-                service.findMemberBill(society.getCode(), paymentCycle, prevPaymentCycle);
+                memberListResult = service.findMemberBill(society.getCode(), paymentCycle, prevPaymentCycle);
             }
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
@@ -73,6 +73,7 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
 //                    return null;
 //                return Arrays.asList(response.getBody());
 //            }
+            return memberListResult;
         } catch (Exception e) {
             LOGGER.error("Memberbill fetch", e);
         }

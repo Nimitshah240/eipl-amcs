@@ -29,13 +29,14 @@ public class BonusEditTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            service.editDto(CommonUtil.setIdentityHeader(),dto);
+            BonusDto updatedDto =  service.editDto(CommonUtil.setIdentityHeader(),dto);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/edit";
 //            ResponseEntity<BonusDto> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), BonusDto.class);
 //            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
 //                return null;
 //            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
+            return updatedDto;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

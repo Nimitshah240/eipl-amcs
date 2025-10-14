@@ -27,11 +27,13 @@ public class MilkDataEntrySaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
+
+            MilkSummaryDataEntry dtoResult;
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             if(this.update == 0){
-                service.saveMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
+                dtoResult = service.saveMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
             }else{
-                service.updateMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
+                dtoResult =  service.updateMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
             }
 
 
@@ -42,6 +44,7 @@ public class MilkDataEntrySaveTask extends Task<Object> {
 //                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MilkSummaryDataEntry.class);
 //            if (response == null || response.getStatusCode() != HttpStatus.CREATED) return null;
 //            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
+            return dtoResult;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

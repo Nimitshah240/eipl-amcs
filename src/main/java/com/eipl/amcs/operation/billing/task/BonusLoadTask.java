@@ -36,7 +36,8 @@ public class BonusLoadTask extends Task<List<Bonus>> {
     protected List<Bonus> call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            service.loadData(fromDate, toDate,milkType);
+
+            List<Bonus> listBonus = service.loadData(fromDate, toDate, milkType);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loaddata";
 //            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
@@ -47,6 +48,7 @@ public class BonusLoadTask extends Task<List<Bonus>> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return Arrays.asList(response.getBody());
+            return listBonus;
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);
         }

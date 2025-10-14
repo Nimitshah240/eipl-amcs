@@ -6,6 +6,7 @@ import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.operation.billing.model.MemberBill;
+import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.billing.service.MemberBillService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -31,19 +32,16 @@ public class CheckMemberBillLoadTask extends Task<List<MemberBill>> {
     @Override
     protected List<MemberBill> call() throws Exception {
         try {
-            SocietyPaymentCycleService paymentCycleService = EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
-            MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
-            paymentCycleService.findById( paymentCycle.getCode());
-            service.checkTableData(paymentCycle);
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/checkBill";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("paymentCycleCode", paymentCycle.getCode());
-//            ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
+            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/checkBill";
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+                    .queryParam("paymentCycleCode", paymentCycle.getCode());
+            ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
+            if (response == null || response.getStatusCode() != HttpStatus.OK)
+                return null;
+            return Arrays.asList(response.getBody());
+
         } catch (Exception e) {
             LOGGER.error("Memberbill fetch", e);
         }

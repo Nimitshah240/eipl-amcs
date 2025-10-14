@@ -31,7 +31,7 @@ public class MemberBillTransactionSaveTask extends Task<List<MemberBillTransacti
     protected List<MemberBillTransaction> call() throws Exception {
         try {
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
-            service.saveTrans(dto);
+            List<MemberBillTransaction> memberBillTxnList = service.saveTrans(dto);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING+"/savetrans";
@@ -39,6 +39,7 @@ public class MemberBillTransactionSaveTask extends Task<List<MemberBillTransacti
 //            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
 //                return null;
 //            return Arrays.asList(response.getBody());
+            return memberBillTxnList;
         } catch (Exception e) {
             e.printStackTrace();
         }

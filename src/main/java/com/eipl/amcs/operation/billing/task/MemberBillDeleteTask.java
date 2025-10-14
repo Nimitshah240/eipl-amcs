@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.service.MemberService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpMethod;
@@ -24,7 +25,7 @@ public class MemberBillDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
-            service.findByMemberCode(code);
+            service.delete(code, CommonUtil.setIdentityHeader());
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/{code}";
 //            Map<String, Object> uriVariables = new HashMap<>();
@@ -33,7 +34,7 @@ public class MemberBillDeleteTask extends Task<Boolean> {
 //            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
-//            return true;
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

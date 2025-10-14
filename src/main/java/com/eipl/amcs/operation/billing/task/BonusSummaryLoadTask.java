@@ -23,7 +23,7 @@ public class BonusSummaryLoadTask extends Task<List<BonusSummary>> {
     protected List<BonusSummary> call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            service.findBonusSummaryBetWeen();
+            List<BonusSummary> summaryList = service.findBonusSummaryBetWeen();
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/summary";
@@ -32,6 +32,7 @@ public class BonusSummaryLoadTask extends Task<List<BonusSummary>> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return Arrays.asList(response.getBody());
+            return summaryList;
         } catch (Exception e) {
             LOGGER.error("Memberbill summary fetch", e);
         }

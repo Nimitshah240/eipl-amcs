@@ -27,25 +27,17 @@ public class MemberBillSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
 
-            if(this.update == 0){
-                service.save(dto, CommonUtil.setIdentityHeader());
-            }else{
-                service.update(dto, CommonUtil.setIdentityHeader());
-            }
+            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER;
+            ResponseEntity<MemberDto> response = this.update == 0 ?
+                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MemberDto.class) :
+                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberDto.class);
 
+            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+                return null;
+            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
 
-//
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER;
-//            ResponseEntity<MemberDto> response = this.update == 0 ?
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MemberDto.class) :
-//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberDto.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

@@ -17,25 +17,32 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 public class MilkSummaryDataEntryTask extends Task<List<MilkCollection>> {
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
+
+    private final String fromDateStr;
+    private final String toDateStr;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkSummaryDataEntryTask.class);
 
-    public MilkSummaryDataEntryTask(LocalDateTime fromDate, LocalDateTime toDate) {
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+    public MilkSummaryDataEntryTask(String fromDateStr, String toDateStr) {
+        this.fromDateStr = fromDateStr;
+        this.toDateStr = toDateStr;
     }
 
     @Override
     protected List<MilkCollection> call() throws Exception {
         try {
+            LocalDateTime fromDate = LocalDateTime.parse(fromDateStr, DATE_TIME_FMT);
+            LocalDateTime toDate = LocalDateTime.parse(toDateStr, DATE_TIME_FMT);
+
             MilkCollectionService service =  EmcsAppContext.getContext().getBean(MilkCollectionService.class);
-            service.findAllBetween(fromDate, toDate);
+            List<MilkCollection> collectionResultList = service.findAllBetween(fromDate, toDate);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION;
@@ -48,6 +55,7 @@ public class MilkSummaryDataEntryTask extends Task<List<MilkCollection>> {
 //                return null;
 //            LOGGER.info("MilkSummaryDataEntry fetched: {}", response.getBody().length);
 //            return Arrays.asList(response.getBody());
+            return collectionResultList;
         } catch (Exception e) {
             LOGGER.error("MilkSummaryDataEntry fetch", e);
         }

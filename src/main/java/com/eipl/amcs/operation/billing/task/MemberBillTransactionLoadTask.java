@@ -38,7 +38,7 @@ public class MemberBillTransactionLoadTask extends Task<List<MemberBillTransacti
 
             MemberBillService service =  EmcsAppContext.getContext().getBean(MemberBillService.class);
             MemberBill mb = repository.findById(code).get();
-            service.findMemberBillTransaction(mb);
+            List<MemberBillTransaction> memberListResult = service.findMemberBillTransaction(mb);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) +
@@ -51,6 +51,7 @@ public class MemberBillTransactionLoadTask extends Task<List<MemberBillTransacti
 //                return null;
 //            LOGGER.info("Transaction fetched: {}", response.getBody());
 //            return Arrays.asList(response.getBody());
+            return memberListResult;
         } catch (Exception e) {
             LOGGER.error("Transaction fetch", e);
         }

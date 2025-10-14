@@ -39,7 +39,7 @@ public class MemberWiseBonusLoadTask extends Task<Map<String,Object>> {
     protected Map<String,Object> call() throws Exception {
         try {
             BonusService service =  EmcsAppContext.getContext().getBean(BonusService.class);
-            service.loadDataBonus( fromDate, toDate,memberCode);
+            Map<String,Object> loadDataBonusResult = service.loadDataBonus( fromDate, toDate,memberCode);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loadbonus";
@@ -51,6 +51,7 @@ public class MemberWiseBonusLoadTask extends Task<Map<String,Object>> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return response.getBody();
+            return loadDataBonusResult;
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);
         }
