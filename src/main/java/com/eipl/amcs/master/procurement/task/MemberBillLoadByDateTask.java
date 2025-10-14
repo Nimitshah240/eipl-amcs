@@ -1,17 +1,11 @@
 package com.eipl.amcs.master.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.operation.billing.service.MemberBillService;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public class MemberBillLoadByDateTask extends Task<List<MemberBillSummary>> {
@@ -27,15 +21,9 @@ public class MemberBillLoadByDateTask extends Task<List<MemberBillSummary>> {
     @Override
     protected List<MemberBillSummary> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/findByDate";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString());
-            ResponseEntity<MemberBillSummary[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBillSummary[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return Arrays.asList(response.getBody());
+            MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
+            return service.findMemberBillSummaryBetWeenFromDateAndToDate(fromDate, toDate);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
