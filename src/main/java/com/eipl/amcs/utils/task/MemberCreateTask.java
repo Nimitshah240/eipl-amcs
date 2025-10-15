@@ -6,23 +6,25 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.global.service.GenderService;
+import com.eipl.amcs.master.global.service.MemberTypeService;
+import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.master.operation.dto.MemberImportDto;
+import com.eipl.amcs.master.operation.repository.MemberRepository;
+import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.master.org.service.SocietyService;
+import com.eipl.amcs.master.org.service.UnionService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MemberCreateTask extends Task<Boolean> {
@@ -51,78 +53,63 @@ public class MemberCreateTask extends Task<Boolean> {
             Society s = new Society();
             s.setCode(this.societyCode);
             MainApp.identityDto.setSociety(s);
+            MemberService memberService = EmcsAppContext.getContext().getBean(MemberService.class);
 
-//            Union union = new Union();
-//            union.setCode("101");
-//            MainApp.identityDto.setUnion(union);
-            RestTemplate restTemplate1 = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url1 = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.SOCIETY;
-            ResponseEntity<Society[]> response1 = restTemplate1.getForEntity(url1, Society[].class);
-            if (response1.getStatusCode() != HttpStatus.OK)
+
+            SocietyService service = EmcsAppContext.getContext().getBean(SocietyService.class);
+            List<Society> list = service.findAll();
+
+            if (list == null || list.isEmpty())
                 return null;
 
-            List<Society> list = Arrays.asList(response1.getBody());
             for (Society society : list) {
                 if (society.getCode().equals(this.societyCode)) {
                     MainApp.identityDto.setSociety(society);
                 }
             }
-            RestTemplate restTemplateUnion = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String unionUrl = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.UNION;
-            ResponseEntity<Union[]> unionResponse = restTemplateUnion.getForEntity(unionUrl, Union[].class);
 
-            if (unionResponse.getStatusCode() == HttpStatus.OK && unionResponse.getBody() != null) {
-                List<Union> unions = Arrays.asList(unionResponse.getBody());
-
-                if (!unions.isEmpty()) {
-                    Union selectedUnion = unions.get(0);
-                    MainApp.identityDto.setUnion(selectedUnion);
-                }
+            UnionService unionService = EmcsAppContext.getContext().getBean(UnionService.class);
+            List<Union> unions = unionService.findAll();
+            if (unions != null || !unions.isEmpty()) {
+                Union selectedUnion = unions.get(0);
+                MainApp.identityDto.setUnion(selectedUnion);
             }
 
-
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + "/members/count";
-            ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
-            if (response.getStatusCode() != HttpStatus.OK)
-                return false;
-            Long count = response.getBody();
-            if (count.longValue() > 0)
+            MemberRepository repository = EmcsAppContext.getContext().getBean(MemberRepository.class);
+            long count = repository.count();
+            if (count > 0)
                 return true;
 
             listDto = new ArrayList<>();
 
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.MILK_TYPE;
-            ResponseEntity<MilkType[]> response2 = restTemplate.getForEntity(url, MilkType[].class);
-            MilkType[] milkTypeArr = response2.getBody();
+            MilkTypeService milkTypeService = EmcsAppContext.getContext().getBean(MilkTypeService.class);
+            List<MilkType> milkTypeList = milkTypeService.findAll();
 
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.MEMBERTYPE;
-            ResponseEntity<MemberType[]> response3 = restTemplate.getForEntity(url, MemberType[].class);
-            MemberType[] memberTypeArr = response3.getBody();
 
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.GENDER;
-            ResponseEntity<Gender[]> response4 = restTemplate.getForEntity(url, Gender[].class);
-            Gender[] genderArr = response4.getBody();
+            MemberTypeService memberTypeService = EmcsAppContext.getContext().getBean(MemberTypeService.class);
+            List<MemberType> memberTypeList = memberTypeService.findAll();
+
+            GenderService genderService = EmcsAppContext.getContext().getBean(GenderService.class);
+            List<Gender> genderList = genderService.findAll();
 
             updateMessage("Preparing members...");
-            for (MilkType milkType : milkTypeArr) {
+            for (MilkType milkType : milkTypeList) {
                 if (milkType.getName().equalsIgnoreCase("cow")) {
-                    prepareMembers(milkType, memberTypeArr[0], genderArr[0], cowMin, cowMax);
+                    prepareMembers(milkType, memberTypeList.get(0), genderList.get(0), cowMin, cowMax);
                 } else if (milkType.getName().equalsIgnoreCase("buffalo")) {
-                    prepareMembers(milkType, memberTypeArr[0], genderArr[0], buffMin, buffMax);
+                    prepareMembers(milkType, memberTypeList.get(0), genderList.get(0), buffMin, buffMax);
                 }
             }
             if (sampleNo > 0)
-                prepareMembers(milkTypeArr[0], memberTypeArr[0], genderArr[0], sampleNo, sampleNo);
+                prepareMembers(milkTypeList.get(0), memberTypeList.get(0), genderList.get(0), sampleNo, sampleNo);
 
             List<List<MemberDto>> listTemp = ListUtils.partition(listDto, AppConstant.MIGRATION_LIST_SIZE);
             url = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.MEMBER + "/import";
             int current = 1;
             for (List<MemberDto> memberDtos : listTemp) {
                 try {
-                    ResponseEntity<MemberImportDto[]> response5 = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(memberDtos), MemberImportDto[].class);
-
-                    if (response5 == null || response5.getStatusCode() != HttpStatus.OK)
+                    List<MemberImportDto> memberImportDtos = memberService.importMembers(memberDtos, CommonUtil.setIdentityHeader());
+                    if (memberImportDtos == null || memberImportDtos.isEmpty())
                         continue;
                     updateMessage("Processing " + current * AppConstant.MIGRATION_LIST_SIZE + " of " + listTemp.size() * AppConstant.MIGRATION_LIST_SIZE);
                     current++;

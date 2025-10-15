@@ -84,22 +84,7 @@ public class SplashController implements MyInitialization {
 
     private void checkHealth() {
         lbl.setText("Please wait...");
-        var task = new HealthCheckTask();
-        task.setOnSucceeded(e -> {
-            try {
-                String resp = task.get();
-                if (resp == null || !"OK".equalsIgnoreCase(resp))
-                    lbl.setText("Could not connect to server!");
-                else
-                    initializeIdentity();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        task.setOnFailed(e -> {
-            lbl.setText("Could not connect to server!");
-        });
-        new Thread(task).start();
+        initializeIdentity();
     }
 
     private void initializeIdentity() {

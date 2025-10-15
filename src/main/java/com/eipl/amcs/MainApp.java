@@ -96,7 +96,7 @@ public class MainApp extends Application {
 
     public static void main(String[] args) {
         try {
-            context = SpringApplication.run(AppConfig.class, args);
+//            context = SpringApplication.run(AppConfig.class, args);
             launch(args);
         } catch (Exception e) {
             throw new RuntimeException(e);

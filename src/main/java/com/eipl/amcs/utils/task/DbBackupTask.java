@@ -2,11 +2,11 @@ package com.eipl.amcs.utils.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.sync.producer.BroadcastedService;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommandExec;
 import com.eipl.amcs.utils.ZipUtil;
 import javafx.concurrent.Task;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,12 +34,9 @@ public class DbBackupTask extends Task<Boolean> {
             requestFactory.setReadTimeout(timeout);
             restTemplate.setRequestFactory(requestFactory);
 
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.IDENTITY_CALL + "/sendBroadcastedAllInOne";
-            try {
-                ResponseEntity<Void> response = restTemplate.getForEntity(url, Void.class);
-            } catch (Exception ee) {
-                ee.printStackTrace();
-            }
+            BroadcastedService broadcastedService = EmcsAppContext.getContext().getBean(BroadcastedService.class);
+            broadcastedService.sendBroadcastedAll();
+
 
             String filename;
             if (LocalDateTime.now().getHour() < 12) {

@@ -1,17 +1,12 @@
 package com.eipl.amcs.setting.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.setting.model.GeneralConfig;
+import com.eipl.amcs.setting.service.GeneralConfigService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -25,14 +20,12 @@ public class GeneralConfigSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, "http://localhost:8080/eipl-amcs/") + AppConstant.UrlPath.GENERAL_CONFIG;
 
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(generalConfigList), String.class);
-
-            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+            GeneralConfigService service = EmcsAppContext.getContext().getBean(GeneralConfigService.class);
+            List<GeneralConfig> list = service.save(generalConfigList, CommonUtil.setIdentityHeader());
+            if (list == null || list.isEmpty())
                 return null;
-            return response.getBody();
+            return list;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

@@ -1,8 +1,14 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.auth.dto.Permission;
+import com.eipl.amcs.auth.model.Permission;
 import com.eipl.amcs.auth.dto.PermissionComparator;
+import com.eipl.amcs.auth.model.RolePermission;
+import com.eipl.amcs.auth.model.User;
+import com.eipl.amcs.auth.model.UserRole;
+import com.eipl.amcs.auth.service.RolePermissionService;
+import com.eipl.amcs.auth.service.UserRoleService;
+import com.eipl.amcs.auth.service.UserService;
 import com.eipl.amcs.base.model.*;
 import com.eipl.amcs.base.task.FtpDetailsCheckTask;
 import com.eipl.amcs.base.task.SentboxSaveTask;
@@ -64,6 +70,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class NavbarController implements MyInitialization {
 
@@ -138,7 +145,7 @@ public class NavbarController implements MyInitialization {
     private void saveSentbox(List<Subscribed> list) {
         SentboxSaveTask task = new SentboxSaveTask(list, (short) 0);
         task.setOnSucceeded(e -> {
-     });
+        });
         new Thread(task).start();
     }
 
@@ -646,28 +653,42 @@ public class NavbarController implements MyInitialization {
         @Override
         protected Short call() throws Exception {
             try {
-                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.AUTH + "/permission/{username}";
-                Map<String, Object> uriVariables = new HashMap<>();
-                uriVariables.put("username", MainApp.getUser().getUsername());
-                ResponseEntity<Permission[]> response = restTemplate.getForEntity(url, Permission[].class, uriVariables);
-                if (response.getBody() == null)
-                    return 0;
+//                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.AUTH + "/permission/{username}";
+//                Map<String, Object> uriVariables = new HashMap<>();
+//                uriVariables.put("username", MainApp.getUser().getUsername());
+//                ResponseEntity<Permission[]> response = restTemplate.getForEntity(url, Permission[].class, uriVariables);
 
-                if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
-                    return 500;
-                if (response.getStatusCode() == HttpStatus.NOT_FOUND)
-                    return 404;
+                UserService service = EmcsAppContext.getContext().getBean(UserService.class);
+                UserRoleService userRoleService = EmcsAppContext.getContext().getBean(UserRoleService.class);
+                RolePermissionService rolePermissionService = EmcsAppContext.getContext().getBean(RolePermissionService.class);
+                String username = MainApp.getUser().getUsername();
+                Optional<User> user = service.findByUsername(username);
+                if (user.isEmpty()) {
+                    return null;
+                }
 
-                LOGGER.info("Permission fetched: {}", response.getBody().length);
+                List<UserRole> userRoles = userRoleService.findAllByUser(user.get());
+                if (userRoles == null || userRoles.isEmpty()) {
+                    return null;
+                }
 
-                permissions = Arrays.asList(response.getBody());
+                List<RolePermission> rolePermissions = rolePermissionService.findAllRolePermissionByRoles(
+                        userRoles.stream().map(m -> m.getRole()).collect(Collectors.toList()));
+                if (userRoles.isEmpty()) {
+                    return null;
+                }
+
+               permissions = rolePermissions.stream().map(m -> m.getPermission())
+                        .collect(Collectors.toList());
+
                 permissions.sort(Comparator.comparing(Permission::getCode));
+
                 menu = new TreeMap<>(new PermissionComparator());
 
                 permissions.forEach(r -> {
                     if (r.getType() != null && r.getType().equals("MENU")) {
-                        if (r.getParentCode() == null || r.getParentCode().intValue() == 0) {
+                        if (r.getParentCode() == null || r.getParentCode() == 0) {
                             menu.put(r, new TreeMap<>(new PermissionComparator()));
                         }
                     }

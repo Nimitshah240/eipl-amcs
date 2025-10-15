@@ -2,8 +2,8 @@ package com.eipl.amcs.operation.procurement.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.Notification;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
@@ -20,6 +20,8 @@ import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import com.eipl.amcs.operation.procurement.dto.*;
+import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
+import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import com.eipl.amcs.utils.AppConstant;
@@ -70,9 +72,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 
 import static com.eipl.amcs.MainApp.manualCollectionRangeList;
 import static com.eipl.amcs.utils.CommonUtils.MY_DECIMAL32;

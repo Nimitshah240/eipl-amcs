@@ -2,6 +2,7 @@ package com.eipl.amcs.utils.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.sync.producer.BroadcastedService;
 import com.eipl.amcs.utils.AppConstant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -34,7 +35,8 @@ public class BroadcastedGroupDataTask extends Task<Map<String, Integer>> {
                 return null;
             }
 
-            String json = response.getBody();
+            BroadcastedService broadcastedService = EmcsAppContext.getContext().getBean(BroadcastedService.class);
+            String json = broadcastedService.getGroupedByTableName().toString();
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
