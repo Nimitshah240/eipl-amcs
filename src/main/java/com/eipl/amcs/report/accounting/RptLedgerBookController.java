@@ -3,19 +3,10 @@ package com.eipl.amcs.report.accounting;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.account.converter.LedgerConvertor;
-import com.eipl.amcs.master.account.converter.SubLedgerConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.account.task.SubLedgerLoadTask;
 import com.eipl.amcs.master.operation.convertor.LedgerCellFactory;
-import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
-import com.eipl.amcs.master.operation.convertor.MemberConvertor;
-import com.eipl.amcs.master.operation.convertor.SubLedgerCellFactory;
-import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -82,10 +73,10 @@ public class RptLedgerBookController implements MyInitialization {
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        if(MainApp.locale.equals("en")){
+        if (MainApp.locale.equals("en")) {
             params.put("p_society_name", MainApp.identityDto.getSociety().getName());
-        }else{
-            params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName(): MainApp.identityDto.getSociety().getNameLocal());
+        } else {
+            params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
         }
         params.put("p_ledger_code", cboxLedgerName.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));

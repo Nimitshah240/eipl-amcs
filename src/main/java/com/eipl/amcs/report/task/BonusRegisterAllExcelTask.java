@@ -1,19 +1,12 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.operation.billing.repository.BonusRepository;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class BonusRegisterAllExcelTask extends Task<List<Map<String, Object>>> {
     private String societyCode;
@@ -45,22 +38,12 @@ public class BonusRegisterAllExcelTask extends Task<List<Map<String, Object>>> {
     @Override
     protected List<Map<String, Object>> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS_REPORT_ALL;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("societyCode", societyCode)
-                    .queryParam("memberCode", memberCode)
-                    .queryParam("paymentmode", paymentMode)
-                    .queryParam("bankcode", bankCode)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString())
-                    .queryParam("bonusType", bonusType)
-                    .queryParam("locale", locale);
+            BonusRepository bonusRepository = EmcsAppContext.getContext().getBean(BonusRepository.class);
+            List<Map<String, Object>> list = bonusRepository.findAllExcel(societyCode, fromDate, toDate, memberCode, locale, bankCode, paymentMode, bonusType);
 
-            ResponseEntity<Map[]> response = restTemplate.getForEntity(builder.toUriString(), Map[].class);
-            if (response.getStatusCode() != HttpStatus.OK)
+            if (list == null || list.isEmpty())
                 return null;
-            return Arrays.asList(Objects.requireNonNull(response.getBody()));
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }

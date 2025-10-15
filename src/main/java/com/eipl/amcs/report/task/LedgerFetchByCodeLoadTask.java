@@ -26,7 +26,7 @@ public class LedgerFetchByCodeLoadTask extends Task<Ledger> {
     protected Ledger call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER+"/ledger_fetch_by_code";
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER + "/ledger_fetch_by_code";
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
                     .queryParam("ledgerCode", ledgerCode);
             ResponseEntity<Ledger> response = restTemplate.getForEntity(builder.toUriString(), Ledger.class);

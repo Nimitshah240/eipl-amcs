@@ -12,7 +12,7 @@ import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MemberTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.dto.MemberDto;
+import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.task.MemberListSaveTask;
 import com.eipl.amcs.setting.task.SkyWayVersionOneMemberFileProcess;

@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.dto.MemberDetail;
+import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.task.AllMemberDetailsLoadTask;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.share.model.Share;

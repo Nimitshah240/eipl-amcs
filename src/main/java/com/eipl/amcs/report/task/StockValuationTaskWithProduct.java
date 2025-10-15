@@ -1,17 +1,13 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.report.dto.ProductStockValuation;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StockValuationTaskWithProduct extends Task<List<ProductStockValuation>> {
@@ -19,6 +15,7 @@ public class StockValuationTaskWithProduct extends Task<List<ProductStockValuati
     private LocalDate asOnDate;
     private String locale;
     private String productCode;
+    private LedgerRepository ledgerRepository;
 
 
     public StockValuationTaskWithProduct(String societyCode, LocalDate asOnDate, String locale, String productCode) {
@@ -36,17 +33,44 @@ public class StockValuationTaskWithProduct extends Task<List<ProductStockValuati
     @Override
     protected List<ProductStockValuation> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.STOCK_VALUATION_WITH_PRODUCT;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("societyCode", societyCode).queryParam("fromDate", asOnDate.toString()).queryParam("locale", locale).queryParam("productCode", productCode);
-
-
-            ResponseEntity<ProductStockValuation[]> response = restTemplate.getForEntity(builder.toUriString(), ProductStockValuation[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK) return null;
-            return Arrays.asList(response.getBody());
+            ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
+            List<ProductStockValuation> list = fetchStockValuationWithProduct(Date.valueOf(asOnDate), societyCode, locale, productCode);
+            if (list.isEmpty())
+                return null;
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    private List<ProductStockValuation> fetchStockValuationWithProduct(Date endDate, String societyCode, String locale, String productCode) {
+        List<ProductStockValuation> list = new ArrayList<>();
+        List<Object[]> listCurrentStock = ledgerRepository.fetchCurrentStockByProductWithProduct(endDate, societyCode, locale, productCode);
+        listCurrentStock.forEach(item -> {
+            double stockValue = 0;
+            List<Object[]> listReceipt = ledgerRepository.fetchProductReceipt((String) item[0], endDate);
+            if (listReceipt != null && !listReceipt.isEmpty()) {
+
+                double stock = Double.parseDouble(item[2].toString());
+                for (Object[] arrReceipt : listReceipt) {
+                    if (stock <= 0) {
+                        break;
+                    }
+                    if (Double.parseDouble(arrReceipt[1].toString()) >= stock) {
+                        stockValue = stockValue + (stock * Double.parseDouble(arrReceipt[1].toString()));
+                        break;
+                    } else {
+                        stockValue = Double.parseDouble(arrReceipt[1].toString()) * Double.parseDouble(arrReceipt[0].toString());
+                        stock -= Double.parseDouble(arrReceipt[1].toString());
+                    }
+                }
+                list.add(new ProductStockValuation((String) item[0], (String) item[1], Double.parseDouble(item[2].toString()), stockValue, (String) item[3]));
+            } else {
+                list.add(new ProductStockValuation((String) item[0], (String) item[1], 0, 0, (String) item[3]));
+            }
+        });
+        return list;
+    }
+
 }

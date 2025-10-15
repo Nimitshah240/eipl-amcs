@@ -8,7 +8,6 @@ import com.eipl.amcs.report.task.ProfitLossTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.NumberUtil;
-import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,7 +20,6 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +35,7 @@ public class RptBalanceSheetController implements MyInitialization {
     private Button btnGenerate;
 
     @FXML
-    private DatePicker dpFromDate,dpToDate;
+    private DatePicker dpFromDate, dpToDate;
 
     @FXML
     private SwingNode reportNode;
@@ -57,7 +55,7 @@ public class RptBalanceSheetController implements MyInitialization {
     public void initialize(URL location, ResourceBundle resources) {
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
-        btnGenerate.setOnAction(e->{
+        btnGenerate.setOnAction(e -> {
             loadData();
         });
 
@@ -66,6 +64,7 @@ public class RptBalanceSheetController implements MyInitialization {
         });
 
     }
+
     @Override
     public void loadData() {
         BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
@@ -78,13 +77,13 @@ public class RptBalanceSheetController implements MyInitialization {
                 }
                 Map<String, Object> param = new HashMap<>();
                 param.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-                if(MainApp.locale.equals("en")){
+                if (MainApp.locale.equals("en")) {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getName());
-                }else{
-                    param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName(): MainApp.identityDto.getSociety().getNameLocal());
+                } else {
+                    param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
-                 param.put("p_from_date",LocalDate.parse(dpFromDate.getValue().toString()));
-                param.put("p_to_date",LocalDate.parse(dpToDate.getValue().toString()));
+                param.put("p_from_date", LocalDate.parse(dpFromDate.getValue().toString()));
+                param.put("p_to_date", LocalDate.parse(dpToDate.getValue().toString()));
 
 
                 param.put("p_locale", MainApp.locale);
@@ -105,23 +104,21 @@ public class RptBalanceSheetController implements MyInitialization {
                 listBSLiability = list.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
                 if (listBSLiability != null) {
                     if (diff > 0) {
-                        listBSLiability.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff),1));
+                        listBSLiability.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 1));
                     }
                     listBSLiability.add(new LedgerBalance("", "Total", 0, 0,
-                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2),1));
+                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
 
                 }
                 listBSAsset = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
                 if (listBSAsset != null) {
                     if (diff < 0) {
-                        listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff),0));
+                        listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 0));
                     }
                     listBSAsset.add(new LedgerBalance("", "Total", 0, 0,
-                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2),0));
+                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
 
                 }
-
-
 
 
                 param.put("p_liability_side", listBSLiability);

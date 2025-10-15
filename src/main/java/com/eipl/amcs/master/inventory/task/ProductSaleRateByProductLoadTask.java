@@ -1,17 +1,14 @@
 package com.eipl.amcs.master.inventory.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.inventory.repository.ProductRepository;
+import com.eipl.amcs.master.inventory.service.ProductSaleRateService;
+import com.eipl.amcs.master.org.model.Union;
 import javafx.concurrent.Task;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 
@@ -29,16 +26,12 @@ public class ProductSaleRateByProductLoadTask extends Task<ProductSaleRate> {
     @Override
     protected ProductSaleRate call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_SALE_RATE + "/findRate";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("code", code)
-                    .queryParam("date", date.toString());
-            ResponseEntity<ProductSaleRate> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, ProductSaleRate.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            LOGGER.info("ProductSaleRate fetched: {}", response.getBody());
-            return response.getBody();
+            ProductSaleRateService service = EmcsAppContext.getContext().getBean(ProductSaleRateService.class);
+            ProductRepository repository = EmcsAppContext.getContext().getBean(ProductRepository.class);
+
+            ProductSaleRate list = service.findByProduct(repository.findById(code).get(), date);
+            list.setUnion(Hibernate.unproxy(list.getUnion(), Union.class));
+            return list;
         } catch (Exception e) {
             LOGGER.error("ProductSaleRate fetch", e);
         }

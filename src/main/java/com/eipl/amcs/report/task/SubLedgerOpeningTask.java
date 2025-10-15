@@ -2,7 +2,6 @@ package com.eipl.amcs.report.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpStatus;
@@ -46,7 +45,7 @@ public class SubLedgerOpeningTask extends Task<List<Object[]>> {
             ResponseEntity<Object[][]> response = restTemplate.getForEntity(builder.toUriString(), Object[][].class);
             if (response == null || response.getStatusCode() != HttpStatus.OK)
                 return null;
-            return  Arrays.asList(response.getBody());
+            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

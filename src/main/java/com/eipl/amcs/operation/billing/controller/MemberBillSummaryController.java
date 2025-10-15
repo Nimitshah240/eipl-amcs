@@ -48,7 +48,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     @FXML
     private TableColumn<MemberBillSummary, String> colStatus;
     @FXML
-    private Button btnAdd, btnEdit, btnClose, btnPaymentRegister, btnGeneral,btnSearch;
+    private Button btnAdd, btnEdit, btnClose, btnPaymentRegister, btnGeneral, btnSearch;
 
     @FXML
     private RadioButton rbtnCash, rbtnBank;
@@ -158,8 +158,8 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     }
 
 //        else {
-////            if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_ADD"))
-////                throw new UnAuthorizedAccessException();
+    ///            if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_ADD"))
+    ///                throw new UnAuthorizedAccessException();
 //            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BankReportPopup", null, this);
 //        }
 //            Map<String, Object> params = new HashMap<>();
@@ -169,8 +169,6 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
 //            params.put("p_locale", MainApp.locale);
 //            JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_BANK, params);
 //            JasperViewer.viewReport(print, false);
-
-
     @Override
     public void setupTable() {
         try {
@@ -210,7 +208,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
                 }
             });
             new Thread(task).start();
-        }else{
+        } else {
             var task = new MemberBillLoadByDateTask(dpFromDate.getValue(), dpToDate.getValue());
             task.setOnSucceeded(e -> {
                 try {

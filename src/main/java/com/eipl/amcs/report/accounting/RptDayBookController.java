@@ -27,7 +27,7 @@ public class RptDayBookController implements MyInitialization {
     private Button btnGenerate;
 
     @FXML
-    private DatePicker dpFromDate,dpToDate;
+    private DatePicker dpFromDate, dpToDate;
 
     @FXML
     private SwingNode reportNode;
@@ -58,7 +58,7 @@ public class RptDayBookController implements MyInitialization {
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
         params.put("p_locale", MainApp.locale);
-        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_DAY_BOOK, params);;
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_DAY_BOOK, params);
         JasperViewer.viewReport(print, false);
     }
 }

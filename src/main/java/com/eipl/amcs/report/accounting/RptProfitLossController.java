@@ -3,10 +3,7 @@ package com.eipl.amcs.report.accounting;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.report.dto.LedgerBalance;
-import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.report.task.ProfitLossTask;
-import com.eipl.amcs.report.task.StockValuationTask;
-import com.eipl.amcs.report.task.TradingTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.embed.swing.SwingNode;
@@ -17,12 +14,14 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -76,7 +75,7 @@ public class RptProfitLossController implements MyInitialization {
                 if (MainApp.locale.equals("en")) {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getName());
                 } else {
-                    param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName(): MainApp.identityDto.getSociety().getNameLocal());
+                    param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
                 param.put("p_from_date", dpFromDate.getValue());
                 param.put("p_to_date", dpToDate.getValue());

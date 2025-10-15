@@ -1,20 +1,16 @@
 package com.eipl.amcs.operation.inventory.task;
 
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.inventory.task.ProductSaleRateByProductLoadTask;
+import com.eipl.amcs.operation.inventory.service.ProductReceiptService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 public class ProductReceiptDeleteTask extends Task<Boolean> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.eipl.amcs.master.inventory.task.ProductSaleRateByProductLoadTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleRateByProductLoadTask.class);
 
     private final String grnNo;
 
@@ -25,13 +21,8 @@ public class ProductReceiptDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_RECEIPT_MATERIAL + "/delete";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("grnNo", grnNo);
-            ResponseEntity<Void> response = restTemplate.exchange(builder.toUriString(), HttpMethod.DELETE, null, Void.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
+            ProductReceiptService service = EmcsAppContext.getContext().getBean(ProductReceiptService.class);
+            service.delete(grnNo, CommonUtil.setIdentityHeader());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

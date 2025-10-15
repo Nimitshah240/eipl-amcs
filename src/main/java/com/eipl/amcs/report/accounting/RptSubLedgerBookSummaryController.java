@@ -72,9 +72,9 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
 
         cboxType.setOnAction(e -> {
             if (cboxType.getSelectionModel().getSelectedIndex() == 0) {
-                loadData((short) ((short) cboxType.getSelectionModel().getSelectedIndex()));
+                loadData((short) cboxType.getSelectionModel().getSelectedIndex());
             } else {
-                loadData((short) ((short) cboxType.getSelectionModel().getSelectedIndex()));
+                loadData((short) cboxType.getSelectionModel().getSelectedIndex());
             }
         });
 

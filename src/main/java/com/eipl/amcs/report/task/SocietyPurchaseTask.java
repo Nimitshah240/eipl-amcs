@@ -2,7 +2,6 @@ package com.eipl.amcs.report.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.report.dto.DairySaleRegister;
 import com.eipl.amcs.report.dto.SocietyPurchase;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;

@@ -2,8 +2,6 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-
-
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.report.task.StockValuationTask;
@@ -84,7 +82,7 @@ public class RptTradingReportController implements MyInitialization {
                         if (MainApp.locale.equals("en")) {
                             TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getName());
                         } else {
-                            TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName(): MainApp.identityDto.getSociety().getNameLocal());
+                            TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                         }
                         TradingTaskparams.put("p_from_date", dpFromDate.getValue());
                         TradingTaskparams.put("p_to_date", dpToDate.getValue());

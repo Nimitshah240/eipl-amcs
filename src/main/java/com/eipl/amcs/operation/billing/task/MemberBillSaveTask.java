@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.billing.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.operation.dto.MemberDto;
+import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
