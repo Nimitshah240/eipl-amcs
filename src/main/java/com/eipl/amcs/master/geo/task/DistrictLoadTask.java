@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
+import com.eipl.amcs.master.geo.service.DistrictService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -31,21 +32,32 @@ public class DistrictLoadTask extends Task<List<District>> {
     @Override
     protected List<District> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.DISTRICT;
-            ResponseEntity<District[]> response = null;
+         DistrictService service=EmcsAppContext.getContext().getBean(DistrictService.class);
+        List<District> list;
+        if (state == null )
+            list = service.findAll();
+        else
+            list = service.findAll(state.getCode());
+        if (list == null || list.isEmpty())
+            return null;
+        return list;
 
-            if (state != null) {
-                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                        .queryParam("stateCode", state.getCode());
-                response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, District[].class);
-            } else {
-                response = restTemplate.getForEntity(url, District[].class);
-            }
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            LOGGER.info("Districts fetched: {}", response.getBody().length);
-            return Arrays.asList(response.getBody());
+//        try {
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.DISTRICT;
+//            ResponseEntity<District[]> response = null;
+//
+//            if (state != null) {
+//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                        .queryParam("stateCode", state.getCode());
+//                response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, District[].class);
+//            } else {
+//                response = restTemplate.getForEntity(url, District[].class);
+//            }
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            LOGGER.info("Districts fetched: {}", response.getBody().length);
+//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Districts fetch", e);
         }

@@ -9,6 +9,10 @@ import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.service.BankService;
 import com.eipl.amcs.master.org.service.BranchService;
 import com.eipl.amcs.master.org.service.SocietyService;
+import com.eipl.amcs.master.org.task.BankLoadTask;
+import com.eipl.amcs.master.org.task.BranchLoadTask;
+import com.eipl.amcs.master.org.task.SocietyLoadTask;
+import com.eipl.amcs.master.org.task.SocietySaveTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,6 +31,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -50,23 +55,12 @@ public class SocietyController implements MyInitialization {
 
     private Society dto;
 
-    private BankService bankService;
-    private SocietyService societyService;
-    private BranchService branchService;
-
-    public SocietyController() {
-        bankService = context.getBean(BankService.class);
-        societyService = context.getBean(SocietyService.class);
-        branchService = context.getBean(BranchService.class);
-    }
-
     @Override
     public Node getRoot() {
         return root;
     }
-
     private ObservableList<Bank> bankList = FXCollections.observableArrayList();
-    private ObservableList<Branch> branchList = FXCollections.observableArrayList();
+    private ObservableList<Branch> branchList= FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,8 +78,13 @@ public class SocietyController implements MyInitialization {
     }
 
     @Override
+    public void setupComboBox() {
+
+    }
+
+    @Override
     public void setupTable() {
-        try {
+        try{
             tableSociety.setEditable(true);
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
@@ -181,7 +180,8 @@ public class SocietyController implements MyInitialization {
             });
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
             colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
-        } catch (Exception e) {
+        }catch (Exception e) {
+            System.out.println("Society setuptable Exception");
             e.printStackTrace();
         }
     }
@@ -220,45 +220,63 @@ public class SocietyController implements MyInitialization {
     };
 
 
+
+
     public void loadBank() {
-        List<Bank> list = bankService.findAll();
-        if (list != null) {
-            bankList.addAll(list);
-        }
+        var task = new BankLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Bank> list = task.get();
+                if (list != null) {
+                    bankList.addAll(list);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     public void loadBranch() {
-        try {
-            List<Branch> list = branchService.findAll();
-            if (list != null) {
-                branchList.addAll(list);
+        var task = new BranchLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Branch> list = task.get();
+                if (list != null) {
+                    branchList.addAll(list);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Society> list = societyService.findAll();
-            if (list != null) {
-                tableSociety.setItems(FXCollections.observableList(list));
-                dto = list.get(0);
+        var task = new SocietyLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Society> list = task.get();
+                if (list != null) {
+                    tableSociety.setItems(FXCollections.observableList(list));
+                    dto = list.get(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+        new Thread(task).start();
     }
 
 
     @Override
     public void saveData() {
-        try {
-            societyService.save(tableSociety.getItems().get(0));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SocietySaveTask task = new SocietySaveTask(tableSociety.getItems().get(0));
+        task.setOnSucceeded(e -> {
+//            loadData();
+        });
+        new Thread(task).start();
     }
 }
 

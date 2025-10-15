@@ -6,6 +6,8 @@ import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.service.RouteService;
+import com.eipl.amcs.master.org.task.RouteLoadTask;
+import com.eipl.amcs.master.org.task.RouteSaveTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import java.net.URL;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -39,15 +42,9 @@ public class RouteController implements MyInitialization {
     @FXML
     TableColumn<Route, String> colCapacity, colLengthKms;
     @FXML
-    Button btnClose, btnSave;
+    Button btnClose,btnSave;
     @FXML
     private StackPane root;
-
-    private RouteService routeService;
-
-    public RouteController() {
-        routeService = context.getBean(RouteService.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -69,7 +66,7 @@ public class RouteController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try {
+        try{
             tableRoute.setEditable(true);
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
@@ -95,7 +92,7 @@ public class RouteController implements MyInitialization {
                 try {
                     if (e.getNewValue() != null)
                         r.setCapacity(Integer.valueOf(e.getNewValue()));
-                } catch (Exception ex) {
+                }catch (Exception ex){
 
                 }
             });
@@ -106,59 +103,64 @@ public class RouteController implements MyInitialization {
                 try {
                     if (e.getNewValue() != null)
                         r.setLengthKms(Integer.valueOf(e.getNewValue()));
-                } catch (Exception ex) {
+                } catch (Exception ex)  {
 
                 }
             });
 
 
-            colStartTime.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStartTime() != null ? data.getValue().getStartTime().toString() : ""));
+            colStartTime.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStartTime()!=null?data.getValue().getStartTime().toString():""));
             colStartTime.setCellFactory(TextFieldTableCell.forTableColumn());
             colStartTime.setOnEditCommit(e -> {
                 Route r = e.getRowValue();
                 try {
                     if (e.getNewValue() != null)
                         r.setStartTime(LocalTime.parse(e.getNewValue()));
-                } catch (Exception ex) {
+                } catch (Exception ex)  {
 
                 }
             });
 
 
-            colReturnTime.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getReturnTime() != null ? data.getValue().getReturnTime().toString() : ""));
+            colReturnTime.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getReturnTime()!=null?data.getValue().getReturnTime().toString():""));
             colReturnTime.setCellFactory(TextFieldTableCell.forTableColumn());
             colReturnTime.setOnEditCommit(e -> {
                 Route r = e.getRowValue();
                 try {
                     if (e.getNewValue() != null)
                         r.setReturnTime(LocalTime.parse(e.getNewValue()));
-                } catch (Exception ex) {
+                } catch (Exception ex)  {
 
                 }
             });
-        } catch (Exception e) {
+        }catch (Exception e) {
+            System.out.println("Route setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Route> list = routeService.findAll();
-            if (list != null)
-                tableRoute.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new RouteLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Route> list = task.get();
+                if (list != null)
+                    tableRoute.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void saveData() {
-        try {
-            routeService.save(tableRoute.getItems().get(0));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        RouteSaveTask task = new RouteSaveTask(tableRoute.getItems().get(0));
+        task.setOnSucceeded(e -> {
+            //           loadData();
+        });
+        new Thread(task).start();
     }
 }
 

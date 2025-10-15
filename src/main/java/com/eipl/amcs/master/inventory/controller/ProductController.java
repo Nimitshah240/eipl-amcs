@@ -5,9 +5,12 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.service.ProductService;
+import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
+import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,6 +28,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -35,6 +39,12 @@ public class ProductController implements MyInitialization, PopupCallback {
     TableView<Product> tableProduct;
     @FXML
     TableColumn<Product, String> colCode, colName, colLocalName, colReferenceCode;
+    //    @FXML
+//    TableColumn<Product, Unit> colPrimaryUnit;
+//    @FXML
+//    TableColumn<Product, ProductGroup> colProductGroup;
+//    @FXML
+//    TableColumn<Product, Tax> colTax;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
 
@@ -42,11 +52,8 @@ public class ProductController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<Product> propProductDto;
 
-    private ProductService productService;
-
     public ProductController() {
         propProductDto = new SimpleObjectProperty<>();
-        productService = context.getBean(ProductService.class);
     }
 
     @Override
@@ -102,23 +109,31 @@ public class ProductController implements MyInitialization, PopupCallback {
             colReferenceCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getReferenceCode()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+//            colProductGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProductGroup()));
+//            colPrimaryUnit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPrimaryUom()));
+//            colTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTax()));
+//            colIsActive.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
             propProductDto.bind(tableProduct.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
+            System.out.println("Product setuptable Exception");
             e.printStackTrace();
         }
     }
 
-
     @Override
     public void loadData() {
         tableProduct.setItems(null);
-        try {
-            List<Product> list = productService.findAllBySociety(MainApp.identityDto.getSociety().getCode());
-            if (list != null)
-                tableProduct.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ProductLoadTask task = new ProductLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Product> list = task.get();
+                if (list != null)
+                    tableProduct.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -129,12 +144,22 @@ public class ProductController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             Product dto = propProductDto.get();
             if (dto != null) {
-                try {
-                    productService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
-                    loadData();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                var task = new ProductDeleteTask(dto.getCode());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || respDelete.booleanValue() == false) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
         }
     }

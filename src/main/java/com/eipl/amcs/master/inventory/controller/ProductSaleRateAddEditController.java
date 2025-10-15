@@ -9,11 +9,16 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.service.ProductSaleRateService;
 import com.eipl.amcs.master.inventory.service.ProductService;
+import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductSaleRateNumberLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductSaleRateSaveTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.util.CommonUtil;
 import javafx.collections.FXCollections;
@@ -31,6 +36,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -54,17 +60,6 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private ProductSaleRate dto = null;
-
-
-    private ProductSaleRateService productSaleRateService;
-    private NextCodeService nextCodeService;
-    private ProductService productService;
-
-    public ProductSaleRateAddEditController() {
-        productSaleRateService = context.getBean(ProductSaleRateService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-        productService = context.getBean(ProductService.class);
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -197,57 +192,113 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         return errorMsg.length() == 0;
     }
 
-
     @Override
     public void saveData() {
-        try {
-            productSaleRateService.save(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
-                    resourceBundle.getString("productsalerate.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ProductSaleRateSaveTask(dto, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                        resourceBundle.getString("productsalerate.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            productSaleRateService.update(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
-                    resourceBundle.getString("productsalerate.update.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
+        var task = new ProductSaleRateSaveTask(dto, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                        resourceBundle.getString("productsalerate.update.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
 
     private void getNextProductSaleRateNumber(Society society) {
-        try {
-            if (society == null)
-                return;
-            String nextCode = nextCodeService.getNextCode("ProductSaleRate", "code", society.getCode(), 4);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        if (society == null)
+            return;
+        var task = new ProductSaleRateNumberLoadTask(society.getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                String nextCode = task.get();
+                if (nextCode == null || nextCode.isEmpty())
+                    return;
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
 
     private void loadProduct() {
-        try {
-            List<Product> list = productService.findAllBySociety(MainApp.identityDto.getSociety().getCode());
-            if (list != null)
-                cboxProduct.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ProductLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Product> list = task.get();
+                if (list != null)
+                    cboxProduct.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
+
+//    private void loadSociety() {
+//        var task = new SocietyLoadTask();
+//        task.setOnSucceeded(e -> {
+//            try {
+//                List<Society> list = task.get();
+//                if (list != null){
+//                    cboxSociety.setItems(FXCollections.observableList(list));
+//                }
+//            } catch (InterruptedException | ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task).start();
+//    }
+
 }

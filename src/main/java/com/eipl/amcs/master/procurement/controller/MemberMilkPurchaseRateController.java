@@ -11,7 +11,7 @@ import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.dto.RateViewDto;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
+import com.eipl.amcs.master.procurement.task.MemberMilkPurchaseRateLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,8 +28,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class MemberMilkPurchaseRateController implements MyInitialization {
     @FXML
@@ -51,12 +50,9 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
     private ResourceBundle resourceBundle;
 
     private ObjectProperty<MemberMilkPurchaseRate> propRate;
-    private MemberMilkPurchaseRateService memberMilkPurchaseRateService;
 
     public MemberMilkPurchaseRateController() {
         propRate = new SimpleObjectProperty<>();
-        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
-
     }
 
     @Override
@@ -131,6 +127,7 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
 
             propRate.bind(tableMemberMilkPurchaseRates.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
+            System.out.println("MemberMilkPurchaseRate setuptable Exception");
             e.printStackTrace();
         }
     }
@@ -138,12 +135,16 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
     @Override
     public void loadData() {
         tableMemberMilkPurchaseRates.setItems(null);
-        try {
-            List<MemberMilkPurchaseRate> list = memberMilkPurchaseRateService.findAll();
-            if (list != null)
-                tableMemberMilkPurchaseRates.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new MemberMilkPurchaseRateLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MemberMilkPurchaseRate> list = task.get();
+                if (list != null)
+                    tableMemberMilkPurchaseRates.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

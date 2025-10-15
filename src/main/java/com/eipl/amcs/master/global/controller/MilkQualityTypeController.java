@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.service.MilkQualityTypeService;
+import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -32,15 +34,9 @@ public class MilkQualityTypeController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private MilkQualityTypeService milkQualityTypeService;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public MilkQualityTypeController() {
-        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
     }
 
     @Override
@@ -59,30 +55,23 @@ public class MilkQualityTypeController implements MyInitialization {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         } catch (Exception e) {
+            System.out.println("MilkQuality setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<MilkQualityType> list = milkQualityTypeService.findAll();
-            if (list != null)
-                tableMilkQualityTypes.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-//        var task = new MilkQualityTypeLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<MilkQualityType> list = task.get();
-//                if (list != null)
-//                    tableMilkQualityTypes.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
+        var task = new MilkQualityTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MilkQualityType> list = task.get();
+                if (list != null)
+                    tableMilkQualityTypes.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

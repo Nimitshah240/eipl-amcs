@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.service.UnitService;
+import com.eipl.amcs.master.global.task.UnitLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -32,15 +34,9 @@ public class UnitController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private UnitService unitService;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public UnitController() {
-        unitService = context.getBean(UnitService.class);
     }
 
     @Override
@@ -60,30 +56,23 @@ public class UnitController implements MyInitialization {
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
             colShortName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getShortName()));
         } catch (Exception e) {
+            System.out.println("Unit setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Unit> list = unitService.findAll();
-            if (list != null)
-                tableUnits.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-//        var task = new UnitLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Unit> list = task.get();
-//                if (list != null)
-//                    tableUnits.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
+        var task = new UnitLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Unit> list = task.get();
+                if (list != null)
+                    tableUnits.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

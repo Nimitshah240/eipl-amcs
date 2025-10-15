@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.procurement.model.HardwareDevice;
 import com.eipl.amcs.master.procurement.service.HardwareDeviceService;
+import com.eipl.amcs.master.procurement.task.HardwareDeviceLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -34,11 +36,6 @@ public class HardwareDeviceController implements MyInitialization {
     TableColumn<HardwareDevice, Number> colBitRate, colBaudRate, colParity;
     @FXML
     Button btnClose;
-    private HardwareDeviceService hardwareDeviceService;
-
-    public HardwareDeviceController() {
-        hardwareDeviceService = context.getBean(HardwareDeviceService.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -65,18 +62,23 @@ public class HardwareDeviceController implements MyInitialization {
             colParity.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getParity()));
             colBitRate.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getBitRate()));
         } catch (Exception e) {
+            System.out.println("HardwareDevice setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<HardwareDevice> list = hardwareDeviceService.findAll();
-            if (list != null)
-                tableHardwareDevices.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new HardwareDeviceLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<HardwareDevice> list = task.get();
+                if (list != null)
+                    tableHardwareDevices.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

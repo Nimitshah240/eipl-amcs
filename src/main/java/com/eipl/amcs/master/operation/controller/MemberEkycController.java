@@ -5,9 +5,10 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
+import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.model.MemberEkyc;
-import com.eipl.amcs.master.operation.repository.MemberEkycRepository;
-import com.eipl.amcs.master.operation.service.MemberService;
+import com.eipl.amcs.master.operation.task.AllMemberDetailsLoadTask;
+import com.eipl.amcs.master.operation.task.MemberEkycLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,8 +21,8 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
 import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberEkycController implements MyInitialization, PopupCallback {
@@ -44,10 +45,6 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
     private Stage stage;
     public PopupCallback callback;
 
-    private MemberService memberService;
-    private MemberEkycRepository memberEkycRepository;
-
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -55,11 +52,6 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
     private ResourceBundle resourceBundle;
     public List<Member> memberList = new ArrayList<>();
     private String memberCode;
-
-    public MemberEkycController() {
-        memberService = context.getBean(MemberService.class);
-        memberEkycRepository = context.getBean(MemberEkycRepository.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -71,22 +63,50 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         setupTable();
         loadDetails();
+//        loadData();
         btnClose.setOnAction(e ->
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
     }
 
+//    private void loadDetails() {
+//        var task = new AllMemberDetailsLoadTask();
+//        task.setOnSucceeded(e -> {
+//            try {
+//                List<MemberDetail> list = task.get();
+//                for (MemberDetail memberDetail : list) {
+//                    mapDetails.put(memberDetail.getCode(), memberDetail);
+//                }
+//                setupTable();
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            } catch (ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task).start();
+//    }
+
     private void loadDetails() {
-        try {
-            List<MemberDetail> list = memberService.findAllMemberDetails();
-            for (MemberDetail memberDetail : list) {
-                mapDetails.put(memberDetail.getCode(), memberDetail);
+        var task = new AllMemberDetailsLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MemberDetail> list = task.get();
+                for (MemberDetail memberDetail : list) {
+                    mapDetails.put(memberDetail.getCode(), memberDetail);
+                }
+                setupTable();
+                loadData();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+                lblStatus.setText("Error loading member details.");
             }
-            setupTable();
-            loadData();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+
+        new Thread(task).start();
     }
+
+    private StringBuilder errorMsg;
+    private List<MemberDto> listMemberDto;
 
     @Override
     public void setupTable() {
@@ -129,11 +149,11 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
             );
             colIsVerified.setCellFactory(param -> new TableCell<>() {
                 private final Button verifyButton = new Button("Verify");
-
                 {
                     verifyButton.setMaxWidth(Double.MAX_VALUE);
                     verifyButton.setOnAction(event -> {
                         MemberEkyc currentItem = getTableView().getItems().get(getIndex());
+                        System.out.println("Verify button clicked for: " + currentItem.getCode());
 
                         if ("Verified".equalsIgnoreCase(currentItem.getStatus())) {
                             currentItem.setStatus("Unverified");
@@ -162,8 +182,12 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
                     }
                 }
             });
+
+
             propMember.bind(tableMemberEkyc.getSelectionModel().selectedItemProperty());
+
         } catch (Exception e) {
+            System.out.println("setupTable Exception");
             e.printStackTrace();
         }
     }
@@ -171,20 +195,39 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        try {
-            tableMemberEkyc.setItems(null);
-            lblStatus.setText("Loading...");
-            List<MemberEkyc> memberList = memberEkycRepository.findAllWithMembers();
-            if (memberList != null && !memberList.isEmpty()) {
-                listMember = memberList;
-                tableMemberEkyc.setItems(FXCollections.observableArrayList(memberList));
-                lblStatus.setText("Loaded " + memberList.size() + " records.");
-            } else {
-                tableMemberEkyc.setItems(FXCollections.observableArrayList()); // clear table
-                lblStatus.setText("No records found.");
+        tableMemberEkyc.setItems(null);
+        lblStatus.setText("Loading...");
+
+        MemberEkycLoadTask task = new MemberEkycLoadTask();
+
+        task.setOnSucceeded(e -> {
+            try {
+                List<MemberEkyc> memberList = task.get();
+                if (memberList != null && !memberList.isEmpty()) {
+                    listMember = memberList;
+                    tableMemberEkyc.setItems(FXCollections.observableArrayList(memberList));
+                    lblStatus.setText("Loaded " + memberList.size() + " records.");
+                } else {
+                    tableMemberEkyc.setItems(FXCollections.observableArrayList()); // clear table
+                    lblStatus.setText("No records found.");
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                lblStatus.setText("Error loading data.");
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+
+        task.setOnFailed(e -> {
+            lblStatus.setText("Failed to load data.");
+            Throwable ex = task.getException();
+            if (ex != null) {
+                ex.printStackTrace();
+            }
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
+
 }

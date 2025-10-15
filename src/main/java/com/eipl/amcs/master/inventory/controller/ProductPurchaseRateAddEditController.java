@@ -8,11 +8,16 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
 import com.eipl.amcs.master.inventory.service.ProductService;
+import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateNumberLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateSaveTask;
 import com.eipl.amcs.util.CommonUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -29,6 +34,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -39,6 +45,8 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private Button btnClose, btnSaveUpdate;
     @FXML
     private ComboBox<Product> cboxProduct;
+    //    @FXML
+//    private ComboBox<Union> cboxUnion;
     @FXML
     private TextField txtPurchaseRate;
     @FXML
@@ -51,16 +59,6 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private PopupCallback callback;
     private StringBuilder errorMsg = null;
     private ProductPurchaseRate dto = null;
-
-    private ProductPurchaseRateService productPurchaseRateService;
-    private ProductService productService;
-    private NextCodeService nextCodeService;
-
-    public ProductPurchaseRateAddEditController() {
-        productPurchaseRateService = context.getBean(ProductPurchaseRateService.class);
-        productService = context.getBean(ProductService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -81,14 +79,18 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
             btnSaveUpdate.setText(resourceBundle.getString("update"));
             loadControls();
         }
+
         loadProduct();
+//        loadUnion();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+
         setupComboBox();
         loadProduct();
+//        loadUnion();
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
     }
@@ -98,15 +100,16 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         cboxProduct.setConverter(new ProductConvertor(cboxProduct));
         dpWefDate.setConverter(new LocalDateConvertor());
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
+            if (!newValue){
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
+            if (!newValue){
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
+//        cboxUnion.setConverter(new UnionConvertor(cboxUnion));
     }
 
     private void validateAndSave() {
@@ -138,6 +141,7 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
 
     private ProductPurchaseRate setValuesInObjectUpdate() {
         dto.setProduct(cboxProduct.getValue());
+//        dto.setUnion(cboxUnion.getValue());
         dto.setWefDate(dpWefDate.getValue());
         dto.setRate(new BigDecimal(txtPurchaseRate.getText()));
         return dto;
@@ -146,6 +150,7 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     @Override
     public void loadControls() {
         cboxProduct.getSelectionModel().select(dto.getProduct());
+//        cboxUnion.getSelectionModel().select(dto.getUnion());
         txtPurchaseRate.setText(String.valueOf(dto.getRate()));
         dpWefDate.setValue(dto.getWefDate());
 
@@ -154,12 +159,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private boolean validate() {
         if (cboxProduct.getValue() == null)
             errorMsg.append("Product can not be null or empty\n");
+//        if (cboxUnion.getValue() == null)
+//            errorMsg.append("Union can not be null or empty\n");
         if (txtPurchaseRate.getText() == null)
             errorMsg.append("Union can not be null or empty\n");
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0 || Double.parseDouble(txtPurchaseRate.getText()) >= 1000000)
+            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0 || Double.parseDouble(txtPurchaseRate.getText())>=1000000)
                 errorMsg.append(resourceBundle.getString("entervalidrate") + "\n");
             Double.parseDouble(txtPurchaseRate.getText().trim());
         } catch (NumberFormatException e) {
@@ -170,54 +177,110 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        try {
-            productPurchaseRateService.save(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
-                    resourceBundle.getString("productpurchaserate.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
+        var task = new ProductPurchaseRateSaveTask(dto, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                        resourceBundle.getString("productpurchaserate.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            productPurchaseRateService.update(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
-                    resourceBundle.getString("productpurchaserate.update.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ProductPurchaseRateSaveTask(dto, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                        resourceBundle.getString("productpurchaserate.update.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private void getNextProductPurchaseRateNumber(ProductPurchaseRate productPurchaseRate) {
-        try {
-            if (productPurchaseRate == null)
-                return;
-            String nextCode = nextCodeService.getNextCode("ProductPurchaseRate", "code", productPurchaseRate.getCode(), 4);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        if (productPurchaseRate == null)
+            return;
+        var task = new ProductPurchaseRateNumberLoadTask(productPurchaseRate.getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                String nextCode = task.get();
+                if (nextCode == null || nextCode.isEmpty())
+                    return;
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
+
     private void loadProduct() {
-        try {
-            List<Product> list = productService.findAllBySociety(MainApp.identityDto.getSociety().getCode());
-            if (list != null)
-                cboxProduct.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ProductLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Product> list = task.get();
+                if (list != null)
+                    cboxProduct.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
+
+//    private void loadUnion() {
+//        var task = new UnionLoadTask();
+//        task.setOnSucceeded(e -> {
+//            try {
+//                List<Union> list = task.get();
+//                if (list != null)
+//                    cboxUnion.setItems(FXCollections.observableList(list));
+//            } catch (InterruptedException | ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task).start();
+//    }
 
 }
 	

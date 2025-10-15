@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.service.ShiftService;
+import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -32,15 +34,9 @@ public class ShiftController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private ShiftService shiftService;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public ShiftController() {
-        shiftService = context.getBean(ShiftService.class);
     }
 
     @Override
@@ -59,30 +55,23 @@ public class ShiftController implements MyInitialization {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         } catch (Exception e) {
+            System.out.println("Shift setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Shift> list = shiftService.findAll();
-            if (list != null)
-                tableShifts.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-//        var task = new ShiftLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Shift> list = task.get();
-//                if (list != null)
-//                    tableShifts.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
+        var task = new ShiftLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Shift> list = task.get();
+                if (list != null)
+                    tableShifts.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

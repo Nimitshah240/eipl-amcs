@@ -7,11 +7,16 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.service.ShiftService;
+import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
+import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleEditSaveTask;
+import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleSaveTask;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
@@ -26,6 +31,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -50,13 +56,6 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private SocietyPaymentCycle dto = null;
-    private SocietyPaymentCycleService societyPaymentCycleService;
-    private ShiftService shiftService;
-
-    public SocietyPaymentCycleEditController() {
-        societyPaymentCycleService = context.getBean(SocietyPaymentCycleService.class);
-        shiftService = context.getBean(ShiftService.class);
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -161,43 +160,79 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        try {
-            societyPaymentCycleService.save(Arrays.asList(dto), CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
-                    resourceBundle.getString("societypaymentcycle.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
+        var task = new SocietyPaymentCycleSaveTask(Arrays.asList(dto), (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                        resourceBundle.getString("societypaymentcycle.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            societyPaymentCycleService.update(txtPaymentCycleId.getText(), dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
-                    resourceBundle.getString("societypaymentcycle.update.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
+        var task = new SocietyPaymentCycleEditSaveTask(txtPaymentCycleId.getText(), dto);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                        resourceBundle.getString("societypaymentcycle.update.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private void loadShift() {
-        try {
-            List<Shift> list = shiftService.findAll();
-            if (list != null)
-                cboxFromShift.setItems(FXCollections.observableList(list));
-            cboxToShift.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ShiftLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Shift> list = task.get();
+                if (list != null)
+                    cboxFromShift.setItems(FXCollections.observableList(list));
+                cboxToShift.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     public void loadControls() {

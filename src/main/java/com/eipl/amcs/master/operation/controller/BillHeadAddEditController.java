@@ -8,10 +8,14 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.repository.FormulaRepository;
 import com.eipl.amcs.master.operation.service.BillCriteriaService;
 import com.eipl.amcs.master.operation.service.BillHeadService;
+import com.eipl.amcs.master.operation.task.BillHeadNumberLoadTask;
+import com.eipl.amcs.master.operation.task.BillHeadSaveTask;
 import com.eipl.amcs.util.CommonUtil;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,6 +27,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -57,19 +62,13 @@ public class BillHeadAddEditController implements MyInitialization {
 
     private StringBuilder errorMsg = null;
 
-    private BillHeadService billHeadService;
-    private FormulaRepository formulaRepository;
-    private NextCodeService nextCodeService;
-    private BillCriteriaService billCriteriaService;
 
-
-    public BillHeadAddEditController() {
-        billHeadService = context.getBean(BillHeadService.class);
-        formulaRepository = context.getBean(FormulaRepository.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-        billCriteriaService = context.getBean(BillCriteriaService.class);
-    }
-
+    /**
+     * Method set action on btn close,saveUpdate.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -96,6 +95,12 @@ public class BillHeadAddEditController implements MyInitialization {
     }
 
 
+    /**
+     * Method set comboBox of disbursement with default no.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     @Override
     public void setupComboBox() {
         try {
@@ -106,6 +111,13 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
+    /**
+     * Method set bill head value if updating and
+     * setting new code on creating new bill head.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     public void setBillHead(BillHead billHead) {
         try {
             if (billHead != null) {
@@ -120,6 +132,12 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
+    /**
+     * Method set bill head value in respective field to show in the frontend.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     public void loadBillHead() {
         try {
             txtCode.setText(billHead.getCode());
@@ -132,17 +150,38 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
+    /**
+     * Method gets the new code from the backend for creating new bill head.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     private void getNextBillHeadCode() {
         try {
-            String nextCode = nextCodeService.getNextCode("BillHead", "code", MainApp.identityDto.getSociety().getCode(), 3);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-            txtCode.setText(nextCode);
+            var task = new BillHeadNumberLoadTask(MainApp.identityDto.getSociety().getCode());
+            task.setOnSucceeded(e -> {
+                try {
+                    String nextCode = task.get();
+                    if (nextCode == null || nextCode.isEmpty())
+                        return;
+                    txtCode.setText(nextCode);
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Method set values in the bill head object from the front end.
+     *
+     * @return BillHead
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     private BillHead setValuesInObject() {
         try {
             billHead.setCode(txtCode.getText());
@@ -160,6 +199,13 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
+    /**
+     * Method first validate fields, then create or update bill head
+     * depending on the this.billHead is null or not respectively.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     public void saveUpdateBillHead() {
         try {
             errorMsg = new StringBuilder();
@@ -185,6 +231,13 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
+    /**
+     * Method checks name is not null.
+     *
+     * @return boolean
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     private boolean validate() {
         try {
             if (txtName.getText() == null || txtName.getText().trim().isEmpty())
@@ -195,29 +248,85 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
+    /**
+     * Method calls BillHeadSaveTask with short 0 to create the bill head.
+     * Then close the popup and reload the data.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     @Override
     public void saveData() {
         try {
-            billHeadService.saveBillHead(billHead, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
-                    resourceBundle.getString("billhead.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
+            var task = new BillHeadSaveTask(billHead, (short) 0);
+            task.setOnSucceeded(e -> {
+                try {
+                    Object obj = task.get();
+                    if (obj instanceof ApiError) {
+                        ApiError error = (ApiError) obj;
+                        StringBuilder sb = new StringBuilder();
+
+                        for (ApiValidationError subError : error.getSubErrors()) {
+                            sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                        }
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
+                                sb.toString());
+                        alert.createAlert();
+                        return;
+                    }
+                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
+                            resourceBundle.getString("billhead.insert.successful"));
+                    alert.createAlert();
+                    this.callback.reloadData(true);
+                    this.stage.close();
+
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Method calls BillHeadSaveTask with short 1 to update the bill head.
+     * Then close the popup and reload the data.
+     *
+     * @author Nimit Shah
+     * @createdOn 30-06-2025
+     */
     @Override
     public void updateData() {
         try {
-            billHeadService.updateBillHead(billHead, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
-                    resourceBundle.getString("billhead.update.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
+            var task = new BillHeadSaveTask(billHead, (short) 1);
+            task.setOnSucceeded(e -> {
+                try {
+                    Object obj = task.get();
+                    if (obj instanceof ApiError) {
+                        ApiError error = (ApiError) obj;
+                        StringBuilder sb = new StringBuilder();
+
+                        for (ApiValidationError subError : error.getSubErrors()) {
+                            sb.append(subError.getField() + " " + subError.getMessage() + "\n");
+                        }
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
+                                sb.toString());
+                        alert.createAlert();
+                        return;
+                    }
+
+                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
+                            resourceBundle.getString("billhead.update.successful"));
+                    alert.createAlert();
+                    this.callback.reloadData(true);
+                    this.stage.close();
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
