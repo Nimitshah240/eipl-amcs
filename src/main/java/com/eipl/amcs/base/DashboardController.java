@@ -1,7 +1,6 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.model.NotificationAcknowledgementTask;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
@@ -14,6 +13,7 @@ import com.eipl.amcs.operation.procurement.dto.CollectionSummary;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.DpuIncentiveRequestLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
+import com.eipl.amcs.sync.repository.BroadcastedRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
@@ -34,10 +34,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.awt.*;
 import java.io.File;
@@ -47,6 +43,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -58,6 +55,14 @@ import java.util.stream.Collectors;
 
 public class DashboardController implements MyInitialization, PopupCallback {
 
+    protected final int SCALE = 2;
+    protected final RoundingMode ROUND = RoundingMode.HALF_UP;
+    @FXML
+    public ListView<Notification> lv;
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
+    ObservableList<CollectionSummary> listCollectionSummary = FXCollections.observableArrayList();
+    List<MilkType> listMilkType = new ArrayList<>();
     @FXML
     private AnchorPane root;
     @FXML
@@ -80,25 +85,13 @@ public class DashboardController implements MyInitialization, PopupCallback {
     private ComboBox<String> cboxNotification;
     @FXML
     private Button btnLoad, btnMilkCollection, btnLocalMilkSale, btnMilkDispatch, btnProductSale, btnBilling, btnKapaat, btnMilkReceipt, btnSync, btnPendingSync;
-
-    ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
-    ObservableList<CollectionSummary> listCollectionSummary = FXCollections.observableArrayList();
-    List<MilkType> listMilkType = new ArrayList<>();
-    protected final int SCALE = 2;
-    protected final RoundingMode ROUND = RoundingMode.HALF_UP;
-    @FXML
-    public ListView<Notification> lv;
     private PopupCallback callback;
     private Stage stage;
-
 
     public void setStage(Stage stage) {
         this.stage = stage;
         this.stage.setResizable(false);
     }
-
-    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-
 
     @Override
     public Node getRoot() {
@@ -140,7 +133,13 @@ public class DashboardController implements MyInitialization, PopupCallback {
         FocusUtils.requestFocus(btnMilkCollection);
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati").split(",");
         cboxLang.setItems(FXCollections.observableList(Arrays.asList(arr)));
-        cboxLang.setValue(MainApp.getLocale().equalsIgnoreCase("en") ? "English" : "Gujarati");
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLang.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLang.setValue("Hindi");
+        } else {
+            cboxLang.setValue("English");
+        }
         cboxLang.setOnAction(e -> {
             createAndSetLocale();
             Rectangle2D rect = Screen.getPrimary().getVisualBounds();
@@ -165,10 +164,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         btnKapaat.setOnAction(e -> openKapaat());
         btnMilkReceipt.setOnAction(e -> openReceipt());
         btnBilling.setOnAction(e -> openBilling());
-//        btnNotification.setOnAction(e -> openNotification());
-//        btnSocietyInfo.setOnAction(e -> openSocietyInfo());
-
-
         loadMsg();
         loadNotification();
 
@@ -177,6 +172,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
             MainApp.lblMessage.setText("Data Syncing...");
             BroadcastedTask task = new BroadcastedTask();
             task.setOnSucceeded(e1 -> {
+                System.out.println("Done");
                 MainApp.paneDrop.setVisible(false);
                 lblSyncCount.setText("0");
             });
@@ -211,6 +207,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 case L:
                     if (cboxLang.getSelectionModel().getSelectedIndex() == 0)
                         cboxLang.getSelectionModel().select(1);
+                    else if (cboxLang.getSelectionModel().getSelectedIndex() == 1)
+                        cboxLang.getSelectionModel().select(2);
                     else
                         cboxLang.getSelectionModel().select(0);
                     break;
@@ -240,16 +238,17 @@ public class DashboardController implements MyInitialization, PopupCallback {
         try {
             Locale.setDefault(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
             MainApp.locale = Locale.getDefault().toString();
-            if ("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase())) {
-                List<String> lines = Files.readAllLines(new File("resources/messages/guj").toPath());
+            if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2))) {
+                List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2)) ? "resources/messages/guj" : "resources/messages/hi").toPath());
                 List<String> nwLines = new ArrayList<>();
                 lines.forEach(item -> {
                     String[] arr = item.split("=");
                     nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
                 });
-                Files.write(new File("resources/messages/message_gu.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-                MainApp.locale = "gu";
+                Files.write(new File(String.format("resources/messages/message_%s.properties", cboxLang.getValue().substring(0, 2).toLowerCase())).toPath(), nwLines, StandardCharsets.UTF_8);
+                MainApp.locale = cboxLang.getValue().substring(0, 2).toLowerCase();
             }
+
             File file = new File("resources/messages/");
             URL[] urls = {file.toURI().toURL()};
             ClassLoader classLoader = new URLClassLoader(urls);
@@ -266,51 +265,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         }
     }
 
-//    private void createAndSetLocale() {
-//        try {
-//            String selectedLang = cboxLang.getValue().substring(0, 2).toLowerCase();
-//
-//            // Ensure Marathi is set correctly
-//            if ("mr".equalsIgnoreCase(selectedLang) || "ma".equalsIgnoreCase(selectedLang)) {
-//                selectedLang = "mr";  // Force correct Marathi locale
-//            }
-//
-//            Locale.setDefault(new Locale(selectedLang));
-//            MainApp.locale = selectedLang;
-//
-//            if ("gu".equals(selectedLang)) {
-//                List<String> lines = Files.readAllLines(new File("resources/messages/guj").toPath());
-//                List<String> nwLines = new ArrayList<>();
-//                for (String item : lines) {
-//                    String[] arr = item.split("=");
-//                    nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
-//                }
-//                Files.write(new File("resources/messages/message_gu.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-//            } else if ("mr".equals(selectedLang)) {  // Ensure Marathi is handled correctly
-//                List<String> lines = Files.readAllLines(new File("resources/messages/mar").toPath());
-//                List<String> nwLines = new ArrayList<>();
-//                for (String item : lines) {
-//                    String[] arr = item.split("=");
-//                    nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
-//                }
-//                Files.write(new File("resources/messages/message_mr.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-//            }
-//
-//            File file = new File("resources/messages/");
-//            URL[] urls = {file.toURI().toURL()};
-//            ClassLoader classLoader = new URLClassLoader(urls);
-//
-//            try {
-//                MainApp.setBundle(ResourceBundle.getBundle("message", new Locale(selectedLang), classLoader));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Locale.setDefault(new Locale("en"));
-//                MainApp.setBundle(ResourceBundle.getBundle("message", Locale.getDefault(), classLoader));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private String getUniCode(String messageVal) {
         String str = "";
@@ -400,13 +354,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
         try {
             lblFinancialYear.setText(MainApp.getFinancialYear().toString());
         } catch (Exception e) {
+            System.out.println(e);
         }
-//        if (MainApp.locale.equals("en")) {
-//            lblLanguage.setText("English");
-//        } else {
-//            lblLanguage.setText("Gujarati");
-//        }
-
     }
 
 
@@ -425,43 +374,12 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 setGraphic(createNode(item));
             }
         });
-//        var task = new NotificationCheckTask(MainApp.identityDto.getSociety().getCode(), "");
-//        task.setOnSucceeded(e -> {
-//            try {
-//                Map<String, Object> res = task.get();
-//                if (res != null) {
-//                    List<Map<String, Object>> list = (List<Map<String, Object>>) res.get("notificationDetail");
-//                    if (res.get("notificationDetail") != null && !((List<?>) res.get("notificationDetail")).isEmpty())
-//                        saveNotification(list);
-//                    else {
-//                        loadNotification();
-//                    }
-//                }
-//            } catch (Exception exception) {
-//                exception.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
     }
 
     public void loadNotification() {
         lv.setItems(FXCollections.observableArrayList(MainApp.notificationList));
     }
 
-//    private void loadNotificationAfterSave() {
-//        var task1 = new NotificationLoadTask();
-//        task1.setOnSucceeded(e1 -> {
-//            try {
-//                MainApp.notificationList = task1.get();
-//                lv.setItems(FXCollections.observableArrayList(MainApp.notificationList.stream().limit(10).
-//                        filter(eee -> eee.getNotificationType() != 3).collect(Collectors.toList())));
-//                sendAcknowledgerment();
-//            } catch (InterruptedException | ExecutionException ee) {
-//                throw new RuntimeException(ee);
-//            }
-//        });
-//        new Thread(task1).start();
-//    }
 
     private Node createNode(Notification item) {
         Label lblTitle = new Label(item.getTitle());
@@ -491,58 +409,15 @@ public class DashboardController implements MyInitialization, PopupCallback {
         return vb;
     }
 
-//    private void saveNotification(List<Map<String, Object>> res) {
-//        List<Notification> notificationList = new ArrayList<>();
-//        for (Map<String, Object> map : res) {
-//            Notification notification = new Notification();
-//            notification.setBulkNotificationId((Integer) map.get("bulkNotificationId"));
-//            notification.setUnionCode((String) map.get("unionCode"));
-//            notification.setPlantCode((String) map.get("plantCode"));
-//            notification.setMccPlantCode((String) map.get("mccPlantCode"));
-//            notification.setBmcCode((String) map.get("bmcCode"));
-//            notification.setSocietyCode(MainApp.identityDto.getSociety().getCode());
-//            notification.setMemberCode((String) map.get("memberCode"));
-//            notification.setAppType((String) map.get("appType"));
-//            notification.setLoginType((String) map.get("loginType"));
-//            notification.setWefDate(map.get("wefDate") != null ? LocalDateTime.parse((String) map.get("wefDate"), formatter) : null);
-//            notification.setTitle((String) map.get("title"));
-//            notification.setMessage((String) map.get("message"));
-//            notification.setCampaignName((String) map.get("campaignName"));
-//            notification.setReceiverType((Integer) map.get("bulkNotificationId"));
-//            notification.setContentId((String) map.get("contentId"));
-//            notification.setStatus((Integer) map.get("status"));
-////            notification.setEntry(LocalDateTime.parse((String) map.get("entryDatetime"),formatter));
-////            notification.setPickup(LocalDateTime.parse((String) map.get("pickupDatetime"),formatter));
-////            notification.setResponse(LocalDateTime.parse((String) map.get("responseDatetime"),formatter));
-//            notification.setOriginatingOrgCode((String) map.get("originatingOrgCode"));
-//            notification.setOriginatingOrgType((String) map.get("originatingOrgType"));
-//            notification.setOriginatingType((Integer) map.get("originatingType"));
-//            notification.setFromDate(map.get("fromDate") != null ? LocalDateTime.parse((String) map.get("fromDate"), formatter) : null);
-//            notification.setToDate(map.get("toDate") != null ? LocalDateTime.parse((String) map.get("toDate"), formatter) : null);
-//            notification.setFromShift((Integer) map.get("fromShiftCode"));
-//            notification.setToShift((Integer) map.get("toShiftCode"));
-//            notification.setNotificationType((Integer) map.get("notificationType"));
-//            notification.setFileName((String) map.get("filename"));
-//            notification.setFilePath((String) map.get("filePath"));
-//            notification.setCreatedAt(map.get("createdAt") != null ? LocalDateTime.parse((String) map.get("createdAt"), formatter) : null);
-//            notification.setCreatedBy((String) map.get("createdBy"));
-//            notificationList.add(notification);
-//        }
-//        var task = new NotificationSaveTask(notificationList);
-//        task.setOnSucceeded(e -> {
-//            loadNotificationAfterSave();
-//        });
-//        new Thread(task).start();
-//    }
-
     private void sendAcknowledgerment() {
         StringBuffer code = new StringBuffer();
         for (Notification notification : MainApp.notificationList) {
             code.append(notification.getBulkNotificationId());
             code.append(",");
         }
-        var task = new NotificationAcknowledgementTask(code.toString().substring(0, code.length() - 1));
+        var task = new NotificationAcknowledgementTask(code.substring(0, code.length() - 1));
         task.setOnSucceeded(e -> {
+            System.out.println("Done");
         });
         new Thread(task).start();
     }
@@ -558,7 +433,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 List<MilkCollection> list = task.get();
                 if (list == null) {
                     tableCollection.setPlaceholder(new Label("No data..."));
-                    return;
                 } else {
                     if (listCollectionSummary != null && !listCollectionSummary.isEmpty())
                         listCollectionSummary.clear();
@@ -668,25 +542,20 @@ public class DashboardController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
+    public void setCallback(PopupCallback callback) {
+        this.callback = callback;
+    }
+
     class PendingSyncTask extends Task<Long> {
 
         @Override
         protected Long call() throws Exception {
             try {
-                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + "/sync/pending-sync";
-                ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.GET,
-                        null, Long.class);
-                if (response.getStatusCode() == HttpStatus.OK)
-                    return response.getBody();
-                return 0L;
+                BroadcastedRepository repository = EmcsAppContext.getContext().getBean(BroadcastedRepository.class);
+                return repository.count();
             } catch (Exception e) {
                 return 0L;
             }
         }
-    }
-
-    public void setCallback(PopupCallback callback) {
-        this.callback = callback;
     }
 }

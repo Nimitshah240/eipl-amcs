@@ -1,7 +1,7 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.base.model.Identity;
+import com.eipl.amcs.base.Identity;
 import com.eipl.amcs.base.model.IdentityCheckTask;
 import com.eipl.amcs.base.model.IdentitySaveTask;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -124,7 +124,6 @@ public class ActivationController implements MyInitialization {
         }
         if (prop != null && !prop.isEmpty()) {
             prop.forEach((k, v) -> properties1.put(k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
-//            prop.forEach((k, v) -> mapProp.put((String) k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
         }
         saveData();
     }
@@ -137,8 +136,6 @@ public class ActivationController implements MyInitialization {
             GeneralConfig generalConfig = new GeneralConfig();
             generalConfig.setKey((String) k);
             generalConfig.setValue((String) v);
-//          generalConfig.setSociety(MainApp.identityDto.getSociety());
-
             list.add(generalConfig);
         });
         var task = new GeneralConfigSaveTask(list);
@@ -192,43 +189,7 @@ public class ActivationController implements MyInitialization {
         makeFile();
         createMembers();
 
-
-//        this.activationKey = txtActivation.getText();
-//        if (this.activationKey.equalsIgnoreCase(appKeyGenerator())) {
-//            makeFile();
-//
-//            if (this.flag) {
-//                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-//                        resourceBundle.getString("activation.success"));
-//                Optional<ButtonType> resp = alert.createConfirmationAlert();
-//                if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//                    System.exit(0);
-//                }
-//            }
-//        } else {
-//            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-//                    resourceBundle.getString("activationkeyfail"));
-//            alert.createAlert();
-//            return;
-//        }
-
     }
-
-//    private void checkMembers() {
-//        var task = new MemberCodeLoadTask(txtServerDetail.getText(), this.society);
-//        task.setOnSucceeded(e -> {
-//            try {
-//                String resp = task.get();
-//                if (resp == null || resp.isEmpty() || resp.endsWith("0001"))
-//                    createMembers();
-//                else
-//                    confirmAndClose();
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
 
     private void createMembers() {
         if (txtCowRange.getText() == null || txtCowRange.getText().isEmpty() ||
@@ -270,10 +231,6 @@ public class ActivationController implements MyInitialization {
                             resourceBundle.getString("activation.success"));
                     alert.createAlert();
                     Platform.exit();
-//                    Optional<ButtonType> resp = alert.createConfirmationAlert();
-//                    if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//                        Platform.exit();
-//                    }
                 });
                 new Thread(task1).start();
             } catch (Exception exception) {
@@ -285,12 +242,6 @@ public class ActivationController implements MyInitialization {
 
     private void confirmAndClose() {
         callApi();
-//        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-//                resourceBundle.getString("activation.success"));
-//        Optional<ButtonType> resp = alert.createConfirmationAlert();
-//        if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//            Platform.exit();
-//        }
     }
 
     private void makeFile() {
@@ -318,14 +269,6 @@ public class ActivationController implements MyInitialization {
         if (txtDock.getText().trim() == null || !CommonUtils.isNumeric(txtDock.getText().trim())) {
             errorMsg.append(resourceBundle.getString("docknullerror") + "\n");
         }
-//        if(txtActivation.getText().trim()==null){
-//            errorMsg.append(resourceBundle.getString("addkey") + "\n");
-//        }
-//        if(txtSampleMilkNo.getText().trim()==null ){
-//            errorMsg.append(resourceBundle.getString("mobilenonullerror"));
-//        }
-
-
         return errorMsg.length() == 0;
 
     }

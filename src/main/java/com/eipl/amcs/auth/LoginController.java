@@ -2,16 +2,19 @@ package com.eipl.amcs.auth;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.dto.LoginDto;
-import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.auth.service.UserService;
+import com.eipl.amcs.auth.task.LoginTask;
+import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.service.FinancialYearService;
+import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.collections.FXCollections;
@@ -24,13 +27,18 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 import static com.eipl.amcs.MainApp.context;
 
@@ -49,9 +57,6 @@ public class LoginController implements MyInitialization {
     @FXML
     private E_PasswordField txtPassword;
 
-    private UserService userService;
-    private FinancialYearService financialYearService;
-
     @Override
     public Node getRoot() {
         return root;
@@ -59,37 +64,48 @@ public class LoginController implements MyInitialization {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        userService = context.getBean(UserService.class);
-        financialYearService = context.getBean(FinancialYearService.class);
-
         loadData();
         setupComboBox();
-        cboxLang.getSelectionModel().select(0);
-
+        cboxLang.setValue(MainApp.getProperty("application.language", "English"));
         btnLogin.setOnAction(e -> {
-// ------------- MERGING ----------------------
-            CompletableFuture future = CompletableFuture.runAsync(() -> createAndSetLocale());
+            CompletableFuture.runAsync(this::deleteOtherFiles);
+            var task = new LoginTask(txtUsername.getText(), txtPassword.getText());
+            task.setOnSucceeded(e1 -> {
+                try {
+                    Object obj = task.get();
+                    if (obj == null) {
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), "Application",
+                                "An error occurred!");
+                        alert.createAlert();
+                        FocusUtils.requestFocus(txtUsername);
+                        return;
+                    }
 
-            LoginDto dto = new LoginDto(txtUsername.getText(), txtPassword.getText(), MainApp.identityDto.getSociety());
-            User user = userService.authenticate(dto);
+                    if (obj instanceof ApiError) {
+                        ApiError error = (ApiError) obj;
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), "Application",
+                                resourceBundle.getString(error.getMessage()));
+                        alert.createAlert();
+                        FocusUtils.requestFocus(txtUsername);
+                        return;
+                    }
 
-            if (user == null) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), "Application",
-                        "An error occurred!");
-                alert.createAlert();
-                FocusUtils.requestFocus(txtUsername);
-            } else {
-                MainApp.setUser(user);
-                MainApp.setFinancialYear(cboxFinancialYear.getValue());
-                Rectangle2D rect = Screen.getPrimary().getVisualBounds();
-                MainApp.getContentPane().setMaxWidth(rect.getWidth());
-                MainApp.getContentPane().setMaxHeight(rect.getHeight());
-                MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
-            }
+                    if (obj instanceof User) {
+                        createAndSetLocale();
+                        MainApp.setUser((User) obj);
+                        MainApp.setFinancialYear(cboxFinancialYear.getValue());
+                        Rectangle2D rect = Screen.getPrimary().getVisualBounds();
+                        MainApp.getContentPane().setMaxWidth(rect.getWidth());
+                        MainApp.getContentPane().setMaxHeight(rect.getHeight());
 
-// ------------- MERGING ----------------------
-
+                        MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+                        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
         });
         cboxLang.setOnAction(e -> {
             FocusUtils.requestFocus(btnLogin);
@@ -101,21 +117,21 @@ public class LoginController implements MyInitialization {
         cboxFinancialYear.setConverter(new FinancialYearConvertor(cboxFinancialYear));
     }
 
-    private String locale;
 
     private void createAndSetLocale() {
         try {
             Locale.setDefault(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
-            if ("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase())) {
-                List<String> lines = Files.readAllLines(new File("resources/messages/guj").toPath());
+            if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase())) {
+                List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase()) ? "resources/messages/guj" : "resources/messages/hi").toPath());
                 List<String> nwLines = new ArrayList<>();
                 lines.forEach(item -> {
                     String[] arr = item.split("=");
                     nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
                 });
-                Files.write(new File("resources/messages/message_gu.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-                MainApp.locale = "gu";
+                Files.write(new File(String.format("resources/messages/message_%s.properties", cboxLang.getValue().substring(0, 2).toLowerCase())).toPath(), nwLines, Charset.forName("UTF-8"));
+                MainApp.locale = cboxLang.getValue().substring(0, 2).toLowerCase();
             }
+
             File file = new File("resources/messages/");
             URL[] urls = {file.toURI().toURL()};
             ClassLoader classLoader = new URLClassLoader(urls);
@@ -156,28 +172,56 @@ public class LoginController implements MyInitialization {
 
     @Override
     public void loadData() {
-
-//        --------------- MERGING ----------------------------
-        List<FinancialYear> list = financialYearService.findAll();
-        if (list != null) {
-            cboxFinancialYear.setItems(FXCollections.observableList(list));
-            LocalDate date = LocalDate.now();
-            for (FinancialYear financialYear : list) {
-                if (date.isAfter(financialYear.getStartDate()) && date.isBefore(financialYear.getEndDate())) {
-                    cboxFinancialYear.getSelectionModel().select(financialYear);
-                    break;
+        var task = new FinancialYearLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<FinancialYear> list = task.get();
+                if (list != null) {
+                    cboxFinancialYear.setItems(FXCollections.observableList(list));
+                    LocalDate date = LocalDate.now();
+                    for (FinancialYear financialYear : list) {
+                        if (date.isAfter(financialYear.getStartDate()) && date.isBefore(financialYear.getEndDate())) {
+                            cboxFinancialYear.getSelectionModel().select(financialYear);
+                            break;
+                        }
+                        if (date.isEqual(financialYear.getStartDate()) || date.isEqual(financialYear.getEndDate())) {
+                            cboxFinancialYear.getSelectionModel().select(financialYear);
+                        }
+                    }
                 }
-                if (date.isEqual(financialYear.getStartDate()) || date.isEqual(financialYear.getEndDate())) {
-                    cboxFinancialYear.getSelectionModel().select(financialYear);
-                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        }
-
-//        --------------- MERGING ----------------------------
-
+        });
+        new Thread(task).start();
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati").split(",");
         cboxLang.setItems(FXCollections.observableList(Arrays.asList(arr)));
         cboxLang.getSelectionModel().select(0);
+    }
+
+    private void deleteOtherFiles() {
+        try {
+            File file = new File("resources/messages/");
+            URL[] urls = {file.toURI().toURL()};
+            Path resourcePath = Paths.get(urls[0].toURI());
+
+            try (Stream<Path> stream = Files.walk(resourcePath)) {
+                stream.filter(Files::isRegularFile)
+                        .forEach(path -> {
+                            String fileName = path.getFileName().toString();
+                            int dotIndex = fileName.lastIndexOf('.');
+                            if (!(fileName.equalsIgnoreCase("guj") || fileName.equalsIgnoreCase("hi") || fileName.equalsIgnoreCase("mar") || fileName.startsWith("message_en"))) {
+                                try {
+                                    Files.delete(path);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        });
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

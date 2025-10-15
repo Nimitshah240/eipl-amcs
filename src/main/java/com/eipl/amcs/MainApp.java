@@ -4,7 +4,7 @@ import com.eipl.amcs.auth.dto.IdentityDto;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.FxmlLoaderUtil;
 import com.eipl.amcs.base.LaunchScreenController;
-import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.base.Notification;
 import com.eipl.amcs.base.model.SentBoxCountTask;
 import com.eipl.amcs.config.AppConfig;
 import com.eipl.amcs.config.EmcsAppContext;

@@ -1,18 +1,12 @@
 package com.eipl.amcs.base.model;
 
-import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.service.NotificationService;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
-import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
+import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.base.Notification;
 
-import java.util.Arrays;
+import javafx.concurrent.Task;
+
 import java.util.List;
 
 public class NotificationSaveTask extends Task<List<Notification>> {
@@ -27,14 +21,11 @@ public class NotificationSaveTask extends Task<List<Notification>> {
     @Override
     protected List<Notification> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.NOTIFICATION;
-
-            ResponseEntity<Notification[]> response =  restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), Notification[].class);
-
-            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+            NotificationService service = EmcsAppContext.getContext().getBean(NotificationService.class);
+            List<Notification> list = service.save(dto, CommonUtil.setIdentityHeader());
+            if (list == null || list.isEmpty())
                 return null;
-            return Arrays.asList(response.getBody());
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }

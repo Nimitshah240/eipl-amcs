@@ -5,8 +5,10 @@ import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,6 +48,7 @@ public class Member extends BaseModel {
     private BigDecimal creditLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
+     @JsonSerialize(using = MilkTypeSerialize.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_members_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)

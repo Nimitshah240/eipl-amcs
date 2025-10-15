@@ -4,12 +4,27 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.dto.Permission;
 import com.eipl.amcs.auth.dto.PermissionComparator;
 import com.eipl.amcs.base.model.*;
-import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.task.FtpDetailsCheckTask;
 import com.eipl.amcs.base.task.SentboxSaveTask;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.master.geo.model.District;
+import com.eipl.amcs.master.geo.model.Hamlet;
+import com.eipl.amcs.master.geo.model.SubDistrict;
+import com.eipl.amcs.master.geo.model.Village;
+import com.eipl.amcs.master.global.model.MemberType;
+import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.model.MemberDetail;
+import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
+import com.eipl.amcs.master.operation.repository.MemberRepository;
+import com.eipl.amcs.master.org.model.Bank;
+import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
 import com.eipl.amcs.operation.inventory.model.ProductDispatch;
 import com.eipl.amcs.operation.inventory.model.ProductDispatchTransaction;
 import com.eipl.amcs.operation.inventory.model.ProductRequisition;
@@ -18,6 +33,13 @@ import com.eipl.amcs.operation.inventory.task.ProductDispatchManualSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductDispatchTransactionManualSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionManualSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionTransactionManualSaveTask;
+import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
+import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
+import com.eipl.amcs.operation.procurement.repository.MilkDispatchTransactionRepository;
+import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
+import com.eipl.amcs.sync.model.Subscribed;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
@@ -28,10 +50,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -248,10 +269,11 @@ public class NavbarController implements MyInitialization {
 //                                productDispatchTransaction.setCreatedBy((String) jsonText.get("updatedBy"));
 //                            productDispatchTransaction.setUnionCode((String) jsonText.get("unionCode"));
 //                            productDispatchTransaction.setSociety(MainApp.identityDto.getSociety());
-////                            productDispatchTransaction.setProductReceipt((String) jsonText.get("productReceipt"));
-////                            productDispatchTransaction.setProduct((String) jsonText.get("product"));
-////                            productDispatchTransaction.setTax((String) jsonText.get("tax"));
-////                            productDispatchTransaction.setUnit((String) jsonText.get("unit"));
+
+    /// /                            productDispatchTransaction.setProductReceipt((String) jsonText.get("productReceipt"));
+    /// /                            productDispatchTransaction.setProduct((String) jsonText.get("product"));
+    /// /                            productDispatchTransaction.setTax((String) jsonText.get("tax"));
+    /// /                            productDispatchTransaction.setUnit((String) jsonText.get("unit"));
 //                            saveProductDispatchTransaction(productDispatchTransaction);
 //                            break;
 //                        case "tbl_bulk_notification":
@@ -291,11 +313,10 @@ public class NavbarController implements MyInitialization {
 //                            break;
 //                    }
 //                    sentBoxUuidList.add((String) map.get("uuid"));
-
-
     private void saveProductRequisition(ProductRequisition requisition) {
         ProductRequisitionManualSaveTask task = new ProductRequisitionManualSaveTask(requisition, (short) 0);
         task.setOnSucceeded(e -> {
+            System.out.println("Saved");
         });
         new Thread(task).start();
     }
@@ -700,12 +721,56 @@ class ReSyncTask extends Task<List> {
     @Override
     protected List call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + "sync/resync";
-            ResponseEntity<Map[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(list), Map[].class);
+            MilkCollectionService milkCollectionRepository = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
+            MemberRepository memberRepository = EmcsAppContext.getContext().getBean(MemberRepository.class);
+            MemberDetailRepository memberDetailRepository = EmcsAppContext.getContext().getBean(MemberDetailRepository.class);
+            SocietyPaymentCycleRepository paymentCycleRepository = EmcsAppContext.getContext().getBean(SocietyPaymentCycleRepository.class);
+            MilkDispatchRepository dispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+            MilkDispatchTransactionRepository milkDispatchTransactionRepository = EmcsAppContext.getContext().getBean(MilkDispatchTransactionRepository.class);
 
-            if (response.getStatusCode() == HttpStatus.OK)
-                return Arrays.asList(response.getBody());
+            for (Map<String, Object> syncResponse : list) {
+                switch ((String) syncResponse.get("tableName")) {
+                    case "tbl_milk_collection":
+                        milkCollectionRepository.findAllCollectionByDate(LocalDateTime.parse((String) syncResponse.get("fromDatetime"), AppConstant.SYNC_DATE_TIME_FMT), LocalDateTime.parse((String) syncResponse.get("toDatetime"), AppConstant.SYNC_DATE_TIME_FMT), CommonUtil.setIdentityHeader());
+                        break;
+                    case "tbl_member":
+                        for (Member member : memberRepository.findAll()) {
+                            member.setSociety(Hibernate.unproxy(member.getSociety(), Society.class));
+                            member.setMemberType(Hibernate.unproxy(member.getMemberType(), MemberType.class));
+                            member.setMilkType(Hibernate.unproxy(member.getMilkType(), MilkType.class));
+                            memberRepository.customSaveForSync(member, CommonUtil.setIdentityHeader());
+                        }
+                        for (MemberDetail detail : memberDetailRepository.findAll()) {
+                            detail.setState(Hibernate.unproxy(detail.getState(), com.eipl.amcs.master.geo.model.State.class));
+                            detail.setDistrict(Hibernate.unproxy(detail.getDistrict(), District.class));
+                            detail.setSubDistrict(Hibernate.unproxy(detail.getSubDistrict(), SubDistrict.class));
+                            detail.setVillage(Hibernate.unproxy(detail.getVillage(), Village.class));
+                            detail.setHamlet(Hibernate.unproxy(detail.getHamlet(), Hamlet.class));
+                            detail.setBank(Hibernate.unproxy(detail.getBank(), Bank.class));
+                            detail.setBranch(Hibernate.unproxy(detail.getBranch(), Branch.class));
+                            memberDetailRepository.customSaveForSync(detail, CommonUtil.setIdentityHeader());
+                        }
+                        break;
+                    case "tbl_dcs_payment_cycle":
+                        for (SocietyPaymentCycle societyPaymentCycle : paymentCycleRepository.findAll()) {
+                            societyPaymentCycle.setSociety(Hibernate.unproxy(societyPaymentCycle.getSociety(), Society.class));
+                            societyPaymentCycle.setFromShift(Hibernate.unproxy(societyPaymentCycle.getFromShift(), Shift.class));
+                            societyPaymentCycle.setToShift(Hibernate.unproxy(societyPaymentCycle.getToShift(), Shift.class));
+                            paymentCycleRepository.customSaveForSync(societyPaymentCycle, CommonUtil.setIdentityHeader());
+                        }
+                        break;
+                    case "tbl_milk_dispatch":
+                        for (MilkDispatch md : dispatchRepository.findByFromDateGreaterThanEqualAndToDateLessThanEqual(LocalDateTime.parse((String) syncResponse.get("fromDatetime"), AppConstant.SYNC_DATE_TIME_FMT), LocalDateTime.parse((String) syncResponse.get("toDatetime"), AppConstant.SYNC_DATE_TIME_FMT))) {
+                            dispatchRepository.customSaveForSync(md, CommonUtil.setIdentityHeader());
+                            for (MilkDispatchTransaction dispatchTransaction : milkDispatchTransactionRepository.findByMilkDispatch(md)) {
+                                milkDispatchTransactionRepository.customSaveForSync(dispatchTransaction, CommonUtil.setIdentityHeader());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
             return null;
         } catch (Exception e) {
             return null;

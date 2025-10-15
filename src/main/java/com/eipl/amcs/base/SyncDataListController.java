@@ -13,6 +13,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.net.URL;
 import java.util.Map;
@@ -85,22 +87,11 @@ public class SyncDataListController implements MyInitialization {
         new Thread(task).start();
     }
 
+    @Getter
+    @AllArgsConstructor
     public static class TableData {
         private final String tableName;
         private final int pendingCount;
-
-        public TableData(String tableName, int pendingCount) {
-            this.tableName = tableName;
-            this.pendingCount = pendingCount;
-        }
-
-        public String getTableName() {
-            return tableName;
-        }
-
-        public int getPendingCount() {
-            return pendingCount;
-        }
     }
 
     public void setCallback(PopupCallback callback) {
