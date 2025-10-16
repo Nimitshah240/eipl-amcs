@@ -16,7 +16,8 @@ import java.util.List;
 
 public class SocietyPaymentCycleLoadByDateTask extends Task<List<SocietyPaymentCycle>> {
 
-    private LocalDate fromDate, toDate;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public SocietyPaymentCycleLoadByDateTask(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;

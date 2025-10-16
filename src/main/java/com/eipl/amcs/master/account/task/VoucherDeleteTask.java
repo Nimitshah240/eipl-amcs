@@ -1,11 +1,13 @@
 package com.eipl.amcs.master.account.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.model.Voucher;
+import com.eipl.amcs.master.account.repository.VoucherRepository;
+import com.eipl.amcs.master.account.service.VoucherService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Optional;
 
 public class VoucherDeleteTask extends Task<Boolean> {
     private final String code;
@@ -17,14 +19,20 @@ public class VoucherDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("code", code);
-            restTemplate.delete(builder.toUriString(), Void.class);
+            VoucherService service = EmcsAppContext.getContext().getBean(VoucherService.class);
+            VoucherRepository repository = EmcsAppContext.getContext().getBean(VoucherRepository.class);
+            Optional<Voucher> voucher = repository.findById(code);
+            service.delete(voucher.get(), CommonUtil.setIdentityHeader());
+            return true;
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER;
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("code", code);
+//            restTemplate.delete(builder.toUriString(), Void.class);
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
-            return true;
+//            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

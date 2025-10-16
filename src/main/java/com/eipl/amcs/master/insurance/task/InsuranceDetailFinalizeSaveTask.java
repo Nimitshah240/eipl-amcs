@@ -10,8 +10,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 public class InsuranceDetailFinalizeSaveTask extends Task<Object> {
 
-    private InsuranceDetail dto;
-    private int process;
+    private final InsuranceDetail dto;
+    private final int process;
 
     public InsuranceDetailFinalizeSaveTask(InsuranceDetail dto, int process) {
         this.dto = dto;

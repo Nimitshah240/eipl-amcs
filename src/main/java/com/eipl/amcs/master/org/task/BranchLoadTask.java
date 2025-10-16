@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class BranchLoadTask extends Task<List<Branch>> {
-    private Bank bank;
     private static final Logger LOGGER = LoggerFactory.getLogger(BranchLoadTask.class);
+    private Bank bank;
 
     public BranchLoadTask() {
 

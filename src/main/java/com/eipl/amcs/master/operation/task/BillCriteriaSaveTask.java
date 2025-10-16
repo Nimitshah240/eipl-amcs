@@ -1,19 +1,12 @@
 package com.eipl.amcs.master.operation.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.service.BillCriteriaService;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * This class acts as a save task to save or update BillCriteria.
@@ -42,13 +35,13 @@ public class BillCriteriaSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            BillCriteriaService service=EmcsAppContext.getContext().getBean(BillCriteriaService.class);
+            BillCriteriaService service = EmcsAppContext.getContext().getBean(BillCriteriaService.class);
             if (billCriteria == null)
                 return null;
             if (this.update == 0) {
                 service.saveBillCriteria(billCriteria, CommonUtil.setIdentityHeader());
             } else {
-                 service.updateBillCriteria(billCriteria, CommonUtil.setIdentityHeader());
+                service.updateBillCriteria(billCriteria, CommonUtil.setIdentityHeader());
             }
             return true;
 

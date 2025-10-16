@@ -2,7 +2,6 @@ package com.eipl.amcs.master.operation.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -12,7 +11,6 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.geo.converter.*;
 import com.eipl.amcs.master.geo.model.*;
-import com.eipl.amcs.master.geo.service.*;
 import com.eipl.amcs.master.geo.task.*;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
 import com.eipl.amcs.master.global.convertor.MemberTypeConvertor;
@@ -20,15 +18,11 @@ import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.service.GenderService;
-import com.eipl.amcs.master.global.service.MemberTypeService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
+import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.master.operation.task.MemberCodeLoadTask;
 import com.eipl.amcs.master.operation.task.MemberDetailLoadTask;
 import com.eipl.amcs.master.operation.task.MemberSaveTask;
@@ -37,11 +31,8 @@ import com.eipl.amcs.master.org.convertor.BankConvertor;
 import com.eipl.amcs.master.org.convertor.BranchConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.org.service.BankService;
-import com.eipl.amcs.master.org.service.BranchService;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
@@ -57,8 +48,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class MemberAddEditController implements MyInitialization {
 
@@ -93,7 +82,7 @@ public class MemberAddEditController implements MyInitialization {
     @FXML
     private TextField txtCodeEx, txtCode, txtMobileNo, txtPincode, txtMiddleName,
             txtName, txtLastName, txtLocalName, txtMiddleLocalName, txtLocalLastName,
-            txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit,txtGroupCode;
+            txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit, txtGroupCode;
     @FXML
     private Button btnSaveUpdate, btnClose;
     @FXML

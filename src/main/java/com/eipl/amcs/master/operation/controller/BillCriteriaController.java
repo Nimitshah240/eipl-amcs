@@ -4,15 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.operation.model.BillCriteria;
-import com.eipl.amcs.master.operation.service.BillCriteriaService;
 import com.eipl.amcs.master.operation.task.BillCriteriaDeleteTask;
 import com.eipl.amcs.master.operation.task.BillCriteriaLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,9 +30,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class BillCriteriaController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<BillCriteria> propBillCriteriaDto;
     @FXML
     StackPane root;
     @FXML
@@ -44,13 +40,9 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
     TableColumn<BillCriteria, String> colCode, colCriteria, colFormula, colStatus, colBillHead;
     @FXML
     TableColumn<BillCriteria, LocalDate> colStartDate, colEndDate;
-
     @FXML
     Button btnAdd, btnEdit, btnClose, btnDelete;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<BillCriteria> propBillCriteriaDto;
 
     public BillCriteriaController() {
         this.propBillCriteriaDto = new SimpleObjectProperty<>();
@@ -165,7 +157,7 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
                     task.setOnSucceeded(e -> {
                         try {
                             Boolean respDelete = task.get();
-                            if (respDelete == null || respDelete.booleanValue() == false) {
+                            if (respDelete == null || !respDelete.booleanValue()) {
                                 MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("billcriteria"),
                                         resourceBundle.getString("error.occurred"));
                                 alert1.createAlert();

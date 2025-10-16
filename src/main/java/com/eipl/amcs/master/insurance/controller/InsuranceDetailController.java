@@ -49,6 +49,12 @@ import java.util.stream.Collectors;
 
 public class InsuranceDetailController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<InsuranceDetail> propInsuranceDetailDto;
+    public List<InsuranceDetail> insuranceDetailList = new ArrayList<>();
+    public List<Gender> genderList = new ArrayList<>();
+    public InsuranceDetailSummary insuranceDetailSummary = null;
+    @FXML
+    TableColumn<InsuranceDetail, String> colSrNo;
     @FXML
     private StackPane root;
     @FXML
@@ -60,22 +66,16 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
     @FXML
     private TableColumn<InsuranceDetail, Integer> colAge;
     @FXML
-    TableColumn<InsuranceDetail, String> colSrNo;
-    @FXML
     private TextField txtMemberCode;
-    public List<InsuranceDetail> insuranceDetailList = new ArrayList<>();
-    public List<Gender> genderList = new ArrayList<>();
-    public InsuranceDetailSummary insuranceDetailSummary = null;
     @FXML
     private Button btnAdd, btnClose, btnEdit, btnDelete, btnSearch, btnExport, btnReport;
     @FXML
     private Label lblInsurance;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<InsuranceDetail> propInsuranceDetailDto;
     private String name;
     private InsuranceMaster insuranceMaster = null;
     //    private List<InsuranceDetail> insuranceDetailList;
-    private Map<String, InsuranceDetail> mapDetails = new HashMap<>();
+    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
 
     public InsuranceDetailController() {
         propInsuranceDetailDto = new SimpleObjectProperty<>();
@@ -92,7 +92,7 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
 
 
         txtMemberCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            search((String) oldValue, (String) newValue);
+            search(oldValue, newValue);
         });
 
         btnSearch.setOnAction(e -> {

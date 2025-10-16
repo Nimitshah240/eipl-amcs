@@ -1,26 +1,18 @@
 package com.eipl.amcs.master.geo.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.geo.model.Hamlet;
 import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.geo.service.HamletService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class HamletLoadTask extends Task<List<Hamlet>> {
-    private Village village;
     private static final Logger LOGGER = LoggerFactory.getLogger(HamletLoadTask.class);
+    private Village village;
 
     public HamletLoadTask() {
 
@@ -33,9 +25,9 @@ public class HamletLoadTask extends Task<List<Hamlet>> {
     @Override
     protected List<Hamlet> call() throws Exception {
         try {
-            HamletService service  = EmcsAppContext.getContext().getBean(HamletService.class);
+            HamletService service = EmcsAppContext.getContext().getBean(HamletService.class);
             List<Hamlet> list;
-            if (village== null )
+            if (village == null)
                 list = service.findAll();
             else
                 list = service.findAll(village.getCode());

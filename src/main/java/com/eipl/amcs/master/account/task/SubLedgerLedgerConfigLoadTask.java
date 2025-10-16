@@ -2,8 +2,8 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.dto.ProductGroupMappingDto;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.SubLedgerLedgerConfig;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -27,9 +27,9 @@ public class SubLedgerLedgerConfigLoadTask extends Task<ProductGroupMappingDto> 
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 
             // ledger
-            String  url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
             ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
-            if(respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
+            if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
                 return null;
 
             url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_LEDGER_CONFIG;

@@ -10,7 +10,8 @@ import java.util.List;
 
 public class MemberBillLoadByDateTask extends Task<List<MemberBillSummary>> {
 
-    private LocalDate fromDate, toDate;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public MemberBillLoadByDateTask(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;

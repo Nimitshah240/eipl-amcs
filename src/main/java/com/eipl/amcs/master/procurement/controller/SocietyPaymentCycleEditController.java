@@ -11,13 +11,10 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.service.ShiftService;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleEditSaveTask;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleSaveTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -29,11 +26,10 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class SocietyPaymentCycleEditController implements MyInitialization {
     @FXML
@@ -160,7 +156,7 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        var task = new SocietyPaymentCycleSaveTask(Arrays.asList(dto), (short) 0);
+        var task = new SocietyPaymentCycleSaveTask(Collections.singletonList(dto), (short) 0);
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();

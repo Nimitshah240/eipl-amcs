@@ -12,12 +12,9 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.service.ShiftService;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleSaveTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,8 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class SocietyPaymentCycleGenerateController implements MyInitialization {
     private static final Logger LOGGER = LoggerFactory.getLogger(SocietyPaymentCycleGenerateController.class);

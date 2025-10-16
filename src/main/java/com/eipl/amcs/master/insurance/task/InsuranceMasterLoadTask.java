@@ -1,19 +1,12 @@
 package com.eipl.amcs.master.insurance.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.insurance.model.InsuranceMaster;
 import com.eipl.amcs.master.insurance.service.InsuranceMasterService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class InsuranceMasterLoadTask extends Task<List<InsuranceMaster>> {
@@ -22,7 +15,7 @@ public class InsuranceMasterLoadTask extends Task<List<InsuranceMaster>> {
     @Override
     protected List<InsuranceMaster> call() throws Exception {
         try {
-            InsuranceMasterService service= EmcsAppContext.getContext().getBean(InsuranceMasterService.class);
+            InsuranceMasterService service = EmcsAppContext.getContext().getBean(InsuranceMasterService.class);
             List<InsuranceMaster> list = service.findAll();
             if (list == null || list.isEmpty())
                 return null;

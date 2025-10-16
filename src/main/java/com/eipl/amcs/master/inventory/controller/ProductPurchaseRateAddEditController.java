@@ -3,7 +3,6 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -13,12 +12,9 @@ import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
-import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
-import com.eipl.amcs.master.inventory.service.ProductService;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateNumberLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateSaveTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -35,8 +31,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class ProductPurchaseRateAddEditController implements MyInitialization {
     @FXML
@@ -100,12 +94,12 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         cboxProduct.setConverter(new ProductConvertor(cboxProduct));
         dpWefDate.setConverter(new LocalDateConvertor());
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
@@ -166,7 +160,7 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0 || Double.parseDouble(txtPurchaseRate.getText())>=1000000)
+            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0 || Double.parseDouble(txtPurchaseRate.getText()) >= 1000000)
                 errorMsg.append(resourceBundle.getString("entervalidrate") + "\n");
             Double.parseDouble(txtPurchaseRate.getText().trim());
         } catch (NumberFormatException e) {
@@ -244,8 +238,8 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 String nextCode = task.get();
-                if (nextCode == null || nextCode.isEmpty())
-                    return;
+                if (nextCode == null || nextCode.isEmpty()) {
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

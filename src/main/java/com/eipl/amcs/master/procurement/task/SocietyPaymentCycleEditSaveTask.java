@@ -1,20 +1,12 @@
 package com.eipl.amcs.master.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 public class SocietyPaymentCycleEditSaveTask extends Task<Object> {
 
@@ -22,7 +14,7 @@ public class SocietyPaymentCycleEditSaveTask extends Task<Object> {
     private final SocietyPaymentCycle dto;
 
 
-    public SocietyPaymentCycleEditSaveTask(String code,SocietyPaymentCycle dto) {
+    public SocietyPaymentCycleEditSaveTask(String code, SocietyPaymentCycle dto) {
         this.code = code;
         this.dto = dto;
     }
@@ -31,7 +23,7 @@ public class SocietyPaymentCycleEditSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            SocietyPaymentCycleService service= EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
+            SocietyPaymentCycleService service = EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
             if (dto == null)
                 return null;
             service.update(code, dto, CommonUtil.setIdentityHeader());

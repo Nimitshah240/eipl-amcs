@@ -3,7 +3,6 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -11,12 +10,8 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.operation.model.BillHead;
-import com.eipl.amcs.master.operation.repository.FormulaRepository;
-import com.eipl.amcs.master.operation.service.BillCriteriaService;
-import com.eipl.amcs.master.operation.service.BillHeadService;
 import com.eipl.amcs.master.operation.task.BillHeadNumberLoadTask;
 import com.eipl.amcs.master.operation.task.BillHeadSaveTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -28,8 +23,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 /**
  * This class acts as a controller for BillHead Add-Edit Popup.

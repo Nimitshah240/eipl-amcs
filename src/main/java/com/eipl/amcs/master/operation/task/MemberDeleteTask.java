@@ -1,18 +1,9 @@
 package com.eipl.amcs.master.operation.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.util.CommonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MemberDeleteTask extends Task<Boolean> {
     private final String code;
@@ -24,7 +15,7 @@ public class MemberDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            MemberService service= EmcsAppContext.getContext().getBean(MemberService.class);
+            MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
             service.delete(code, CommonUtil.setIdentityHeader());
             return true;
 

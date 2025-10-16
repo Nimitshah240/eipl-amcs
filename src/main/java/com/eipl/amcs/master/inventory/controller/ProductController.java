@@ -8,10 +8,8 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.master.inventory.service.ProductService;
 import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,9 +28,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class ProductController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<Product> propProductDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -47,10 +44,7 @@ public class ProductController implements MyInitialization, PopupCallback {
 //    TableColumn<Product, Tax> colTax;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<Product> propProductDto;
 
     public ProductController() {
         propProductDto = new SimpleObjectProperty<>();
@@ -148,7 +142,7 @@ public class ProductController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

@@ -1,18 +1,12 @@
 package com.eipl.amcs.master.global.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.service.RateTypeService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class RateTypeLoadTask extends Task<List<RateType>> {
@@ -21,7 +15,7 @@ public class RateTypeLoadTask extends Task<List<RateType>> {
     @Override
     protected List<RateType> call() throws Exception {
         try {
-            RateTypeService service= EmcsAppContext.getContext().getBean(RateTypeService.class);
+            RateTypeService service = EmcsAppContext.getContext().getBean(RateTypeService.class);
             List<RateType> list = service.findAll();
             if (list == null || list.isEmpty())
                 return null;

@@ -1,17 +1,11 @@
 package com.eipl.amcs.master.insurance.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.insurance.model.InsuranceDetailSummary;
 import com.eipl.amcs.master.insurance.service.InsuranceMasterService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 public class InsuranceDetailSummaryLoadTask extends Task<InsuranceDetailSummary> {
     private static final Logger LOGGER = LoggerFactory.getLogger(InsuranceDetailSummaryLoadTask.class);
@@ -27,8 +21,6 @@ public class InsuranceDetailSummaryLoadTask extends Task<InsuranceDetailSummary>
         try {
             InsuranceMasterService service = EmcsAppContext.getContext().getBean(InsuranceMasterService.class);
             InsuranceDetailSummary list = service.findInsuranceDetailSummaryByInsuranceMaster(insuranceMasterCode);
-            if (list == null)
-                return null;
             return list;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

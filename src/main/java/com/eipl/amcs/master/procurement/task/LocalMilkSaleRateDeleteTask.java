@@ -1,19 +1,11 @@
 package com.eipl.amcs.master.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
 import com.eipl.amcs.master.procurement.service.LocalMilkSaleRateService;
 import com.eipl.amcs.util.CommonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class LocalMilkSaleRateDeleteTask extends Task<Boolean> {
@@ -26,7 +18,7 @@ public class LocalMilkSaleRateDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            LocalMilkSaleRateService service= EmcsAppContext.getContext().getBean(LocalMilkSaleRateService.class);
+            LocalMilkSaleRateService service = EmcsAppContext.getContext().getBean(LocalMilkSaleRateService.class);
             Optional<LocalMilkSaleRate> localMilkSaleRateData = service.findById(code);
             if (localMilkSaleRateData == null || !localMilkSaleRateData.isPresent())
                 return null;

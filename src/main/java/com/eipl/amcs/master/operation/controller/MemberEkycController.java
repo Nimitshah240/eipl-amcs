@@ -27,6 +27,9 @@ import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberEkycController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<MemberEkyc> propMember = new SimpleObjectProperty<>();
+    public PopupCallback callback;
+    public List<Member> memberList = new ArrayList<>();
     @FXML
     AnchorPane root;
     @FXML
@@ -39,33 +42,16 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
     private Label lblStatus;
     @FXML
     private Button btnClose;
-    private final ObjectProperty<MemberEkyc> propMember = new SimpleObjectProperty<>();
     private List<MemberEkyc> listMember = new ArrayList<>();
-    private Map<String, MemberDetail> mapDetails = new HashMap<>();
+    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     private Stage stage;
-    public PopupCallback callback;
+    private ResourceBundle resourceBundle;
+    private String memberCode;
+    private StringBuilder errorMsg;
+    private List<MemberDto> listMemberDto;
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    private ResourceBundle resourceBundle;
-    public List<Member> memberList = new ArrayList<>();
-    private String memberCode;
-
-    @Override
-    public Node getRoot() {
-        return root;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.resourceBundle = resourceBundle;
-        setupTable();
-        loadDetails();
-//        loadData();
-        btnClose.setOnAction(e ->
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
     }
 
 //    private void loadDetails() {
@@ -86,6 +72,21 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
 //        new Thread(task).start();
 //    }
 
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+        setupTable();
+        loadDetails();
+//        loadData();
+        btnClose.setOnAction(e ->
+                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+    }
+
     private void loadDetails() {
         var task = new AllMemberDetailsLoadTask();
         task.setOnSucceeded(e -> {
@@ -104,9 +105,6 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
 
         new Thread(task).start();
     }
-
-    private StringBuilder errorMsg;
-    private List<MemberDto> listMemberDto;
 
     @Override
     public void setupTable() {
@@ -149,6 +147,7 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
             );
             colIsVerified.setCellFactory(param -> new TableCell<>() {
                 private final Button verifyButton = new Button("Verify");
+
                 {
                     verifyButton.setMaxWidth(Double.MAX_VALUE);
                     verifyButton.setOnAction(event -> {

@@ -1,21 +1,14 @@
 package com.eipl.amcs.master.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
 import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 public class MemberMilkPurchaseRateSaveTask extends Task<Object> {
-    private MemberMilkPurchaseRateDto dto;
+    private final MemberMilkPurchaseRateDto dto;
 
     public MemberMilkPurchaseRateSaveTask(MemberMilkPurchaseRateDto dto) {
         this.dto = dto;
@@ -24,7 +17,7 @@ public class MemberMilkPurchaseRateSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            MemberMilkPurchaseRateService service= EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
+            MemberMilkPurchaseRateService service = EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
             if (dto == null)
                 return null;
             service.savePurchaseRate(dto);

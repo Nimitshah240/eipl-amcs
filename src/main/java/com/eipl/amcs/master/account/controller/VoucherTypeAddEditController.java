@@ -3,14 +3,15 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.model.VoucherType;
-import com.eipl.amcs.master.account.service.VoucherTypeService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.account.task.VoucherTypeNumberLoadTask;
+import com.eipl.amcs.master.account.task.VoucherTypeSaveTask;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -20,8 +21,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class VoucherTypeAddEditController implements MyInitialization {
     @FXML
@@ -35,13 +35,7 @@ public class VoucherTypeAddEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private VoucherType dto = null;
-    private NextCodeService nextCodeService;
-    private VoucherTypeService voucherTypeService;
 
-    public VoucherTypeAddEditController() {
-        voucherTypeService = context.getBean(VoucherTypeService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -106,14 +100,18 @@ public class VoucherTypeAddEditController implements MyInitialization {
     }
 
     private void getNextVoucherTypeCode() {
-        try {
-            String nextCode = nextCodeService.getNextCode("VoucherType", "code", MainApp.identityDto.getSociety().getCode(), 0);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-            txtCode.setText(nextCode);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new VoucherTypeNumberLoadTask(MainApp.identityDto.getSociety().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                String nextCode = task.get();
+                if (nextCode == null || nextCode.isEmpty())
+                    return;
+                txtCode.setText(nextCode);
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private VoucherType setValuesInObject() {
@@ -132,35 +130,65 @@ public class VoucherTypeAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        try {
-            voucherTypeService.save(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
-                    resourceBundle.getString("vouchertype.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
-                    "Error");
-            alert.createAlert();
-        }
+        var task = new VoucherTypeSaveTask(dto, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
+                        resourceBundle.getString("vouchertype.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            voucherTypeService.update(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
-                    resourceBundle.getString("vouchertype.update.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
-                    "Error");
-            alert.createAlert();
-        }
+        var task = new VoucherTypeSaveTask(dto, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("vouchertype"),
+                        resourceBundle.getString("vouchertype.update.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
+
+
 }

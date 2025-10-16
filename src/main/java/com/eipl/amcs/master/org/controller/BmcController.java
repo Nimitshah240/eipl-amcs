@@ -6,7 +6,6 @@ import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Mcc;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.service.BmcService;
 import com.eipl.amcs.master.org.task.BmcLoadTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,8 +20,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class BmcController implements MyInitialization {
 
@@ -66,7 +63,7 @@ public class BmcController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
+        try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
@@ -75,7 +72,7 @@ public class BmcController implements MyInitialization {
             colPhoneNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhoneNo()));
             colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
             colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("BMc setuptable Exception");
             e.printStackTrace();
         }

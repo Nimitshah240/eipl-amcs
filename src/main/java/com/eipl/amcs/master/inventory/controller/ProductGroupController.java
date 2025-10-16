@@ -4,7 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
-import com.eipl.amcs.master.inventory.service.ProductGroupService;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,8 +19,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class ProductGroupController implements MyInitialization {
 

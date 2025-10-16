@@ -11,10 +11,8 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
-import com.eipl.amcs.master.procurement.service.LocalMilkSaleRateService;
 import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateDeleteTask;
 import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -33,8 +31,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class LocalMilkSaleRateController implements MyInitialization, PopupCallback {
     @FXML
     StackPane root;
@@ -52,7 +48,7 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
     Button btnClose, btnAdd, btnDelete;
 
     private ResourceBundle resourceBundle;
-    private ObjectProperty<LocalMilkSaleRate> propLocalMilkSaleRate;
+    private final ObjectProperty<LocalMilkSaleRate> propLocalMilkSaleRate;
 
     public LocalMilkSaleRateController() {
         propLocalMilkSaleRate = new SimpleObjectProperty<>();
@@ -124,7 +120,7 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksalerate"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

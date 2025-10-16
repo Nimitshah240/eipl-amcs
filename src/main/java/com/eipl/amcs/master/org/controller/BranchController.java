@@ -8,7 +8,6 @@ import com.eipl.amcs.master.geo.model.SubDistrict;
 import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.org.service.BranchService;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,8 +23,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class BranchController implements MyInitialization {
 
@@ -66,7 +63,7 @@ public class BranchController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
+        try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colBank.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBank()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
@@ -74,7 +71,7 @@ public class BranchController implements MyInitialization {
             colIfsc.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIfsc()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Branch setuptable Exception");
             e.printStackTrace();
         }

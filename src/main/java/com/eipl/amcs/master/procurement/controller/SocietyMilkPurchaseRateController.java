@@ -7,7 +7,6 @@ import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.dto.RateViewDto;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
-import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
 import com.eipl.amcs.master.procurement.task.SocietyMilkPurchaseRateLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
@@ -27,8 +26,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class SocietyMilkPurchaseRateController implements MyInitialization {
     @FXML
     StackPane root;
@@ -47,7 +44,7 @@ public class SocietyMilkPurchaseRateController implements MyInitialization {
     @FXML
     Button btnAdd, btnClose, btnView;
 
-    private ObjectProperty<SocietyMilkPurchaseRate> propRate;
+    private final ObjectProperty<SocietyMilkPurchaseRate> propRate;
 
     public SocietyMilkPurchaseRateController() {
         propRate = new SimpleObjectProperty<>();
@@ -64,11 +61,7 @@ public class SocietyMilkPurchaseRateController implements MyInitialization {
         loadData();
 
         propRate.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnView.setDisable(false);
-            } else {
-                btnView.setDisable(true);
-            }
+            btnView.setDisable(newValue == null);
         });
         btnAdd.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/procurement/SocietyMilkPurchaseRateAddEdit.fxml")));

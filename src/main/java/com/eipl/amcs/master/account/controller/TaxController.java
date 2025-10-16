@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.account.dto.TaxDto;
-import com.eipl.amcs.master.account.service.TaxService;
+import com.eipl.amcs.master.account.task.TaxLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,10 +20,10 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class TaxController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<TaxDto> propTaxDto;
     @FXML
     StackPane root;
     @FXML
@@ -35,20 +35,15 @@ public class TaxController implements MyInitialization, PopupCallback {
     @FXML
     Button btnClose, btnTaxDetail;
     private Stage stage;
-
-    private final ObjectProperty<TaxDto> propTaxDto;
-    private TaxService taxService;
+    private ResourceBundle resourceBundle;
 
     public TaxController() {
         propTaxDto = new SimpleObjectProperty<>();
-        taxService = context.getBean(TaxService.class);
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -66,11 +61,7 @@ public class TaxController implements MyInitialization, PopupCallback {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         propTaxDto.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnTaxDetail.setDisable(false);
-            } else {
-                btnTaxDetail.setDisable(true);
-            }
+            btnTaxDetail.setDisable(newValue == null);
         });
 
         btnTaxDetail.setOnAction(e -> {
@@ -92,13 +83,17 @@ public class TaxController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-        try {
-            List<TaxDto> list = taxService.findAll();
-            if (list != null) {
-                tableTax.setItems(FXCollections.observableList(list));
+        var task = new TaxLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<TaxDto> list = task.get();
+                if (list != null) {
+                    tableTax.setItems(FXCollections.observableList(list));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 }

@@ -1,19 +1,12 @@
 package com.eipl.amcs.master.org.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.service.DockService;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 public class DockSaveTask extends Task<Object> {
     private final DockMilkTypeDto dto;
@@ -31,14 +24,11 @@ public class DockSaveTask extends Task<Object> {
             if (dto == null)
                 return null;
             if (this.update == 0) {
-                 service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtil.setIdentityHeader());
             } else {
-                 service.update(dto, CommonUtil.setIdentityHeader());
+                service.update(dto, CommonUtil.setIdentityHeader());
             }
             return true;
-
-
-
 
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

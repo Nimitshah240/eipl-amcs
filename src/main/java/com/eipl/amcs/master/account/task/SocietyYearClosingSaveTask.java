@@ -34,7 +34,7 @@ public class SocietyYearClosingSaveTask extends Task<SocietyYearClosing> {
 
             if (response == null || response.getStatusCode() != HttpStatus.CREATED)
                 return null;
-            return  response.getBody()  ;
+            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

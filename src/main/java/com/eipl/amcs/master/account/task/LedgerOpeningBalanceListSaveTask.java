@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LedgerOpeningBalanceListSaveTask extends Task<List<LedgerOpeningBalance>> {
-    private List<LedgerOpeningBalance> dtoList;
-    private boolean fromMigration = false;
+    private final List<LedgerOpeningBalance> dtoList;
+    private final boolean fromMigration = false;
 
     public LedgerOpeningBalanceListSaveTask(List<LedgerOpeningBalance> dtoList) {
         this.dtoList = dtoList;
@@ -34,7 +34,7 @@ public class LedgerOpeningBalanceListSaveTask extends Task<List<LedgerOpeningBal
             for (List<LedgerOpeningBalance> memberDtos : listTemp) {
                 try {
                     RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                    String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_OPENING_BALANCE+ "/import";
+                    String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_OPENING_BALANCE + "/import";
                     ResponseEntity<LedgerOpeningBalance[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(memberDtos), LedgerOpeningBalance[].class);
 
                     if (response == null || response.getStatusCode() != HttpStatus.OK)
@@ -50,12 +50,12 @@ public class LedgerOpeningBalanceListSaveTask extends Task<List<LedgerOpeningBal
         } else {
             try {
                 RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_OPENING_BALANCE+"/import";
+                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_OPENING_BALANCE + "/import";
                 ResponseEntity<LedgerOpeningBalance[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), LedgerOpeningBalance[].class);
 
                 if (response == null || response.getStatusCode() != HttpStatus.OK)
                     return null;
-                return response.getBody()!=null?Arrays.asList(response.getBody()):null;
+                return response.getBody() != null ? Arrays.asList(response.getBody()) : null;
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -15,18 +15,15 @@ import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.service.MilkQualityTypeService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
-import com.eipl.amcs.master.global.service.RateTypeService;
-import com.eipl.amcs.master.global.service.ShiftService;
 import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.RateTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
 import com.eipl.amcs.master.procurement.dto.PurchaseRateGenerate;
-import com.eipl.amcs.master.procurement.model.*;
-import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicability;
+import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateDetail;
 import com.eipl.amcs.master.procurement.task.MemberMilkPurchaseRateSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -54,8 +51,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class MemberMilkPurchaseRateAddEditController implements MyInitialization {
 
@@ -86,9 +81,9 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
     private List<MilkQualityType> listMilkQualityType;
     private List<RateType> listRateType;
     private RateType rateType;
-    private Map<Integer, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
+    private final Map<Integer, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
     private StringBuilder errorMsg = null;
-    private List<MemberMilkPurchaseRateDetail> listDetails = new ArrayList<>();
+    private final List<MemberMilkPurchaseRateDetail> listDetails = new ArrayList<>();
     private MemberMilkPurchaseRateDto dto = null;
 
     @Override
@@ -167,7 +162,7 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
                 .collect(Collectors.toList());
 
         dto.setPurchaseRate(rate);
-        dto.setListApplicability(Arrays.asList(app));
+        dto.setListApplicability(List.of(app));
         dto.setListDetail(list);
     }
 
@@ -336,7 +331,7 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
             listDetails.clear();
 
             String fileExtension = CommonUtils.getFileExtension(selectedFile);
-            if (fileExtension == null || !"xls".equalsIgnoreCase(fileExtension))
+            if (!"xls".equalsIgnoreCase(fileExtension))
                 throw new IllegalArgumentException("Invalid Rate File");
 
             Workbook workbook = new HSSFWorkbook(new FileInputStream(selectedFile));
@@ -372,20 +367,20 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
                                     .findAny().orElseThrow(() -> new IllegalArgumentException("Invalid Rate Type"));
                             firstCell = false;
                         } else if (firstRow && !firstCell) {
-                            BigDecimal snf = new BigDecimal(cell.getNumericCellValue()).setScale(SCALE, RATE_ROUND);
+                            BigDecimal snf = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(SCALE, RATE_ROUND);
                             minSnf = minSnf.min(snf);
                             maxSnf = maxSnf.max(snf);
                             LOGGER.info("SNF Value {} at [{}, {}]", snf, cell.getRowIndex(), cell.getColumnIndex());
                             listSnf.add(snf);
                         } else if (!firstRow && firstCell) {
-                            fat = new BigDecimal(cell.getNumericCellValue()).setScale(SCALE, RATE_ROUND);
+                            fat = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(SCALE, RATE_ROUND);
                             minFat = minFat.min(fat);
                             maxFat = maxFat.max(fat);
                             listFat.add(fat);
                             LOGGER.info("FAT Value {} at [{}, {}]", fat, cell.getRowIndex(), cell.getColumnIndex());
                             firstCell = false;
                         } else {
-                            BigDecimal rtpl = new BigDecimal(cell.getNumericCellValue()).setScale(SCALE, RATE_ROUND);
+                            BigDecimal rtpl = BigDecimal.valueOf(cell.getNumericCellValue()).setScale(SCALE, RATE_ROUND);
                             LOGGER.info("RTPL Value {} at index[{}, {}] and Quality[{}, {}]", rtpl, cell.getRowIndex(), cell.getColumnIndex(),
                                     fat, listSnf.get(index));
 

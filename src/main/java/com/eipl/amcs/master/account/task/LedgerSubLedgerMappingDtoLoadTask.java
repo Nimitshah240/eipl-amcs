@@ -2,8 +2,8 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerSubLedgerMapping;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.utils.AppConstant;
@@ -17,8 +17,8 @@ import java.util.Arrays;
 
 public class LedgerSubLedgerMappingDtoLoadTask extends Task<LedgerSubLedgerDto> {
 
-    private Ledger ledger;
-    private SubLedger subLedger;
+    private final Ledger ledger;
+    private final SubLedger subLedger;
 
     public LedgerSubLedgerMappingDtoLoadTask(Ledger ledger, SubLedger subLedger) {
         this.ledger = ledger;
@@ -47,7 +47,7 @@ public class LedgerSubLedgerMappingDtoLoadTask extends Task<LedgerSubLedgerDto> 
             }
 
             for (SubLedger sbl : dto.getSubLedgerList()) {
-                if(dto.getLedgerSubLedgerMappingList().stream()
+                if (dto.getLedgerSubLedgerMappingList().stream()
                         .anyMatch(p -> p.getSubLedger().getCode().equals(sbl.getCode())))
                     sbl.selectedProperty().set(true);
             }
@@ -70,7 +70,7 @@ public class LedgerSubLedgerMappingDtoLoadTask extends Task<LedgerSubLedgerDto> 
             }
 
             for (Ledger ldr : dto.getLedgerList()) {
-                if(dto.getLedgerSubLedgerMappingList().stream()
+                if (dto.getLedgerSubLedgerMappingList().stream()
                         .anyMatch(p -> p.getLedger().getCode().equals(ldr.getCode())))
                     ldr.selectedProperty().set(true);
             }

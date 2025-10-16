@@ -3,7 +3,6 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -12,20 +11,15 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.service.TaxService;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.model.Unit;
-import com.eipl.amcs.master.global.service.UnitService;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
 import com.eipl.amcs.master.inventory.convertor.ProductGroupConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
-import com.eipl.amcs.master.inventory.service.ProductGroupService;
-import com.eipl.amcs.master.inventory.service.ProductService;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductNumberLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductSaveTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -41,8 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class ProductAddEditController implements MyInitialization {
     @FXML

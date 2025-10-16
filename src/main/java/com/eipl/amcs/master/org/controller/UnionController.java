@@ -6,7 +6,6 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.service.UnionService;
 import com.eipl.amcs.master.org.task.UnionLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,8 +22,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class UnionController implements MyInitialization {
 
@@ -61,7 +58,7 @@ public class UnionController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
+        try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
             colRegistrationCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
@@ -76,7 +73,7 @@ public class UnionController implements MyInitialization {
             colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Union setuptable Exception");
             e.printStackTrace();
         }

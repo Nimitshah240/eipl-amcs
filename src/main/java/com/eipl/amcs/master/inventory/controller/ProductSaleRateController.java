@@ -10,13 +10,10 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
-import com.eipl.amcs.master.inventory.service.ProductSaleRateService;
-import com.eipl.amcs.master.inventory.service.ProductService;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateLoadTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -36,10 +33,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class ProductSaleRateController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<ProductSaleRate> propSaleRateDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -58,9 +54,7 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
     TableColumn<ProductSaleRate, Union> colUnion;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<ProductSaleRate> propSaleRateDto;
 
     public ProductSaleRateController() {
         propSaleRateDto = new SimpleObjectProperty<>();
@@ -153,7 +147,7 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -168,6 +162,7 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
             }
         }
     }
+
     @Override
     public void reloadData(boolean flag) {
         if (flag)

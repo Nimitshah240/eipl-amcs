@@ -1,19 +1,12 @@
 package com.eipl.amcs.master.inventory.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 public class ProductPurchaseRateSaveTask extends Task<Object> {
     private final ProductPurchaseRate dto;
@@ -27,12 +20,13 @@ public class ProductPurchaseRateSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            ProductPurchaseRateService service= EmcsAppContext.getContext().getBean(ProductPurchaseRateService.class);
+            ProductPurchaseRateService service = EmcsAppContext.getContext().getBean(ProductPurchaseRateService.class);
             if (this.update == 0) {
                 service.save(dto, CommonUtil.setIdentityHeader());
-            }else {
+            } else {
                 service.update(dto, CommonUtil.setIdentityHeader());
-            }   return true;
+            }
+            return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_PURCHASE_RATE;

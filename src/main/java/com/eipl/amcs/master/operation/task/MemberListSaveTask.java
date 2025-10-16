@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemberListSaveTask extends Task<List<MemberImportDto>> {
-    private List<MemberDto> dtoList;
+    private final List<MemberDto> dtoList;
     private boolean fromMigration = false;
 
     public MemberListSaveTask(List<MemberDto> dtoList) {

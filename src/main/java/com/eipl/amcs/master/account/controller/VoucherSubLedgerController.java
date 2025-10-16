@@ -7,12 +7,10 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.converter.SubLedgerConvertor;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
-import com.eipl.amcs.master.account.model.LedgerSubLedgerMapping;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.model.VoucherSubLedger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
-import com.eipl.amcs.master.account.service.LedgerService;
-import com.eipl.amcs.master.account.service.SubLedgerService;
+import com.eipl.amcs.master.account.task.LedgerSubLedgerMappingDtoLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,9 +28,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class VoucherSubLedgerController implements MyInitialization {
+    private final StringBuilder errorMsg = null;
+    private final ObjectProperty<VoucherSubLedger> propSubLedger;
+    public VoucherTransaction voucherTransaction = new VoucherTransaction();
     @FXML
     VBox vbox;
     @FXML
@@ -52,19 +53,10 @@ public class VoucherSubLedgerController implements MyInitialization {
     private BigDecimal total = BigDecimal.ZERO;
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
     private PopupCallback callback;
     private List<VoucherSubLedger> voucherSubLedgerList;
 
-    private SubLedgerService subLedgerService;
-    private LedgerService ledgerService;
-
-    private final ObjectProperty<VoucherSubLedger> propSubLedger;
-    public VoucherTransaction voucherTransaction = new VoucherTransaction();
-
     public VoucherSubLedgerController() {
-        subLedgerService = MainApp.context.getBean(SubLedgerService.class);
-        ledgerService = MainApp.context.getBean(LedgerService.class);
         propSubLedger = new SimpleObjectProperty<>();
     }
 
@@ -204,34 +196,21 @@ public class VoucherSubLedgerController implements MyInitialization {
         }
     }
 
+
     public void loadSubLedger() {
-        LedgerSubLedgerDto dto = new LedgerSubLedgerDto();
-        CompletableFuture<List<SubLedger>> subLedgerListFuture = CompletableFuture.supplyAsync(() -> subLedgerService.findAll());
-        CompletableFuture<List<LedgerSubLedgerMapping>> ledgerSubLedgerMappingListFuture = CompletableFuture.supplyAsync(() -> ledgerService.fetchMapping(MainApp.identityDto.getSociety().getCode(), voucherTransaction.getLedger().getCode(), null));
-        CompletableFuture.allOf(subLedgerListFuture, ledgerSubLedgerMappingListFuture)
-                .whenCompleteAsync((result, ex) -> {
-                    try {
-                        if (!subLedgerListFuture.get().isEmpty())
-                            dto.setSubLedgerList(subLedgerListFuture.get());
-
-                        if (!ledgerSubLedgerMappingListFuture.get().isEmpty())
-                            dto.setLedgerSubLedgerMappingList(ledgerSubLedgerMappingListFuture.get());
-
-                        for (SubLedger sbl : dto.getSubLedgerList()) {
-                            if (dto.getLedgerSubLedgerMappingList().stream()
-                                    .anyMatch(p -> p.getSubLedger().getCode().equals(sbl.getCode())))
-                                sbl.selectedProperty().set(true);
-                        }
-
-                        if (dto != null) {
-                            cboxSubLedger.setItems(FXCollections.observableList(dto.getSubLedgerList()));
-                            cboxSubLedger.getSelectionModel().select(0);
-                        }
-                    } catch (Exception exs) {
-                        System.out.println(exs);
-                        throw new RuntimeException(exs);
-                    }
-                });
+        var task = new LedgerSubLedgerMappingDtoLoadTask(voucherTransaction.getLedger(), null);
+        task.setOnSucceeded(e -> {
+            try {
+                LedgerSubLedgerDto list = task.get();
+                if (list != null) {
+                    cboxSubLedger.setItems(FXCollections.observableList(list.getSubLedgerList()));
+                    cboxSubLedger.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
 

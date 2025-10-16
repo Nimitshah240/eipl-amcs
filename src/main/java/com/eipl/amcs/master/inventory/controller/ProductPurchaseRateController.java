@@ -10,12 +10,10 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
-import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateLoadTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -35,10 +33,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class ProductPurchaseRateController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<ProductPurchaseRate> propPurchaseRateDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -57,9 +54,7 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
     TableColumn<ProductPurchaseRate, Union> colUnion;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<ProductPurchaseRate> propPurchaseRateDto;
 
     public ProductPurchaseRateController() {
         propPurchaseRateDto = new SimpleObjectProperty<>();
@@ -74,7 +69,7 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        this.resourceBundle=resourceBundle;
+        this.resourceBundle = resourceBundle;
         setupTable();
         loadData();
         propPurchaseRateDto.addListener((observable, oldValue, newValue) -> {
@@ -119,7 +114,7 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             propPurchaseRateDto.bind(tableProductPurchaseRate.getSelectionModel().selectedItemProperty());
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("ProductPurchaseRate setuptable Exception");
             e.printStackTrace();
         }
@@ -153,7 +148,7 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -168,6 +163,7 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
             }
         }
     }
+
     @Override
     public void reloadData(boolean flag) {
         if (flag)

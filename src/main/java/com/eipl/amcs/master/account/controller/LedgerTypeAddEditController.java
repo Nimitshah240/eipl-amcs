@@ -3,14 +3,15 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.model.LedgerType;
-import com.eipl.amcs.master.account.service.LedgerTypeService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.account.task.LedgerTypeNumberLoadTask;
+import com.eipl.amcs.master.account.task.LedgerTypeSaveTask;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,8 +21,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class LedgerTypeAddEditController implements MyInitialization {
     @FXML
@@ -38,8 +38,6 @@ public class LedgerTypeAddEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private LedgerType dto = null;
-    private LedgerTypeService service;
-    private NextCodeService nextCodeService;
 
 
     public void setCallback(PopupCallback callback) {
@@ -55,10 +53,6 @@ public class LedgerTypeAddEditController implements MyInitialization {
         return root;
     }
 
-    public LedgerTypeAddEditController() {
-        service = context.getBean(LedgerTypeService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-    }
 
     public void setLedgerType(LedgerType dto) {
         if (dto != null) {
@@ -108,14 +102,18 @@ public class LedgerTypeAddEditController implements MyInitialization {
     }
 
     private void getNextLedgerTypeCode() {
-        try {
-            String nextCode = nextCodeService.getNextCode("LedgerType", "code", MainApp.identityDto.getSociety().getCode(), 0);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-            txtCode.setText(nextCode);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new LedgerTypeNumberLoadTask(MainApp.identityDto.getSociety().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                String nextCode = task.get();
+                if (nextCode == null || nextCode.isEmpty())
+                    return;
+                txtCode.setText(nextCode);
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private LedgerType setValuesInObject() {
@@ -136,36 +134,64 @@ public class LedgerTypeAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        try {
-            service.save(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
-                    resourceBundle.getString("ledgertype.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
-                    "Error");
-            alert.createAlert();
-        }
+        var task = new LedgerTypeSaveTask(dto, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
+                        resourceBundle.getString("ledgertype.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            service.update(dto, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
-                    resourceBundle.getString("ledgertype.update.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
-                    "Error");
-            alert.createAlert();
-        }
+        var task = new LedgerTypeSaveTask(dto, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgertype"),
+                        resourceBundle.getString("ledgertype.update.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
 

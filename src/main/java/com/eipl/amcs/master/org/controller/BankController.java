@@ -3,7 +3,6 @@ package com.eipl.amcs.master.org.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.service.BankService;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,8 +18,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class BankController implements MyInitialization {
 
@@ -55,7 +52,7 @@ public class BankController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
+        try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
@@ -66,7 +63,7 @@ public class BankController implements MyInitialization {
                     resourceBundle.getString("yes") : resourceBundle.getString("no")));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Bank setuptable Exception");
             e.printStackTrace();
         }

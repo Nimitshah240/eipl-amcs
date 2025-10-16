@@ -49,7 +49,7 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
     Button btnAdd, btnClose, btnView, btnSync;
     private ResourceBundle resourceBundle;
 
-    private ObjectProperty<MemberMilkPurchaseRate> propRate;
+    private final ObjectProperty<MemberMilkPurchaseRate> propRate;
 
     public MemberMilkPurchaseRateController() {
         propRate = new SimpleObjectProperty<>();
@@ -67,11 +67,7 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
         loadData();
 
         propRate.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnView.setDisable(false);
-            } else {
-                btnView.setDisable(true);
-            }
+            btnView.setDisable(newValue == null);
         });
 
         btnAdd.setOnAction(e -> {

@@ -1,18 +1,9 @@
 package com.eipl.amcs.master.operation.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.service.BillCriteriaService;
 import com.eipl.amcs.util.CommonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class acts as a Delete task to delete BillCriteria.
@@ -37,7 +28,7 @@ public class BillCriteriaDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            BillCriteriaService service=EmcsAppContext.getContext().getBean(BillCriteriaService.class);
+            BillCriteriaService service = EmcsAppContext.getContext().getBean(BillCriteriaService.class);
             service.delete(code, CommonUtil.setIdentityHeader());
             return true;
 

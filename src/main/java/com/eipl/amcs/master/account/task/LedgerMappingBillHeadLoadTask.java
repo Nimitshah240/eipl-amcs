@@ -54,7 +54,7 @@ public class LedgerMappingBillHeadLoadTask extends Task<BillHeadMappingDto> {
                 listMapping.add(mp);
             }
             List<Ledger> list = new ArrayList<>(Arrays.asList(respLedger.getBody()));
-            list.add(0, new Ledger( "None"));//"0",
+            list.add(0, new Ledger("None"));//"0",
             return new BillHeadMappingDto(listMapping, list);
         } catch (Exception e) {
             LOGGER.error("LedgerMappingBillHead fetch", e);

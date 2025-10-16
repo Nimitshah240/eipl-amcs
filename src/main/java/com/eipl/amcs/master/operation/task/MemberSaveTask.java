@@ -1,19 +1,12 @@
 package com.eipl.amcs.master.operation.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 public class MemberSaveTask extends Task<Object> {
     private final MemberDto dto;
@@ -28,7 +21,7 @@ public class MemberSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
-            MemberDto dtoNew=null;
+            MemberDto dtoNew = null;
             if (this.update == 0) {
                 dtoNew = service.save(dto, CommonUtil.setIdentityHeader());
             } else {

@@ -19,26 +19,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class MemberEditPasswordController implements MyInitialization {
+    public PopupCallback callback;
     @FXML
     StackPane root;
-
-    @FXML
-    private TextField txtPassword;
-
     @FXML
     Button btnOk, btnClose;
+    @FXML
+    private TextField txtPassword;
     private Stage stage;
-    public PopupCallback callback;
     private Member member;
     @FXML
     private Label lblincorrectpassword;
+    private ResourceBundle resourceBundle;
+    private ObjectProperty<Member> propMember;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    private ResourceBundle resourceBundle;
-    private ObjectProperty<Member> propMember;
 
     @Override
     public Node getRoot() {

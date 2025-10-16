@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SocietyPaymentCycleSaveTask extends Task<Object> {
-    private List<SocietyPaymentCycle> paymentCycleList;
-    private short update;
+    private final List<SocietyPaymentCycle> paymentCycleList;
+    private final short update;
 
     public SocietyPaymentCycleSaveTask(List<SocietyPaymentCycle> paymentCycleList, short update) {
         this.paymentCycleList = paymentCycleList;

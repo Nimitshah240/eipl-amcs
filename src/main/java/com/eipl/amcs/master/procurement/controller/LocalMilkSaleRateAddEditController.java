@@ -14,14 +14,10 @@ import com.eipl.amcs.master.global.convertor.MilkClassConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.service.MilkClassService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
 import com.eipl.amcs.master.global.task.MilkClassLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
-import com.eipl.amcs.master.procurement.service.LocalMilkSaleRateService;
 import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateSaveTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -37,8 +33,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class LocalMilkSaleRateAddEditController implements MyInitialization {
     @FXML
@@ -58,7 +52,7 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
-    private LocalMilkSaleRate dto = null;
+    private final LocalMilkSaleRate dto = null;
     private LocalMilkSaleRate localMilkSaleRate = null;
     private BigDecimal rate;
 

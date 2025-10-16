@@ -3,7 +3,6 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -14,13 +13,10 @@ import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
-import com.eipl.amcs.master.inventory.service.ProductSaleRateService;
-import com.eipl.amcs.master.inventory.service.ProductService;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateNumberLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateSaveTask;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -37,8 +33,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class ProductSaleRateAddEditController implements MyInitialization {
     @FXML
@@ -262,8 +256,8 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 String nextCode = task.get();
-                if (nextCode == null || nextCode.isEmpty())
-                    return;
+                if (nextCode == null || nextCode.isEmpty()) {
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

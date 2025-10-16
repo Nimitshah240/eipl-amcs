@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SubLedgerOpeningBalanceListSaveTask extends Task<List<SubLedgerOpeningBalance>> {
-    private List<SubLedgerOpeningBalance> dtoList;
-    private boolean fromMigration = false;
+    private final List<SubLedgerOpeningBalance> dtoList;
+    private final boolean fromMigration = false;
 
     public SubLedgerOpeningBalanceListSaveTask(List<SubLedgerOpeningBalance> dtoList) {
         this.dtoList = dtoList;
@@ -38,7 +38,7 @@ public class SubLedgerOpeningBalanceListSaveTask extends Task<List<SubLedgerOpen
             for (List<SubLedgerOpeningBalance> memberDtos : listTemp) {
                 try {
                     RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                    String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_OPENING_BALANCE+ "/import";
+                    String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_OPENING_BALANCE + "/import";
                     ResponseEntity<SubLedgerOpeningBalance[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(memberDtos), SubLedgerOpeningBalance[].class);
 
                     if (response == null || response.getStatusCode() != HttpStatus.OK)
@@ -54,7 +54,7 @@ public class SubLedgerOpeningBalanceListSaveTask extends Task<List<SubLedgerOpen
         } else {
             try {
                 RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_OPENING_BALANCE+"/import";
+                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_OPENING_BALANCE + "/import";
                 ResponseEntity<SubLedgerOpeningBalance[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), SubLedgerOpeningBalance[].class);
 
                 if (response == null || response.getStatusCode() != HttpStatus.OK)

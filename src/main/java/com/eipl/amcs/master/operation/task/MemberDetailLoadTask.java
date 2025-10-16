@@ -1,21 +1,12 @@
 package com.eipl.amcs.master.operation.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MemberDetailLoadTask extends Task<MemberDetail> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberDetailLoadTask.class);
@@ -25,10 +16,11 @@ public class MemberDetailLoadTask extends Task<MemberDetail> {
     public MemberDetailLoadTask(String code) {
         this.code = code;
     }
+
     @Override
     protected MemberDetail call() throws Exception {
         try {
-            MemberService service= EmcsAppContext.getContext().getBean(MemberService.class);
+            MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
             Member member = service.findByMemberCode(code);
             return service.findDetailByMember(member);
 

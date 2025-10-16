@@ -3,15 +3,12 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.service.CustomerService;
 import com.eipl.amcs.master.operation.task.CustomerDeleteTask;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,8 +28,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class CustomerController implements MyInitialization {
 
     @FXML
@@ -43,17 +38,15 @@ public class CustomerController implements MyInitialization {
     TableColumn<Customer, String> colCode, colName, colLocalName, colMobileNo, colStatus, colType;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
+    private ResourceBundle resourceBundle;
+    private final ObjectProperty<Customer> propCustomer;
+    public CustomerController() {
+        propCustomer = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    private ResourceBundle resourceBundle;
-    private ObjectProperty<Customer> propCustomer;
-
-    public CustomerController() {
-        propCustomer = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -81,7 +74,7 @@ public class CustomerController implements MyInitialization {
                 MainApp.getContentPane().setCenter((controller).getRoot());
             }
         });
-        btnDelete.setOnAction(e ->{
+        btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_CUSTOMER_DELETE"))
                 throw new UnAuthorizedAccessException();
             deleteData();
@@ -100,8 +93,8 @@ public class CustomerController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
-            colType.setCellValueFactory(data->new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getType().shortValue())));
+        try {
+            colType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getType().shortValue())));
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
 //        colType.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()==3?"Customer":data.getValue().getType()==4?"Institute":"Consumer"));
@@ -109,7 +102,7 @@ public class CustomerController implements MyInitialization {
             colMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMobileNo()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
             propCustomer.bind(tableCustomer.getSelectionModel().selectedItemProperty());
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("BillCriteria setuptable Exception");
             e.printStackTrace();
         }
@@ -143,7 +136,7 @@ public class CustomerController implements MyInitialization {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

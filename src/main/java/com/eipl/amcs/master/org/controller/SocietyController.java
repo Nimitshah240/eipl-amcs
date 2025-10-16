@@ -6,9 +6,6 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.service.BankService;
-import com.eipl.amcs.master.org.service.BranchService;
-import com.eipl.amcs.master.org.service.SocietyService;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.master.org.task.SocietyLoadTask;
@@ -33,8 +30,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class SocietyController implements MyInitialization {
 
     @FXML
@@ -54,13 +49,45 @@ public class SocietyController implements MyInitialization {
     private StackPane root;
 
     private Society dto;
+    private final ObservableList<Bank> bankList = FXCollections.observableArrayList();
+    private final StringConverter<Bank> bankConverter = new StringConverter<Bank>() {
+        @Override
+        public String toString(Bank bank) {
+            if (bank == null)
+                return null;
+            return bank.toString();
+        }
+
+        @Override
+        public Bank fromString(String s) {
+            if (s == null || s.isEmpty())
+                return null;
+            return bankList.stream().filter(p -> s.equals(p.toString())).findAny().orElse(null);
+        }
+
+    };
+    private final ObservableList<Branch> branchList = FXCollections.observableArrayList();
+    private final StringConverter<Branch> branchConverter = new StringConverter<>() {
+        @Override
+        public String toString(Branch object) {
+            if (object == null)
+                return null;
+            return object.toString();
+        }
+
+        @Override
+        public Branch fromString(String string) {
+            if (string == null || string.isEmpty())
+                return null;
+            return branchList.stream().filter(p -> p.toString().equalsIgnoreCase(string))
+                    .findFirst().orElse(null);
+        }
+    };
 
     @Override
     public Node getRoot() {
         return root;
     }
-    private ObservableList<Bank> bankList = FXCollections.observableArrayList();
-    private ObservableList<Branch> branchList= FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,7 +111,7 @@ public class SocietyController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
+        try {
             tableSociety.setEditable(true);
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
@@ -180,47 +207,11 @@ public class SocietyController implements MyInitialization {
             });
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
             colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Society setuptable Exception");
             e.printStackTrace();
         }
     }
-
-    private final StringConverter<Bank> bankConverter = new StringConverter<Bank>() {
-        @Override
-        public String toString(Bank bank) {
-            if (bank == null)
-                return null;
-            return bank.toString();
-        }
-
-        @Override
-        public Bank fromString(String s) {
-            if (s == null || s.isEmpty())
-                return null;
-            return bankList.stream().filter(p -> s.equals(p.toString())).findAny().orElse(null);
-        }
-
-    };
-    private final StringConverter<Branch> branchConverter = new StringConverter<>() {
-        @Override
-        public String toString(Branch object) {
-            if (object == null)
-                return null;
-            return object.toString();
-        }
-
-        @Override
-        public Branch fromString(String string) {
-            if (string == null || string.isEmpty())
-                return null;
-            return branchList.stream().filter(p -> p.toString().equalsIgnoreCase(string))
-                    .findFirst().orElse(null);
-        }
-    };
-
-
-
 
     public void loadBank() {
         var task = new BankLoadTask();

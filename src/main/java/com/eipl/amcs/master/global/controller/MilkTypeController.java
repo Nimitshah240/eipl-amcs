@@ -3,7 +3,6 @@ package com.eipl.amcs.master.global.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.service.MilkTypeService;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,8 +18,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class MilkTypeController implements MyInitialization {
     @FXML

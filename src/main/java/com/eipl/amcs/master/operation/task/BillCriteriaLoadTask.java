@@ -1,18 +1,12 @@
 package com.eipl.amcs.master.operation.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.service.BillCriteriaService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class BillCriteriaLoadTask extends Task<List<BillCriteria>> {
@@ -21,7 +15,7 @@ public class BillCriteriaLoadTask extends Task<List<BillCriteria>> {
     @Override
     protected List<BillCriteria> call() throws Exception {
         try {
-            BillCriteriaService service=EmcsAppContext.getContext().getBean(BillCriteriaService.class);
+            BillCriteriaService service = EmcsAppContext.getContext().getBean(BillCriteriaService.class);
             List<BillCriteria> list = service.findAll();
             if (list == null || list.isEmpty())
                 return null;

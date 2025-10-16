@@ -3,7 +3,6 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -16,14 +15,10 @@ import com.eipl.amcs.master.operation.convertor.FormulaConvertor;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.model.Formula;
-import com.eipl.amcs.master.operation.repository.FormulaRepository;
-import com.eipl.amcs.master.operation.service.BillCriteriaService;
-import com.eipl.amcs.master.operation.service.BillHeadService;
 import com.eipl.amcs.master.operation.task.BillCriteriaNumberLoadTask;
 import com.eipl.amcs.master.operation.task.BillCriteriaSaveTask;
 import com.eipl.amcs.master.operation.task.BillHeadLoadTask;
 import com.eipl.amcs.master.operation.task.FormulaLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -39,8 +34,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-
-import static com.eipl.amcs.MainApp.context;
 
 /**
  * This class acts as a controller for BillCriteria Add-Edit Popup.
@@ -166,7 +159,7 @@ public class BillCriteriaAddEditController implements MyInitialization {
                     List<Formula> list = task.get();
                     if (list != null) {
                         List<Formula> filteredList = list.stream()
-                                .filter(b -> Boolean.TRUE.equals(b.getType().equals("2"))) // Get type=2 for bill head use.
+                                .filter(b -> b.getType().equals("2")) // Get type=2 for bill head use.
                                 .collect(Collectors.toList());
                         cboxFormula.setItems(FXCollections.observableList(filteredList));
                     }

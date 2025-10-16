@@ -1,16 +1,9 @@
 package com.eipl.amcs.master.org.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.service.RouteService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 public class RouteSaveTask extends Task<Object> {
 
@@ -22,7 +15,7 @@ public class RouteSaveTask extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
-        RouteService service=EmcsAppContext.getContext().getBean(RouteService.class);
+        RouteService service = EmcsAppContext.getContext().getBean(RouteService.class);
         if (route == null)
             return null;
         service.save(route);

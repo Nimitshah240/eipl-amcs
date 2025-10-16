@@ -11,11 +11,9 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleDeleteTask;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadByDateTask;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,22 +26,16 @@ import javafx.scene.layout.StackPane;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class SocietyPaymentCycleController implements MyInitialization, PopupCallback {
     @FXML
     StackPane root;
     @FXML
     TableView<SocietyPaymentCycle> tableSocietyPaymentCycles;
-    @FXML
-    private DatePicker dpFromDate, dpToDate;
     @FXML
     TableColumn<SocietyPaymentCycle, String> colCode;
     @FXML
@@ -54,12 +46,12 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
     TableColumn<SocietyPaymentCycle, LocalDate> colFromDate, colToDate;
     @FXML
     TableColumn<SocietyPaymentCycle, String> colIsBilling, colLockBillingProcess;
-
     @FXML
     Button btnClose, btnEdit, btnGenerate, btnDelete, btnSearch;
-
+    @FXML
+    private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    private ObjectProperty<SocietyPaymentCycle> propPaymentCycle;
+    private final ObjectProperty<SocietyPaymentCycle> propPaymentCycle;
 
     public SocietyPaymentCycleController() {
         propPaymentCycle = new SimpleObjectProperty<>();
@@ -187,7 +179,7 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
             task.setOnSucceeded(e -> {
                 try {
                     Boolean respDelete = task.get();
-                    if (respDelete == null || respDelete.booleanValue() == false) {
+                    if (respDelete == null || !respDelete.booleanValue()) {
                         MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
                                 resourceBundle.getString("error.occurred"));
                         alert1.createAlert();

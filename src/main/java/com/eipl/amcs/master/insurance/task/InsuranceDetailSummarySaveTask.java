@@ -1,24 +1,17 @@
 package com.eipl.amcs.master.insurance.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.insurance.model.InsuranceDetailSummary;
 import com.eipl.amcs.master.insurance.service.InsuranceMasterService;
 import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 public class InsuranceDetailSummarySaveTask extends Task<Object> {
 
-    private InsuranceDetailSummary dto;
-    private int process;
+    private final InsuranceDetailSummary dto;
+    private final int process;
 
     public InsuranceDetailSummarySaveTask(InsuranceDetailSummary dto, int process) {
         this.dto = dto;

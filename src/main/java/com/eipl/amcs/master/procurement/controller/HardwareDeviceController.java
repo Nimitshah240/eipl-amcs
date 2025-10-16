@@ -3,7 +3,6 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.procurement.model.HardwareDevice;
-import com.eipl.amcs.master.procurement.service.HardwareDeviceService;
 import com.eipl.amcs.master.procurement.task.HardwareDeviceLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -20,8 +19,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class HardwareDeviceController implements MyInitialization {
     @FXML

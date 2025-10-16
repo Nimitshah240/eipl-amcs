@@ -1,26 +1,17 @@
 package com.eipl.amcs.master.geo.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.geo.model.District;
-import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.service.DistrictService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DistrictLoadTask extends Task<List<District>> {
-    private com.eipl.amcs.master.geo.model.State state;
     private static final Logger LOGGER = LoggerFactory.getLogger(DistrictLoadTask.class);
+    private com.eipl.amcs.master.geo.model.State state;
 
     public DistrictLoadTask() {
     }
@@ -32,15 +23,15 @@ public class DistrictLoadTask extends Task<List<District>> {
     @Override
     protected List<District> call() throws Exception {
         try {
-         DistrictService service=EmcsAppContext.getContext().getBean(DistrictService.class);
-        List<District> list;
-        if (state == null )
-            list = service.findAll();
-        else
-            list = service.findAll(state.getCode());
-        if (list == null || list.isEmpty())
-            return null;
-        return list;
+            DistrictService service = EmcsAppContext.getContext().getBean(DistrictService.class);
+            List<District> list;
+            if (state == null)
+                list = service.findAll();
+            else
+                list = service.findAll(state.getCode());
+            if (list == null || list.isEmpty())
+                return null;
+            return list;
 
 //        try {
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

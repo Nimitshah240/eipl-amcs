@@ -1,19 +1,11 @@
 package com.eipl.amcs.master.inventory.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
 import com.eipl.amcs.util.CommonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class ProductPurchaseRateDeleteTask extends Task<Boolean> {
@@ -26,7 +18,7 @@ public class ProductPurchaseRateDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            ProductPurchaseRateService service= EmcsAppContext.getContext().getBean(ProductPurchaseRateService.class);
+            ProductPurchaseRateService service = EmcsAppContext.getContext().getBean(ProductPurchaseRateService.class);
             Optional<ProductPurchaseRate> productData = service.findById(code);
             if (productData == null || !productData.isPresent())
                 return null;

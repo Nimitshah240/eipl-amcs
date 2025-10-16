@@ -50,6 +50,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.UnaryOperator;
 
 public class InsuranceDetailAddEditController implements MyInitialization {
+    public InsuranceMaster insuranceMaster = null;
+    public InsuranceDetailSummary insuranceDetailSummary = null;
+    public String insuranceDetailCode = "";
+    public String insuranceDetailSrNo = "";
+    public String yearOfDetailFromPortal = String.valueOf(LocalDate.now().getYear() % 100);
+    public List<InsuranceDetail> insuranceDetailList = null;
     @FXML
     private StackPane root;
     @FXML
@@ -65,18 +71,11 @@ public class InsuranceDetailAddEditController implements MyInitialization {
     private Member member;
     @FXML
     private TextField txtAge;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private InsuranceDetail insuranceDetail = null;
     private PopupCallback callback;
-    public InsuranceMaster insuranceMaster = null;
-    public InsuranceDetailSummary insuranceDetailSummary = null;
-    public String insuranceDetailCode = "";
-    public String insuranceDetailSrNo = "";
-    public String yearOfDetailFromPortal = String.valueOf(LocalDate.now().getYear() % 100);
-    public List<InsuranceDetail> insuranceDetailList = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;

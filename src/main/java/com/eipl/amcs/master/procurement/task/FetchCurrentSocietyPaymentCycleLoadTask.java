@@ -22,16 +22,16 @@ public class FetchCurrentSocietyPaymentCycleLoadTask extends Task<SocietyPayment
     private final Integer code;
     private final LocalDateTime date;
 
-    public FetchCurrentSocietyPaymentCycleLoadTask(Integer code,LocalDateTime date) {
+    public FetchCurrentSocietyPaymentCycleLoadTask(Integer code, LocalDateTime date) {
         this.code = code;
-        this.date=date;
+        this.date = date;
     }
 
     @Override
     protected SocietyPaymentCycle call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER +"/fetchspc";
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/fetchspc";
             Map<String, Object> uriVariables = new HashMap<>();
             uriVariables.put("code", code);
             uriVariables.put("date", date);

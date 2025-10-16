@@ -45,34 +45,35 @@ import java.util.stream.Collectors;
 
 public class InsuranceMasterController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<InsuranceMaster> propInsuranceMasterDto;
     @FXML
     private StackPane root;
     @FXML
     private TableView<InsuranceMaster> tableInsuranceMaster;
-
     @FXML
     private TableColumn<InsuranceMaster, String> colInsuranceDescription;
     @FXML
     private TableColumn<InsuranceMaster, LocalDate> colInsuranceEndDate, colInsuranceStartDate, colDcsEditEndDate;
     @FXML
     private TableColumn<InsuranceMaster, Integer> colInsuranceMasterCode, colMinAge, colMaxAge;
-
     @FXML
     private E_Button btnView, btnFinalize, btnExport;
-
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
-    private final ObjectProperty<InsuranceMaster> propInsuranceMasterDto;
+    private final StringBuilder errorMsg = null;
     private String name;
     private List<InsuranceMaster> insuranceMasterList;
     private List<InsuranceDetail> insuranceDetailList;
     private InsuranceDetailSummary insuranceDetailSummary;
     private InsuranceMaster insuranceMaster;
     private List<Member> members;
-    private Map<String, InsuranceDetail> mapDetails = new HashMap<>();
+    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
 
     public InsuranceMasterController() {
         propInsuranceMasterDto = new SimpleObjectProperty<>();
+    }
+
+    public static int calculateAge(LocalDate birthDate) {
+        return (birthDate != null) ? Period.between(birthDate, LocalDate.now()).getYears() : 0;
     }
 
     @Override
@@ -269,10 +270,8 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
                         .append(": ").append(nomineeName).append("\n");
             }
             if (invalidNameMembers.length() > 0) {
-                String errorMsg3 = new StringBuilder()
-                        .append(resourceBundle.getString("invalid.members")).append("\n\n")
-                        .append(invalidNameMembers)
-                        .toString();
+                String errorMsg3 = resourceBundle.getString("invalid.members") + "\n\n" +
+                        invalidNameMembers;
                 MyAlert alert = new WarningAlert(MainApp.getStage(),
                         resourceBundle.getString("members.name.criteria"),
                         errorMsg3);
@@ -304,10 +303,8 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         }
 
         if (invalidMembers.length() > 0) {
-            String errorMsg1 = new StringBuilder()
-                    .append(resourceBundle.getString("invalid.members")).append("\n\n")
-                    .append(invalidMembers)
-                    .toString();
+            String errorMsg1 = resourceBundle.getString("invalid.members") + "\n\n" +
+                    invalidMembers;
             MyAlert alert = new WarningAlert(MainApp.getStage(),
                     resourceBundle.getString("members.not.available"),
                     errorMsg1);
@@ -315,11 +312,9 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             return;
         }
         if (invalidAgeMembers.length() > 0) {
-            String errorMsg2 = new StringBuilder()
-                    .append(resourceBundle.getString("invalid.age.members"))
-                    .append(" (").append(minAge).append(" - ").append(maxAge).append("):\n\n")
-                    .append(invalidAgeMembers)
-                    .toString();
+            String errorMsg2 = resourceBundle.getString("invalid.age.members") +
+                    " (" + minAge + " - " + maxAge + "):\n\n" +
+                    invalidAgeMembers;
             MyAlert alert = new WarningAlert(MainApp.getStage(),
                     resourceBundle.getString("members.age.criteria"),
                     errorMsg2);
@@ -357,10 +352,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
                 resourceBundle.getString("insurance.finalized.success"));
         alert.createAlert();
         System.out.println("Finalization complete.");
-    }
-
-    public static int calculateAge(LocalDate birthDate) {
-        return (birthDate != null) ? Period.between(birthDate, LocalDate.now()).getYears() : 0;
     }
 
     public void setInsuranceMaster(InsuranceMaster insuranceMaster) {

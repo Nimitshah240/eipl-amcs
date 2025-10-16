@@ -4,15 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.operation.model.BillHead;
-import com.eipl.amcs.master.operation.service.BillHeadService;
 import com.eipl.amcs.master.operation.task.BillHeadDeleteTask;
 import com.eipl.amcs.master.operation.task.BillHeadLoadTask;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -32,9 +29,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class BillHeadController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<BillHead> propBillHeadDto;
     @FXML
     StackPane root;
     @FXML
@@ -43,12 +39,8 @@ public class BillHeadController implements MyInitialization, PopupCallback {
     TableColumn<BillHead, String> colCode, colName, colDefault, colDisburseAllowed, colStatus;
     @FXML
     TableColumn<BillHead, String> colLocalName;
-
     @FXML
     Button btnAdd, btnEdit, btnClose, btnDelete;
-
-    private final ObjectProperty<BillHead> propBillHeadDto;
-
     private ResourceBundle resourceBundle;
 
     public BillHeadController() {
@@ -173,7 +165,7 @@ public class BillHeadController implements MyInitialization, PopupCallback {
                     task.setOnSucceeded(e -> {
                         try {
                             Boolean respDelete = task.get();
-                            if (respDelete == null || respDelete.booleanValue() == false) {
+                            if (respDelete == null || !respDelete.booleanValue()) {
                                 MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("billhead"),
                                         resourceBundle.getString("error.occurred"));
                                 alert1.createAlert();

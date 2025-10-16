@@ -16,12 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class RateViewTask extends Task<List<String>> {
-    private short rateType;
-    private String code;
-    private Integer milkType;
-    private Integer milkQualityType;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RateViewTask.class);
+    private final short rateType;
+    private final String code;
+    private final Integer milkType;
+    private final Integer milkQualityType;
 
     public RateViewTask(short rateType, String code, Integer milkType, Integer milkQualityType) {
         this.rateType = rateType;
@@ -34,7 +33,7 @@ public class RateViewTask extends Task<List<String>> {
     protected List<String> call() throws Exception {
         try {
             List<String> listStr = null;
-            if(rateType == (short) 0) {
+            if (rateType == (short) 0) {
                 RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
                 String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_MILK_PURCHASE_RATE + "/view/{code}/{milkTypeCode}/{milkQualityTypeCode}";
                 Map<String, Object> uriVariables = new HashMap<>();
