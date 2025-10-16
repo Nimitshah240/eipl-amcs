@@ -1,17 +1,12 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
+import com.eipl.amcs.operation.procurement.service.MilkDispatchService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 public class MilkDispatchTransactionDeleteTask extends Task<Boolean> {
 
@@ -24,14 +19,21 @@ public class MilkDispatchTransactionDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/transaction";
-//            Map<String, Object> uriVariables = new HashMap<>();
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code",code);
+            MilkDispatchService service = EmcsAppContext.getContext().getBean(MilkDispatchService.class);
 
-            ResponseEntity<Void> response = restTemplate.exchange((builder.toUriString()) , HttpMethod.DELETE, null, Void.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            Optional<MilkDispatchTransaction> dispatchData = service.findTransactionById(code);
+            if (dispatchData == null || !dispatchData.isPresent())
                 return null;
+            service.deleteTransaction(dispatchData.get(), CommonUtil.setIdentityHeader());
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/transaction";
+////            Map<String, Object> uriVariables = new HashMap<>();
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code",code);
+//
+//            ResponseEntity<Void> response = restTemplate.exchange((builder.toUriString()) , HttpMethod.DELETE, null, Void.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();
