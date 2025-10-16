@@ -2,6 +2,8 @@ package com.eipl.amcs.operation.procurement.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.operation.procurement.service.LocalMilkSaleService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpMethod;
@@ -22,14 +24,16 @@ public class LocalMilkSaleDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/{code}";
-            Map<String, Object> uriVariables = new HashMap<>();
-            uriVariables.put("code", code);
-
-            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
+            LocalMilkSaleService service=EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/{code}";
+//            Map<String, Object> uriVariables = new HashMap<>();
+//            uriVariables.put("code", code);
+//
+//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
+            service.delete(code, CommonUtil.setIdentityHeader());
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();

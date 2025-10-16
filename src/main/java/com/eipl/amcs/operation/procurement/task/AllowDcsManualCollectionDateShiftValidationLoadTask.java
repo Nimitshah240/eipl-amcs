@@ -3,6 +3,8 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
+import com.eipl.amcs.operation.procurement.repository.AllowDcsManualCollectionRangeRepository;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -14,6 +16,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.eipl.amcs.utils.AppConstant.DATE_TIME_FMT;
 
 public class AllowDcsManualCollectionDateShiftValidationLoadTask extends Task<Boolean> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AllowDcsManualCollectionDateShiftValidationLoadTask.class);
@@ -37,18 +42,24 @@ public class AllowDcsManualCollectionDateShiftValidationLoadTask extends Task<Bo
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ALLOWDCSMANUALCOLLECTIONRANGE + "/findByDateShiftValidation";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString())
-                    .queryParam("weightManual", weightManual)
-                    .queryParam("qualityManual", qualityManual)
-                    .queryParam("type", selectedIndex);
-            ResponseEntity<Boolean> response = restTemplate.getForEntity(builder.toUriString(), Boolean.class);
-            if (response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return response.getBody();
+            AllowDcsManualCollectionRangeRepository repository=EmcsAppContext.getContext().getBean(AllowDcsManualCollectionRangeRepository.class);
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ALLOWDCSMANUALCOLLECTIONRANGE + "/findByDateShiftValidation";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("fromDate", fromDate.toString())
+//                    .queryParam("toDate", toDate.toString())
+//                    .queryParam("weightManual", weightManual)
+//                    .queryParam("qualityManual", qualityManual)
+//                    .queryParam("type", selectedIndex);
+//            ResponseEntity<Boolean> response = restTemplate.getForEntity(builder.toUriString(), Boolean.class);
+
+            if (selectedIndex.toString().equalsIgnoreCase("0")) {
+                 repository.findByFromDateLessThanEqualAndToDateGreaterThanEqualAndxCol1AndWeightManualAndQualityManualAndFromShiftAndToShiftAndStatus(fromDate, toDate, selectedIndex.toString(), weightManual, qualityManual, 2);
+            } else {
+                  repository.findByFromDateBetweenAndToDateBetweenAndxCol1AndWeightManualAndQualityManualAndStatus
+                        (fromDate, toDate, selectedIndex.toString(), qualityManual, weightManual, 2);
+            }
+           return true;
         } catch (Exception e) {
             LOGGER.error("ProductReceipt fetch", e);
         }

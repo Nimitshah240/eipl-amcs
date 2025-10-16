@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.procurement.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.operation.procurement.dto.MemberSocietyInfoDto;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
@@ -39,19 +40,26 @@ public class MemberSocietyInfoLoadTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/member-information";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("code", code)
-                    .queryParam("count", count == null ? 5 : count)
-                    .queryParam("paymentCycle", paymentCycleCode)
-                    .queryParam("date", date.toString());
+            MemberService service=EmcsAppContext.getContext().getBean(MemberService.class);
+            if (count == null)
+                count = 5;
 
-            ResponseEntity<MemberSocietyInfoDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-                    null, MemberSocietyInfoDto.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return response.getBody();
+           MemberSocietyInfoDto dtoResult = service.findMemberInformation(code, date, count, paymentCycleCode);
+            if(dtoResult == null)return null;
+            return dtoResult;
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/member-information";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("code", code)
+//                    .queryParam("count", count == null ? 5 : count)
+//                    .queryParam("paymentCycle", paymentCycleCode)
+//                    .queryParam("date", date.toString());
+//
+//            ResponseEntity<MemberSocietyInfoDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
+//                    null, MemberSocietyInfoDto.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

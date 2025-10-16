@@ -6,6 +6,7 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.service.MilkDispatchService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpMethod;
@@ -32,16 +33,21 @@ public class MilkDispatchSocietyPurchaseRateLoadTask extends Task<SocietyMilkPur
     @Override
     protected SocietyMilkPurchaseRate call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/rate-code";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("date", date.toString())
-                    .queryParam("shiftCode", shift.getCode())
-                    .queryParam("societyCode", society.getCode());
-            ResponseEntity<SocietyMilkPurchaseRate> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, SocietyMilkPurchaseRate.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            MilkDispatchService service=EmcsAppContext.getContext().getBean(MilkDispatchService.class);
+            SocietyMilkPurchaseRate societyMilkPurchaseRate = service.fetchPurchaseRateCode(date, shift.getCode(), society.getCode());
+            if (societyMilkPurchaseRate==null||societyMilkPurchaseRate.getCode().isEmpty())
                 return null;
-            return response.getBody();
+            return societyMilkPurchaseRate;
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/rate-code";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("date", date.toString())
+//                    .queryParam("shiftCode", shift.getCode())
+//                    .queryParam("societyCode", society.getCode());
+//            ResponseEntity<SocietyMilkPurchaseRate> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, SocietyMilkPurchaseRate.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

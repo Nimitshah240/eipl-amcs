@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.dto.MemberWiseCollectionDto;
+import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -36,20 +37,25 @@ public class MemberAvgTotalPrevCollectionLoadTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/allinone";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("code", code)
-                    .queryParam("no", no)
-                    .queryParam("milktype", milktype)
-                    .queryParam("paymentCycleCode", paymentCycleCode)
-                    .queryParam("shiftCode", shiftCode)
-                    .queryParam("date", date.toString());
-            ResponseEntity<MemberWiseCollectionDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-                    null, MemberWiseCollectionDto.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return response.getBody();
+            MilkCollectionService service=EmcsAppContext.getContext().getBean(MilkCollectionService.class);
+            MemberWiseCollectionDto dtoResult = service.findAllInOne(code, Integer.parseInt(no), milktype, date, shiftCode, paymentCycleCode);
+
+            if(dtoResult == null)return null;
+            return dtoResult;
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/allinone";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("code", code)
+//                    .queryParam("no", no)
+//                    .queryParam("milktype", milktype)
+//                    .queryParam("paymentCycleCode", paymentCycleCode)
+//                    .queryParam("shiftCode", shiftCode)
+//                    .queryParam("date", date.toString());
+//            ResponseEntity<MemberWiseCollectionDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
+//                    null, MemberWiseCollectionDto.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {
