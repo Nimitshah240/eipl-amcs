@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
+import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MilkCollectionSummaryImportTask extends Task<List<MilkSummaryDataEntry>> {
+public class MilkCollectionSummaryImportTask extends Task<List<MilkCollectionSummaryData>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionSummaryImportTask.class);
     private final File file;
@@ -36,13 +36,13 @@ public class MilkCollectionSummaryImportTask extends Task<List<MilkSummaryDataEn
     }
 
     @Override
-    protected List<MilkSummaryDataEntry> call() throws Exception {
+    protected List<MilkCollectionSummaryData> call() throws Exception {
         try {
             Workbook workbook = new HSSFWorkbook(new FileInputStream(file));
             Sheet dataSheet = workbook.getSheetAt(0); // use first sheet for milkCollection data
             Iterator<Row> iterator = dataSheet.iterator();
             boolean firstRow = true;
-            List<MilkSummaryDataEntry> list = new ArrayList<>();
+            List<MilkCollectionSummaryData> list = new ArrayList<>();
             while (iterator.hasNext()) {
                 Row row = iterator.next();
                 if (firstRow) {
@@ -94,7 +94,7 @@ public class MilkCollectionSummaryImportTask extends Task<List<MilkSummaryDataEn
                     continue;
                 }
 
-                MilkSummaryDataEntry milkCollection = new MilkSummaryDataEntry();
+                MilkCollectionSummaryData milkCollection = new MilkCollectionSummaryData();
                 milkCollection.setDate(collectionDate);
                 milkCollection.setMember(member);
                 milkCollection.setMilkType(milkType);

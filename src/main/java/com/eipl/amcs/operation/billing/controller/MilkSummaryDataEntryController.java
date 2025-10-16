@@ -13,7 +13,7 @@ import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
+import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.billing.task.MilkCollectionSummaryImportTask;
 import com.eipl.amcs.operation.billing.task.MilkCollectionSummaryListSaveTask;
 import com.eipl.amcs.operation.billing.task.MilkSummaryDataEntryTask;
@@ -182,7 +182,7 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
         new Thread(task).start();
     }
 
-    private List<MilkSummaryDataEntry> listSummaryData;
+    private List<MilkCollectionSummaryData> listSummaryData;
 
     private void startImport(File file) {
         var task = new MilkCollectionSummaryImportTask(file, milkTypeList, memberList);

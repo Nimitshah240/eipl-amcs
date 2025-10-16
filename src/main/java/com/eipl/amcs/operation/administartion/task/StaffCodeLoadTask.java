@@ -20,7 +20,7 @@ public class StaffCodeLoadTask extends Task<String> {
 
             NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
             String code = nextCodeService.getNextCode("StaffMember", "code", society, 0);
-            if (code == null || code.isEmpty())
+            if (code == null || code.isBlank())
                 return null;
 
             return code;

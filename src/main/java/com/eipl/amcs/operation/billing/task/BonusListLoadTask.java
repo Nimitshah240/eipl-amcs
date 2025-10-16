@@ -19,14 +19,13 @@ public class BonusListLoadTask extends Task<BonusDto> {
     protected BonusDto call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            BonusDto bonus = service.findBySummary(code);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+            //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS;
 //            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 //                    .queryParam("code", code);
 //            ResponseEntity<BonusDto> response = restTemplate.getForEntity(builder.toUriString(), BonusDto.class);
             //            return response.getBody();
-            return bonus;
+            return service.findBySummary(code);
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);
         }
