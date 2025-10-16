@@ -19,7 +19,7 @@ import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.master.procurement.converter.SocietyPaymentCycleConvertor;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
-import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
+import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.billing.task.MilkDataEntrySaveTask;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.utils.CommonUtils;
@@ -61,7 +61,7 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
-    private MilkSummaryDataEntry dto = null;
+    private MilkCollectionSummaryData dto = null;
     private Member member;
     private MilkQualityType milkQualityType;
 
@@ -80,7 +80,7 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
 
     public void setMilkSummaryDataEntry(MilkCollection dto) {
         if (dto != null) {
-            this.dto = new MilkSummaryDataEntry();
+            this.dto = new MilkCollectionSummaryData();
             this.dto.setMilkQualityType(dto.getMilkQualityType());
             this.dto.setUnion(MainApp.identityDto.getUnion().getCode());
             this.dto.setSociety(MainApp.identityDto.getSociety());
@@ -208,7 +208,7 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
             setValuesInObject();
             updateData();
         } else {
-            dto = new MilkSummaryDataEntry();
+            dto = new MilkCollectionSummaryData();
             setValuesInObject();
             saveData();
         }

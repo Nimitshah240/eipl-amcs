@@ -10,7 +10,7 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.operation.administartion.dto.StaffSalaryHead;
+import com.eipl.amcs.master.account.model.StaffSalaryHead;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadCodeLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadSaveTask;
 import javafx.fxml.FXML;
