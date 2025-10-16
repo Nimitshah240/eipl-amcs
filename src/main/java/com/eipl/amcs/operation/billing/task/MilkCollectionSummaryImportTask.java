@@ -2,11 +2,8 @@ package com.eipl.amcs.operation.billing.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -21,19 +18,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class MilkCollectionSummaryImportTask extends Task<List<MilkSummaryDataEntry>> {
 
-    private File file;
-    private List<MilkType> milkTypeList;
-    private List<Member> memberList;
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionSummaryImportTask.class);
+    private final File file;
+    private final List<MilkType> milkTypeList;
+    private final List<Member> memberList;
 
     public MilkCollectionSummaryImportTask(File file, List<MilkType> milkTypeList, List<Member> memberList) {
         this.file = file;

@@ -1,33 +1,26 @@
 package com.eipl.amcs.operation.billing.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
 import com.eipl.amcs.operation.billing.model.MemberBill;
-import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.billing.service.MemberBillService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class MemberBillLoadTask extends Task<List<MemberBill>> {
-    private SocietyPaymentCycle paymentCycle;
-    private short generate;
-    private Society society;
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberBillLoadTask.class);
+    private final SocietyPaymentCycle paymentCycle;
+    private final short generate;
+    private final Society society;
+    private final LocalDateTime fromDate;
+    private final LocalDateTime toDate;
 
     public MemberBillLoadTask(SocietyPaymentCycle paymentCycle, Society society, LocalDateTime fromDate, LocalDateTime toDate, short generate) {
         this.paymentCycle = paymentCycle;
@@ -41,14 +34,20 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
     protected List<MemberBill> call() throws Exception {
         try {
             SocietyPaymentCycleService paymentCycleService = EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
+
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             List<MemberBill> memberListResult;
+            SocietyPaymentCycle paymentCycle1 = null;
+
             if (generate == 0) {
-                memberListResult = service.fetchTableData(paymentCycle);
-            }else{
-                paymentCycleService.findById(paymentCycle.getCode());
-                SocietyPaymentCycle prevPaymentCycle = paymentCycleService.fetchCurrentPaymentCycle(paymentCycle.getFromDate().minusDays(3), null);
-                memberListResult = service.findMemberBill(society.getCode(), paymentCycle, prevPaymentCycle);
+                paymentCycle1 = paymentCycleService.findById(paymentCycle.getCode())
+                        .orElseThrow(() -> new EntityNotFoundException(SocietyPaymentCycle.class, "invalid.paymentcycle"));
+                memberListResult = service.fetchTableData(paymentCycle1);
+            } else {
+                paymentCycle1 = paymentCycleService.findById(paymentCycle.getCode())
+                        .orElseThrow(() -> new EntityNotFoundException(SocietyPaymentCycle.class, "code", "invalid.paymentcycle"));
+                SocietyPaymentCycle prevPaymentCycle = paymentCycleService.fetchCurrentPaymentCycle(paymentCycle1.getFromDate().minusDays(3), null);
+                memberListResult = service.findMemberBill(society.getCode(), paymentCycle1, prevPaymentCycle);
             }
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
@@ -73,6 +72,7 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
 //                    return null;
 //                return Arrays.asList(response.getBody());
 //            }
+            if (memberListResult == null || memberListResult.isEmpty()) return null;
             return memberListResult;
         } catch (Exception e) {
             LOGGER.error("Memberbill fetch", e);

@@ -6,7 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.operation.administartion.dto.CommitteeMembers;
+import com.eipl.amcs.master.account.model.CommitteeMembers;
 import com.eipl.amcs.operation.administartion.task.CommitteeMembersDeleteTask;
 import com.eipl.amcs.operation.administartion.task.CommitteeMembersLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;

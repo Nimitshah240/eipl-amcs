@@ -2,19 +2,12 @@ package com.eipl.amcs.operation.billing.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.operation.billing.model.BonusSummary;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.billing.service.MemberBillService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MemberBillSummaryLoadTask extends Task<List<MemberBillSummary>> {
@@ -24,7 +17,7 @@ public class MemberBillSummaryLoadTask extends Task<List<MemberBillSummary>> {
     protected List<MemberBillSummary> call() throws Exception {
         try {
 
-            MemberBillService service =  EmcsAppContext.getContext().getBean(MemberBillService.class);
+            MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             List<MemberBillSummary> summaryList = service.findMemberBillSummaryBetWeen(MainApp.getFinancialYear().getStartDate(),
                     MainApp.getFinancialYear().getEndDate());
 
@@ -37,7 +30,8 @@ public class MemberBillSummaryLoadTask extends Task<List<MemberBillSummary>> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return Arrays.asList(response.getBody());
-             return summaryList;
+            if (summaryList == null || summaryList.isEmpty()) return null;
+            return summaryList;
         } catch (Exception e) {
             LOGGER.error("Memberbill summary fetch", e);
         }

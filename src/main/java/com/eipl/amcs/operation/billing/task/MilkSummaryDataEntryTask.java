@@ -1,47 +1,33 @@
 package com.eipl.amcs.operation.billing.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.inventory.model.ProductSaleRate;
-import com.eipl.amcs.master.inventory.task.ProductSaleRateLoadTask;
-import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 public class MilkSummaryDataEntryTask extends Task<List<MilkCollection>> {
 
-    private final String fromDateStr;
-    private final String toDateStr;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkSummaryDataEntryTask.class);
-
     private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private final LocalDateTime fromDate;
+    private final LocalDateTime toDate;
 
-    public MilkSummaryDataEntryTask(String fromDateStr, String toDateStr) {
-        this.fromDateStr = fromDateStr;
-        this.toDateStr = toDateStr;
+    public MilkSummaryDataEntryTask(LocalDateTime fromDate, LocalDateTime toDate) {
+        this.fromDate = fromDate;
+        this.toDate = toDate;
     }
 
     @Override
     protected List<MilkCollection> call() throws Exception {
         try {
-            LocalDateTime fromDate = LocalDateTime.parse(fromDateStr, DATE_TIME_FMT);
-            LocalDateTime toDate = LocalDateTime.parse(toDateStr, DATE_TIME_FMT);
 
-            MilkCollectionService service =  EmcsAppContext.getContext().getBean(MilkCollectionService.class);
+            MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             List<MilkCollection> collectionResultList = service.findAllBetween(fromDate, toDate);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
@@ -55,6 +41,7 @@ public class MilkSummaryDataEntryTask extends Task<List<MilkCollection>> {
 //                return null;
 //            LOGGER.info("MilkSummaryDataEntry fetched: {}", response.getBody().length);
 //            return Arrays.asList(response.getBody());
+            if (collectionResultList == null || collectionResultList.isEmpty()) return null;
             return collectionResultList;
         } catch (Exception e) {
             LOGGER.error("MilkSummaryDataEntry fetch", e);

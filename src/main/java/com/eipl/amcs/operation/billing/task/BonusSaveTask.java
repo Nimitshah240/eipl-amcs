@@ -29,11 +29,11 @@ public class BonusSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            BonusDto resultDto;
+
             if(this.update == 0){
-                resultDto =  service.saveDto(CommonUtil.setIdentityHeader(),dto,(short)0);
+                service.saveDto(CommonUtil.setIdentityHeader(),dto,(short)0);
             }else{
-                resultDto =  service.updateDto(CommonUtil.setIdentityHeader(),dto);
+                service.updateDto(CommonUtil.setIdentityHeader(),dto);
             }
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS;
@@ -44,7 +44,7 @@ public class BonusSaveTask extends Task<Object> {
 //            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
 //                return null;
 //            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
-            return resultDto;
+            return true;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

@@ -3,8 +3,6 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.dto.MilkSummaryDataEntry;
-import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;

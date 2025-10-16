@@ -347,23 +347,23 @@ public class ShareTransferAddEditController implements MyInitialization {
     }
 
     void loadShareByMember(String code) {
-        ShareByShareCodeLoadTask task = new ShareByShareCodeLoadTask(code);
-        task.setOnSucceeded(e -> {
-            try {
-                oldShareList = task.get().stream().filter(e1 -> !e1.getTransferred()).collect(Collectors.toList());
-                oldShare = oldShareList.get(0);
-                for (Share share : oldShareList) {
-                    oldShareAmount = oldShareAmount.add(share.getShareAmount());
-                    oldShareNo = oldShareNo + share.getNoOfShare();
+            ShareByShareCodeLoadTask task = new ShareByShareCodeLoadTask(code);
+            task.setOnSucceeded(e -> {
+                try {
+                    oldShareList = task.get().stream().filter(e1 -> !e1.getTransferred()).collect(Collectors.toList());
+                    oldShare = oldShareList.get(0);
+                    for (Share share : oldShareList) {
+                        oldShareAmount = oldShareAmount.add(share.getShareAmount());
+                        oldShareNo = oldShareNo + share.getNoOfShare();
+                    }
+                    txtNoOfShare.setText(String.valueOf(oldShareNo));
+                    txtAmount.setText(String.valueOf(oldShareAmount));
+                    setConsumerName(oldShare.getMember().getCode());
+                } catch (InterruptedException | ExecutionException ex) {
+                    throw new RuntimeException(ex);
                 }
-                txtNoOfShare.setText(String.valueOf(oldShareNo));
-                txtAmount.setText(String.valueOf(oldShareAmount));
-                setConsumerName(oldShare.getMember().getCode());
-            } catch (InterruptedException | ExecutionException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        new Thread(task).start();
+            });
+            new Thread(task).start();
     }
 
 }

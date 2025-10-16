@@ -1,32 +1,22 @@
 package com.eipl.amcs.operation.billing.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.model.Bonus;
 import com.eipl.amcs.operation.billing.service.BonusService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class BonusLoadTask extends Task<List<Bonus>> {
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
-    private Integer milkType;
     private static final Logger LOGGER = LoggerFactory.getLogger(BonusLoadTask.class);
+    private final LocalDateTime fromDate;
+    private final LocalDateTime toDate;
+    private final Integer milkType;
 
-    public BonusLoadTask(LocalDateTime fromDate, LocalDateTime toDate,Integer milkType) {
+    public BonusLoadTask(LocalDateTime fromDate, LocalDateTime toDate, Integer milkType) {
         this.fromDate = fromDate;
         this.milkType = milkType;
         this.toDate = toDate;
@@ -48,6 +38,7 @@ public class BonusLoadTask extends Task<List<Bonus>> {
 //            if (response == null || response.getStatusCode() != HttpStatus.OK)
 //                return null;
 //            return Arrays.asList(response.getBody());
+            if (listBonus == null || listBonus.isEmpty()) return null;
             return listBonus;
         } catch (Exception e) {
             LOGGER.error("Bonus fetch", e);

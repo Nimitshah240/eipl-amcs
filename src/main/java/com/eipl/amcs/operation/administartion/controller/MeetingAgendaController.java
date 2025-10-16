@@ -6,7 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.operation.administartion.dto.MeetingAgenda;
+import com.eipl.amcs.master.account.model.MeetingAgenda;
 import com.eipl.amcs.operation.administartion.task.MeetingAgendaDeleteTask;
 import com.eipl.amcs.operation.administartion.task.MeetingAgendaLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;

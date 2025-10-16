@@ -39,7 +39,7 @@ public class StaffSalaryMapping extends BaseModelTxn {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "salary_head_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_salary_head_code"))
 	private StaffSalaryHead staffSalaryHead;
-
+	protected boolean active;
 
 	@Override
 	public String getTableName() {

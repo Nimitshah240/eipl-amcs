@@ -1,6 +1,6 @@
 package com.eipl.amcs.operation.administartion.dto.converter;
 
-import com.eipl.amcs.operation.administartion.dto.StaffMember;
+import com.eipl.amcs.master.account.model.StaffMember;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 

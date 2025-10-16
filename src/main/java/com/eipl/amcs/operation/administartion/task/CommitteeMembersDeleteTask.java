@@ -1,16 +1,9 @@
 package com.eipl.amcs.operation.administartion.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.service.CommitteeMembersService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CommitteeMembersDeleteTask extends Task<Boolean> {
     private final String code;
@@ -22,15 +15,19 @@ public class CommitteeMembersDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.COMMITTEE_MEMBERS + "/{code}";
-            Map<String, Object> uriVariables = new HashMap<>();
-            uriVariables.put("code", code);
+            CommitteeMembersService service = EmcsAppContext.getContext().getBean(CommitteeMembersService.class);
+            service.delete(code, CommonUtil.setIdentityHeader());
 
-            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
             return true;
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.COMMITTEE_MEMBERS + "/{code}";
+//            Map<String, Object> uriVariables = new HashMap<>();
+//            uriVariables.put("code", code);
+//
+//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
         } catch (Exception e) {
             e.printStackTrace();
         }

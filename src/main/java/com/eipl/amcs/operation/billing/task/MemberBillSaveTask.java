@@ -3,8 +3,6 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.dto.MemberDto;
-import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -29,7 +27,7 @@ public class MemberBillSaveTask extends Task<Object> {
         try {
 
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER;
             ResponseEntity<MemberDto> response = this.update == 0 ?
                     restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MemberDto.class) :
                     restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberDto.class);

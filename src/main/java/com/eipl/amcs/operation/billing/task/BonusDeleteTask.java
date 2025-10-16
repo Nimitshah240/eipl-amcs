@@ -18,7 +18,7 @@ public class BonusDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            service.deleteDto(CommonUtil.setIdentityHeader(),code);
+            service.deleteDto(CommonUtil.setIdentityHeader(), code);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/{code}";
 //            Map<String, Object> uriVariables = new HashMap<>();

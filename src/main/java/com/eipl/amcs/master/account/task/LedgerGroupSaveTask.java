@@ -3,7 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.LedgerGroup;
-import com.eipl.amcs.operation.administartion.dto.CommitteeMembers;
+import com.eipl.amcs.master.account.model.CommitteeMembers;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;

@@ -12,7 +12,7 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.operation.administartion.dto.MeetingAgenda;
+import com.eipl.amcs.master.account.model.MeetingAgenda;
 import com.eipl.amcs.operation.administartion.task.MeetingAgendaNumberLoadTask;
 import com.eipl.amcs.operation.administartion.task.MeetingAgendaSaveTask;
 import com.eipl.amcs.utils.CommonUtils;

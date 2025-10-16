@@ -6,7 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.operation.administartion.dto.StaffMember;
+import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.operation.administartion.task.StaffMembersDeleteTask;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import javafx.beans.property.ObjectProperty;
