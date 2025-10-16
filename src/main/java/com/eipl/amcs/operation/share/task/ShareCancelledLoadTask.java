@@ -36,6 +36,8 @@ public class ShareCancelledLoadTask extends Task<List<Share>> {
     protected List<Share> call() throws Exception {
         try {
             ShareService service=EmcsAppContext.getContext().getBean(ShareService.class);
+
+//           TODO - What if i have fromDate and toDate?
             if (fromDate == null || toDate == null) {
             List<Share>list=service.findAll();
             if (list==null||list.isEmpty())return null;

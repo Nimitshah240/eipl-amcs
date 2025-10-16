@@ -44,9 +44,7 @@ public class MemberSocietyInfoLoadTask extends Task<Object> {
             if (count == null)
                 count = 5;
 
-           MemberSocietyInfoDto dtoResult = service.findMemberInformation(code, date, count, paymentCycleCode);
-            if(dtoResult == null)return null;
-            return dtoResult;
+            return service.findMemberInformation(code, date, count, paymentCycleCode);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/member-information";
 //            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)

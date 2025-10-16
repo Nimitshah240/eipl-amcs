@@ -35,6 +35,7 @@ public class MilkDispatchSocietyPurchaseRateLoadTask extends Task<SocietyMilkPur
         try {
             MilkDispatchService service=EmcsAppContext.getContext().getBean(MilkDispatchService.class);
             SocietyMilkPurchaseRate societyMilkPurchaseRate = service.fetchPurchaseRateCode(date, shift.getCode(), society.getCode());
+//            TODO - not required isEmpty()
             if (societyMilkPurchaseRate==null||societyMilkPurchaseRate.getCode().isEmpty())
                 return null;
             return societyMilkPurchaseRate;

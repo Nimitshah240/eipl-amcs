@@ -32,6 +32,8 @@ public class SampleNoLoadTask extends Task<Number> {
 
             MilkCollectionService service=EmcsAppContext.getContext().getBean(MilkCollectionService.class);;
             Number number=service.fetchNextSampleNo(date, dock.getDockNo());
+
+//           TODO - who had checked number.invalue == 0 before?
             if (number==null||number.intValue()==0)return null;
             return number;
 

@@ -42,6 +42,7 @@ public class AllowDcsManualCollectionDateShiftValidationLoadTask extends Task<Bo
     @Override
     protected Boolean call() throws Exception {
         try {
+//            TODO Required changes
             AllowDcsManualCollectionRangeRepository repository=EmcsAppContext.getContext().getBean(AllowDcsManualCollectionRangeRepository.class);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ALLOWDCSMANUALCOLLECTIONRANGE + "/findByDateShiftValidation";

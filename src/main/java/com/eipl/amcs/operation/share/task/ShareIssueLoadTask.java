@@ -36,6 +36,9 @@ public class ShareIssueLoadTask extends Task<List<Share>> {
     protected List<Share> call() throws Exception {
         try {
             ShareService service=EmcsAppContext.getContext().getBean(ShareService.class);;
+
+//            TODO - Taking fromDate and toDate for joke?
+
             List<Share> list=service.findAll();
             if (list==null||list.isEmpty())return null;
             return list;

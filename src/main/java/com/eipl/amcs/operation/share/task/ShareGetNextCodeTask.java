@@ -23,6 +23,7 @@ public class ShareGetNextCodeTask extends Task<String> {
     protected String call() throws Exception {
         try {
             NextCodeService nextCodeService=EmcsAppContext.getContext().getBean(NextCodeService.class);
+//            TODO - what is code ? How should i get?
             String codes = nextCodeService.getNextCode("Share", "code", "code", 5);
             if (codes==null||codes.isEmpty())return null;
             return codes;

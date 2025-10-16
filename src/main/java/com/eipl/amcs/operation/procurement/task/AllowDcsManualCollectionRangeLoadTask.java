@@ -33,7 +33,7 @@ public class AllowDcsManualCollectionRangeLoadTask extends Task<List<AllowDcsMan
                 request.setToShift(Hibernate.unproxy(request.getToShift(), Shift.class));
                 request.setSociety(Hibernate.unproxy(request.getSociety(), Society.class));
             }
-            if (list == null || list.isEmpty())
+            if (list.isEmpty())
                 return null;
             return list;
 

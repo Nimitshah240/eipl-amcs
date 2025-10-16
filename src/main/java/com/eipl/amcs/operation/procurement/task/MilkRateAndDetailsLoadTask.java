@@ -27,6 +27,7 @@ public class MilkRateAndDetailsLoadTask extends Task<MilkRateAndDetailsDto> {
 
             MemberMilkPurchaseRateService service=EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
             MilkRateAndDetailsDto milkRateAndDetailsDto=service.fetchRateAndDetails(code);
+//            TODO - inappropriate use of isEmpty
             if (milkRateAndDetailsDto==null||milkRateAndDetailsDto.getDetails().isEmpty())
                 return null;
             return milkRateAndDetailsDto;

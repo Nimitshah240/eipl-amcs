@@ -30,6 +30,7 @@ public class LocalMilkSaleSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
+            // TODO - cleanup code
             LocalMilkSaleService service=EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE;
