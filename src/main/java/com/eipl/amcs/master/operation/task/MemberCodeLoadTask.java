@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.operation.task;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -23,16 +24,22 @@ public class MemberCodeLoadTask extends Task<String> {
     @Override
     protected String call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_NUMBER;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("society", society);
-
-            ResponseEntity<String> response = restTemplate.exchange(builder.buildAndExpand().toUri(), HttpMethod.GET, null, String.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            NextCodeService nextCodeService= EmcsAppContext.getContext().getBean(NextCodeService.class);
+            String code = nextCodeService.getNextCode("Member", "code", society, 4);
+            if (code == null || code.isEmpty())
                 return null;
-            LOGGER.info("Member Number fetched: {}", response.getBody());
-            return response.getBody();
+            return code;
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_NUMBER;
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("society", society);
+//
+//            ResponseEntity<String> response = restTemplate.exchange(builder.buildAndExpand().toUri(), HttpMethod.GET, null, String.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            LOGGER.info("Member Number fetched: {}", response.getBody());
+//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("Member Number fetch", e);
         }

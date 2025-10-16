@@ -22,7 +22,7 @@ public class UnitConversionLoadTask extends Task<List<UnitConversion>> {
     protected List<UnitConversion> call() throws Exception {
         try {
             UnitConversionService service= EmcsAppContext.getContext().getBean(UnitConversionService.class);
-            List<com.eipl.amcs.master.global.model.UnitConversion> list = service.findAll();
+            List<UnitConversion> list = service.findAll();
             if (list == null || list.isEmpty())
                 return null;
             return list;

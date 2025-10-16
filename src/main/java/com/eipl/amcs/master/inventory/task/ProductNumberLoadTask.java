@@ -25,8 +25,7 @@ public class ProductNumberLoadTask extends Task<String> {
     protected String call() throws Exception {
         try {
             NextCodeService nextCodeService= EmcsAppContext.getContext().getBean(NextCodeService.class);
-            String code = nextCodeService.getNextCode("Product", "code", society, 0);
-            return  code;
+            return nextCodeService.getNextCode("Product", "code", society, 0);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_NUMBER;

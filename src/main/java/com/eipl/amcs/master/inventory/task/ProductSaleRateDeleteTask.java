@@ -28,7 +28,7 @@ public class ProductSaleRateDeleteTask extends Task<Boolean> {
         try {
             ProductSaleRateService service= EmcsAppContext.getContext().getBean(ProductSaleRateService.class);
             Optional<ProductSaleRate> productData = service.findById(code);
-            if (productData == null || !productData.isPresent())
+            if (productData == null || productData.isEmpty())
                 return null;
             service.delete(productData.get(), CommonUtil.setIdentityHeader());
             return true;

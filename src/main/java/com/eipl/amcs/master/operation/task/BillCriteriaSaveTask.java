@@ -3,6 +3,8 @@ package com.eipl.amcs.master.operation.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.BillCriteria;
+import com.eipl.amcs.master.operation.service.BillCriteriaService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
@@ -40,16 +42,27 @@ public class BillCriteriaSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BILLCRITERIA;
-
-            ResponseEntity<BillCriteria> response = this.update == 0 ?
-                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(billCriteria), BillCriteria.class) :
-                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(billCriteria), BillCriteria.class);
-
-            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+            BillCriteriaService service=EmcsAppContext.getContext().getBean(BillCriteriaService.class);
+            if (billCriteria == null)
                 return null;
-            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
+            if (this.update == 0) {
+                service.saveBillCriteria(billCriteria, CommonUtil.setIdentityHeader());
+            } else {
+                 service.updateBillCriteria(billCriteria, CommonUtil.setIdentityHeader());
+            }
+            return true;
+
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BILLCRITERIA;
+//
+//            ResponseEntity<BillCriteria> response = this.update == 0 ?
+//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(billCriteria), BillCriteria.class) :
+//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(billCriteria), BillCriteria.class);
+//
+//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+//                return null;
+//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

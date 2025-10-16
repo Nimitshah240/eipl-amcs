@@ -3,6 +3,7 @@ package com.eipl.amcs.master.procurement.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
+import com.eipl.amcs.master.procurement.service.LocalMilkSaleRateService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -20,13 +21,19 @@ public class LocalMilkSaleRateLoadTask extends Task<List<LocalMilkSaleRate>> {
     @Override
     protected List<LocalMilkSaleRate> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE_RATE;
-            ResponseEntity<LocalMilkSaleRate[]> response = restTemplate.getForEntity(url, LocalMilkSaleRate[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            LocalMilkSaleRateService service= EmcsAppContext.getContext().getBean(LocalMilkSaleRateService.class);
+            List<LocalMilkSaleRate> list = service.findAll();
+            if (list == null || list.isEmpty())
                 return null;
-            LOGGER.info("LocalMilkSaleRates fetched: {}", response.getBody().length);
-            return Arrays.asList(response.getBody());
+            return list;
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE_RATE;
+//            ResponseEntity<LocalMilkSaleRate[]> response = restTemplate.getForEntity(url, LocalMilkSaleRate[].class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            LOGGER.info("LocalMilkSaleRates fetched: {}", response.getBody().length);
+//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("LocalMilkSaleRates fetch", e);
         }

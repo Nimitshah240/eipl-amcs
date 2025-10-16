@@ -1,16 +1,12 @@
 package com.eipl.amcs.master.org.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.org.model.Dock;
+import com.eipl.amcs.master.org.service.DockService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 public class DockDeleteTask extends Task<Boolean> {
     private final String dockNo;
@@ -22,15 +18,22 @@ public class DockDeleteTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.DOCK + "/{dockNo}";
-            Map<String, Object> uriVariables = new HashMap<>();
-            uriVariables.put("dockNo", dockNo);
-
-            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            DockService service = EmcsAppContext.getContext().getBean(DockService.class);
+            Optional<Dock> dockData = service.findById(dockNo);
+            if (dockData == null || !dockData.isPresent())
                 return null;
+            service.delete(dockData.get(), CommonUtil.setIdentityHeader());
             return true;
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.DOCK + "/{dockNo}";
+//            Map<String, Object> uriVariables = new HashMap<>();
+//            uriVariables.put("dockNo", dockNo);
+//
+//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
