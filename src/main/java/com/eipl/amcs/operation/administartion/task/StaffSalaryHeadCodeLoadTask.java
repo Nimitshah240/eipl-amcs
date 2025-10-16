@@ -19,7 +19,7 @@ public class StaffSalaryHeadCodeLoadTask extends Task<String> {
         try {
             NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
             String code = nextCodeService.getNextCode("StaffSalaryHead", "code", society, 2);
-            if (code == null || code.isEmpty())
+            if (code == null || code.isBlank())
                 return null;
             return code;
 
