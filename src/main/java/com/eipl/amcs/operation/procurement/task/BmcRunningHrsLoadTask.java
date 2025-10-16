@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.procurement.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.operation.procurement.dto.BmcRunningHrs;
+import com.eipl.amcs.operation.procurement.model.BmcRunningHours;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
-public class BmcRunningHrsLoadTask extends Task<List<BmcRunningHrs>> {
+public class BmcRunningHrsLoadTask extends Task<List<BmcRunningHours>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BmcRunningHrsLoadTask.class);
 //
 //    private final Integer code;
@@ -25,11 +25,11 @@ public class BmcRunningHrsLoadTask extends Task<List<BmcRunningHrs>> {
 
 
     @Override
-    protected List<BmcRunningHrs> call() throws Exception {
+    protected List<BmcRunningHours> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BMC_RUNNING_HRS + "/All";
-            ResponseEntity<BmcRunningHrs[]> response = restTemplate.getForEntity(url, BmcRunningHrs[].class);
+            ResponseEntity<BmcRunningHours[]> response = restTemplate.getForEntity(url, BmcRunningHours[].class);
             if (response == null || response.getStatusCode() != HttpStatus.OK)
                 return null;
             LOGGER.info("BmcRunningHrs fetched: {}", response.getBody().length);

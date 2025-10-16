@@ -28,7 +28,7 @@ import com.eipl.amcs.master.operation.model.CustomerDto;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerSaveTask;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.dto.ProductAndSaleRateDto;
+import com.eipl.amcs.master.inventory.model.ProductAndSaleRateDto;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleMigrationListSaveTask;
 import com.eipl.amcs.operation.procurement.task.ProductMigrationListSaveTask;
 import com.eipl.amcs.utils.AppConstant;
