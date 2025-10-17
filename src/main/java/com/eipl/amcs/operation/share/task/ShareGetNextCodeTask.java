@@ -3,15 +3,9 @@ package com.eipl.amcs.operation.share.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 public class ShareGetNextCodeTask extends Task<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareGetNextCodeTask.class);
@@ -22,10 +16,10 @@ public class ShareGetNextCodeTask extends Task<String> {
     @Override
     protected String call() throws Exception {
         try {
-            NextCodeService nextCodeService=EmcsAppContext.getContext().getBean(NextCodeService.class);
+            NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
 //            TODO - what is code ? How should i get?
-            String codes = nextCodeService.getNextCode("Share", "code", "code", 5);
-            if (codes==null||codes.isEmpty())return null;
+            String codes = nextCodeService.getNextCode("Share", "code", MainApp.identityDto.getSociety().getCode(), 5);
+            if (codes == null || codes.isEmpty()) return null;
             return codes;
 
 //            String code = MainApp.identityDto.getSociety().getCode();

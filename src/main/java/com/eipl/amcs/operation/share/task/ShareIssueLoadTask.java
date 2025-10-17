@@ -39,9 +39,12 @@ public class ShareIssueLoadTask extends Task<List<Share>> {
 
 //            TODO - Taking fromDate and toDate for joke?
 
-            List<Share> list=service.findAll();
-            if (list==null||list.isEmpty())return null;
-            return list;
+            LocalDate fromDt = fromDate;
+            LocalDate toDt = toDate;
+            if (fromDate == null || toDate == null) {
+                return service.findAll();
+            }
+            return service.findAllData(fromDt, toDt);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE;

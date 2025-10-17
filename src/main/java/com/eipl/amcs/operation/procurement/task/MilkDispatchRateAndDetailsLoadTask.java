@@ -26,12 +26,7 @@ public class MilkDispatchRateAndDetailsLoadTask extends Task<MilkDispatchRateAnd
     protected MilkDispatchRateAndDetailsDto call() throws Exception {
         try {
             SocietyMilkPurchaseRateService service= EmcsAppContext.getContext().getBean(SocietyMilkPurchaseRateService.class);;
-            MilkDispatchRateAndDetailsDto milkDispatchRateAndDetailsDto =service.fetchRateAndDetails(code);
-//TODO inappropriate use of isEmpty
-            if (milkDispatchRateAndDetailsDto==null||milkDispatchRateAndDetailsDto.getDetails().isEmpty())
-                return null;
-
-            return milkDispatchRateAndDetailsDto;
+            return service.fetchRateAndDetails(code);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY_MILK_PURCHASE_RATE + "/rate-and-details/{code}";

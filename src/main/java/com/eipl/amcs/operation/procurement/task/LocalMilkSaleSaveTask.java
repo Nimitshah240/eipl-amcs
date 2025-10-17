@@ -32,7 +32,7 @@ public class LocalMilkSaleSaveTask extends Task<Object> {
         try {
             // TODO - cleanup code
             LocalMilkSaleService service=EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE;
 //            String url;
 //            ResponseEntity<LocalMilkSale> response = this.update == 0 ?

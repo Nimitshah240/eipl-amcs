@@ -27,9 +27,9 @@ public class MilkDispatchGetNextChallanNoTask extends Task<String> {
 
             NextCodeService nextCodeService=EmcsAppContext.getContext().getBean(NextCodeService.class);;
 //            TODO - what is nextCode?
-            String code = nextCodeService.getNextCode("MilkDispatch", "challanNo", "nextCode", 3);
-
-            if(code==null || code.isEmpty())return null;
+            String code = nextCodeService.getNextCode("MilkDispatch", "challanNo", MainApp.identityDto.getSociety().getCode(), 3);
+            if(code==null || code.isEmpty())
+                return null;
             return code;
 
 //            String code = MainApp.identityDto.getSociety().getCode()+"/"+MainApp.getFinancialYear().getCode()+"/";
