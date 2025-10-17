@@ -6,6 +6,7 @@ import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
 import com.eipl.amcs.operation.procurement.dto.MilkRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.service.MilkDispatchService;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class MilkDispatchByChallaNoLoadTask extends Task<MilkDispatch> {
     private String challanNo;
@@ -29,14 +31,20 @@ public class MilkDispatchByChallaNoLoadTask extends Task<MilkDispatch> {
     @Override
     protected MilkDispatch call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/milk-dispatch-by-challan-no";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("challanNo",challanNo);
-            ResponseEntity<MilkDispatch> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkDispatch.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            MilkDispatchService service=EmcsAppContext.getContext().getBean(MilkDispatchService.class);
+            Optional<MilkDispatch> milkDispatch=service.findById(challanNo);
+            if(milkDispatch==null||milkDispatch.isEmpty())
                 return null;
-            LOGGER.info("Milk dispatch transaction fetched: {}", response.getBody());
-            return response.getBody();
+            return milkDispatch.get();
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/milk-dispatch-by-challan-no";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("challanNo",challanNo);
+//            ResponseEntity<MilkDispatch> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkDispatch.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            LOGGER.info("Milk dispatch transaction fetched: {}", response.getBody());
+//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }
