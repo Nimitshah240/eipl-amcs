@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.LedgerMappingProductGroup;
 import com.eipl.amcs.master.account.service.LedgerMappingProductGroupService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -22,10 +23,8 @@ public class LedgerMappingProductGroupSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             LedgerMappingProductGroupService service = EmcsAppContext.getContext().getBean(LedgerMappingProductGroupService.class);
-            List<LedgerMappingProductGroup> list = service.findAll();
-            if (list == null || list.isEmpty())
-                return null;
-            return list;
+            service.save(dto, CommonUtil.setIdentityHeader());
+            return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_PRODUCT_GROUP;
