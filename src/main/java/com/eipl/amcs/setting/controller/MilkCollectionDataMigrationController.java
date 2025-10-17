@@ -40,6 +40,9 @@ public class MilkCollectionDataMigrationController implements MyInitialization {
     TableView<MilkCollectionMigration> tableData;
     @FXML
     TableColumn<MilkCollectionMigration, String> colMonth, colCount;
+    String milkTypeStr = null;
+    List<MilkCollection> list = new ArrayList<>();
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     @FXML
     private TextField txtFilePath, txtCow, txtBuffalo;
     @FXML
@@ -48,25 +51,17 @@ public class MilkCollectionDataMigrationController implements MyInitialization {
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private Label lblStatus;
-
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private String selectedFilePath;
-
-
     private List<Member> memberList;
-    String milkTypeStr = null;
+    private Stage stage;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    List<MilkCollection> list = new ArrayList<>();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-
-    private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -149,13 +144,13 @@ public class MilkCollectionDataMigrationController implements MyInitialization {
         colCount.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCount().toString()));
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -163,7 +158,7 @@ public class MilkCollectionDataMigrationController implements MyInitialization {
 
     private void startImportProcess() {
         var task = new PromptMilkCollectionDbSaveTask(milkTypeList, shiftList, selectedFilePath,
-                txtCow.getText(), txtBuffalo.getText(),dpFromDate.getValue(),dpToDate.getValue());
+                txtCow.getText(), txtBuffalo.getText(), dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 Boolean res = task.get();

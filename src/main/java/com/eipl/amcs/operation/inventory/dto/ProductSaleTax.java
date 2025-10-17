@@ -2,10 +2,10 @@ package com.eipl.amcs.operation.inventory.dto;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.account.model.TaxDetail;
-
-import java.math.BigDecimal;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
+
+import java.math.BigDecimal;
 
 public class ProductSaleTax extends BaseModel {
 

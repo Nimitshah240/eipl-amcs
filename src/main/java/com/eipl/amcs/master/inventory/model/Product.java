@@ -70,6 +70,12 @@ public class Product extends BaseModel {
             "subDistrict", "village", "hamlet"})
     private Society society;
 
+    public Product(String code, String name, String nameLocal) {
+        this.code = code;
+        this.name = name;
+        this.nameLocal = nameLocal;
+    }
+
     @Override
     public String getTableName() {
         return "products";
@@ -112,11 +118,5 @@ public class Product extends BaseModel {
         audit.setXCol3(this.getXCol3());
 
         return audit;
-    }
-
-    public Product(String code, String name, String nameLocal) {
-        this.code = code;
-        this.name = name;
-        this.nameLocal = nameLocal;
     }
 }

@@ -21,51 +21,50 @@ import java.util.Map;
 @RequestMapping("/product-receipt")
 public class ProductReceiptController {
 
-	@Autowired
-	private ProductReceiptService service;
-	@Autowired
-	private NextCodeService nextCodeService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductReceiptController.class);
+    @Autowired
+    private ProductReceiptService service;
+    @Autowired
+    private NextCodeService nextCodeService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductReceiptController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductReceipt>> index(@RequestParam(name = "fromDate") String fromDate,
+                                                      @RequestParam(name = "toDate") String toDate) {
+        LocalDate fromDt = LocalDate.parse(fromDate);
+        LocalDate toDt = LocalDate.parse(toDate);
+        return new ResponseEntity<List<ProductReceipt>>(service.findAll(fromDt, toDt), HttpStatus.OK);
+    }
 
-	@GetMapping
-	public ResponseEntity<List<ProductReceipt>> index(@RequestParam(name = "fromDate") String fromDate,
-			@RequestParam(name = "toDate") String toDate) {
-		LocalDate fromDt = LocalDate.parse(fromDate);
-		LocalDate toDt = LocalDate.parse(toDate);
-		return new ResponseEntity<List<ProductReceipt>>(service.findAll(fromDt, toDt), HttpStatus.OK);
-	}
+    @PostMapping
+    public ResponseEntity<ProductReceiptDto> createProductReceipt(@RequestHeader Map<String, String> headers, @RequestBody ProductReceiptDto dto)
+            throws BusinessValidationFailException {
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
-	@PostMapping
-	public ResponseEntity<ProductReceiptDto> createProductReceipt(@RequestHeader Map<String, String> headers,@RequestBody ProductReceiptDto dto)
-			throws BusinessValidationFailException {
-		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @PutMapping
+    public ResponseEntity<ProductReceiptDto> updateProductReceipt(@RequestHeader Map<String, String> headers, @RequestBody ProductReceiptDto dto)
+            throws BusinessValidationFailException {
+        return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
-	@PutMapping
-	public ResponseEntity<ProductReceiptDto> updateProductReceipt(@RequestHeader Map<String, String> headers,@RequestBody ProductReceiptDto dto)
-			throws BusinessValidationFailException {
-		return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteProductSale(@RequestHeader Map<String, String> headers, @RequestParam String grnNo) {
+        service.delete(grnNo, CommonUtil.getIdentityHeader(headers));
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
-	@DeleteMapping("/delete")
-	public ResponseEntity<?> deleteProductSale(@RequestHeader Map<String, String> headers,@RequestParam String grnNo) {
-		service.delete(grnNo, CommonUtil.getIdentityHeader(headers));
-		return new ResponseEntity<>(null, HttpStatus.OK);
-	}
+    @GetMapping("/fetchGrnNo")
+    public ResponseEntity<String> getGrnNoNextCode(@RequestParam String code) {
+        try {
+            LOGGER.info("Next grn no for Society: {}", code);
+            String codes = nextCodeService.getNextCode("ProductReceipt", "grnNo", code, 0);
+            if (codes == null || codes.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping("/fetchGrnNo")
-	public ResponseEntity<String> getGrnNoNextCode(@RequestParam String code) {
-		try {
-			LOGGER.info("Next grn no for Society: {}", code);
-			String codes = nextCodeService.getNextCode("ProductReceipt", "grnNo", code, 0);
-			if (codes == null || codes.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<>(codes, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(codes, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface HardwareDeviceConfigService {
 
-	List<HardwareDeviceConfig> findAll();
+    List<HardwareDeviceConfig> findAll();
 
-	HardwareDeviceConfig save(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo);
+    HardwareDeviceConfig save(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo);
 
-	HardwareDeviceConfig update(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo);
+    HardwareDeviceConfig update(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo);
 
-	Optional<HardwareDeviceConfig> findById(String hardwareDeviceConfig);
-	
-	void delete(String code, String identityInfo);
+    Optional<HardwareDeviceConfig> findById(String hardwareDeviceConfig);
 
-	void delete(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo);
+    void delete(String code, String identityInfo);
 
-	String saveUpdate(List<HardwareDeviceConfig> list, String identityInfo);
+    void delete(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo);
+
+    String saveUpdate(List<HardwareDeviceConfig> list, String identityInfo);
 }

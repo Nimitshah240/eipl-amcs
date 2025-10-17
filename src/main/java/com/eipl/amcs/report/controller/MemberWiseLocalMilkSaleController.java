@@ -41,6 +41,7 @@ public class MemberWiseLocalMilkSaleController implements MyInitialization {
     private ComboBox<Shift> cboxFromShift, cboxToShift;
 
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -54,14 +55,14 @@ public class MemberWiseLocalMilkSaleController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -76,8 +77,6 @@ public class MemberWiseLocalMilkSaleController implements MyInitialization {
         cboxReportType.getItems().addAll("Date & Shift Wise", "Date Wise");
         cboxReportType.getSelectionModel().select(0);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();

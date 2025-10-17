@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ProductDispatchController implements MyInitialization {
+    private final ObjectProperty<ProductDispatchTransaction> propProductDispatchTransactionDto;
     @FXML
     StackPane root;
     @FXML
@@ -34,19 +35,18 @@ public class ProductDispatchController implements MyInitialization {
     @FXML
     TableColumn<ProductDispatchTransaction, LocalDate> colChallanDate;
     @FXML
+    Button btnClose, btnSearch;
+    @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    @FXML
-    Button btnClose, btnSearch;
-    private final ObjectProperty<ProductDispatchTransaction> propProductDispatchTransactionDto;
+
+    public ProductDispatchController() {
+        propProductDispatchTransactionDto = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public ProductDispatchController() {
-        propProductDispatchTransactionDto = new SimpleObjectProperty<>();
     }
 
     @Override

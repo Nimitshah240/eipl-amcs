@@ -17,29 +17,28 @@ import java.util.Map;
 @RequestMapping("/ledger-mapping-product-group")
 public class LedgerMappingProductGroupController {
 
-	@Autowired
-	private LedgerMappingProductGroupService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerMappingProductGroupController.class);
+    @Autowired
+    private LedgerMappingProductGroupService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LedgerMappingProductGroupController.class);
+    @GetMapping
+    public ResponseEntity<List<LedgerMappingProductGroup>> index() {
+        try {
+            List<LedgerMappingProductGroup> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.OK);
 
-	@GetMapping
-	public ResponseEntity<List<LedgerMappingProductGroup>> index() {
-		try {
-			List<LedgerMappingProductGroup> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.OK);
-			
-			return new ResponseEntity<List<LedgerMappingProductGroup>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<LedgerMappingProductGroup>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
-	@PostMapping
-	public ResponseEntity<String> createLedgerType(@RequestHeader Map<String, String> headers, @RequestBody List<LedgerMappingProductGroup> dto) {
-		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @PostMapping
+    public ResponseEntity<String> createLedgerType(@RequestHeader Map<String, String> headers, @RequestBody List<LedgerMappingProductGroup> dto) {
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
 }

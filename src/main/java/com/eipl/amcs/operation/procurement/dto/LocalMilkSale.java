@@ -8,7 +8,6 @@ import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class LocalMilkSale extends BaseModel {

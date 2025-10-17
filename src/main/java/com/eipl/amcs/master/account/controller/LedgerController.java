@@ -55,6 +55,7 @@ public class LedgerController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private List<Ledger> ledgerList = new ArrayList<>();
     private List<LedgerGroup> ledgerGroupList = new ArrayList<>();
+
     public LedgerController() {
         propLedger = new SimpleObjectProperty<>();
     }

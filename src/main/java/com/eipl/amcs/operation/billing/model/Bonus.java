@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -49,6 +48,12 @@ public class Bonus extends BaseModelTxn {
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_bonus_union_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
+    @Transient
+    private BooleanProperty selected;
+
+    public Bonus() {
+        selected = new SimpleBooleanProperty();
+    }
 
     @Override
     public String getTableName() {
@@ -86,13 +91,6 @@ public class Bonus extends BaseModelTxn {
         audit.setXCol3(this.getXCol3());
 
         return audit;
-    }
-
-    @Transient
-    private BooleanProperty selected;
-
-    public Bonus() {
-        selected = new SimpleBooleanProperty();
     }
 
     public final BooleanProperty selectedProperty() {

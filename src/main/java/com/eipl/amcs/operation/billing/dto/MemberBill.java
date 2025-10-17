@@ -4,8 +4,6 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

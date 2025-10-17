@@ -20,8 +20,8 @@ import java.util.Map;
 public class IdentityCheckTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityCheckTask.class);
 
-    private String societyCode;
-    private String mobileNo;
+    private final String societyCode;
+    private final String mobileNo;
 
     public IdentityCheckTask(String societyCode, String mobileNo) {
         this.societyCode = societyCode;

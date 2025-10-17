@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,11 +28,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public HisaabMitraMilkCollection2DbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath,
                                                 String cowRange, String buffRange) {
@@ -99,8 +98,7 @@ public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
                         map.put("amount", amt);
                         try {
                             map.put("rate", amt.divide(qty, RoundingMode.HALF_DOWN));
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         map.put("density", BigDecimal.ZERO);
@@ -116,7 +114,7 @@ public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
                         map.put("convqty", CommonUtils.convertQty(AppConstant.CollectionType.MEMBER_COLL, arr[4]));
                         LocalDate date = LocalDate.now();
                         try {
-                             date = LocalDate.parse(arr[0], formatter);
+                            date = LocalDate.parse(arr[0], formatter);
                         } catch (Exception e) {
 
                         }
@@ -139,10 +137,10 @@ public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
                         map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + map.get("sampleno") + "-" + arr[2].replace("\"", ""));
 
                         try {
-                            if (prevDate != null && prevDate.get().compareTo((LocalDateTime) map.get("collectiondate")) != 0) {
+                            if (prevDate != null && !prevDate.get().isEqual((LocalDateTime) map.get("collectiondate"))) {
                                 sampleNo.set(0);
                                 prevDate.set((LocalDateTime) map.get("collectiondate"));
-                            } else if (prevDate.get() == (LocalDateTime) map.get("collectiondate")) {
+                            } else if (prevDate.get() == map.get("collectiondate")) {
                                 sampleNo.incrementAndGet();
                             }
                         } catch (Exception eee) {
@@ -183,7 +181,7 @@ public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
             for (Map<String, Object> map : listTemp) {
                 pstmt.setString(1, map.get("code").toString());
                 pstmt.setInt(2, (int) map.get("sampleno"));
-                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                pstmt.setObject(3, map.get("collectiondate"));
                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

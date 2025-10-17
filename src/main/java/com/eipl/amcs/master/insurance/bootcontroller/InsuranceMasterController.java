@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/insurance")
 public class InsuranceMasterController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(InsuranceMasterController.class);
     @Autowired
     private InsuranceMasterService service;
     @Autowired
@@ -32,7 +33,6 @@ public class InsuranceMasterController {
     private InsuranceMasterServiceImpl insuranceMasterServiceImpl;
     @Autowired
     private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(InsuranceMasterController.class);
 
     @GetMapping
     public ResponseEntity<List<InsuranceMaster>> fetchInsuranceMaster() {
@@ -63,7 +63,7 @@ public class InsuranceMasterController {
     }
 
     @PostMapping("/save-summary")
-    public ResponseEntity<InsuranceDetailSummary> saveInsuranceDetailSummary(@RequestHeader Map<String, String> headers,@RequestBody InsuranceDetailSummary insuranceDetailSummary) {
+    public ResponseEntity<InsuranceDetailSummary> saveInsuranceDetailSummary(@RequestHeader Map<String, String> headers, @RequestBody InsuranceDetailSummary insuranceDetailSummary) {
         try {
             return new ResponseEntity<>(service.saveDetailsSumamry(insuranceDetailSummary, CommonUtil.getIdentityHeader(headers)),
                     HttpStatus.OK);
@@ -83,6 +83,7 @@ public class InsuranceMasterController {
         }
         return null;
     }
+
     @PostMapping("/detail-finalize")
     public ResponseEntity<InsuranceDetail> fetchInsuranceDetailsFinalize(@RequestHeader Map<String, String> headers, @RequestBody InsuranceDetail insuranceDetail) {
         try {
@@ -115,6 +116,7 @@ public class InsuranceMasterController {
         }
         return null;
     }
+
     @PutMapping("/detail-finalize")
     public ResponseEntity<InsuranceDetail> updateInsuranceDetailsFinalize(@RequestHeader Map<String, String> headers, @RequestBody InsuranceDetail insuranceDetail) {
         try {

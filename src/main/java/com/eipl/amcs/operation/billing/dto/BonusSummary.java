@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.billing.dto;
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

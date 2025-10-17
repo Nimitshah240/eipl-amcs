@@ -45,18 +45,19 @@ public class MilkCollectionDataMigrationHisaabMitraController implements MyIniti
     @FXML
     Button btnClose, btnBrowse, btnGenerate;
     @FXML
+    CheckBox chkIsExcel, chkIsFormat2;
+    @FXML
     private Label lblStatus;
     private File file;
-    @FXML
-    CheckBox chkIsExcel,chkIsFormat2;
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<Member> memberList;
     private List<MilkType> milkTypeList;
 
 
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     private Stage stage;
+    private List<MilkCollection> listMilkCollection;
 
     @Override
     public Node getRoot() {
@@ -95,17 +96,15 @@ public class MilkCollectionDataMigrationHisaabMitraController implements MyIniti
             } else {
                 if (chkIsExcel.isSelected()) {
                     startImportFileProcess();
-                } else if (chkIsFormat2.isSelected()){
+                } else if (chkIsFormat2.isSelected()) {
                     startSkywayFileProcess2();
-                }
-                else {
+                } else {
                     startSkywayFileProcess();
                 }
             }
         });
         btnClose.setOnAction(e -> this.stage.close());
     }
-
 
     @Override
     public void loadData() {
@@ -160,6 +159,7 @@ public class MilkCollectionDataMigrationHisaabMitraController implements MyIniti
         new Thread(task).start();
         lblStatus.textProperty().bind(task.messageProperty());
     }
+
     private void startSkywayFileProcess2() {
         var task = new HisaabMitraMilkCollection2DbSaveTask(milkTypeList, shiftList, txtFilePath.getText(), txtCow.getText(), txtBuffalo.getText());
         task.setOnSucceeded(e -> {
@@ -181,9 +181,6 @@ public class MilkCollectionDataMigrationHisaabMitraController implements MyIniti
         new Thread(task).start();
         lblStatus.textProperty().bind(task.messageProperty());
     }
-
-
-    private List<MilkCollection> listMilkCollection;
 
     private void startImportFileProcess() {
         var task = new HisaabMitraMilkCollectionImportTask(file, milkTypeList, shiftList, memberList);

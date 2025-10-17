@@ -20,14 +20,11 @@ import java.util.Optional;
 @RequestMapping("/ledgers")
 public class LedgerController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerController.class);
     @Autowired
     private LedgerService service;
-
     @Autowired
     private NextCodeService nextCodeService;
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerController.class);
 
     @GetMapping
     public ResponseEntity<List<Ledger>> index() {

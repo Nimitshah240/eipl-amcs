@@ -1,8 +1,8 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.auth.model.Permission;
 import com.eipl.amcs.auth.dto.PermissionComparator;
+import com.eipl.amcs.auth.model.Permission;
 import com.eipl.amcs.auth.model.RolePermission;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.auth.model.UserRole;
@@ -59,9 +59,6 @@ import javafx.scene.text.Font;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.net.URL;
@@ -74,24 +71,20 @@ import java.util.stream.Collectors;
 
 public class NavbarController implements MyInitialization {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NavbarController.class);
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
     @FXML
     AnchorPane root;
     @FXML
     Button btnDashboard;
+    ObjectMapper mapper = new ObjectMapper();
     @FXML
     private VBox menuVbox;
     @FXML
     private Label lblVersion;
-
-
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NavbarController.class);
-    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-    ObjectMapper mapper = new ObjectMapper();
-
 
     @Override
     public Node getRoot() {
@@ -453,7 +446,7 @@ public class NavbarController implements MyInitialization {
                         content.append(",");
                     }
                     task1.setOnSucceeded(ee -> {
-                        SyncCheckAcknowledgementTask syncCheckAcknowledgementTask = new SyncCheckAcknowledgementTask(content.toString().substring(0, content.length() - 1));
+                        SyncCheckAcknowledgementTask syncCheckAcknowledgementTask = new SyncCheckAcknowledgementTask(content.substring(0, content.length() - 1));
                         syncCheckAcknowledgementTask.setOnSucceeded(eee -> {
                         });
                         new Thread(syncCheckAcknowledgementTask).start();
@@ -567,7 +560,7 @@ public class NavbarController implements MyInitialization {
             code.append(notification.getBulkNotificationId());
             code.append(",");
         }
-        var task = new NotificationAcknowledgementTask(code.toString().substring(0, code.length() - 1));
+        var task = new NotificationAcknowledgementTask(code.substring(0, code.length() - 1));
         task.setOnSucceeded(e -> {
         });
         new Thread(task).start();
@@ -648,6 +641,14 @@ public class NavbarController implements MyInitialization {
         });
     }
 
+    private void ftpBackup() {
+        //FTP Backup
+        if (LocalDate.now().getDayOfMonth() == 30) {
+            FtpDetailsCheckTask task = new FtpDetailsCheckTask();
+            new Thread(task).start();
+        }
+    }
+
     class MenuGenerateTask extends Task<Short> {
 
         @Override
@@ -679,7 +680,7 @@ public class NavbarController implements MyInitialization {
                     return null;
                 }
 
-               permissions = rolePermissions.stream().map(m -> m.getPermission())
+                permissions = rolePermissions.stream().map(m -> m.getPermission())
                         .collect(Collectors.toList());
 
                 permissions.sort(Comparator.comparing(Permission::getCode));
@@ -720,20 +721,12 @@ public class NavbarController implements MyInitialization {
             return (short) 0;
         }
     }
-
-    private void ftpBackup() {
-        //FTP Backup
-        if (LocalDate.now().getDayOfMonth() == 30) {
-            FtpDetailsCheckTask task = new FtpDetailsCheckTask();
-            new Thread(task).start();
-        }
-    }
 }
 
 
 class ReSyncTask extends Task<List> {
 
-    private List<Map<String, Object>> list;
+    private final List<Map<String, Object>> list;
 
     public ReSyncTask(List<Map<String, Object>> list) {
         this.list = list;

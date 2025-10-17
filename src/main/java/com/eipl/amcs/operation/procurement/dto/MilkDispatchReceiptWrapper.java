@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public class MilkDispatchReceiptWrapper {
 
     private MilkType milkType;
-    private BigDecimal purchase,sale,difference;
+    private BigDecimal purchase, sale, difference;
 
     public MilkType getMilkType() {
         return milkType;

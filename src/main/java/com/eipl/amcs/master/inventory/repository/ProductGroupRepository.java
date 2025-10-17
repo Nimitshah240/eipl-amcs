@@ -17,7 +17,7 @@ public interface ProductGroupRepository extends BaseRepository<ProductGroup, Str
     List<ProductGroup> findAll(Sort sort);
 
     @EntityGraph(attributePaths = {"unit"})
-    public ProductGroup findByCode(Integer Code);
+    ProductGroup findByCode(Integer Code);
 
     @Override
     @EntityGraph(attributePaths = {"unit"})

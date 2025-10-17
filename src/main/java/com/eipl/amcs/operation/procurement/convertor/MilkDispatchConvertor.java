@@ -1,6 +1,5 @@
 package com.eipl.amcs.operation.procurement.convertor;
 
-import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;

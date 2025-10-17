@@ -1,13 +1,12 @@
 package com.eipl.amcs.operation.procurement.dto;
 
+import com.eipl.amcs.operation.procurement.model.MilkReceipt;
+import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.eipl.amcs.operation.procurement.model.MilkReceipt;
-import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import lombok.Setter;
 
-import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import java.util.List;
 
 @Getter

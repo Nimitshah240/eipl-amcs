@@ -13,13 +13,11 @@ public class NextCodeRepositoryImpl implements NextCodeRepository {
     EntityManager em;
 
     /**
-     *
      * @param className
      * @param pkColumnName
      * @param prefix
      * @param numberOfDigit
      * @return String
-     *
      * @updatedBy Nimit Shah
      * @updatedOn - 30-06-2025
      * @update - added condition to get first bill head code with ending 201.
@@ -40,7 +38,7 @@ public class NextCodeRepositoryImpl implements NextCodeRepository {
                                     + className + " al where code not like '%portal%' ORDER BY CAST( SUBSTRING(al." + pkColumnName + ","
                                     + (prefix.length() + 1) + ") AS int) DESC", String.class)
                             .setMaxResults(1).getSingleResult();
-                } else if (className.equalsIgnoreCase("InsuranceDetail")){
+                } else if (className.equalsIgnoreCase("InsuranceDetail")) {
                     nextCode = em
                             .createQuery("SELECT SUBSTRING(al." + pkColumnName + "," + (prefix.length() + 1) + ") FROM "
                                     + className + " al  where insuranceDetailCode not like '%portal%' ORDER BY CAST( SUBSTRING(al." + pkColumnName + ","

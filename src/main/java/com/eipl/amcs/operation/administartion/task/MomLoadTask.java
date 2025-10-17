@@ -6,6 +6,7 @@ import com.eipl.amcs.master.account.service.MeetingAgendaService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 public class MomLoadTask extends Task<List<Mom>> {
@@ -13,9 +14,10 @@ public class MomLoadTask extends Task<List<Mom>> {
     private final String code;
 
 
-    public MomLoadTask(String code){
-        this.code=code;
+    public MomLoadTask(String code) {
+        this.code = code;
     }
+
     @Override
     protected List<Mom> call() throws Exception {
         try {

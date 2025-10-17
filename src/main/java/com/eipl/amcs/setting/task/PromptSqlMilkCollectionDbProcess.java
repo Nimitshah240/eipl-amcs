@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PromptSqlMilkCollectionDbProcess extends Task<List<MilkCollectionMigration>> {
-    private String filePath;
-    private String dbName;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private final String filePath;
+    private final String dbName;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public PromptSqlMilkCollectionDbProcess(String filePath, String dbName, LocalDate fromDate, LocalDate toDate) {
         this.filePath = filePath;
@@ -28,12 +28,12 @@ public class PromptSqlMilkCollectionDbProcess extends Task<List<MilkCollectionMi
     protected List<MilkCollectionMigration> call() throws Exception {
         List<MilkCollectionMigration> list = new ArrayList<>();
         try {
-    //        String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=false;user=dev;password=dev@123";
+            //        String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=false;user=dev;password=dev@123";
 
-        //  String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=eipl;integretedSecurity=false";
-        //    String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";integretedSecurity=true";
+            //  String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=eipl;integretedSecurity=false";
+            //    String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";integretedSecurity=true";
             String connectionUrl = "jdbc:sqlserver://IT40\\EIPL;databaseName=" + dbName + ";integratedSecurity=false;encrypt=true;trustServerCertificate=true;user=sa;password=eipl";
-         //   String connectionUrl = "jdbc:sqlserver://ITCAP2\\DEVEIPL;databaseName=" + dbName + ";integratedSecurity=false;encrypt=true;trustServerCertificate=true;user=sa;password=eipl";
+            //   String connectionUrl = "jdbc:sqlserver://ITCAP2\\DEVEIPL;databaseName=" + dbName + ";integratedSecurity=false;encrypt=true;trustServerCertificate=true;user=sa;password=eipl";
 
 //            String urlDb = "jdbc:ucanaccess://" + filePath;
             try (Connection connection = DriverManager.getConnection(connectionUrl)) {

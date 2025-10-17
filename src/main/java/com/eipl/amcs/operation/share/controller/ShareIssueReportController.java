@@ -24,6 +24,10 @@ import java.util.*;
 
 public class ShareIssueReportController implements MyInitialization {
 
+    public PopupCallback callback;
+    public Bonus bonus;
+    public Map<String, Object> map;
+    List<Bonus> bonusList = new ArrayList<>();
     @FXML
     private StackPane root;
     @FXML
@@ -31,30 +35,18 @@ public class ShareIssueReportController implements MyInitialization {
     private Stage stage;
     @FXML
     private ComboBox<String> cboxFormat;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-
-    public PopupCallback callback;
-
-
     private ResourceBundle resourceBundle;
-
 
     @Override
     public Node getRoot() {
         return root;
     }
 
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    List<Bonus> bonusList = new ArrayList<>();
-    public Bonus bonus;
-    public Map<String, Object> map;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -95,8 +87,7 @@ public class ShareIssueReportController implements MyInitialization {
         params.put("p_payment_type", 0);
 
 
-        if (cboxFormat.getSelectionModel().getSelectedIndex() == 0)
-        {
+        if (cboxFormat.getSelectionModel().getSelectedIndex() == 0) {
             print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SHARE_ISSUE_2, params);
             JasperViewer.viewReport(print, false);
         } else {

@@ -24,13 +24,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/member-bill")
 public class MemberBillController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemberBillController.class);
     @Autowired
     private MemberBillService service;
     @Autowired
     private SocietyPaymentCycleService paymentCycleService;
     @Autowired
     private MemberBillRepository repository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MemberBillController.class);
 
     @GetMapping("/summary")
     public ResponseEntity<List<MemberBillSummary>> fetchBillSummary(@RequestParam("fromDate") String fromDate,
@@ -40,9 +40,10 @@ public class MemberBillController {
         return new ResponseEntity<List<MemberBillSummary>>(service.findMemberBillSummaryBetWeen(fromDt, toDt),
                 HttpStatus.OK);
     }
+
     @GetMapping("/findByDate")
     public ResponseEntity<List<MemberBillSummary>> index(@RequestParam(name = "fromDate") String fromDate,
-                                                           @RequestParam(name = "toDate") String toDate) {
+                                                         @RequestParam(name = "toDate") String toDate) {
         try {
             LocalDate fromDt = LocalDate.parse(fromDate);
             LocalDate toDt = LocalDate.parse(toDate);

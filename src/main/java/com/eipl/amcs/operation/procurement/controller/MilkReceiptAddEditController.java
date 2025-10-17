@@ -22,7 +22,14 @@ import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.operation.procurement.convertor.MilkDispatchDateWiseConvertor;
-import com.eipl.amcs.operation.procurement.dto.*;
+import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.dto.MilkDispatchSummaryDto;
+import com.eipl.amcs.operation.procurement.dto.MilkReceiptDto;
+import com.eipl.amcs.operation.procurement.dto.MilkReceiptSummaryDto;
+import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
+import com.eipl.amcs.operation.procurement.model.MilkReceipt;
+import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -48,59 +55,43 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import com.eipl.amcs.operation.procurement.model.MilkDispatch;
-import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
-import com.eipl.amcs.operation.procurement.model.MilkReceipt;
-import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 
 public class MilkReceiptAddEditController extends MilkDispatchBaseController implements MyInitialization {
 
+    List<MilkReceiptSummaryDto> milkReceiptSummaryDtoList = new ArrayList<>();
+    List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
+    List<MilkDispatchTransaction> milkDispatchSummaryDtoList = new ArrayList<>();
     @FXML
     private StackPane root;
-
     @FXML
     private GridPane gridMaster;
-
     @FXML
     private E_TextField txtQuanity, txtFat, txtSnf, txtClr,
             txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans;
-
     @FXML
     private E_DatePicker dpFromDate, dpToDate, dpReceiptDate;
-
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
-
-
     @FXML
     private TableView<MilkReceiptSummaryDto> tableMilkReceiptSummary;
-
     @FXML
     private TableColumn<MilkReceiptSummaryDto, MilkType> colCollecMilkType;
-
     @FXML
     private TableColumn<MilkReceiptSummaryDto, BigDecimal> colPurchaseMilk, colLocalMilkSale, colDifference;
-
     @FXML
     private GridPane gridTransaction;
-
     @FXML
     private ComboBox<MilkType> cboxMilkType;
     @FXML
     private ComboBox<MilkDispatch> cboxChallanNo;
-
     @FXML
     private ComboBox<MilkQualityType> cboxMilkQuality;
-
     @FXML
     private Label lblQuantity;
-
     @FXML
     private HBox btnPanel;
-
     @FXML
     private Button btnAdd, btnDelete;
-
     @FXML
     private TableView<MilkReceiptTransaction> tableMilkReceipt;
     @FXML
@@ -111,13 +102,10 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     private TableColumn<MilkReceiptTransaction, String> colMilkQltyType;
     @FXML
     private TableColumn<MilkDispatchTransaction, MilkType> colMilkType1;
-
     @FXML
     private TableColumn<MilkReceiptTransaction, BigDecimal> colQuantity, colQuantity2, colFat, colSnf, colRate, colAmount;
-
     @FXML
     private TableColumn<MilkDispatchTransaction, BigDecimal> colQuantity1, colFat1, colSnf1, colRate1, colAmount1, colWater1;
-
     @FXML
     private HBox btnMainPanel;
     private ObjectProperty<MilkDispatchSummaryDto> propDto;
@@ -129,15 +117,23 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     private MilkReceipt dto;
     private MilkReceiptTransaction dtoTxn;
     private MilkReceiptDto receiptDto;
-    private ObjectProperty<MilkReceiptTransaction> propMilkReceiptTransaction;
+    private final ObjectProperty<MilkReceiptTransaction> propMilkReceiptTransaction;
     private StringBuilder errorMsg = null;
-    private ObservableList<MilkReceiptTransaction> listMilkReceipt, listDeleteTxn;
+    private ObservableList<MilkReceiptTransaction> listMilkReceipt;
+    private final ObservableList<MilkReceiptTransaction> listDeleteTxn;
     private String challanNo;
-
-    List<MilkReceiptSummaryDto> milkReceiptSummaryDtoList = new ArrayList<>();
-    List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
-    private ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
-    List<MilkDispatchTransaction> milkDispatchSummaryDtoList = new ArrayList<>();
+    private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
+        }
+    };
+    private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            fetchRateForReceipt(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
+            calculateClr(txtFat.getText(), txtSnf.getText());
+        }
+    };
 
     public MilkReceiptAddEditController() {
         propMilkReceiptTransaction = new SimpleObjectProperty<>();
@@ -173,20 +169,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
         }
 
     }
-
-    private ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
-        }
-    };
-
-    private ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            fetchRateForReceipt(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
-            calculateClr(txtFat.getText(), txtSnf.getText());
-        }
-    };
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -684,7 +666,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkreceipt"),
                     errorMsg.toString());
             alert.createAlert();
-            return;
         }
     }
 

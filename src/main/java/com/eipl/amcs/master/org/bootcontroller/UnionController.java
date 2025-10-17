@@ -17,22 +17,21 @@ import java.util.List;
 @RequestMapping("/unions")
 public class UnionController {
 
-	@Autowired
-	private UnionService service;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(UnionController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnionController.class);
+    @Autowired
+    private UnionService service;
 
-	@GetMapping
-	public ResponseEntity<List<Union>> index() {
-		try {
-			List<Union> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<Union>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<Union>> index() {
+        try {
+            List<Union> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<List<Union>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

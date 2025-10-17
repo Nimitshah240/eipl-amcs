@@ -27,6 +27,8 @@ import java.util.Map;
 @RequestMapping("/members")
 public class MemberController {
 
+    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
     @Autowired
     private MemberService service;
     @Autowired
@@ -35,9 +37,6 @@ public class MemberController {
     private MemberRepository repository;
     @Autowired
     private MemberDetailRepository detailRepository;
-
-    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
 
     @GetMapping
     public ResponseEntity<List<Member>> index(@RequestParam(name = "society", required = false) String societyCode) {

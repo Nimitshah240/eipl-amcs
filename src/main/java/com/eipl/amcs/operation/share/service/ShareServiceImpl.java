@@ -57,7 +57,7 @@ public class ShareServiceImpl implements ShareService {
 
     @Override
     public Share save(Share share, String identityInfo) {
-        if(!share.getCheckMember()){
+        if (!share.getCheckMember()) {
             Member m = new Member();
             m.setCode(share.getMember().getCode());
 
@@ -71,13 +71,13 @@ public class ShareServiceImpl implements ShareService {
                     share.setTransferDate(LocalDate.now());
                     oldShare.setTransferred(true);
                     oldShare.setNoOfTransferredShare(share.getNoOfShare());
-                    shareRepository.customUpdate(oldShare,identityInfo);
+                    shareRepository.customUpdate(oldShare, identityInfo);
                 }
             }
         }
         share.setInitData();
         share.setMember(Hibernate.unproxy(share.getMember(), Member.class));
-        shareRepository.customSave(share,identityInfo);
+        shareRepository.customSave(share, identityInfo);
 
         return null;
     }
@@ -85,7 +85,7 @@ public class ShareServiceImpl implements ShareService {
     @Override
     public Share update(Share share, String identityHeader) {
         share.setupdateData();
-        return shareRepository.customUpdate(share,identityHeader);
+        return shareRepository.customUpdate(share, identityHeader);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class ShareServiceImpl implements ShareService {
             share.get().setCancelled(true);
             share.get().setCancelDate(LocalDate.now());
             share.get().setupdateData();
-            shareRepository.customUpdate(share.get(),identityInfo);
+            shareRepository.customUpdate(share.get(), identityInfo);
         }
         return null;
     }
@@ -110,7 +110,7 @@ public class ShareServiceImpl implements ShareService {
     public Share delete(String id, String identityInfo) {
         Optional<Share> share = shareRepository.findById(id);
         if (share.isPresent()) {
-            shareRepository.customDelete(share.get(),identityInfo);
+            shareRepository.customDelete(share.get(), identityInfo);
         }
         return null;
     }
@@ -122,7 +122,7 @@ public class ShareServiceImpl implements ShareService {
             share.get().setCancelled(false);
             share.get().setCancelDate(null);
             share.get().setupdateData();
-            shareRepository.customUpdate(share.get(),identityInfo);
+            shareRepository.customUpdate(share.get(), identityInfo);
         }
         return null;
     }
@@ -133,7 +133,7 @@ public class ShareServiceImpl implements ShareService {
         Optional<Share> oldShare = shareRepository.findById(newShare.get().getXCol1());
         oldShare.get().setTransferred(false);
         oldShare.get().setNoOfTransferredShare(0);
-        shareRepository.customUpdate(oldShare.get(),identityHeader);
+        shareRepository.customUpdate(oldShare.get(), identityHeader);
         shareRepository.delete(newShare.get());
     }
 

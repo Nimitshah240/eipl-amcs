@@ -46,6 +46,8 @@ import java.util.stream.Collectors;
 public class InsuranceMasterController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<InsuranceMaster> propInsuranceMasterDto;
+    private final StringBuilder errorMsg = null;
+    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
     @FXML
     private StackPane root;
     @FXML
@@ -59,14 +61,12 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
     @FXML
     private E_Button btnView, btnFinalize, btnExport;
     private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
     private String name;
     private List<InsuranceMaster> insuranceMasterList;
     private List<InsuranceDetail> insuranceDetailList;
     private InsuranceDetailSummary insuranceDetailSummary;
     private InsuranceMaster insuranceMaster;
     private List<Member> members;
-    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
 
     public InsuranceMasterController() {
         propInsuranceMasterDto = new SimpleObjectProperty<>();

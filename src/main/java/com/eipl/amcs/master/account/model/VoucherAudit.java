@@ -21,34 +21,35 @@ import java.util.List;
 public class VoucherAudit extends BaseModelTxnAudit {
 
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;	private String code;
-	private Boolean autoPosted;
-	private Boolean cancelled;
-	private LocalDate billDate;
-	private LocalDate voucherDate;
-	private String billNo;
-	private String remarks;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String code;
+    private Boolean autoPosted;
+    private Boolean cancelled;
+    private LocalDate billDate;
+    private LocalDate voucherDate;
+    private String billNo;
+    private String remarks;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code",  foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "voucher_type_code",  foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private VoucherType voucherType;
-	private String unionCode;
-	private String dockCode;
-	private String financialYearsCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private VoucherType voucherType;
+    private String unionCode;
+    private String dockCode;
+    private String financialYearsCode;
 
-	@Transient
-	@JsonIgnore
-	private List<VoucherTransaction> voucherTransactions;
+    @Transient
+    @JsonIgnore
+    private List<VoucherTransaction> voucherTransactions;
 
-	@Override
-	public String getTableName() {
-		return "voucher_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "voucher_audit";
+    }
 
 
 }

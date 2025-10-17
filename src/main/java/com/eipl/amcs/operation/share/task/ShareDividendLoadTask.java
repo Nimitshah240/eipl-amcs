@@ -1,27 +1,20 @@
 package com.eipl.amcs.operation.share.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.model.ShareDividend;
 import com.eipl.amcs.operation.share.service.ShareDividendService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public class ShareDividendLoadTask extends Task<List<ShareDividend>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareDividendLoadTask.class);
 
     private LocalDate fromDate, toDate;
+
     public ShareDividendLoadTask() {
 
     }
@@ -36,9 +29,9 @@ public class ShareDividendLoadTask extends Task<List<ShareDividend>> {
     protected List<ShareDividend> call() throws Exception {
         try {
 
-            ShareDividendService service=  EmcsAppContext.getContext().getBean(ShareDividendService.class);
-            List<ShareDividend>list=service.findAllData(fromDate,toDate);
-            if (list==null||list.isEmpty())return null;
+            ShareDividendService service = EmcsAppContext.getContext().getBean(ShareDividendService.class);
+            List<ShareDividend> list = service.findAllData(fromDate, toDate);
+            if (list == null || list.isEmpty()) return null;
             return list;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

@@ -11,11 +11,9 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.setting.model.GeneralConfig;
 import com.eipl.amcs.setting.task.GeneralConfigSaveTask;
-import com.eipl.amcs.setting.task.HardwareDeviceConfigSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.task.DbBackupTask;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-//import net.ucanaccess.console.Main;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,10 +31,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class GeneralConfigController implements MyInitialization {
 
+    File appProperty, old;
+    String[] arrQuality = {"Single MA", "Dual MA By Milk", "Dual MA By Sequence"};
     @FXML
     private AnchorPane root;
     @FXML
@@ -46,7 +44,7 @@ public class GeneralConfigController implements MyInitialization {
     private Tab tabMilkConfig, tabProductConfig, tabPaymentMode;
     @FXML
     private TextField txtLtrToKg, txtClrConst1, txtClrConst2, txtDefaultSnfValue, txtSampleSize, txtAvgPBasedOnPrevShift,
-            txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs,txtCollectionSlip,txtDecimalValue;
+            txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs, txtCollectionSlip, txtDecimalValue;
     @FXML
     private ComboBox<String> cboxDefaultSnf, cboxWeightSetting, cboxQualitySetting, cboxMemberCollectionQtyMode,
             cboxBmcCollectionQtyMode, cboxLocalMilkSaleQtyMode, cboxDispatchMilkQtyMode, cboxReceiptMilkQtyMode, cboxPaymentMode,
@@ -58,11 +56,7 @@ public class GeneralConfigController implements MyInitialization {
     private Button btnSave, btnClose, btnSave1, btnClose1, btnSave2, btnClose2, btnBrowse, btnBackup;
     @FXML
     private ComboBox<String> cboxSlipLanguage;
-
-
     private ResourceBundle resourceBundle;
-    File appProperty, old;
-    String[] arrQuality = {"Single MA", "Dual MA By Milk", "Dual MA By Sequence"};
 
     @Override
     public Node getRoot() {
@@ -126,29 +120,17 @@ public class GeneralConfigController implements MyInitialization {
             }
         });
 
-        if (chkAvgParam.isSelected()) {
-            txtAvgPIfMachineOff.setDisable(false);
-        } else {
-            txtAvgPIfMachineOff.setDisable(true);
-        }
+        txtAvgPIfMachineOff.setDisable(!chkAvgParam.isSelected());
         chkAvgParam.setOnAction(e -> {
-            if (chkAvgParam.isSelected()) {
-                txtAvgPIfMachineOff.setDisable(false);
-            } else {
-                txtAvgPIfMachineOff.setDisable(true);
-            }
+            txtAvgPIfMachineOff.setDisable(!chkAvgParam.isSelected());
         });
         chkAvgParam.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(true)) {
-                txtAvgPIfMachineOff.setDisable(false);
-            } else {
-                txtAvgPIfMachineOff.setDisable(true);
-            }
+            txtAvgPIfMachineOff.setDisable(!newValue.equals(true));
         });
 
 
         btnBackup.setOnAction(e -> {
-            String backupPath = MainApp.getProperty("backuppath", null).replace(" ","");
+            String backupPath = MainApp.getProperty("backuppath", null).replace(" ", "");
             if (backupPath == null || backupPath.isEmpty())
                 return;
             var task = new DbBackupTask(backupPath);
@@ -170,25 +152,25 @@ public class GeneralConfigController implements MyInitialization {
         cboxWeightSetting.setValue(setWeightSetting(MainApp.getProperty("qty.reading.rounding", "0")));
         cboxQualitySetting.setValue(MainApp.getProperty("quality.reading.rounding", "0").equalsIgnoreCase("0") ? "Round" : "Truncate");
         txtSampleSize.setText(MainApp.getProperty("sample.milk.size", "0"));
-        chkAcceptOtherMilk.setSelected(MainApp.getProperty("accept.milktype.otherthen.default", "1").equalsIgnoreCase("1") ? true : false);
-        chkAllowMultiEntry.setSelected(MainApp.getProperty("allow.multipleentry.samemilktype", "1").equalsIgnoreCase("1") ? true : false);
-        chkAllowMultiEntryDiffType.setSelected(MainApp.getProperty("allow.multipleentry.diffmilktype", "1").equalsIgnoreCase("1") ? true : false);
+        chkAcceptOtherMilk.setSelected(MainApp.getProperty("accept.milktype.otherthen.default", "1").equalsIgnoreCase("1"));
+        chkAllowMultiEntry.setSelected(MainApp.getProperty("allow.multipleentry.samemilktype", "1").equalsIgnoreCase("1"));
+        chkAllowMultiEntryDiffType.setSelected(MainApp.getProperty("allow.multipleentry.diffmilktype", "1").equalsIgnoreCase("1"));
         cboxMemberCollectionQtyMode.setValue(MainApp.getProperty("member.collection.qty.mode", "0").equalsIgnoreCase("0") ? resourceBundle.getString("liter") : resourceBundle.getString("kg"));
         cboxBmcCollectionQtyMode.setValue(MainApp.getProperty("society.collection.qty.mode", "0").equalsIgnoreCase("0") ? resourceBundle.getString("liter") : resourceBundle.getString("kg"));
         cboxLocalMilkSaleQtyMode.setValue(MainApp.getProperty("milksale.qty.mode", "0").equalsIgnoreCase("0") ? resourceBundle.getString("liter") : resourceBundle.getString("kg"));
         cboxDispatchMilkQtyMode.setValue(MainApp.getProperty("dispatch.qty.mode", "1").equalsIgnoreCase("1") ? resourceBundle.getString("kg") : resourceBundle.getString("litre"));
         cboxReceiptMilkQtyMode.setValue(MainApp.getProperty("receipt.qty.mode", "1").equalsIgnoreCase("1") ? resourceBundle.getString("kg") : resourceBundle.getString("litre"));
-        chkPurchaseRate.setSelected(MainApp.getProperty("product.purchaserate", "0").equalsIgnoreCase("0") ? false : true);
-        chkSaleRate.setSelected(MainApp.getProperty("product.salerate", "0").equalsIgnoreCase("0") ? false : true);
-        chkAllowZeroDispatch.setSelected(MainApp.getProperty("zero.amount.dispatch", "0").equalsIgnoreCase("0") ? false : true);
-        chkPaymentMode.setSelected(MainApp.getProperty("allow.cashpayment", "1").equalsIgnoreCase("1") ? true : false);
+        chkPurchaseRate.setSelected(!MainApp.getProperty("product.purchaserate", "0").equalsIgnoreCase("0"));
+        chkSaleRate.setSelected(!MainApp.getProperty("product.salerate", "0").equalsIgnoreCase("0"));
+        chkAllowZeroDispatch.setSelected(!MainApp.getProperty("zero.amount.dispatch", "0").equalsIgnoreCase("0"));
+        chkPaymentMode.setSelected(MainApp.getProperty("allow.cashpayment", "1").equalsIgnoreCase("1"));
         cboxPaymentMode.setValue(MainApp.getProperty("payment.mode", "2").equalsIgnoreCase("2") ? "Local disburse" : MainApp.getProperty("payment.mode", "2").equalsIgnoreCase("0") ? "Society Bank" : "Union Bank");
         cboxPaymentOption.setValue(MainApp.getProperty("payment.option", "0").equalsIgnoreCase("0") ? "Actual amount" : "Decimal truncate");
 
         txtAvgPBasedOnPrevShift.setText(MainApp.getProperty("avg.param.prev.shiftcount", "5"));
         txtAvgPIfMachineOff.setText(MainApp.getProperty("avg.param.capture.value", "5"));
-        chkAvgParam.setSelected(MainApp.getProperty("avg.param.capture", "1").equalsIgnoreCase("1") ? true : false);
-        txtDecimalValue.setText(MainApp.getProperty("decimalvalue","2"));
+        chkAvgParam.setSelected(MainApp.getProperty("avg.param.capture", "1").equalsIgnoreCase("1"));
+        txtDecimalValue.setText(MainApp.getProperty("decimalvalue", "2"));
         txtHrs.setText(MainApp.getProperty("hrs", "72"));
         txtSampleMilk.setText(MainApp.getProperty("samplemilk", ""));
         txtBackupPath.setText(MainApp.getProperty("backuppath", ""));
@@ -218,7 +200,8 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("identity.id=" + new String(Base64.getEncoder().encode(MainApp.systemId.getBytes())));
         lines.add("identity.version=" + new String(Base64.getEncoder().encode(AppConstant.versionNo.getBytes())));
         lines.add("identity.activation=" + new String(Base64.getEncoder().encode(MainApp.getProperty("identity.activation", "").getBytes())));
-        lines.add("updater.url=" + new String(Base64.getEncoder().encode("http://client.emilkpro.in/webservice/eipl/v1/free-access/latest-app".getBytes())));        lines.add("#Configurations");
+        lines.add("updater.url=" + new String(Base64.getEncoder().encode("http://client.emilkpro.in/webservice/eipl/v1/free-access/latest-app".getBytes())));
+        lines.add("#Configurations");
         lines.add("default.creditlimit=" + new String(Base64.getEncoder().encode("100000".getBytes())));
         lines.add("ltr.to.kg=" + new String(Base64.getEncoder().encode((txtLtrToKg.getText().trim() != null ? txtLtrToKg.getText() : "1.028").getBytes())));
         lines.add("clr.const1=" + new String(Base64.getEncoder().encode((txtClrConst1.getText().trim() != null ? txtClrConst1.getText() : "0.21").getBytes())));
@@ -272,7 +255,7 @@ public class GeneralConfigController implements MyInitialization {
             appProperty = new File("resources/app.properties");
             old = new File("resources/old_app.properties");
             if (appProperty.renameTo(old)) {
-                Files.write(appProperty.toPath(), writeAppProperty(), Charset.forName("UTF-8"));
+                Files.write(appProperty.toPath(), writeAppProperty(), StandardCharsets.UTF_8);
                 saveData();
                 MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("generalconfiguration"),
                         resourceBundle.getString("alert.propertychange"));
@@ -311,7 +294,7 @@ public class GeneralConfigController implements MyInitialization {
     public void saveData() {
         MainApp.loadProperties();
         List<GeneralConfig> list = new ArrayList<>();
-        MainApp.properties.forEach((k,v)->{
+        MainApp.properties.forEach((k, v) -> {
             GeneralConfig generalConfig = new GeneralConfig();
             generalConfig.setKey((String) k);
             generalConfig.setValue((String) v);
@@ -332,7 +315,6 @@ public class GeneralConfigController implements MyInitialization {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("generalconfig"),
                             sb.toString());
                     alert.createAlert();
-                    return;
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -389,11 +371,7 @@ public class GeneralConfigController implements MyInitialization {
 //            txtDefaultSnfValue.setDisable(true);
         });
         cboxPaymentMode.setOnAction(event -> {
-            if (cboxPaymentMode.getSelectionModel().getSelectedIndex() == 2) {
-                chkPaymentMode.setSelected(true);
-            } else {
-                chkPaymentMode.setSelected(false);
-            }
+            chkPaymentMode.setSelected(cboxPaymentMode.getSelectionModel().getSelectedIndex() == 2);
         });
 //        cboxPaymentOption.setOnAction(data -> {
 //            if (cboxPaymentOption.getSelectionModel().getSelectedIndex() == 0) {

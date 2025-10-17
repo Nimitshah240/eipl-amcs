@@ -32,7 +32,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
     @FXML
     private ComboBox cboxType;
     @FXML
-    private E_TextField txtName,txtCode;
+    private E_TextField txtName, txtCode;
     private Stage stage;
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
@@ -59,10 +59,10 @@ public class SalaryHeadAddEditController implements MyInitialization {
             btnSaveUpdate.setText(resourceBundle.getString("update"));
             loadControls();
         } else {
-             getNextCode();
-             loadData();
+            getNextCode();
+            loadData();
         }
-       // loadDesignation();
+        // loadDesignation();
 
     }
 
@@ -98,9 +98,9 @@ public class SalaryHeadAddEditController implements MyInitialization {
     }
 
     public void loadControls() {
-         cboxType.getSelectionModel().select(dto.getType()==0?resourceBundle.getString("deduction"):resourceBundle.getString("addition"));
-         txtName.setText(dto.getName());
-         txtCode.setText(dto.getCode().toString());
+        cboxType.getSelectionModel().select(dto.getType() == 0 ? resourceBundle.getString("deduction") : resourceBundle.getString("addition"));
+        txtName.setText(dto.getName());
+        txtCode.setText(dto.getCode().toString());
     }
 
     //
@@ -128,7 +128,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
     }
 
     private StaffSalaryHead setValuesInObject() {
-        dto.setType(cboxType.getSelectionModel().getSelectedIndex()-1);
+        dto.setType(cboxType.getSelectionModel().getSelectedIndex() - 1);
         dto.setName(txtName.getText());
         dto.setCode(Integer.valueOf(txtCode.getText()));
         dto.setSociety(MainApp.identityDto.getSociety());
@@ -139,7 +139,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
         if (cboxType.getValue() == null)
             errorMsg.append(resourceBundle.getString("typenullerror") + "\n");
 
-        if (txtName.getText().trim() == null|| txtName.getText().trim().isEmpty())
+        if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
 
         return errorMsg.length() == 0;
@@ -206,7 +206,6 @@ public class SalaryHeadAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
 
 
 }

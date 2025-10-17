@@ -53,14 +53,14 @@ public class PatrakOneController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });

@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class SubLedgerAddEditController implements MyInitialization {
+    private final ObjectProperty<Ledger> propDto;
     @FXML
     TableColumn<Ledger, Boolean> colSelect;
     @FXML
@@ -45,12 +46,10 @@ public class SubLedgerAddEditController implements MyInitialization {
     @FXML
     private E_TextField txtCode, txtName, txtLocalName;
     private List<LedgerSubLedgerMapping> ledgerSubLedgerMappingList;
-
     @FXML
     private TableView<Ledger> tableLedgerData;
     @FXML
     private TableColumn<Ledger, String> colCode, colName, colLocalName, colIsActive;
-    private final ObjectProperty<Ledger> propDto;
     private List<Ledger> listLedger;
     private Stage stage;
 

@@ -17,13 +17,11 @@ import java.util.Optional;
 
 @Service
 public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceService {
+    private static final Logger log = LoggerFactory.getLogger(LedgerOpeningBalanceServiceImpl.class);
     @Autowired
     private LedgerOpeningBalanceRepository ledgerOpeningBalanceRepository;
     @Autowired
     private NextCodeService nextCodeService;
-
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerOpeningBalanceServiceImpl.class);
 
     @Override
     public List<LedgerOpeningBalance> findAll() {

@@ -1,23 +1,14 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import com.eipl.amcs.operation.procurement.repository.MilkReceiptRepository;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 public class MilkReceiptPrevRecordGetTask extends Task<MilkReceipt> {
-    private LocalDateTime fromDate;
+    private final LocalDateTime fromDate;
 
     public MilkReceiptPrevRecordGetTask(LocalDateTime fromDate) {
         this.fromDate = fromDate;
@@ -28,8 +19,8 @@ public class MilkReceiptPrevRecordGetTask extends Task<MilkReceipt> {
     protected MilkReceipt call() throws Exception {
         try {
 
-            MilkReceiptRepository repository=EmcsAppContext.getContext().getBean(MilkReceiptRepository.class);
-           return repository.findPreviousRecordOfGoodMilkType(fromDate).get();
+            MilkReceiptRepository repository = EmcsAppContext.getContext().getBean(MilkReceiptRepository.class);
+            return repository.findPreviousRecordOfGoodMilkType(fromDate).get();
 
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

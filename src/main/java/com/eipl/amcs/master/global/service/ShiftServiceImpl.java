@@ -12,10 +12,9 @@ import java.util.List;
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
+    private static final Logger log = LoggerFactory.getLogger(ShiftServiceImpl.class);
     @Autowired
     private ShiftRepository shiftRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(ShiftServiceImpl.class);
 
     @Override
     public List<Shift> findAll() {

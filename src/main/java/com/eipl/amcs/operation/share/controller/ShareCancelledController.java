@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 
 public class ShareCancelledController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<Share> propShareIssue;
     @FXML
     private StackPane root;
-
     @FXML
     private TableView<Share> tableShareCancelled;
     @FXML
@@ -49,7 +49,6 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
     private TableColumn<Share, BigDecimal> colAmount;
     @FXML
     private Button btnClose, btnSearch, btnReport, btnRevert;
-    private final ObjectProperty<Share> propShareIssue;
     private ResourceBundle resourceBundle;
 
     private String name;
@@ -70,11 +69,7 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         propShareIssue.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnRevert.setDisable(false);
-            } else {
-                btnRevert.setDisable(true);
-            }
+            btnRevert.setDisable(newValue == null);
         });
         setupTable();
         loadMember();
@@ -122,7 +117,7 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

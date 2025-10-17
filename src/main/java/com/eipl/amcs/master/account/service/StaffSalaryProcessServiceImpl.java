@@ -13,11 +13,9 @@ import java.util.List;
 @Service
 public class StaffSalaryProcessServiceImpl implements StaffSalaryProcessService {
 
+    private static final Logger log = LoggerFactory.getLogger(StaffSalaryProcessServiceImpl.class);
     @Autowired
     private StaffSalaryProcessRepository staffSalaryProcessRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(StaffSalaryProcessServiceImpl.class);
-
 
     @Override
     public List<StaffSalaryProcess> findAll() {

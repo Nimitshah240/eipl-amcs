@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ProductStockTransactionRepository extends BaseRepository<ProductStockTransaction, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "product" })
-	Optional<ProductStockTransaction> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"society", "product"})
+    Optional<ProductStockTransaction> findById(String id);
 }

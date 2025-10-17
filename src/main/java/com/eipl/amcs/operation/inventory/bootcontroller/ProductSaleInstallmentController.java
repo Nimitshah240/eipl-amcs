@@ -16,98 +16,97 @@ import java.util.Optional;
 @RequestMapping("/product-sale-to-member-installments")
 public class ProductSaleInstallmentController {
 
-	@Autowired
-	private ProductSaleInstallmentService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleInstallmentController.class);
+    @Autowired
+    private ProductSaleInstallmentService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleInstallmentController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductSaleInstallment>> index() {
+        try {
+            List<ProductSaleInstallment> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<ProductSaleInstallment>> index() {
-		try {
-			List<ProductSaleInstallment> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<ProductSaleInstallment>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<List<ProductSaleInstallment>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/{invoiceNo}/{isBilling}")
+    public ResponseEntity<List<ProductSaleInstallment>> indexByInstallmentNo(
+            @PathVariable("invoiceNo") String invoiceNo, @PathVariable("isBilling") boolean b) {
+        try {
+            List<ProductSaleInstallment> list = service.fetchInstallmentIsBilled(invoiceNo, b);
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping("/{invoiceNo}/{isBilling}")
-	public ResponseEntity<List<ProductSaleInstallment>> indexByInstallmentNo(
-			@PathVariable("invoiceNo") String invoiceNo, @PathVariable("isBilling") boolean b) {
-		try {
-			List<ProductSaleInstallment> list = service.fetchInstallmentIsBilled(invoiceNo, b);
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<ProductSaleInstallment>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<List<ProductSaleInstallment>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/invoiceNo")
+    public ResponseEntity<List<ProductSaleInstallment>> indexByInstallmentNoAndPaymentCycle(
+            @RequestParam("invoiceNo") String invoiceNo) {
+        try {
+            List<ProductSaleInstallment> list = service.fetchByPaymentCycle(invoiceNo);
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping("/invoiceNo")
-	public ResponseEntity<List<ProductSaleInstallment>> indexByInstallmentNoAndPaymentCycle(
-			@RequestParam("invoiceNo") String invoiceNo) {
-		try {
-			List<ProductSaleInstallment> list = service.fetchByPaymentCycle(invoiceNo);
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<List<ProductSaleInstallment>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<ProductSaleInstallment>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
-	@PostMapping
-	public ResponseEntity<ProductSaleInstallment> createInstallment(@RequestBody ProductSaleInstallment dto) {
-		try {
-			LOGGER.info("ProductSaleToMemberInstallment save method");
-			dto = service.save(dto);
-			if (dto == null)
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @PostMapping
+    public ResponseEntity<ProductSaleInstallment> createInstallment(@RequestBody ProductSaleInstallment dto) {
+        try {
+            LOGGER.info("ProductSaleToMemberInstallment save method");
+            dto = service.save(dto);
+            if (dto == null)
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@PutMapping
-	public ResponseEntity<ProductSaleInstallment> updateInstallment(@RequestBody ProductSaleInstallment dto) {
-		try {
-			LOGGER.info("ProductSaleToMemberInstallment save method");
-			dto = service.update(dto);
-			if (dto == null)
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @PutMapping
+    public ResponseEntity<ProductSaleInstallment> updateInstallment(@RequestBody ProductSaleInstallment dto) {
+        try {
+            LOGGER.info("ProductSaleToMemberInstallment save method");
+            dto = service.update(dto);
+            if (dto == null)
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@DeleteMapping("/{installmentNo}")
-	public ResponseEntity<?> deleteInstallment(@PathVariable("installmentNo") String installmentNo) {
-		try {
-			LOGGER.info("ProductSaleToMemberInstallment delete method");
-			Optional<ProductSaleInstallment> memberData = service.findById(installmentNo);
-			if (memberData == null || !memberData.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{installmentNo}")
+    public ResponseEntity<?> deleteInstallment(@PathVariable("installmentNo") String installmentNo) {
+        try {
+            LOGGER.info("ProductSaleToMemberInstallment delete method");
+            Optional<ProductSaleInstallment> memberData = service.findById(installmentNo);
+            if (memberData == null || !memberData.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			service.delete(memberData.get());
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            service.delete(memberData.get());
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

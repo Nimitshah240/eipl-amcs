@@ -6,7 +6,10 @@ import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.service.*;
+import com.eipl.amcs.master.global.service.MilkQualityTypeService;
+import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.global.service.RateTypeService;
+import com.eipl.amcs.master.global.service.ShiftService;
 import com.eipl.amcs.master.operation.model.Formula;
 import com.eipl.amcs.master.operation.repository.FormulaRepository;
 import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
@@ -39,22 +42,21 @@ import static com.eipl.amcs.MainApp.context;
 
 public class RateTask extends Task<Void> {
 
-    @Autowired
-    private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
-    @Autowired
-    private ShiftService shiftService;
-    @Autowired
-    private RateTypeService rateTypeService;
-    @Autowired
-    private MilkTypeService milkTypeService;
-    @Autowired
-    private MilkQualityTypeService milkQualityTypeService;
-    @Autowired
-    private FormulaRepository formulaRepository;
-    @Autowired
-    private MemberMilkPurchaseRateService memberMilkPurchaseRateService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RateTask.class);
+    @Autowired
+    private final SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
+    @Autowired
+    private final ShiftService shiftService;
+    @Autowired
+    private final RateTypeService rateTypeService;
+    @Autowired
+    private final MilkTypeService milkTypeService;
+    @Autowired
+    private final MilkQualityTypeService milkQualityTypeService;
+    @Autowired
+    private final FormulaRepository formulaRepository;
+    @Autowired
+    private final MemberMilkPurchaseRateService memberMilkPurchaseRateService;
 
     public RateTask() {
         formulaRepository = context.getBean(FormulaRepository.class);
@@ -65,7 +67,6 @@ public class RateTask extends Task<Void> {
         societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
         memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
     }
-
 
 
     @Override
@@ -209,7 +210,7 @@ public class RateTask extends Task<Void> {
                         contentRateDetail.put("rateType", "MEMBER");
                         contentRateDetail.put("rateClass", "0");
 
-                        updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType.toString() + ")");
+                        updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
 
                         requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                 MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
@@ -226,17 +227,16 @@ public class RateTask extends Task<Void> {
                         if (listStr != null && !listStr.isEmpty()) {
                             for (String s : listStr) {
                                 String[] arr = s.split("#");
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(arr[0]);
-                                sb.append("#");
-                                sb.append(arr[1]);
-                                sb.append("#");
-                                sb.append(arr[2]);
-                                sb.append("#");
-                                sb.append(milkType.getCode());
-                                sb.append("#");
-                                sb.append("1");
-                                listRateDetails.add(sb.toString());
+                                String sb = arr[0] +
+                                        "#" +
+                                        arr[1] +
+                                        "#" +
+                                        arr[2] +
+                                        "#" +
+                                        milkType.getCode() +
+                                        "#" +
+                                        "1";
+                                listRateDetails.add(sb);
                             }
                         }
                     }
@@ -259,7 +259,7 @@ public class RateTask extends Task<Void> {
                         if (responseRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
                             url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
                             Map<String, String> contentRateAck = new HashMap<>();
-                            contentRateAck.put("rateAppCode", appCode.toString().substring(0, appCode.toString().length() - 1));
+                            contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
                             contentRateAck.put("rateType", "MEMBER");
                             LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
                             requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
@@ -279,7 +279,7 @@ public class RateTask extends Task<Void> {
                         if (e.getMessage().contains("wefdate.not.valid")) {
                             url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
                             Map<String, String> contentRateAck = new HashMap<>();
-                            contentRateAck.put("rateAppCode", appCode.toString().substring(0, appCode.toString().length() - 1));
+                            contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
                             contentRateAck.put("rateType", "MEMBER");
                             LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
                             requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
@@ -410,17 +410,16 @@ public class RateTask extends Task<Void> {
                         if (listStr != null && !listStr.isEmpty()) {
                             for (String s : listStr) {
                                 String[] arr = s.split("#");
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(arr[0]);
-                                sb.append("#");
-                                sb.append(arr[1]);
-                                sb.append("#");
-                                sb.append(arr[2]);
-                                sb.append("#");
-                                sb.append(milkType.getCode());
-                                sb.append("#");
-                                sb.append("1");
-                                listSocRateDetails.add(sb.toString());
+                                String sb = arr[0] +
+                                        "#" +
+                                        arr[1] +
+                                        "#" +
+                                        arr[2] +
+                                        "#" +
+                                        milkType.getCode() +
+                                        "#" +
+                                        "1";
+                                listSocRateDetails.add(sb);
                             }
                         }
                     }
@@ -436,7 +435,7 @@ public class RateTask extends Task<Void> {
                         if (societyRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
                             url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
                             content = new HashMap<>();
-                            content.put("rateAppCode", appCode1.toString().substring(0, appCode1.toString().length() - 1));
+                            content.put("rateAppCode", appCode1.substring(0, appCode1.toString().length() - 1));
                             content.put("rateType", "BMC");
                             LOGGER.info("Society milk ack for app: {}", content.get("rateAppCode"));
                             payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
@@ -455,7 +454,7 @@ public class RateTask extends Task<Void> {
                         e.printStackTrace();
                         url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
                         content = new HashMap<>();
-                        content.put("rateAppCode", appCode1.toString().substring(0, appCode1.toString().length() - 1));
+                        content.put("rateAppCode", appCode1.substring(0, appCode1.toString().length() - 1));
                         content.put("rateType", "BMC");
                         LOGGER.info("Society milk ack for app: {}", content.get("rateAppCode"));
                         payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),

@@ -1,4 +1,5 @@
 package com.eipl.amcs.operation.procurement.dto;
+
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
@@ -184,7 +185,7 @@ public class MilkDispatch extends BaseModel {
 
     @Override
     public String toString() {
-        return getFromDate().toLocalDate()+"-"+getFromShift().getName().substring(0,1)+" "+
-                getToDate().toLocalDate()+"-"+getToShift().getName().substring(0,1);
+        return getFromDate().toLocalDate() + "-" + getFromShift().getName().charAt(0) + " " +
+                getToDate().toLocalDate() + "-" + getToShift().getName().charAt(0);
     }
 }

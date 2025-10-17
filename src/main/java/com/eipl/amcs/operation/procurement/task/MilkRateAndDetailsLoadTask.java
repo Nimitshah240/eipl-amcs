@@ -1,21 +1,12 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
 import com.eipl.amcs.operation.procurement.dto.MilkRateAndDetailsDto;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MilkRateAndDetailsLoadTask extends Task<MilkRateAndDetailsDto> {
-    private String code;
+    private final String code;
 
     public MilkRateAndDetailsLoadTask(String code) {
         this.code = code;
@@ -25,7 +16,7 @@ public class MilkRateAndDetailsLoadTask extends Task<MilkRateAndDetailsDto> {
     protected MilkRateAndDetailsDto call() throws Exception {
         try {
 
-            MemberMilkPurchaseRateService service=EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
+            MemberMilkPurchaseRateService service = EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
             return service.fetchRateAndDetails(code);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

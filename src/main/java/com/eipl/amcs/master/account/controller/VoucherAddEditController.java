@@ -80,6 +80,7 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
     private List<VoucherSubLedger> voucherSubLedgerList = new ArrayList<>();
     private VoucherDto dto;
     private VoucherTransaction voucherTransaction;
+
     public VoucherAddEditController() {
         propVoucherTransactionDto = new SimpleObjectProperty<>();
         propVoucherTransactionDto1 = new SimpleObjectProperty<>();

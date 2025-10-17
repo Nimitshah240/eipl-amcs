@@ -20,54 +20,54 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(name = "member_bill_audit")
 public class MemberBillAudit extends BaseModelTxnAudit {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String code;
-	private BigDecimal milkQty;
-	private BigDecimal avgFat;
-	private BigDecimal avgSnf;
-	private BigDecimal avgClr;
-	private BigDecimal kgFat;
-	private BigDecimal kgSnf;
-	private BigDecimal milkAmount;
-	private BigDecimal productSaleAmount;
-	private BigDecimal localSaleAmount;
-	private BigDecimal loanAmount;
-	private BigDecimal otherAddAmount;
-	private BigDecimal otherDedAmount;
-	private BigDecimal netAmount;
-	
-	private String voucherNo;
-	private short paymentMode; //0-Cash, 1-Bank
-	private String bankAcno;
-	private String ifsc;
-	private String paymentRef;
-	
-	private short status; //1-PENDING, 2-SENT, 3-SENT_DBT, 4-REJECT, 5-PROCESSING, 6-DISBURSED, 7-FAIL
-	
-	@Column(name = "is_disbursed")
-	private boolean disbursed;
-	private LocalDate disbursedDate;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Society society;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Union union;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_code",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Member member;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private SocietyPaymentCycle paymentCycle;
-	
-	@Override
-	public String getTableName() {
-		return "member_bill_audit";
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String code;
+    private BigDecimal milkQty;
+    private BigDecimal avgFat;
+    private BigDecimal avgSnf;
+    private BigDecimal avgClr;
+    private BigDecimal kgFat;
+    private BigDecimal kgSnf;
+    private BigDecimal milkAmount;
+    private BigDecimal productSaleAmount;
+    private BigDecimal localSaleAmount;
+    private BigDecimal loanAmount;
+    private BigDecimal otherAddAmount;
+    private BigDecimal otherDedAmount;
+    private BigDecimal netAmount;
+
+    private String voucherNo;
+    private short paymentMode; //0-Cash, 1-Bank
+    private String bankAcno;
+    private String ifsc;
+    private String paymentRef;
+
+    private short status; //1-PENDING, 2-SENT, 3-SENT_DBT, 4-REJECT, 5-PROCESSING, 6-DISBURSED, 7-FAIL
+
+    @Column(name = "is_disbursed")
+    private boolean disbursed;
+    private LocalDate disbursedDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Society society;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Union union;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private SocietyPaymentCycle paymentCycle;
+
+    @Override
+    public String getTableName() {
+        return "member_bill_audit";
+    }
 }

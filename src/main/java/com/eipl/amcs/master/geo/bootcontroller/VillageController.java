@@ -18,28 +18,27 @@ import java.util.List;
 @RequestMapping("/villages")
 public class VillageController {
 
-	@Autowired
-	private VillageService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(VillageController.class);
+    @Autowired
+    private VillageService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(VillageController.class);
+    @GetMapping
+    public ResponseEntity<List<Village>> index(
+            @RequestParam(name = "subDistrictCode", required = false) String subDistrictCode) {
+        try {
+            List<Village> list;
+            if (subDistrictCode == null || subDistrictCode.isEmpty())
+                list = service.findAll();
+            else
+                list = service.findAll(subDistrictCode);
 
-	@GetMapping
-	public ResponseEntity<List<Village>> index(
-			@RequestParam(name = "subDistrictCode", required = false) String subDistrictCode) {
-		try {
-			List<Village> list;
-			if (subDistrictCode == null || subDistrictCode.isEmpty())
-				list = service.findAll();
-			else
-				list = service.findAll(subDistrictCode);
-			
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<List<Village>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<Village>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -12,10 +12,9 @@ import java.util.List;
 @Service
 public class HardwareDeviceServiceImpl implements HardwareDeviceService {
 
+    private static final Logger log = LoggerFactory.getLogger(HardwareDeviceServiceImpl.class);
     @Autowired
     private HardwareDeviceRepository hardwareDeviceRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(HardwareDeviceServiceImpl.class);
 
     @Override
     public List<HardwareDevice> findAll() {

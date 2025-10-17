@@ -41,17 +41,16 @@ public class SystemParamInterceptor implements ClientHttpRequestInterceptor {
             }
         } catch (MalformedURLException e) {
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("SOCIETY");
-        sb.append("#");
-        sb.append(MainApp.identityDto.getSociety().getCode());
-        sb.append("#");
-        sb.append(MainApp.systemId);
-        sb.append("#");
-        sb.append(MainApp.getProperty(AppConstant.Props.VERSION, "1.0"));
-        sb.append("#");
-        sb.append(MainApp.locale);
-        String headerVal = new String(Base64.getEncoder().encode(sb.toString().getBytes()));
+        String sb = "SOCIETY" +
+                "#" +
+                MainApp.identityDto.getSociety().getCode() +
+                "#" +
+                MainApp.systemId +
+                "#" +
+                MainApp.getProperty(AppConstant.Props.VERSION, "1.0") +
+                "#" +
+                MainApp.locale;
+        String headerVal = new String(Base64.getEncoder().encode(sb.getBytes()));
         request.getHeaders().add("identity", headerVal);
     }
 

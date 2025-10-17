@@ -1,10 +1,10 @@
 package com.eipl.amcs.operation.inventory.dto;
 
+import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 
 import java.util.List;
 

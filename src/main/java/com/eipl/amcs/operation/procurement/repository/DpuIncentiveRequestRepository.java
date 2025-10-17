@@ -13,18 +13,19 @@ import java.util.Optional;
 @Repository
 public interface DpuIncentiveRequestRepository extends BaseRepository<DpuIncentiveRequest, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society"})
-	List<DpuIncentiveRequest> findAll(Sort sort);
-	
+    @Override
+    @EntityGraph(attributePaths = {"society"})
+    List<DpuIncentiveRequest> findAll(Sort sort);
 
-	@Override
-	@EntityGraph(attributePaths = { "society"})
-	Optional<DpuIncentiveRequest> findById(String id);
 
-	@EntityGraph(attributePaths = {"society"})
-	List<DpuIncentiveRequest> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDate fd, LocalDate td);
-	@EntityGraph(attributePaths = {"society"})
-	Optional<DpuIncentiveRequest> findTop1ByOrderByCreatedAtDesc();
+    @Override
+    @EntityGraph(attributePaths = {"society"})
+    Optional<DpuIncentiveRequest> findById(String id);
+
+    @EntityGraph(attributePaths = {"society"})
+    List<DpuIncentiveRequest> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDate fd, LocalDate td);
+
+    @EntityGraph(attributePaths = {"society"})
+    Optional<DpuIncentiveRequest> findTop1ByOrderByCreatedAtDesc();
 
 }

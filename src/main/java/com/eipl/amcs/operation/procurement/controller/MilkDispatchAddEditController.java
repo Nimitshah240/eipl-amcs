@@ -23,9 +23,13 @@ import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.org.convertor.RouteConvertor;
-import com.eipl.amcs.master.org.dto.*;
+import com.eipl.amcs.master.org.model.*;
 import com.eipl.amcs.master.org.task.*;
-import com.eipl.amcs.operation.procurement.dto.*;
+import com.eipl.amcs.operation.procurement.dto.MilkDispatchDto;
+import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.dto.MilkDispatchSummaryDto;
+import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
@@ -44,7 +48,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
-import com.eipl.amcs.master.org.model.Bmc;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -54,105 +57,85 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import com.eipl.amcs.master.org.model.Mcc;
-import com.eipl.amcs.master.org.model.Plant;
-import com.eipl.amcs.master.org.model.Route;
-import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.operation.procurement.model.MilkDispatch;
-import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
 
 public class MilkDispatchAddEditController extends MilkDispatchBaseController implements MyInitialization {
 
+    List<MilkDispatchSummaryDto> milkDispatchSummaryDtoList = new ArrayList<>();
+    List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
     @FXML
     private StackPane root;
-
     @FXML
     private GridPane gridMaster;
-
     @FXML
     private E_TextField txtChallanNo, txtVehicleNo, txtQuanity, txtFat, txtSnf, txtClr,
             txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans;
-
     @FXML
     private TextField txtVehicleInTime, txtVehicleOutTime;
-
     @FXML
     private E_DatePicker dpFromDate, dpToDate, dpChallanDate;
-
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
-
     @FXML
     private ComboBox<String> cboxDispatchType;
-
     @FXML
     private ComboBox<Route> cboxRouteNo;
-
     @FXML
     private ComboBox<String> cboxDestinationType;
-
     @FXML
     private ComboBox<String> cboxDestination;
-
     @FXML
     private TableView<MilkDispatchSummaryDto> tableMilkDispatchSummary;
-
     @FXML
     private TableColumn<MilkDispatchSummaryDto, MilkType> colCollecMilkType;
-
     @FXML
     private TableColumn<MilkDispatchSummaryDto, BigDecimal> colPurchaseMilk, colLocalMilkSale, colDifference;
-
     @FXML
     private GridPane gridTransaction;
-
     @FXML
     private ComboBox<MilkType> cboxMilkType;
-
     @FXML
     private ComboBox<MilkQualityType> cboxMilkQuality;
-
     @FXML
     private Label lblQuantity;
-
     @FXML
     private HBox btnPanel;
-
     @FXML
     private Button btnAdd, btnEdit, btnDelete, btnCopy;
-
     @FXML
     private TableView<MilkDispatchTransaction> tableMilkDispatch;
-
     @FXML
     private TableColumn<MilkDispatchTransaction, MilkType> colMilkType;
-
     @FXML
     private TableColumn<MilkDispatchTransaction, MilkQualityType> colMilkQualityType;
-
     @FXML
     private TableColumn<MilkDispatchTransaction, String> colDispatchType;
-
     @FXML
     private TableColumn<MilkDispatchTransaction, BigDecimal> colQuantity, colFat, colSnf, colClr, colRate, colAmount, colCans, colWater;
-
     @FXML
     private HBox btnMainPanel;
-
-    private ObjectProperty<MilkDispatchSummaryDto> propDto;
+    private final ObjectProperty<MilkDispatchSummaryDto> propDto;
     @FXML
     private E_Button btnSaveUpdate, btnClose;
-
     private ResourceBundle resourceBundle;
     private MilkDispatch dto;
     private MilkDispatchTransaction dtoTxn;
     private MilkDispatchDto dispatchDto;
-    private ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
+    private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
     private StringBuilder errorMsg = null;
-    private ObservableList<MilkDispatchTransaction> listMilkDispatch, listDeleteTxn;
+    private ObservableList<MilkDispatchTransaction> listMilkDispatch;
+    private final ObservableList<MilkDispatchTransaction> listDeleteTxn;
     private String challanNo;
-    List<MilkDispatchSummaryDto> milkDispatchSummaryDtoList = new ArrayList<>();
-    List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
+        }
+    };
+    private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
+            calculateClr(txtFat.getText(), txtSnf.getText());
+        }
+    };
 
     public MilkDispatchAddEditController() {
         propMilkDispatchTransaction = new SimpleObjectProperty<>();
@@ -173,19 +156,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             btnSaveUpdate.setText(resourceBundle.getString("update"));
         }
     }
-
-    private ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
-        }
-    };
-
-    private ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(),CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(),cboxFromShift.getValue()));
-            calculateClr(txtFat.getText(), txtSnf.getText());
-        }
-    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -210,11 +180,11 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             nextChallanNo();
         }
         cboxMilkType.setOnAction(e -> {
-            fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(),CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(),cboxFromShift.getValue()));
+            fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             calculateClr(txtFat.getText(), txtSnf.getText());
         });
         cboxMilkQuality.setOnAction(e -> {
-            fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(),CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(),cboxFromShift.getValue()));
+            fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             calculateClr(txtFat.getText(), txtSnf.getText());
         });
         txtFat.textProperty().addListener(qualityParamChangeListener);
@@ -299,7 +269,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                             errorMsg.toString());
                     alert.createAlert();
-                    return;
                 }
             } else {
                 addEntry();
@@ -388,8 +357,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dtoTxn.setAvgSnf(BigDecimal.valueOf(0));
 
 
-            fetchRateForDispatchTable(String.valueOf(dtoTxn.getAvgFat()),String.valueOf(dtoTxn.getAvgSnf()),dtoTxn.getMilkType(),dtoTxn.getMilkQualityType(),dpFromDate.getValue().atStartOfDay(),dtoTxn);
-
+            fetchRateForDispatchTable(String.valueOf(dtoTxn.getAvgFat()), String.valueOf(dtoTxn.getAvgSnf()), dtoTxn.getMilkType(), dtoTxn.getMilkQualityType(), dpFromDate.getValue().atStartOfDay(), dtoTxn);
 
 
             dtoTxn.setRate(milkDispatchSummaryDto.getAmount().divide(milkDispatchSummaryDto.getMilkCollection(), RoundingMode.HALF_UP));
@@ -969,7 +937,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                     errorMsg.toString());
             alert.createAlert();
-            return;
         }
     }
 

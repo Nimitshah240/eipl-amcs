@@ -6,20 +6,18 @@ import javax.print.event.PrintJobEvent;
 import java.awt.*;
 import java.awt.print.*;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrinterHelper implements Printable {
     private final DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-    private Font font;
     private final PrinterJob pj;
+    private final Book book;
+    private final Font font;
     private PrintJobWatcher pjw;
     private PrintService service;
-    private final Book book;
     private List<String> lines = new ArrayList<>();
-
 
 
     public PrinterHelper(String printerName, String font, int fontSize) {

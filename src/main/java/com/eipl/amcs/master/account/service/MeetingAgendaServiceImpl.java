@@ -21,6 +21,7 @@ import java.util.Optional;
 @Service
 public class MeetingAgendaServiceImpl implements MeetingAgendaService {
 
+    private static final Logger log = LoggerFactory.getLogger(MeetingAgendaServiceImpl.class);
     @Autowired
     private MeetingAgendaRepository meetingAgendaRepository;
     @Autowired
@@ -29,9 +30,6 @@ public class MeetingAgendaServiceImpl implements MeetingAgendaService {
     private MomActionRepository momActionRepository;
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger log = LoggerFactory.getLogger(MeetingAgendaServiceImpl.class);
-
 
     @Override
     public List<MeetingAgenda> findAll() {

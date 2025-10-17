@@ -14,20 +14,20 @@ import java.util.Optional;
 @Repository
 public interface ProductReceiptTaxRepository extends BaseRepository<ProductReceiptTax, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "productReceipt", "productReceiptTransaction", "taxDetail" })
-	Optional<ProductReceiptTax> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"productReceipt", "productReceiptTransaction", "taxDetail"})
+    Optional<ProductReceiptTax> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "productReceipt", "productReceiptTransaction", "taxDetail" })
-	List<ProductReceiptTax> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"productReceipt", "productReceiptTransaction", "taxDetail"})
+    List<ProductReceiptTax> findAll(Sort sort);
 
-	void deleteByProductReceipt(ProductReceipt productReceipt);
+    void deleteByProductReceipt(ProductReceipt productReceipt);
 
-	@EntityGraph(attributePaths = { "productReceipt", "productReceiptTransaction", "taxDetail" })
-	List<ProductReceiptTax> findByproductReceiptTransaction(ProductReceiptTransaction productReceiptTransaction);
+    @EntityGraph(attributePaths = {"productReceipt", "productReceiptTransaction", "taxDetail"})
+    List<ProductReceiptTax> findByproductReceiptTransaction(ProductReceiptTransaction productReceiptTransaction);
 
-	@EntityGraph(attributePaths = { "productReceipt", "productReceiptTransaction", "taxDetail" })
-	List<ProductReceiptTax> findByProductReceipt(ProductReceipt productReceipt);
+    @EntityGraph(attributePaths = {"productReceipt", "productReceiptTransaction", "taxDetail"})
+    List<ProductReceiptTax> findByProductReceipt(ProductReceipt productReceipt);
 
 }

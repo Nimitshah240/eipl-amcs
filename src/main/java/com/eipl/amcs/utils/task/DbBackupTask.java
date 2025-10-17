@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DbBackupTask extends Task<Boolean> {
-    private String path;
+    private final String path;
 
     public DbBackupTask(String path) {
         this.path = path;

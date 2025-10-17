@@ -70,7 +70,11 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     private List<MemberBill> memberBillList;
     private ResourceBundle resourceBundle;
 
-    private ObjectProperty<MemberBill> propMemberBill;
+    private final ObjectProperty<MemberBill> propMemberBill;
+
+    public MemberBillController() {
+        propMemberBill = new SimpleObjectProperty<>();
+    }
 
     public void setBillSummary(MemberBillSummary billSummary) {
         this.billSummary = billSummary;
@@ -80,10 +84,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             btnEdit.setDisable(true);
             btnFinalize.setDisable(true);
         }
-    }
-
-    public MemberBillController() {
-        propMemberBill = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -152,10 +152,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
 
         propMemberBill.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                if (memberBillList.get(0).getStatus() == 2)
-                    btnEdit.setDisable(true);
-                else
-                    btnEdit.setDisable(false);
+                btnEdit.setDisable(memberBillList.get(0).getStatus() == 2);
             } else {
                 btnEdit.setDisable(true);
             }
@@ -353,7 +350,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                                 CommonUtils.getResourceString(resourceBundle, "member.bill.finalize.successful"));
                         alert.createAlert();
                         btnFinalize.setDisable(true);
-                        return;
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
@@ -371,7 +367,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                         MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
                                 CommonUtils.getResourceString(resourceBundle, "member.bill.disburse.successful"));
                         alert.createAlert();
-                        return;
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();

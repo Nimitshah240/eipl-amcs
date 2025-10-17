@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class MemberBillTransactionController implements MyInitialization {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemberBillTransactionController.class);
     @FXML
     private StackPane root;
     @FXML
@@ -44,28 +45,28 @@ public class MemberBillTransactionController implements MyInitialization {
     private TableColumn<MemberBillTransaction, String> colParticulars, colType, colAdjusted;
     @FXML
     private Label lblAmount, lblMember, lblPaymentCycle, lblQty;
-
     @FXML
     private TableView<MemberBillTransaction> tableMemberBillTransaction;
-
     @FXML
     private TextField txtDue, txtNetPayable;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
+    private final StringBuilder errorMsg = null;
     private List<MemberBillTransaction> listTransaction;
     private PopupCallback callback;
-    private ObjectProperty<MemberBillTransaction> propMemberBillTransaction;
-    private BigDecimal actualPayable = BigDecimal.ZERO;
+    private final ObjectProperty<MemberBillTransaction> propMemberBillTransaction;
+    private final BigDecimal actualPayable = BigDecimal.ZERO;
     private BigDecimal netPayable = BigDecimal.ZERO;
-    private BigDecimal adjustment = BigDecimal.ZERO;
+    private final BigDecimal adjustment = BigDecimal.ZERO;
     private BigDecimal due = BigDecimal.ZERO;
-
-    private List<MemberBillTransaction> txn = null;
-    private List<MemberBillTransaction> billOtherTxn = null;
+    private final List<MemberBillTransaction> txn = null;
+    private final List<MemberBillTransaction> billOtherTxn = null;
     private MemberBillTransaction txnNetPay;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MemberBillTransactionController.class);
+    private MemberBill memberBill = null;
+
+    public MemberBillTransactionController() {
+        propMemberBillTransaction = new SimpleObjectProperty<>();
+    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -75,15 +76,9 @@ public class MemberBillTransactionController implements MyInitialization {
         this.stage = stage;
     }
 
-    private MemberBill memberBill = null;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public MemberBillTransactionController() {
-        propMemberBillTransaction = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -93,11 +88,7 @@ public class MemberBillTransactionController implements MyInitialization {
         btnClose.setOnAction(e -> this.stage.close());
         btnUpdate.setOnAction(e -> updateData());
         propMemberBillTransaction.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnUpdate.setDisable(false);
-            } else {
-                btnUpdate.setDisable(true);
-            }
+            btnUpdate.setDisable(newValue == null);
         });
     }
 

@@ -15,10 +15,9 @@ import java.util.Optional;
 @Service
 public class VoucherTypeServiceImpl implements VoucherTypeService {
 
+    private static final Logger log = LoggerFactory.getLogger(VoucherTypeServiceImpl.class);
     @Autowired
     private VoucherTypeRepository voucherTypeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(VoucherTypeServiceImpl.class);
 
     @Override
     public List<VoucherType> findAll() {

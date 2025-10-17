@@ -1,8 +1,8 @@
 package com.eipl.amcs.operation.administartion.dto;
+
 import com.eipl.amcs.base.model.BaseModel;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class StaffSalary extends BaseModel {
 
@@ -12,12 +12,12 @@ public class StaffSalary extends BaseModel {
 
     private int effectiveWorkingDays;
 
-   private LocalDate month;
+    private LocalDate month;
 
     private int typeOfHead;
 
-   private double value;
-   private String voucherNo;
+    private double value;
+    private String voucherNo;
 
     private String societyCode;
 

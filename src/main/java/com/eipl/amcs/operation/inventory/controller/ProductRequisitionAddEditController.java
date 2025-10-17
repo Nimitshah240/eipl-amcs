@@ -20,10 +20,10 @@ import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
-import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 import com.eipl.amcs.operation.inventory.dto.ProductRequisitionDto;
-import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
+import com.eipl.amcs.operation.inventory.model.ProductRequisition;
+import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionGetNextCodeTask;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionTransactionsByProductRequisitionCodeLoadTask;
@@ -71,9 +71,9 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
     private TableColumn<ProductRequisitionTransaction, Number> colTotalAmount, colTaxAmount, colDiscount, colQuantity, colAmount, colAQ;
     //    @FXML
 //    private TableColumn<ProductRequisitionTransaction, Unit> colUnit;
-    private ObjectProperty<ProductRequisitionTransaction> propReceiptTxn;
+    private final ObjectProperty<ProductRequisitionTransaction> propReceiptTxn;
 
-    private List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
+    private final List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
     private List<ProductRequisitionTransaction> listTransactions;
     private ProductRequisition productRequisition;
     private ResourceBundle resourceBundle;
@@ -110,11 +110,7 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
         btnDelete.setOnAction(e -> deleteData());
         propReceiptTxn.addListener((observable, oldValue, newValue) -> {
             if (productRequisition.getStatus().equalsIgnoreCase("Sent")) {
-                if (newValue != null) {
-                    btnDelete.setDisable(false);
-                } else {
-                    btnDelete.setDisable(true);
-                }
+                btnDelete.setDisable(newValue == null);
             }
         });
         cboxProductGroup.setOnAction(e -> {

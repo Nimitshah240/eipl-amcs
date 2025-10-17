@@ -15,27 +15,26 @@ import java.util.List;
 @RequestMapping("/routes")
 public class RouteController {
 
-	@Autowired
-	private RouteService service;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(RouteController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RouteController.class);
+    @Autowired
+    private RouteService service;
 
-	@GetMapping
-	public ResponseEntity<List<Route>> index() {
-		try {
-			List<Route> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<Route>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<Route>> index() {
+        try {
+            List<Route> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@PutMapping
-	public ResponseEntity<Route> save(@RequestBody Route obj) {
-		return new ResponseEntity<>(service.save(obj), HttpStatus.OK);
-	}
+            return new ResponseEntity<List<Route>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<Route> save(@RequestBody Route obj) {
+        return new ResponseEntity<>(service.save(obj), HttpStatus.OK);
+    }
 }

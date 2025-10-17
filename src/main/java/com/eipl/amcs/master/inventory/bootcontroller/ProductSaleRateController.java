@@ -24,46 +24,45 @@ import java.util.Optional;
 @RequestMapping("/product-sale-rates")
 public class ProductSaleRateController {
 
-	@Autowired
-	private ProductSaleRateService service;
-	@Autowired
-	private NextCodeService nextCodeService;
-	@Autowired
-	private ProductRepository repository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleRateController.class);
+    @Autowired
+    private ProductSaleRateService service;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private ProductRepository repository;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleRateController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductSaleRate>> index() {
+        try {
+            List<ProductSaleRate> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<ProductSaleRate>> index() {
-		try {
-			List<ProductSaleRate> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<ProductSaleRate>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<List<ProductSaleRate>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/findRate")
+    public ResponseEntity<ProductSaleRate> indexByProduct(@RequestParam("code") String code,
+                                                          @RequestParam("date") String date) {
+        try {
+            LocalDate dt = LocalDate.parse(date);
+            ProductSaleRate list = service.findByProduct(repository.findById(code).get(), dt);
+            list.setUnion(Hibernate.unproxy(list.getUnion(), Union.class));
+            return new ResponseEntity<ProductSaleRate>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping("/findRate")
-	public ResponseEntity<ProductSaleRate> indexByProduct(@RequestParam("code") String code,
-			@RequestParam("date") String date) {
-		try {
-			LocalDate dt = LocalDate.parse(date);
-			ProductSaleRate list = service.findByProduct(repository.findById(code).get(), dt);
-			list.setUnion(Hibernate.unproxy(list.getUnion(), Union.class));
-			return new ResponseEntity<ProductSaleRate>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	@PostMapping
-	public ResponseEntity<ProductSaleRate> createProductSaleRate(@RequestHeader Map<String, String> headers,
-			@RequestBody ProductSaleRate dto) throws BusinessValidationFailException {
+    @PostMapping
+    public ResponseEntity<ProductSaleRate> createProductSaleRate(@RequestHeader Map<String, String> headers,
+                                                                 @RequestBody ProductSaleRate dto) throws BusinessValidationFailException {
 //		try {
 //			LOGGER.info("ProductSaleRate save method");
 //			dto = service.save(dto);
@@ -74,13 +73,13 @@ public class ProductSaleRateController {
 //			LOGGER.error(e.getMessage());
 //			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 //		}
-		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
 
-	}
+    }
 
-	@PutMapping
-	public ResponseEntity<ProductSaleRate> updateProductSaleRate(@RequestHeader Map<String, String> headers,
-			@RequestBody ProductSaleRate dto) throws BusinessValidationFailException {
+    @PutMapping
+    public ResponseEntity<ProductSaleRate> updateProductSaleRate(@RequestHeader Map<String, String> headers,
+                                                                 @RequestBody ProductSaleRate dto) throws BusinessValidationFailException {
 //		try {
 //			LOGGER.info("ProductSaleRate save method");
 //			dto = service.save(dto);
@@ -91,38 +90,38 @@ public class ProductSaleRateController {
 //			LOGGER.error(e.getMessage());
 //			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 //		}
-		return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
 
-	}
+    }
 
-	@DeleteMapping("/{code}")
-	public ResponseEntity<?> deleteProductSaleRate(@RequestHeader Map<String, String> headers,
-			@PathVariable("code") String code) {
-		try {
-			LOGGER.info("ProductSaleRate delete method");
-			Optional<ProductSaleRate> productData = service.findById(code);
-			if (productData == null || !productData.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteProductSaleRate(@RequestHeader Map<String, String> headers,
+                                                   @PathVariable("code") String code) {
+        try {
+            LOGGER.info("ProductSaleRate delete method");
+            Optional<ProductSaleRate> productData = service.findById(code);
+            if (productData == null || !productData.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			service.delete(productData.get(), CommonUtil.getIdentityHeader(headers));
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            service.delete(productData.get(), CommonUtil.getIdentityHeader(headers));
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping("/next-code")
-	public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
-		try {
-			LOGGER.info("Next dock no for Society: {}", societyCode);
-			String code = nextCodeService.getNextCode("ProductSaleRate", "code", societyCode, 4);
-			if (code == null || code.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @GetMapping("/next-code")
+    public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
+        try {
+            LOGGER.info("Next dock no for Society: {}", societyCode);
+            String code = nextCodeService.getNextCode("ProductSaleRate", "code", societyCode, 4);
+            if (code == null || code.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<>(code, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(code, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

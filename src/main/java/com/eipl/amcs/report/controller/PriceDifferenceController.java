@@ -14,9 +14,6 @@ import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
 import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
-import com.eipl.amcs.report.util.ReportGenerate;
-import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -24,12 +21,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class PriceDifferenceController implements MyInitialization {

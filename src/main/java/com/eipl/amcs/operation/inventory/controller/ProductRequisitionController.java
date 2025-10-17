@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ProductRequisitionController implements MyInitialization {
+    private final ObjectProperty<ProductRequisition> propProductRequisitionDto;
     @FXML
     StackPane root;
     @FXML
@@ -37,19 +38,18 @@ public class ProductRequisitionController implements MyInitialization {
     @FXML
     TableColumn<ProductRequisition, String> colRequisitionDate, colChallanDate;
     @FXML
+    Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
+    @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
-    private final ObjectProperty<ProductRequisition> propProductRequisitionDto;
+
+    public ProductRequisitionController() {
+        propProductRequisitionDto = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public ProductRequisitionController() {
-        propProductRequisitionDto = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -121,7 +121,6 @@ public class ProductRequisitionController implements MyInitialization {
                 MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product.requisition"),
                         resourceBundle.getString("error.occurred"));
                 alert1.createAlert();
-                return;
             }
         });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
@@ -183,7 +182,7 @@ public class ProductRequisitionController implements MyInitialization {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product.requisition"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

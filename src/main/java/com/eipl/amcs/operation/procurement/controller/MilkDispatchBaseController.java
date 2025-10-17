@@ -4,7 +4,11 @@ import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
-import com.eipl.amcs.operation.procurement.dto.*;
+import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
+import com.eipl.amcs.operation.procurement.model.MilkReceipt;
+import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import com.eipl.amcs.operation.procurement.task.MilkDispatchPrevRecordGetTask;
 import com.eipl.amcs.operation.procurement.task.MilkDispatchTransactionLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkReceiptPrevRecordGetTask;
@@ -18,21 +22,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import com.eipl.amcs.operation.procurement.model.MilkDispatch;
-import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
-import com.eipl.amcs.operation.procurement.model.MilkReceipt;
-import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 
 public abstract class MilkDispatchBaseController {
 
     protected final int SCALE = 2;
     protected final RoundingMode ROUND = RoundingMode.HALF_UP;
-
-    String mapKey = null;
     protected SocietyMilkPurchaseRate societyMilkPurchaseRate;
     protected Map<String, BigDecimal> mapRateDetails;
     protected List<SocietyMilkPurchaseRateBased> listBased;
     protected MilkDispatchRateAndDetailsDto milkDispatchRateAndDetailsDto;
+    String mapKey = null;
 
     protected void calculateClr(String fat, String snf) {
         if (!fat.isEmpty() && !snf.isEmpty()) {
@@ -63,13 +62,13 @@ public abstract class MilkDispatchBaseController {
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 1
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     Optional<SocietyMilkPurchaseRateBased> basedSnf =
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 2
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     if (basedFat.isPresent() && basedSnf.isPresent()) {
                         BigDecimal kgRate = CommonUtils.fetchEffectiveRate(basedFat.get().getKgRate(), basedSnf.get());
@@ -85,7 +84,7 @@ public abstract class MilkDispatchBaseController {
 
 //                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
-                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2,RoundingMode.FLOOR).toString());
+                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.FLOOR).toString());
                         } else {
                             formula = formula.replace("RATE", kgRate.toString());
                         }
@@ -121,13 +120,13 @@ public abstract class MilkDispatchBaseController {
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 1
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     Optional<SocietyMilkPurchaseRateBased> basedSnf =
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 2
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     if (basedFat.isPresent() && basedSnf.isPresent()) {
                         BigDecimal kgRate = CommonUtils.fetchEffectiveRate(basedFat.get().getKgRate(), basedSnf.get());
@@ -143,7 +142,7 @@ public abstract class MilkDispatchBaseController {
 
 //                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
-                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2,RoundingMode.FLOOR).toString());
+                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.FLOOR).toString());
                         } else {
                             formula = formula.replace("RATE", kgRate.toString());
                         }
@@ -209,13 +208,13 @@ public abstract class MilkDispatchBaseController {
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 1
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     Optional<SocietyMilkPurchaseRateBased> basedSnf =
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 2
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     if (basedFat.isPresent() && basedSnf.isPresent()) {
                         BigDecimal kgRate = CommonUtils.fetchEffectiveRate(basedFat.get().getKgRate(), basedSnf.get());
@@ -231,7 +230,7 @@ public abstract class MilkDispatchBaseController {
 
 //                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
-                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2,RoundingMode.FLOOR).toString());
+                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.FLOOR).toString());
                         } else {
                             formula = formula.replace("RATE", kgRate.toString());
                         }
@@ -296,13 +295,13 @@ public abstract class MilkDispatchBaseController {
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 1
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && fatVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     Optional<SocietyMilkPurchaseRateBased> basedSnf =
                             listBased.stream().filter(p -> p.getMilkType().getCode().compareTo(milkType.getCode()) == 0
                                             && p.getQualityParam() == 2
                                             && p.getMilkQualityType().getCode() == milkQualityType.getCode()
-                                            && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1,RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
+                                            && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     if (basedFat.isPresent() && basedSnf.isPresent()) {
                         BigDecimal kgRate = CommonUtils.fetchEffectiveRate(basedFat.get().getKgRate(), basedSnf.get());
@@ -318,7 +317,7 @@ public abstract class MilkDispatchBaseController {
 
 //                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
-                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2,RoundingMode.HALF_UP).toString());
+                            formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString());
                         } else {
                             formula = formula.replace("RATE", kgRate.toString());
                         }

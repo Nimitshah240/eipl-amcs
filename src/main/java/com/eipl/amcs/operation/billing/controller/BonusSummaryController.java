@@ -51,15 +51,14 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
     @FXML
     private Button btnAdd, btnEdit, btnClose, btnDelete, btnDisburse, btnReport, btnGeneral;
 
-    private ObjectProperty<BonusSummary> propSummary;
+    private final ObjectProperty<BonusSummary> propSummary;
 
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     public BonusSummaryController() {
         propSummary = new SimpleObjectProperty<>();
     }
-
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -181,7 +180,7 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol1().equalsIgnoreCase("1") ?
                     resourceBundle.getString("cow") : data.getValue().getxCol1().equalsIgnoreCase("2") ?
                     resourceBundle.getString("buffalo") : data.getValue().getxCol1().equalsIgnoreCase("3") ? resourceBundle.getString("mix")
-                   :data.getValue().getxCol1().equalsIgnoreCase("4") ? resourceBundle.getString("A2_Cow"):resourceBundle.getString("all")));
+                    : data.getValue().getxCol1().equalsIgnoreCase("4") ? resourceBundle.getString("A2_Cow") : resourceBundle.getString("all")));
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus() == 0 ? "PENDING" : "DONE"));
             colTotalQty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTotalMilkQty()));
@@ -229,7 +228,7 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
                     task.setOnSucceeded(e -> {
                         try {
                             Boolean respDelete = task.get();
-                            if (respDelete == null || respDelete.booleanValue() == false) {
+                            if (respDelete == null || !respDelete.booleanValue()) {
                                 MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("bonus"),
                                         resourceBundle.getString("error.occurred"));
                                 alert1.createAlert();

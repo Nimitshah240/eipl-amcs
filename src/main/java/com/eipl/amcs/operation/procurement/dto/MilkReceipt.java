@@ -1,13 +1,12 @@
 package com.eipl.amcs.operation.procurement.dto;
+
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+
+import java.time.LocalDateTime;
 
 public class MilkReceipt extends BaseModel {
     private String code;
@@ -84,8 +83,6 @@ public class MilkReceipt extends BaseModel {
     public void setUnion(Union union) {
         this.union = union;
     }
-
-
 
 
 }

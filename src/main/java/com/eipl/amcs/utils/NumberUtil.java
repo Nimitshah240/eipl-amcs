@@ -37,6 +37,7 @@ public class NumberUtil {
         bd = bd.setScale(places, RoundingMode.DOWN);
         return bd.doubleValue();
     }
+
     public static String twoDecimal(double debit) {
         return MainApp.DECIMAL_FORMAT_2_DIGIT.format(debit);
     }

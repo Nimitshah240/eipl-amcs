@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleRateController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<LocalMilkSaleRate> propLocalMilkSaleRate;
     @FXML
     StackPane root;
     @FXML
@@ -46,9 +47,7 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
     TableColumn<LocalMilkSaleRate, LocalDate> colWefDate;
     @FXML
     Button btnClose, btnAdd, btnDelete;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<LocalMilkSaleRate> propLocalMilkSaleRate;
 
     public LocalMilkSaleRateController() {
         propLocalMilkSaleRate = new SimpleObjectProperty<>();

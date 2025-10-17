@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
-    private LocalDateTime fromDate;
+    private final LocalDateTime fromDate;
     private LocalDateTime toDate;
     private String code;
     private String dockNo;

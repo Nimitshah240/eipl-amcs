@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 public class SubLedgerOpeningBalanceViewController implements MyInitialization {
 
+    private final ObjectProperty<LedgerClose> propObjSubLedger;
     @FXML
     Button btnClose;
     private ResourceBundle resourceBundle;
@@ -39,7 +40,6 @@ public class SubLedgerOpeningBalanceViewController implements MyInitialization {
     private Stage stage;
     @FXML
     private TableView<LedgerClose> tableSubLedger;
-    private final ObjectProperty<LedgerClose> propObjSubLedger;
     private PopupCallback callback;
     @FXML
     private Label lblTotalBalance;

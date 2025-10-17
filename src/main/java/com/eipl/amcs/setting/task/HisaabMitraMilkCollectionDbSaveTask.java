@@ -28,11 +28,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 public class HisaabMitraMilkCollectionDbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public HisaabMitraMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath, String cowRange, String buffRange) {
         this.milkTypeList = milkTypeList;
@@ -156,10 +156,10 @@ public class HisaabMitraMilkCollectionDbSaveTask extends Task<Boolean> {
                         map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + map.get("sampleno") + "-" + arr[2]);
 
                         try {
-                            if (prevDate != null && prevDate.get().compareTo((LocalDateTime) map.get("collectiondate")) != 0) {
+                            if (prevDate != null && !prevDate.get().isEqual((LocalDateTime) map.get("collectiondate"))) {
                                 sampleNo.set(0);
                                 prevDate.set((LocalDateTime) map.get("collectiondate"));
-                            } else if (prevDate.get() == (LocalDateTime) map.get("collectiondate")) {
+                            } else if (prevDate.get() == map.get("collectiondate")) {
                                 sampleNo.incrementAndGet();
                             }
                         } catch (Exception eee) {
@@ -195,7 +195,7 @@ public class HisaabMitraMilkCollectionDbSaveTask extends Task<Boolean> {
             for (Map<String, Object> map : listTemp) {
                 pstmt.setString(1, map.get("code").toString());
                 pstmt.setInt(2, (int) map.get("sampleno"));
-                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                pstmt.setObject(3, map.get("collectiondate"));
                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

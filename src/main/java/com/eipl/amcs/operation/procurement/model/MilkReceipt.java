@@ -21,42 +21,39 @@ import java.time.LocalDateTime;
 @Table(name = "milk_receipt")
 public class MilkReceipt extends BaseModelTxn {
 
-	@Id
-	private String code;
-	private LocalDateTime fromDate;
-	private LocalDateTime toDate;
-	private LocalDate receiptDate;
+    @Id
+    private String code;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
+    private LocalDate receiptDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "challan_no", foreignKey = @ForeignKey(name = "fk_milk_receipt_challan_no"))
-	@JsonIgnoreProperties(value = { "fromShift","toShift","society","union" })
-	private MilkDispatch milkDispatch;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challan_no", foreignKey = @ForeignKey(name = "fk_milk_receipt_challan_no"))
+    @JsonIgnoreProperties(value = {"fromShift", "toShift", "society", "union"})
+    private MilkDispatch milkDispatch;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_from_shift"))
-	private Shift fromShift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_to_shift"))
-	private Shift toShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_from_shift"))
+    private Shift fromShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_to_shift"))
+    private Shift toShift;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_society_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_union_code"))
-	@JsonIgnoreProperties(value = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet" })
-	private Union union;
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_milk_receipt_union_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    private Union union;
 
 
-	@Override
-	public String getTableName() {
-		return "milk_receipt";
-	}
-
+    @Override
+    public String getTableName() {
+        return "milk_receipt";
+    }
 
 
 //	@Override

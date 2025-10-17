@@ -1,6 +1,7 @@
 package com.eipl.amcs.auth.dto;
 
 import com.eipl.amcs.auth.model.Permission;
+
 import java.util.Comparator;
 
 public class PermissionComparator implements Comparator<Permission> {

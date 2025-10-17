@@ -24,17 +24,15 @@ import java.util.Optional;
 @RequestMapping("/voucher")
 public class VoucherController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(VoucherController.class);
     @Autowired
     private VoucherService service;
-
     @Autowired
     private NextCodeService nextCodeService;
     @Autowired
     private VoucherRepository repository;
     @Autowired
     private VoucherTransactionRepository transactionRepository;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(VoucherController.class);
 
     @GetMapping
     public ResponseEntity<List<VoucherDto>> index() {
@@ -63,8 +61,8 @@ public class VoucherController {
             LOGGER.error(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-		return null;
-	}
+        return null;
+    }
 
     @GetMapping("/voucher-sub-ledger")
     public ResponseEntity<List<VoucherSubLedger>> indexVoucherSubLedger(@RequestParam String code) {
@@ -101,7 +99,7 @@ public class VoucherController {
 
 
     @GetMapping("/next-code")
-    public ResponseEntity<String> nextCode(@RequestHeader Map<String, String> headers,@RequestParam String code) {
+    public ResponseEntity<String> nextCode(@RequestHeader Map<String, String> headers, @RequestParam String code) {
         try {
             LOGGER.info("Next Voucher no for Voucher: {}", code);
             String codeI = nextCodeService.getNextCode("Voucher", "code", code, 6);

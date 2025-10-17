@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface ProductDispatchTransactionService {
 
-	List<ProductDispatchTransaction> findAll();
+    List<ProductDispatchTransaction> findAll();
 
-	ProductDispatchTransaction save(ProductDispatchTransaction  productDispatchTransaction);
+    ProductDispatchTransaction save(ProductDispatchTransaction productDispatchTransaction);
 
-	Optional<ProductDispatchTransaction> findById(String code);
+    Optional<ProductDispatchTransaction> findById(String code);
 
-	void delete(String code);
+    void delete(String code);
 
 
 }

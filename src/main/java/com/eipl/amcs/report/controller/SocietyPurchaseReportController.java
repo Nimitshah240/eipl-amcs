@@ -40,21 +40,21 @@ public class SocietyPurchaseReportController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose,btnGenerate1, btnClose1;
+    private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
     @FXML
     private SwingNode reportNode;
     @FXML
-    private DatePicker dpFromDate, dpToDate,dpFromDate1, dpToDate1;
+    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift,cboxFromShift1, cboxToShift1;
+    private ComboBox<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
     @FXML
-    private ComboBox<MilkType> cboxMilkType,cboxMilkType1;
+    private ComboBox<MilkType> cboxMilkType, cboxMilkType1;
     @FXML
-    private ComboBox<Member> cboxMember,cboxMember1;
+    private ComboBox<Member> cboxMember, cboxMember1;
 
 
     private ResourceBundle resourceBundle;
-
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -120,9 +120,7 @@ public class SocietyPurchaseReportController implements MyInitialization {
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
-        }
-
-    private StringBuilder errorMsg;
+    }
 
     private void validateAndGenerateReport1() {
         Map<String, Object> params = new HashMap<>();
@@ -135,6 +133,7 @@ public class SocietyPurchaseReportController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE, params);
         JasperViewer.viewReport(print, false);
     }
+
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
@@ -219,7 +218,7 @@ public class SocietyPurchaseReportController implements MyInitialization {
                     milkType.setCode(0);
                     milkType.setName("All");
                     List<MilkType> temp = new ArrayList<>();
-                    temp.add(0,milkType);
+                    temp.add(0, milkType);
                     temp.addAll(list);
                     cboxMilkType.setItems(FXCollections.observableList(temp));
                     cboxMilkType.getSelectionModel().select(0);
@@ -237,6 +236,7 @@ public class SocietyPurchaseReportController implements MyInitialization {
 
 
     }
+
     @Override
     public void setupComboBox() {
         cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
@@ -269,6 +269,7 @@ public class SocietyPurchaseReportController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
-        new Thread(task).start();}
+        new Thread(task).start();
+    }
 
 }

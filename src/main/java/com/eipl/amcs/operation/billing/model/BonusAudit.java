@@ -18,35 +18,35 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "bonus_audit")
 public class BonusAudit extends BaseModelTxnAudit {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String code;
-	private BigDecimal milkQty;
-	private BigDecimal milkAmount;
-	private BigDecimal bonusAmount;
-	
-	private short status; //0-PENDING,1-DISBURSED
-	private short type; //0-Union,1-Society
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bonus_summary_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private BonusSummary bonusSummary;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String code;
+    private BigDecimal milkQty;
+    private BigDecimal milkAmount;
+    private BigDecimal bonusAmount;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Member member;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Society society;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Union union;
-	
-	@Override
-	public String getTableName() {
-		return "bonus_audit";
-	}
-	
+    private short status; //0-PENDING,1-DISBURSED
+    private short type; //0-Union,1-Society
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bonus_summary_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private BonusSummary bonusSummary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Society society;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Union union;
+
+    @Override
+    public String getTableName() {
+        return "bonus_audit";
+    }
+
 }

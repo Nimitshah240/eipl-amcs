@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class MccServiceImpl implements MccService {
 
+    private static final Logger log = LoggerFactory.getLogger(MccServiceImpl.class);
     @Autowired
     private MccRepository mccRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(MccServiceImpl.class);
 
     @Override
     public List<Mcc> findAll() {

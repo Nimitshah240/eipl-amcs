@@ -20,14 +20,13 @@ import java.util.UUID;
 @Service
 public class InsuranceMasterServiceImpl implements InsuranceMasterService {
 
+    private static final Logger log = LoggerFactory.getLogger(InsuranceMasterServiceImpl.class);
     @Autowired
     private InsuranceMasterRepository insuranceMasterRepository;
     @Autowired
     private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
     @Autowired
     private InsuranceDetailRepository insuranceDetailRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(InsuranceMasterServiceImpl.class);
 
     @Override
     public List<InsuranceMaster> findAll() {

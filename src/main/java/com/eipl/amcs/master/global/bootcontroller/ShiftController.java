@@ -17,23 +17,22 @@ import java.util.List;
 @RequestMapping("/shifts")
 public class ShiftController {
 
-	@Autowired
-	private ShiftService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShiftController.class);
+    @Autowired
+    private ShiftService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ShiftController.class);
+    @GetMapping
+    public ResponseEntity<List<Shift>> index() {
+        try {
+            List<Shift> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<Shift>> index() {
-		try {
-			List<Shift> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<List<Shift>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<Shift>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

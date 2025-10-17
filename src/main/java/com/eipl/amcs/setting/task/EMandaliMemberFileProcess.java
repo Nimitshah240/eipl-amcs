@@ -19,12 +19,12 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class EMandaliMemberFileProcess extends Task<List<MemberDto>> {
-    private Map<String, MilkType> milkTypeMap;
-    private Map<String, Gender> genderMap;
-    private MemberType memberType;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
+    private final Map<String, MilkType> milkTypeMap;
+    private final Map<String, Gender> genderMap;
+    private final MemberType memberType;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public EMandaliMemberFileProcess(Map<String, MilkType> milkTypeMap, Map<String, Gender> genderMap,
                                      MemberType memberType, String filePath, String cowRange, String buffRange) {
@@ -47,7 +47,7 @@ public class EMandaliMemberFileProcess extends Task<List<MemberDto>> {
             int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
 
-            try(Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
+            try (Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
                 lines.forEach(line -> {
                     // line -> code, name, localname, mobile, gender, no of cow, no of buff, bank ac no
                     String[] arr = line.split(",");

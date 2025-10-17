@@ -43,6 +43,8 @@ import java.util.stream.Collectors;
 
 public class BankReportController implements MyInitialization {
 
+    public BigDecimal textFileTotal = BigDecimal.ZERO;
+    List<PaymentForBank> list;
     @FXML
     private StackPane root;
     @FXML
@@ -51,21 +53,22 @@ public class BankReportController implements MyInitialization {
     private PopupCallback callback;
     @FXML
     private ComboBox<Bank> cboxBank;
-
-    List<PaymentForBank> list;
-
     @FXML
     private ComboBox<String> cboxReportType;
-
-
     private ResourceBundle resourceBundle;
+    private MemberBillSummary dto = null;
+    private MemberBillSummary propSummary;
+    private StringBuilder errorMsg;
+
+    public static String rightPadding(String input, char ch, int L) {
+        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
+        return result;
+    }
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -74,11 +77,6 @@ public class BankReportController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
-    private MemberBillSummary propSummary;
-
-    public BigDecimal textFileTotal = BigDecimal.ZERO;
-
 
     public void setSummay(MemberBillSummary dto) {
         if (dto != null) {
@@ -91,7 +89,7 @@ public class BankReportController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         loadBank();
         cboxReportType.getItems().addAll(resourceBundle.getString("report"), resourceBundle.getString("excel"),
-                resourceBundle.getString("textfile"), resourceBundle.getString("textfile"),resourceBundle.getString("ifscreport")
+                resourceBundle.getString("textfile"), resourceBundle.getString("textfile"), resourceBundle.getString("ifscreport")
         );
         setupComboBox();
         cboxBank.getSelectionModel().select(0);
@@ -105,8 +103,6 @@ public class BankReportController implements MyInitialization {
         cboxBank.getSelectionModel().select(0);
         cboxReportType.getSelectionModel().select(0);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
@@ -357,12 +353,6 @@ public class BankReportController implements MyInitialization {
         }
     }
 
-    public static String rightPadding(String input, char ch, int L) {
-        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
-        return result;
-    }
-
-
     private void exportExcel(List<PaymentForBank> list) {
         boolean exported = true;
         try {
@@ -373,7 +363,7 @@ public class BankReportController implements MyInitialization {
             if (file != null) {
                 HSSFWorkbook wb = new HSSFWorkbook();
                 HSSFSheet sheet = wb.createSheet("Sheet-1");
-                List<String> strColumns = Arrays.asList("Sr. No.", "Member Code", "Member Name", "Bank A/C","IFSC CODE", "Payment For Member");
+                List<String> strColumns = Arrays.asList("Sr. No.", "Member Code", "Member Name", "Bank A/C", "IFSC CODE", "Payment For Member");
                 List<String> strColumnTodisplay = null;
                 CellStyle style;
                 List<String> items = null;

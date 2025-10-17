@@ -4,7 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.network.IdentityPayload;
 import com.eipl.amcs.network.RealTimeRequest;
-import com.eipl.amcs.network.RealTimeResponse;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -20,8 +19,8 @@ import java.util.Map;
 public class SentBoxCheckTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxCheckTask.class);
 
-    private String societyCode;
-    private String mobileNo;
+    private final String societyCode;
+    private final String mobileNo;
 
     public SentBoxCheckTask(String societyCode, String mobileNo) {
         this.societyCode = societyCode;

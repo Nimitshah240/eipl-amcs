@@ -42,6 +42,9 @@ import java.util.stream.Collectors;
 
 public class ShareTransferAddEditController implements MyInitialization {
 
+    public ResourceBundle resourceBundle;
+    Integer oldShareNo = 0;
+    BigDecimal oldShareAmount = BigDecimal.ZERO;
     private PopupCallback callback;
     @FXML
     private StackPane root;
@@ -50,19 +53,18 @@ public class ShareTransferAddEditController implements MyInitialization {
     private E_DatePicker dpDate;
     @FXML
     private E_TextField txtVoucherNo, txtOldMemberCode, txtShareCode, txtNewMemberCode, txtNoOfShare, txtCertificateNo, txtAmount, txtOldMemberName, txtNewMemberName;
-
-    public ResourceBundle resourceBundle;
     @FXML
     private Button btnSave, btnClose;
     @FXML
     private CheckBox chkIsMember;
-    Integer oldShareNo = 0;
-    BigDecimal oldShareAmount = BigDecimal.ZERO;
     private Share oldShare = new Share();
     private MemberDetail memberDetail;
     private Member member;
 
     private List<Share> oldShareList = new ArrayList<>();
+    private final Share newShare = new Share();
+    private StringBuilder errorMsg = null;
+    private Member oldMember;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -71,10 +73,6 @@ public class ShareTransferAddEditController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
-    private Share newShare = new Share();
-    private StringBuilder errorMsg = null;
-    private Member oldMember;
 
     @Override
     public Node getRoot() {
@@ -108,11 +106,7 @@ public class ShareTransferAddEditController implements MyInitialization {
         });
 
         chkIsMember.setOnAction(event -> {
-            if (chkIsMember.isSelected()) {
-                txtNewMemberName.setDisable(true);
-            } else {
-                txtNewMemberName.setDisable(false);
-            }
+            txtNewMemberName.setDisable(chkIsMember.isSelected());
         });
         dpDate.setValue(LocalDate.now());
         btnClose.setOnAction(e -> this.stage.close());
@@ -213,7 +207,6 @@ public class ShareTransferAddEditController implements MyInitialization {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("sharetransfer"),
                     errorMsg.toString());
             alert.createAlert();
-            return;
         } else {
             if (!chkIsMember.isSelected()) {
                 createMember();
@@ -347,23 +340,23 @@ public class ShareTransferAddEditController implements MyInitialization {
     }
 
     void loadShareByMember(String code) {
-            ShareByShareCodeLoadTask task = new ShareByShareCodeLoadTask(code);
-            task.setOnSucceeded(e -> {
-                try {
-                    oldShareList = task.get().stream().filter(e1 -> !e1.getTransferred()).collect(Collectors.toList());
-                    oldShare = oldShareList.get(0);
-                    for (Share share : oldShareList) {
-                        oldShareAmount = oldShareAmount.add(share.getShareAmount());
-                        oldShareNo = oldShareNo + share.getNoOfShare();
-                    }
-                    txtNoOfShare.setText(String.valueOf(oldShareNo));
-                    txtAmount.setText(String.valueOf(oldShareAmount));
-                    setConsumerName(oldShare.getMember().getCode());
-                } catch (InterruptedException | ExecutionException ex) {
-                    throw new RuntimeException(ex);
+        ShareByShareCodeLoadTask task = new ShareByShareCodeLoadTask(code);
+        task.setOnSucceeded(e -> {
+            try {
+                oldShareList = task.get().stream().filter(e1 -> !e1.getTransferred()).collect(Collectors.toList());
+                oldShare = oldShareList.get(0);
+                for (Share share : oldShareList) {
+                    oldShareAmount = oldShareAmount.add(share.getShareAmount());
+                    oldShareNo = oldShareNo + share.getNoOfShare();
                 }
-            });
-            new Thread(task).start();
+                txtNoOfShare.setText(String.valueOf(oldShareNo));
+                txtAmount.setText(String.valueOf(oldShareAmount));
+                setConsumerName(oldShare.getMember().getCode());
+            } catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
     }
 
 }

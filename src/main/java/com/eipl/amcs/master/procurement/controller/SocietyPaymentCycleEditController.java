@@ -25,7 +25,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;

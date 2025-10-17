@@ -34,6 +34,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class MomActionController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<MomAction> propAction;
     @FXML
     StackPane root;
     @FXML
@@ -43,24 +44,20 @@ public class MomActionController implements MyInitialization, PopupCallback {
     @FXML
     GridPane gridMaster;
     @FXML
-    private DatePicker dpDate;
-    @FXML
     Button btnClose, btnAdd, btnEdit, btnDelete;
     @FXML
     TextArea txtActionTaken;
     @FXML
     ComboBox<String> cboxSubjectLine, cboxMinutesOfMeeting;
+    @FXML
+    private DatePicker dpDate;
     private MomAction dto;
     private Mom mom;
     private StringBuilder errorMsg = null;
     private List<MomAction> momActionList;
-
     private ResourceBundle resourceBundle;
     private Stage stage;
     private PopupCallback callback;
-
-
-    private final ObjectProperty<MomAction> propAction;
 
     public MomActionController() {
         propAction = new SimpleObjectProperty<>();
@@ -250,7 +247,7 @@ public class MomActionController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("actiontaken"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

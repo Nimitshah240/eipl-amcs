@@ -24,82 +24,81 @@ import java.util.Optional;
 @RequestMapping("/product-purchase-rates")
 public class ProductPurchaseRateController {
 
-	@Autowired
-	private ProductPurchaseRateService service;
-	@Autowired
-	private NextCodeService nextCodeService;
-	@Autowired
-	private ProductRepository productRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductPurchaseRateController.class);
+    @Autowired
+    private ProductPurchaseRateService service;
+    @Autowired
+    private NextCodeService nextCodeService;
+    @Autowired
+    private ProductRepository productRepository;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductPurchaseRateController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductPurchaseRate>> index() {
+        try {
+            List<ProductPurchaseRate> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<ProductPurchaseRate>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping
-	public ResponseEntity<List<ProductPurchaseRate>> index() {
-		try {
-			List<ProductPurchaseRate> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			return new ResponseEntity<List<ProductPurchaseRate>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @PostMapping
+    public ResponseEntity<ProductPurchaseRate> createProductPurchaseRate(@RequestHeader Map<String, String> headers,
+                                                                         @RequestBody ProductPurchaseRate dto) throws BusinessValidationFailException {
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
-	@PostMapping
-	public ResponseEntity<ProductPurchaseRate> createProductPurchaseRate(@RequestHeader Map<String, String> headers,
-			@RequestBody ProductPurchaseRate dto) throws BusinessValidationFailException {
-		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @PutMapping
+    public ResponseEntity<ProductPurchaseRate> updateProductPurchaseRate(@RequestHeader Map<String, String> headers,
+                                                                         @RequestBody ProductPurchaseRate dto) throws BusinessValidationFailException {
+        return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
-	@PutMapping
-	public ResponseEntity<ProductPurchaseRate> updateProductPurchaseRate(@RequestHeader Map<String, String> headers,
-			@RequestBody ProductPurchaseRate dto) throws BusinessValidationFailException {
-		return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteProductPurchaseRate(@RequestHeader Map<String, String> headers,
+                                                       @PathVariable("code") String code) {
+        try {
+            LOGGER.info("ProductPurchaseRate delete method");
+            Optional<ProductPurchaseRate> productData = service.findById(code);
+            if (productData == null || !productData.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            service.delete(productData.get(), CommonUtil.getIdentityHeader(headers));
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@DeleteMapping("/{code}")
-	public ResponseEntity<?> deleteProductPurchaseRate(@RequestHeader Map<String, String> headers,
-			@PathVariable("code") String code) {
-		try {
-			LOGGER.info("ProductPurchaseRate delete method");
-			Optional<ProductPurchaseRate> productData = service.findById(code);
-			if (productData == null || !productData.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			service.delete(productData.get(), CommonUtil.getIdentityHeader(headers));
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/next-code")
+    public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
+        try {
+            LOGGER.info("Next dock no for Society: {}", societyCode);
+            String code = nextCodeService.getNextCode("ProductPurchaseRate", "code", societyCode, 4);
+            if (code == null || code.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping("/next-code")
-	public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
-		try {
-			LOGGER.info("Next dock no for Society: {}", societyCode);
-			String code = nextCodeService.getNextCode("ProductPurchaseRate", "code", societyCode, 4);
-			if (code == null || code.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(code, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<>(code, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/product-purchase-rate")
+    public ResponseEntity<ProductPurchaseRate> fetchProductPurchaseRate(@RequestParam("code") String code,
+                                                                        @RequestParam("date") String date) {
+        try {
+            LocalDate dt = LocalDate.parse(date);
+            Product product = productRepository.findById(code)
+                    .orElseThrow(() -> new EntityNotFoundException(Product.class, ""));
 
-	@GetMapping("/product-purchase-rate")
-	public ResponseEntity<ProductPurchaseRate> fetchProductPurchaseRate(@RequestParam("code") String code,
-			@RequestParam("date") String date) {
-		try {
-			LocalDate dt = LocalDate.parse(date);
-			Product product = productRepository.findById(code)
-					.orElseThrow(() -> new EntityNotFoundException(Product.class, ""));
-
-			return new ResponseEntity<ProductPurchaseRate>(service.findProductRate(product, dt), HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<ProductPurchaseRate>(service.findProductRate(product, dt), HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

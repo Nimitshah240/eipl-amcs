@@ -15,11 +15,9 @@ import java.util.Optional;
 @Service
 public class LedgerMappingTaxDetailServiceImpl implements LedgerMappingTaxDetailService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerMappingTaxDetailServiceImpl.class);
     @Autowired
     private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerMappingTaxDetailServiceImpl.class);
-
 
     @Override
     public List<LedgerMappingTaxDetail> findAll() {

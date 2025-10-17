@@ -5,7 +5,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-public class RightAlignCellFactory <S, Number> implements Callback<TableColumn<S, Number>, TableCell<S, Number>> {
+public class RightAlignCellFactory<S, Number> implements Callback<TableColumn<S, Number>, TableCell<S, Number>> {
 
     public TableCell<S, Number> call(TableColumn<S, Number> param) {
         return new TableCell<S, Number>() {
@@ -15,11 +15,11 @@ public class RightAlignCellFactory <S, Number> implements Callback<TableColumn<S
                 if (item == null || empty) {
                     setText(null);
                 } else {
-                    double it = ((java.lang.Number)item).doubleValue();
-                    if(it < 0) {
+                    double it = ((java.lang.Number) item).doubleValue();
+                    if (it < 0) {
                         setText(String.valueOf(NumberUtil.twoDecimal(Math.abs(it))));
                         setStyle("-fx-alignment: center-right");
-                    }else {
+                    } else {
                         setText(String.valueOf(NumberUtil.twoDecimal(it)));
                         setStyle("-fx-alignment: center-right");
                     }

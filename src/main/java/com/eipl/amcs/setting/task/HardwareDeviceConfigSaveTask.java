@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.util.List;
 
 public class HardwareDeviceConfigSaveTask extends Task<Object> {
-    private List<HardwareDeviceConfig> deviceConfigList;
+    private final List<HardwareDeviceConfig> deviceConfigList;
 
     public HardwareDeviceConfigSaveTask(List<HardwareDeviceConfig> deviceConfigList) {
         this.deviceConfigList = deviceConfigList;

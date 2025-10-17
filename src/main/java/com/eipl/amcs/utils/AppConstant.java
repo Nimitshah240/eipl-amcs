@@ -38,6 +38,15 @@ public class AppConstant {
             AppConstant.Formatter5,
             AppConstant.Formatter6
     );
+    public static final String HEADER_IDENTITY = "identity";
+    public static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    public static final DateTimeFormatter DATE_TIME_FMT_SSSSSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    public static final DateTimeFormatter SYNC_DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final DateTimeFormatter RFC_CALL_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+// SPRING BOOTS CONSTANTS
+    public static List<String> prioritizedTableNameList = Arrays.asList("tbl_bulk_notification", "rfc_call");
 
     public static LocalDate parseDateWithMultipleFormats(String dateStr) {
         for (DateTimeFormatter formatter : DATE_FORMATTERS) {
@@ -50,7 +59,6 @@ public class AppConstant {
         // Handle the case where none of the formatters could parse the date
         throw new IllegalArgumentException("Date format not recognized: " + dateStr);
     }
-
     public interface UrlPath {
         String PERMISSION = "permissions/";
         String CUSTOMER_NUMBER = "customers/next-code";
@@ -238,7 +246,6 @@ public class AppConstant {
         String BILL_HEAD_NUMBER = "bill-head/next-code";
         String BILL_CRITERIA_NUMBER = "bill-criteria/next-code";
     }
-
     public interface CollectionType {
         String MEMBER_COLL = "member_collection";
         String SOCIETY_COLL = "society_collection";
@@ -246,7 +253,6 @@ public class AppConstant {
         String DISPATCH = "dispatch";
         String RECEIPT = "receipt";
     }
-
     public interface DEVICE_TAG {
         String WS_TAG = "ws";
         String ANALYSER_TAG = "ma";
@@ -255,7 +261,6 @@ public class AppConstant {
         String ANALYSER4_TAG = "ma4";
         String SPLITTER_TAG = "sp";
     }
-
     public interface Props {
         String BASE_URL = "baseurl";
         String APP_REQUEST_DEBUG = "app.request.debug";
@@ -287,7 +292,6 @@ public class AppConstant {
         String VERSION = "identity.version";
         String BASE_URL_REALTIME = "baseurl.realtime";
     }
-
     public interface ReportPath {
         String SHIFT_REPORT_CODEWISE = "ShiftReportCodeWise";
         String PRICE_DIFFERENCE = "PriceDifference";
@@ -405,17 +409,6 @@ public class AppConstant {
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
 
     }
-
-// SPRING BOOTS CONSTANTS
-
-    public static final String HEADER_IDENTITY = "identity";
-
-    public static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    public static final DateTimeFormatter DATE_TIME_FMT_SSSSSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-    public static final DateTimeFormatter SYNC_DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-    public static final DateTimeFormatter RFC_CALL_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
-    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static List<String> prioritizedTableNameList = Arrays.asList("tbl_bulk_notification", "rfc_call");
 
 
     public interface EventCode {

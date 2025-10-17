@@ -19,60 +19,59 @@ import java.util.Optional;
 
 @Service
 public class ProductReceiptTransactionServiceImpl implements ProductReceiptTransactionService {
-	@Autowired
-	private ProductReceiptTransactionRepository receiptTransRepository;
-	@Autowired
-	private ProductReceiptRepository productReceiptRepository;
-	@Autowired
-	private ProductReceiptTaxRepository receiptTaxRepository;
+    private static final Logger log = LoggerFactory.getLogger(ProductReceiptTransactionServiceImpl.class);
+    @Autowired
+    private ProductReceiptTransactionRepository receiptTransRepository;
+    @Autowired
+    private ProductReceiptRepository productReceiptRepository;
+    @Autowired
+    private ProductReceiptTaxRepository receiptTaxRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductReceiptTransactionServiceImpl.class);
+    @Override
+    public List<ProductReceiptTransaction> findAll() {
+        List<ProductReceiptTransaction> list = receiptTransRepository.findAll(Sort.by("grnTxnNo"));
+        log.info("ProductReceiptTransactions findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public List<ProductReceiptTransaction> findAll() {
-		List<ProductReceiptTransaction> list = receiptTransRepository.findAll(Sort.by("grnTxnNo"));
-		log.info("ProductReceiptTransactions findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public ProductReceiptTransaction save(ProductReceiptTransaction productReceiptTransaction) {
+        return receiptTransRepository.save(productReceiptTransaction);
+    }
 
-	@Override
-	public ProductReceiptTransaction save(ProductReceiptTransaction productReceiptTransaction) {
-		return receiptTransRepository.save(productReceiptTransaction);
-	}
+    @Override
+    public ProductReceiptTransaction update(ProductReceiptTransaction productReceiptTransaction) {
+        return receiptTransRepository.save(productReceiptTransaction);
+    }
 
-	@Override
-	public ProductReceiptTransaction update(ProductReceiptTransaction productReceiptTransaction) {
-		return receiptTransRepository.save(productReceiptTransaction);
-	}
+    @Override
+    public Optional<ProductReceiptTransaction> findById(String code) {
+        return receiptTransRepository.findById(code);
+    }
 
-	@Override
-	public Optional<ProductReceiptTransaction> findById(String code) {
-		return receiptTransRepository.findById(code);
-	}
+    @Override
+    public void delete(String code) {
+        receiptTransRepository.deleteById(code);
+    }
 
-	@Override
-	public void delete(String code) {
-		receiptTransRepository.deleteById(code);
-	}
+    @Override
+    @Transactional
+    public void delete(ProductReceiptTransaction productReceiptTransaction) {
+        receiptTransRepository.deleteById(productReceiptTransaction.getGrnTxnNo());
+    }
 
-	@Override
-	@Transactional
-	public void delete(ProductReceiptTransaction productReceiptTransaction) {
-		receiptTransRepository.deleteById(productReceiptTransaction.getGrnTxnNo());
-	}
-
-	@Override
-	public List<ReceiptTxnTaxDto> findByProductReceipt(String code) {
-		// TODO Auto-generated method stub
-		List<ProductReceiptTransaction> listTrans = receiptTransRepository.findByProductReceipt(productReceiptRepository.findById(code).orElse(null));
-		List<ReceiptTxnTaxDto> listDto = new ArrayList<>();
-		for(int i= 0;i<listTrans.size();i++) {
-			ReceiptTxnTaxDto dto = new ReceiptTxnTaxDto();
-			dto.setTransaction(listTrans.get(i));
-			dto.setReceiptTaxList(receiptTaxRepository.findByproductReceiptTransaction(listTrans.get(i)));
-			listDto.add(dto);
-		}
-		return listDto;
-	}
+    @Override
+    public List<ReceiptTxnTaxDto> findByProductReceipt(String code) {
+        // TODO Auto-generated method stub
+        List<ProductReceiptTransaction> listTrans = receiptTransRepository.findByProductReceipt(productReceiptRepository.findById(code).orElse(null));
+        List<ReceiptTxnTaxDto> listDto = new ArrayList<>();
+        for (int i = 0; i < listTrans.size(); i++) {
+            ReceiptTxnTaxDto dto = new ReceiptTxnTaxDto();
+            dto.setTransaction(listTrans.get(i));
+            dto.setReceiptTaxList(receiptTaxRepository.findByproductReceiptTransaction(listTrans.get(i)));
+            listDto.add(dto);
+        }
+        return listDto;
+    }
 
 }

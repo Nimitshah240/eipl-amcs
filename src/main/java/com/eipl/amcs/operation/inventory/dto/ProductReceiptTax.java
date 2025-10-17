@@ -1,11 +1,11 @@
 package com.eipl.amcs.operation.inventory.dto;
 
-import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.account.model.TaxDetail;
+import com.eipl.amcs.operation.inventory.model.ProductReceipt;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 
 public class ProductReceiptTax extends BaseModel {
 

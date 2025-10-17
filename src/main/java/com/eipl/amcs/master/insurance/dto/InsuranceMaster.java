@@ -29,6 +29,8 @@ public class InsuranceMaster extends BaseModel {
     private String xCol1;
     private String xCol2;
     private String xCol3;
+    private String xCol4;
+    private String xCol5;
 
     public String getStatus() {
         return status;
@@ -37,9 +39,6 @@ public class InsuranceMaster extends BaseModel {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    private String xCol4;
-    private String xCol5;
 
     public Integer getInsuranceMasterCode() {
         return insuranceMasterCode;

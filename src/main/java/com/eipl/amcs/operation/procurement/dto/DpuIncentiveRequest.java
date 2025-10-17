@@ -3,10 +3,8 @@ package com.eipl.amcs.operation.procurement.dto;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class DpuIncentiveRequest extends BaseModelTxn {

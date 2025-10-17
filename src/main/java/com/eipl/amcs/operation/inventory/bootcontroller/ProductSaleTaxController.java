@@ -16,67 +16,66 @@ import java.util.Optional;
 @RequestMapping("/product-sale-to-member-tax-calculates")
 public class ProductSaleTaxController {
 
-	@Autowired
-	private ProductSaleTaxService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleTaxController.class);
+    @Autowired
+    private ProductSaleTaxService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleTaxController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductSaleTax>> index() {
+        try {
+            List<ProductSaleTax> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<ProductSaleTax>> index() {
-		try {
-			List<ProductSaleTax> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<ProductSaleTax>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<List<ProductSaleTax>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @PostMapping
+    public ResponseEntity<ProductSaleTax> createMember(@RequestBody ProductSaleTax dto) {
+        try {
+            LOGGER.info("ProductSaleToMemberTaxCalculated save method");
+            dto = service.save(dto);
+            if (dto == null)
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@PostMapping
-	public ResponseEntity<ProductSaleTax> createMember(@RequestBody ProductSaleTax dto) {
-		try {
-			LOGGER.info("ProductSaleToMemberTaxCalculated save method");
-			dto = service.save(dto);
-			if (dto == null)
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @PutMapping
+    public ResponseEntity<ProductSaleTax> updateMember(@RequestBody ProductSaleTax dto) {
+        try {
+            LOGGER.info("ProductSaleToMemberTaxCalculated save method");
+            dto = service.update(dto);
+            if (dto == null)
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@PutMapping
-	public ResponseEntity<ProductSaleTax> updateMember(@RequestBody ProductSaleTax dto) {
-		try {
-			LOGGER.info("ProductSaleToMemberTaxCalculated save method");
-			dto = service.update(dto);
-			if (dto == null)
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteMember(@PathVariable("code") String code) {
+        try {
+            LOGGER.info("ProductSaleToMemberTaxCalculated delete method");
+            Optional<ProductSaleTax> memberData = service.findById(code);
+            if (memberData == null || !memberData.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@DeleteMapping("/{code}")
-	public ResponseEntity<?> deleteMember(@PathVariable("code") String code) {
-		try {
-			LOGGER.info("ProductSaleToMemberTaxCalculated delete method");
-			Optional<ProductSaleTax> memberData = service.findById(code);
-			if (memberData == null || !memberData.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			service.delete(memberData.get());
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            service.delete(memberData.get());
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

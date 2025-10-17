@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 
 public class ShareTransferController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<Share> propShareTransfer;
     @FXML
     private StackPane root;
     @FXML
@@ -43,19 +44,14 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
     private TableColumn<Share, String> colVoucherNo, colNoOfShare, colOldMemberName, colNewMemberName, colNewMemberCode, colOldMemberCode;
     @FXML
     private TableColumn<Share, LocalDate> colDate;
-
     @FXML
     private TableColumn<Share, BigDecimal> colAmount;
     @FXML
     private Button btnAdd, btnClose, btnReport, btnRevert;
-
     private ResourceBundle resourceBundle;
-
-
     private String name;
     private List<Member> listMembers;
     private List<Customer> listCustomers;
-    private final ObjectProperty<Share> propShareTransfer;
 
     public ShareTransferController() {
         propShareTransfer = new SimpleObjectProperty<>();
@@ -70,12 +66,7 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         propShareTransfer.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-
-                btnRevert.setDisable(false);
-            } else {
-                btnRevert.setDisable(true);
-            }
+            btnRevert.setDisable(newValue == null);
         });
         setupTable();
 
@@ -110,7 +101,7 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("sharetransfer"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -163,7 +154,7 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("sharetransfer"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

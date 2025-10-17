@@ -24,25 +24,25 @@ public interface BonusRepository extends BaseRepository<Bonus, String> {
     Optional<Bonus> findById(String id);
 
     @EntityGraph(attributePaths = {"member", "bonusSummary", "society", "union"})
-    public Bonus findByMember(Member member);
+    Bonus findByMember(Member member);
 
     @EntityGraph(attributePaths = {"member", "society", "union"})
-    public List<Bonus> findByBonusSummary(BonusSummary bonusSummary);
+    List<Bonus> findByBonusSummary(BonusSummary bonusSummary);
 
 //	@Query(value = "SELECT wefDate FROM LocalMilkSaleRate lsr WHERE lsr.society = ?1 AND lsr.milkType = ?2 AND lsr.milkClass = ?3 ORDER BY lsr.wefDate desc")
 
     @Query(value = "SELECT sum(qty) as qty,sum(amount)as amt,member_code FROM milk_collection where collection_date between :fromDate" + " and :toDate and milk_type_code=:milk_type_code group by member_code ", nativeQuery = true)
-    public List<Map<String, Object>> loadData(@Param("fromDate") LocalDateTime d1, @Param("toDate") LocalDateTime d2, @Param("milk_type_code") Integer milkType);
+    List<Map<String, Object>> loadData(@Param("fromDate") LocalDateTime d1, @Param("toDate") LocalDateTime d2, @Param("milk_type_code") Integer milkType);
 
     @Query(value = "select sum(milk_qty) as qty,sum(milk_amount) as amt,sum(bonus_amount) as bonus,member_code,sum(b.x_col1) as kapaat from bonus b join bonus_summary bs on b.bonus_Summary_code=bs.code where member_code=:member_code and from_date >=:fromDate" + " and to_Date<= :toDate", nativeQuery = true)
-    public Map<String, Object> loadDataBonus(@Param("fromDate") LocalDate d1, @Param("toDate") LocalDate d2, @Param("member_code") String memberCode);
+    Map<String, Object> loadDataBonus(@Param("fromDate") LocalDate d1, @Param("toDate") LocalDate d2, @Param("member_code") String memberCode);
 
     @Query(value = "select sum(milk_qty) as qty,sum(milk_amount) as amt,sum(bonus_amount) as bonus, member_code,sum(b.x_col1) as kapaat  from bonus b join bonus_summary bs on b.bonus_Summary_code=bs.code  where  from_date >=:fromDate" + " and to_Date<= :toDate group by member_code", nativeQuery = true)
-    public List<Map<String, Object>>  loadDataBonusSummary(@Param("fromDate") LocalDate d1, @Param("toDate") LocalDate d2);
+    List<Map<String, Object>> loadDataBonusSummary(@Param("fromDate") LocalDate d1, @Param("toDate") LocalDate d2);
 
 
     @Query(value = "SELECT sum(qty) as qty,sum(amount)as amt,member_code FROM milk_collection where collection_date between :fromDate" + " and :toDate group by member_code ", nativeQuery = true)
-    public List<Map<String, Object>> loadData(@Param("fromDate") LocalDateTime d1, @Param("toDate") LocalDateTime d2);
+    List<Map<String, Object>> loadData(@Param("fromDate") LocalDateTime d1, @Param("toDate") LocalDateTime d2);
 
     @Query(value = "CALL rpt_bonus_register(:p_society_code,:p_bonus_summary_code);", nativeQuery = true)
     List<BonusRegister> findBonus(@Param("p_society_code") String societyCode, @Param("p_bonus_summary_code") String bonusSummaryCode);

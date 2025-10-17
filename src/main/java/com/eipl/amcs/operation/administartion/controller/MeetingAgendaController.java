@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MeetingAgendaController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<MeetingAgenda> propMeetingDto;
     @FXML
     StackPane root;
     @FXML
@@ -44,13 +45,9 @@ public class MeetingAgendaController implements MyInitialization, PopupCallback 
     TableColumn<MeetingAgenda, Object> colDate, colMeetingDate, colMeetingType;
     @FXML
     Button btnClose, btnAdd, btnEdit, btnDelete, btnReport, btnMom;
-
     private Stage stage;
     private PopupCallback callback;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<MeetingAgenda> propMeetingDto;
 
     public MeetingAgendaController() {
         propMeetingDto = new SimpleObjectProperty<>();
@@ -112,7 +109,6 @@ public class MeetingAgendaController implements MyInitialization, PopupCallback 
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEETING_REGISTER, params);
-        ;
         JasperViewer.viewReport(print, false);
     }
 
@@ -176,7 +172,7 @@ public class MeetingAgendaController implements MyInitialization, PopupCallback 
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("meeting"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

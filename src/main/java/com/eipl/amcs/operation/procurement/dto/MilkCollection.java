@@ -10,7 +10,6 @@ import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.beans.Transient;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -58,10 +57,10 @@ public class MilkCollection extends BaseModelTxn {
     private String xCol4;
     private String xCol5;
 
-    public String getxCol4() {
-        return xCol4;
+    public MilkCollection() {
     }
-    public String getxcol4() {
+
+    public String getxCol4() {
         return xCol4;
     }
 
@@ -69,17 +68,20 @@ public class MilkCollection extends BaseModelTxn {
         this.xCol4 = xCol4;
     }
 
-    public String getxCol5() {
-        return xCol5;
+    public String getxcol4() {
+        return xCol4;
     }
 
-
-    public String getxcol5() {
+    public String getxCol5() {
         return xCol5;
     }
 
     public void setxCol5(String xCol5) {
         this.xCol5 = xCol5;
+    }
+
+    public String getxcol5() {
+        return xCol5;
     }
 
     public BigDecimal getNewRate() {
@@ -96,9 +98,6 @@ public class MilkCollection extends BaseModelTxn {
 
     public void setNewAmount(BigDecimal newAmount) {
         this.newAmount = newAmount;
-    }
-
-    public MilkCollection() {
     }
 
     public String getCode() {

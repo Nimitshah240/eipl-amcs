@@ -38,9 +38,16 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class BmcRunningHrsController implements MyInitialization {
+    private final ObjectProperty<BmcRunningHours> bmcRunningHrsObjectProperty;
+    public String invoice = "";
+    @FXML
+    TableView<BmcRunningHours> tableBMCRunningHrs;
+    @FXML
+    GridPane gridMaster;
+    @FXML
+    VBox vbox;
     @FXML
     private StackPane root;
-
     @FXML
     private E_TextField txtBmcRunningHrs, txtDgRunningHrs, txtAmount, txtSocietyCode, txtPowerGrid;
     @FXML
@@ -54,21 +61,18 @@ public class BmcRunningHrsController implements MyInitialization {
     @FXML
     private TableColumn<BmcRunningHours, Integer> colBmcRunningHrs, colDgRunningHrs, colPowerGrid;
     @FXML
-    TableView<BmcRunningHours> tableBMCRunningHrs;
-    @FXML
     private TableColumn<BmcRunningHours, BigDecimal> colAmount;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
+    private final StringBuilder errorMsg = null;
     private BmcRunningHours dto = null;
     private PopupCallback callback;
     private BigDecimal rate;
-    public String invoice = "";
-    @FXML
-    GridPane gridMaster;
-    @FXML
-    VBox vbox;
+    private BmcRunningHours bmcRunningHrs;
+
+    public BmcRunningHrsController() {
+        bmcRunningHrsObjectProperty = new SimpleObjectProperty<>();
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -82,14 +86,6 @@ public class BmcRunningHrsController implements MyInitialization {
     public Node getRoot() {
         return root;
     }
-
-    private final ObjectProperty<BmcRunningHours> bmcRunningHrsObjectProperty;
-
-    public BmcRunningHrsController() {
-        bmcRunningHrsObjectProperty = new SimpleObjectProperty<>();
-    }
-
-    private BmcRunningHours bmcRunningHrs;
 
     public void setBmcRunningHrsDto(BmcRunningHours dto) {
         try {
@@ -114,13 +110,7 @@ public class BmcRunningHrsController implements MyInitialization {
         txtSocietyCode.setDisable(true);
         txtAmount.setDisable(true);
         bmcRunningHrsObjectProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnDelete.setDisable(false);
-
-            } else {
-                btnDelete.setDisable(true);
-
-            }
+            btnDelete.setDisable(newValue == null);
         });
 
         btnSave.setOnAction(e -> {
@@ -183,7 +173,6 @@ public class BmcRunningHrsController implements MyInitialization {
             clearControls();
         });
         new Thread(task).start();
-        return;
 
     }
 
@@ -227,7 +216,6 @@ public class BmcRunningHrsController implements MyInitialization {
             clearControls();
         });
         new Thread(task).start();
-        return;
 
     }
 
@@ -287,7 +275,7 @@ public class BmcRunningHrsController implements MyInitialization {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("BmcRunningHrs"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

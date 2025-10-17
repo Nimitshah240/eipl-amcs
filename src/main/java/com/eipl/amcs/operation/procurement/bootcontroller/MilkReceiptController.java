@@ -9,8 +9,8 @@ import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import com.eipl.amcs.operation.procurement.repository.MilkReceiptRepository;
 import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.AppConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +28,14 @@ import java.util.Optional;
 @RequestMapping("/milk-receipt")
 public class MilkReceiptController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MilkReceiptController.class);
+    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     @Autowired
     private MilkReceiptService service;
     @Autowired
     private MilkReceiptRepository repository;
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MilkReceiptController.class);
-    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     @GetMapping
     public ResponseEntity<List<MilkReceipt>> index() {

@@ -1,33 +1,26 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptGetNextCodeTask;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 public class MilkReceiptGetNextCodeTask extends Task<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductReceiptGetNextCodeTask.class);
 
-    public MilkReceiptGetNextCodeTask(){
+    public MilkReceiptGetNextCodeTask() {
 
     }
 
     @Override
     protected String call() throws Exception {
         try {
-            NextCodeService nextCodeService= EmcsAppContext.getContext().getBean(NextCodeService.class);
-            String code = nextCodeService.getNextCode("MilkDispatch", "challanNo","nextCode", 3);
+            NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
+            String code = nextCodeService.getNextCode("MilkDispatch", "challanNo", "nextCode", 3);
 
-            if (code == null || code.isEmpty())return null;
+            if (code == null || code.isEmpty()) return null;
             return code;
 
 

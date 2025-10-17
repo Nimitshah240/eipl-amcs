@@ -32,23 +32,6 @@ import java.util.concurrent.ExecutionException;
 
 public class SocietyController implements MyInitialization {
 
-    @FXML
-    TableView<Society> tableSociety;
-    @FXML
-    TableColumn<Society, String> colCode, colName, colLocalName, colCodeEx, colShortName, colShortNameLocal,
-            colRegistrationCode, colPhoneNo, colPinCode, colContactPerson, colEmail, colContactPersonMobileNo, colAcNo, colIfsc;
-    @FXML
-    TableColumn<Society, Branch> colBranch;
-    @FXML
-    TableColumn<Society, Bank> colBank;
-    @FXML
-    TableColumn<Society, LocalDate> colRegistrationDate;
-    @FXML
-    Button btnClose, btnSave;
-    @FXML
-    private StackPane root;
-
-    private Society dto;
     private final ObservableList<Bank> bankList = FXCollections.observableArrayList();
     private final StringConverter<Bank> bankConverter = new StringConverter<Bank>() {
         @Override
@@ -83,6 +66,22 @@ public class SocietyController implements MyInitialization {
                     .findFirst().orElse(null);
         }
     };
+    @FXML
+    TableView<Society> tableSociety;
+    @FXML
+    TableColumn<Society, String> colCode, colName, colLocalName, colCodeEx, colShortName, colShortNameLocal,
+            colRegistrationCode, colPhoneNo, colPinCode, colContactPerson, colEmail, colContactPersonMobileNo, colAcNo, colIfsc;
+    @FXML
+    TableColumn<Society, Branch> colBranch;
+    @FXML
+    TableColumn<Society, Bank> colBank;
+    @FXML
+    TableColumn<Society, LocalDate> colRegistrationDate;
+    @FXML
+    Button btnClose, btnSave;
+    @FXML
+    private StackPane root;
+    private Society dto;
 
     @Override
     public Node getRoot() {

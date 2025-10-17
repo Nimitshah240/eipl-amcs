@@ -52,8 +52,8 @@ import com.eipl.amcs.sync.model.Subscribed;
 import com.eipl.amcs.sync.repository.BroadcastedLogRepository;
 import com.eipl.amcs.sync.repository.BroadcastedRepository;
 import com.eipl.amcs.sync.repository.SubscribedRepository;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.EncryptionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,7 +81,8 @@ import java.util.stream.Collectors;
 public class BroadcastedService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastedService.class);
-
+    ObjectMapper mapper = new ObjectMapper();
+    Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
     @Autowired
     private BroadcastedProducer producer;
     @Autowired
@@ -148,19 +149,12 @@ public class BroadcastedService {
     private NextCodeService nextCodeService;
     @Autowired
     private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
-
     @Autowired
     private InsuranceDetailRepository insuranceDetailRepository;
-
     @Autowired
     private InsuranceMasterRepository insuranceMasterRepository;
-
     @Autowired
     private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
-
-
-    ObjectMapper mapper = new ObjectMapper();
-    Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -481,16 +475,8 @@ public class BroadcastedService {
                         allowDcsManualCollectionRange.setUnionCode(String.valueOf(jsonText.get("unionCode")));
                         allowDcsManualCollectionRange.setFromShift(shiftList.stream().filter(e -> e.getCode() == Integer.parseInt(String.valueOf(jsonText.get("fromShift")))).findFirst().get());
                         allowDcsManualCollectionRange.setToShift(shiftList.stream().filter(e -> e.getCode() == Integer.parseInt(String.valueOf(jsonText.get("toShift")))).findFirst().get());
-                        if (jsonText.get("isQualityManual").toString().equalsIgnoreCase("1")) {
-                            allowDcsManualCollectionRange.setQualityManual(true);
-                        } else {
-                            allowDcsManualCollectionRange.setQualityManual(false);
-                        }
-                        if (jsonText.get("isWeightManual").toString().equalsIgnoreCase("1")) {
-                            allowDcsManualCollectionRange.setWeightManual(true);
-                        } else {
-                            allowDcsManualCollectionRange.setWeightManual(false);
-                        }
+                        allowDcsManualCollectionRange.setQualityManual(jsonText.get("isQualityManual").toString().equalsIgnoreCase("1"));
+                        allowDcsManualCollectionRange.setWeightManual(jsonText.get("isWeightManual").toString().equalsIgnoreCase("1"));
                         allowDcsManualCollectionRange.setUpdatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4) : null);
                         allowDcsManualCollectionRange.setUpdatedBy(String.valueOf(jsonText.get("updatedBy")));
                         allowDcsManualCollectionRange.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null);
@@ -659,7 +645,7 @@ public class BroadcastedService {
                                 insuranceDetail.setAdharNo(jsonText.get("adharNo") != null ? String.valueOf(jsonText.get("adharNo")) : null);
                                 insuranceDetail.setDob(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null);
                                 try {
-                                    int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null)), insuranceStartDateMap.get(jsonText.get("insuranceMasterCode") != null ? (Integer) jsonText.get("insuranceMasterCode") : null)).getYears();
+                                    int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null)), insuranceStartDateMap.get(jsonText.get("insuranceMasterCode") != null ? jsonText.get("insuranceMasterCode") : null)).getYears();
                                     insuranceDetail.setAge(age != 0 ? age : null);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -687,7 +673,7 @@ public class BroadcastedService {
                                 insuranceDetailRepository.save(insuranceDetail);
                                 break;
                             case "DELETE":
-                                insuranceDetailRepository.deleteById(String.valueOf((String) jsonText.get("insuranceDetailCode")));
+                                insuranceDetailRepository.deleteById(String.valueOf(jsonText.get("insuranceDetailCode")));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

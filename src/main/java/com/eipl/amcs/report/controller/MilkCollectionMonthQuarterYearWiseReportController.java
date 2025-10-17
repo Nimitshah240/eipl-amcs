@@ -31,6 +31,9 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkCollectionMonthQuarterYearWiseReportController implements MyInitialization {
 
+    String[] month = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    String[] quarter = {"All", "1", "2", "3", "4"};
+    String[] year = {"All", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
     @FXML
     private StackPane root;
     @FXML
@@ -45,20 +48,14 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     private ComboBox<String> cboxType;
     @FXML
     private DatePicker dpFromDate, dpToDate;
-
     private ResourceBundle resourceBundle;
-
-
-    String[] month = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    String[] quarter = {"All", "1", "2", "3", "4"};
-    String[] year = {"All", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
+    private final MemberBillSummary dto = null;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -75,13 +72,13 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         dpToDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -104,8 +101,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         cboxStaff.getSelectionModel().select(0);
         new AutoCompleteComboBoxListener<>(cboxStaff);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
 

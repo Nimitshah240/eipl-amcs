@@ -27,6 +27,9 @@ public class InsuranceDetailSummary extends BaseModel {
 //    private String xCol1;
 //    private String xCol2;
 //    private String xCol3;
+    private String xCol4;
+    private String xCol5;
+    private String dcsName;
 
     public String getDcsName() {
         return dcsName;
@@ -35,10 +38,6 @@ public class InsuranceDetailSummary extends BaseModel {
     public void setDcsName(String dcsName) {
         this.dcsName = dcsName;
     }
-
-    private String xCol4;
-    private String xCol5;
-    private String dcsName;
 
     public String getPlantCode() {
         return plantCode;

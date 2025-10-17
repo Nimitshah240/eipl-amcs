@@ -57,6 +57,8 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
     private static final Logger LOGGER = LoggerFactory.getLogger(SocietyMilkPurchaseRateAddEditController.class);
     private final int SCALE = 2;
     private final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
+    private final Map<Integer, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
+    private final List<SocietyMilkPurchaseRateDetail> listDetails = new ArrayList<>();
     @FXML
     private Button btnBrowse, btnClose, btnSaveUpdate;
     @FXML
@@ -81,9 +83,7 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
     private List<MilkQualityType> listMilkQualityType;
     private List<RateType> listRateType;
     private RateType rateType;
-    private final Map<Integer, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
     private StringBuilder errorMsg = null;
-    private final List<SocietyMilkPurchaseRateDetail> listDetails = new ArrayList<>();
     private SocietyMilkPurchaseRateDto dto = null;
 
     @Override

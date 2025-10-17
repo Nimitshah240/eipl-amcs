@@ -17,23 +17,22 @@ import java.util.List;
 @RequestMapping("/milk-types")
 public class MilkTypeController {
 
-	@Autowired
-	private MilkTypeService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MilkTypeController.class);
+    @Autowired
+    private MilkTypeService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MilkTypeController.class);
+    @GetMapping
+    public ResponseEntity<List<MilkType>> index() {
+        try {
+            List<MilkType> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<MilkType>> index() {
-		try {
-			List<MilkType> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<List<MilkType>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<MilkType>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

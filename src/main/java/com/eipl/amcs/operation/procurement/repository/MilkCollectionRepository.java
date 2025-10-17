@@ -101,8 +101,8 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
 
     @Query(value = "CALL final_amount(:p_member_code, :p_society_payment_cycle_code,:p_from_date,:p_to_date);", nativeQuery = true)
     BigDecimal findTotalCollectionDateBetweenAndMember(@Param("p_member_code") String member_code,
-									  @Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
-									  @Param("p_from_date") LocalDateTime fromDate,
+                                                       @Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
+                                                       @Param("p_from_date") LocalDateTime fromDate,
                                                        @Param("p_to_date") LocalDateTime toDate
 
     );

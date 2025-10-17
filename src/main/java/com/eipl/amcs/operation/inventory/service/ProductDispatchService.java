@@ -16,6 +16,7 @@ public interface ProductDispatchService {
     ProductDispatch save(ProductDispatch dto, String identityInfo);
 
     ProductDispatchTransaction save(ProductDispatchTransaction dto, String identityInfo);
+
     ProductDispatchDto update(ProductDispatchDto dto, String identityInfo);
 
     ProductDispatchDto save(ProductDispatchDto dto, String identityInfo);

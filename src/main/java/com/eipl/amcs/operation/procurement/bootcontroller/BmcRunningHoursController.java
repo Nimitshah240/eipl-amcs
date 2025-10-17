@@ -18,11 +18,11 @@ import java.util.Map;
 @RequestMapping("/bmc-running-hours")
 public class BmcRunningHoursController {
 
-    @Autowired
-    private NextCodeService nextCodeService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerController.class);
     @Autowired
     private final BmcRunningHoursService service;
-    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerController.class);
+    @Autowired
+    private NextCodeService nextCodeService;
 
     @Autowired
     public BmcRunningHoursController(BmcRunningHoursService service) {

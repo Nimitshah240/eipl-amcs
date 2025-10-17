@@ -57,6 +57,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.*;
 import java.sql.Date;
@@ -67,6 +68,28 @@ import java.util.concurrent.ExecutionException;
 
 public class GeneralBonusReportController implements MyInitialization {
 
+    public PopupCallback callback;
+    public Integer index = 0;
+    public BigDecimal sum = BigDecimal.ZERO;
+    public BigDecimal sum1 = BigDecimal.ZERO;
+    public BigDecimal sum2 = BigDecimal.ZERO;
+    public BigDecimal finalAmount = BigDecimal.ZERO;
+    public BigDecimal kapat = BigDecimal.ZERO;
+    public BigDecimal totalamount = BigDecimal.ZERO;
+    public Bonus bonus;
+    public Map<String, Object> map;
+    public Map<String, Object> map1;
+    List<PaymentForBank> list;
+    List<Map<String, Object>> maplist = new ArrayList<>();
+    List<Map<String, Object>> mapList = new ArrayList<>();
+    List<String> colList = new ArrayList<>();
+    List<Bonus> bonusList = new ArrayList<>();
+    List<Member> list2 = new ArrayList<>();
+    String printer = "";
+    String slipLanguage = "";
+    List<HardwareDeviceConfig> hardwareDeviceConfigs = new ArrayList<>();
+    List<String> columns = new ArrayList<>();
+    DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yy");
     @FXML
     private StackPane root;
     @FXML
@@ -76,72 +99,41 @@ public class GeneralBonusReportController implements MyInitialization {
     private ComboBox<Bank> cboxBank;
     @FXML
     private ComboBox<Member> cboxMember;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-
-    List<PaymentForBank> list;
     private String memberCode;
-
-    public PopupCallback callback;
     @FXML
     private ComboBox<String> cboxReportType, cboxType;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
-
-
-    private ObjectProperty<Bonus> propBonus;
-    private ObjectProperty<Bonus> propBonusSummary;
-    private ArrayList<String> masterLines = new ArrayList<>();
-    List<Map<String, Object>> maplist = new ArrayList<>();
+    private final ObjectProperty<Bonus> propBonus;
+    private final ObjectProperty<Bonus> propBonusSummary;
+    private final ArrayList<String> masterLines = new ArrayList<>();
     private PrinterHelper printerHelper;
     private ResourceBundle resourceBundle;
-
-
-    @Override
-    public Node getRoot() {
-        return root;
-    }
-
     private BonusSummary dto = null;
-    public Integer index = 0;
-    public BigDecimal sum = BigDecimal.ZERO;
-    public BigDecimal sum1 = BigDecimal.ZERO;
-    public BigDecimal sum2 = BigDecimal.ZERO;
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    List<Map<String, Object>> mapList = new ArrayList<>();
-    List<String> colList = new ArrayList<>();
-
-    public BigDecimal finalAmount = BigDecimal.ZERO;
-    public BigDecimal kapat = BigDecimal.ZERO;
-    public BigDecimal totalamount = BigDecimal.ZERO;
-
-    List<Bonus> bonusList = new ArrayList<>();
-    public Bonus bonus;
-    public Map<String, Object> map;
-    public Map<String, Object> map1;
-    List<Member> list2 = new ArrayList<>();
     private List<MilkType> listMilkType;
-    String printer = "";
-    String slipLanguage = "";
-    List<HardwareDeviceConfig> hardwareDeviceConfigs = new ArrayList<>();
-    List<String> columns = new ArrayList<>();
-
-    public void setSummay(BonusSummary dto) {
-        if (dto != null) {
-            this.dto = dto;
-        }
-    }
+    private File slipFile = null;
 
     public GeneralBonusReportController() {
         propBonus = new SimpleObjectProperty<>();
         propBonusSummary = new SimpleObjectProperty<>();
     }
 
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void setSummay(BonusSummary dto) {
+        if (dto != null) {
+            this.dto = dto;
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -368,7 +360,6 @@ public class GeneralBonusReportController implements MyInitialization {
         }
     }
 
-
     public void loadExcel1() {
         String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
@@ -413,7 +404,6 @@ public class GeneralBonusReportController implements MyInitialization {
             throw new RuntimeException(e);
         }
     }
-
 
     public void loadExcel2() {
         String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
@@ -572,7 +562,6 @@ public class GeneralBonusReportController implements MyInitialization {
         new Thread(task).start();
 
     }
-
 
     private void exportExcel(List<Map<String, Object>> list) {
         boolean exported = true;
@@ -886,7 +875,6 @@ public class GeneralBonusReportController implements MyInitialization {
         alert.createAlert();
     }
 
-
     private void exportExcel2(List<Map<String, Object>> list) {
         boolean exported = true;
         try {
@@ -1048,11 +1036,9 @@ public class GeneralBonusReportController implements MyInitialization {
         alert.createAlert();
     }
 
-
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
 
     public void loadMember() {
         MemberLoadTask task = new MemberLoadTask();
@@ -1097,8 +1083,6 @@ public class GeneralBonusReportController implements MyInitialization {
         new Thread(task1).start();
     }
 
-    private File slipFile = null;
-
     private void readFile() {
         try {
             if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/BonusSlip.txt");
@@ -1109,7 +1093,6 @@ public class GeneralBonusReportController implements MyInitialization {
         }
     }
 
-
     private void print(List<String> masterLines) {
         for (int i = 0; i < Integer.parseInt(MainApp.getProperty("no.of.enter", "0")); i++) {
             masterLines.add("\n");
@@ -1118,13 +1101,11 @@ public class GeneralBonusReportController implements MyInitialization {
         printerHelper.print(masterLines);
     }
 
-    DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yy");
-
     private void placeVariables(Map<String, Object> map, Object[] resp) {
         List<String> lines = null;
         try {
             masterLines.clear();
-            lines = Files.readAllLines(slipFile.toPath(), Charset.forName("utf-8"));
+            lines = Files.readAllLines(slipFile.toPath(), StandardCharsets.UTF_8);
 
             if (lines == null) return;
             for (int i = 0; i < lines.size(); ) {
@@ -1168,9 +1149,9 @@ public class GeneralBonusReportController implements MyInitialization {
                 }
                 if (s.contains("{total}")) {
                     if (map.get("kapaat") != null)
-                        s = s.replace("{total}", String.valueOf(BigDecimal.valueOf((Double) map.get("bonus") - (Double) map.get("kapaat")).setScale(2, RoundingMode.HALF_DOWN)) + "(" + new BigDecimal((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
+                        s = s.replace("{total}", BigDecimal.valueOf((Double) map.get("bonus") - (Double) map.get("kapaat")).setScale(2, RoundingMode.HALF_DOWN) + "(" + BigDecimal.valueOf((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
                     else
-                        s = s.replace("{total}", BigDecimal.valueOf((Double) map.get("bonus") - 0).setScale(2, RoundingMode.HALF_DOWN) + "(" + new BigDecimal((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
+                        s = s.replace("{total}", BigDecimal.valueOf((Double) map.get("bonus") - 0).setScale(2, RoundingMode.HALF_DOWN) + "(" + BigDecimal.valueOf((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
 
                 }
 
@@ -1190,7 +1171,7 @@ public class GeneralBonusReportController implements MyInitialization {
     private void placeVariables1(Map<String, Object> map, Object[] resp) {
         List<String> lines = null;
         try {
-            lines = Files.readAllLines(slipFile.toPath(), Charset.forName("utf-8"));
+            lines = Files.readAllLines(slipFile.toPath(), StandardCharsets.UTF_8);
 
             if (lines == null) return;
             for (int i = 0; i < lines.size(); ) {
@@ -1235,9 +1216,9 @@ public class GeneralBonusReportController implements MyInitialization {
                 }
                 if (s.contains("{total}")) {
                     if (map.get("kapaat") != null)
-                        s = s.replace("{total}", String.valueOf(BigDecimal.valueOf((Double) map.get("bonus") - (Double) map.get("kapaat")).setScale(2, RoundingMode.HALF_DOWN)) + "(" + new BigDecimal((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
+                        s = s.replace("{total}", BigDecimal.valueOf((Double) map.get("bonus") - (Double) map.get("kapaat")).setScale(2, RoundingMode.HALF_DOWN) + "(" + BigDecimal.valueOf((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
                     else
-                        s = s.replace("{total}", BigDecimal.valueOf((Double) map.get("bonus") - 0).setScale(2, RoundingMode.HALF_DOWN) + "(" + new BigDecimal((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
+                        s = s.replace("{total}", BigDecimal.valueOf((Double) map.get("bonus") - 0).setScale(2, RoundingMode.HALF_DOWN) + "(" + BigDecimal.valueOf((Double) map.get("bonus") * 100 / (Double) map.get("amt")).setScale(2, RoundingMode.HALF_DOWN) + "%)");
 
                 }
                 lines.set(i, s);

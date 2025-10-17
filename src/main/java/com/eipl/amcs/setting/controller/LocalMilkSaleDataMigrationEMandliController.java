@@ -4,7 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -19,9 +18,7 @@ import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerSaveTask;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleMigrationListSaveTask;
-import com.eipl.amcs.setting.dto.MilkCollectionMigration;
 import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -34,7 +31,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.commons.collections4.ListUtils;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
@@ -54,18 +50,18 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
     TableColumn<LocalMilkSale, Number> colQty, colRate, colAmount;
     @FXML
     TableColumn<LocalMilkSale, LocalDate> colSaleDate;
-    private ResourceBundle resourceBundle;
     @FXML
     TextField txtDatabase;
     @FXML
     Button btnSave, btnClose, btnGenerate;
-
-    private String selectedFilePath = null;
+    String milkTypeStr = null;
+    List<LocalMilkSale> list = new ArrayList<>();
+    private ResourceBundle resourceBundle;
+    private final String selectedFilePath = null;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<MilkClass> classList;
     private List<Customer> customerList;
-    String milkTypeStr = null;
     private Stage stage;
 
     public void setStage(Stage stage) {
@@ -76,8 +72,6 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
     public Node getRoot() {
         return root;
     }
-
-    List<LocalMilkSale> list = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -224,7 +218,7 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
                 LocalTime morningTime = LocalTime.of(6, 0);
                 LocalTime eveningTime = LocalTime.of(18, 0);
                 try (Connection connection = DriverManager.getConnection(connectionUrl);
-                     Statement stmt = connection.createStatement();) {
+                     Statement stmt = connection.createStatement()) {
 
 //            try (Connection connection = DriverManager.getConnection(connectionUrl, "", AppConstant.PROMPT_DB_PASS)) {
                     Statement statement = connection.createStatement();
@@ -259,7 +253,7 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
                                 map.put("collectiondate", LocalDateTime.of(date, eveningTime));
                             }
                             map.put("milktype", mapMilkType.get(resultSet.getString("MilkType")));
-                            map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift")  + "-" +resultSet.getString("Id"));
+                            map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + resultSet.getString("Id"));
                             mapCollection.add(map);
                         }
                         resultSet.close();
@@ -281,10 +275,10 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
                                 for (Map<String, Object> map : maps) {
                                     pstmt.setString(1, map.get("code").toString());
                                     pstmt.setString(2, map.get("code").toString());
-                                    pstmt.setObject(3, (short)1);
+                                    pstmt.setObject(3, (short) 1);
                                     pstmt.setString(4, map.get("membercode").toString());
                                     pstmt.setObject(5, map.get("collectiondate"));
-                                    pstmt.setInt(6,  (int)map.get("shift"));
+                                    pstmt.setInt(6, (int) map.get("shift"));
                                     pstmt.setShort(7, (short) 1);
                                     pstmt.setShort(8, (short) 1);
                                     pstmt.setBigDecimal(9, (BigDecimal) map.get("qty"));
@@ -294,9 +288,9 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
                                     pstmt.setInt(13, (int) map.get("milktype"));
                                     pstmt.setInt(14, 1);
                                     pstmt.setString(15, map.get("unioncode").toString());
-                                    pstmt.setInt(16, (int) 1);
+                                    pstmt.setInt(16, 1);
                                     pstmt.setBigDecimal(17, (BigDecimal) map.get("cash"));
-                                    pstmt.setInt(18, (int) 1);
+                                    pstmt.setInt(18, 1);
                                     pstmt.setString(19, MainApp.identityDto.getSociety().getCode());
                                     pstmt.setString(20, MainApp.identityDto.getDock().getDockNo());
                                     pstmt.setObject(21, LocalDateTime.now());

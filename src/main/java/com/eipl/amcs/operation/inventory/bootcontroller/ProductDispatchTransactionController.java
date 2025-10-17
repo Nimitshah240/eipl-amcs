@@ -13,34 +13,34 @@ import java.util.Optional;
 @RequestMapping("/product-dispatch-transaction")
 public class ProductDispatchTransactionController {
 
-	@Autowired
-	private ProductDispatchTransactionService service;
+    @Autowired
+    private ProductDispatchTransactionService service;
 
-	@GetMapping
-	List<ProductDispatchTransaction> findAll() {
-		return service.findAll();
-	}
+    @GetMapping
+    List<ProductDispatchTransaction> findAll() {
+        return service.findAll();
+    }
 
-	@GetMapping("/{code}")
-	Optional<ProductDispatchTransaction> findByID(@PathVariable String code ) {
-		return service.findById(code);
-	}
+    @GetMapping("/{code}")
+    Optional<ProductDispatchTransaction> findByID(@PathVariable String code) {
+        return service.findById(code);
+    }
 
-	@PostMapping
-	ProductDispatchTransaction save(@RequestBody ProductDispatchTransaction productDispatch){
-		return service.save(productDispatch);
-	}
+    @PostMapping
+    ProductDispatchTransaction save(@RequestBody ProductDispatchTransaction productDispatch) {
+        return service.save(productDispatch);
+    }
 
 
-	@PutMapping("/{code}")
-	ProductDispatchTransaction update(@PathVariable String code,@RequestBody ProductDispatchTransaction productDispatch){
-		productDispatch.setCode(code);
-		return service.save(productDispatch);
-	}
+    @PutMapping("/{code}")
+    ProductDispatchTransaction update(@PathVariable String code, @RequestBody ProductDispatchTransaction productDispatch) {
+        productDispatch.setCode(code);
+        return service.save(productDispatch);
+    }
 
-	@DeleteMapping("/{code}")
-	void  delete(@PathVariable String code){
-		service.delete(code);
-	}
+    @DeleteMapping("/{code}")
+    void delete(@PathVariable String code) {
+        service.delete(code);
+    }
 
 }

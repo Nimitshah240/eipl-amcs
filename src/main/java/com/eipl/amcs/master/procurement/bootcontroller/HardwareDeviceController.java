@@ -17,22 +17,21 @@ import java.util.List;
 @RequestMapping("/hardware-devices")
 public class HardwareDeviceController {
 
-	@Autowired
-	private HardwareDeviceService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HardwareDeviceController.class);
+    @Autowired
+    private HardwareDeviceService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(HardwareDeviceController.class);
+    @GetMapping
+    public ResponseEntity<List<HardwareDevice>> index() {
+        try {
+            List<HardwareDevice> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<HardwareDevice>> index() {
-		try {
-			List<HardwareDevice> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<List<HardwareDevice>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<HardwareDevice>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

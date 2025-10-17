@@ -13,14 +13,14 @@ import java.util.Optional;
 @Repository
 public interface ProductStockRepository extends BaseRepository<ProductStock, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "product" })
-	Optional<ProductStock> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"society", "product"})
+    Optional<ProductStock> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "product" })
-	List<ProductStock> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"society", "product"})
+    List<ProductStock> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "society", "product" })
-	Optional<ProductStock> findByProduct(Product product);
+    @EntityGraph(attributePaths = {"society", "product"})
+    Optional<ProductStock> findByProduct(Product product);
 }

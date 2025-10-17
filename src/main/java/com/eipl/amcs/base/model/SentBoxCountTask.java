@@ -23,12 +23,10 @@ import java.util.Map;
 
 public class SentBoxCountTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxCountTask.class);
-
-    private String societyCode;
-    private String mobileNo;
-
     List<String> sentBoxUuidList;
     List<Subscribed> subscribedList;
+    private final String societyCode;
+    private final String mobileNo;
 
     public SentBoxCountTask(String societyCode, String mobileNo) {
         this.societyCode = societyCode;

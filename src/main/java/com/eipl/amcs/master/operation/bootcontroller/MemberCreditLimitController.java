@@ -16,33 +16,33 @@ import java.util.Optional;
 @RequestMapping("/membercreditlimit")
 public class MemberCreditLimitController {
 
-	@Autowired
-	private MemberCreditLimitService service;
+    @Autowired
+    private MemberCreditLimitService service;
 
-	@GetMapping
-	public ResponseEntity<MemberCreditLimit> index(@RequestParam String code, @RequestParam Short type) {
-		try {
-			Optional<MemberCreditLimit> list = service.findByConsumerCodeAndConsumerType(code, type);
-			if (list == null || !list.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @GetMapping
+    public ResponseEntity<MemberCreditLimit> index(@RequestParam String code, @RequestParam Short type) {
+        try {
+            Optional<MemberCreditLimit> list = service.findByConsumerCodeAndConsumerType(code, type);
+            if (list == null || !list.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<MemberCreditLimit>(list.get(), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<MemberCreditLimit>(list.get(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping("/codeAndType")
-	public ResponseEntity<MemberCreditLimit> findByCodeAndType(@RequestParam String code, @RequestParam Short type) {
-		try {
-			Optional<MemberCreditLimit> list = service.findByConsumerCodeAndConsumerType(code, type);
-			if (list == null || !list.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @GetMapping("/codeAndType")
+    public ResponseEntity<MemberCreditLimit> findByCodeAndType(@RequestParam String code, @RequestParam Short type) {
+        try {
+            Optional<MemberCreditLimit> list = service.findByConsumerCodeAndConsumerType(code, type);
+            if (list == null || !list.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<MemberCreditLimit>(list.get(), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<MemberCreditLimit>(list.get(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

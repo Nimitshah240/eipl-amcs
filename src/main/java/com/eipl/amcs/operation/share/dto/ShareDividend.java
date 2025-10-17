@@ -4,7 +4,6 @@ import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -146,7 +145,6 @@ public class ShareDividend extends BaseModel {
     public void setxCol5(String xCol5) {
         this.xCol5 = xCol5;
     }
-
 
 
 }

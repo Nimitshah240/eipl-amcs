@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LedgerAddEditController implements MyInitialization {
+    private final ObjectProperty<SubLedger> propDto;
     @FXML
     private StackPane root;
     @FXML
@@ -41,12 +42,10 @@ public class LedgerAddEditController implements MyInitialization {
     private CheckBox chkBoxSubLedger, chkBoxSelectAll;
     @FXML
     private E_TextField txtCode, txtName, txtLocalName;
-
     @FXML
     private TableColumn<SubLedger, Boolean> colSelect;
     @FXML
     private TableColumn<SubLedger, String> colSubLedger, colCode, colName, colLocalName;
-
     @FXML
     private TableView<SubLedger> tableSubLedgerData;
     private List<SubLedger> listSubLedger;
@@ -54,11 +53,7 @@ public class LedgerAddEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private Ledger ledger = null;
-
     private List<LedgerGroup> ledgerGroupList;
-
-
-    private final ObjectProperty<SubLedger> propDto;
 
 
     public LedgerAddEditController() {

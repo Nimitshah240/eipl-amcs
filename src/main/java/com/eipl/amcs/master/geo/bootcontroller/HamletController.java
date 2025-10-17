@@ -18,28 +18,27 @@ import java.util.List;
 @RequestMapping("/hamlets")
 public class HamletController {
 
-	@Autowired
-	private HamletService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HamletController.class);
+    @Autowired
+    private HamletService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(HamletController.class);
+    @GetMapping
+    public ResponseEntity<List<Hamlet>> index(
+            @RequestParam(name = "villageCode", required = false) String villageCode) {
+        try {
+            List<Hamlet> list;
+            if (villageCode == null || villageCode.isEmpty())
+                list = service.findAll();
+            else
+                list = service.findAll(villageCode);
 
-	@GetMapping
-	public ResponseEntity<List<Hamlet>> index(
-			@RequestParam(name = "villageCode", required = false) String villageCode) {
-		try {
-			List<Hamlet> list;
-			if (villageCode == null || villageCode.isEmpty())
-				list = service.findAll();
-			else
-				list = service.findAll(villageCode);
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<List<Hamlet>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<Hamlet>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -106,7 +106,7 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
                 List<MilkType> list = task.get();
                 if (list != null) {
                     cboxMilkType.setItems(FXCollections.observableList(list));
-                    if(dto != null) {
+                    if (dto != null) {
                         cboxMilkType.getSelectionModel().select(dto.getMilkType());
                     }
                 }
@@ -124,7 +124,7 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
                 List<SocietyPaymentCycle> list = task.get();
                 if (list != null) {
                     cboxPaymentCycle.setItems(FXCollections.observableList(list));
-                    if(dto != null) {
+                    if (dto != null) {
                         cboxPaymentCycle.getSelectionModel().select(dto.getPaymentCycle());
                     }
                 }
@@ -220,7 +220,7 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
         cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
         dpDate.setConverter(new LocalDateConvertor());
         dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpDate.setValue(dpDate.getConverter().fromString(dpDate.getEditor().getText()));
             }
         });

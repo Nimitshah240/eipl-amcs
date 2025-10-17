@@ -1,29 +1,10 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.auth.service.IdentityService;
 import com.eipl.amcs.auth.task.IdentityTask;
 import com.eipl.amcs.base.task.RateTask;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.global.model.MilkQualityType;
-import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.model.RateType;
-import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.service.MilkQualityTypeService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
-import com.eipl.amcs.master.global.service.RateTypeService;
-import com.eipl.amcs.master.global.service.ShiftService;
-import com.eipl.amcs.master.operation.model.Formula;
-import com.eipl.amcs.master.operation.repository.FormulaRepository;
-import com.eipl.amcs.master.procurement.dto.MemberMilkPurchaseRateDto;
-import com.eipl.amcs.master.procurement.dto.SocietyMilkPurchaseRateDto;
-import com.eipl.amcs.master.procurement.model.*;
-import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
-import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
-import com.eipl.amcs.network.RealTimeRequest;
-import com.eipl.amcs.network.RealTimeResponse;
 import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -31,20 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class SplashController implements MyInitialization {
 

@@ -30,11 +30,11 @@ public class ProductDispatch extends BaseModel {
     private String unionCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_product_dispatch_society_code"))
-    @JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "route_code", foreignKey = @ForeignKey(name = "fk_product_dispatch_route_code"))
-	@JsonIgnoreProperties(value = { "society", "union" })
+    @JsonIgnoreProperties(value = {"society", "union"})
     private Route route;
 
     @Override

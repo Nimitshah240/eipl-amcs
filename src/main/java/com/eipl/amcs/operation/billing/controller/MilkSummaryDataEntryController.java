@@ -44,6 +44,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkSummaryDataEntryController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<MilkCollection> milkSummaryDataEntry;
     @FXML
     StackPane root;
     @FXML
@@ -58,17 +59,14 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
     TableColumn<MilkCollection, MilkType> colMilkType;
     @FXML
     TableColumn<MilkCollection, BigDecimal> colMilkQuantity, colMilkAmount;
-
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch, btnImport;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-
     private ResourceBundle resourceBundle;
-
-
-    private final ObjectProperty<MilkCollection> milkSummaryDataEntry;
+    private List<Member> memberList;
+    private List<MilkType> milkTypeList;
+    private List<MilkCollectionSummaryData> listSummaryData;
 
     public MilkSummaryDataEntryController() {
         milkSummaryDataEntry = new SimpleObjectProperty<>();
@@ -157,9 +155,6 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
 
     }
 
-    private List<Member> memberList;
-    private List<MilkType> milkTypeList;
-
     private void loadPreRequisiteData() {
         var task2 = new MemberLoadTask();
         task2.setOnSucceeded(e -> {
@@ -181,8 +176,6 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
         });
         new Thread(task).start();
     }
-
-    private List<MilkCollectionSummaryData> listSummaryData;
 
     private void startImport(File file) {
         var task = new MilkCollectionSummaryImportTask(file, milkTypeList, memberList);
@@ -217,16 +210,15 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
                     alert.createAlert();
                     return;
                 }
-                StringBuilder builder = new StringBuilder();
-                builder.append("Import success: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-                builder.append("\n");
-                builder.append("Import fail: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-                builder.append("\n");
+                String builder = "Import success: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count() +
+                        "\n" +
+                        "Import fail: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count() +
+                        "\n";
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milkcollectionsummarydataentry"),
-                        builder.toString());
+                        builder);
                 alert.createAlert();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -248,7 +240,7 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollectionsummarydataentry"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

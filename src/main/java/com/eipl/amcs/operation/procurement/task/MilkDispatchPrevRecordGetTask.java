@@ -8,7 +8,7 @@ import javafx.concurrent.Task;
 import java.time.LocalDateTime;
 
 public class MilkDispatchPrevRecordGetTask extends Task<MilkDispatch> {
-    private LocalDateTime fromDate;
+    private final LocalDateTime fromDate;
 
     public MilkDispatchPrevRecordGetTask(LocalDateTime fromDate) {
         this.fromDate = fromDate;

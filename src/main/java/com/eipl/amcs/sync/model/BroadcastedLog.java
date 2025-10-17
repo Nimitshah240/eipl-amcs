@@ -15,21 +15,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "broadcasted_log")
 public class BroadcastedLog {
-	@Id
-	private String uuid;
-	private String sourceType;
-	private String sourceCode;
-	private String destType;
-	private String destCode;
-	private String tableName;
-	private String operation; // INSERT, UPDATE, DELETE
-	private String dataText;
-	private String errorText;
-	private LocalDateTime createdAt;
-	private short processed; // Default = 0
-	private short sequence; // Default = 0
-	private LocalDateTime processedAt;
-	private String language;
-	private String sourceSystemId;
-	private String version;
+    @Id
+    private String uuid;
+    private String sourceType;
+    private String sourceCode;
+    private String destType;
+    private String destCode;
+    private String tableName;
+    private String operation; // INSERT, UPDATE, DELETE
+    private String dataText;
+    private String errorText;
+    private LocalDateTime createdAt;
+    private short processed; // Default = 0
+    private short sequence; // Default = 0
+    private LocalDateTime processedAt;
+    private String language;
+    private String sourceSystemId;
+    private String version;
 }

@@ -18,63 +18,63 @@ import java.util.Optional;
 
 @Service
 public class ProductSaleInstallmentServiceImpl implements ProductSaleInstallmentService {
-	@Autowired
-	private ProductSaleInstallmentRepository installmentRepository;
-	@Autowired
-	private SocietyPaymentCycleRepository paymentCycleRepository;
+    private static final Logger log = LoggerFactory.getLogger(ProductSaleInstallmentServiceImpl.class);
+    @Autowired
+    private ProductSaleInstallmentRepository installmentRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository paymentCycleRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductSaleInstallmentServiceImpl.class);
+    @Override
+    public List<ProductSaleInstallment> findAll() {
+        List<ProductSaleInstallment> list = installmentRepository.findAll(Sort.by("installmentNo"));
+        log.info("ProductSaleToMemberInstallments findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public List<ProductSaleInstallment> findAll() {
-		List<ProductSaleInstallment> list = installmentRepository.findAll(Sort.by("installmentNo"));
-		log.info("ProductSaleToMemberInstallments findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public ProductSaleInstallment save(ProductSaleInstallment productSaleToMemberInstallment) {
+        return installmentRepository.save(productSaleToMemberInstallment);
+    }
 
-	@Override
-	public ProductSaleInstallment save(ProductSaleInstallment productSaleToMemberInstallment) {
-		return installmentRepository.save(productSaleToMemberInstallment);
-	}
+    @Override
+    public ProductSaleInstallment update(ProductSaleInstallment productSaleToMemberInstallment) {
+        return installmentRepository.save(productSaleToMemberInstallment);
+    }
 
-	@Override
-	public ProductSaleInstallment update(ProductSaleInstallment productSaleToMemberInstallment) {
-		return installmentRepository.save(productSaleToMemberInstallment);
-	}
+    @Override
+    public Optional<ProductSaleInstallment> findById(String code) {
+        return installmentRepository.findById(code);
+    }
 
-	@Override
-	public Optional<ProductSaleInstallment> findById(String code) {
-		return installmentRepository.findById(code);
-	}
+    @Override
+    public void delete(String code) {
+        installmentRepository.deleteById(code);
+    }
 
-	@Override
-	public void delete(String code) {
-		installmentRepository.deleteById(code);
-	}
+    @Override
+    @Transactional
+    public void delete(ProductSaleInstallment productSaleToMemberInstallment) {
+        installmentRepository.deleteById(productSaleToMemberInstallment.getCode());
+    }
 
-	@Override
-	@Transactional
-	public void delete(ProductSaleInstallment productSaleToMemberInstallment) {
-		installmentRepository.deleteById(productSaleToMemberInstallment.getCode());
-	}
+    @Override
+    public List<ProductSaleInstallment> fetchInstallmentIsBilled(String str, boolean b) {
+        List<ProductSaleInstallment> installmentList = installmentRepository.fetchInstallmentIsBilled(str, b);
+        for (ProductSaleInstallment productSaleInstallment : installmentList) {
+            productSaleInstallment.setSocietyPaymentCycle(Hibernate.unproxy(productSaleInstallment.getSocietyPaymentCycle(), SocietyPaymentCycle.class));
+            productSaleInstallment.setMember(Hibernate.unproxy(productSaleInstallment.getMember(), Member.class));
+        }
+        return installmentList;
+    }
 
-	@Override
-	public List<ProductSaleInstallment> fetchInstallmentIsBilled(String str, boolean b) {
-		List<ProductSaleInstallment> installmentList =  installmentRepository.fetchInstallmentIsBilled(str, b);
-		for (ProductSaleInstallment productSaleInstallment : installmentList) {
-			productSaleInstallment.setSocietyPaymentCycle(Hibernate.unproxy(productSaleInstallment.getSocietyPaymentCycle(), SocietyPaymentCycle.class));
-			productSaleInstallment.setMember(Hibernate.unproxy(productSaleInstallment.getMember(), Member.class));
-		}
-		return installmentList;
-	}
-	@Override
-	public List<ProductSaleInstallment> fetchByPaymentCycle(String str) {
-		List<ProductSaleInstallment> installmentList =  installmentRepository.findByInvoiceNo(str);
-		for (ProductSaleInstallment productSaleInstallment : installmentList) {
-			productSaleInstallment.setSocietyPaymentCycle(Hibernate.unproxy(productSaleInstallment.getSocietyPaymentCycle(), SocietyPaymentCycle.class));
-			productSaleInstallment.setMember(Hibernate.unproxy(productSaleInstallment.getMember(), Member.class));
-		}
-		return installmentList;
-	}
+    @Override
+    public List<ProductSaleInstallment> fetchByPaymentCycle(String str) {
+        List<ProductSaleInstallment> installmentList = installmentRepository.findByInvoiceNo(str);
+        for (ProductSaleInstallment productSaleInstallment : installmentList) {
+            productSaleInstallment.setSocietyPaymentCycle(Hibernate.unproxy(productSaleInstallment.getSocietyPaymentCycle(), SocietyPaymentCycle.class));
+            productSaleInstallment.setMember(Hibernate.unproxy(productSaleInstallment.getMember(), Member.class));
+        }
+        return installmentList;
+    }
 
 }

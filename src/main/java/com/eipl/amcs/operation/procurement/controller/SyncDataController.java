@@ -3,14 +3,12 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -50,12 +48,12 @@ public class SyncDataController implements MyInitialization {
     @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -64,7 +62,6 @@ public class SyncDataController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -80,13 +77,13 @@ public class SyncDataController implements MyInitialization {
     public void setupComboBox() {
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -96,15 +93,12 @@ public class SyncDataController implements MyInitialization {
         dpToDate.setValue(LocalDate.now());
     }
 
-    private StringBuilder errorMsg;
-
-
-    private void syncData1(){
-        var task =new MilkCollectionLoadTask(
-                CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(),cboxFromShift.getValue()),
-                CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(),cboxToShift.getValue()),1);
+    private void syncData1() {
+        var task = new MilkCollectionLoadTask(
+                CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()),
+                CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()), 1);
         lbl.setVisible(true);
-        task.setOnSucceeded(e->{
+        task.setOnSucceeded(e -> {
             System.out.println("Done");
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("sync"),
                     resourceBundle.getString("successful"));
@@ -158,7 +152,7 @@ public class SyncDataController implements MyInitialization {
                     (cboxToShift.getValue().getName().equalsIgnoreCase(resourceBundle.getString("Morning")) ? "06:00:00" : "18:00:00") + "';";
 
             Boolean rs = stmt.execute(sql);
-            if(rs){
+            if (rs) {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"),
                         resourceBundle.getString("successful"));
                 alert.createAlert();

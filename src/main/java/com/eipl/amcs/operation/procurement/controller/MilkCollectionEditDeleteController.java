@@ -21,8 +21,8 @@ import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.operation.procurement.dto.CollectionEditDelete;
 import com.eipl.amcs.operation.procurement.dto.MemberSocietyInfoDto;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.dto.MilkRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -53,65 +53,52 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class MilkCollectionEditDeleteController extends MilkCollectionBaseController implements MyInitialization {
+    public String text = "";
+    BigDecimal oldQty = BigDecimal.ZERO;
+    BigDecimal oldAmount = BigDecimal.ZERO;
     @FXML
     private StackPane root;
     @FXML
     private TextField txtCode, txtName, txtFat, txtSnf, txtClr, txtQuantity, txtRtpl, txtAmount;
-
     @FXML
     private DatePicker dpDate;
     @FXML
     private HBox hbox;
-
     @FXML
     private Label lblTitle;
-
     @FXML
     private ComboBox<Shift> cboxShift;
-
     @FXML
     private ComboBox<MilkType> cboxType;
-
     @FXML
     private ComboBox<MilkQualityType> cboxQualityType;
-
     @FXML
     private GridPane gridCollection;
-
     @FXML
     private TableView<MilkCollection> tableCollection;
     @FXML
     private TableColumn<MilkCollection, MilkType> colMilkType;
     @FXML
     private TableColumn<MilkCollection, Number> colSampleNo, colMemberCode, colQty, colFat, colSnf, colRate, colAmount;
-
     @FXML
     private Button btnEdit, btnClose, btnDelete;
-
     private Stage stage;
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private MemberSocietyInfoDto memberSocietyInfoDto;
-    private ObjectProperty<MilkCollection> propCollection = new SimpleObjectProperty<>();
-    private ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
+    private final ObjectProperty<MilkCollection> propCollection = new SimpleObjectProperty<>();
+    private final ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
     private MilkCollection milkCollection;
     private StringBuilder errorMsg = null;
     private String operation = "UPDATE";
-
-    public String text = "";
-
-    BigDecimal oldQty = BigDecimal.ZERO;
-    BigDecimal oldAmount = BigDecimal.ZERO;
-
-
-    private ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
+    private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
             fetchRate(txtFat.getText(), txtSnf.getText(), cboxType.getValue(), cboxQualityType.getValue());
             calculateClr(txtFat.getText(), txtSnf.getText());
         }
     };
 
-    private ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
             calculateAmount(txtRtpl.getText(), txtQuantity.getText());
         }
@@ -488,7 +475,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         } else {
             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("error.occurred"));
             alert1.createAlert();
-            return;
         }
     }
 
@@ -504,7 +490,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
                             return;
@@ -668,32 +654,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         new Thread(task1).start();
     }
 
-
-    @Override
-    protected void setQty(String qty) {
-        txtQuantity.setText(qty);
-    }
-
-    @Override
-    protected void setFat(String fat) {
-        txtFat.setText(fat);
-    }
-
-    @Override
-    protected void setSnf(String snf) {
-        txtSnf.setText(snf);
-    }
-
-    @Override
-    protected void setWater(String water) {
-
-    }
-
-    @Override
-    protected void setClr(String clr) {
-        txtClr.setText(clr);
-    }
-
     @Override
     protected void setRate(String rate) {
         txtRtpl.setText(rate);
@@ -710,13 +670,28 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
+    protected void setQty(String qty) {
+        txtQuantity.setText(qty);
+    }
+
+    @Override
     protected String getFat() {
         return txtFat.getText() == null || txtFat.getText().isEmpty() ? "0" : txtFat.getText();
     }
 
     @Override
+    protected void setFat(String fat) {
+        txtFat.setText(fat);
+    }
+
+    @Override
     protected String getSnf() {
         return txtSnf.getText() == null || txtSnf.getText().isEmpty() ? "0" : txtSnf.getText();
+    }
+
+    @Override
+    protected void setSnf(String snf) {
+        txtSnf.setText(snf);
     }
 
     @Override
@@ -726,8 +701,18 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
+    protected void setWater(String water) {
+
+    }
+
+    @Override
     protected String getClr() {
         return txtClr.getText() == null || txtClr.getText().isEmpty() ? "0" : txtClr.getText();
+    }
+
+    @Override
+    protected void setClr(String clr) {
+        txtClr.setText(clr);
     }
 
     @Override
@@ -756,12 +741,17 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
+    protected String getFat1() {
+        return null;
+    }
+
+    @Override
     protected void setFat1(String fat) {
         txtFat.setText(fat);
     }
 
     @Override
-    protected String getFat1() {
+    protected String getSnf1() {
         return null;
     }
 
@@ -771,7 +761,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getSnf1() {
+    protected String getWater1() {
         return null;
     }
 
@@ -781,7 +771,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getWater1() {
+    protected String getFat2() {
         return null;
     }
 
@@ -792,7 +782,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getFat2() {
+    protected String getSnf2() {
         return null;
     }
 
@@ -803,7 +793,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getSnf2() {
+    protected String getWater2() {
         return null;
     }
 
@@ -813,7 +803,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getWater2() {
+    protected String getFat3() {
         return null;
     }
 
@@ -824,7 +814,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getFat3() {
+    protected String getSnf3() {
         return null;
     }
 
@@ -835,7 +825,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getSnf3() {
+    protected String getWater3() {
         return null;
     }
 
@@ -845,7 +835,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getWater3() {
+    protected String getFat4() {
         return null;
     }
 
@@ -856,7 +846,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getFat4() {
+    protected String getSnf4() {
         return null;
     }
 
@@ -867,18 +857,13 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     }
 
     @Override
-    protected String getSnf4() {
+    protected String getWater4() {
         return null;
     }
 
     @Override
     protected void setWater4(String water) {
 
-    }
-
-    @Override
-    protected String getWater4() {
-        return null;
     }
 
     @Override

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @NoArgsConstructor
@@ -28,7 +27,7 @@ public class PaymentRegisterForCash {
 
     private Short payment_mode;
 
-    private BigDecimal  other_add_amount;
+    private BigDecimal other_add_amount;
     private BigDecimal other_ded_amount;
     private BigDecimal net_amount;
     private BigDecimal milk_amount;

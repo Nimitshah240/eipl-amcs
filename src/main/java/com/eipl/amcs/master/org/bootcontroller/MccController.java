@@ -17,22 +17,21 @@ import java.util.List;
 @RequestMapping("/mccs")
 public class MccController {
 
-	@Autowired
-	private MccService service;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MccController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MccController.class);
+    @Autowired
+    private MccService service;
 
-	@GetMapping
-	public ResponseEntity<List<Mcc>> index() {
-		try {
-			List<Mcc> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<Mcc>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<Mcc>> index() {
+        try {
+            List<Mcc> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<List<Mcc>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

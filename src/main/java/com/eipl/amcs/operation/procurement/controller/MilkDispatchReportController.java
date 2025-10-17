@@ -3,43 +3,28 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.InformationAlert;
-import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.master.org.convertor.BankConvertor;
-import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.task.BankLoadTask;
-import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import com.eipl.amcs.report.dto.PaymentForBank;
-import com.eipl.amcs.report.task.PaymentRegisterReportExcelTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class MilkDispatchReportController implements MyInitialization {
 
+    List<PaymentForBank> list;
     @FXML
     private StackPane root;
     @FXML
@@ -48,18 +33,14 @@ public class MilkDispatchReportController implements MyInitialization {
     private PopupCallback callback;
     @FXML
     private ComboBox<String> cboxFormat;
-
-    List<PaymentForBank> list;
-
-
     private ResourceBundle resourceBundle;
+    private MilkDispatch dto = null;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MilkDispatch dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -68,7 +49,6 @@ public class MilkDispatchReportController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
 
     public void setDispatch(MilkDispatch dto) {
         if (dto != null) {
@@ -101,9 +81,6 @@ public class MilkDispatchReportController implements MyInitialization {
     public void setupComboBox() {
     }
 
-    private StringBuilder errorMsg;
-
-
     private boolean validate() {
         return true;
     }
@@ -121,7 +98,7 @@ public class MilkDispatchReportController implements MyInitialization {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_challan_no", dto.getChallanNo());
-        params.put("p_locale",  MainApp.locale);
+        params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_TWO, params);
         JasperViewer.viewReport(print, false);
     }

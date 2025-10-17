@@ -4,12 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.*;
+import com.eipl.amcs.master.account.dto.CashAdvanceDto;
+import com.eipl.amcs.master.account.model.CashAdvance;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.FetchAllPaymentCycleLoadTask;
-import com.eipl.amcs.master.account.model.CashAdvance;
-import com.eipl.amcs.master.account.dto.CashAdvanceDto;
 import com.eipl.amcs.operation.administartion.task.CashAdvanceDeleteTask;
 import com.eipl.amcs.operation.administartion.task.CashAdvanceLoadTask;
 import com.eipl.amcs.operation.administartion.task.CashAdvanceSaveTask;
@@ -41,6 +41,7 @@ import java.util.concurrent.ExecutionException;
 
 public class CashAdvanceController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<CashAdvance> propCashAdvanceDto;
     @FXML
     StackPane root;
     @FXML
@@ -52,33 +53,26 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<CashAdvance, String> colNoOfInstallment;
     @FXML
-    private TextField txtAmount, txtMemberName, txtMemberCode, txtNoOfInstallment;
-    @FXML
-    private DatePicker dpDate;
-    @FXML
     GridPane gridMaster;
     @FXML
     VBox vbox;
-
     @FXML
     Button btnClose, btnSave, btnDelete, btnView;
-
+    @FXML
+    private TextField txtAmount, txtMemberName, txtMemberCode, txtNoOfInstallment;
+    @FXML
+    private DatePicker dpDate;
     private Stage stage;
     private PopupCallback callback;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<CashAdvance> propCashAdvanceDto;
-
-    public CashAdvanceController() {
-        propCashAdvanceDto = new SimpleObjectProperty<>();
-    }
-
     private CashAdvance cashAdvance;
     private Member member;
     private List<SocietyPaymentCycle> paymentCycleList;
     private List<ProductSaleInstallment> installmentList = new ArrayList<>();
     private CashAdvanceDto dto;
+    public CashAdvanceController() {
+        propCashAdvanceDto = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
@@ -100,7 +94,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
                 btnView.setDisable(true);
             }
         });
-        txtNoOfInstallment.setOnAction(e->{
+        txtNoOfInstallment.setOnAction(e -> {
             FocusUtils.requestFocus(btnSave);
         });
         btnSave.setOnAction(e -> {
@@ -188,7 +182,6 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
                     resourceBundle.getString("error.occurred"));
             alert.createAlert();
             clearControls();
-            return;
         }
     }
 
@@ -206,14 +199,14 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        try{
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCode()));
-        colNoOfInstallment.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfInstallment().toString()));
-        colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
-        colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().toMemberName()));
+        try {
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCode()));
+            colNoOfInstallment.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfInstallment().toString()));
+            colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
+            colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().toMemberName()));
 
-        propCashAdvanceDto.bind(tableCashAdvance.getSelectionModel().selectedItemProperty());
-    }catch (Exception e) {
+            propCashAdvanceDto.bind(tableCashAdvance.getSelectionModel().selectedItemProperty());
+        } catch (Exception e) {
             System.out.println("CashAdvance setuptable Exception");
             e.printStackTrace();
         }
@@ -311,7 +304,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("cashadvance"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

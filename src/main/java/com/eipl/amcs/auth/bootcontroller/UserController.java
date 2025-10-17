@@ -24,45 +24,44 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class UserController {
 
-	@Autowired
-	UserService service;
-	@Autowired
-	UserRoleService userRoleService;
-	@Autowired
-	RolePermissionService rolePermissionService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    @Autowired
+    UserService service;
+    @Autowired
+    UserRoleService userRoleService;
+    @Autowired
+    RolePermissionService rolePermissionService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-	
-	@PostMapping
-	public ResponseEntity<User> login(@RequestBody LoginDto dto) {
-		return new ResponseEntity<User>(service.authenticate(dto), HttpStatus.OK);
-	}
-	
-	@GetMapping("/permission/{username}")
-	public ResponseEntity<Set<Permission>> getPermissionForUser(@PathVariable("username") String username) {
-		try {
-			LOGGER.info("Get permission for user {}", username);
-			Optional<User> user = service.findByUsername(username);
-			if (user == null || !user.isPresent()) {
-				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-			}
+    @PostMapping
+    public ResponseEntity<User> login(@RequestBody LoginDto dto) {
+        return new ResponseEntity<User>(service.authenticate(dto), HttpStatus.OK);
+    }
 
-			List<UserRole> userRoles = userRoleService.findAllByUser(user.get());
-			if (userRoles == null || userRoles.isEmpty()) {
-				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-			}
+    @GetMapping("/permission/{username}")
+    public ResponseEntity<Set<Permission>> getPermissionForUser(@PathVariable("username") String username) {
+        try {
+            LOGGER.info("Get permission for user {}", username);
+            Optional<User> user = service.findByUsername(username);
+            if (user == null || !user.isPresent()) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
 
-			List<RolePermission> rolePermissions = rolePermissionService.findAllRolePermissionByRoles(
-					userRoles.stream().map(m -> m.getRole()).collect(Collectors.toList()));
-			if (userRoles == null || userRoles.isEmpty()) {
-				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-			}
+            List<UserRole> userRoles = userRoleService.findAllByUser(user.get());
+            if (userRoles == null || userRoles.isEmpty()) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
 
-			Set<Permission> permissions = rolePermissions.stream().map(m -> m.getPermission())
-					.collect(Collectors.toSet());
-			return new ResponseEntity<Set<Permission>>(permissions, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            List<RolePermission> rolePermissions = rolePermissionService.findAllRolePermissionByRoles(
+                    userRoles.stream().map(m -> m.getRole()).collect(Collectors.toList()));
+            if (userRoles == null || userRoles.isEmpty()) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+
+            Set<Permission> permissions = rolePermissions.stream().map(m -> m.getPermission())
+                    .collect(Collectors.toSet());
+            return new ResponseEntity<Set<Permission>>(permissions, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

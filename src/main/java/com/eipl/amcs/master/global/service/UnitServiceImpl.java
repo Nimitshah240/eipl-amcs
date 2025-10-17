@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class UnitServiceImpl implements UnitService {
 
+    private static final Logger log = LoggerFactory.getLogger(UnitServiceImpl.class);
     @Autowired
     private UnitRepository unitRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(UnitServiceImpl.class);
 
     @Override
     public List<Unit> findAll() {

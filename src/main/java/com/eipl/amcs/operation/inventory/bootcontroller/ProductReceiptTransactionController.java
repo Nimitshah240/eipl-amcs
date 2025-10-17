@@ -18,99 +18,98 @@ import java.util.Optional;
 @RequestMapping("/product-receipt-transactions")
 public class ProductReceiptTransactionController {
 
-	@Autowired
-	private ProductReceiptTransactionService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductReceiptTransactionController.class);
+    @Autowired
+    private ProductReceiptTransactionService service;
+    @Autowired
+    private NextCodeService nextCodeService;
 
-	@Autowired
-	private NextCodeService nextCodeService;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductReceiptTransactionController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductReceiptTransaction>> index() {
+        try {
+            List<ProductReceiptTransaction> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<ProductReceiptTransaction>> index() {
-		try {
-			List<ProductReceiptTransaction> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<ProductReceiptTransaction>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<List<ProductReceiptTransaction>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	@GetMapping("/ByGrnNo")
-	public ResponseEntity<List<ReceiptTxnTaxDto>> indexByProductReceipt(@RequestParam String code) {
-		try {
-			List<ReceiptTxnTaxDto> list = service.findByProductReceipt(code);
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @GetMapping("/ByGrnNo")
+    public ResponseEntity<List<ReceiptTxnTaxDto>> indexByProductReceipt(@RequestParam String code) {
+        try {
+            List<ReceiptTxnTaxDto> list = service.findByProductReceipt(code);
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<List<ReceiptTxnTaxDto>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
+            return new ResponseEntity<List<ReceiptTxnTaxDto>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping("/next-receiptTransactionNo")
-	public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
-		try {
-			LOGGER.info("Next productReceiptTransaction no for Society: {}", societyCode);
-			String receiptTransactionNo = nextCodeService.getNextCode("ProductReceiptTransaction", "grnTxnNo", societyCode, 2);
-			if (receiptTransactionNo == null || receiptTransactionNo.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<>(receiptTransactionNo, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/next-receiptTransactionNo")
+    public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
+        try {
+            LOGGER.info("Next productReceiptTransaction no for Society: {}", societyCode);
+            String receiptTransactionNo = nextCodeService.getNextCode("ProductReceiptTransaction", "grnTxnNo", societyCode, 2);
+            if (receiptTransactionNo == null || receiptTransactionNo.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@PostMapping
-	public ResponseEntity<ProductReceiptTransaction> createProductReceiptTransaction(@RequestBody ProductReceiptTransaction dto) {
-		try {
-			LOGGER.info("ProductReceiptTransaction save method");
-			dto = service.save(dto);
-			if (dto == null)
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	@PutMapping
-	public ResponseEntity<ProductReceiptTransaction> updateProductReceiptTransaction(@RequestBody ProductReceiptTransaction dto) {
-		try {
-			LOGGER.info("ProductReceiptTransaction save method");
-			dto = service.update(dto);
-			if (dto == null)
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	@DeleteMapping("/{receiptTransactionNo}")
-	public ResponseEntity<?> deleteProductReceiptTransaction(@PathVariable("receiptTransactionNo") String receiptTransactionNo) {
-		try {
-			LOGGER.info("ProductReceiptTransaction delete method");
-			Optional<ProductReceiptTransaction> productReceiptTransactionData = service.findById(receiptTransactionNo); 
-			if (productReceiptTransactionData == null || !productReceiptTransactionData.isPresent())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			service.delete(productReceiptTransactionData.get());
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(receiptTransactionNo, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductReceiptTransaction> createProductReceiptTransaction(@RequestBody ProductReceiptTransaction dto) {
+        try {
+            LOGGER.info("ProductReceiptTransaction save method");
+            dto = service.save(dto);
+            if (dto == null)
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<ProductReceiptTransaction> updateProductReceiptTransaction(@RequestBody ProductReceiptTransaction dto) {
+        try {
+            LOGGER.info("ProductReceiptTransaction save method");
+            dto = service.update(dto);
+            if (dto == null)
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{receiptTransactionNo}")
+    public ResponseEntity<?> deleteProductReceiptTransaction(@PathVariable("receiptTransactionNo") String receiptTransactionNo) {
+        try {
+            LOGGER.info("ProductReceiptTransaction delete method");
+            Optional<ProductReceiptTransaction> productReceiptTransactionData = service.findById(receiptTransactionNo);
+            if (productReceiptTransactionData == null || !productReceiptTransactionData.isPresent())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            service.delete(productReceiptTransactionData.get());
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

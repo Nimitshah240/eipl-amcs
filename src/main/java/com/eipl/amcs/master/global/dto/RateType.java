@@ -24,6 +24,7 @@ public class RateType {
     public void setRateType(String rateType) {
         this.rateType = rateType;
     }
+
     @Override
     public String toString() {
         return CommonUtils.getLocalString(this.rateType, null);

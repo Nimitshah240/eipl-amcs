@@ -38,7 +38,6 @@ public class MilkCollectionSaveTask extends Task<Object> {
 //            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
 //                return null;
 //            return response.getBody();
-            if(collections == null) return null;
             return collections;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());

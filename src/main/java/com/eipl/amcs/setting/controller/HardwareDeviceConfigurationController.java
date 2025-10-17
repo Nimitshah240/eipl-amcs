@@ -13,10 +13,10 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.procurement.converter.HardwareDeviceConvertor;
 import com.eipl.amcs.master.procurement.model.HardwareDevice;
+import com.eipl.amcs.master.procurement.task.HardwareDeviceLoadTask;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import com.eipl.amcs.setting.task.HardwareDeviceConfigLoadTask;
 import com.eipl.amcs.setting.task.HardwareDeviceConfigSaveTask;
-import com.eipl.amcs.master.procurement.task.HardwareDeviceLoadTask;
 import com.fazecast.jSerialComm.SerialPort;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -31,7 +31,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class HardwareDeviceConfigurationController implements MyInitialization {
     public static final String WS = "WS";
@@ -46,6 +45,7 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
     StackPane root;
     @FXML
     Button btnClose, btnSave;
+    String[] arrQuality = {"Sequence Wise", "Milk Type Wise"};
     @FXML
     private ComboBox<String> cboxWsPort, cboxAnalyserPort, cboxAnalyserPort2, cboxAnalyserPort3, cboxAnalyserPort4, cboxDisplayPort, cboxPrinter, cboxSplitterPort, cboxQualityMachine, cboxQualityMachine2, cboxQualityMachine3, cboxQualityMachine4;
     @FXML
@@ -54,9 +54,8 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
     private ComboBox<MilkType> cboxMilkType, cboxMilkType2, cboxMilkType3, cboxMilkType4;
     private List<HardwareDeviceConfig> deviceConfigList;
     private StringBuilder errorMsg = null;
-    private List<String> commPorts = new ArrayList<>();
+    private final List<String> commPorts = new ArrayList<>();
     private ResourceBundle resourceBundle;
-    String[] arrQuality = {"Sequence Wise", "Milk Type Wise"};
 
     @Override
     public Node getRoot() {

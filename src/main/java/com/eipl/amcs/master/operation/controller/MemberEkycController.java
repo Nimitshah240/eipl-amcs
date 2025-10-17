@@ -28,6 +28,7 @@ import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 public class MemberEkycController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<MemberEkyc> propMember = new SimpleObjectProperty<>();
+    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     public PopupCallback callback;
     public List<Member> memberList = new ArrayList<>();
     @FXML
@@ -43,7 +44,6 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
     @FXML
     private Button btnClose;
     private List<MemberEkyc> listMember = new ArrayList<>();
-    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     private Stage stage;
     private ResourceBundle resourceBundle;
     private String memberCode;

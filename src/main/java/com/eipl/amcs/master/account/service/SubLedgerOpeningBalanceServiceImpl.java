@@ -19,13 +19,11 @@ import java.util.Optional;
 @Service
 public class SubLedgerOpeningBalanceServiceImpl implements SubLedgerOpeningBalanceService {
 
+    private static final Logger log = LoggerFactory.getLogger(SubLedgerOpeningBalanceServiceImpl.class);
     @Autowired
     private SubLedgerOpeningBalanceRepository subLedgerOpeningBalanceRepository;
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger log = LoggerFactory.getLogger(SubLedgerOpeningBalanceServiceImpl.class);
-
 
     @Override
     public List<SubLedgerOpeningBalance> findAll() {

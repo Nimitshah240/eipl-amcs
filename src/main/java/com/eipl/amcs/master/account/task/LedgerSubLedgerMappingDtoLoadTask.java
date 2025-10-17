@@ -8,7 +8,6 @@ import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.service.LedgerService;
 import com.eipl.amcs.master.account.service.SubLedgerService;
 import javafx.concurrent.Task;
-import org.springframework.web.client.RestTemplate;
 
 public class LedgerSubLedgerMappingDtoLoadTask extends Task<LedgerSubLedgerDto> {
 

@@ -33,6 +33,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ProductSaleController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<ProductSale> propProductSaleDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -44,21 +45,20 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<ProductSale, LocalDate> colDate, colDeductionStartDate;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
-    @FXML
     Button btnClose, btnAdd, btnInstallments, btnEdit, btnDelete, btnSearch;
-    private final ObjectProperty<ProductSale> propProductSaleDto;
+    @FXML
+    private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
     private ProductSaleInstallment dto = null;
     private List<ProductSaleInstallment> installmentList;
 
+    public ProductSaleController() {
+        propProductSaleDto = new SimpleObjectProperty<>();
+    }
+
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public ProductSaleController() {
-        propProductSaleDto = new SimpleObjectProperty<>();
     }
 
     public void setProductSaleInstallment(ProductSaleInstallment dto) {
@@ -187,7 +187,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
                             return;

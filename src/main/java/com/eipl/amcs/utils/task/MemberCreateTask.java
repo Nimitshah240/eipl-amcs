@@ -28,10 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemberCreateTask extends Task<Boolean> {
-    private String societyCode;
+    private final String societyCode;
     private String url;
-    private int cowMin, cowMax, buffMin, buffMax;
-    private int sampleNo;
+    private final int cowMin;
+    private final int cowMax;
+    private final int buffMin;
+    private final int buffMax;
+    private final int sampleNo;
 
     private List<MemberDto> listDto = null;
 

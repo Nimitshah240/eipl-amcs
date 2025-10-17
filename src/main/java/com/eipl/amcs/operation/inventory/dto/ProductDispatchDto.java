@@ -11,6 +11,9 @@ public class ProductDispatchDto {
         this.dispatchTransactions = dispatchTransactions;
     }
 
+    public ProductDispatchDto() {
+    }
+
     public ProductDispatch getProductDispatch() {
         return productDispatch;
     }
@@ -25,8 +28,5 @@ public class ProductDispatchDto {
 
     public void setDispatchTransactions(List<ProductDispatchTransaction> dispatchTransactions) {
         this.dispatchTransactions = dispatchTransactions;
-    }
-
-    public ProductDispatchDto() {
     }
 }

@@ -54,6 +54,8 @@ import java.util.stream.Collectors;
 
 public class FinancialYearClosingController implements MyInitialization, PopupCallback {
 
+    private final List<LedgerOpeningBalance> ledgerOpeningBalanceList;
+    private final ObjectProperty<LedgerClose> propObjLedger;
     TimeUnit time = TimeUnit.SECONDS;
     List<SubLedgerOpeningBalance> listSubLdgrOpening = new ArrayList<>();
     MyAlert alert;
@@ -136,9 +138,7 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     private List<Ledger> listLedger;
     private List<SubLedger> listSubLedger;
     private LedgerSubLedgerDto ledgerSubLedgerDto;
-    private final List<LedgerOpeningBalance> ledgerOpeningBalanceList;
     private List<Object[]> subLedgerOpeningBalanceList;
-    private final ObjectProperty<LedgerClose> propObjLedger;
     private SocietyYearClosing societyYearClosingDto = null;
 
     private Stage stage;

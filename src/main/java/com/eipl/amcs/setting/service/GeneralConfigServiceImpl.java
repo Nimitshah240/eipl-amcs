@@ -37,7 +37,7 @@ public class GeneralConfigServiceImpl implements GeneralConfigService {
     private SocietyRepository societyRepository;
 
     //    private final EntityManager entityManager;
-    private ObjectMapper objMapper;
+    private final ObjectMapper objMapper;
 
     //
     public GeneralConfigServiceImpl() {

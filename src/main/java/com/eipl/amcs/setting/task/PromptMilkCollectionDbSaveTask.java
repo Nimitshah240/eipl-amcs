@@ -21,17 +21,17 @@ import java.util.List;
 import java.util.Map;
 
 public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
 
     public PromptMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath,
-                                          String cowRange, String buffRange,LocalDate fromDate,LocalDate toDate) {
+                                          String cowRange, String buffRange, LocalDate fromDate, LocalDate toDate) {
         this.milkTypeList = milkTypeList;
         this.shiftList = shiftList;
         this.filePath = filePath;
@@ -75,7 +75,7 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
             try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select format(Date, 'mmm yyyy') as month, count(*) as count from tblILedger" +
-                        " where  format(Date, 'yyyy-MM-dd') >= '" + fromDate.toString() + "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate.toString()+
+                        " where  format(Date, 'yyyy-MM-dd') >= '" + fromDate.toString() + "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate.toString() +
                         "' group by format(Date, 'mmm yyyy')");
                 List<String> listMonth = new ArrayList<>();
                 while (resultSet.next()) {
@@ -88,7 +88,7 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
                 for (String month : listMonth) {
                     statement = connection.createStatement();
                     resultSet = statement.executeQuery("select * from tblILedger where format(Date, 'yyyy-MM-dd') >= '" + fromDate.toString() +
-                            "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate.toString()+"'");
+                            "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate.toString() + "'");
 //                    resultSet = statement.executeQuery("select * from tblILedger where format(Date, 'mmm yyyy') = '" + month + "'");
                     List<Map<String, Object>> mapCollection = new ArrayList<>();
                     String shift = null;
@@ -156,7 +156,7 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
                         else
                             map.put("milktype", mapMilkType.get("C"));
                         map.put("sampleno", resultSet.getInt("SrNo"));
-                        map.put("code", MainApp.identityDto.getDock().getDockNo() + "-"+ "1-" +((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + map.get("sampleno") + "-" + codeEx);
+                        map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + "1-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + map.get("sampleno") + "-" + codeEx);
                         if (tempMap.get(map.get("code")) == null)
                             tempMap.put(map.get("code").toString(), true);
                         else
@@ -184,7 +184,7 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
                             for (Map<String, Object> map : maps) {
                                 pstmt.setString(1, map.get("code").toString());
                                 pstmt.setInt(2, (int) map.get("sampleno"));
-                                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                                pstmt.setObject(3, map.get("collectiondate"));
                                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.procurement.dto;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDateTime;
 
@@ -75,6 +74,7 @@ public class AllowDcsManualCollectionRange extends BaseModelTxn {
     public void setBmcCode(String bmcCode) {
         this.bmcCode = bmcCode;
     }
+
     public String getxCol4() {
         return xCol4;
     }
@@ -94,6 +94,7 @@ public class AllowDcsManualCollectionRange extends BaseModelTxn {
     public Long getCode() {
         return code;
     }
+
     public void setCode(Long code) {
         this.code = code;
     }

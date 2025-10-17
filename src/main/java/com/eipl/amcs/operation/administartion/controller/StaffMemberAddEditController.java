@@ -14,12 +14,8 @@ import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.operation.administartion.dto.converter.DesignationConvertor;
 import com.eipl.amcs.master.account.model.Designation;
 import com.eipl.amcs.master.account.model.StaffMember;
-import com.eipl.amcs.operation.administartion.task.DesignationLoadTask;
-import com.eipl.amcs.operation.administartion.task.StaffCodeLoadTask;
-import com.eipl.amcs.operation.administartion.task.StaffMemberSaveTask;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
@@ -29,6 +25,10 @@ import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
+import com.eipl.amcs.operation.administartion.dto.converter.DesignationConvertor;
+import com.eipl.amcs.operation.administartion.task.DesignationLoadTask;
+import com.eipl.amcs.operation.administartion.task.StaffCodeLoadTask;
+import com.eipl.amcs.operation.administartion.task.StaffMemberSaveTask;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -300,13 +300,13 @@ public class StaffMemberAddEditController implements MyInitialization {
         cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
         dptenureFromDate.setConverter(new LocalDateConvertor());
         dptenureFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dptenureFromDate.setValue(dptenureFromDate.getConverter().fromString(dptenureFromDate.getEditor().getText()));
             }
         });
         dptenureToDate.setConverter(new LocalDateConvertor());
         dptenureToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dptenureToDate.setValue(dptenureToDate.getConverter().fromString(dptenureToDate.getEditor().getText()));
             }
         });

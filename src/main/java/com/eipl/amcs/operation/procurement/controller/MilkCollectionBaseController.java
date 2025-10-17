@@ -6,8 +6,8 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import com.eipl.amcs.operation.procurement.dto.HardwareSetting;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
+import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.serial.*;
 import com.eipl.amcs.setting.controller.HardwareDeviceConfigurationController;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
@@ -28,25 +28,21 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public abstract class MilkCollectionBaseController implements DeviceCallback {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionBaseController.class);
+    protected static BigDecimal weightHold = BigDecimal.ZERO, weightLock = BigDecimal.ZERO;
+    protected final int SCALE = 2;
+    protected final RoundingMode ROUND = RoundingMode.HALF_UP;
     protected MilkCollectionPreReqDto collectionPreReqDto;
     protected MemberMilkPurchaseRate memberMilkPurchaseRate;
     protected List<MemberMilkPurchaseRateBased> memberRateBasedList;
     protected Map<String, BigDecimal> mapRateDetails;
-
-    protected final int SCALE = 2;
-    protected final RoundingMode ROUND = RoundingMode.HALF_UP;
-
     protected String collectionType;
     protected MilkCollection collection;
-    protected static BigDecimal weightHold = BigDecimal.ZERO, weightLock = BigDecimal.ZERO;
     protected LocalDateTime collectionDate;
-
     protected boolean qualityAuto = false;
     protected boolean weightAuto = false;
     protected boolean autoTare = false;
     protected int maSetting = 1; //CommonUtils.strToInteger(MainApp.getProperty("masetting", "1"));
-    private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionBaseController.class);
-
     // String prop for fat snf values
     protected StringProperty fatStringProp = new SimpleStringProperty();
     protected StringProperty snfStringProp = new SimpleStringProperty();
@@ -55,6 +51,28 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
     protected Map<String, Integer> analyserMilkType = new TreeMap<>();
     protected Map<Integer, String> analyserMilkTypeMapping = new HashMap<>();
     protected Map<Integer, String> analyserMilkTypeMappingLastSavedFrom = new HashMap<>();
+    protected BigDecimal tempQty = BigDecimal.ZERO;
+    protected BigDecimal tempFat = BigDecimal.ZERO;
+    protected BigDecimal tempSnf = BigDecimal.ZERO;
+    protected BigDecimal tempWater = BigDecimal.ZERO;
+    protected BigDecimal tempFat2 = BigDecimal.ZERO;
+    protected BigDecimal tempSnf2 = BigDecimal.ZERO;
+    protected BigDecimal tempWater2 = BigDecimal.ZERO;
+    protected BigDecimal tempFat3 = BigDecimal.ZERO;
+    protected BigDecimal tempSnf3 = BigDecimal.ZERO;
+    protected BigDecimal tempWater3 = BigDecimal.ZERO;
+    protected BigDecimal tempFat4 = BigDecimal.ZERO;
+    protected BigDecimal tempSnf4 = BigDecimal.ZERO;
+    protected BigDecimal tempWater4 = BigDecimal.ZERO;
+    protected BigDecimal prevFat1 = BigDecimal.ZERO;
+    protected BigDecimal prevSnf1 = BigDecimal.ZERO;
+    protected BigDecimal prevFat2 = BigDecimal.ZERO;
+    protected BigDecimal prevSnf2 = BigDecimal.ZERO;
+    protected BigDecimal prevFat3 = BigDecimal.ZERO;
+    protected BigDecimal prevSnf3 = BigDecimal.ZERO;
+    protected BigDecimal prevFat4 = BigDecimal.ZERO;
+    protected BigDecimal prevSnf4 = BigDecimal.ZERO;
+    String mapKey = null;
 
     protected void calculateClr(String fat, String snf) {
         if (!fat.isEmpty() && !snf.isEmpty()) {
@@ -66,8 +84,6 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
             }
         }
     }
-
-    String mapKey = null;
 
     protected void calculateAmount(String rate, String qty) {
         try {
@@ -319,8 +335,7 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
         }
         if (weightAuto && autoTare && MainApp.splitterSerial != null) {
             MainApp.splitterSerial.tareWs();
-        }
-        else if (autoTare && MainApp.splitterSerial != null) {
+        } else if (autoTare && MainApp.splitterSerial != null) {
             MainApp.splitterSerial.tareWs();
         }
     }
@@ -379,29 +394,6 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
                 break;
         }
     }
-
-    protected BigDecimal tempQty = BigDecimal.ZERO;
-    protected BigDecimal tempFat = BigDecimal.ZERO;
-    protected BigDecimal tempSnf = BigDecimal.ZERO;
-    protected BigDecimal tempWater = BigDecimal.ZERO;
-    protected BigDecimal tempFat2 = BigDecimal.ZERO;
-    protected BigDecimal tempSnf2 = BigDecimal.ZERO;
-    protected BigDecimal tempWater2 = BigDecimal.ZERO;
-    protected BigDecimal tempFat3 = BigDecimal.ZERO;
-    protected BigDecimal tempSnf3 = BigDecimal.ZERO;
-    protected BigDecimal tempWater3 = BigDecimal.ZERO;
-    protected BigDecimal tempFat4 = BigDecimal.ZERO;
-    protected BigDecimal tempSnf4 = BigDecimal.ZERO;
-    protected BigDecimal tempWater4 = BigDecimal.ZERO;
-
-    protected BigDecimal prevFat1 = BigDecimal.ZERO;
-    protected BigDecimal prevSnf1 = BigDecimal.ZERO;
-    protected BigDecimal prevFat2 = BigDecimal.ZERO;
-    protected BigDecimal prevSnf2 = BigDecimal.ZERO;
-    protected BigDecimal prevFat3 = BigDecimal.ZERO;
-    protected BigDecimal prevSnf3 = BigDecimal.ZERO;
-    protected BigDecimal prevFat4 = BigDecimal.ZERO;
-    protected BigDecimal prevSnf4 = BigDecimal.ZERO;
 
     private void displaySplitterReading(Map<String, String> resp) {
         try {
@@ -462,6 +454,7 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
             LOGGER.error("Splitter Reading", e);
         }
     }
+
     private void displayAnalyserReading(Map<String, String> resp, String tag) {
         try {
             System.out.println("displayAnalyzerreading 293" + resp);
@@ -515,9 +508,7 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
                     }
 //                    if (new BigDecimal(getWater()).compareTo(tempWater) != 0)
 //                        setWater(tempWater.toString());
-                }
-
-                else if (tag.equalsIgnoreCase(AppConstant.DEVICE_TAG.ANALYSER2_TAG)) {
+                } else if (tag.equalsIgnoreCase(AppConstant.DEVICE_TAG.ANALYSER2_TAG)) {
                     System.out.println("MASETTING 2");
                     if (serialRespFat != null)
                         tempFat2 = CommonUtils.convertQualityValue(new BigDecimal(serialRespFat),
@@ -550,9 +541,7 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
                     }
                     if (new BigDecimal(getWater()).compareTo(tempWater2) != 0)
                         setWater2(tempWater2.toString());
-                }
-
-                else if (tag.equalsIgnoreCase(AppConstant.DEVICE_TAG.ANALYSER3_TAG)) {
+                } else if (tag.equalsIgnoreCase(AppConstant.DEVICE_TAG.ANALYSER3_TAG)) {
                     System.out.println("MASETTING 3");
                     if (serialRespFat != null)
                         tempFat3 = CommonUtils.convertQualityValue(new BigDecimal(serialRespFat),
@@ -637,25 +626,25 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
         }
     }
 
-    protected abstract void setQty(String qty);
-
     protected abstract String getQty();
 
-    protected abstract void setFat(String fat);
+    protected abstract void setQty(String qty);
 
     protected abstract String getFat();
 
-    protected abstract void setSnf(String snf);
+    protected abstract void setFat(String fat);
 
     protected abstract String getSnf();
 
-    protected abstract void setWater(String water);
+    protected abstract void setSnf(String snf);
 
     protected abstract String getWater();
 
-    protected abstract void setClr(String clr);
+    protected abstract void setWater(String water);
 
     protected abstract String getClr();
+
+    protected abstract void setClr(String clr);
 
     protected abstract void setRate(String rate);
 
@@ -671,53 +660,53 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
 
     protected abstract void setSampleNo(String sampleNo);
 
-    protected abstract void setFat1(String fat);
-
     protected abstract String getFat1();
 
-    protected abstract void setSnf1(String snf);
+    protected abstract void setFat1(String fat);
 
     protected abstract String getSnf1();
 
-    protected abstract void setWater1(String water);
+    protected abstract void setSnf1(String snf);
 
     protected abstract String getWater1();
 
-    protected abstract void setFat2(String fat);
+    protected abstract void setWater1(String water);
 
     protected abstract String getFat2();
 
-    protected abstract void setSnf2(String snf);
+    protected abstract void setFat2(String fat);
 
     protected abstract String getSnf2();
 
-    protected abstract void setWater2(String water);
+    protected abstract void setSnf2(String snf);
 
     protected abstract String getWater2();
 
-    protected abstract void setFat3(String fat);
+    protected abstract void setWater2(String water);
 
     protected abstract String getFat3();
 
-    protected abstract void setSnf3(String snf);
+    protected abstract void setFat3(String fat);
 
     protected abstract String getSnf3();
 
-    protected abstract void setWater3(String water);
+    protected abstract void setSnf3(String snf);
 
     protected abstract String getWater3();
 
-    protected abstract void setFat4(String fat);
+    protected abstract void setWater3(String water);
 
     protected abstract String getFat4();
 
-    protected abstract void setSnf4(String snf);
+    protected abstract void setFat4(String fat);
 
     protected abstract String getSnf4();
 
-    protected abstract void setWater4(String water);
+    protected abstract void setSnf4(String snf);
 
     protected abstract String getWater4();
+
+    protected abstract void setWater4(String water);
 
     protected abstract void bindFatForAuto();
 

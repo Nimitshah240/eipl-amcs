@@ -47,6 +47,7 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
     TextField txtSearch;
     private List<LedgerGroup> ledgerGroupList = new ArrayList<>();
     private ResourceBundle resourceBundle;
+
     public LedgerGroupController() {
         propLedgerGroup = new SimpleObjectProperty<>();
     }

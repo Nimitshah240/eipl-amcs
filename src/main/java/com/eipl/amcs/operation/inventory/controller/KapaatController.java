@@ -6,14 +6,11 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.operation.billing.model.MemberBillSummary;
-import com.eipl.amcs.operation.billing.task.MemberBillSummaryLoadTask;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.task.ProductSaleDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleLoadTask;
@@ -21,7 +18,6 @@ import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -35,7 +31,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +40,7 @@ import java.util.concurrent.ExecutionException;
 
 public class KapaatController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<ProductSale> propProductSaleDto;
     @FXML
     StackPane root;
     @FXML
@@ -61,26 +57,19 @@ public class KapaatController implements MyInitialization, PopupCallback {
     DatePicker dpFromDate, dpToDate;
     @FXML
     VBox vbox;
-
     @FXML
     Button btnClose, btnAdd, btnDelete, btnSearch;
-
     private Stage stage;
     private PopupCallback callback;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<ProductSale> propProductSaleDto;
-
-    public KapaatController() {
-        propProductSaleDto = new SimpleObjectProperty<>();
-    }
-
     private ProductSale productSale;
     private Member member;
     private List<SocietyPaymentCycle> paymentCycleList;
-    private List<ProductSaleInstallment> installmentList = new ArrayList<>();
+    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
     private ProductSaleDto dto;
+    public KapaatController() {
+        propProductSaleDto = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
@@ -92,11 +81,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         FocusUtils.requestFocus(btnAdd);
         propProductSaleDto.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnDelete.setDisable(false);
-            } else {
-                btnDelete.setDisable(true);
-            }
+            btnDelete.setDisable(newValue == null);
         });
         btnAdd.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "KapaatAddEdit", null, this);
@@ -145,7 +130,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
                     task.setOnSucceeded(e -> {
                         try {
                             Boolean respDelete = task.get();
-                            if (respDelete == null || respDelete.booleanValue() == false) {
+                            if (respDelete == null || !respDelete.booleanValue()) {
                                 MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), resourceBundle.getString("error.occurred"));
                                 alert1.createAlert();
                                 return;
@@ -167,7 +152,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
 //            colInvoiceNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getInvoiceNo()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getInvoiceDate().format(AppConstant.Formatter3)));
             colConsumerType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeString(data.getValue().getConsumerType())));
-            colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode().replace(MainApp.identityDto.getSociety().getCode(),"")));
+            colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode().replace(MainApp.identityDto.getSociety().getCode(), "")));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colNetPayable.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
 //            colNoOfInstallment.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getNoOfInstallments() == null ? 0 : data.getValue().getNoOfInstallments()));
@@ -182,7 +167,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadData() {
-      tableData.setItems(null);
+        tableData.setItems(null);
         ProductSaleLoadTask task = new ProductSaleLoadTask(dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {

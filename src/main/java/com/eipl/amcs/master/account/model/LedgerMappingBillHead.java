@@ -34,7 +34,7 @@ public class LedgerMappingBillHead extends BaseModelTxn {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_head_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_bill_head_bill_head_code"))
-    @JsonIgnoreProperties(value = { "society", "union"})
+    @JsonIgnoreProperties(value = {"society", "union"})
     private BillHead billHead;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +44,7 @@ public class LedgerMappingBillHead extends BaseModelTxn {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_criteria_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_bill_head_bill_criteria_code"))
-    @JsonIgnoreProperties(value = {"formulaCode","union","society"})
+    @JsonIgnoreProperties(value = {"formulaCode", "union", "society"})
     private BillCriteria billCriteria;
 
     private String unionCode;
@@ -54,7 +54,6 @@ public class LedgerMappingBillHead extends BaseModelTxn {
     public String getTableName() {
         return "ledger_mapping_bill_head";
     }
-
 
 
     @Override
@@ -88,7 +87,6 @@ public class LedgerMappingBillHead extends BaseModelTxn {
 
         return audit;
     }
-
 
 
 }

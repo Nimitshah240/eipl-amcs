@@ -5,11 +5,7 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

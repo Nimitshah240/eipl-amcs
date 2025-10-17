@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class DesignationServiceImpl implements DesignationService {
 
+    private static final Logger log = LoggerFactory.getLogger(DesignationServiceImpl.class);
     @Autowired
     private DesignationRepository designationRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(DesignationServiceImpl.class);
 
     @Override
     public List<Designation> findAll() {

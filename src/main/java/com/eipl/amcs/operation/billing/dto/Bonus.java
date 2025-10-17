@@ -5,12 +5,10 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.operation.billing.model.BonusSummary;
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class Bonus extends BaseModel {
 
@@ -26,7 +24,8 @@ public class Bonus extends BaseModel {
     private Society society;
     private Union union;
 
-    private BooleanProperty selected;
+    private final BooleanProperty selected;
+
     public Bonus() {
         selected = new SimpleBooleanProperty();
     }
@@ -38,6 +37,7 @@ public class Bonus extends BaseModel {
     public final boolean isSelected() {
         return this.selectedProperty().get();
     }
+
     public Society getSociety() {
         return society;
     }

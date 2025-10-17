@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SubscribedRepository extends JpaRepository<Subscribed, String>{
+public interface SubscribedRepository extends JpaRepository<Subscribed, String> {
 
 
     List<Subscribed> findTop10ByOrderByReceivedAt();

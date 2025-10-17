@@ -48,7 +48,7 @@ public class Member extends BaseModel {
     private BigDecimal creditLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
-     @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonSerialize(using = MilkTypeSerialize.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_members_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)

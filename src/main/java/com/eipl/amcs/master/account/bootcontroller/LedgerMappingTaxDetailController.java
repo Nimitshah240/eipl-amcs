@@ -17,29 +17,28 @@ import java.util.Map;
 @RequestMapping("/ledger-mapping-tax-detail")
 public class LedgerMappingTaxDetailController {
 
-	@Autowired
-	private LedgerMappingTaxDetailService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerMappingTaxDetailController.class);
+    @Autowired
+    private LedgerMappingTaxDetailService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LedgerMappingTaxDetailController.class);
+    @GetMapping
+    public ResponseEntity<List<LedgerMappingTaxDetail>> index() {
+        try {
+            List<LedgerMappingTaxDetail> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.OK);
 
-	@GetMapping
-	public ResponseEntity<List<LedgerMappingTaxDetail>> index() {
-		try {
-			List<LedgerMappingTaxDetail> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.OK);
-			
-			return new ResponseEntity<List<LedgerMappingTaxDetail>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<LedgerMappingTaxDetail>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
-	@PostMapping
-	public ResponseEntity<String> createLedgerType(@RequestHeader Map<String, String> headers, @RequestBody List<LedgerMappingTaxDetail> dto) {
-		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @PostMapping
+    public ResponseEntity<String> createLedgerType(@RequestHeader Map<String, String> headers, @RequestBody List<LedgerMappingTaxDetail> dto) {
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
 }

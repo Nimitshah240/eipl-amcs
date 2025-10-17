@@ -6,9 +6,9 @@ import com.eipl.amcs.config.EmcsAppContext;
 import javafx.concurrent.Task;
 
 public class IdentityTask extends Task<IdentityDto> {
-    private String dockNumber;
-    private String societyCode;
-    private String unionCode;
+    private final String dockNumber;
+    private final String societyCode;
+    private final String unionCode;
 
     public IdentityTask(String dockNumber, String societyCode, String unionCode) {
         this.dockNumber = dockNumber;

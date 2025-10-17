@@ -18,61 +18,59 @@ import java.util.Map;
 @RequestMapping("/ledger-types")
 public class LedgerTypeController {
 
-	@Autowired
-	private LedgerTypeService service;
-	@Autowired
-	private NextCodeService nextCodeService;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(LedgerTypeController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LedgerTypeController.class);
+    @Autowired
+    private LedgerTypeService service;
+    @Autowired
+    private NextCodeService nextCodeService;
 
-	@GetMapping
-	public ResponseEntity<List<LedgerType>> index() {
-		try {
-			List<LedgerType> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<LedgerType>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<LedgerType>> index() {
+        try {
+            List<LedgerType> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
+            return new ResponseEntity<List<LedgerType>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
-	@GetMapping("/next-code")
-	public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
-		try {
-			LOGGER.info("Next Ledger Type no for Society: {}", societyCode);
-			String code = nextCodeService.getNextCode("LedgerType", "code", societyCode, 0);
-			if (code == null || code.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    @GetMapping("/next-code")
+    public ResponseEntity<String> nextCode(@RequestParam(name = "society", required = true) String societyCode) {
+        try {
+            LOGGER.info("Next Ledger Type no for Society: {}", societyCode);
+            String code = nextCodeService.getNextCode("LedgerType", "code", societyCode, 0);
+            if (code == null || code.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-			return new ResponseEntity<>(code, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<>(code, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@PostMapping
-	public ResponseEntity<LedgerType> createLedgerType(@RequestHeader Map<String, String> headers, @RequestBody LedgerType dto) {
-		return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<LedgerType> createLedgerType(@RequestHeader Map<String, String> headers, @RequestBody LedgerType dto) {
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
 
-	}
+    }
 
-	@PutMapping
-	public ResponseEntity<LedgerType> updateLedgerType(@RequestHeader Map<String, String> headers, @RequestBody LedgerType dto) {
-		return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    @PutMapping
+    public ResponseEntity<LedgerType> updateLedgerType(@RequestHeader Map<String, String> headers, @RequestBody LedgerType dto) {
+        return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
 
-	}
+    }
 
-	@DeleteMapping("/{code}")
-	public ResponseEntity<?> deleteLedgerType(@RequestHeader Map<String, String> headers,
-										   @PathVariable("code") Integer code) {
-		service.delete(code, CommonUtil.getIdentityHeader(headers));
-		return new ResponseEntity<>(null, HttpStatus.OK);
-	}
+    @DeleteMapping("/{code}")
+    public ResponseEntity<?> deleteLedgerType(@RequestHeader Map<String, String> headers,
+                                              @PathVariable("code") Integer code) {
+        service.delete(code, CommonUtil.getIdentityHeader(headers));
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
 }

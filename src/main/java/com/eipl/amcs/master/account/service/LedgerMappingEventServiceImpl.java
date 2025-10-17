@@ -15,11 +15,9 @@ import java.util.Optional;
 @Service
 public class LedgerMappingEventServiceImpl implements LedgerMappingEventService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerMappingEventServiceImpl.class);
     @Autowired
     private LedgerMappingEventRepository ledgerMappingEventRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerMappingEventServiceImpl.class);
-
 
     @Override
     public List<LedgerMappingEvent> findAll() {

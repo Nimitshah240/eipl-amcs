@@ -91,7 +91,6 @@ public class ProductRequisitionTransaction extends BaseModelTxn {
         audit.setSocietyCode(this.getSocietyCode());
 
 
-
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());

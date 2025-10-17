@@ -1,22 +1,13 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class MilkReceiptTransactionLoadTask extends Task<List<MilkReceiptTransaction>> {
 
@@ -31,9 +22,9 @@ public class MilkReceiptTransactionLoadTask extends Task<List<MilkReceiptTransac
     @Override
     protected List<MilkReceiptTransaction> call() throws Exception {
         try {
-            MilkReceiptService service=EmcsAppContext.getContext().getBean(MilkReceiptService.class);
-            List<MilkReceiptTransaction>list=(service.findDetailByChallanNo(challanNo));
-            if (list==null||list.isEmpty())return null;
+            MilkReceiptService service = EmcsAppContext.getContext().getBean(MilkReceiptService.class);
+            List<MilkReceiptTransaction> list = (service.findDetailByChallanNo(challanNo));
+            if (list == null || list.isEmpty()) return null;
             return list;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

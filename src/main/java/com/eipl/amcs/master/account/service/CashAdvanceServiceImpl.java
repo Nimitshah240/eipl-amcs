@@ -28,6 +28,7 @@ import java.util.Optional;
 @Service
 public class CashAdvanceServiceImpl implements CashAdvanceService {
 
+    private static final Logger log = LoggerFactory.getLogger(CashAdvanceServiceImpl.class);
     @Autowired
     private CashAdvanceRepository cashAdvanceRepository;
     @Autowired
@@ -48,9 +49,6 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
     private VoucherTransactionRepository voucherTxnRepository;
     @Autowired
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(CashAdvanceServiceImpl.class);
-
 
     @Override
     public List<CashAdvance> findAll() {

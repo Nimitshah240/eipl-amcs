@@ -12,8 +12,6 @@ import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.setting.dto.MilkCollectionMigration;
-import com.eipl.amcs.setting.task.EMandaliMilkCollectionDbProcess;
-import com.eipl.amcs.setting.task.EMandaliMilkCollectionDbSaveTask;
 import com.eipl.amcs.setting.task.PromptSqlMilkCollectionDbProcess;
 import com.eipl.amcs.setting.task.PromptSqlMilkCollectionDbSaveTask;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,33 +37,28 @@ public class MilkCollectionDataMigrationPromptController implements MyInitializa
     TableView<MilkCollectionMigration> tableData;
     @FXML
     TableColumn<MilkCollectionMigration, String> colMonth, colCount;
+    String milkTypeStr = null;
+    List<MilkCollection> list = new ArrayList<>();
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     @FXML
-    private TextField  txtCow, txtBuffalo,txtdatabase;
+    private TextField txtCow, txtBuffalo, txtdatabase;
     @FXML
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private Button btnSave, btnClose, btnGenerate;
     @FXML
     private Label lblStatus;
-
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private String selectedFilePath;
-
-
     private List<Member> memberList;
-    String milkTypeStr = null;
+    private Stage stage;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    List<MilkCollection> list = new ArrayList<>();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-
-    private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -104,7 +97,7 @@ public class MilkCollectionDataMigrationPromptController implements MyInitializa
 
     private void startAccessDbProcess() {
         lblStatus.setText("Preparing data...");
-        var task = new PromptSqlMilkCollectionDbProcess(selectedFilePath,txtdatabase.getText(), dpFromDate.getValue(), dpToDate.getValue());
+        var task = new PromptSqlMilkCollectionDbProcess(selectedFilePath, txtdatabase.getText(), dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 lblStatus.setText("");
@@ -150,7 +143,7 @@ public class MilkCollectionDataMigrationPromptController implements MyInitializa
 
     private void startImportProcess() {
         var task = new PromptSqlMilkCollectionDbSaveTask(milkTypeList, shiftList,
-                txtCow.getText(), txtBuffalo.getText(),txtdatabase.getText(),dpFromDate.getValue(), dpToDate.getValue());
+                txtCow.getText(), txtBuffalo.getText(), txtdatabase.getText(), dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 Boolean res = task.get();

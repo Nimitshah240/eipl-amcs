@@ -21,12 +21,11 @@ import java.util.Map;
 @RequestMapping("/share_dividend")
 
 public class ShareDividendController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocalMilkSaleController.class);
     @Autowired
     private ShareDividendService service;
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocalMilkSaleController.class);
 
     @GetMapping
     public ResponseEntity<List<ShareDividend>> findAll() {
@@ -72,6 +71,7 @@ public class ShareDividendController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/all")
     public ResponseEntity<?> deleteAllShare(@RequestParam(name = "fromDate") String fromDate,
                                             @RequestParam(name = "toDate") String toDate) {
@@ -86,6 +86,7 @@ public class ShareDividendController {
         }
 
     }
+
     @GetMapping("/next-code")
     public ResponseEntity<String> nextCode(@RequestParam String code) {
         try {

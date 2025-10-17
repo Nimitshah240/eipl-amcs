@@ -1,13 +1,12 @@
 package com.eipl.amcs.operation.procurement.dto;
 
 import com.eipl.amcs.master.operation.model.Member;
-import lombok.AllArgsConstructor;
+import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import java.util.List;
 
 @NoArgsConstructor

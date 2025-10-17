@@ -21,24 +21,25 @@ import java.util.Optional;
 @RequestMapping("/product-dispatch")
 public class ProductDispatchController {
 
-	@Autowired
-	private ProductDispatchService service;
+    @Autowired
+    private ProductDispatchService service;
 
-//	@GetMapping
+    //	@GetMapping
 //	List<ProductDispatch> findAll() {
 //		return service.findAll();
 //	}
     @GetMapping
     public ResponseEntity<List<ProductDispatchTransaction>> index(@RequestParam(name = "fromDate") String fromDate,
-                                                          @RequestParam(name = "toDate") String toDate) {
+                                                                  @RequestParam(name = "toDate") String toDate) {
         LocalDate fromDt = LocalDate.parse(fromDate);
         LocalDate toDt = LocalDate.parse(toDate);
         return new ResponseEntity<List<ProductDispatchTransaction>>(service.findByDispatchDate(fromDt, toDt), HttpStatus.OK);
     }
-	@GetMapping("/{challanNo}")
-	Optional<ProductDispatch> findByID(@PathVariable String challanNo ) {
-		return service.findById(challanNo);
-	}
+
+    @GetMapping("/{challanNo}")
+    Optional<ProductDispatch> findByID(@PathVariable String challanNo) {
+        return service.findById(challanNo);
+    }
 
 //		@PutMapping("/{challanNo}")
 //	ProductDispatch update(@PathVariable String challanNo,@RequestBody ProductDispatch productDispatch){
@@ -70,9 +71,9 @@ public class ProductDispatchController {
         return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
     }
 
-	@DeleteMapping("/{challanNo}")
-	void  delete(@PathVariable String challanNo){
-		service.delete(challanNo);
-	}
+    @DeleteMapping("/{challanNo}")
+    void delete(@PathVariable String challanNo) {
+        service.delete(challanNo);
+    }
 
 }

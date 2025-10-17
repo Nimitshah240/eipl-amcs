@@ -7,10 +7,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.TextField;
 
 public class E_NumericField extends TextField {
-    private IntegerProperty maxLength;
-    private BooleanProperty real;
     private final String PATTERN_INT = "[0-9]*";
     private final String PATTERN_REAL = "[0-9]+(\\.[0-9]{0,3})?";
+    private final IntegerProperty maxLength;
+    private final BooleanProperty real;
 
     public E_NumericField() {
         this.maxLength = new SimpleIntegerProperty(Integer.MAX_VALUE);

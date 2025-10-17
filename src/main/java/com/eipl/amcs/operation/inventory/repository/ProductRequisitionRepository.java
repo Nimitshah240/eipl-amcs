@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ProductRequisitionRepository extends BaseRepository<ProductRequisition, String> {
 
-    @EntityGraph(attributePaths = {"society" })
+    @EntityGraph(attributePaths = {"society"})
     List<ProductRequisition> findByRequisitionDateBetween(LocalDateTime fromDate, LocalDateTime toDate);
 
 

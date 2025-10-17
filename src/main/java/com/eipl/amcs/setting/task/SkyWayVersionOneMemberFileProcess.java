@@ -8,12 +8,9 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.utils.CommonUtils;
-import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -22,18 +19,18 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class SkyWayVersionOneMemberFileProcess extends Task<List<MemberDto>> {
-    private Map<String, MilkType> milkTypeMap;
-    private Map<String, Gender> genderMap;
-    private MemberType memberType;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
+    private final Map<String, MilkType> milkTypeMap;
+    private final Map<String, Gender> genderMap;
+    private final MemberType memberType;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public SkyWayVersionOneMemberFileProcess(Map<String, MilkType> milkTypeMap, Map<String, Gender> genderMap,
                                              MemberType memberType, String filePath, String cowRange, String buffRange) {
         this.milkTypeMap = milkTypeMap;
         this.genderMap = genderMap;
-        this.memberType= memberType;
+        this.memberType = memberType;
         this.filePath = filePath;
         this.cowRange = cowRange;
         this.buffRange = buffRange;
@@ -50,7 +47,7 @@ public class SkyWayVersionOneMemberFileProcess extends Task<List<MemberDto>> {
             int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
 
-            try(Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
+            try (Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
                 lines.forEach(line -> {
                     String[] arr = line.split(",");
 
@@ -64,7 +61,7 @@ public class SkyWayVersionOneMemberFileProcess extends Task<List<MemberDto>> {
 //                    m.setMiddleName(nameArr.length > 2 ? nameArr[2] : "");
 
 
-                    m.setFirstName(arr[17]!=null?arr[17]:"Member");
+                    m.setFirstName(arr[17] != null ? arr[17] : "Member");
                     m.setLastName(".");
 //                    String[] nameLocalArr = arr[1].trim().replace("'", "").split("\\s+");
                     m.setFirstNameLocal(arr[1]);
@@ -89,11 +86,11 @@ public class SkyWayVersionOneMemberFileProcess extends Task<List<MemberDto>> {
                     md.setNumberOfCow((short) 0);
                     md.setNumberOfBuffalo((short) 0);
                     md.setMember(m);
-                    md.setAccountNo(arr.length > 18 ? arr[18].trim().replace("'", ""): null);
-                    if(md.getAccountNo()==null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
-                        md.setPaymentMode((short)0);
-                    else{
-                        md.setPaymentMode((short)1);
+                    md.setAccountNo(arr.length > 18 ? arr[18].trim().replace("'", "") : null);
+                    if (md.getAccountNo() == null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
+                        md.setPaymentMode((short) 0);
+                    else {
+                        md.setPaymentMode((short) 1);
                     }
                     list.add(new MemberDto(m, md));
 

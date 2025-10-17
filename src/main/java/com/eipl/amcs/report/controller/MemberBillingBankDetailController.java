@@ -34,6 +34,7 @@ public class MemberBillingBankDetailController implements MyInitialization {
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
 
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -54,8 +55,6 @@ public class MemberBillingBankDetailController implements MyInitialization {
         cboxSocietyPaymentCycleCode.setConverter(new SocietyPaymentCycleConvertor(cboxSocietyPaymentCycleCode));
         cboxSocietyPaymentCycleCode.getSelectionModel().select(0);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();

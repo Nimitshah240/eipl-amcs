@@ -1,22 +1,14 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
 import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SocietyRateBasedLoadTask extends Task<List<SocietyMilkPurchaseRateBased>> {
-    private String code;
+    private final String code;
 
     public SocietyRateBasedLoadTask(String code) {
         this.code = code;
@@ -26,10 +18,10 @@ public class SocietyRateBasedLoadTask extends Task<List<SocietyMilkPurchaseRateB
     protected List<SocietyMilkPurchaseRateBased> call() throws Exception {
         try {
 
-            SocietyMilkPurchaseRateService service=EmcsAppContext.getContext().getBean(SocietyMilkPurchaseRateService.class);;
-            List<SocietyMilkPurchaseRateBased>list=(service.fetchRateBased(code));
+            SocietyMilkPurchaseRateService service = EmcsAppContext.getContext().getBean(SocietyMilkPurchaseRateService.class);
+            List<SocietyMilkPurchaseRateBased> list = (service.fetchRateBased(code));
 
-            if (list==null||list.isEmpty())return null;
+            if (list == null || list.isEmpty()) return null;
             return list;
 
 //

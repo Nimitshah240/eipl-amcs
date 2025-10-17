@@ -41,15 +41,15 @@ public class ShareRateController implements MyInitialization, PopupCallback {
     Button btnClose, btnAdd, btnDelete;
 
     private ResourceBundle resourceBundle;
-    private ObjectProperty<ShareRate> propLocalMilkSaleRate;
+    private final ObjectProperty<ShareRate> propLocalMilkSaleRate;
+
+    public ShareRateController() {
+        propLocalMilkSaleRate = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public ShareRateController() {
-        propLocalMilkSaleRate = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ShareRateController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksalerate"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

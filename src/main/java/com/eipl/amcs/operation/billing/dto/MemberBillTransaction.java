@@ -2,7 +2,6 @@ package com.eipl.amcs.operation.billing.dto;
 
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.operation.billing.model.MemberBill;
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 
 import java.math.BigDecimal;
 

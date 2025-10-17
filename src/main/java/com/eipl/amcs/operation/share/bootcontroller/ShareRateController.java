@@ -21,13 +21,11 @@ import java.util.Optional;
 @RequestMapping("/share_rate")
 
 public class ShareRateController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShareRateController.class);
     @Autowired
     private ShareRateService service;
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShareRateController.class);
-
 
     @GetMapping
     public ResponseEntity<List<ShareRate>> findAll() {

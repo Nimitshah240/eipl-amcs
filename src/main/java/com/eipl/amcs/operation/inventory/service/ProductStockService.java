@@ -6,18 +6,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductStockService {
-	 List<ProductStock> findAll();
+    List<ProductStock> findAll();
 
 
-		ProductStock save(ProductStock productStock);
-		ProductStock update(ProductStock productStock);
-		
+    ProductStock save(ProductStock productStock);
 
-		Optional<ProductStock> findById(String code);
-		
-		void delete(String code);
+    ProductStock update(ProductStock productStock);
 
-		ProductStock findByProduct(String code);
-		void delete(ProductStock productStock);
+
+    Optional<ProductStock> findById(String code);
+
+    void delete(String code);
+
+    ProductStock findByProduct(String code);
+
+    void delete(ProductStock productStock);
 
 }

@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MilkReceiptSummaryTask extends Task<List<MilkReceiptSummaryDto>> {
-    private LocalDateTime fromDate;
-    private LocalDateTime toDate;
+    private final LocalDateTime fromDate;
+    private final LocalDateTime toDate;
 
     public MilkReceiptSummaryTask(LocalDateTime fromDate, LocalDateTime toDate) {
         this.fromDate = fromDate;

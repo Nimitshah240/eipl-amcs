@@ -2,9 +2,9 @@ package com.eipl.amcs.operation.inventory.dto;
 
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
-import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.operation.inventory.model.ProductRequisition;
+import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

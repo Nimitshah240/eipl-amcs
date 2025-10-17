@@ -3,9 +3,9 @@ package com.eipl.amcs.operation.procurement.dto;
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 
 public class MilkReceiptTransaction extends BaseModel {
 
@@ -47,7 +47,6 @@ public class MilkReceiptTransaction extends BaseModel {
     public void setTxnCode(String txnCode) {
         this.txnCode = txnCode;
     }
-
 
 
     public BigDecimal getAcidity() {

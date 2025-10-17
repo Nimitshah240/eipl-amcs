@@ -2,11 +2,11 @@ package com.eipl.amcs.operation.inventory.dto;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 
 public class ProductRequisitionTransaction extends BaseModel {
     private String code;

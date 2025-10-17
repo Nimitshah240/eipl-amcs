@@ -20,15 +20,13 @@ import java.util.Map;
 @RequestMapping("/identity_details")
 public class IdentityDetailsController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityDetailsController.class);
     @Autowired
     private IdentityDetailsService service;
-
     @Autowired
     private NextCodeService nextCodeService;
     @Autowired
     private BroadcastedService broadcastedService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityDetailsController.class);
 
     @GetMapping
     public ResponseEntity<List<Identity>> index(@RequestParam(name = "society", required = false) String societyCode) {

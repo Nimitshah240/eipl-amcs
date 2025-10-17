@@ -20,6 +20,11 @@ public class ProductSale extends BaseModel {
     private Short paymentMode;
     private Short consumerType;
     private Short transactionType;
+    private String voucherNo;
+    private String consumerCode;
+    private Dock dock;
+    private Union union;
+    private Society society;
 
     public String getInvoiceNo() {
         return invoiceNo;
@@ -148,10 +153,4 @@ public class ProductSale extends BaseModel {
     public void setSociety(Society society) {
         this.society = society;
     }
-
-    private String voucherNo;
-    private String consumerCode;
-    private Dock dock;
-    private Union union;
-    private Society society;
 }

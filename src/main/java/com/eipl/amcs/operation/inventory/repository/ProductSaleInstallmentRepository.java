@@ -15,29 +15,29 @@ import java.util.Optional;
 @Repository
 public interface ProductSaleInstallmentRepository extends BaseRepository<ProductSaleInstallment, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "societyPaymentCycle", "member" })
-	Optional<ProductSaleInstallment> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
+    Optional<ProductSaleInstallment> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "societyPaymentCycle", "member" })
-	List<ProductSaleInstallment> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
+    List<ProductSaleInstallment> findAll(Sort sort);
 
-	@Query("SELECT psm FROM ProductSaleInstallment psm WHERE psm.invoiceNo = ?1 AND psm.billing = ?2")
-	List<ProductSaleInstallment> fetchInstallmentIsBilled(String str, boolean b);
+    @Query("SELECT psm FROM ProductSaleInstallment psm WHERE psm.invoiceNo = ?1 AND psm.billing = ?2")
+    List<ProductSaleInstallment> fetchInstallmentIsBilled(String str, boolean b);
 
-	@EntityGraph(attributePaths = { "societyPaymentCycle", "member" })
-	List<ProductSaleInstallment> findByMemberAndBillingFalse(Member member);
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
+    List<ProductSaleInstallment> findByMemberAndBillingFalse(Member member);
 
-	@EntityGraph(attributePaths = { "societyPaymentCycle", "member" })
-	List<ProductSaleInstallment> findByMemberAndBillingFalseAndType(Member member,Integer type);
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
+    List<ProductSaleInstallment> findByMemberAndBillingFalseAndType(Member member, Integer type);
 
-	void deleteByInvoiceNo(String invoiceNo);
+    void deleteByInvoiceNo(String invoiceNo);
 
-	@EntityGraph(attributePaths = { "societyPaymentCycle", "member" })
-	List<ProductSaleInstallment> findByInvoiceNo(String invoiceNo);
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
+    List<ProductSaleInstallment> findByInvoiceNo(String invoiceNo);
 
-	@EntityGraph(attributePaths = {"member"})
-	List<ProductSaleInstallment> findBySocietyPaymentCycle(SocietyPaymentCycle spc);
+    @EntityGraph(attributePaths = {"member"})
+    List<ProductSaleInstallment> findBySocietyPaymentCycle(SocietyPaymentCycle spc);
 
 }

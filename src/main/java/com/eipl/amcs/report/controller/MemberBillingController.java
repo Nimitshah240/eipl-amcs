@@ -33,19 +33,19 @@ import java.util.concurrent.ExecutionException;
 public class MemberBillingController implements MyInitialization {
 
     @FXML
+    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
+    @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate,btnSummary;
+    private Button btnGenerate, btnSummary;
     @FXML
-    private DatePicker dpToDate, dpFromDate,dpToDateSummary, dpFromDateSummary;
+    private DatePicker dpToDate, dpFromDate, dpToDateSummary, dpFromDateSummary;
     @FXML
-    private ComboBox<Member> cboxMemberCode,cboxMemberCodeSummary;
+    private ComboBox<Member> cboxMemberCode, cboxMemberCodeSummary;
     @FXML
     private ComboBox<String> cboxType;
-    @FXML
-    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
-
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -61,14 +61,14 @@ public class MemberBillingController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -76,14 +76,14 @@ public class MemberBillingController implements MyInitialization {
         dpFromDateSummary.setValue(LocalDate.now());
         dpFromDateSummary.setConverter(new LocalDateConvertor());
         dpFromDateSummary.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDateSummary.setValue(dpFromDateSummary.getConverter().fromString(dpFromDateSummary.getEditor().getText()));
             }
         });
         dpToDateSummary.setValue(LocalDate.now());
         dpToDateSummary.setConverter(new LocalDateConvertor());
         dpToDateSummary.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDateSummary.setValue(dpToDateSummary.getConverter().fromString(dpToDateSummary.getEditor().getText()));
             }
         });
@@ -106,13 +106,11 @@ public class MemberBillingController implements MyInitialization {
         cboxType.getSelectionModel().select(0);
     }
 
-    private StringBuilder errorMsg;
-
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
-        params.put("p_from_date",dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_report_type", cboxType.getSelectionModel().getSelectedIndex() + 1);
         params.put("p_locale", MainApp.locale);
@@ -137,8 +135,8 @@ public class MemberBillingController implements MyInitialization {
         params.put("p_member_code", cboxMemberCodeSummary.getValue().getCode());
         params.put("from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "- M" : "- E"));
         params.put("to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "- M" : "- E"));
-        params.put("p_from_date", dpFromDateSummary.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
-        params.put("p_to_date", dpToDateSummary.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
+        params.put("p_from_date", dpFromDateSummary.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_date", dpToDateSummary.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SUMMARY_2, params);
         JasperViewer.viewReport(print, false);

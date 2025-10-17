@@ -17,20 +17,20 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-public class SentBoxAcknowledgementTask extends Task<Map<String,Object>> {
+public class SentBoxAcknowledgementTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxAcknowledgementTask.class);
 
-    private String uuid;
+    private final String uuid;
 
     public SentBoxAcknowledgementTask(String uuid) {
         this.uuid = uuid;
     }
 
     @Override
-    protected Map<String,Object> call() throws Exception {
+    protected Map<String, Object> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url =  MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_ACK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_ACK;
 
             IdentityPayloadForAcknowledgement payload = new IdentityPayloadForAcknowledgement(uuid);
             RealTimeRequest<IdentityPayloadForAcknowledgement> requestPayload = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payload);
@@ -40,7 +40,7 @@ public class SentBoxAcknowledgementTask extends Task<Map<String,Object>> {
                 return null;
 
             RealTimeResponse respBody = response.getBody();
-            if(!"success".equalsIgnoreCase(respBody.getStatus()))
+            if (!"success".equalsIgnoreCase(respBody.getStatus()))
                 return null;
 
             return response.getBody().getData();

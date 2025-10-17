@@ -1,11 +1,10 @@
 package com.eipl.amcs.operation.inventory.dto;
 
-import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
 
 public class ProductSaleTransaction extends BaseModelTxn {
 
@@ -14,15 +13,6 @@ public class ProductSaleTransaction extends BaseModelTxn {
     private BigDecimal discount;
     private Integer quantity;
     private BigDecimal rate;
-
-    public BigDecimal getNetAmount() {
-        return netAmount;
-    }
-
-    public void setNetAmount(BigDecimal netAmount) {
-        this.netAmount = netAmount;
-    }
-
     private BigDecimal taxAmount;
     private BigDecimal netAmount;
     private Boolean isLooseSale;
@@ -33,6 +23,13 @@ public class ProductSaleTransaction extends BaseModelTxn {
     private ProductSale productSaleToMember;
     private Product product;
 
+    public BigDecimal getNetAmount() {
+        return netAmount;
+    }
+
+    public void setNetAmount(BigDecimal netAmount) {
+        this.netAmount = netAmount;
+    }
 
     public String getInvoiceTxnNo() {
         return invoiceTxnNo;

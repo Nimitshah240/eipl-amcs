@@ -1,29 +1,18 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
 import com.eipl.amcs.operation.procurement.repository.AllowDcsManualCollectionRangeRepository;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-
-import static com.eipl.amcs.utils.AppConstant.DATE_TIME_FMT;
 
 public class AllowDcsManualCollectionDateShiftLoadTask extends Task<List<AllowDcsManualCollectionRange>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AllowDcsManualCollectionDateShiftLoadTask.class);
@@ -42,7 +31,7 @@ public class AllowDcsManualCollectionDateShiftLoadTask extends Task<List<AllowDc
     @Override
     protected List<AllowDcsManualCollectionRange> call() throws Exception {
         try {
-            AllowDcsManualCollectionRangeRepository repository=EmcsAppContext.getContext().getBean(AllowDcsManualCollectionRangeRepository.class);
+            AllowDcsManualCollectionRangeRepository repository = EmcsAppContext.getContext().getBean(AllowDcsManualCollectionRangeRepository.class);
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ALLOWDCSMANUALCOLLECTIONRANGE + "/findByDateShift";
 //            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)

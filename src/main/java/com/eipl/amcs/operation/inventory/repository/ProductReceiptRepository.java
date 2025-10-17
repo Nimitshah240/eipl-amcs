@@ -14,17 +14,17 @@ import java.util.Optional;
 @Repository
 public interface ProductReceiptRepository extends BaseRepository<ProductReceipt, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "customer", "union", "society" })
-	Optional<ProductReceipt> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"customer", "union", "society"})
+    Optional<ProductReceipt> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "customer", "union", "society" })
-	List<ProductReceipt> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"customer", "union", "society"})
+    List<ProductReceipt> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "customer", "union", "society" })
-	List<ProductReceipt> findByGrnDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
+    @EntityGraph(attributePaths = {"customer", "union", "society"})
+    List<ProductReceipt> findByGrnDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
 
-	@Query(value = "SELECT count(*) FROM ProductReceipt prm WHERE prm.grnNo != ?1 AND  prm.challanNo = ?2")
-	ProductReceipt checkChallanNo(String str1, String str2);
+    @Query(value = "SELECT count(*) FROM ProductReceipt prm WHERE prm.grnNo != ?1 AND  prm.challanNo = ?2")
+    ProductReceipt checkChallanNo(String str1, String str2);
 }

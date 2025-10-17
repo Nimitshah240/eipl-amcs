@@ -14,8 +14,6 @@ import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.setting.dto.MilkCollectionMigration;
 import com.eipl.amcs.setting.task.FriendsMilkCollectionDbProcess;
 import com.eipl.amcs.setting.task.FriendsMilkCollectionDbSaveTask;
-import com.eipl.amcs.setting.task.PromptMilkCollectionDbProcess;
-import com.eipl.amcs.setting.task.PromptMilkCollectionDbSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -41,6 +39,9 @@ public class MilkCollectionDataMigrationFriendsController implements MyInitializ
     TableView<MilkCollectionMigration> tableData;
     @FXML
     TableColumn<MilkCollectionMigration, String> colMonth, colCount;
+    String milkTypeStr = null;
+    List<MilkCollection> list = new ArrayList<>();
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     @FXML
     private TextField txtFilePath, txtCow, txtBuffalo;
     @FXML
@@ -49,25 +50,17 @@ public class MilkCollectionDataMigrationFriendsController implements MyInitializ
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private Label lblStatus;
-
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private String selectedFilePath;
-
-
     private List<Member> memberList;
-    String milkTypeStr = null;
+    private Stage stage;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    List<MilkCollection> list = new ArrayList<>();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-
-    private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;

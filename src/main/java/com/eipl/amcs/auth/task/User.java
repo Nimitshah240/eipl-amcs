@@ -21,7 +21,7 @@ public class User {
     }
 
     public Set<String> getPermissions() {
-        if(permissions == null)
+        if (permissions == null)
             permissions = new HashSet<>();
         return permissions;
     }

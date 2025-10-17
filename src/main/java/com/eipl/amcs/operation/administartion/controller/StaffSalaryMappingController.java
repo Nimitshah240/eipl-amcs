@@ -50,20 +50,15 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     Button btnClose, btnSave;
     @FXML
     DatePicker dpDate;
-
-    private List<StaffMember> listStaffMembers;
-    private StaffSalaryMapping dto;
-
-    private List<StaffSalaryHead> listStaffSalaryHead;
-    private List<StaffSalaryMapping> staffSalaryMappingList;
-
-    @FXML
-    private GridPane gridMaster;
-
-    private StringBuilder errorMsg = null;
-
     @FXML
     ComboBox<StaffMember> cboxStaff;
+    private List<StaffMember> listStaffMembers;
+    private StaffSalaryMapping dto;
+    private List<StaffSalaryHead> listStaffSalaryHead;
+    private List<StaffSalaryMapping> staffSalaryMappingList;
+    @FXML
+    private GridPane gridMaster;
+    private final StringBuilder errorMsg = null;
     private ResourceBundle resourceBundle;
 
 

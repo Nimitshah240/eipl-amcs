@@ -13,10 +13,9 @@ import java.util.List;
 @Service
 public class RouteServiceImpl implements RouteService {
 
+    private static final Logger log = LoggerFactory.getLogger(RouteServiceImpl.class);
     @Autowired
     private RouteRepository routeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(RouteServiceImpl.class);
 
     @Override
     public List<Route> findAll() {

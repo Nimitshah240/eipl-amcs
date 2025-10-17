@@ -30,7 +30,6 @@ public class MilkReceiptSaveTask extends Task<Object> {
             } else {
                 dtoResult = service.update(dto, CommonUtil.setIdentityHeader());
             }
-            if(dtoResult == null) return null;
             return dtoResult;
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT+"/a";

@@ -12,10 +12,9 @@ import java.util.List;
 @Service
 public class MilkTypeServiceImpl implements MilkTypeService {
 
+    private static final Logger log = LoggerFactory.getLogger(MilkTypeServiceImpl.class);
     @Autowired
     private MilkTypeRepository milkTypeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(MilkTypeServiceImpl.class);
 
     @Override
     public List<MilkType> findAll() {

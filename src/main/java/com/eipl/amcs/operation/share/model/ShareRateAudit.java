@@ -32,6 +32,7 @@ public class ShareRateAudit extends BaseModelTxnAudit {
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_share_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "route", "bmc", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
+
     @Override
     public String getTableName() {
         return "share_rate_audit";

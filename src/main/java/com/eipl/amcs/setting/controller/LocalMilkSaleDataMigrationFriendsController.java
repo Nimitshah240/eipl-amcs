@@ -4,7 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -12,16 +11,16 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkClassLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.operation.dto.*;
+import com.eipl.amcs.master.operation.model.Customer;
+import com.eipl.amcs.master.operation.model.CustomerDetails;
+import com.eipl.amcs.master.operation.model.CustomerDto;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerSaveTask;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleMigrationListSaveTask;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -30,16 +29,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.model.CustomerDetails;
-import com.eipl.amcs.master.operation.model.CustomerDto;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -59,18 +50,18 @@ public class LocalMilkSaleDataMigrationFriendsController implements MyInitializa
     TableColumn<LocalMilkSale, Number> colQty, colRate, colAmount;
     @FXML
     TableColumn<LocalMilkSale, LocalDate> colSaleDate;
-    private ResourceBundle resourceBundle;
     @FXML
     TextField txtFilePath;
     @FXML
     Button btnSave, btnClose, btnBrowse, btnGenerate;
-
-    private String selectedFilePath = null;
+    String milkTypeStr = null;
+    List<LocalMilkSale> list = new ArrayList<>();
+    private ResourceBundle resourceBundle;
+    private final String selectedFilePath = null;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<MilkClass> classList;
     private List<Customer> customerList;
-    String milkTypeStr = null;
     private Stage stage;
 
     public void setStage(Stage stage) {
@@ -81,8 +72,6 @@ public class LocalMilkSaleDataMigrationFriendsController implements MyInitializa
     public Node getRoot() {
         return root;
     }
-
-    List<LocalMilkSale> list = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

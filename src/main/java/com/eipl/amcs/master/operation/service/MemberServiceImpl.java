@@ -344,7 +344,7 @@ public class MemberServiceImpl implements MemberService {
             dto.setCurrentPaymentCycleData(currentPaymentCycleData);
         }
         dto.setMember(member);
-        dto.setMemberCollection(collections.stream().filter(p -> p.getCollectionDate().compareTo(date) == 0)
+        dto.setMemberCollection(collections.stream().filter(p -> p.getCollectionDate().isEqual(date))
                 .collect(Collectors.toList()));
         dto.setPrevCollectionData(collections);
         return dto;

@@ -5,7 +5,6 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.operation.procurement.model.BmcRecording;
 import com.eipl.amcs.operation.procurement.task.BmcRecordingParameterDeleteTask;
@@ -35,6 +34,7 @@ import java.util.concurrent.ExecutionException;
 
 public class BmcRecordingParameterController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<BmcRecording> propRunningPara;
     @FXML
     StackPane root;
     @FXML
@@ -45,31 +45,24 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
     TableColumn<BmcRecording, LocalDateTime> colDate, colTime;
     @FXML
     TableColumn<BmcRecording, BigDecimal> colWeight, colTemperature;
-
-    @FXML
-    private TextField txtTime, txtWeight, txtTemperature, txtSocietyCode;
-    @FXML
-    private DatePicker dpDate;
     @FXML
     GridPane gridMaster;
     @FXML
     VBox vbox;
-
     @FXML
     Button btnAdd, btnEdit, btnSave, btnDelete, btnCancel;
-
+    @FXML
+    private TextField txtTime, txtWeight, txtTemperature, txtSocietyCode;
+    @FXML
+    private DatePicker dpDate;
     private Stage stage;
     private PopupCallback callback;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<BmcRecording> propRunningPara;
+    private BmcRecording recordingParameter;
 
     public BmcRecordingParameterController() {
         propRunningPara = new SimpleObjectProperty<>();
     }
-
-    private BmcRecording recordingParameter;
 
     @Override
     public Node getRoot() {
@@ -157,7 +150,6 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
             clearControls();
         });
         new Thread(task).start();
-        return;
 
     }
 
@@ -169,7 +161,6 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
             clearControls();
         });
         new Thread(task).start();
-        return;
 
     }
 
@@ -241,7 +232,7 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("recordingparameter"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

@@ -2,7 +2,6 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
@@ -12,35 +11,23 @@ import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.operation.procurement.task.MilkCollectionMigrationListSaveTask;
 import com.eipl.amcs.setting.task.AmcsMilkCollectionDbSaveTask;
-import com.eipl.amcs.setting.task.PromptMilkCollectionDbSaveTask;
 import com.eipl.amcs.setting.task.SkywayMilkCollectionDbSaveTask;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.sql.*;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Stream;
 
 public class MilkCollectionDataMigrationSkyWayController implements MyInitialization {
     @FXML
@@ -56,7 +43,7 @@ public class MilkCollectionDataMigrationSkyWayController implements MyInitializa
     private List<Shift> shiftList;
     private List<Member> memberList;
     private List<MilkType> milkTypeList;
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     private Stage stage;
 
     @Override

@@ -25,6 +25,7 @@ import java.util.Optional;
 @Service
 public class LocalMilkSaleRateServiceImpl implements LocalMilkSaleRateService {
 
+    private static final Logger log = LoggerFactory.getLogger(LocalMilkSaleRateServiceImpl.class);
     @Autowired
     private LocalMilkSaleRateRepository localMilkSaleRateRepository;
     @Autowired
@@ -33,8 +34,6 @@ public class LocalMilkSaleRateServiceImpl implements LocalMilkSaleRateService {
     private MilkTypeRepository milkTypeRepository;
     @Autowired
     private MilkClassRepository milkClassRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LocalMilkSaleRateServiceImpl.class);
 
     @Override
     public List<LocalMilkSaleRate> findAll() {

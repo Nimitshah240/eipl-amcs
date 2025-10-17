@@ -53,19 +53,15 @@ public class BaseModelTxn implements Serializable, JsonAndTableBuilder {
         return xCol1;
     }
 
-    public String getXCol1() {
-        return xCol1;
-    }
-
     public void setxCol1(String xCol1) {
         this.xCol1 = xCol1;
     }
 
-    public String getxCol2() {
-        return xCol2;
+    public String getXCol1() {
+        return xCol1;
     }
 
-    public String getXCol2() {
+    public String getxCol2() {
         return xCol2;
     }
 
@@ -73,16 +69,20 @@ public class BaseModelTxn implements Serializable, JsonAndTableBuilder {
         this.xCol2 = xCol2;
     }
 
-    public String getxCol3() {
-        return xCol3;
+    public String getXCol2() {
+        return xCol2;
     }
 
-    public String getXCol3() {
+    public String getxCol3() {
         return xCol3;
     }
 
     public void setxCol3(String xCol3) {
         this.xCol3 = xCol3;
+    }
+
+    public String getXCol3() {
+        return xCol3;
     }
 
 }

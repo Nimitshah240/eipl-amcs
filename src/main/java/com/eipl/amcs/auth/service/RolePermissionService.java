@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RolePermissionService {
 
-	List<RolePermission> findAllRolePermissionByRoles(List<Role> roles);
+    List<RolePermission> findAllRolePermissionByRoles(List<Role> roles);
 }

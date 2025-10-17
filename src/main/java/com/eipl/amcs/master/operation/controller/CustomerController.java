@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 
 public class CustomerController implements MyInitialization {
 
+    private final ObjectProperty<Customer> propCustomer;
     @FXML
     AnchorPane root;
     @FXML
@@ -39,7 +40,7 @@ public class CustomerController implements MyInitialization {
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<Customer> propCustomer;
+
     public CustomerController() {
         propCustomer = new SimpleObjectProperty<>();
     }

@@ -15,12 +15,9 @@ import java.util.Optional;
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
+    private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
     @Autowired
     private NotificationRepository notificationRepository;
-
-
-
-    private static final Logger log = LoggerFactory.getLogger(NotificationServiceImpl.class);
 
     @Override
     public List<Notification> findAll() {

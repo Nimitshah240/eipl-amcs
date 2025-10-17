@@ -11,12 +11,12 @@ import java.util.Optional;
 @Repository
 public interface HardwareDeviceConfigRepository extends BaseRepository<HardwareDeviceConfig, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "society", "hardwareDevice", "dock" })
-	List<HardwareDeviceConfig> findAll();
-	
-	@Override
-	@EntityGraph(attributePaths = { "society", "hardwareDevice", "dock" })
-	Optional<HardwareDeviceConfig> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"society", "hardwareDevice", "dock"})
+    List<HardwareDeviceConfig> findAll();
+
+    @Override
+    @EntityGraph(attributePaths = {"society", "hardwareDevice", "dock"})
+    Optional<HardwareDeviceConfig> findById(String id);
 
 }

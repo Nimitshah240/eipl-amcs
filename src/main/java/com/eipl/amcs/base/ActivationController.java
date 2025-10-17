@@ -1,7 +1,6 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.base.Identity;
 import com.eipl.amcs.base.model.IdentityCheckTask;
 import com.eipl.amcs.base.model.IdentitySaveTask;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -35,18 +34,15 @@ import java.util.concurrent.ExecutionException;
 
 public class ActivationController implements MyInitialization {
 
+    public static final Properties properties1 = new Properties();
     @FXML
     private StackPane root;
-
     @FXML
     private TextField txtServerDetail, txtUnion, txtSociety, txtDock, txtCowRange, txtBuffRange, txtSampleMilkNo;
-
     @FXML
     private Button btnActivate;
-
     @FXML
     private Label lblSampleNo;
-    public static final Properties properties1 = new Properties();
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg;
     private String union, society, dock, activationKey, sampleNo;
@@ -152,7 +148,6 @@ public class ActivationController implements MyInitialization {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("generalconfig"),
                             sb.toString());
                     alert.createAlert();
-                    return;
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -248,7 +243,7 @@ public class ActivationController implements MyInitialization {
         try {
             File appProperties = new File("resources/app.properties");
             if (appProperties.createNewFile()) {
-                Files.write(appProperties.toPath(), writeAppProperty(), Charset.forName("UTF-8"));
+                Files.write(appProperties.toPath(), writeAppProperty(), StandardCharsets.UTF_8);
                 loadProperties();
                 this.flag = true;
             }

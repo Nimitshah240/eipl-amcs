@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
 
 public class VoucherLedgerController implements MyInitialization, PopupCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(VoucherLedgerController.class);
+    private final StringBuilder errorMsg = null;
+    private final ObjectProperty<VoucherTransaction> propTransaction1;
+    private final ObjectProperty<VoucherTransaction> propTransaction2;
     @FXML
     private StackPane root;
     @FXML
@@ -40,12 +43,9 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
     private TableColumn<VoucherTransaction, String> colCode1, colName1, colAmount1, colType1;
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
     private PopupCallback callback;
     private List<VoucherTransaction> listVoucherTransaction;
     private VoucherDto voucherDto;
-    private final ObjectProperty<VoucherTransaction> propTransaction1;
-    private final ObjectProperty<VoucherTransaction> propTransaction2;
 
     public VoucherLedgerController() {
         propTransaction1 = new SimpleObjectProperty<>();

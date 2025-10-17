@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends BaseRepository<User, String> {
 
-	@EntityGraph(attributePaths = { "society" })
-	Optional<User> findByUsernameAndPasswordAndSocietyAndActiveTrue(String username, String password, Society society);
+    @EntityGraph(attributePaths = {"society"})
+    Optional<User> findByUsernameAndPasswordAndSocietyAndActiveTrue(String username, String password, Society society);
 
-	@EntityGraph(attributePaths = { "society" })
-	Optional<User> findByUsernameAndActiveTrue(String username);
+    @EntityGraph(attributePaths = {"society"})
+    Optional<User> findByUsernameAndActiveTrue(String username);
 
 }

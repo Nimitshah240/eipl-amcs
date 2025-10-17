@@ -20,59 +20,58 @@ import java.util.Map;
 @RequestMapping("/financial-years")
 public class FinancialYearController {
 
-	@Autowired
-	private FinancialYearService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FinancialYearController.class);
+    @Autowired
+    private FinancialYearService service;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
 
-	@Autowired
-	private FinancialYearRepository financialYearRepository;
+    @GetMapping
+    public ResponseEntity<List<FinancialYear>> index() {
+        try {
+            List<FinancialYear> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FinancialYearController.class);
+            return new ResponseEntity<List<FinancialYear>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping
-	public ResponseEntity<List<FinancialYear>> index() {
-		try {
-			List<FinancialYear> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<FinancialYear>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	@GetMapping("/next_fy_date")
-	public ResponseEntity<List<LocalDate>> nextFyDate(@RequestParam String date) {
-		LocalDate currentDate = LocalDate.parse(date);
-		try {
-			List<LocalDate> list = financialYearRepository.fetchByDate(currentDate);
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			return new ResponseEntity<List<LocalDate>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/next_fy_date")
+    public ResponseEntity<List<LocalDate>> nextFyDate(@RequestParam String date) {
+        LocalDate currentDate = LocalDate.parse(date);
+        try {
+            List<LocalDate> list = financialYearRepository.fetchByDate(currentDate);
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<List<LocalDate>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@GetMapping("/fetch_code")
-	public ResponseEntity<Boolean> nextFyYear(String financialYearCode) {
-		try {
-			Integer  ints = financialYearRepository.fetchByCode(financialYearCode);
-			if (ints>0)
-				return new ResponseEntity<Boolean>(false, HttpStatus.OK);
-			else
-				return new ResponseEntity<>(true, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/fetch_code")
+    public ResponseEntity<Boolean> nextFyYear(String financialYearCode) {
+        try {
+            Integer ints = financialYearRepository.fetchByCode(financialYearCode);
+            if (ints > 0)
+                return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+            else
+                return new ResponseEntity<>(true, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
-	@PostMapping
-	public ResponseEntity<YearClosingDto> createLedgerOpeningBalance(@RequestHeader Map<String, String> headers, @RequestBody YearClosingDto dto) {
-		return new ResponseEntity<>(service.saveDto(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @PostMapping
+    public ResponseEntity<YearClosingDto> createLedgerOpeningBalance(@RequestHeader Map<String, String> headers, @RequestBody YearClosingDto dto) {
+        return new ResponseEntity<>(service.saveDto(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
 }

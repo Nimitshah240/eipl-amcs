@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 public class PromptMemberDbProcess extends Task<List<MemberDto>> {
-    private Map<String, MilkType> milkTypeMap;
-    private Map<String, Gender> genderMap;
-    private MemberType memberType;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
+    private final Map<String, MilkType> milkTypeMap;
+    private final Map<String, Gender> genderMap;
+    private final MemberType memberType;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public PromptMemberDbProcess(Map<String, MilkType> milkTypeMap, Map<String, Gender> genderMap, MemberType memberType,
                                  String filePath, String cowRange, String buffRange) {
@@ -101,10 +101,10 @@ public class PromptMemberDbProcess extends Task<List<MemberDto>> {
                     md.setNumberOfBuffalo(resultSet.getShort("NoOfBuff"));
                     md.setMember(m);
                     md.setAccountNo(resultSet.getString("BankAcNo"));
-                    if(md.getAccountNo()==null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
-                        md.setPaymentMode((short)0);
-                    else{
-                        md.setPaymentMode((short)1);
+                    if (md.getAccountNo() == null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
+                        md.setPaymentMode((short) 0);
+                    else {
+                        md.setPaymentMode((short) 1);
                     }
                     list.add(new MemberDto(m, md));
 

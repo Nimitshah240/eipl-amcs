@@ -11,8 +11,8 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.operation.billing.model.Bonus;
 import com.eipl.amcs.operation.billing.dto.BonusDto;
+import com.eipl.amcs.operation.billing.model.Bonus;
 import com.eipl.amcs.operation.billing.model.BonusSummary;
 import com.eipl.amcs.operation.billing.task.BonusListLoadTask;
 import com.eipl.amcs.operation.billing.task.BonusSaveTask;
@@ -65,7 +65,7 @@ public class BonusDisburseController extends SocietyPaymentCycleEditController i
     private List<Bonus> bonusList;
     private BonusSummary bonusSummary;
     private ResourceBundle resourceBundle;
-    private ObjectProperty<Bonus> propBonus;
+    private final ObjectProperty<Bonus> propBonus;
     private BonusDto dto;
 
 

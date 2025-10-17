@@ -62,6 +62,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,6 +78,12 @@ import static com.eipl.amcs.MainApp.manualCollectionRangeList;
 import static com.eipl.amcs.utils.CommonUtils.MY_DECIMAL32;
 
 public class MilkCollectionAddController extends MilkCollectionBaseController implements MyInitialization, PopupCallback {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionAddController.class);
+    List<String> lines1 = new ArrayList<>();
+    List<Shift> shiftList = new ArrayList<>();
+    String text;
+    DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yy");
+    DateTimeFormatter dTF1 = DateTimeFormatter.ofPattern("HH:mm");
     @FXML
     private StackPane root;
     @FXML
@@ -95,7 +102,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private E_NumericField txtSampleNo, txtCode, txtQty, txtFat, txtSnf1, txtFat1, txtSnf2, txtFat2, txtSnf3, txtFat3, txtSnf4, txtFat4, txtSnf, txtClr, txtWater, txtRate, txtAmount;
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport;
-
     @FXML
     private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime;
     @FXML
@@ -104,7 +110,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private TableColumn<CollectionSummary, MilkType> colSummaryMilkType;
     @FXML
     private TableColumn<CollectionSummary, Number> colSummaryMemberNos, colAvgFat, colAvgSnf, colSummaryQty, colSummaryAmount;
-
     @FXML
     private TableView<MilkCollection> tableCollection, tablePrevCollection;
     @FXML
@@ -129,37 +134,48 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private ToggleGroup tagMa;
     @FXML
     private RadioButton rbtMa1, rbtMa2, rbtMa3, rbtMa4;
-
     private MemberSocietyInfoDto memberSocietyInfoDto;
-    private ObservableList<MilkCollection> listCollection = FXCollections.observableArrayList();
-    private ObservableList<MilkCollection> listPrevCollection = FXCollections.observableArrayList();
-    private ObservableList<CollectionSummary> listCollectionSummary = FXCollections.observableArrayList();
+    private final ObservableList<MilkCollection> listCollection = FXCollections.observableArrayList();
+    private final ObservableList<MilkCollection> listPrevCollection = FXCollections.observableArrayList();
+    private final ObservableList<CollectionSummary> listCollectionSummary = FXCollections.observableArrayList();
     private MilkCollectionLoadTask milkCollectionLoadTask;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionAddController.class);
-
-    private ObjectProperty<MilkCollection> propCollection;
-    private ObjectProperty<MilkCollection> propCollectionSummary;
+    private final ObjectProperty<MilkCollection> propCollection;
+    private final ObjectProperty<MilkCollection> propCollectionSummary;
     private MemberWiseCollectionDto memberWiseCollectionDto;
-
     //Printer
-    private List<String> lines = new ArrayList<>();
-    private ArrayList<String> bottomLines = new ArrayList<>();
-    private ArrayList<String> startLines = new ArrayList<>();
-    private int width = 0;
-    private ArrayList<String> masterLines = new ArrayList<>();
-    private PrinterHelper printerHelper;
-    private String slipLanguage = "English";
+    private final List<String> lines = new ArrayList<>();
+    private final ArrayList<String> bottomLines = new ArrayList<>();
 //    Map<String, BigDecimal> a = new HashMap<>();
 //    Map<String, BigDecimal> avg = new HashMap<>();
-
-    List<String> lines1 = new ArrayList<>();
-
-    List<Shift> shiftList = new ArrayList<>();
-
-    String text;
-
+    private final ArrayList<String> startLines = new ArrayList<>();
+    private final int width = 0;
+    private final ArrayList<String> masterLines = new ArrayList<>();
+    private PrinterHelper printerHelper;
+    private String slipLanguage = "English";
     private StringBinding bindingFat1, bindingFat2, bindingFat3, bindingFat4;
     private StringBinding bindingSnf1, bindingSnf2, bindingSnf3, bindingSnf4;
+    private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            fetchRate(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue());
+            calculateClr(txtFat.getText(), txtSnf.getText());
+        }
+
+        if (MainApp.displaySerial != null) {
+            MainApp.displaySerial.displayQuantity(getStringForDisplay("QLTY"));
+        }
+    };
+
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            calculateAmount(txtRate.getText(), txtQty.getText());
+            if (MainApp.displaySerial != null)
+                MainApp.displaySerial.displayQuantity(getStringForDisplay("QTY"));
+        }
+    };
+    private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg = null;
+    private boolean printOnOff = true;
+    private File slipFile = null;
 
     public MilkCollectionAddController() {
         propCollection = new SimpleObjectProperty<>();
@@ -336,25 +352,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         }
     }
 
-    private ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            fetchRate(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue());
-            calculateClr(txtFat.getText(), txtSnf.getText());
-        }
-
-        if (MainApp.displaySerial != null) {
-            MainApp.displaySerial.displayQuantity(getStringForDisplay("QLTY"));
-        }
-    };
-
-    private ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            calculateAmount(txtRate.getText(), txtQty.getText());
-            if (MainApp.displaySerial != null)
-                MainApp.displaySerial.displayQuantity(getStringForDisplay("QTY"));
-        }
-    };
-
     private String getStringForDisplay(String type) {
         if (MainApp.displaySerial != null) {
             switch (Integer.parseInt(MainApp.displaySerial.getDispDevice().getxCol2())) {
@@ -459,9 +456,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         }
         return null;
     }
-
-    private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
 
     @Override
     public Node getRoot() {
@@ -709,73 +703,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         }
     }
 
-    private boolean printOnOff = true;
-
-    private void printToggle() {
-        printOnOff = !printOnOff;
-        if (printOnOff)
-            lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete"));
-        else lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete1"));
-    }
-
-    private void RePrint() {
-        MilkCollection mc = propCollection.get();
-        BigDecimal totalQty = BigDecimal.ZERO;
-        BigDecimal totalAmt = BigDecimal.ZERO;
-        if (memberSocietyInfoDto.getCurrentPaymentCycleData() != null) {
-            for (MilkCollection coll : memberSocietyInfoDto.getCurrentPaymentCycleData()) {
-                totalQty = totalQty.add(coll.getQty());
-                totalAmt = totalAmt.add(coll.getAmount());
-            }
-        }
-        mc.setxCol1(String.valueOf(totalQty));
-        mc.setxCol2(String.valueOf(totalAmt));
-        if (printerHelper != null) {
-            placeVariables(mc, null);
-            print(masterLines);
-//            var task = new MemberTotalParametersLoadTask(mc.getMember().getCode(),
-//                    collectionPreReqDto.getPaymentCycle().getCode(), propCollection.get().getMilkType().getCode());
-//            task.setOnSucceeded(e -> {
-//                try {
-//                    a = (Map<String, BigDecimal>) task.get();
-//                    if (a != null) {
-//                        placeVariablesForReprint(mc, null);
-//                        print(masterLines);
-//                    }
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                } catch (ExecutionException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//            new Thread(task).start();
-        }
-    }
-
-    private void RePrintForSummary() {
-        MilkCollection mc = propCollectionSummary.get();
-        if (printerHelper != null) {
-            placeVariables(mc, null);
-            print(masterLines);
-//            var task = new MemberTotalParametersLoadTask(mc.getMember().getCode(),
-//                    collectionPreReqDto.getPaymentCycle().getCode(), propCollectionSummary.get().getMilkType().getCode());
-//            task.setOnSucceeded(e -> {
-//                try {
-//                    a = (Map<String, BigDecimal>) task.get();
-//                    if (a != null) {
-//                        placeVariables(mc, null);
-//                        print(masterLines);
-//                    }
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                } catch (ExecutionException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//            new Thread(task).start();
-        }
-    }
-
 //    private void placeVariablesForReprint(MilkCollection collection, Object[] resp) {
 //        List<String> lines = null;
 //        try {
@@ -876,40 +803,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 //
 //            masterLines.add(s);
 
-    /// /            if (width < s.length()) {
-    /// /                int length = s.length();
-    /// /                int packet = length / width;
-    /// /                int reminder = length % width;
-    /// /                int beginIndex = 0;
-    /// /                for (int p = 0; p < packet; p++) {
-    /// /                    masterLines.add(s.substring(beginIndex, (p + 1) * width));
-    /// /                    beginIndex = (p + 1) * width;
-    /// /                }
-    /// /                if (reminder != 0)
-    /// /                    masterLines.add(s.substring(beginIndex, packet * width + reminder));
-    /// /            } else {
-    /// /                masterLines.add(s);
-    /// /            }
-//            s = null;
-//        }
-//    }
-    private void setParams() {
-        if (txtCode.getText().isEmpty()) return;
-        String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
-        var task = new MemberAvgParametersLoadTask(code, MainApp.getProperty("avg.param.capture.shift.value", "5"), cboxMilkType.getValue().getName().equalsIgnoreCase("cow") ? "1" : "2", dpDate.getValue(), cboxShift.getValue().getCode());
-        task.setOnSucceeded(e -> {
-            try {
-                Map<String, BigDecimal> avg = (Map<String, BigDecimal>) task.get();
-                if (!avg.isEmpty()) {
-                    txtFat.setText(String.valueOf(new BigDecimal(String.valueOf(avg.get("fat"))).setScale(1, RoundingMode.HALF_UP)));
-//                    txtSnf.setText(String.valueOf(avg.get("snf")));
-//                    lblAvgQty.setText(String.valueOf(avg.get("qty")));
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+    private void printToggle() {
+        printOnOff = !printOnOff;
+        if (printOnOff)
+            lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete"));
+        else lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete1"));
     }
 
 //    private void fetchAvgParameters() {
@@ -993,6 +891,99 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 //        new Thread(task).start();
 //    }
 
+    private void RePrint() {
+        MilkCollection mc = propCollection.get();
+        BigDecimal totalQty = BigDecimal.ZERO;
+        BigDecimal totalAmt = BigDecimal.ZERO;
+        if (memberSocietyInfoDto.getCurrentPaymentCycleData() != null) {
+            for (MilkCollection coll : memberSocietyInfoDto.getCurrentPaymentCycleData()) {
+                totalQty = totalQty.add(coll.getQty());
+                totalAmt = totalAmt.add(coll.getAmount());
+            }
+        }
+        mc.setxCol1(String.valueOf(totalQty));
+        mc.setxCol2(String.valueOf(totalAmt));
+        if (printerHelper != null) {
+            placeVariables(mc, null);
+            print(masterLines);
+//            var task = new MemberTotalParametersLoadTask(mc.getMember().getCode(),
+//                    collectionPreReqDto.getPaymentCycle().getCode(), propCollection.get().getMilkType().getCode());
+//            task.setOnSucceeded(e -> {
+//                try {
+//                    a = (Map<String, BigDecimal>) task.get();
+//                    if (a != null) {
+//                        placeVariablesForReprint(mc, null);
+//                        print(masterLines);
+//                    }
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                } catch (ExecutionException ex) {
+//                    ex.printStackTrace();
+//                }
+//            });
+//            new Thread(task).start();
+        }
+    }
+
+    private void RePrintForSummary() {
+        MilkCollection mc = propCollectionSummary.get();
+        if (printerHelper != null) {
+            placeVariables(mc, null);
+            print(masterLines);
+//            var task = new MemberTotalParametersLoadTask(mc.getMember().getCode(),
+//                    collectionPreReqDto.getPaymentCycle().getCode(), propCollectionSummary.get().getMilkType().getCode());
+//            task.setOnSucceeded(e -> {
+//                try {
+//                    a = (Map<String, BigDecimal>) task.get();
+//                    if (a != null) {
+//                        placeVariables(mc, null);
+//                        print(masterLines);
+//                    }
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                } catch (ExecutionException ex) {
+//                    ex.printStackTrace();
+//                }
+//            });
+//            new Thread(task).start();
+        }
+    }
+
+    /// /            if (width < s.length()) {
+    /// /                int length = s.length();
+    /// /                int packet = length / width;
+    /// /                int reminder = length % width;
+    /// /                int beginIndex = 0;
+    /// /                for (int p = 0; p < packet; p++) {
+    /// /                    masterLines.add(s.substring(beginIndex, (p + 1) * width));
+    /// /                    beginIndex = (p + 1) * width;
+    /// /                }
+    /// /                if (reminder != 0)
+    /// /                    masterLines.add(s.substring(beginIndex, packet * width + reminder));
+    /// /            } else {
+    /// /                masterLines.add(s);
+    /// /            }
+//            s = null;
+//        }
+//    }
+    private void setParams() {
+        if (txtCode.getText().isEmpty()) return;
+        String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
+        var task = new MemberAvgParametersLoadTask(code, MainApp.getProperty("avg.param.capture.shift.value", "5"), cboxMilkType.getValue().getName().equalsIgnoreCase("cow") ? "1" : "2", dpDate.getValue(), cboxShift.getValue().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                Map<String, BigDecimal> avg = (Map<String, BigDecimal>) task.get();
+                if (!avg.isEmpty()) {
+                    txtFat.setText(String.valueOf(new BigDecimal(String.valueOf(avg.get("fat"))).setScale(1, RoundingMode.HALF_UP)));
+//                    txtSnf.setText(String.valueOf(avg.get("snf")));
+//                    lblAvgQty.setText(String.valueOf(avg.get("qty")));
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
 
     @Override
     public void setupTable() {
@@ -1013,7 +1004,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         colSummaryMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
 
 
-        colCollMemberCode1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCollectionDate().getDayOfMonth() + "-" + data.getValue().getShift().getName().substring(0, 1)));
+        colCollMemberCode1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCollectionDate().getDayOfMonth() + "-" + data.getValue().getShift().getName().charAt(0)));
         colCollQty1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getQty()));
         colCollFat1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFat()));
         colCollSnf1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSnf()));
@@ -1024,7 +1015,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         propCollection.bind(tableCollection.getSelectionModel().selectedItemProperty());
         propCollectionSummary.bind(tablePrevCollection.getSelectionModel().selectedItemProperty());
     }
-
 
     private void validateAndSave() {
         if (!validate()) {
@@ -1110,9 +1100,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                             return true;
                         } else if (rangeList.stream().filter(e -> e.getxCol1().equalsIgnoreCase("0")).anyMatch(e1 -> e1.getStatus() == 2)) {
                             return false;
-                        } else if (rangeList.stream().filter(e -> e.getxCol1().equalsIgnoreCase("0")).anyMatch(e1 -> e1.getStatus() != 2)) {
-                            return true;
-                        }
+                        } else return rangeList.stream().filter(e -> e.getxCol1().equalsIgnoreCase("0")).anyMatch(e1 -> e1.getStatus() != 2);
                     }
                     return false;
                 } else {
@@ -1121,29 +1109,20 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                             return true;
                         } else if (rangeList.stream().filter(e -> e.getxCol1().equalsIgnoreCase("0")).anyMatch(e1 -> e1.getStatus() == 2)) {
                             return false;
-                        } else if (rangeList.stream().filter(e -> e.getxCol1().equalsIgnoreCase("0")).anyMatch(e1 -> e1.getStatus() != 2)) {
-                            return true;
-                        }
+                        } else return rangeList.stream().filter(e -> e.getxCol1().equalsIgnoreCase("0")).anyMatch(e1 -> e1.getStatus() != 2);
                     }
                     return false;
                 }
             }
         } else if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
             if (isShift0Selected) {
-                if (isBeforeOrAfter(MainApp.timingList.get(0).getMstime(), MainApp.timingList.get(0).getMltime())) {
-                    return true;
-                }
-                return false;
+                return isBeforeOrAfter(MainApp.timingList.get(0).getMstime(), MainApp.timingList.get(0).getMltime());
             } else {
-                if (isBeforeOrAfter(MainApp.timingList.get(0).getEstime(), MainApp.timingList.get(0).getEltime())) {
-                    return true;
-                }
-                return false;
+                return isBeforeOrAfter(MainApp.timingList.get(0).getEstime(), MainApp.timingList.get(0).getEltime());
             }
         }
         return false;
     }
-
 
     private boolean isBeforeOrAfter(LocalTime startTime, LocalTime endTime) {
         return LocalTime.now().isBefore(startTime) || LocalTime.now().isAfter(endTime.plusMinutes(1));
@@ -1169,7 +1148,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         alert.createAlert();
         clearControls();
     }
-
 
     private MilkCollectionSaveTask getSaveTask() {
 //            xCol1 = 0 means Manual Request for Allow collection beyond shift time
@@ -1407,7 +1385,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         ft.play();
     }
 
-
     private void writeCollection() {
         try {
 
@@ -1575,7 +1552,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collection.setxCol3(CommonUtils.fetchCollectionSlipDateFormatted(collectionPreReqDto.getPaymentCycle().getFromDate().toLocalDate()) + "-" + CommonUtils.fetchCollectionSlipDateFormatted(dpDate.getValue()) + " (" + (memberSocietyInfoDto.getCurrentPaymentCycleData() != null ? memberSocietyInfoDto.getCurrentPaymentCycleData().size() + 1 : "1") + ")");
     }
 
-
     private boolean validate() {
         errorMsg = new StringBuilder();
         if (txtSampleNo.getText() == null || txtSampleNo.getText().isEmpty())
@@ -1676,7 +1652,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         });
         new Thread(task).start();
     }
-
 
     private void fetchMemberSocietyDetailsForReprint() {
         String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(propCollection.get().getMember().getCodeEx());
@@ -2183,36 +2158,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         new Thread(task2).start();
     }
 
-
-    @Override
-    protected void setQty(String qty) {
-        txtQty.setText(qty);
-    }
-
-    @Override
-    protected void setFat(String fat) {
-        txtFat.setText(fat);
-    }
-
-    @Override
-    protected void setSnf(String snf) {
-        if (!"1".equals(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF, "0"))) {
-            txtSnf.setText(snf);
-        } else {
-            txtSnf.setText(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF_VALUE, "0"));
-        }
-    }
-
-    @Override
-    protected void setWater(String water) {
-        txtWater.setText(water);
-    }
-
-    @Override
-    protected void setClr(String clr) {
-        txtClr.setText(clr);
-    }
-
     @Override
     protected void setRate(String rate) {
         txtRate.setText(rate);
@@ -2237,8 +2182,18 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
+    protected void setQty(String qty) {
+        txtQty.setText(qty);
+    }
+
+    @Override
     protected String getFat() {
         return txtFat.getText() == null || txtFat.getText().isEmpty() ? "0" : txtFat.getText();
+    }
+
+    @Override
+    protected void setFat(String fat) {
+        txtFat.setText(fat);
     }
 
     @Override
@@ -2247,13 +2202,32 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
+    protected void setSnf(String snf) {
+        if (!"1".equals(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF, "0"))) {
+            txtSnf.setText(snf);
+        } else {
+            txtSnf.setText(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF_VALUE, "0"));
+        }
+    }
+
+    @Override
     protected String getWater() {
         return txtWater.getText() == null || txtWater.getText().isEmpty() ? "0" : txtWater.getText();
     }
 
     @Override
+    protected void setWater(String water) {
+        txtWater.setText(water);
+    }
+
+    @Override
     protected String getClr() {
         return txtClr.getText() == null || txtClr.getText().isEmpty() ? "0" : txtClr.getText();
+    }
+
+    @Override
+    protected void setClr(String clr) {
+        txtClr.setText(clr);
     }
 
     @Override
@@ -2301,33 +2275,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         if (flag) fetchCurrentShiftCollection();
     }
 
-    private File slipFile = null;
-
-    private void readFile() {
-        try {
-            if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/PrintSlip.txt");
-            else slipFile = new File("resources/collection/PrintSlipLocal.txt");
-//            Scanner dataReader = new Scanner(f1);
-//            while (dataReader.hasNextLine()) {
-//                String fileData = dataReader.nextLine();
-//                this.lines.add(fileData);
-//                System.out.println(fileData);
-//            }
-//            dataReader.close();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    private String getPrinterName(List<HardwareDeviceConfig> devices) {
-        for (HardwareDeviceConfig device : devices) {
-            if (device.getDeviceType().equalsIgnoreCase("PRINTER")) {
-                return device.getxCol1();
-            }
-        }
-        return null;
-    }
-
 //    public void process(MilkCollection milkCollection, String printSlipMessage, Object[] resp) {
 //        try {
 //            if (printSlipMessage != null)
@@ -2363,15 +2310,37 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 //        }
 //    }
 
-    DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yy");
-    DateTimeFormatter dTF1 = DateTimeFormatter.ofPattern("HH:mm");
+    private void readFile() {
+        try {
+            if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/PrintSlip.txt");
+            else slipFile = new File("resources/collection/PrintSlipLocal.txt");
+//            Scanner dataReader = new Scanner(f1);
+//            while (dataReader.hasNextLine()) {
+//                String fileData = dataReader.nextLine();
+//                this.lines.add(fileData);
+//                System.out.println(fileData);
+//            }
+//            dataReader.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private String getPrinterName(List<HardwareDeviceConfig> devices) {
+        for (HardwareDeviceConfig device : devices) {
+            if (device.getDeviceType().equalsIgnoreCase("PRINTER")) {
+                return device.getxCol1();
+            }
+        }
+        return null;
+    }
 
     private void placeVariables(MilkCollection collection, Object[] resp) {
         try {
             List<String> lines = null;
 
             masterLines.clear();
-            lines = Files.readAllLines(slipFile.toPath(), Charset.forName("utf-8"));
+            lines = Files.readAllLines(slipFile.toPath(), StandardCharsets.UTF_8);
 
             if (lines == null) return;
             for (int i = 0; i < lines.size(); ) {
@@ -2417,7 +2386,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                             s = s.replace("{kgfat}", "");
                         }
                     } else {
-                        String arr[];
+                        String[] arr;
                         if (memberMilkPurchaseRate.getxCol1() != null) {
                             arr = memberMilkPurchaseRate.getxCol1().split("-");
                             s = s.replace("{kgfat}", collection.getMilkType().getCode() == 1 ? arr[0] : arr[1]);
@@ -2533,18 +2502,13 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setFat1(String fat) {
-        txtFat1.setText(fat);
-    }
-
-    @Override
     protected String getFat1() {
         return txtFat1.getText() == null || txtFat1.getText().isEmpty() ? "0" : txtFat1.getText();
     }
 
     @Override
-    protected void setSnf1(String snf) {
-        txtSnf1.setText(snf);
+    protected void setFat1(String fat) {
+        txtFat1.setText(fat);
     }
 
     @Override
@@ -2553,8 +2517,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setWater1(String water) {
-
+    protected void setSnf1(String snf) {
+        txtSnf1.setText(snf);
     }
 
     @Override
@@ -2563,8 +2527,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setFat2(String fat) {
-        txtFat2.setText(fat);
+    protected void setWater1(String water) {
+
     }
 
     @Override
@@ -2573,8 +2537,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setSnf2(String snf) {
-        txtSnf2.setText(snf);
+    protected void setFat2(String fat) {
+        txtFat2.setText(fat);
     }
 
     @Override
@@ -2583,8 +2547,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setWater2(String water) {
-
+    protected void setSnf2(String snf) {
+        txtSnf2.setText(snf);
     }
 
     @Override
@@ -2593,8 +2557,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setFat3(String fat) {
-        txtFat3.setText(fat);
+    protected void setWater2(String water) {
+
     }
 
     @Override
@@ -2603,8 +2567,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setSnf3(String snf) {
-        txtSnf3.setText(snf);
+    protected void setFat3(String fat) {
+        txtFat3.setText(fat);
     }
 
     @Override
@@ -2613,8 +2577,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setWater3(String water) {
-
+    protected void setSnf3(String snf) {
+        txtSnf3.setText(snf);
     }
 
     @Override
@@ -2623,8 +2587,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setFat4(String fat) {
-        txtFat4.setText(fat);
+    protected void setWater3(String water) {
+
     }
 
     @Override
@@ -2633,8 +2597,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setSnf4(String snf) {
-        txtSnf4.setText(snf);
+    protected void setFat4(String fat) {
+        txtFat4.setText(fat);
     }
 
     @Override
@@ -2643,13 +2607,18 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     @Override
-    protected void setWater4(String water) {
-
+    protected void setSnf4(String snf) {
+        txtSnf4.setText(snf);
     }
 
     @Override
     protected String getWater4() {
         return "";
+    }
+
+    @Override
+    protected void setWater4(String water) {
+
     }
 
     @Override

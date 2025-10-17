@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
-    private Map<String, MilkType> milkTypeMap;
-    private Map<String, Gender> genderMap;
-    private MemberType memberType;
-    private String cowRange;
-    private String buffRange;
-    private String dbName;
+    private final Map<String, MilkType> milkTypeMap;
+    private final Map<String, Gender> genderMap;
+    private final MemberType memberType;
+    private final String cowRange;
+    private final String buffRange;
+    private final String dbName;
 
     public PromptSqlMemberDbProcess(Map<String, MilkType> milkTypeMap, Map<String, Gender> genderMap, MemberType memberType,
                                     String cowRange, String buffRange, String dbName) {
@@ -42,7 +42,7 @@ public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
         try {
             String connectionUrl = "jdbc:sqlserver://IT40\\EIPL;databaseName=" + dbName + ";integratedSecurity=false;encrypt=true;trustServerCertificate=true;user=sa;password=eipl";
 
-          //  String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=false;user=dev;password=dev@123";
+            //  String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=false;user=dev;password=dev@123";
 //            String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=true;";
 //            String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
             String[] cowRangeArr = cowRange.split("-");
@@ -51,7 +51,7 @@ public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
             String[] buffRangeArr = buffRange.split("-");
             int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
-            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement();) {
+            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
 //            try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select * from tblSabhasad");
@@ -102,10 +102,10 @@ public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
                     md.setMember(m);
                     md.setAccountNo(resultSet.getString("AcNo"));
 
-                    if(md.getAccountNo()==null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
-                        md.setPaymentMode((short)0);
-                    else{
-                        md.setPaymentMode((short)1);
+                    if (md.getAccountNo() == null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
+                        md.setPaymentMode((short) 0);
+                    else {
+                        md.setPaymentMode((short) 1);
                     }
 
                     list.add(new MemberDto(m, md));

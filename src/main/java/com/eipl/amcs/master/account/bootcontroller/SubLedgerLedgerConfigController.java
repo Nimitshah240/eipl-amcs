@@ -17,10 +17,9 @@ import java.util.Map;
 @RequestMapping("/sub_ledger_ledger_config")
 public class SubLedgerLedgerConfigController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubLedgerLedgerConfigController.class);
     @Autowired
     private SubLedgerLedgerConfigService service;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SubLedgerLedgerConfigController.class);
 
     @GetMapping
     public ResponseEntity<List<SubLedgerLedgerConfig>> index() {

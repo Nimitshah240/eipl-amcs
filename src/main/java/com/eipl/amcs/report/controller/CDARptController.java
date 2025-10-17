@@ -28,15 +28,13 @@ import java.util.concurrent.ExecutionException;
 
 public class CDARptController implements MyInitialization {
     @FXML
+    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
+    @FXML
     private Button btnClose;
-
     @FXML
     private Button btnGenerate;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-    @FXML
-    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
     private List<MilkType> listMilkType;

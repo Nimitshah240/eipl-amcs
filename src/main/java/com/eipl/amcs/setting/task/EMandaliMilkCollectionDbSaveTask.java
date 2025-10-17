@@ -20,16 +20,16 @@ import java.util.List;
 import java.util.Map;
 
 public class EMandaliMilkCollectionDbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private String cowRange;
-    private String buffRange;
-    private String dbName;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final String cowRange;
+    private final String buffRange;
+    private final String dbName;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public EMandaliMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList,
-                                            String cowRange, String buffRange,String dbName,LocalDate fromDate,LocalDate toDate) {
+                                            String cowRange, String buffRange, String dbName, LocalDate fromDate, LocalDate toDate) {
         this.milkTypeList = milkTypeList;
         this.shiftList = shiftList;
         this.cowRange = cowRange;
@@ -64,7 +64,7 @@ public class EMandaliMilkCollectionDbSaveTask extends Task<Boolean> {
 
             LocalTime morningTime = LocalTime.of(6, 0);
             LocalTime eveningTime = LocalTime.of(18, 0);
-            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement();) {
+            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
 
 //            try (Connection connection = DriverManager.getConnection(connectionUrl, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
@@ -132,7 +132,7 @@ public class EMandaliMilkCollectionDbSaveTask extends Task<Boolean> {
                         else
                             map.put("milktype", mapMilkType.get("C"));
                         map.put("sampleno", resultSet.getInt("sampleno"));
-                        map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + map.get("sampleno")+"-"+codeEx);
+                        map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")).format(dateTimeFormatter) + map.get("shift") + "-" + map.get("sampleno") + "-" + codeEx);
 
                         mapCollection.add(map);
                     }
@@ -155,7 +155,7 @@ public class EMandaliMilkCollectionDbSaveTask extends Task<Boolean> {
                             for (Map<String, Object> map : maps) {
                                 pstmt.setString(1, map.get("code").toString());
                                 pstmt.setInt(2, (int) map.get("sampleno"));
-                                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                                pstmt.setObject(3, map.get("collectiondate"));
                                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

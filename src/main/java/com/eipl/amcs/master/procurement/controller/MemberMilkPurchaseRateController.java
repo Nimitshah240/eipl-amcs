@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class MemberMilkPurchaseRateController implements MyInitialization {
+    private final ObjectProperty<MemberMilkPurchaseRate> propRate;
     @FXML
     StackPane root;
     @FXML
@@ -48,8 +49,6 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
     @FXML
     Button btnAdd, btnClose, btnView, btnSync;
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<MemberMilkPurchaseRate> propRate;
 
     public MemberMilkPurchaseRateController() {
         propRate = new SimpleObjectProperty<>();

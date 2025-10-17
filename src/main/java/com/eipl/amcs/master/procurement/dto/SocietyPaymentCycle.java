@@ -111,12 +111,11 @@ public class SocietyPaymentCycle extends BaseModel {
     }
 
     public String toDateShiftString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getFromDate().toLocalDate().format(AppConstant.DATE_FORMATTER));
-        sb.append(CommonUtils.getShiftShort(getFromShift()));
-        sb.append(" - ");
-        sb.append(getToDate().toLocalDate().format(AppConstant.DATE_FORMATTER));
-        sb.append(CommonUtils.getShiftShort(getToShift()));
-        return sb.toString();
+        String sb = getFromDate().toLocalDate().format(AppConstant.DATE_FORMATTER) +
+                CommonUtils.getShiftShort(getFromShift()) +
+                " - " +
+                getToDate().toLocalDate().format(AppConstant.DATE_FORMATTER) +
+                CommonUtils.getShiftShort(getToShift());
+        return sb;
     }
 }

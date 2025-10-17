@@ -9,8 +9,8 @@ import javafx.scene.input.KeyEvent;
 
 public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
 
-    private ComboBox<T> comboBox;
-    private ObservableList<T> data;
+    private final ComboBox<T> comboBox;
+    private final ObservableList<T> data;
     private boolean moveCaretToPos = false;
     private int caretPos;
 

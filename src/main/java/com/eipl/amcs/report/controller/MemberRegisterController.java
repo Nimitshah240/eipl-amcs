@@ -45,11 +45,12 @@ public class MemberRegisterController implements MyInitialization {
     @FXML
     private TextField txtSocietyCode;
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
+
     @Override
     public Node getRoot() {
         return root;
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -60,7 +61,7 @@ public class MemberRegisterController implements MyInitialization {
         dpfromDate.setValue(LocalDate.now());
         dpfromDate.setConverter(new LocalDateConvertor());
         dpfromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpfromDate.setValue(dpfromDate.getConverter().fromString(dpfromDate.getEditor().getText()));
             }
         });
@@ -70,6 +71,7 @@ public class MemberRegisterController implements MyInitialization {
         txtSocietyCode.setText(MainApp.identityDto.getSociety().getCode());
         txtSocietyCode.setDisable(true);
     }
+
     private void validateAndGenerate() {
         switch (cboxFormat.getSelectionModel().getSelectedIndex() + 1) {
             case 1:
@@ -80,8 +82,6 @@ public class MemberRegisterController implements MyInitialization {
                 break;
         }
     }
-    private StringBuilder errorMsg;
-
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
@@ -92,6 +92,7 @@ public class MemberRegisterController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_REGISTER, params);
         JasperViewer.viewReport(print, false);
     }
+
     private void validateAndGenerateReportTwo() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());

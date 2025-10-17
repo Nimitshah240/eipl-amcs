@@ -28,13 +28,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HisaabMitraMilkCollectionImportTask extends Task<List<MilkCollection>> {
 
-    private File file;
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private List<Member> memberList;
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(HisaabMitraMilkCollectionImportTask.class);
+    private final File file;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final List<Member> memberList;
 
     public HisaabMitraMilkCollectionImportTask(File file, List<MilkType> milkTypeList, List<Shift> shiftList, List<Member> memberList) {
         this.file = file;
@@ -172,7 +170,7 @@ public class HisaabMitraMilkCollectionImportTask extends Task<List<MilkCollectio
                 map.put("convqty", CommonUtils.convertQty(AppConstant.CollectionType.MEMBER_COLL, "4"));
                 i += 1;
                 map.put("sampleno", (i));
-                map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + ((LocalDateTime) map.get("collectiondate")) + map.get("shift") + "-" + map.get("sampleno") + "-" + String.format("%04d", Integer.parseInt(valCode)));
+                map.put("code", MainApp.identityDto.getDock().getDockNo() + "-" + map.get("collectiondate") + map.get("shift") + "-" + map.get("sampleno") + "-" + String.format("%04d", Integer.parseInt(valCode)));
 
 
                 mapCollection.add(map);
@@ -203,7 +201,7 @@ public class HisaabMitraMilkCollectionImportTask extends Task<List<MilkCollectio
             for (Map<String, Object> map : listTemp) {
                 pstmt.setString(1, map.get("code").toString());
                 pstmt.setInt(2, (int) map.get("sampleno"));
-                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                pstmt.setObject(3, map.get("collectiondate"));
                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

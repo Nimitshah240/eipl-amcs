@@ -1,12 +1,11 @@
 package com.eipl.amcs.operation.billing.dto;
 
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.operation.billing.model.Bonus;
+import com.eipl.amcs.operation.billing.model.BonusSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.eipl.amcs.operation.billing.model.Bonus;
-import com.eipl.amcs.operation.billing.model.BonusSummary;
 
 import java.util.List;
 

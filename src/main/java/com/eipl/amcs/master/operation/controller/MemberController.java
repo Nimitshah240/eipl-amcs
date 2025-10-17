@@ -46,6 +46,9 @@ import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<Member> propMember;
+    //    private Map<String, String> mapDetails;
+    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     public List<Member> memberList = new ArrayList<>();
     public PopupCallback callback;
     @FXML
@@ -67,14 +70,11 @@ public class MemberController implements MyInitialization, PopupCallback {
     @FXML
     private DatePicker dpFromDate;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<Member> propMember;
     private List<Gender> genderList;
     private List<MilkType> milkTypeList;
     private List<MemberType> memberTypeList;
     private List<Bank> bankList;
     private List<Member> listMember;
-    //    private Map<String, String> mapDetails;
-    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     private String memberCode;
     private Stage stage;
     private StringBuilder errorMsg;

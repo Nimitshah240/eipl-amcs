@@ -217,7 +217,7 @@ public class TableExportUtil {
 
     private static boolean checkColumn(TableView<?> tableView, int j, List<TableColItem> columns) {
         return columns.stream()
-                .filter(p -> p.getColName().equals(tableView.getColumns().get(j).getId()) && p.isVisible() == false)
-                .findAny().orElse(null) != null ? true : false;
+                .filter(p -> p.getColName().equals(tableView.getColumns().get(j).getId()) && !p.isVisible())
+                .findAny().orElse(null) != null;
     }
 }

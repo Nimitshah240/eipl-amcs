@@ -29,15 +29,14 @@ import java.util.stream.Collectors;
 @RequestMapping("milk_collection")
 public class MilkCollectionController {
 
+    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Autowired
     private MilkCollectionService service;
     @Autowired
     private AllowDcsManualCollectionRangeRepository allowDcsManualCollectionRangeRepository;
     @Autowired
     private DpuIncentiveRequestRepository dpuIncentiveRequestRepository;
-
-    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @GetMapping
     public ResponseEntity<List<MilkCollection>> index(@RequestParam(name = "fromDate", required = false) String fromDate, @RequestParam(name = "toDate", required = false) String toDate, @RequestParam(name = "type", required = false) String type, @RequestParam(name = "code", required = false) String code, @RequestParam(name = "sync", required = false) int sync, @RequestParam(name = "dockNo", required = false) String dockNo, @RequestHeader Map<String, String> headers) {
@@ -130,7 +129,7 @@ public class MilkCollectionController {
         return new ResponseEntity<Number>(service.fetchNextSampleNo(dt, dockCode), HttpStatus.OK);
     }
 
-//    @GetMapping("/next-sampleno")
+    //    @GetMapping("/next-sampleno")
 //    public ResponseEntity<Number> fetchNextSampleNo(@RequestParam(name = "date", required = true) String date,@RequestParam(name = "dockCode", required = true) String dockCode, @RequestParam(name = "milkTypeCode", defaultValue = "0") int milkTypeCode) {
 //        LocalDateTime dt = LocalDateTime.parse(date, DATE_TIME_FMT);
 //        Number nextSampleNo = service.fetchNextSampleNo(dt, dockCode, milkTypeCode);

@@ -16,13 +16,13 @@ public class MemberMilkPurchaseRateConvertor extends StringConverter<MemberMilkP
     public String toString(MemberMilkPurchaseRate memberMilkPurchaseRate) {
         if (memberMilkPurchaseRate == null)
             return null;
-        return memberMilkPurchaseRate.getWefDate().toString().replace("T"," ");
+        return memberMilkPurchaseRate.getWefDate().toString().replace("T", " ");
     }
 
     @Override
     public MemberMilkPurchaseRate fromString(String s) {
         if (s == null || s.isEmpty())
             return null;
-        return cbox.getItems().stream().filter(p -> s.equals(p.getWefDate().toString().replace("T"," "))).findAny().orElse(null);
+        return cbox.getItems().stream().filter(p -> s.equals(p.getWefDate().toString().replace("T", " "))).findAny().orElse(null);
     }
 }

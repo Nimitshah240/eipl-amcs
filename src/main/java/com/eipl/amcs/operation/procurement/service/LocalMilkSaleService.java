@@ -10,19 +10,19 @@ import java.util.Optional;
 public interface LocalMilkSaleService {
 
 
-	List<LocalMilkSale> findAll(LocalDateTime fromDt, LocalDateTime toDt);
+    List<LocalMilkSale> findAll(LocalDateTime fromDt, LocalDateTime toDt);
 
-	LocalMilkSale save(LocalMilkSale localMilkSale, String identityInfo) throws BusinessValidationFailException;
+    LocalMilkSale save(LocalMilkSale localMilkSale, String identityInfo) throws BusinessValidationFailException;
 
-	LocalMilkSale update(LocalMilkSale localMilkSale, String identityInfo) throws BusinessValidationFailException;
+    LocalMilkSale update(LocalMilkSale localMilkSale, String identityInfo) throws BusinessValidationFailException;
 
-	Optional<LocalMilkSale> findById(String localMilkSale);
-	
-	void delete(String code, String identityInfo);
+    Optional<LocalMilkSale> findById(String localMilkSale);
 
-	void delete(LocalMilkSale localMilkSale, String identityInfo);
+    void delete(String code, String identityInfo);
 
-	List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header);
+    void delete(LocalMilkSale localMilkSale, String identityInfo);
+
+    List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header);
 
 
 }

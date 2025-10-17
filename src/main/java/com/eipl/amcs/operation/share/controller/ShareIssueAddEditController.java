@@ -41,6 +41,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ShareIssueAddEditController implements MyInitialization {
 
+    BigDecimal shareAmount;
     private PopupCallback callback;
     @FXML
     private StackPane root;
@@ -54,6 +55,10 @@ public class ShareIssueAddEditController implements MyInitialization {
     @FXML
     private CheckBox chkIsMember;
     private ResourceBundle resourceBundle;
+    private Share share;
+    private Member member;
+    private StringBuilder errorMsg = null;
+    private MemberDetail memberDetail;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -67,13 +72,6 @@ public class ShareIssueAddEditController implements MyInitialization {
     public Node getRoot() {
         return root;
     }
-
-    private Share share;
-    private Member member;
-    private StringBuilder errorMsg = null;
-    private MemberDetail memberDetail;
-    BigDecimal shareAmount;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -105,11 +103,7 @@ public class ShareIssueAddEditController implements MyInitialization {
         });
 
         chkIsMember.setOnAction(event -> {
-            if (chkIsMember.isSelected()) {
-                txtMemberName.setDisable(true);
-            } else {
-                txtMemberName.setDisable(false);
-            }
+            txtMemberName.setDisable(chkIsMember.isSelected());
         });
 
 
@@ -121,7 +115,6 @@ public class ShareIssueAddEditController implements MyInitialization {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
                     errorMsg.toString());
             alert.createAlert();
-            return;
         } else {
             if (!chkIsMember.isSelected()) {
                 createMember();

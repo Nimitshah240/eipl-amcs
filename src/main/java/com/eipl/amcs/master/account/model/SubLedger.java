@@ -39,13 +39,13 @@ public class SubLedger extends BaseModel {
     private Society society;
     private String unionCode;
 
+    public SubLedger() {
+        selected = new SimpleBooleanProperty(false);
+    }
+
     @Override
     public String getTableName() {
         return "sub_ledgers";
-    }
-
-    public SubLedger() {
-        selected = new SimpleBooleanProperty(false);
     }
 
     public final BooleanProperty selectedProperty() {

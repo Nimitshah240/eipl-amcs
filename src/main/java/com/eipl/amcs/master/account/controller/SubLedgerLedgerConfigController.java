@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutionException;
 
 public class SubLedgerLedgerConfigController implements MyInitialization, PopupCallback {
 
+    private final StringBuilder errorMsg = null;
     @FXML
     StackPane root;
     @FXML
@@ -40,18 +41,13 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
     TableColumn<Ledger, String> colLedger;
     @FXML
     Button btnClose, btnSave;
-
     @FXML
     ComboBox<CustomerTypeKeyValDto> cboxType;
     private Stage stage;
     private List<Ledger> listLedger;
     private List<SubLedgerLedgerConfig> list;
-
     @FXML
     private CheckBox chkSelect;
-
-    private final StringBuilder errorMsg = null;
-
     private ResourceBundle resourceBundle;
 
     @Override

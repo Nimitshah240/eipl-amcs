@@ -14,19 +14,19 @@ import java.util.Optional;
 @Repository
 public interface ProductSaleTaxRepository extends BaseRepository<ProductSaleTax, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "productSale", "productSaleTransaction", "taxDetail" })
-	Optional<ProductSaleTax> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"productSale", "productSaleTransaction", "taxDetail"})
+    Optional<ProductSaleTax> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "productSale", "productSaleTransaction", "taxDetail" })
-	List<ProductSaleTax> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"productSale", "productSaleTransaction", "taxDetail"})
+    List<ProductSaleTax> findAll(Sort sort);
 
-	void deleteByProductSale(ProductSale productSale);
+    void deleteByProductSale(ProductSale productSale);
 
-	@EntityGraph(attributePaths = { "productSale", "productSaleTransaction", "taxDetail" })
-	List<ProductSaleTax> findByProductSale(ProductSale productSale);
+    @EntityGraph(attributePaths = {"productSale", "productSaleTransaction", "taxDetail"})
+    List<ProductSaleTax> findByProductSale(ProductSale productSale);
 
-	@EntityGraph(attributePaths = { "productSale", "productSaleTransaction", "taxDetail" })
-	List<ProductSaleTax> findByproductSaleTransaction(ProductSaleTransaction productSaleTransaction);
+    @EntityGraph(attributePaths = {"productSale", "productSaleTransaction", "taxDetail"})
+    List<ProductSaleTax> findByproductSaleTransaction(ProductSaleTransaction productSaleTransaction);
 }

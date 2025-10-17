@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface ManualRequestRepository extends BaseRepository<ManualRequest, Long> {
     @Override
-    @EntityGraph(attributePaths = { "fromShift","toShift","society"})
+    @EntityGraph(attributePaths = {"fromShift", "toShift", "society"})
     List<ManualRequest> findAll();
-    
+
 
     @Override
-    @EntityGraph(attributePaths = { "fromShift","toShift","society"})
+    @EntityGraph(attributePaths = {"fromShift", "toShift", "society"})
     Optional<ManualRequest> findById(Long id);
 
 

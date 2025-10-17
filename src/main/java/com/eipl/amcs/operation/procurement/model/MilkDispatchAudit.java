@@ -22,42 +22,42 @@ import java.time.LocalTime;
 @Table(name = "milk_dispatch_audit")
 public class MilkDispatchAudit extends BaseModelTxnAudit {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Size(max = 35)
-	private String challanNo;
-	private String destinationCode;
-	private BigDecimal dipStickReadingClosing;
-	private BigDecimal dipStickReadingOpening;
-	private Integer dispatchType;
-	private Integer destinationType;
-	private BigDecimal headLoadKms;
-	private String routeNo;
-	private LocalDateTime fromDate;
-	private LocalDateTime toDate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Size(max = 35)
+    private String challanNo;
+    private String destinationCode;
+    private BigDecimal dipStickReadingClosing;
+    private BigDecimal dipStickReadingOpening;
+    private Integer dispatchType;
+    private Integer destinationType;
+    private BigDecimal headLoadKms;
+    private String routeNo;
+    private LocalDateTime fromDate;
+    private LocalDateTime toDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Shift fromShift;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Shift toShift;
-	private LocalTime vehicleInTime;
-	private LocalTime vehicleOutTime;
-	private String vehicleNo;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Society society;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private Union union;
-	private String brokenSealNo;
-	private String newSealNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Shift fromShift;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Shift toShift;
+    private LocalTime vehicleInTime;
+    private LocalTime vehicleOutTime;
+    private String vehicleNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Union union;
+    private String brokenSealNo;
+    private String newSealNo;
 
-	@Override
-	public String getTableName() {
-		return "milk_dispatch_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "milk_dispatch_audit";
+    }
 
 }

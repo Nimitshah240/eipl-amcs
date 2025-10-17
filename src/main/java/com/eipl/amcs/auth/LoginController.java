@@ -1,10 +1,8 @@
 package com.eipl.amcs.auth;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.auth.dto.LoginDto;
-import com.eipl.amcs.auth.service.UserService;
-import com.eipl.amcs.auth.task.LoginTask;
 import com.eipl.amcs.auth.model.User;
+import com.eipl.amcs.auth.task.LoginTask;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
@@ -13,7 +11,6 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
-import com.eipl.amcs.master.account.service.FinancialYearService;
 import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.FocusUtils;
@@ -31,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,8 +37,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class LoginController implements MyInitialization {
 
@@ -121,14 +117,14 @@ public class LoginController implements MyInitialization {
     private void createAndSetLocale() {
         try {
             Locale.setDefault(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
-            if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase())) {
-                List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase()) ? "resources/messages/guj" : "resources/messages/hi").toPath());
+            if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2))) {
+                List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2)) ? "resources/messages/guj" : "resources/messages/hi").toPath());
                 List<String> nwLines = new ArrayList<>();
                 lines.forEach(item -> {
                     String[] arr = item.split("=");
                     nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
                 });
-                Files.write(new File(String.format("resources/messages/message_%s.properties", cboxLang.getValue().substring(0, 2).toLowerCase())).toPath(), nwLines, Charset.forName("UTF-8"));
+                Files.write(new File(String.format("resources/messages/message_%s.properties", cboxLang.getValue().substring(0, 2).toLowerCase())).toPath(), nwLines, StandardCharsets.UTF_8);
                 MainApp.locale = cboxLang.getValue().substring(0, 2).toLowerCase();
             }
 

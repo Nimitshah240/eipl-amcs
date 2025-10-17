@@ -41,20 +41,20 @@ public class Product extends BaseModel {
         this.nameLocal = nameLocal;
     }
 
-    public String getAmount() {
-        return amount.get();
+    public Product() {
+        amount = new SimpleStringProperty("0");
     }
 
-    public StringProperty amountProperty() {
-        return amount;
+    public String getAmount() {
+        return amount.get();
     }
 
     public void setAmount(String amount) {
         this.amount.set(amount);
     }
 
-    public Product() {
-        amount = new SimpleStringProperty("0");
+    public StringProperty amountProperty() {
+        return amount;
     }
 
     public String getCode() {

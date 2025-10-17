@@ -4,9 +4,9 @@ import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 
 import java.math.BigDecimal;
-import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 
 public class ProductReceiptTransaction extends BaseModel {
 

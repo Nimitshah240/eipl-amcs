@@ -18,13 +18,11 @@ import java.util.Map;
 @RequestMapping("/notification")
 public class NotificationController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationController.class);
     @Autowired
     private NotificationService service;
-
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationController.class);
 
     @GetMapping
     public ResponseEntity<List<Notification>> index(@RequestParam(name = "society", required = false) String societyCode) {

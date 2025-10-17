@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleRateAddEditController implements MyInitialization {
+    private final LocalMilkSaleRate dto = null;
     @FXML
     private StackPane root;
     @FXML
@@ -47,12 +48,10 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
     private DatePicker dpWefDate;
     @FXML
     private E_NumericField txtRate;
-
     private Stage stage;
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
-    private final LocalMilkSaleRate dto = null;
     private LocalMilkSaleRate localMilkSaleRate = null;
     private BigDecimal rate;
 

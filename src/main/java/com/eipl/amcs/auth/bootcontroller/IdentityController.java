@@ -16,19 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/identity")
 public class IdentityController {
 
-	@Autowired
-	private IdentityService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdentityController.class);
+    @Autowired
+    private IdentityService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(IdentityController.class);
-
-	@GetMapping("/{dockNumber}/{societyCode}/{unionCode}")
-	public ResponseEntity<IdentityDto> fetchIdentity(@PathVariable(name = "dockNumber") String dockNumber,
-			@PathVariable(name = "societyCode") String societyCode, @PathVariable(name = "unionCode") String unionCode) {
-		try {
-			return new ResponseEntity<IdentityDto>(service.fetchIdentity(dockNumber, societyCode, unionCode), HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping("/{dockNumber}/{societyCode}/{unionCode}")
+    public ResponseEntity<IdentityDto> fetchIdentity(@PathVariable(name = "dockNumber") String dockNumber,
+                                                     @PathVariable(name = "societyCode") String societyCode, @PathVariable(name = "unionCode") String unionCode) {
+        try {
+            return new ResponseEntity<IdentityDto>(service.fetchIdentity(dockNumber, societyCode, unionCode), HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

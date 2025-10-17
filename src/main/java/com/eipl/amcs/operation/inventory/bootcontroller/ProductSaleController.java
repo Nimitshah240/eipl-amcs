@@ -22,58 +22,57 @@ import java.util.Map;
 @RequestMapping("/product-sale")
 public class ProductSaleController {
 
-	@Autowired
-	private ProductSaleService service;
-	@Autowired
-	private NextCodeService nextCodeService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleController.class);
+    @Autowired
+    private ProductSaleService service;
+    @Autowired
+    private NextCodeService nextCodeService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProductSaleController.class);
+    @GetMapping
+    public ResponseEntity<List<ProductSale>> index(@RequestParam(name = "fromDate") String fromDate,
+                                                   @RequestParam(name = "toDate") String toDate) {
+        LocalDate fromDt = LocalDate.parse(fromDate);
+        LocalDate toDt = LocalDate.parse(toDate);
+        return new ResponseEntity<List<ProductSale>>(service.findAll(fromDt, toDt), HttpStatus.OK);
+    }
 
-	@GetMapping
-	public ResponseEntity<List<ProductSale>> index(@RequestParam(name ="fromDate") String fromDate,
-			@RequestParam(name ="toDate") String toDate) {
-		LocalDate fromDt = LocalDate.parse(fromDate);
-		LocalDate toDt = LocalDate.parse(toDate);
-		return new ResponseEntity<List<ProductSale>>(service.findAll(fromDt, toDt), HttpStatus.OK);
-	}
+    @PostMapping
+    public ResponseEntity<ProductSaleDto> createProductSale(@RequestHeader Map<String, String> headers, @RequestBody ProductSaleDto dto)
+            throws BusinessValidationFailException {
+        return new ResponseEntity<>(service.save(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
-	@PostMapping
-	public ResponseEntity<ProductSaleDto> createProductSale(@RequestHeader Map<String, String> headers,@RequestBody ProductSaleDto dto)
-			throws BusinessValidationFailException {
-		return new ResponseEntity<>(service.save(dto,CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
-	}
+    @GetMapping("/next-code")
+    public ResponseEntity<String> nextCode(@RequestHeader Map<String, String> headers, @RequestParam String code) {
+        try {
+            LOGGER.info("Next Invoice no for ProductSale: {}", code);
+            String codeI = nextCodeService.getNextCode("ProductSale", "invoiceNo", code, 6);
+            if (codeI == null || codeI.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping("/next-code")
-	public ResponseEntity<String> nextCode(@RequestHeader Map<String, String> headers,@RequestParam String code) {
-		try {
-			LOGGER.info("Next Invoice no for ProductSale: {}", code);
-			String codeI = nextCodeService.getNextCode("ProductSale", "invoiceNo", code, 6);
-			if (codeI == null || codeI.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(codeI, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-			return new ResponseEntity<>(codeI, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @PutMapping
+    public ResponseEntity<ProductSaleDto> updateProductSale(@RequestHeader Map<String, String> headers, @RequestBody ProductSaleDto dto) throws BusinessValidationFailException {
+        return new ResponseEntity<>(service.update(dto, CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
 
-	@PutMapping
-	public ResponseEntity<ProductSaleDto> updateProductSale(@RequestHeader Map<String, String> headers,@RequestBody ProductSaleDto dto) throws BusinessValidationFailException {
-		return new ResponseEntity<>(service.update(dto,CommonUtil.getIdentityHeader(headers)), HttpStatus.CREATED);
+    }
 
-	}
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteProductSale(@RequestHeader Map<String, String> headers, @RequestParam String invoiceNo) {
+        service.delete(invoiceNo, CommonUtil.getIdentityHeader(headers));
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
-	@DeleteMapping("/delete")
-	public ResponseEntity<?> deleteProductSale(@RequestHeader Map<String, String> headers,@RequestParam String invoiceNo) {
-		service.delete(invoiceNo,CommonUtil.getIdentityHeader(headers));
-		return new ResponseEntity<>(null,HttpStatus.OK);
-	}
-
-	@PostMapping("/migrate")
-	public ResponseEntity<List<ProductSaleMigrateDto>> migrateData(@RequestHeader Map<String, String> headers,
-																   @RequestBody List<ProductSaleMigrateDto> dtoList) {
-		return new ResponseEntity<List<ProductSaleMigrateDto>>(
-				service.migrateCollections(dtoList, CommonUtil.getIdentityHeader(headers)), HttpStatus.OK);
-	}
+    @PostMapping("/migrate")
+    public ResponseEntity<List<ProductSaleMigrateDto>> migrateData(@RequestHeader Map<String, String> headers,
+                                                                   @RequestBody List<ProductSaleMigrateDto> dtoList) {
+        return new ResponseEntity<List<ProductSaleMigrateDto>>(
+                service.migrateCollections(dtoList, CommonUtil.getIdentityHeader(headers)), HttpStatus.OK);
+    }
 }

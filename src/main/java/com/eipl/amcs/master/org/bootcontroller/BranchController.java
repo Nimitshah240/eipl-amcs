@@ -18,27 +18,26 @@ import java.util.List;
 @RequestMapping("/branches")
 public class BranchController {
 
-	@Autowired
-	private BranchService service;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(BranchController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BranchController.class);
+    @Autowired
+    private BranchService service;
 
-	@GetMapping
-	public ResponseEntity<List<Branch>> index(@RequestParam(name = "bankCode", required = false) String bankCode) {
-		try {
-			List<Branch> list = null;
-			if(bankCode == null || bankCode.isEmpty())
-				list = service.findAll();
-			else
-				list = service.findAll(bankCode);
-			
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<Branch>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<Branch>> index(@RequestParam(name = "bankCode", required = false) String bankCode) {
+        try {
+            List<Branch> list = null;
+            if (bankCode == null || bankCode.isEmpty())
+                list = service.findAll();
+            else
+                list = service.findAll(bankCode);
+
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<List<Branch>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

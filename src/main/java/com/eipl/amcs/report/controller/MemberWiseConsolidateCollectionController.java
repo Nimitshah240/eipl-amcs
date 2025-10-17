@@ -35,23 +35,22 @@ import java.util.concurrent.ExecutionException;
 public class MemberWiseConsolidateCollectionController implements MyInitialization {
 
     @FXML
+    ComboBox<String> cboxType, cboxType1;
+    @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate,btnGenerate1;
+    private Button btnGenerate, btnGenerate1;
     @FXML
-    private ComboBox<Member> cboxMemberCode,cboxMemberCode1;
+    private ComboBox<Member> cboxMemberCode, cboxMemberCode1;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift,cboxFromShift1, cboxToShift1;
+    private ComboBox<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
     @FXML
-    private DatePicker dpFromDate, dpToDate,dpFromDate1, dpToDate1;
+    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
-    private ComboBox<MilkType> cboxMilkType,cboxMilkType1;
-
-    @FXML
-    ComboBox<String> cboxType,cboxType1;
-
+    private ComboBox<MilkType> cboxMilkType, cboxMilkType1;
     private List<MilkType> listMilkType;
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -69,21 +68,13 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
         cboxType.getItems().addAll("Member Wise", "Member and MIlkType Wise", "Member Code Wise");
         cboxType.getSelectionModel().select(0);
         cboxType.setOnAction(e -> {
-            if (cboxType.getSelectionModel().getSelectedIndex() == 1)
-                cboxMilkType.setDisable(false);
-            else {
-                cboxMilkType.setDisable(true);
-            }
+            cboxMilkType.setDisable(cboxType.getSelectionModel().getSelectedIndex() != 1);
 
         });
         cboxType1.getItems().addAll("Member Wise", "Member and MIlkType Wise", "Member Code Wise");
         cboxType1.getSelectionModel().select(0);
         cboxType1.setOnAction(e -> {
-            if (cboxType1.getSelectionModel().getSelectedIndex() == 1)
-                cboxMilkType1.setDisable(false);
-            else {
-                cboxMilkType1.setDisable(true);
-            }
+            cboxMilkType1.setDisable(cboxType1.getSelectionModel().getSelectedIndex() != 1);
 
         });
 
@@ -108,8 +99,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
         cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
         cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         //(IN p_society_code varchar(25),IN p_member_code varchar(25),IN p_from_date date,IN p_to_date date,IN p_milk_type_code INT,IN p_locale VARCHAR(20))
@@ -144,6 +133,7 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
         }
         JasperViewer.viewReport(print, false);
     }
+
     private void validateAndGenerateReport1() {
         //(IN p_society_code varchar(25),IN p_member_code varchar(25),IN p_from_date date,IN p_to_date date,IN p_milk_type_code INT,IN p_locale VARCHAR(20))
         Map<String, Object> params = new HashMap<>();

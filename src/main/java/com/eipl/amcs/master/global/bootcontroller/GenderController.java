@@ -17,23 +17,22 @@ import java.util.List;
 @RequestMapping("/genders")
 public class GenderController {
 
-	@Autowired
-	private GenderService service;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenderController.class);
+    @Autowired
+    private GenderService service;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GenderController.class);
+    @GetMapping
+    public ResponseEntity<List<Gender>> index() {
+        try {
+            List<Gender> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 
-	@GetMapping
-	public ResponseEntity<List<Gender>> index() {
-		try {
-			List<Gender> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-
-			return new ResponseEntity<List<Gender>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+            return new ResponseEntity<List<Gender>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

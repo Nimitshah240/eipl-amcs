@@ -18,12 +18,11 @@ import java.util.List;
 @Service
 public class SocietyYearClosingServiceImpl implements SocietyYearClosingService {
 
+    private static final Logger log = LoggerFactory.getLogger(SocietyYearClosingServiceImpl.class);
     @Autowired
     private SocietyYearClosingRepository closingRepository;
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger log = LoggerFactory.getLogger(SocietyYearClosingServiceImpl.class);
 
     @Override
     public List<SocietyYearClosing> findAll() {

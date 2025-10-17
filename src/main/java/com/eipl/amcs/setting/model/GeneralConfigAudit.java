@@ -21,7 +21,7 @@ public class GeneralConfigAudit extends BaseModelTxnAudit {
     private Integer id;
     @Size(max = 10)
     private String code;
-    @Column(name="json_key")
+    @Column(name = "json_key")
     private String key;
     private String value;
 

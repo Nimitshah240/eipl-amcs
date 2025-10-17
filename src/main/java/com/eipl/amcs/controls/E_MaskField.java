@@ -8,228 +8,225 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class E_MaskField extends TextField {
-	public static final char MASK_DIGIT = 'D';
+    public static final char MASK_DIGIT = 'D';
 
-	public static final char MASK_DIG_OR_CHAR = 'W';
+    public static final char MASK_DIG_OR_CHAR = 'W';
 
-	public static final char MASK_CHARACTER = 'A';
+    public static final char MASK_CHARACTER = 'A';
 
-	public static final char WHAT_MASK_CHAR = '#';
-	public static final char WHAT_MASK_NO_CHAR = '-';
+    public static final char WHAT_MASK_CHAR = '#';
+    public static final char WHAT_MASK_NO_CHAR = '-';
 
-	public static final char PLACEHOLDER_CHAR_DEFAULT = '_';
+    public static final char PLACEHOLDER_CHAR_DEFAULT = '_';
 
-	private List<Position> objectMask = new ArrayList<>();
+    private List<Position> objectMask = new ArrayList<>();
 
-	private StringProperty plainText;
+    private StringProperty plainText;
+    private StringProperty mask;
+    private StringProperty whatMask;
+    private StringProperty placeholder;
 
-	public final String getPlainText() {
-		return plainTextProperty().get();
-	}
+    public final String getPlainText() {
+        return plainTextProperty().get();
+    }
 
-	public final void setPlainText(String value) {
-		plainTextProperty().set(value);
-		updateShowingField();
-	}
+    public final void setPlainText(String value) {
+        plainTextProperty().set(value);
+        updateShowingField();
+    }
 
-	public final StringProperty plainTextProperty() {
-		if (plainText == null)
-			plainText = new SimpleStringProperty(this, "plainText", "");
-		return plainText;
-	}
+    public final StringProperty plainTextProperty() {
+        if (plainText == null)
+            plainText = new SimpleStringProperty(this, "plainText", "");
+        return plainText;
+    }
 
-	private StringProperty mask;
+    public final String getMask() {
+        return maskProperty().get();
+    }
 
-	public final String getMask() {
-		return maskProperty().get();
-	}
+    public final void setMask(String value) {
+        maskProperty().set(value);
+        rebuildObjectMask();
+        updateShowingField();
+    }
 
-	public final void setMask(String value) {
-		maskProperty().set(value);
-		rebuildObjectMask();
-		updateShowingField();
-	}
+    public final StringProperty maskProperty() {
+        if (mask == null)
+            mask = new SimpleStringProperty(this, "mask");
 
-	public final StringProperty maskProperty() {
-		if (mask == null)
-			mask = new SimpleStringProperty(this, "mask");
+        return mask;
+    }
 
-		return mask;
-	}
+    public final String getWhatMask() {
+        return whatMaskProperty().get();
+    }
 
-	private StringProperty whatMask;
+    public final void setWhatMask(String value) {
+        whatMaskProperty().set(value);
+        rebuildObjectMask();
+        updateShowingField();
+    }
 
-	public final String getWhatMask() {
-		return whatMaskProperty().get();
-	}
+    public final StringProperty whatMaskProperty() {
+        if (whatMask == null) {
+            whatMask = new SimpleStringProperty(this, "whatMask");
+        }
+        return whatMask;
+    }
 
-	public final void setWhatMask(String value) {
-		whatMaskProperty().set(value);
-		rebuildObjectMask();
-		updateShowingField();
-	}
+    public final String getPlaceholder() {
+        return placeholderProperty().get();
+    }
 
-	public final StringProperty whatMaskProperty() {
-		if (whatMask == null) {
-			whatMask = new SimpleStringProperty(this, "whatMask");
-		}
-		return whatMask;
-	}
+    public final void setPlaceholder(String value) {
+        placeholderProperty().set(value);
+        rebuildObjectMask();
+        updateShowingField();
+    }
 
-	private StringProperty placeholder;
+    public final StringProperty placeholderProperty() {
+        if (placeholder == null)
+            placeholder = new SimpleStringProperty(this, "placeholder");
+        return placeholder;
+    }
 
-	public final String getPlaceholder() {
-		return placeholderProperty().get();
-	}
+    private void rebuildObjectMask() {
+        objectMask = new ArrayList<>();
 
-	public final void setPlaceholder(String value) {
-		placeholderProperty().set(value);
-		rebuildObjectMask();
-		updateShowingField();
-	}
+        for (int i = 0; i < getMask().length(); i++) {
+            char m = getMask().charAt(i);
+            char w = WHAT_MASK_CHAR;
+            char p = PLACEHOLDER_CHAR_DEFAULT;
 
-	public final StringProperty placeholderProperty() {
-		if (placeholder == null)
-			placeholder = new SimpleStringProperty(this, "placeholder");
-		return placeholder;
-	}
+            if (getWhatMask() != null && i < getWhatMask().length()) {
+                if (getWhatMask().charAt(i) != WHAT_MASK_CHAR) {
+                    w = WHAT_MASK_NO_CHAR;
+                }
+            } else {
+                if (m != MASK_CHARACTER && m != MASK_DIG_OR_CHAR && m != MASK_DIGIT)
+                    w = WHAT_MASK_NO_CHAR;
 
-	private class Position {
-		public char mask;
-		public char whatMask;
-		public char placeholder;
+            }
 
-		public Position(char mask, char whatMask, char placeholder) {
-			this.mask = mask;
-			this.placeholder = placeholder;
-			this.whatMask = whatMask;
-		}
+            if (getPlaceholder() != null && i < getPlaceholder().length())
+                p = getPlaceholder().charAt(i);
 
-		public boolean isPlainCharacter() {
-			return whatMask == WHAT_MASK_CHAR;
-		}
+            objectMask.add(new Position(m, w, p));
+        }
+    }
 
-		public boolean isCorrect(char c) {
-			switch (mask) {
-			case MASK_DIGIT:
-				return Character.isDigit(c);
-			case MASK_CHARACTER:
-				return Character.isLetter(c);
-			case MASK_DIG_OR_CHAR:
-				return Character.isLetter(c) || Character.isDigit(c);
-			}
-			return false;
-		}
-	}
+    private void updateShowingField() {
+        int counterPlainCharInMask = 0;
+        int lastPositionPlainCharInMask = 0;
+        int firstPlaceholderInMask = -1;
+        String textMask = "";
+        String textPlain = getPlainText();
+        for (int i = 0; i < objectMask.size(); i++) {
+            Position p = objectMask.get(i);
+            if (p.isPlainCharacter()) {
+                if (textPlain.length() > counterPlainCharInMask) {
 
-	private void rebuildObjectMask() {
-		objectMask = new ArrayList<>();
+                    char c = textPlain.charAt(counterPlainCharInMask);
+                    while (!p.isCorrect(c)) {
+                        textPlain = textPlain.substring(0, counterPlainCharInMask)
+                                + textPlain.substring(counterPlainCharInMask + 1);
 
-		for (int i = 0; i < getMask().length(); i++) {
-			char m = getMask().charAt(i);
-			char w = WHAT_MASK_CHAR;
-			char p = PLACEHOLDER_CHAR_DEFAULT;
+                        if (textPlain.length() > counterPlainCharInMask)
+                            c = textPlain.charAt(counterPlainCharInMask);
+                        else
+                            break;
+                    }
 
-			if (getWhatMask() != null && i < getWhatMask().length()) {
-				if (getWhatMask().charAt(i) != WHAT_MASK_CHAR) {
-					w = WHAT_MASK_NO_CHAR;
-				}
-			} else {
-				if (m != MASK_CHARACTER && m != MASK_DIG_OR_CHAR && m != MASK_DIGIT)
-					w = WHAT_MASK_NO_CHAR;
+                    textMask += c;
+                    lastPositionPlainCharInMask = i;
+                } else {
+                    textMask += p.placeholder;
+                    if (firstPlaceholderInMask == -1)
+                        firstPlaceholderInMask = i;
+                }
 
-			}
+                counterPlainCharInMask++;
 
-			if (getPlaceholder() != null && i < getPlaceholder().length())
-				p = getPlaceholder().charAt(i);
+            } else {
+                textMask += p.mask;
+            }
+        }
 
-			objectMask.add(new Position(m, w, p));
-		}
-	}
+        setText(textMask);
 
-	private void updateShowingField() {
-		int counterPlainCharInMask = 0;
-		int lastPositionPlainCharInMask = 0;
-		int firstPlaceholderInMask = -1;
-		String textMask = "";
-		String textPlain = getPlainText();
-		for (int i = 0; i < objectMask.size(); i++) {
-			Position p = objectMask.get(i);
-			if (p.isPlainCharacter()) {
-				if (textPlain.length() > counterPlainCharInMask) {
+        if (firstPlaceholderInMask == -1)
+            firstPlaceholderInMask = 0;
 
-					char c = textPlain.charAt(counterPlainCharInMask);
-					while (!p.isCorrect(c)) {
-						textPlain = textPlain.substring(0, counterPlainCharInMask)
-								+ textPlain.substring(counterPlainCharInMask + 1);
+        int caretPosition = (textPlain.length() > 0 ? lastPositionPlainCharInMask + 1 : firstPlaceholderInMask);
+        selectRange(caretPosition, caretPosition);
 
-						if (textPlain.length() > counterPlainCharInMask)
-							c = textPlain.charAt(counterPlainCharInMask);
-						else
-							break;
-					}
+        if (textPlain.length() > counterPlainCharInMask)
+            textPlain = textPlain.substring(0, counterPlainCharInMask);
 
-					textMask += c;
-					lastPositionPlainCharInMask = i;
-				} else {
-					textMask += p.placeholder;
-					if (firstPlaceholderInMask == -1)
-						firstPlaceholderInMask = i;
-				}
+        if (!textPlain.equals(getPlainText()))
+            setPlainText(textPlain);
 
-				counterPlainCharInMask++;
+    }
 
-			} else {
-				textMask += p.mask;
-			}
-		}
+    private int interpretMaskPositionInPlainPosition(int posMask) {
+        int posPlain = 0;
 
-		setText(textMask);
+        for (int i = 0; i < objectMask.size() && i < posMask; i++) {
+            Position p = objectMask.get(i);
+            if (p.isPlainCharacter())
+                posPlain++;
+        }
 
-		if (firstPlaceholderInMask == -1)
-			firstPlaceholderInMask = 0;
+        return posPlain;
+    }
 
-		int caretPosition = (textPlain.length() > 0 ? lastPositionPlainCharInMask + 1 : firstPlaceholderInMask);
-		selectRange(caretPosition, caretPosition);
+    @Override
+    public void replaceText(int start, int end, String text) {
 
-		if (textPlain.length() > counterPlainCharInMask)
-			textPlain = textPlain.substring(0, counterPlainCharInMask);
+        int plainStart = interpretMaskPositionInPlainPosition(start);
+        int plainEnd = interpretMaskPositionInPlainPosition(end);
 
-		if (!textPlain.equals(getPlainText()))
-			setPlainText(textPlain);
+        String plainText1 = "";
+        if (getPlainText().length() > plainStart)
+            plainText1 = getPlainText().substring(0, plainStart);
+        else
+            plainText1 = getPlainText();
 
-	}
+        String plainText2 = "";
+        if (getPlainText().length() > plainEnd)
+            plainText2 = getPlainText().substring(plainEnd);
+        else
+            plainText2 = "";
+        setPlainText(plainText1 + text + plainText2);
+    }
 
-	private int interpretMaskPositionInPlainPosition(int posMask) {
-		int posPlain = 0;
+    private class Position {
+        public char mask;
+        public char whatMask;
+        public char placeholder;
 
-		for (int i = 0; i < objectMask.size() && i < posMask; i++) {
-			Position p = objectMask.get(i);
-			if (p.isPlainCharacter())
-				posPlain++;
-		}
+        public Position(char mask, char whatMask, char placeholder) {
+            this.mask = mask;
+            this.placeholder = placeholder;
+            this.whatMask = whatMask;
+        }
 
-		return posPlain;
-	}
+        public boolean isPlainCharacter() {
+            return whatMask == WHAT_MASK_CHAR;
+        }
 
-	@Override
-	public void replaceText(int start, int end, String text) {
-
-		int plainStart = interpretMaskPositionInPlainPosition(start);
-		int plainEnd = interpretMaskPositionInPlainPosition(end);
-
-		String plainText1 = "";
-		if (getPlainText().length() > plainStart)
-			plainText1 = getPlainText().substring(0, plainStart);
-		else
-			plainText1 = getPlainText();
-
-		String plainText2 = "";
-		if (getPlainText().length() > plainEnd)
-			plainText2 = getPlainText().substring(plainEnd);
-		else
-			plainText2 = "";
-		setPlainText(plainText1 + text + plainText2);
-	}
+        public boolean isCorrect(char c) {
+            switch (mask) {
+                case MASK_DIGIT:
+                    return Character.isDigit(c);
+                case MASK_CHARACTER:
+                    return Character.isLetter(c);
+                case MASK_DIG_OR_CHAR:
+                    return Character.isLetter(c) || Character.isDigit(c);
+            }
+            return false;
+        }
+    }
 
 }

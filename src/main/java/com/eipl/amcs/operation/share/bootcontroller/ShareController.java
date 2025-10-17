@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping("/share")
 
 public class ShareController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShareController.class);
     @Autowired
     private ShareService service;
     @Autowired
@@ -29,14 +30,12 @@ public class ShareController {
     @Autowired
     private MemberRepository memberRepository;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShareController.class);
-
-
     @GetMapping("/by_member")
     public ResponseEntity<List<Share>> index(@RequestParam(name = "memCode") String memCode) {
         Member member = memberRepository.findByCode(memCode);
         return new ResponseEntity<List<Share>>(service.findByMember(member), HttpStatus.OK);
     }
+
     @GetMapping("/by_share_code")
     public ResponseEntity<List<Share>> indexbyShareCode(@RequestParam(name = "shareCode") String shareCode) {
         return new ResponseEntity<List<Share>>(service.findByShareCode(shareCode), HttpStatus.OK);
@@ -126,6 +125,7 @@ public class ShareController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @DeleteMapping("/transfer_revert/{code}")
     public ResponseEntity<?> transferRevertShare(@RequestHeader Map<String, String> headers, @PathVariable("code") String code) {
         try {

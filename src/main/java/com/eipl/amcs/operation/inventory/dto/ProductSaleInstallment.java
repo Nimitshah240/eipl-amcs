@@ -1,6 +1,5 @@
 package com.eipl.amcs.operation.inventory.dto;
 
-import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
@@ -21,6 +20,7 @@ public class ProductSaleInstallment extends BaseModelTxn {
     private String societyCode;
     private SocietyPaymentCycle societyPaymentCycle;
     private Member member;
+
     public String getCode() {
         return code;
     }

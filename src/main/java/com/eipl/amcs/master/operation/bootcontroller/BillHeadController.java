@@ -18,13 +18,11 @@ import java.util.Map;
 @RequestMapping("bill-head")
 public class BillHeadController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BillHeadController.class);
     @Autowired
     private BillHeadService service;
-
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BillHeadController.class);
 
     @GetMapping
     public ResponseEntity<List<BillHead>> index() {

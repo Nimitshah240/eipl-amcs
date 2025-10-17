@@ -14,7 +14,7 @@ import java.util.Optional;
 public class BmcRecordingServiceImpl implements BmcRecordingService {
 
     @Autowired
-    private  BmcRecordingRepository bmcRecordingRepository;
+    private BmcRecordingRepository bmcRecordingRepository;
     @Autowired
     private NextCodeService nextCodeService;
 
@@ -41,6 +41,7 @@ public class BmcRecordingServiceImpl implements BmcRecordingService {
         recording.setupdateData();
         return bmcRecordingRepository.save(recording);
     }
+
     @Override
     public BmcRecording updateBmcRecording(Long code, BmcRecording recording) {
         recording.setCode(code);

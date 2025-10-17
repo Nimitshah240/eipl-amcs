@@ -55,6 +55,7 @@ public class MemberCollectionReportController implements MyInitialization {
 
     private ResourceBundle resourceBundle;
     private MemberCollection memberCollection;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -96,8 +97,6 @@ public class MemberCollectionReportController implements MyInitialization {
         cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
         cboxMemberCode.setCellFactory(new MemberCellFactory());
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();

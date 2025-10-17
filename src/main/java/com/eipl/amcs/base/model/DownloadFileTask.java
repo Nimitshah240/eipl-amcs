@@ -12,9 +12,7 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -22,13 +20,12 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class DownloadFileTask extends Task<Map<String, Object>> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadFileTask.class);
     public String url;
 
     public DownloadFileTask(String url) {
         this.url = url;
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadFileTask.class);
 
     @Override
     protected Map<String, Object> call() throws Exception {

@@ -1,18 +1,12 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MilkReceiptLoadTask extends Task<List<MilkReceipt>> {
@@ -21,10 +15,10 @@ public class MilkReceiptLoadTask extends Task<List<MilkReceipt>> {
     @Override
     protected List<MilkReceipt> call() throws Exception {
         try {
-            MilkReceiptService service=EmcsAppContext.getContext().getBean(MilkReceiptService.class);
+            MilkReceiptService service = EmcsAppContext.getContext().getBean(MilkReceiptService.class);
             List<MilkReceipt> list = service.findAll();
 
-            if (list==null||list.isEmpty())return  null;
+            if (list == null || list.isEmpty()) return null;
             return list;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

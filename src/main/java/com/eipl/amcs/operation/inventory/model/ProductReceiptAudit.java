@@ -21,42 +21,42 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(name = "product_receipt_audit")
 public class ProductReceiptAudit extends BaseModelTxnAudit {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Size(max = 35)
-	private String grnNo;
-	private LocalDate grnDate;
-	private LocalDate challanDate;
-	@Size(max = 35)
-	private String challanNo;
-	@Size(max = 500)
-	private String description;
-	@Size(max = 35)
-	private String voucherNo;
-	private BigDecimal amount;
-	private BigDecimal discount;
-	private BigDecimal taxAmount;
-	private BigDecimal netAmount;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Size(max = 35)
+    private String grnNo;
+    private LocalDate grnDate;
+    private LocalDate challanDate;
+    @Size(max = 35)
+    private String challanNo;
+    @Size(max = 500)
+    private String description;
+    @Size(max = 35)
+    private String voucherNo;
+    private BigDecimal amount;
+    private BigDecimal discount;
+    private BigDecimal taxAmount;
+    private BigDecimal netAmount;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "customer_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = { "society", "union" })
-	private Customer customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"society", "union"})
+    private Customer customer;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = { "bank", "branch", "state", "district", "subDistrict", "village", "hamlet" })
-	private Union union;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
+    private Union union;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = { "bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
-			"subDistrict", "village", "hamlet" })
-	private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
+            "subDistrict", "village", "hamlet"})
+    private Society society;
 
-	@Override
-	public String getTableName() {
-		return "product_receipt_audit";
-	}
+    @Override
+    public String getTableName() {
+        return "product_receipt_audit";
+    }
 }

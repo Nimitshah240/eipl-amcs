@@ -22,10 +22,9 @@ import java.util.Map;
 @RequestMapping("/society-payment-cycles")
 public class SocietyPaymentCycleController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocietyPaymentCycleController.class);
     @Autowired
     private SocietyPaymentCycleService service;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SocietyPaymentCycleController.class);
 
     @GetMapping
     public ResponseEntity<List<SocietyPaymentCycle>> index() {

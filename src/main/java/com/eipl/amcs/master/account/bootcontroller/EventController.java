@@ -17,22 +17,21 @@ import java.util.List;
 @RequestMapping("/event")
 public class EventController {
 
-	@Autowired
-	private EventService service;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
+    @Autowired
+    private EventService service;
 
-	@GetMapping
-	public ResponseEntity<List<Events>> index() {
-		try {
-			List<Events> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<Events>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<Events>> index() {
+        try {
+            List<Events> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<List<Events>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

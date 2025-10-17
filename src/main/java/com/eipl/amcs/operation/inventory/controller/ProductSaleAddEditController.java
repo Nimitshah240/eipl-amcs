@@ -14,9 +14,9 @@ import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
+import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.model.TaxDetail;
-import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
@@ -32,8 +32,12 @@ import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.master.operation.task.MemberCreditLimitLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.FetchAllPaymentCycleLoadTask;
-import com.eipl.amcs.operation.inventory.dto.*;
+import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
+import com.eipl.amcs.operation.inventory.dto.SaleTxnTaxDto;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
+import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.model.ProductSaleTax;
+import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 import com.eipl.amcs.operation.inventory.task.ProductSaleGetNextCodeTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleTransactionsByInvoiceNoLoadTask;
@@ -57,9 +61,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
-import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 
 public class ProductSaleAddEditController implements MyInitialization, PopupCallback {
 
@@ -96,26 +97,26 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     private StringBuilder errorMsg = null;
     private SaleTxnTaxDto saleTxnTaxDto;
 
-    private BigDecimal amount = BigDecimal.valueOf(0);
-    private BigDecimal taxAmount = BigDecimal.valueOf(0);
-    private BigDecimal discount = BigDecimal.valueOf(0);
-    private BigDecimal netAmount = BigDecimal.valueOf(0);
+    private final BigDecimal amount = BigDecimal.valueOf(0);
+    private final BigDecimal taxAmount = BigDecimal.valueOf(0);
+    private final BigDecimal discount = BigDecimal.valueOf(0);
+    private final BigDecimal netAmount = BigDecimal.valueOf(0);
 
     private List<SocietyPaymentCycle> paymentCycleList;
-    private ObjectProperty<ProductSaleTransaction> propSaleTxn;
-    private List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
-    private List<ProductSaleInstallment> installmentList = new ArrayList<>();
-    private ObservableList<ProductSaleTransaction> listProductSaleTransaction;
+    private final ObjectProperty<ProductSaleTransaction> propSaleTxn;
+    private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
+    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
+    private final ObservableList<ProductSaleTransaction> listProductSaleTransaction;
     private List<TaxDto> taxDtoList;
-
-    @Override
-    public Node getRoot() {
-        return root;
-    }
 
     public ProductSaleAddEditController() {
         propSaleTxn = new SimpleObjectProperty<>();
         listProductSaleTransaction = FXCollections.observableArrayList();
+    }
+
+    @Override
+    public Node getRoot() {
+        return root;
     }
 
     @Override
@@ -172,11 +173,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         btnDelete.setOnAction(e -> deleteData());
 
         propSaleTxn.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnDelete.setDisable(false);
-            } else {
-                btnDelete.setDisable(true);
-            }
+            btnDelete.setDisable(newValue == null);
         });
         txtConsumerCode.setOnAction(e -> {
             String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
@@ -376,7 +373,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                                 resourceBundle.getString("error.occurred"));
                         alert.createAlert();
                         FocusUtils.requestFocus(txtConsumerCode);
-                        return;
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -397,7 +393,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                                 resourceBundle.getString("error.occurred"));
                         alert.createAlert();
                         FocusUtils.requestFocus(txtConsumerCode);
-                        return;
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();

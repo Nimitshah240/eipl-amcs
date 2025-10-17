@@ -18,8 +18,14 @@ import java.util.Optional;
 @RequestMapping("/bmc-recordings")
 public class BmcRecordingController {
 
-    private final BmcRecordingService service;
     private static final Logger LOGGER = LoggerFactory.getLogger(BmcRecordingController.class);
+    private final BmcRecordingService service;
+
+    @Autowired
+    public BmcRecordingController(BmcRecordingService service) {
+        this.service = service;
+    }
+
     @GetMapping
     public ResponseEntity<List<BmcRecording>> index() {
         try {
@@ -31,11 +37,6 @@ public class BmcRecordingController {
             LOGGER.error(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @Autowired
-    public BmcRecordingController(BmcRecordingService service) {
-        this.service = service;
     }
 
     @GetMapping("/{id}")

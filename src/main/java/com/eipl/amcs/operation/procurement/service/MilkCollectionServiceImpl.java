@@ -28,8 +28,8 @@ import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.setting.repository.HardwareDeviceConfigRepository;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,7 @@ import java.util.*;
 @Service
 public class MilkCollectionServiceImpl implements MilkCollectionService {
 
+    private final DateTimeFormatter CODE_DATE_FMT = DateTimeFormatter.ofPattern("yyMMdd");
     @Autowired
     private MilkCollectionRepository milkCollectionRepository;
     @Autowired
@@ -82,9 +83,6 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     private MilkQualityTypeRepository milkQualityRepository;
     @Autowired
     private DockRepository dockRepository;
-
-    private final DateTimeFormatter CODE_DATE_FMT = DateTimeFormatter.ofPattern("yyMMdd");
-
 
     @Override
     public List<MilkCollection> findAllBetween(LocalDateTime fromDt, LocalDateTime toDt) {
@@ -153,7 +151,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
                 if (voucherNo == null)
                     return null;
                 Voucher voucher = VoucherUtil.getVoucherInstance(voucherNo, null, collection.getCollectionDate().toLocalDate(),
-                        collection.getCollectionDate().toLocalDate(), "Milk Collection Auto Posting " + collection.getCollectionDate().toString(),
+                        collection.getCollectionDate().toLocalDate(), "Milk Collection Auto Posting " + collection.getCollectionDate(),
                         eventsList.get(0).getVoucherType(), financialYear.isPresent() ? financialYear.get().getCode() : null,
                         collection.getSociety(), collection.getUnionCode(), collection.getDock().getDockNo());
                 voucher.setVoucherTransactions(new ArrayList<>());

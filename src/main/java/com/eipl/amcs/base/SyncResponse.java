@@ -5,6 +5,12 @@ import java.time.LocalDateTime;
 
 public class SyncResponse {
 
+    protected LocalDateTime fromDatetime;
+    protected LocalDateTime toDatetime;
+    protected LocalDateTime createdAt;
+    protected String createdBy;
+    protected LocalDateTime updatedAt;
+    protected String updatedBy;
     private String forceSyncRequestCode;
     private String dcsCode;
     private String unionCode;
@@ -17,13 +23,6 @@ public class SyncResponse {
     private String originatingOrgCode;
     private String originatingOrgType;
     private String originatingType;
-    protected LocalDateTime fromDatetime;
-    protected LocalDateTime toDatetime;
-    protected LocalDateTime createdAt;
-    protected String createdBy;
-    protected LocalDateTime updatedAt;
-    protected String updatedBy;
-
 
     public String getForceSyncRequestCode() {
         return forceSyncRequestCode;

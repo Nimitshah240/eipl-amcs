@@ -1,26 +1,16 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.operation.procurement.dto.MemberSocietyInfoDto;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MemberSocietyInfoLoadTask extends Task<Object> {
-    private String code;
-    private LocalDateTime date;
+    private final String code;
+    private final LocalDateTime date;
     private Integer count;
     private String paymentCycleCode;
 
@@ -40,7 +30,7 @@ public class MemberSocietyInfoLoadTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            MemberService service=EmcsAppContext.getContext().getBean(MemberService.class);
+            MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
             if (count == null)
                 count = 5;
 

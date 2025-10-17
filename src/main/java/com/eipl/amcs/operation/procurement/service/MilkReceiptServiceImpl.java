@@ -41,7 +41,8 @@ import java.util.Optional;
 
 @Service
 public class MilkReceiptServiceImpl implements MilkReceiptService {
-    
+
+    private static final Logger log = LoggerFactory.getLogger(MilkReceiptServiceImpl.class);
     @Autowired
     private MilkReceiptRepository milkReceiptRepository;
     @Autowired
@@ -60,8 +61,6 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
     private LocalMilkSaleRepository localMilkSaleRepository;
     @Autowired
     private MilkTypeRepository milkTypeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(MilkReceiptServiceImpl.class);
 
     @Override
     // @Cacheable(value = "MilkDispatchsCache")

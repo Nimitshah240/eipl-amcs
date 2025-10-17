@@ -16,10 +16,9 @@ import java.util.Optional;
 @Service
 public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConfigService {
 
+    private static final Logger log = LoggerFactory.getLogger(VoucherTypeLedgerConfigServiceImpl.class);
     @Autowired
     private VoucherTypeLedgerConfigRepository voucherTypeLedgerConfigRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(VoucherTypeLedgerConfigServiceImpl.class);
 
     @Override
     public List<VoucherTypeLedgerConfig> findAll() {

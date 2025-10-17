@@ -7,7 +7,6 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
@@ -20,12 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 public class EMandaliMemberDbProcess extends Task<List<MemberDto>> {
-    private Map<String, MilkType> milkTypeMap;
-    private Map<String, Gender> genderMap;
-    private MemberType memberType;
-    private String cowRange;
-    private String buffRange;
-    private String dbName;
+    private final Map<String, MilkType> milkTypeMap;
+    private final Map<String, Gender> genderMap;
+    private final MemberType memberType;
+    private final String cowRange;
+    private final String buffRange;
+    private final String dbName;
 
     public EMandaliMemberDbProcess(Map<String, MilkType> milkTypeMap, Map<String, Gender> genderMap, MemberType memberType,
                                    String cowRange, String buffRange, String dbName) {
@@ -48,7 +47,7 @@ public class EMandaliMemberDbProcess extends Task<List<MemberDto>> {
             String[] buffRangeArr = buffRange.split("-");
             int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
-            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement();) {
+            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
 //            try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select * from MemberMaster");
@@ -71,7 +70,7 @@ public class EMandaliMemberDbProcess extends Task<List<MemberDto>> {
 //                        }
 //                    }
 
-                    m.setFirstName(resultSet.getString("NameEng")!=null?resultSet.getString("NameEng"):"Member");
+                    m.setFirstName(resultSet.getString("NameEng") != null ? resultSet.getString("NameEng") : "Member");
                     m.setLastName(".");
 
 //                    String[] nameLocalArr = resultSet.getString("NameGuj") != null ?
@@ -81,7 +80,7 @@ public class EMandaliMemberDbProcess extends Task<List<MemberDto>> {
 //                        m.setFirstNameLocal(nameLocalArr.length > 1 ? nameLocalArr[1] : "");
 //                        m.setMiddleNameLocal(nameLocalArr.length > 2 ? nameLocalArr[2] : "");
 //                    }
-                    m.setFirstNameLocal(resultSet.getString("NameGuj")!=null?resultSet.getString("NameGuj"):"Member");
+                    m.setFirstNameLocal(resultSet.getString("NameGuj") != null ? resultSet.getString("NameGuj") : "Member");
                     m.setMemberType(memberType);
                     m.setSociety(MainApp.identityDto.getSociety());
                     m.setActive(true);
@@ -101,10 +100,10 @@ public class EMandaliMemberDbProcess extends Task<List<MemberDto>> {
                     md.setUnionCode(MainApp.identityDto.getUnion().getCode());
                     md.setMember(m);
                     md.setAccountNo(resultSet.getString("BankAcNo"));
-                    if(md.getAccountNo()==null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
-                        md.setPaymentMode((short)0);
-                    else{
-                        md.setPaymentMode((short)1);
+                    if (md.getAccountNo() == null || md.getAccountNo().isEmpty() || md.getAccountNo().equalsIgnoreCase("0"))
+                        md.setPaymentMode((short) 0);
+                    else {
+                        md.setPaymentMode((short) 1);
                     }
                     list.add(new MemberDto(m, md));
 

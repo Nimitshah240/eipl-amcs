@@ -31,7 +31,7 @@ public class VoucherUtil {
     public static VoucherTransaction getVoucherTxn(Voucher voucher, BigDecimal amount, boolean creditDebit, Ledger ledger,
                                                    String narration, String code) {
         VoucherTransaction txn = new VoucherTransaction();
-        txn.setCode(voucher.getCode() +"T"+ code);
+        txn.setCode(voucher.getCode() + "T" + code);
         txn.setAmount(amount);
         txn.setCreditDebit(creditDebit);
         txn.setLedger(ledger);
@@ -46,7 +46,7 @@ public class VoucherUtil {
                                                        BigDecimal amount, boolean creditDebit, String narration,
                                                        SubLedger subLedger) {
         VoucherSubLedger voucherSubLedger = new VoucherSubLedger();
-        voucherSubLedger.setCode(txn.getCode() +"S"+ code);
+        voucherSubLedger.setCode(txn.getCode() + "S" + code);
         voucherSubLedger.setAmount(amount);
         voucherSubLedger.setCreditDebit(creditDebit);
         voucherSubLedger.setNarration(narration);

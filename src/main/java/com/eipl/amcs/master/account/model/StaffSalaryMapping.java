@@ -19,30 +19,26 @@ import java.time.LocalDate;
 @Table(name = "staff_salary_head_mapping")
 public class StaffSalaryMapping extends BaseModelTxn {
 
-	@Id
-	private Integer code;
-	private BigDecimal amount;
-	private String unionCode;
-	private LocalDate wefDate;
+    protected boolean active;
+    @Id
+    private Integer code;
+    private BigDecimal amount;
+    private String unionCode;
+    private LocalDate wefDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_society_code"))
+    @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
+    private Society society;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staff_member_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_staff_member_code"))
+    @JsonIgnoreProperties(value = {"society", "bank", "branch", "gender", "designation"})
+    private StaffMember staffMember;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "salary_head_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_salary_head_code"))
+    private StaffSalaryHead staffSalaryHead;
 
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_society_code"))
-	@JsonIgnoreProperties(value = {"bank", "branch","union","plant","mcc","bmc","route","state","district","subDistrict","village","hamlet"})
-	private Society society;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "staff_member_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_staff_member_code"))
-	@JsonIgnoreProperties(value = {"society","bank","branch","gender","designation"})
-	private StaffMember staffMember;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "salary_head_code", foreignKey = @ForeignKey(name = "fk_staff_salary_head_mapping_salary_head_code"))
-	private StaffSalaryHead staffSalaryHead;
-	protected boolean active;
-
-	@Override
-	public String getTableName() {
-		return "staff_salary_head_mapping";
-	}
+    @Override
+    public String getTableName() {
+        return "staff_salary_head_mapping";
+    }
 }

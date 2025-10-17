@@ -23,6 +23,16 @@ public class Share extends BaseModel {
     private Integer noOfRefundShare;
     private Integer noOfTransferredShare;
     private Member transferredFrom;
+    private BigDecimal unitCost;
+    private String voucherNo;
+    private String unionCode;
+    private String shareCode;
+    private Member member;
+    private Society society;
+    private String transferredFromCode;
+    private String xcol4;
+    private String xcol5;
+    private LocalDate cancelDate;
 
     public Member getTransferredFrom() {
         return transferredFrom;
@@ -32,19 +42,12 @@ public class Share extends BaseModel {
         this.transferredFrom = transferredFrom;
     }
 
-    private BigDecimal unitCost;
-    private String voucherNo;
-    private String unionCode;
-    private String shareCode;
-    private Member member;
-    private Society society;
-    private String transferredFromCode;
-
-    private String xcol4;
-    private String xcol5;
-
     public LocalDate getCancelDate() {
         return cancelDate;
+    }
+
+    public void setCancelDate(LocalDate cancelDate) {
+        this.cancelDate = cancelDate;
     }
 
     public String getTransferredFromCode() {
@@ -54,13 +57,6 @@ public class Share extends BaseModel {
     public void setTransferredFromCode(String transferredFromCode) {
         this.transferredFromCode = transferredFromCode;
     }
-
-    public void setCancelDate(LocalDate cancelDate) {
-        this.cancelDate = cancelDate;
-    }
-
-    private LocalDate cancelDate;
-
 
     public String getLedgerNo() {
         return ledgerNo;
@@ -74,16 +70,16 @@ public class Share extends BaseModel {
         return xcol4;
     }
 
+    public void setXcol4(String xcol4) {
+        this.xcol4 = xcol4;
+    }
+
     public Boolean getCheckMember() {
         return checkMember;
     }
 
     public void setCheckMember(Boolean checkMember) {
         this.checkMember = checkMember;
-    }
-
-    public void setXcol4(String xcol4) {
-        this.xcol4 = xcol4;
     }
 
     public String getXcol5() {
@@ -147,6 +143,10 @@ public class Share extends BaseModel {
         return noOfTransferredShare;
     }
 
+    public void setNoOfTransferredShare(Integer noOfTransferredShare) {
+        this.noOfTransferredShare = noOfTransferredShare;
+    }
+
     public Boolean getCancelled() {
         return cancelled;
     }
@@ -169,10 +169,6 @@ public class Share extends BaseModel {
 
     public void setTransferred(Boolean transferred) {
         this.transferred = transferred;
-    }
-
-    public void setNoOfTransferredShare(Integer noOfTransferredShare) {
-        this.noOfTransferredShare = noOfTransferredShare;
     }
 
     public BigDecimal getUnitCost() {

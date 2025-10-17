@@ -40,6 +40,18 @@ public class Ledger extends BaseModel {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     private String unionCode;
+    @Transient
+    private BooleanProperty selected;
+
+    public Ledger() {
+        selected = new SimpleBooleanProperty(false);
+    }
+
+    public Ledger(String name) {
+        selected = new SimpleBooleanProperty(false);
+
+        this.name = name;
+    }
 
     @Override
     public String getTableName() {
@@ -75,19 +87,6 @@ public class Ledger extends BaseModel {
         audit.setXCol3(this.getXCol3());
 
         return audit;
-    }
-
-    @Transient
-    private BooleanProperty selected;
-
-    public Ledger() {
-        selected = new SimpleBooleanProperty(false);
-    }
-
-    public Ledger(String name) {
-        selected = new SimpleBooleanProperty(false);
-
-        this.name = name;
     }
 
     public final BooleanProperty selectedProperty() {

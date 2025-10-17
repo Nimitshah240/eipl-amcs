@@ -1,10 +1,9 @@
 package com.eipl.amcs.base.model;
 
+import com.eipl.amcs.base.Notification;
 import com.eipl.amcs.base.service.NotificationService;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.util.CommonUtil;
-import com.eipl.amcs.base.Notification;
-
 import javafx.concurrent.Task;
 
 import java.util.List;

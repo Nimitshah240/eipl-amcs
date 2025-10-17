@@ -16,27 +16,27 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "member_bill_summary_audit")
 public class MemberBillSummaryAudit extends BaseModelTxnAudit {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String code;
-	private BigDecimal milkQty;
-	private BigDecimal milkAmount;
-	private BigDecimal productSaleAmount;
-	private BigDecimal localSaleAmount;
-	private BigDecimal loanAmount;
-	private BigDecimal otherAddAmount;
-	private BigDecimal otherDedAmount;
-	private BigDecimal netAmount;
-	private BigDecimal disbursedAmount;
-	private short status; //1-PENDING
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_payment_cycle_code",foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	private SocietyPaymentCycle paymentCycle;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String code;
+    private BigDecimal milkQty;
+    private BigDecimal milkAmount;
+    private BigDecimal productSaleAmount;
+    private BigDecimal localSaleAmount;
+    private BigDecimal loanAmount;
+    private BigDecimal otherAddAmount;
+    private BigDecimal otherDedAmount;
+    private BigDecimal netAmount;
+    private BigDecimal disbursedAmount;
+    private short status; //1-PENDING
 
-	@Override
-	public String getTableName() {
-		return "member_bill_summary";
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private SocietyPaymentCycle paymentCycle;
+
+    @Override
+    public String getTableName() {
+        return "member_bill_summary";
+    }
 }

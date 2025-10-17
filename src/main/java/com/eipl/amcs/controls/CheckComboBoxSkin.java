@@ -3,15 +3,10 @@ package com.eipl.amcs.controls;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Skin;
-import javafx.scene.control.SkinBase;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.input.KeyCode;
-
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 

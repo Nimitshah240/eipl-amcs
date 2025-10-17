@@ -17,19 +17,19 @@ import javax.persistence.Table;
 @Table(name = "identity")
 public class Identity extends BaseModelTxn {
 
-	@Id
-	private String code;
-	private String token;
-	private String societyRefCode;
-	private String systemMac;
-	private String syncStatus;
-	private String syncUrl;
-	private String unionCode;
-	private String societyCode;
-	private String dockNo;
+    @Id
+    private String code;
+    private String token;
+    private String societyRefCode;
+    private String systemMac;
+    private String syncStatus;
+    private String syncUrl;
+    private String unionCode;
+    private String societyCode;
+    private String dockNo;
 
-	@Override
-	public String getTableName() {
-		return "identity";
-	}
+    @Override
+    public String getTableName() {
+        return "identity";
+    }
 }

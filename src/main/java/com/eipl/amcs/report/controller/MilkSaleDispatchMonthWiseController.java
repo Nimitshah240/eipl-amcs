@@ -7,10 +7,6 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.org.convertor.DockConvertor;
-import com.eipl.amcs.master.org.model.Dock;
-import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
-import com.eipl.amcs.master.org.task.DockLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -26,12 +22,9 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class MilkSaleDispatchMonthWiseController implements MyInitialization {
 
@@ -40,9 +33,9 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpFromDate,dpToDate;
+    private DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<Shift> cboxFromShift,cboxToShift;
+    private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
 
@@ -60,13 +53,13 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
         dpToDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -85,8 +78,8 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
-        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
+        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_animal_type_code", cboxMilkType.getValue().getCode());
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_MONTH_WISE, params);
@@ -113,13 +106,13 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
-        
+
         new Thread(task1).start();
         var task2 = new MilkTypeLoadTask();
         task2.setOnSucceeded(e -> {
             try {
                 List<MilkType> list = new ArrayList<>();
-                list.add(new MilkType(0,"All"));
+                list.add(new MilkType(0, "All"));
                 list.addAll(task2.get());
                 if (list != null) {
                     cboxMilkType.setItems(FXCollections.observableList(list));
@@ -130,9 +123,6 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
             }
         });
         new Thread(task2).start();
-
-        
-
 
 
     }

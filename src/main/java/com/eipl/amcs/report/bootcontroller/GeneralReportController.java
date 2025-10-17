@@ -6,17 +6,10 @@ import com.eipl.amcs.operation.billing.repository.BonusRepository;
 import com.eipl.amcs.operation.billing.repository.MemberBillRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
-import com.eipl.amcs.report.bootdto.*;
-import com.eipl.amcs.report.dto.ProductStockValuation;
-import com.eipl.amcs.report.dto.BonusRegister;
-import com.eipl.amcs.report.dto.SocietyPurchase;
-import com.eipl.amcs.report.dto.PaymentRegisterForCash;
-import com.eipl.amcs.report.dto.PaymentForBank;
-import com.eipl.amcs.report.dto.MilkDispatchChallan;
-import com.eipl.amcs.report.dto.MemberRegister;
-import com.eipl.amcs.report.dto.DairySaleRegister;
-import com.eipl.amcs.report.dto.LedgerClose;
-import com.eipl.amcs.report.dto.MemberCollectionSummary;
+import com.eipl.amcs.report.bootdto.LedgerBalance;
+import com.eipl.amcs.report.bootdto.ProductStockValuationWithSaleAndPurchase;
+import com.eipl.amcs.report.bootdto.ShiftReportCode;
+import com.eipl.amcs.report.dto.*;
 import com.eipl.amcs.utils.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -197,7 +190,7 @@ public class GeneralReportController {
             List<Object[]> list = ledgerRepository.fetchSubLedgerOpeningBalance(ledgerCode, fromDate, toDate, locale);
             if (list != null && !list.isEmpty()) {
                 for (Object[] arr : list) {
-                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (((BigDecimal) arr[2]).doubleValue() < 0 ? false : true), ((BigDecimal) arr[2]).doubleValue());
+                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (!(((BigDecimal) arr[2]).doubleValue() < 0)), ((BigDecimal) arr[2]).doubleValue());
                     listResp.add(bal);
                 }
             }
@@ -216,7 +209,7 @@ public class GeneralReportController {
             List<Object[]> list = ledgerRepository.fetchLedgerClosing(societyCode, fromDate, toDate, locale);
             if (list != null && !list.isEmpty()) {
                 for (Object[] arr : list) {
-                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (((BigDecimal) arr[2]).doubleValue() < 0 ? false : true), ((BigDecimal) arr[2]).doubleValue());
+                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (!(((BigDecimal) arr[2]).doubleValue() < 0)), ((BigDecimal) arr[2]).doubleValue());
                     listResp.add(bal);
                 }
             }

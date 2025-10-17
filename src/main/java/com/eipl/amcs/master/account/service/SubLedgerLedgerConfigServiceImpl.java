@@ -17,11 +17,9 @@ import java.util.stream.Collectors;
 @Service
 public class SubLedgerLedgerConfigServiceImpl implements SubLedgerLedgerConfigService {
 
+    private static final Logger log = LoggerFactory.getLogger(SubLedgerLedgerConfigServiceImpl.class);
     @Autowired
     private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(SubLedgerLedgerConfigServiceImpl.class);
-
 
     @Override
     public List<SubLedgerLedgerConfig> findAll() {

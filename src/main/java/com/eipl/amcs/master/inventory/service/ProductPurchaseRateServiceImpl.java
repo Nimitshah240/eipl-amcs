@@ -23,14 +23,13 @@ import java.util.Optional;
 
 @Service
 public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateService {
+    private static final Logger log = LoggerFactory.getLogger(ProductPurchaseRateServiceImpl.class);
     @Autowired
     private ProductPurchaseRateRepository productPurchaseRateRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private NextCodeRepository nextCodeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(ProductPurchaseRateServiceImpl.class);
 
     @Override
     public List<ProductPurchaseRate> findAll() {

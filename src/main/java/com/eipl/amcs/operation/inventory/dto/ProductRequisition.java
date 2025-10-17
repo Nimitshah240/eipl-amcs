@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.inventory.dto;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.org.model.Society;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ProductRequisition extends BaseModelTxn {

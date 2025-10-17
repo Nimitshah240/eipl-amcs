@@ -1,6 +1,5 @@
 package com.eipl.amcs.network;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -21,8 +20,8 @@ public class RealTimeRequest<T> implements Serializable {
     public RealTimeRequest(String societyCode, String token, T content) {
         this.token = token;
         this.deviceId = CommonUtils.getDeviceId(societyCode);
-        this.organizationCode= societyCode;
-        this.organizationType="VLC";
+        this.organizationCode = societyCode;
+        this.organizationType = "VLC";
 //        this.organizationType="SOCIETY";
         this.imei = "";
         this.token = token;

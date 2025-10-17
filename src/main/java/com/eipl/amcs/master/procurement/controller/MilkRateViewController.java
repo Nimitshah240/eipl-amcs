@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class MilkRateViewController implements MyInitialization {
+    private final Map<String, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
     @FXML
     private Button btnClose;
     @FXML
@@ -38,8 +39,6 @@ public class MilkRateViewController implements MyInitialization {
     private StackPane root;
     @FXML
     private TableView<PurchaseRateGenerate> tableRateDetails;
-
-    private final Map<String, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
     private RateViewDto rateViewDto;
     private RateType rateType;
     private ResourceBundle resourceBundle;

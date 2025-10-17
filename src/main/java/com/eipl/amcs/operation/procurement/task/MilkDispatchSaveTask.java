@@ -32,7 +32,6 @@ public class MilkDispatchSaveTask extends Task<Object> {
                 dtoResult = service.update(dto, CommonUtil.setIdentityHeader());
             }
 
-            if(dtoResult == null) return null;
             return dtoResult;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

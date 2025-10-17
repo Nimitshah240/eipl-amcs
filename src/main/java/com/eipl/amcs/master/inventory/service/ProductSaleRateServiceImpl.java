@@ -20,12 +20,11 @@ import java.util.Optional;
 
 @Service
 public class ProductSaleRateServiceImpl implements ProductSaleRateService {
+    private static final Logger log = LoggerFactory.getLogger(ProductSaleRateServiceImpl.class);
     @Autowired
     private ProductSaleRateRepository productSaleRateRepository;
     @Autowired
     private NextCodeRepository nextCodeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(ProductSaleRateServiceImpl.class);
 
     @Override
     public List<ProductSaleRate> findAll() {

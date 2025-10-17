@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class SocietyPaymentCycleController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<SocietyPaymentCycle> propPaymentCycle;
     @FXML
     StackPane root;
     @FXML
@@ -51,7 +52,6 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
     @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<SocietyPaymentCycle> propPaymentCycle;
 
     public SocietyPaymentCycleController() {
         propPaymentCycle = new SimpleObjectProperty<>();

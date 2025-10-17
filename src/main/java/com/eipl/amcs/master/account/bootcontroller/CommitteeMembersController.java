@@ -18,13 +18,11 @@ import java.util.Map;
 @RequestMapping("/committee-members")
 public class CommitteeMembersController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommitteeMembersController.class);
     @Autowired
     private CommitteeMembersService service;
-
     @Autowired
     private NextCodeService nextCodeService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommitteeMembersController.class);
 
     @GetMapping
     public ResponseEntity<List<CommitteeMembers>> index(String memberCode) {

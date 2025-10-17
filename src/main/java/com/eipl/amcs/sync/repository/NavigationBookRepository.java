@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NavigationBookRepository extends JpaRepository<NavigationBook, Integer>{
+public interface NavigationBookRepository extends JpaRepository<NavigationBook, Integer> {
 
-	List<NavigationBook> findByNavForAndFlag(short navFor, short flag);
+    List<NavigationBook> findByNavForAndFlag(short navFor, short flag);
 
 }

@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class CommitteeMembersController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<CommitteeMembers> propCommitteMembertDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -37,11 +38,8 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
     @FXML
     DatePicker dpDate;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit,btnRegister;
-
+    Button btnClose, btnAdd, btnDelete, btnEdit, btnRegister;
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<CommitteeMembers> propCommitteMembertDto;
 
 
     public CommitteeMembersController() {
@@ -90,7 +88,7 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeMembersAddEdit", dto, this);
         });
 
-        btnRegister.setOnAction(e->{
+        btnRegister.setOnAction(e -> {
             validateAndGenerateReport();
         });
     }
@@ -100,17 +98,17 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
         params.put("p_date", dpDate.getValue());
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_locale", MainApp.locale);
-        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.COMMITTEE_REGISTER, params);;
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.COMMITTEE_REGISTER, params);
         JasperViewer.viewReport(print, false);
     }
 
     @Override
     public void setupTable() {
-        try{
-        colMembername.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMemberName()));
-        colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
-        propCommitteMembertDto.bind(tableCommitteeMembers.getSelectionModel().selectedItemProperty());
-    }catch (Exception e) {
+        try {
+            colMembername.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMemberName()));
+            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
+            propCommitteMembertDto.bind(tableCommitteeMembers.getSelectionModel().selectedItemProperty());
+        } catch (Exception e) {
             System.out.println("CommiteMembers setuptable Exception");
             e.printStackTrace();
         }
@@ -143,7 +141,7 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

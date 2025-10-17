@@ -15,10 +15,9 @@ import java.util.List;
 @RequestMapping("/societies")
 public class SocietyController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocietyController.class);
     @Autowired
     private SocietyService service;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(SocietyController.class);
 
     @GetMapping
     public ResponseEntity<List<Society>> index() {

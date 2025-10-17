@@ -23,6 +23,7 @@ import java.util.Optional;
 @Service
 public class LedgerServiceImpl implements LedgerService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerServiceImpl.class);
     @Autowired
     private LedgerRepository ledgerRepository;
     @Autowired
@@ -31,9 +32,6 @@ public class LedgerServiceImpl implements LedgerService {
     private LedgerSubLedgerMappingRepository ledgerSubLedgerMappingRepository;
     @Autowired
     private SocietyRepository societyRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerServiceImpl.class);
-
 
     @Override
     public List<Ledger> findAll() {

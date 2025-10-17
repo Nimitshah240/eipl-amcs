@@ -17,13 +17,11 @@ import java.util.Optional;
 @Service
 public class LedgerGroupServiceImpl implements LedgerGroupService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerGroupServiceImpl.class);
     @Autowired
     private LedgerGroupRepository ledgerGroupRepository;
     @Autowired
     private LedgerTypeRepository typeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerGroupServiceImpl.class);
-
 
     @Override
     public List<LedgerGroup> findAll() {

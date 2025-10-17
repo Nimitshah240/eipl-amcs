@@ -17,22 +17,21 @@ import java.util.List;
 @RequestMapping("/bmcs")
 public class BmcController {
 
-	@Autowired
-	private BmcService service;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(BmcController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BmcController.class);
+    @Autowired
+    private BmcService service;
 
-	@GetMapping
-	public ResponseEntity<List<Bmc>> index() {
-		try {
-			List<Bmc> list = service.findAll();
-			if (list == null || list.isEmpty())
-				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<Bmc>>(list, HttpStatus.OK);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    @GetMapping
+    public ResponseEntity<List<Bmc>> index() {
+        try {
+            List<Bmc> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+            return new ResponseEntity<List<Bmc>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

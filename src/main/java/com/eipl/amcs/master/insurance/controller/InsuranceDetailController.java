@@ -50,6 +50,8 @@ import java.util.stream.Collectors;
 public class InsuranceDetailController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<InsuranceDetail> propInsuranceDetailDto;
+    //    private List<InsuranceDetail> insuranceDetailList;
+    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
     public List<InsuranceDetail> insuranceDetailList = new ArrayList<>();
     public List<Gender> genderList = new ArrayList<>();
     public InsuranceDetailSummary insuranceDetailSummary = null;
@@ -74,8 +76,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
     private ResourceBundle resourceBundle;
     private String name;
     private InsuranceMaster insuranceMaster = null;
-    //    private List<InsuranceDetail> insuranceDetailList;
-    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
 
     public InsuranceDetailController() {
         propInsuranceDetailDto = new SimpleObjectProperty<>();

@@ -37,6 +37,8 @@ public class InsuranceDetail extends BaseModel {
 //    private String xCol1;
 //    private String xCol2;
 //    private String xCol3;
+    private String xCol4;
+    private String xCol5;
 
     public LocalDate getDateOfJoiningScheme() {
         return dateOfJoiningScheme;
@@ -45,10 +47,6 @@ public class InsuranceDetail extends BaseModel {
     public void setDateOfJoiningScheme(LocalDate dateOfJoiningScheme) {
         this.dateOfJoiningScheme = dateOfJoiningScheme;
     }
-
-    private String xCol4;
-    private String xCol5;
-
 
     public String getInsuranceDetailCode() {
         return insuranceDetailCode;

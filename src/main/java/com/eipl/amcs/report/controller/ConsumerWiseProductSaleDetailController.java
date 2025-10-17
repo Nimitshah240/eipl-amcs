@@ -37,6 +37,7 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
     private ComboBox<Member> cboxMemberCode;
 
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -50,14 +51,14 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
         dpFromDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -74,8 +75,6 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
         cboxMemberCode.setCellFactory(new MemberCellFactory());
         cboxMemberCode.getSelectionModel().select(0);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();

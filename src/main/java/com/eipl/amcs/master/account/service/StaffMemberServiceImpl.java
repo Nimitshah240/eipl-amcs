@@ -21,10 +21,9 @@ import java.util.Optional;
 @Service
 public class StaffMemberServiceImpl implements StaffMemberService {
 
+    private static final Logger log = LoggerFactory.getLogger(StaffMemberServiceImpl.class);
     @Autowired
     private StaffMemberRepository staffMemberRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(StaffMemberServiceImpl.class);
 
     @Override
     public List<StaffMember> findAll() {

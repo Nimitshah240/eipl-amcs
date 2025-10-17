@@ -11,14 +11,12 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MemberTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
+import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.task.MemberListSaveTask;
 import com.eipl.amcs.setting.task.FriendsMemberDbProcess;
 import com.eipl.amcs.setting.task.FriendsMemberFileProcess;
-import com.eipl.amcs.setting.task.PromptMemberDbProcess;
-import com.eipl.amcs.setting.task.PromptMemberFileProcess;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -51,8 +49,8 @@ public class MemberDataMigrationFriendsController implements MyInitialization {
     private Stage stage;
     private ResourceBundle resourceBundle;
     private List<MemberDto> listDto = new ArrayList<>();
-    private Map<String, MilkType> mapMilkType = new HashMap<>();
-    private Map<String, Gender> mapGender = new HashMap<>();
+    private final Map<String, MilkType> mapMilkType = new HashMap<>();
+    private final Map<String, Gender> mapGender = new HashMap<>();
     private MemberType memberType;
     private String selectedFilePath = null;
 

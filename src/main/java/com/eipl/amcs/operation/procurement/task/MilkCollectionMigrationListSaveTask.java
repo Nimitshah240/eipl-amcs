@@ -8,17 +8,15 @@ import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
 public class MilkCollectionMigrationListSaveTask extends Task<Integer> {
     private final Queue<List<MilkCollection>> dtoList;
-    private int max;
+    private final int max;
 
     public MilkCollectionMigrationListSaveTask(Queue<List<MilkCollection>> dtoList, int max) {
         this.dtoList = dtoList;
@@ -34,7 +32,7 @@ public class MilkCollectionMigrationListSaveTask extends Task<Integer> {
                 String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/migrate";
                 ResponseEntity<CollectionImportDto[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(list), CollectionImportDto[].class);
                 updateProgress(max - dtoList.size(), max);
-                System.out.println(max-dtoList.size());
+                System.out.println(max - dtoList.size());
             }
             return max;
         } catch (Exception e) {

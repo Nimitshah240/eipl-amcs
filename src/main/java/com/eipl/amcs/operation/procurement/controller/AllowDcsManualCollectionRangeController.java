@@ -29,19 +29,24 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class AllowDcsManualCollectionRangeController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<AllowDcsManualCollectionRange> propManualRequestDto;
+    public List<AllowDcsManualCollectionRange> requestList = new ArrayList<>();
+    @FXML
+    TableView<AllowDcsManualCollectionRange> tableManualRequest;
     @FXML
     private StackPane root;
     @FXML
     private GridPane gridMaster;
     @FXML
     private DatePicker dpFromDate, dpToDate;
-    @FXML
-    TableView<AllowDcsManualCollectionRange> tableManualRequest;
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
@@ -50,12 +55,10 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
     private ComboBox<String> cboxType;
     @FXML
     private CheckBox chkIsQualityManual, chkIsWeightManual;
-
     @FXML
     private TextField txtRemarks;
     @FXML
     private TableColumn<AllowDcsManualCollectionRange, LocalDate> colFromDate, colToDate;
-
     @FXML
     private TableColumn<AllowDcsManualCollectionRange, Shift> colFromShift, colToShift;
     @FXML
@@ -64,8 +67,6 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
     private TableColumn<AllowDcsManualCollectionRange, Integer> colStatus;
     @FXML
     private TableColumn<AllowDcsManualCollectionRange, String> colIsQuality, colIsWeight;
-    private final ObjectProperty<AllowDcsManualCollectionRange> propManualRequestDto;
-    public List<AllowDcsManualCollectionRange> requestList = new ArrayList<>();
     @FXML
     private Button btnCancel, btnSave, btnClose, btnRefresh, btnGoMilkCollection;
     private Stage stage;
@@ -240,7 +241,6 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
                             resourceBundle.getString("milk.collection.request.can.not.send"));
                     alert.createAlert();
                     clearControls();
-                    return;
                 }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
