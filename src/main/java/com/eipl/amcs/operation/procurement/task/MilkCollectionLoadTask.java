@@ -1,19 +1,12 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
@@ -43,25 +36,21 @@ public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
     @Override
     protected List<MilkCollection> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION;
-            UriComponentsBuilder builder = null;
-            if (fromDate != null)
-                builder = UriComponentsBuilder.fromUriString(url)
-                        .queryParam("fromDate", fromDate.toString());
-            if (toDate != null)
-                builder.queryParam("toDate", toDate.toString());
-            if (code != null && !code.isEmpty())
-                builder.queryParam("code", code);
-            if (dockNo != null && !dockNo.isEmpty() && !"All".equalsIgnoreCase(dockNo))
-                builder.queryParam("dockNo", dockNo);
-            if (builder != null) {
-                builder.queryParam("sync", sync);
-                ResponseEntity<MilkCollection[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkCollection[].class);
-                if (response == null || response.getStatusCode() != HttpStatus.OK)
-                    return null;
-                return Arrays.asList(response.getBody());
+
+            MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
+            if (sync == 1) {
+                service.findAllCollectionByDate(fromDate, toDate, CommonUtil.setIdentityHeader());
+                return null;
             }
+
+            if (dockNo != null)
+                return service.findAllCollectionByDockNo(fromDate, toDate, dockNo);
+
+            if (toDate == null)
+                return service.findAllCollection(fromDate);
+
+            return service.findAllBetween(fromDate, toDate);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
