@@ -20,8 +20,7 @@ public class InsuranceDetailSummaryLoadTask extends Task<InsuranceDetailSummary>
     protected InsuranceDetailSummary call() throws Exception {
         try {
             InsuranceMasterService service = EmcsAppContext.getContext().getBean(InsuranceMasterService.class);
-            InsuranceDetailSummary list = service.findInsuranceDetailSummaryByInsuranceMaster(insuranceMasterCode);
-            return list;
+            return service.findInsuranceDetailSummaryByInsuranceMaster(insuranceMasterCode);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.INSURANCE + "/detailSummary";
