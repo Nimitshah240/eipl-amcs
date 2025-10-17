@@ -34,7 +34,6 @@ public class MilkDispatchSocietyPurchaseRateLoadTask extends Task<SocietyMilkPur
     protected SocietyMilkPurchaseRate call() throws Exception {
         try {
             MilkDispatchService service=EmcsAppContext.getContext().getBean(MilkDispatchService.class);
-            //            TODO - not required isEmpty()
             return service.fetchPurchaseRateCode(date, shift.getCode(), society.getCode());
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/rate-code";

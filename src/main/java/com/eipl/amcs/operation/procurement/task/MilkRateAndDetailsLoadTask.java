@@ -26,7 +26,6 @@ public class MilkRateAndDetailsLoadTask extends Task<MilkRateAndDetailsDto> {
         try {
 
             MemberMilkPurchaseRateService service=EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
-            //            TODO - inappropriate use of isEmpty
             return service.fetchRateAndDetails(code);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

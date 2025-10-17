@@ -29,7 +29,6 @@ public class MilkReceiptPrevRecordGetTask extends Task<MilkReceipt> {
         try {
 
             MilkReceiptRepository repository=EmcsAppContext.getContext().getBean(MilkReceiptRepository.class);
-            // TODO - inappropriate use of isEmpty
            return repository.findPreviousRecordOfGoodMilkType(fromDate).get();
 
 

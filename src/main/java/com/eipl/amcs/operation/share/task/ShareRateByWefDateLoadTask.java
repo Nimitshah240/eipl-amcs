@@ -31,7 +31,6 @@ public class ShareRateByWefDateLoadTask extends Task<ShareRate> {
         try {
 
             ShareRateService service=EmcsAppContext.getContext().getBean(ShareRateService.class);;
-            // TODO inappropriate use of getCode
             return service.fetchRate(date);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

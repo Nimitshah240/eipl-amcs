@@ -30,7 +30,6 @@ public class AllowDcsManualCollectionDateShiftValidationLoadTask extends Task<Bo
     @Override
     protected Boolean call() throws Exception {
         try {
-//            TODO Required changes
             AllowDcsManualCollectionRangeRepository repository = EmcsAppContext.getContext().getBean(AllowDcsManualCollectionRangeRepository.class);
             List<AllowDcsManualCollectionRange> existingData;
             if (selectedIndex.toString().equalsIgnoreCase("0")) {
