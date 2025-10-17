@@ -9,10 +9,9 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.insurance.model.InsuranceDetail;
 import com.eipl.amcs.master.insurance.model.InsuranceDetailSummary;
 import com.eipl.amcs.master.insurance.model.InsuranceMaster;
-import com.eipl.amcs.master.insurance.service.InsuranceMasterService;
+import com.eipl.amcs.master.insurance.task.*;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.EncryptionUtil;
 import javafx.beans.property.ObjectProperty;
@@ -39,47 +38,42 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class InsuranceMasterController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<InsuranceMaster> propInsuranceMasterDto;
     @FXML
     private StackPane root;
     @FXML
     private TableView<InsuranceMaster> tableInsuranceMaster;
-
     @FXML
     private TableColumn<InsuranceMaster, String> colInsuranceDescription;
     @FXML
     private TableColumn<InsuranceMaster, LocalDate> colInsuranceEndDate, colInsuranceStartDate, colDcsEditEndDate;
     @FXML
     private TableColumn<InsuranceMaster, Integer> colInsuranceMasterCode, colMinAge, colMaxAge;
-
     @FXML
     private E_Button btnView, btnFinalize, btnExport;
-
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
-    private final ObjectProperty<InsuranceMaster> propInsuranceMasterDto;
+    private final StringBuilder errorMsg = null;
     private String name;
     private List<InsuranceMaster> insuranceMasterList;
     private List<InsuranceDetail> insuranceDetailList;
     private InsuranceDetailSummary insuranceDetailSummary;
     private InsuranceMaster insuranceMaster;
     private List<Member> members;
-    private Map<String, InsuranceDetail> mapDetails = new HashMap<>();
-
-    private MemberService memberService;
-    private InsuranceMasterService insuranceMasterService;
+    private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
 
     public InsuranceMasterController() {
-        memberService = context.getBean(MemberService.class);
-        insuranceMasterService = context.getBean(InsuranceMasterService.class);
         propInsuranceMasterDto = new SimpleObjectProperty<>();
+    }
+
+    public static int calculateAge(LocalDate birthDate) {
+        return (birthDate != null) ? Period.between(birthDate, LocalDate.now()).getYears() : 0;
     }
 
     @Override
@@ -87,6 +81,11 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         return root;
     }
 
+    /**
+     * @updatedBy Nimit Shah
+     * @updatedOn - 09-09-2025
+     * @update - added try catch and btnExport to export excel of insurance detail.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -154,6 +153,8 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
     }
 
     private void finalizeInsurance() {
+        System.out.println("Finalizing insurance triggered...");
+        StringBuilder errorMsg = new StringBuilder();
 
         if (propInsuranceMasterDto.get() == null) {
             MyAlert alert = new WarningAlert(MainApp.getStage(),
@@ -235,7 +236,12 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
 
             if (aadhaarList.contains(memberAadhaarNumber)) {
                 invalidNameMembers.append("• ").append(detail.getMemberCode()).append(" - ").append(resourceBundle.getString("member.duplicate.aadhaar")).append("\n");
-            } else {
+            }
+//            else if (aadhaarList.contains(nomineeAadhaarNumber)) {
+//                invalidNameMembers.append("• ").append(detail.getMemberCode()).append(" - ").append(resourceBundle.getString("nominee.duplicate.aadhaar")).append("\n");
+//            }
+            else {
+//                aadhaarList.add(nomineeAadhaarNumber);
                 aadhaarList.add(memberAadhaarNumber);
             }
 
@@ -264,10 +270,8 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
                         .append(": ").append(nomineeName).append("\n");
             }
             if (invalidNameMembers.length() > 0) {
-                String errorMsg3 = new StringBuilder()
-                        .append(resourceBundle.getString("invalid.members")).append("\n\n")
-                        .append(invalidNameMembers)
-                        .toString();
+                String errorMsg3 = resourceBundle.getString("invalid.members") + "\n\n" +
+                        invalidNameMembers;
                 MyAlert alert = new WarningAlert(MainApp.getStage(),
                         resourceBundle.getString("members.name.criteria"),
                         errorMsg3);
@@ -299,10 +303,8 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         }
 
         if (invalidMembers.length() > 0) {
-            String errorMsg1 = new StringBuilder()
-                    .append(resourceBundle.getString("invalid.members")).append("\n\n")
-                    .append(invalidMembers)
-                    .toString();
+            String errorMsg1 = resourceBundle.getString("invalid.members") + "\n\n" +
+                    invalidMembers;
             MyAlert alert = new WarningAlert(MainApp.getStage(),
                     resourceBundle.getString("members.not.available"),
                     errorMsg1);
@@ -310,11 +312,9 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             return;
         }
         if (invalidAgeMembers.length() > 0) {
-            String errorMsg2 = new StringBuilder()
-                    .append(resourceBundle.getString("invalid.age.members"))
-                    .append(" (").append(minAge).append(" - ").append(maxAge).append("):\n\n")
-                    .append(invalidAgeMembers)
-                    .toString();
+            String errorMsg2 = resourceBundle.getString("invalid.age.members") +
+                    " (" + minAge + " - " + maxAge + "):\n\n" +
+                    invalidAgeMembers;
             MyAlert alert = new WarningAlert(MainApp.getStage(),
                     resourceBundle.getString("members.age.criteria"),
                     errorMsg2);
@@ -326,14 +326,24 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             detail.setStatus("PARTIAL_FINALIZE");
             detail.setOriginatingOrgCode(detail.getDcsCode());
             detail.setCreatedBy(detail.getDcsCode());
-            insuranceMasterService.updateDetailsFinalize(detail, CommonUtil.setIdentityHeader());
+            InsuranceDetailFinalizeSaveTask saveTask = new InsuranceDetailFinalizeSaveTask(detail, 1);
+            saveTask.setOnFailed(e -> {
+                System.err.println("Failed to save InsuranceDetail for member: " + detail.getMemberCode());
+                saveTask.getException().printStackTrace();
+            });
+            new Thread(saveTask).start();
         }
         if (insuranceDetailSummary != null) {
             insuranceDetailSummary.setStatus("PARTIAL_FINALIZE");
             insuranceDetailSummary.setOriginatingOrgType("VLC");
             insuranceDetailSummary.setOriginatingOrgCode(insuranceDetailSummary.getDcsCode());
             insuranceDetailSummary.setCreatedBy(insuranceDetailSummary.getDcsCode());
-            insuranceMasterService.updateInsuranceSummaryDetails(insuranceDetailSummary, CommonUtil.setIdentityHeader());
+            InsuranceDetailSummarySaveTask summaryTask = new InsuranceDetailSummarySaveTask(insuranceDetailSummary, 1);
+            summaryTask.setOnFailed(e -> {
+                System.err.println("Failed to save InsuranceDetailSummary.");
+                summaryTask.getException().printStackTrace();
+            });
+            new Thread(summaryTask).start();
         }
         btnView.setDisable(true);
         btnFinalize.setDisable(true);
@@ -341,10 +351,7 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
                 resourceBundle.getString("insurance.finalized.title"),
                 resourceBundle.getString("insurance.finalized.success"));
         alert.createAlert();
-    }
-
-    public static int calculateAge(LocalDate birthDate) {
-        return (birthDate != null) ? Period.between(birthDate, LocalDate.now()).getYears() : 0;
+        System.out.println("Finalization complete.");
     }
 
     public void setInsuranceMaster(InsuranceMaster insuranceMaster) {
@@ -359,6 +366,7 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             colInsuranceStartDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInsuranceStartDate()));
             colInsuranceStartDate.setCellFactory(new LocalDateCellFactory<>());
             colInsuranceDescription.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInsuranceDescription()));
+//            colStatus.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStatus()));
             colMinAge.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberMinAge()));
             colMaxAge.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberMaxAge()));
             propInsuranceMasterDto.bind(tableInsuranceMaster.getSelectionModel().selectedItemProperty());
@@ -368,82 +376,109 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         }
     }
 
-
     private void loadMember() {
-        try {
-            members = memberService.findAllBySociety(MainApp.identityDto.getSociety().getCode());
-            for (Member member : members) {
-                String code = member.getCode();
-                if (code != null && code.length() >= 4) {
-                    member.setCode(code.substring(code.length() - 4));
+        var task2 = new MemberLoadTask();
+        task2.setOnSucceeded(e -> {
+            try {
+                members = task2.get();
+                for (Member member : members) {
+                    String code = member.getCode();
+                    if (code != null && code.length() >= 4) {
+                        member.setCode(code.substring(code.length() - 4));
+                    }
                 }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task2).start();
     }
 
-
+    /**
+     * @updatedBy Nimit Shah
+     * @updatedOn - 09-09-2025
+     * @update - added condition to check list is null or not
+     */
     private void loadDetails(InsuranceMaster master) {
         if (master == null) return;
-        try {
-            List<InsuranceDetail> list = insuranceMasterService.findInsuranceDetailByInsuranceMaster(master.getInsuranceMasterCode());
-            mapDetails.clear();
-            if (list != null)
-                for (InsuranceDetail detail : list) {
-                    if (detail.getInsuranceDetailCode() != null) {
-                        mapDetails.put(detail.getInsuranceDetailCode(), detail);
+
+        var task = new InsuranceDetailLoadTask(master.getInsuranceMasterCode());
+        task.setOnSucceeded(e -> {
+            try {
+                List<InsuranceDetail> list = task.get();
+                mapDetails.clear();
+                if (list != null)
+                    for (InsuranceDetail detail : list) {
+                        if (detail.getInsuranceDetailCode() != null) {
+                            mapDetails.put(detail.getInsuranceDetailCode(), detail);
+                        }
                     }
-                }
-            insuranceDetailList = list;
+                insuranceDetailList = list;
+                InsuranceDetailSummaryLoadTask summaryTask = new InsuranceDetailSummaryLoadTask(master.getInsuranceMasterCode());
+                summaryTask.setOnSucceeded(summaryEvent -> {
+                    InsuranceDetailSummary summary = summaryTask.getValue();
+                    if (summary != null && "PUBLISH".equalsIgnoreCase(summary.getStatus())) {
+                        for (InsuranceDetail detail : insuranceDetailList) {
+                            if ("PARTIAL_FINALIZE".equalsIgnoreCase(detail.getStatus())) {
+                                detail.setStatus("PUBLISH");
+                            }
+                        }
 
-            InsuranceDetailSummary summary = insuranceMasterService.findInsuranceDetailSummaryByInsuranceMaster(master.getInsuranceMasterCode());
-            if (summary != null && "PUBLISH".equalsIgnoreCase(summary.getStatus())) {
-                for (InsuranceDetail detail : insuranceDetailList) {
-                    if ("PARTIAL_FINALIZE".equalsIgnoreCase(detail.getStatus())) {
-                        detail.setStatus("PUBLISH");
+                        btnView.setDisable(false);
+                        btnFinalize.setDisable(false);
+                    } else {
+                        if (insuranceDetailList != null) {
+                            Optional<InsuranceDetail> partial_finalize = insuranceDetailList.stream()
+                                    .filter(d -> "PARTIAL_FINALIZE".equalsIgnoreCase(d.getStatus()))
+                                    .findAny();
+
+                            boolean isPartial = partial_finalize.isPresent();
+                            btnView.setDisable(isPartial);
+                            btnFinalize.setDisable(isPartial);
+                        }
                     }
-                }
+                });
+                summaryTask.setOnFailed(summaryEvent -> {
+                    System.err.println("Failed to load InsuranceDetailSummary.");
+                    summaryTask.getException().printStackTrace();
+                });
 
-                btnView.setDisable(false);
-                btnFinalize.setDisable(false);
-            } else {
-                if (insuranceDetailList != null) {
-                    Optional<InsuranceDetail> partial_finalize = insuranceDetailList.stream()
-                            .filter(d -> "PARTIAL_FINALIZE".equalsIgnoreCase(d.getStatus()))
-                            .findAny();
-
-                    boolean isPartial = partial_finalize.isPresent();
-                    btnView.setDisable(isPartial);
-                    btnFinalize.setDisable(isPartial);
-                }
+                new Thread(summaryTask).start();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+        });
+        new Thread(task).start();
     }
 
     private void loadInsuranceDetailSummary(Integer insuranceMasterCode) {
         if (insuranceMasterCode == null) return;
-        try {
-            insuranceDetailSummary = insuranceMasterService.findInsuranceDetailSummaryByInsuranceMaster(insuranceMasterCode);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
+
+        InsuranceDetailSummaryLoadTask task = new InsuranceDetailSummaryLoadTask(insuranceMasterCode);
+        task.setOnSucceeded(e -> insuranceDetailSummary = task.getValue());
+        task.setOnFailed(e -> {
+            System.err.println("Failed to load InsuranceDetailSummary.");
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
     }
 
     @Override
     public void loadData() {
         tableInsuranceMaster.setItems(null);
-        try {
-            insuranceMasterList = insuranceMasterService.findAll();
-            if (insuranceMasterList != null) {
-                tableInsuranceMaster.setItems(FXCollections.observableList(insuranceMasterList));
+        InsuranceMasterLoadTask task = new InsuranceMasterLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                insuranceMasterList = task.get();
+                if (insuranceMasterList != null) {
+                    tableInsuranceMaster.setItems(FXCollections.observableList(insuranceMasterList));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -452,15 +487,37 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             loadData();
     }
 
+    /**
+     * This method help to get deleted insurance details.
+     *
+     * @param callback
+     * @author Nimit Shah
+     * @createdOn 09-09-2025
+     */
     private void loadDeletedDetails(Consumer<List<InsuranceDetail>> callback) {
-        try {
-            List<InsuranceDetail> list = insuranceMasterService.findDeletedInsuranceDetailByInsuranceMaster(insuranceMaster.getInsuranceMasterCode());
-            callback.accept(list);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new InsuranceDetailFetchDeletedTask(insuranceMaster.getInsuranceMasterCode());
+        task.setOnSucceeded(e -> {
+            try {
+                List<InsuranceDetail> list = task.get();
+                callback.accept(list);
+
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            } catch (ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
+
+    /**
+     * This method help to create excel sheet of insurance details
+     *
+     * @param list
+     * @author Nimit Shah
+     * @createdOn 09-09-2025
+     */
     private void exportExcel(List<InsuranceDetail> list) {
         boolean exported = true;
         try {

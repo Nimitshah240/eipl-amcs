@@ -16,8 +16,7 @@ public class FinancialYearLoadTask extends Task<List<FinancialYear>> {
     protected List<FinancialYear> call() throws Exception {
         try {
             FinancialYearService financialYearService = EmcsAppContext.getContext().getBean(FinancialYearService.class);
-            List<FinancialYear> list = financialYearService.findAll();
-            return list;
+            return financialYearService.findAll();
         } catch (Exception e) {
             LOGGER.error("FinancialYear fetch", e);
         }

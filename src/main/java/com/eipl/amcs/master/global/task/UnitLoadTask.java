@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class UnitLoadTask extends Task<List<Unit>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UnitLoadTask.class);
 

@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -18,24 +19,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class MemberEditPasswordController implements MyInitialization {
+    public PopupCallback callback;
     @FXML
     StackPane root;
-
-    @FXML
-    private TextField txtPassword;
-
     @FXML
     Button btnOk, btnClose;
+    @FXML
+    private TextField txtPassword;
     private Stage stage;
-    public PopupCallback callback;
     private Member member;
+    @FXML
+    private Label lblincorrectpassword;
+    private ResourceBundle resourceBundle;
+    private ObjectProperty<Member> propMember;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    private ResourceBundle resourceBundle;
-    private ObjectProperty<Member> propMember;
 
     @Override
     public Node getRoot() {
@@ -44,16 +44,16 @@ public class MemberEditPasswordController implements MyInitialization {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        lblincorrectpassword.setVisible(false);
         this.resourceBundle = resourceBundle;
         btnOk.setOnAction(e -> {
             if (txtPassword.getText().equalsIgnoreCase(LocalDate.now().format(DateTimeFormatter.ofPattern("ddyyMM")))) {
                 this.stage.close();
-                if (member != null) {
-                    MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil()
-                            .loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-                    controller.setMember(member);
-                    MainApp.getContentPane().setCenter((controller).getRoot());
-                }
+                MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+                controller.setMember(member);
+                MainApp.getContentPane().setCenter(controller.getRoot());
+            } else {
+                lblincorrectpassword.setVisible(true);
             }
         });
 

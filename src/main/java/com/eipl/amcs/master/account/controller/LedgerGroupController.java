@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.LedgerGroup;
 import com.eipl.amcs.master.account.model.LedgerType;
-import com.eipl.amcs.master.account.service.LedgerGroupService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.account.task.LedgerGroupDeleteTask;
+import com.eipl.amcs.master.account.task.LedgerGroupLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class LedgerGroupController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<LedgerGroup> propLedgerGroup;
     @FXML
     AnchorPane root;
     @FXML
@@ -46,21 +46,15 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
     @FXML
     TextField txtSearch;
     private List<LedgerGroup> ledgerGroupList = new ArrayList<>();
+    private ResourceBundle resourceBundle;
+    public LedgerGroupController() {
+        propLedgerGroup = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private ResourceBundle resourceBundle;
-    private final ObjectProperty<LedgerGroup> propLedgerGroup;
-    private LedgerGroupService ledgerGroupService;
-
-    public LedgerGroupController() {
-        propLedgerGroup = new SimpleObjectProperty<>();
-        ledgerGroupService = context.getBean(LedgerGroupService.class);
-    }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,7 +87,7 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
             deleteData();
         });
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
-            search((String) oldValue, (String) newValue);
+            search(oldValue, newValue);
         });
         btnClear.setOnAction(e -> {
             loadData();
@@ -120,6 +114,8 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
         colCode.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+//        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
+//                resourceBundle.getString("active") : resourceBundle.getString("inactive")));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
         colLedgerType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerType()));
         propLedgerGroup.bind(tableLedgerGroup.getSelectionModel().selectedItemProperty());
@@ -128,13 +124,17 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
     @Override
     public void loadData() {
         tableLedgerGroup.setItems(null);
-        try {
-            ledgerGroupList = ledgerGroupService.findAll();
-            if (ledgerGroupList != null)
-                tableLedgerGroup.setItems(FXCollections.observableList(ledgerGroupList));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        LedgerGroupLoadTask task = new LedgerGroupLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                ledgerGroupList = task.get();
+                if (ledgerGroupList != null)
+                    tableLedgerGroup.setItems(FXCollections.observableList(ledgerGroupList));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -145,22 +145,32 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             LedgerGroup dto = propLedgerGroup.get();
             if (dto != null) {
-                try {
-                    ledgerGroupService.delete(dto.getCode(), CommonUtil.setIdentityHeader());
-                    loadData();
-                } catch (Exception ex) {
-                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgergroup"),
-                            resourceBundle.getString("error.occurred"));
-                    alert1.createAlert();
-                    ex.printStackTrace();
-                }
+                var task = new LedgerGroupDeleteTask(dto.getCode().toString());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || !respDelete.booleanValue()) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledgergroup"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
         }
     }
+
 
     @Override
     public void reloadData(boolean flag) {
         if (flag)
             loadData();
     }
+
+
 }

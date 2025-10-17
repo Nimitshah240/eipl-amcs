@@ -4,9 +4,8 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.cellfactory.RightAlignCellFactory;
-import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.report.dto.LedgerClose;
-import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.report.task.SubLedgerCloseTask;
 import com.eipl.amcs.utils.NumberUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -20,41 +19,32 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.eipl.amcs.MainApp.context;
-
 public class SubLedgerOpeningBalanceViewController implements MyInitialization {
 
+    @FXML
+    Button btnClose;
     private ResourceBundle resourceBundle;
     @FXML
     private VBox vbox;
-
     @FXML
     private TableColumn<LedgerClose, String> colName, colSubLedgerCode, colCreditDebit;
     @FXML
     private TableColumn<LedgerClose, Number> colBalance;
-
-    @FXML
-    Button btnClose;
     @FXML
     private AnchorPane root;
     private Stage stage;
     @FXML
     private TableView<LedgerClose> tableSubLedger;
-    private ObjectProperty<LedgerClose> propObjSubLedger;
+    private final ObjectProperty<LedgerClose> propObjSubLedger;
     private PopupCallback callback;
     @FXML
     private Label lblTotalBalance;
-    private LedgerRepository ledgerRepository;
-
 
     public SubLedgerOpeningBalanceViewController() {
-        ledgerRepository = context.getBean(LedgerRepository.class);
         propObjSubLedger = new SimpleObjectProperty<>();
     }
 
@@ -84,20 +74,16 @@ public class SubLedgerOpeningBalanceViewController implements MyInitialization {
     }
 
     public void loadReview(LedgerClose ledger) {
-        try {
-            List<LedgerClose> list = new ArrayList<>();
-            List<Object[]> listLedger = ledgerRepository.fetchSubLedgerOpeningBalance(ledger.getLedgerCode(), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getStartDate()), CommonUtils.convertToSqlDate(MainApp.getFinancialYear().getEndDate()), MainApp.locale);
-            if (list != null && !list.isEmpty()) {
-                for (Object[] arr : listLedger) {
-                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (((BigDecimal) arr[2]).doubleValue() < 0 ? false : true), ((BigDecimal) arr[2]).doubleValue());
-                    list.add(bal);
-                }
+        SubLedgerCloseTask ledgerCloseTask = new SubLedgerCloseTask(ledger.getLedgerCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
+        ledgerCloseTask.setOnSucceeded(e -> {
+            try {
+                List<LedgerClose> list = ledgerCloseTask.get();
+                tableSubLedger.setItems(FXCollections.observableArrayList(list));
+                lblTotalBalance.setText(NumberUtil.twoDecimal(list.stream().mapToDouble(m -> m.getBalance()).sum()));
+            } catch (Exception ee) {
+                ee.printStackTrace();
             }
-            tableSubLedger.setItems(FXCollections.observableArrayList(list));
-            lblTotalBalance.setText(NumberUtil.twoDecimal(list.stream().mapToDouble(m -> m.getBalance()).sum()));
-        } catch (Exception ee) {
-            ee.printStackTrace();
-        }
+        });
     }
 
     @Override

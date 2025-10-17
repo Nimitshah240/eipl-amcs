@@ -1,17 +1,14 @@
 package com.eipl.amcs.master.inventory.task;
 
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
-import com.eipl.amcs.master.inventory.service.ProductService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 

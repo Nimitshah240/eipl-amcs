@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
-import com.eipl.amcs.master.inventory.service.ProductGroupService;
+import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,8 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class ProductGroupController implements MyInitialization {
 
@@ -33,13 +32,6 @@ public class ProductGroupController implements MyInitialization {
     TableColumn<ProductGroup, Unit> colBaseUnit;
     @FXML
     Button btnClose;
-
-    private ProductGroupService productGroupService;
-
-
-    public ProductGroupController() {
-        productGroupService = context.getBean(ProductGroupService.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -64,18 +56,23 @@ public class ProductGroupController implements MyInitialization {
             colBaseUnit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getUnit()));
             colIsActive.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
         } catch (Exception e) {
+            System.out.println("ProductGroup setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<ProductGroup> list = productGroupService.findAll();
-            if (list != null)
-                tableProductGroup.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ProductGroupLoadTask task = new ProductGroupLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<ProductGroup> list = task.get();
+                if (list != null)
+                    tableProductGroup.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

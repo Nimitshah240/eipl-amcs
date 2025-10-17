@@ -3,7 +3,7 @@ package com.eipl.amcs.master.global.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.MilkClass;
-import com.eipl.amcs.master.global.service.MilkClassService;
+import com.eipl.amcs.master.global.task.MilkClassLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,8 +17,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class MilkClassController implements MyInitialization {
     @FXML
@@ -32,16 +31,9 @@ public class MilkClassController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private MilkClassService milkClassService;
-
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public MilkClassController() {
-        milkClassService = context.getBean(MilkClassService.class);
     }
 
     @Override
@@ -60,30 +52,23 @@ public class MilkClassController implements MyInitialization {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         } catch (Exception e) {
+            System.out.println("MilkClass setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<MilkClass> list = milkClassService.findAll();
-            if (list != null)
-                tableMilkClasss.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-//        var task = new MilkClassLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<MilkClass> list = task.get();
-//                if (list != null)
-//                    tableMilkClasss.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
+        var task = new MilkClassLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MilkClass> list = task.get();
+                if (list != null)
+                    tableMilkClasss.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

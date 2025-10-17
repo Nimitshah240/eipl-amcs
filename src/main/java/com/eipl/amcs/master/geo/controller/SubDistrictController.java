@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.SubDistrict;
-import com.eipl.amcs.master.geo.service.SubDistrictService;
+import com.eipl.amcs.master.geo.task.SubDistrictLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,13 +14,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class SubDistrictController implements MyInitialization {
     @FXML
@@ -36,16 +34,9 @@ public class SubDistrictController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    @Autowired
-    private SubDistrictService subDistrictService;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public SubDistrictController() {
-        subDistrictService = context.getBean(SubDistrictService.class);
     }
 
     @Override
@@ -65,18 +56,23 @@ public class SubDistrictController implements MyInitialization {
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
             colDistrict.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDistrict()));
         } catch (Exception e) {
+            System.out.println("SubDistrict setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<SubDistrict> list = subDistrictService.findAll();
-            if (list != null)
-                tableSubDistricts.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new SubDistrictLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<SubDistrict> list = task.get();
+                if (list != null)
+                    tableSubDistricts.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

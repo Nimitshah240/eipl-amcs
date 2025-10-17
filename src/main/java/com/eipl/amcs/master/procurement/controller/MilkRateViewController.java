@@ -6,12 +6,11 @@ import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.RateType;
-import com.eipl.amcs.master.global.service.MilkQualityTypeService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.procurement.dto.PurchaseRateGenerate;
 import com.eipl.amcs.master.procurement.dto.RateViewDto;
-import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
-import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
+import com.eipl.amcs.master.procurement.task.RateViewTask;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -24,8 +23,7 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class MilkRateViewController implements MyInitialization {
     @FXML
@@ -41,22 +39,11 @@ public class MilkRateViewController implements MyInitialization {
     @FXML
     private TableView<PurchaseRateGenerate> tableRateDetails;
 
-    private Map<String, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
+    private final Map<String, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
     private RateViewDto rateViewDto;
     private RateType rateType;
     private ResourceBundle resourceBundle;
     private Stage stage;
-    private MemberMilkPurchaseRateService memberMilkPurchaseRateService;
-    private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
-    private MilkTypeService milkTypeService;
-    private MilkQualityTypeService milkQualityTypeService;
-
-    public MilkRateViewController() {
-        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
-        societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
-        milkTypeService = context.getBean(MilkTypeService.class);
-        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
-    }
 
     public void setRateViewDto(RateViewDto rateViewDto) {
         this.rateViewDto = rateViewDto;
@@ -96,31 +83,25 @@ public class MilkRateViewController implements MyInitialization {
     private void loadRateDetailsData() {
         if (cboxMilkType.getValue() == null || cboxMilkQualityType.getValue() == null)
             return;
+
         tableRateDetails.getItems().clear();
         tableRateDetails.setPlaceholder(new Label("Loading data..."));
-        try {
-            if (rateViewDto.getRateType() == (short) 0) {
-                List<String> list = memberMilkPurchaseRateService.fetchRateDetails(rateViewDto.getRateType() == (short) 0 ? rateViewDto.getMemberRate().getCode() : rateViewDto.getSocietyRate().getCode(),
-                        cboxMilkType.getValue().getCode(), cboxMilkQualityType.getValue().getCode());
+        var task = new RateViewTask(rateViewDto.getRateType(), rateViewDto.getRateType() == (short) 0 ? rateViewDto.getMemberRate().getCode() : rateViewDto.getSocietyRate().getCode(),
+                cboxMilkType.getValue().getCode(), cboxMilkQualityType.getValue().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                List<String> list = task.get();
                 if (list == null || list.isEmpty()) {
                     tableRateDetails.setPlaceholder(new Label("No data..."));
                     return;
                 }
                 prepareMap(list);
                 prepareTableData();
-            } else {
-                List<String> list = societyMilkPurchaseRateService.fetchRateDetails(rateViewDto.getRateType() == (short) 0 ? rateViewDto.getMemberRate().getCode() : rateViewDto.getSocietyRate().getCode(),
-                        cboxMilkType.getValue().getCode(), cboxMilkQualityType.getValue().getCode());
-                if (list == null || list.isEmpty()) {
-                    tableRateDetails.setPlaceholder(new Label("No data..."));
-                    return;
-                }
-                prepareMap(list);
-                prepareTableData();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 
     private void prepareMap(List<String> details) {
@@ -181,22 +162,29 @@ public class MilkRateViewController implements MyInitialization {
 
     @Override
     public void loadData() {
-        //Nimit- ASYNC
-        try {
-            List<MilkType> list = milkTypeService.findAll();
-            if (list != null)
-                cboxMilkType.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task2 = new MilkTypeLoadTask();
+        task2.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task2.get();
+                if (list != null)
+                    cboxMilkType.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task2).start();
 
-        try {
-            List<MilkQualityType> list = milkQualityTypeService.findAll();
-            if (list != null)
-                cboxMilkQualityType.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task3 = new MilkQualityTypeLoadTask();
+        task3.setOnSucceeded(e -> {
+            try {
+                List<MilkQualityType> list = task3.get();
+                if (list != null)
+                    cboxMilkQualityType.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task3).start();
     }
 
     public void setStage(Stage stage) {

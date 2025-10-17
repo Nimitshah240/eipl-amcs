@@ -7,11 +7,8 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.dto.ProductGroupMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingProductGroup;
-import com.eipl.amcs.master.account.service.LedgerMappingProductGroupService;
-import com.eipl.amcs.master.account.service.LedgerService;
-import com.eipl.amcs.master.inventory.model.ProductGroup;
-import com.eipl.amcs.master.inventory.service.ProductGroupService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.account.task.LedgerMappingProductGroupLoadTask;
+import com.eipl.amcs.master.account.task.LedgerMappingProductGroupSaveTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,12 +23,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.CompletableFuture;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class LedgerMappingProductGroupController implements MyInitialization {
 
@@ -48,15 +41,23 @@ public class LedgerMappingProductGroupController implements MyInitialization {
     Button btnSave, btnClose;
 
     private ResourceBundle resourceBundle;
-    private LedgerMappingProductGroupService ledgerMappingProductGroupService;
-    private ProductGroupService productGroupService;
-    private LedgerService ledgerService;
+    private ObservableList<Ledger> ledgerList;
+    private final StringConverter<Ledger> converter = new StringConverter<>() {
+        @Override
+        public String toString(Ledger object) {
+            if (object == null)
+                return null;
+            return object.toString();
+        }
 
-    public LedgerMappingProductGroupController() {
-        ledgerMappingProductGroupService = context.getBean(LedgerMappingProductGroupService.class);
-        productGroupService = context.getBean(ProductGroupService.class);
-        ledgerService = context.getBean(LedgerService.class);
-    }
+        @Override
+        public Ledger fromString(String string) {
+            if (string == null || string.isEmpty())
+                return null;
+            return ledgerList.stream().filter(p -> p.toString().equalsIgnoreCase(string))
+                    .findFirst().orElse(null);
+        }
+    };
 
     @Override
     public Node getRoot() {
@@ -66,13 +67,15 @@ public class LedgerMappingProductGroupController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+
         loadData();
+
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+
         btnSave.setOnAction(e -> {
             saveData();
         });
     }
-
 
     @Override
     public void saveData() {
@@ -80,10 +83,13 @@ public class LedgerMappingProductGroupController implements MyInitialization {
             item.setUnionCode(MainApp.identityDto.getUnion().getCode());
             item.setSociety(MainApp.identityDto.getSociety());
         }
-        ledgerMappingProductGroupService.save(tableData.getItems(), CommonUtil.setIdentityHeader());
-        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
-                resourceBundle.getString("save.successful"));
-        alert.createAlert();
+        LedgerMappingProductGroupSaveTask task = new LedgerMappingProductGroupSaveTask(tableData.getItems());
+        task.setOnSucceeded(e -> {
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
+                    resourceBundle.getString("save.successful"));
+            alert.createAlert();
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -105,65 +111,24 @@ public class LedgerMappingProductGroupController implements MyInitialization {
         });
     }
 
-    private StringConverter<Ledger> converter = new StringConverter<>() {
-        @Override
-        public String toString(Ledger object) {
-            if (object == null)
-                return null;
-            return object.toString();
-        }
-
-        @Override
-        public Ledger fromString(String string) {
-            if (string == null || string.isEmpty())
-                return null;
-            return ledgerList.stream().filter(p -> p.toString().equalsIgnoreCase(string))
-                    .findFirst().orElse(null);
-        }
-    };
-
-    private ObservableList<Ledger> ledgerList;
-
     @Override
     public void loadData() {
-        try {
-            CompletableFuture<List<ProductGroup>> productGroupListFuture = CompletableFuture.supplyAsync(() -> productGroupService.findAll());
-            CompletableFuture<List<Ledger>> ledgerListFuture = CompletableFuture.supplyAsync(() -> ledgerService.findAllByIsActive());
-            CompletableFuture<List<LedgerMappingProductGroup>> ledgerMappingProductGroupListFuture = CompletableFuture.supplyAsync(() -> ledgerMappingProductGroupService.findAll());
-            CompletableFuture.allOf(productGroupListFuture, ledgerListFuture, ledgerMappingProductGroupListFuture)
-                    .whenCompleteAsync((result, ex) -> {
-                        try {
+        LedgerMappingProductGroupLoadTask task = new LedgerMappingProductGroupLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                ProductGroupMappingDto dto = task.get();
+                if (dto == null)
+                    return;
 
-                            List<ProductGroup> productGroupList = productGroupListFuture.get();
-                            List<Ledger> ledgerList1 = ledgerListFuture.get();
-                            List<LedgerMappingProductGroup> ledgerMappingProductGroupList = ledgerMappingProductGroupListFuture.get();
+                ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
+                setupTable();
+                tableData.setItems(FXCollections.observableList(dto.getListMapping()));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
 
-                            List<LedgerMappingProductGroup> listMapping = new ArrayList<>(ledgerMappingProductGroupList);
-                            for (LedgerMappingProductGroup mp : listMapping) {
-                                productGroupList.removeIf(p -> p.getCode().toString().equalsIgnoreCase(mp.getProductGroup().getCode().toString()));
-                            }
-                            for (ProductGroup productGroup : productGroupList) {
-                                LedgerMappingProductGroup mp = new LedgerMappingProductGroup();
-                                mp.setProductGroup(productGroup);
-                                listMapping.add(mp);
-                            }
-                            List<Ledger> list = new ArrayList<>(ledgerList1);
-                            list.add(0, new Ledger("None"));
-                            ProductGroupMappingDto dto = new ProductGroupMappingDto(listMapping, list);
-
-                            if (dto == null)
-                                return;
-
-                            ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
-                            setupTable();
-                            tableData.setItems(FXCollections.observableList(dto.getListMapping()));
-                        } catch (Exception e) {
-                            System.out.println(e);
-                            throw new RuntimeException(e);
-                        }
-                    });
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(task).start();
     }
+
 }

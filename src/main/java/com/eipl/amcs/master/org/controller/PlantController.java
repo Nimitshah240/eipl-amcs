@@ -5,7 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Plant;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.service.PlantService;
+import com.eipl.amcs.master.org.task.PlantLoadTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -18,8 +18,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class PlantController implements MyInitialization {
 
@@ -43,12 +42,6 @@ public class PlantController implements MyInitialization {
     Button btnClose;
     @FXML
     private StackPane root;
-
-    private PlantService plantService;
-
-    public PlantController() {
-        plantService = context.getBean(PlantService.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -76,19 +69,24 @@ public class PlantController implements MyInitialization {
             colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
             colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
         } catch (Exception e) {
+            System.out.println("Plant setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Plant> list = plantService.findAll();
-            if (list != null)
-                tablePlant.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new PlantLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Plant> list = task.get();
+                if (list != null)
+                    tablePlant.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
 

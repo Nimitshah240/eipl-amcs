@@ -4,8 +4,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.account.model.VoucherSubLedger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
-import com.eipl.amcs.master.account.repository.VoucherTransactionRepository;
-import com.eipl.amcs.master.account.service.VoucherService;
+import com.eipl.amcs.master.account.task.VoucherSubLedgerLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -22,10 +21,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class VoucherSubLedgerPopupController implements MyInitialization {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VoucherSubLedgerPopupController.class);
     @FXML
     private StackPane root;
     @FXML
@@ -34,23 +33,12 @@ public class VoucherSubLedgerPopupController implements MyInitialization {
     private TableView<VoucherSubLedger> tableData;
     @FXML
     private TableColumn<VoucherSubLedger, String> colCode, colSubLedger, colAmount;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
+    private final StringBuilder errorMsg = null;
     private PopupCallback callback;
     private List<VoucherSubLedger> listVoucheSubLedger;
     private VoucherTransaction voucherTransaction;
-
-    private VoucherTransactionRepository voucherTransactionRepository;
-    private VoucherService voucherService;
-
-    public VoucherSubLedgerPopupController() {
-        voucherService = context.getBean(VoucherService.class);
-        voucherTransactionRepository = context.getBean(VoucherTransactionRepository.class);
-    }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(VoucherSubLedgerPopupController.class);
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -82,19 +70,23 @@ public class VoucherSubLedgerPopupController implements MyInitialization {
         });
     }
 
+
     @Override
     public void loadData() {
         if (voucherTransaction != null) {
-            try {
-                listVoucheSubLedger = new ArrayList<>();
-                VoucherTransaction voucherTransactionNew = voucherTransactionRepository.findById(voucherTransaction.getCode()).get();
-                listVoucheSubLedger = voucherService.findAllVoucherSubLedger(voucherTransactionNew);
-                if (listVoucheSubLedger != null && !listVoucheSubLedger.isEmpty()) {
-                    tableData.setItems(FXCollections.observableList(listVoucheSubLedger));
+            var task = new VoucherSubLedgerLoadTask(voucherTransaction.getCode());
+            task.setOnSucceeded(e -> {
+                try {
+                    listVoucheSubLedger = new ArrayList<>();
+                    listVoucheSubLedger = task.get();
+                    if (listVoucheSubLedger != null && !listVoucheSubLedger.isEmpty()) {
+                        tableData.setItems(FXCollections.observableList(listVoucheSubLedger));
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            });
+            new Thread(task).start();
         }
     }
 
