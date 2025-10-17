@@ -33,7 +33,6 @@ public class VoucherTransactionLoadTask extends Task<List<VoucherTransaction>> {
                     return null;
                 return list;
             }
-            return null;
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER + "/trans";
 //            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)

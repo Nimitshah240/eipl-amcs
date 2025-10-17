@@ -21,8 +21,7 @@ public class YearClosingDtoSaveTask extends Task<Object> {
     protected YearClosingDto call() throws Exception {
         try {
             FinancialYearService service = EmcsAppContext.getContext().getBean(FinancialYearService.class);
-            service.saveDto(dto, CommonUtil.setIdentityHeader());
-            return dto;
+            return service.saveDto(dto, CommonUtil.setIdentityHeader());
 
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

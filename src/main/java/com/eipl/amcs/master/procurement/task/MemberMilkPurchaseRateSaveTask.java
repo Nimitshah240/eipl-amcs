@@ -20,8 +20,7 @@ public class MemberMilkPurchaseRateSaveTask extends Task<Object> {
             MemberMilkPurchaseRateService service = EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
             if (dto == null)
                 return null;
-            service.savePurchaseRate(dto);
-            return dto;
+            return service.savePurchaseRate(dto);
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_MILK_PURCHASE_RATE;

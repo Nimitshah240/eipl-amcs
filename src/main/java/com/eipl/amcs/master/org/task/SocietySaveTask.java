@@ -18,8 +18,8 @@ public class SocietySaveTask extends Task<Object> {
         SocietyService service = EmcsAppContext.getContext().getBean(SocietyService.class);
         if (society == null)
             return null;
-        service.save(society);
-        return society;
+
+        return service.save(society);
 
 
 //        RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

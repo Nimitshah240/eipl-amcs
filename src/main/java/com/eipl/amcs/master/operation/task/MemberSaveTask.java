@@ -41,7 +41,7 @@ public class MemberSaveTask extends Task<Object> {
                 dtoNew.getMemberDetail().setHamlet(dto.getMemberDetail().getHamlet());
                 dtoNew.getMemberDetail().setMember(dto.getMemberDetail().getMember());
             }
-            return dtoNew;
+            return true;
 
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

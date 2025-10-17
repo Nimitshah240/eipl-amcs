@@ -16,7 +16,10 @@ public class LedgerLoadTask extends Task<List<Ledger>> {
     protected List<Ledger> call() throws Exception {
         try {
             LedgerService ledgerService = EmcsAppContext.getContext().getBean(LedgerService.class);
-            return ledgerService.findAllByIsActive();
+            List<Ledger> list = ledgerService.findAllByIsActive();
+            if (list == null || list.isEmpty())
+                return null;
+            return list;
         } catch (Exception e) {
             LOGGER.error("Ledger fetch", e);
         }
