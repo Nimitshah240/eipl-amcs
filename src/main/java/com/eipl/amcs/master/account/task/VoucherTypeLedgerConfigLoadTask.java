@@ -1,21 +1,18 @@
 package com.eipl.amcs.master.account.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.dto.VoucherTypeMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.VoucherTypeLedgerConfigService;
+import com.eipl.amcs.master.account.service.VoucherTypeService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VoucherTypeLedgerConfigLoadTask extends Task<VoucherTypeMappingDto> {
@@ -24,24 +21,16 @@ public class VoucherTypeLedgerConfigLoadTask extends Task<VoucherTypeMappingDto>
     @Override
     protected VoucherTypeMappingDto call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER_TYPE;
-            ResponseEntity<VoucherType[]> response = restTemplate.getForEntity(url, VoucherType[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            List<VoucherType> voucherTypeList = new ArrayList<>(Arrays.asList(response.getBody()));
+            VoucherTypeService voucherTypeService = EmcsAppContext.getContext().getBean(VoucherTypeService.class);
+            LedgerService ledgerService = EmcsAppContext.getContext().getBean(LedgerService.class);
+            VoucherTypeLedgerConfigService voucherTypeLedgerConfigService = EmcsAppContext.getContext().getBean(VoucherTypeLedgerConfigService.class);
+
+            List<VoucherType> voucherTypeList = new ArrayList<>(voucherTypeService.findAll());
 
             // ledger
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
-            ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
-            if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
-                return null;
+            List<Ledger> ledgerList = ledgerService.findAllByIsActive();
 
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_VOUCHER_TYPE;
-            ResponseEntity<VoucherTypeLedgerConfig[]> respPgLedMap = restTemplate.getForEntity(url, VoucherTypeLedgerConfig[].class);
-            if (respPgLedMap == null || respPgLedMap.getStatusCode() != HttpStatus.OK)
-                return null;
-            List<VoucherTypeLedgerConfig> mapping = respPgLedMap.getBody() != null ? Arrays.asList(respPgLedMap.getBody()) : new ArrayList<>();
+            List<VoucherTypeLedgerConfig> mapping = voucherTypeLedgerConfigService.findAll();
 
             List<VoucherTypeLedgerConfig> listMapping = new ArrayList<>(mapping);
             for (VoucherTypeLedgerConfig mp : listMapping) {
@@ -53,7 +42,7 @@ public class VoucherTypeLedgerConfigLoadTask extends Task<VoucherTypeMappingDto>
                 listMapping.add(mp);
             }
 
-            List<Ledger> list = new ArrayList<>(Arrays.asList(respLedger.getBody()));
+            List<Ledger> list = new ArrayList<>(ledgerList);
             list.add(0, new Ledger("None"));//"0",
             return new VoucherTypeMappingDto(listMapping, list);
         } catch (Exception e) {

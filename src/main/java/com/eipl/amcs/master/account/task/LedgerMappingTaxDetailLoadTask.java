@@ -1,6 +1,5 @@
 package com.eipl.amcs.master.account.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.dto.TaxDetailMappingDto;
 import com.eipl.amcs.master.account.dto.TaxDto;
@@ -8,16 +7,14 @@ import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingTaxDetail;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.model.TaxDetail;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.service.LedgerMappingTaxDetailService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.TaxService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class LedgerMappingTaxDetailLoadTask extends Task<TaxDetailMappingDto> {
@@ -27,26 +24,17 @@ public class LedgerMappingTaxDetailLoadTask extends Task<TaxDetailMappingDto> {
     protected TaxDetailMappingDto call() throws Exception {
         try {
             //Tax
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.TAX;
-            ResponseEntity<TaxDto[]> response = restTemplate.getForEntity(url, TaxDto[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            List<TaxDto> taxDetailList = new ArrayList<>(Arrays.asList(response.getBody()));
-
+            TaxService taxService = EmcsAppContext.getContext().getBean(TaxService.class);
+            List<TaxDto> taxDetailList = taxService.findAll();
 
             // ledger
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
-            ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
-            if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
-                return null;
+            LedgerService ledgerService = EmcsAppContext.getContext().getBean(LedgerService.class);
+            List<Ledger> ledgerList = ledgerService.findAllByIsActive();
 
             // mapping
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_TAX_DETAIL;
-            ResponseEntity<LedgerMappingTaxDetail[]> respTaxDLedMap = restTemplate.getForEntity(url, LedgerMappingTaxDetail[].class);
-            if (respTaxDLedMap == null || respTaxDLedMap.getStatusCode() != HttpStatus.OK)
-                return null;
-            List<LedgerMappingTaxDetail> mapping = respTaxDLedMap.getBody() != null ? Arrays.asList(respTaxDLedMap.getBody()) : new ArrayList<>();
+            LedgerMappingTaxDetailService ledgerMappingTaxDetailService = EmcsAppContext.getContext().getBean(LedgerMappingTaxDetailService.class);
+            List<LedgerMappingTaxDetail> mapping = ledgerMappingTaxDetailService.findAll();
+
 
             List<LedgerMappingTaxDetail> listMapping = new ArrayList<>(mapping);
 //            for (LedgerMappingTaxDetail mp : listMapping) {
@@ -68,7 +56,7 @@ public class LedgerMappingTaxDetailLoadTask extends Task<TaxDetailMappingDto> {
                     }
                 }
             }
-            List<Ledger> list = new ArrayList<>(Arrays.asList(respLedger.getBody()));
+            List<Ledger> list = new ArrayList<>(ledgerList);
             list.add(0, new Ledger("None")); //"0",
             return new TaxDetailMappingDto(listMapping, list);
         } catch (Exception e) {
