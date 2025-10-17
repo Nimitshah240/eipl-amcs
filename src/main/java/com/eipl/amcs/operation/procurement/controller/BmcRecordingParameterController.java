@@ -7,7 +7,7 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.operation.procurement.dto.RecordingParameter;
+import com.eipl.amcs.operation.procurement.model.BmcRecording;
 import com.eipl.amcs.operation.procurement.task.BmcRecordingParameterDeleteTask;
 import com.eipl.amcs.operation.procurement.task.BmcRecordingParameterLoadTask;
 import com.eipl.amcs.operation.procurement.task.BmcRecordingParameterSaveTask;
@@ -38,13 +38,13 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
     @FXML
     StackPane root;
     @FXML
-    TableView<RecordingParameter> tableRecordingParameters;
+    TableView<BmcRecording> tableRecordingParameters;
     @FXML
-    TableColumn<RecordingParameter, String> colCode;
+    TableColumn<BmcRecording, String> colCode;
     @FXML
-    TableColumn<RecordingParameter, LocalDateTime> colDate, colTime;
+    TableColumn<BmcRecording, LocalDateTime> colDate, colTime;
     @FXML
-    TableColumn<RecordingParameter, BigDecimal> colWeight, colTemperature;
+    TableColumn<BmcRecording, BigDecimal> colWeight, colTemperature;
 
     @FXML
     private TextField txtTime, txtWeight, txtTemperature, txtSocietyCode;
@@ -63,13 +63,13 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
 
     private ResourceBundle resourceBundle;
 
-    private final ObjectProperty<RecordingParameter> propRunningPara;
+    private final ObjectProperty<BmcRecording> propRunningPara;
 
     public BmcRecordingParameterController() {
         propRunningPara = new SimpleObjectProperty<>();
     }
 
-    private RecordingParameter recordingParameter;
+    private BmcRecording recordingParameter;
 
     @Override
     public Node getRoot() {
@@ -138,7 +138,7 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
         });
     }
 
-    private void setControls(RecordingParameter recordingParameter) {
+    private void setControls(BmcRecording recordingParameter) {
         txtWeight.setText(String.valueOf(recordingParameter.getWeight()));
     }
 
@@ -149,7 +149,7 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
 
     @Override
     public void saveData() {
-        recordingParameter = new RecordingParameter();
+        recordingParameter = new BmcRecording();
         setValuesInObject();
         var task = new BmcRecordingParameterSaveTask(recordingParameter, (short) 0);
         task.setOnSucceeded(e -> {
@@ -209,7 +209,7 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
         BmcRecordingParameterLoadTask task = new BmcRecordingParameterLoadTask();
         task.setOnSucceeded(e -> {
             try {
-                List<RecordingParameter> list = task.get();
+                List<BmcRecording> list = task.get();
                 if (list != null)
                     tableRecordingParameters.setItems(FXCollections.observableList(list));
             } catch (InterruptedException | ExecutionException ex) {
@@ -235,7 +235,7 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
                 resourceBundle.getString("alert.delete"));
         Optional<ButtonType> resp = alert.createConfirmationAlert();
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
-            RecordingParameter dto = propRunningPara.get();
+            BmcRecording dto = propRunningPara.get();
             if (dto != null) {
                 var task = new BmcRecordingParameterDeleteTask(dto.getCode());
                 task.setOnSucceeded(e -> {
