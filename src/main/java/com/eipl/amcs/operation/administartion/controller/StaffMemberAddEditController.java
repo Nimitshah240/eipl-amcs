@@ -25,7 +25,7 @@ import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
-import com.eipl.amcs.operation.administartion.dto.converter.DesignationConvertor;
+import com.eipl.amcs.operation.administartion.converter.DesignationConvertor;
 import com.eipl.amcs.operation.administartion.task.DesignationLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffCodeLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffMemberSaveTask;

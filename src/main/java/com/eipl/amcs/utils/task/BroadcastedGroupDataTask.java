@@ -1,17 +1,13 @@
 package com.eipl.amcs.utils.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.sync.producer.BroadcastedService;
-import com.eipl.amcs.utils.AppConstant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,16 +21,6 @@ public class BroadcastedGroupDataTask extends Task<Map<String, Integer>> {
     @Override
     protected Map<String, Integer> call() {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String baseUrl = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.IDENTITY_CALL;
-            String urlGroup = baseUrl + "/group-by-table";
-
-            ResponseEntity<String> response = restTemplate.getForEntity(urlGroup, String.class);
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                updateMessage("Fetching grouped data failed: " + response.getStatusCode());
-                return null;
-            }
-
             BroadcastedService broadcastedService = EmcsAppContext.getContext().getBean(BroadcastedService.class);
             String json = broadcastedService.getGroupedByTableName().toString();
             ObjectMapper mapper = new ObjectMapper();

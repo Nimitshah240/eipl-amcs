@@ -44,19 +44,6 @@ public class SubLedgerCloseTask extends Task<List<LedgerClose>> {
                 }
             }
             return listResp;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.FY_SUB_LEDGER_OPENING_BALANCE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("ledgerCode", ledgerCode)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString())
-//                    .queryParam("locale", MainApp.locale);
-//            ResponseEntity<LedgerClose[]> response = restTemplate.getForEntity(builder.toUriString(), LedgerClose[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
-
         } catch (Exception e) {
             e.printStackTrace();
         }

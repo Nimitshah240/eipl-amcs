@@ -6,6 +6,8 @@ import com.eipl.amcs.network.IdentityPayload;
 import com.eipl.amcs.network.IdentityPayloadForAcknowledgement;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
+import com.eipl.amcs.sync.model.Subscribed;
+import com.eipl.amcs.sync.repository.SubscribedRepository;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
     @Override
     protected Map<String, Object> call() throws Exception {
         try {
+            SubscribedRepository subscribedRepository = EmcsAppContext.getContext().getBean(SubscribedRepository.class);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_COUNT;
 //            String url = "http://192.168.1.74/AMULUAT/webservice/amcs/v1/realtime-services/sentbox-count";
@@ -83,12 +86,9 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
                         sentBoxUuidList.add(sentBox.getUuid());
                         subscribedList.add(sentBox);
                     }
-                    url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + "/sync/sentbox";
-//                    url = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/realtime-services/sync/sentbox";
-                    ResponseEntity<Subscribed[]> subscribedResponse = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(subscribedList), Subscribed[].class);
 
-                    if (subscribedResponse.getStatusCodeValue() != 200)
-                        return null;
+                    subscribedRepository.saveAll(subscribedList);
+
                     code = new StringBuilder();
                     for (String uuid : sentBoxUuidList) {
                         code.append(uuid);

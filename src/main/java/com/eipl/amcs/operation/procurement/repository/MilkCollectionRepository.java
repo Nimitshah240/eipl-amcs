@@ -6,7 +6,7 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.report.bootdto.ShiftReportCode;
+import com.eipl.amcs.report.dto.ShiftReportCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;

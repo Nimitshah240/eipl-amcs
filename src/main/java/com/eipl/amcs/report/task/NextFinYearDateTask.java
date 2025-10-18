@@ -26,16 +26,6 @@ public class NextFinYearDateTask extends Task<List<LocalDate>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.NEXT_FY_DATE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("date", currentDate.toString());
-//            ResponseEntity<FinancialYear[]> response = restTemplate.getForEntity(builder.toUriString(), FinancialYear[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

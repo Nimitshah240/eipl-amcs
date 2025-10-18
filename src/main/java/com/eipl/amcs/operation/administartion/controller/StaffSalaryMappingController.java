@@ -11,7 +11,7 @@ import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.master.account.model.StaffSalaryHead;
 import com.eipl.amcs.master.account.model.StaffSalaryMapping;
-import com.eipl.amcs.operation.administartion.dto.converter.StaffMemberConvertor;
+import com.eipl.amcs.operation.administartion.converter.StaffMemberConvertor;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryMappingLoadTask;

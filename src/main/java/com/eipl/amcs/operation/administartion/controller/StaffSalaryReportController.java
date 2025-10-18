@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.account.model.StaffMember;
-import com.eipl.amcs.operation.administartion.dto.converter.StaffMemberConvertor;
+import com.eipl.amcs.operation.administartion.converter.StaffMemberConvertor;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.report.util.ReportGenerate;

@@ -1,16 +1,10 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public class SubLedgerOpeningTask extends Task<List<Object[]>> {
@@ -34,18 +28,12 @@ public class SubLedgerOpeningTask extends Task<List<Object[]>> {
     @Override
     protected List<Object[]> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_BALANCES;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("societyCode", societyCode)
-                    .queryParam("fromDate", fromDate.toString())
-                    .queryParam("toDate", toDate.toString()).queryParam("locale", locale);
-
-
-            ResponseEntity<Object[][]> response = restTemplate.getForEntity(builder.toUriString(), Object[][].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            LedgerRepository ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
+            List<Object[]> listStockValuation = ledgerRepository.fetchSubLedgerOpeningBalanceSecond(societyCode, fromDate, toDate, locale);
+            if (listStockValuation == null || listStockValuation.isEmpty()) {
                 return null;
-            return Arrays.asList(response.getBody());
+            }
+            return listStockValuation;
         } catch (Exception e) {
             e.printStackTrace();
         }

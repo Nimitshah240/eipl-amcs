@@ -30,17 +30,6 @@ public class MilkCollectionPreRequisiteTask extends Task<MilkCollectionPreReqDto
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             LocalDateTime dt = LocalDateTime.parse(date.format(DATE_TIME_FMT), DATE_TIME_FMT);
             return service.fetchPreRequsite(dt, shift.getCode(), society.getCode());
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/pre-req";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("date", date.toString())
-//                    .queryParam("shiftCode", shift.getCode())
-//                    .queryParam("societyCode", society.getCode());
-//            ResponseEntity<MilkCollectionPreReqDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkCollectionPreReqDto.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

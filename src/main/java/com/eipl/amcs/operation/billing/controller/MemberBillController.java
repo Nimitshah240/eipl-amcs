@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
@@ -15,6 +14,7 @@ import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
 import com.eipl.amcs.operation.billing.dto.FinalizeDto;
 import com.eipl.amcs.operation.billing.model.MemberBill;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
+import com.eipl.amcs.operation.billing.task.CheckMemberBillLoadTask;
 import com.eipl.amcs.operation.billing.task.MemberBillDisburseLoadTask;
 import com.eipl.amcs.operation.billing.task.MemberBillFinalizeLoadTask;
 import com.eipl.amcs.operation.billing.task.MemberBillLoadTask;
@@ -33,10 +33,6 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -116,31 +112,31 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 return;
             }
 
-            short generate = 0;
-            // check payment cycle data
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/checkBill")
-                    .queryParam("paymentCycleCode", cboxPaymentCycle.getValue().getCode());
-            ResponseEntity<MemberBillSummary> response = restTemplate.getForEntity(builder.toUriString(), MemberBillSummary.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK) {
-                MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("member.bill"),
-                        resourceBundle.getString("error.occurred"));
-                alert.createAlert();
-                return;
-            }
 
-            if (response.getBody() == null)
-                generate = 1;
-            if (response.getBody() != null) {
-                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
-                        CommonUtils.getResourceString(resourceBundle, "member.bill.generated.confirmation"));
-                Optional<ButtonType> resp = alert.createConfirmationAlert();
-                if (resp.isPresent() && resp.get() == ButtonType.OK) {
-                    generate = 1;
+            var task = new CheckMemberBillLoadTask(cboxPaymentCycle.getValue());
+            task.setOnSucceeded(exs -> {
+                try {
+                    short generate = 0;
+                    MemberBillSummary memberBillSummary = task.get();
+                    if (memberBillSummary == null) {
+                        generate = 1;
+                    } else {
+                        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                                CommonUtils.getResourceString(resourceBundle, "member.bill.generated.confirmation"));
+                        Optional<ButtonType> resp = alert.createConfirmationAlert();
+                        if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                            generate = 1;
+                        }
+                    }
+
+                    loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), generate);
+
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
                 }
-            }
+            });
+            new Thread(task).start();
 
-            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), generate);
         });
         btnEdit.setOnAction(e -> {
 //            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_EDIT"))

@@ -107,7 +107,6 @@ public class MemberCreateTask extends Task<Boolean> {
                 prepareMembers(milkTypeList.get(0), memberTypeList.get(0), genderList.get(0), sampleNo, sampleNo);
 
             List<List<MemberDto>> listTemp = ListUtils.partition(listDto, AppConstant.MIGRATION_LIST_SIZE);
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, this.url) + AppConstant.UrlPath.MEMBER + "/import";
             int current = 1;
             for (List<MemberDto> memberDtos : listTemp) {
                 try {

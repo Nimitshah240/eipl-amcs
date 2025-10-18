@@ -1,13 +1,8 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.repository.FinancialYearRepository;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 public class FinancialYearsCodeTask extends Task<Boolean> {
 
@@ -23,15 +18,9 @@ public class FinancialYearsCodeTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.FY_FETCH_BY_CODE;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("code", code);
-            ResponseEntity<Boolean> response = restTemplate.getForEntity(builder.toUriString(), Boolean.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return response.getBody();
+            FinancialYearRepository financialYearRepository = EmcsAppContext.getContext().getBean(FinancialYearRepository.class);
+            Integer ints = financialYearRepository.fetchByCode(code);
+            return ints <= 0;
         } catch (Exception e) {
             e.printStackTrace();
         }

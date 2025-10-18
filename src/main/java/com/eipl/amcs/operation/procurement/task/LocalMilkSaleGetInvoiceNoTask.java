@@ -28,16 +28,6 @@ public class LocalMilkSaleGetInvoiceNoTask extends Task<String> {
             if (codes == null || codes.isEmpty())
                 return null;
             return codes;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/fetchInvoiceNo";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam(MainApp.identityDto.getSociety().getCode())
-//                    .queryParam("code", code);
-//            ResponseEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, String.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("LocalMilkSale InvoiceNo fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("LocalMilkSale InvoiceNo fetched: {}", e);
         }

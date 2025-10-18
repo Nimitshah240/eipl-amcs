@@ -1,22 +1,20 @@
 package com.eipl.amcs.master.account.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.dto.EventMappingDto;
 import com.eipl.amcs.master.account.model.Events;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingEvent;
 import com.eipl.amcs.master.account.model.VoucherType;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.service.EventService;
+import com.eipl.amcs.master.account.service.LedgerMappingEventService;
+import com.eipl.amcs.master.account.service.LedgerService;
+import com.eipl.amcs.master.account.service.VoucherTypeService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class LedgerMappingEventLoadTask extends Task<EventMappingDto> {
@@ -25,30 +23,21 @@ public class LedgerMappingEventLoadTask extends Task<EventMappingDto> {
     @Override
     protected EventMappingDto call() throws Exception {
         try {
+            EventService eventService = EmcsAppContext.getContext().getBean(EventService.class);
+            LedgerService ledgerService = EmcsAppContext.getContext().getBean(LedgerService.class);
+            VoucherTypeService voucherTypeService = EmcsAppContext.getContext().getBean(VoucherTypeService.class);
+            LedgerMappingEventService ledgerMappingEventService = EmcsAppContext.getContext().getBean(LedgerMappingEventService.class);
+
             // product group
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.EVENT;
-            ResponseEntity<Events[]> response = restTemplate.getForEntity(url, Events[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            List<Events> eventList = new ArrayList<>(Arrays.asList(response.getBody()));
+            List<Events> eventList = eventService.findAll();
 
             // ledger
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
-            ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
-            if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
-                return null;
-            // voucherType
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER_TYPE;
-            ResponseEntity<VoucherType[]> respVoucherType = restTemplate.getForEntity(url, VoucherType[].class);
-            if (respVoucherType == null || respVoucherType.getStatusCode() != HttpStatus.OK)
-                return null;
+            List<Ledger> ledgerList = ledgerService.findAllByIsActive();
 
-            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_EVENT;
-            ResponseEntity<LedgerMappingEvent[]> respPgLedMap = restTemplate.getForEntity(url, LedgerMappingEvent[].class);
-            if (respPgLedMap == null || respPgLedMap.getStatusCode() != HttpStatus.OK)
-                return null;
-            List<LedgerMappingEvent> mapping = respPgLedMap.getBody() != null ? Arrays.asList(respPgLedMap.getBody()) : new ArrayList<>();
+            // voucherType
+            List<VoucherType> voucherTypeList = voucherTypeService.findAll();
+
+            List<LedgerMappingEvent> mapping = ledgerMappingEventService.findAll();
 
             List<LedgerMappingEvent> listMapping = new ArrayList<>(mapping);
             for (LedgerMappingEvent mp : listMapping) {
@@ -59,9 +48,9 @@ public class LedgerMappingEventLoadTask extends Task<EventMappingDto> {
                 mp.setEvents(event);
                 listMapping.add(mp);
             }
-            List<Ledger> list = new ArrayList<>(Arrays.asList(respLedger.getBody()));
+            List<Ledger> list = new ArrayList<>(ledgerList);
             list.add(0, new Ledger("None")); //"0",
-            return new EventMappingDto(listMapping, list, Arrays.asList(respVoucherType.getBody()));
+            return new EventMappingDto(listMapping, list, voucherTypeList);
         } catch (Exception e) {
             LOGGER.error("LedgerMappingEvent fetch", e);
         }
