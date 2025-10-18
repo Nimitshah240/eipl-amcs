@@ -1,20 +1,13 @@
 package com.eipl.amcs.report.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.model.FinancialYear;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.repository.FinancialYearRepository;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
-public class NextFinYearDateTask extends Task<List<FinancialYear>> {
+public class NextFinYearDateTask extends Task<List<LocalDate>> {
 
     private LocalDate currentDate;
 
@@ -26,17 +19,23 @@ public class NextFinYearDateTask extends Task<List<FinancialYear>> {
     }
 
     @Override
-    protected List<FinancialYear> call() throws Exception {
+    protected List<LocalDate> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.NEXT_FY_DATE;
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("date", currentDate.toString());
-            ResponseEntity<FinancialYear[]> response = restTemplate.getForEntity(builder.toUriString(), FinancialYear[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            FinancialYearRepository financialYearRepository = EmcsAppContext.getContext().getBean(FinancialYearRepository.class);
+            List<LocalDate> list = financialYearRepository.fetchByDate(currentDate);
+            if (list == null || list.isEmpty())
                 return null;
-            return Arrays.asList(response.getBody());
+            return list;
+
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.NEXT_FY_DATE;
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("date", currentDate.toString());
+//            ResponseEntity<FinancialYear[]> response = restTemplate.getForEntity(builder.toUriString(), FinancialYear[].class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

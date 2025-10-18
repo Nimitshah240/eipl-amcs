@@ -484,8 +484,7 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         NextFinYearDateTask financialYear = new NextFinYearDateTask(MainApp.getFinancialYear().getEndDate().plusDays(1));
         financialYear.setOnSucceeded(e -> {
             try {
-                List<FinancialYear> list = financialYear.get();
-                if (financialYear == null) {
+                if (financialYear.get() == null) {
                     MyAlert alert = new WarningAlert(MainApp.stage, resources.getString("yearend.title"),
                             resources.getString("alert.yearclose.nextyearnotfound"));
                     alert.createAlert();
