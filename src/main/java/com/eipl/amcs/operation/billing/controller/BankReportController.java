@@ -24,12 +24,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.*;
@@ -43,8 +39,6 @@ import java.util.stream.Collectors;
 
 public class BankReportController implements MyInitialization {
 
-    public BigDecimal textFileTotal = BigDecimal.ZERO;
-    List<PaymentForBank> list;
     @FXML
     private StackPane root;
     @FXML
@@ -53,22 +47,21 @@ public class BankReportController implements MyInitialization {
     private PopupCallback callback;
     @FXML
     private ComboBox<Bank> cboxBank;
+
+    List<PaymentForBank> list;
+
     @FXML
     private ComboBox<String> cboxReportType;
-    private ResourceBundle resourceBundle;
-    private MemberBillSummary dto = null;
-    private MemberBillSummary propSummary;
-    private StringBuilder errorMsg;
 
-    public static String rightPadding(String input, char ch, int L) {
-        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
-        return result;
-    }
+
+    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
         return root;
     }
+
+    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -77,6 +70,11 @@ public class BankReportController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
+
+    private MemberBillSummary propSummary;
+
+    public BigDecimal textFileTotal = BigDecimal.ZERO;
+
 
     public void setSummay(MemberBillSummary dto) {
         if (dto != null) {
@@ -89,7 +87,7 @@ public class BankReportController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         loadBank();
         cboxReportType.getItems().addAll(resourceBundle.getString("report"), resourceBundle.getString("excel"),
-                resourceBundle.getString("textfile"), resourceBundle.getString("textfile"), resourceBundle.getString("ifscreport")
+                resourceBundle.getString("textfile"), resourceBundle.getString("textfile"), resourceBundle.getString("ifscreport"), resourceBundle.getString("excelUnion")
         );
         setupComboBox();
         cboxBank.getSelectionModel().select(0);
@@ -103,6 +101,8 @@ public class BankReportController implements MyInitialization {
         cboxBank.getSelectionModel().select(0);
         cboxReportType.getSelectionModel().select(0);
     }
+
+    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
@@ -130,6 +130,8 @@ public class BankReportController implements MyInitialization {
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_BANK_IFSC, params);
                 JasperViewer.viewReport(print, false);
                 break;
+            case 6:
+                loadExcelData(3);
 
         }
 
@@ -172,6 +174,8 @@ public class BankReportController implements MyInitialization {
                     exportExcel(list);
                 else if (var == 1)
                     exportTextFile(list);
+                else if (var == 3)
+                    exportExcel2(list);
                 else
                     exportTextFile1(list);
             } catch (InterruptedException ex) {
@@ -353,6 +357,12 @@ public class BankReportController implements MyInitialization {
         }
     }
 
+    public static String rightPadding(String input, char ch, int L) {
+        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
+        return result;
+    }
+
+
     private void exportExcel(List<PaymentForBank> list) {
         boolean exported = true;
         try {
@@ -482,6 +492,176 @@ public class BankReportController implements MyInitialization {
                     resourceBundle.getString("successful"));
         } else {
             alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                    resourceBundle.getString("error.occurred"));
+        }
+        alert.createAlert();
+    }
+
+    private void exportExcel2(List<PaymentForBank> list) {
+        MyAlert alert;
+        boolean exported = true;
+        try {
+            if (list.isEmpty()) {
+                alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("bankreport"),
+                        resourceBundle.getString("no.data"));
+                alert.createAlert();
+                return;
+            }
+            FileChooser fileDialog = new FileChooser();
+            fileDialog.setTitle("Export Billing Data");
+            fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
+            File file = fileDialog.showSaveDialog(MainApp.stage);
+            if (file != null) {
+                HSSFWorkbook wb = new HSSFWorkbook();
+                HSSFSheet sheet = wb.createSheet("Sheet-1");
+
+                HSSFCellStyle centerStyle = wb.createCellStyle();
+                centerStyle.setBorderBottom(BorderStyle.THIN);
+                centerStyle.setBorderTop(BorderStyle.THIN);
+                centerStyle.setBorderLeft(BorderStyle.THIN);
+                centerStyle.setBorderRight(BorderStyle.THIN);
+                centerStyle.setAlignment(HorizontalAlignment.CENTER);
+                centerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+                List<String> strColumns = Arrays.asList("Soc Code", "Soc Name", "Payment Period", "Cust Code", "Cust Name", "Bank A/C", "IFSC CODE", "Bank Name", "Branch Name", "Pay Value");
+                List<String> strColumnTodisplay = null;
+                CellStyle style;
+                List<String> items = null;
+                strColumnTodisplay = new ArrayList<>(strColumns);
+                DataFormat format = wb.createDataFormat();
+                style = wb.createCellStyle();
+                style.setDataFormat(format.getFormat("0.00"));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+
+                List<String> finalResultToDisplay = strColumnTodisplay.stream().collect(Collectors.toList());
+
+                List<String> mainHeader = Arrays.asList("Code :", "Name: ", "Date: ");
+                List<String> mainHeaderValue = Arrays.asList(MainApp.identityDto.getSociety().getCode(),
+                        MainApp.identityDto.getSociety().getName(),
+                        dto.getPaymentCycle().getFromDate().toLocalDate().format(formatter) + " To " + dto.getPaymentCycle().getToDate().toLocalDate().format(formatter));
+
+                HSSFRow row = null;
+                HSSFCell cell = null;
+                for (int i = 0; i < mainHeader.size(); i++) {
+                    row = sheet.createRow(i + 2);
+                    cell = row.createCell(2);
+                    cell.setCellStyle(centerStyle);
+                    cell.setCellValue(mainHeader.get(i));
+                    cell = row.createCell(3);
+                    cell.setCellStyle(centerStyle);
+                    cell.setCellValue(mainHeaderValue.get(i));
+                    for (int j = 0; j < 3; j++) {
+                        cell = row.createCell(4 + j);
+                        cell.setCellStyle(centerStyle);
+                    }
+                }
+
+                row = sheet.createRow(6);
+                int cellValueHeading = 0;
+                for (String columnTitle : finalResultToDisplay) {
+                    cell = row.createCell(cellValueHeading);
+                    cell.setCellValue(columnTitle);
+                    cell.setCellStyle(centerStyle);
+                    cellValueHeading++;
+                }
+                int rowCnt = 7;
+                BigDecimal total = BigDecimal.ZERO;
+                for (PaymentForBank item : list) {
+                    cellValueHeading = 0;
+                    row = sheet.createRow(rowCnt);
+                    for (String columnTitle : finalResultToDisplay) {
+                        switch (columnTitle) {
+                            case "Soc Code":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getSoc_code());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "Soc Name":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getSoc_name());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "Payment Period":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getPayment_period());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+
+                            case "Cust Code":
+                                cell = row.createCell(cellValueHeading++);
+                                total = total.add(item.getNet_amount());
+                                cell.setCellValue(item.getMember_Code());
+                                sheet.autoSizeColumn(cellValueHeading);
+
+                                cell.setCellStyle(style);
+                                break;
+                            case "Cust Name":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getMember_name());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "Bank A/C":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getBank_acno());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "IFSC CODE":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getIfsc());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "Bank Name":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getBank_name());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "Branch Name":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getBranch_name());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            case "Pay Value":
+                                cell = row.createCell(cellValueHeading++);
+                                cell.setCellValue(item.getNet_amount().doubleValue());
+                                sheet.autoSizeColumn(cellValueHeading);
+                                break;
+                            default:
+                                break;
+                        }
+                        cell.setCellStyle(centerStyle);
+                    }
+                    rowCnt++;
+                }
+
+                row = sheet.createRow(rowCnt);
+                cell = row.createCell(0);
+                cell.setCellValue("TOTAL");
+                cell = row.createCell(9);
+                cell.setCellValue(total.doubleValue());
+                cell.setCellStyle(style);
+                sheet.addMergedRegion(new CellRangeAddress(rowCnt, rowCnt, 0, 3));
+                sheet.addMergedRegion(new CellRangeAddress(2, 2, 3, 6));
+                sheet.addMergedRegion(new CellRangeAddress(3, 3, 3, 6));
+                sheet.addMergedRegion(new CellRangeAddress(4, 4, 3, 6));
+                try {
+                    wb.close();
+                    FileOutputStream out = new FileOutputStream(file);
+                    wb.write(out);
+                    out.flush();
+                    out.close();
+                } catch (Exception e) {
+                    exported = false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            exported = false;
+        }
+        if (exported) {
+            alert = new InformationAlert(MainApp.stage, resourceBundle.getString("bankreport"),
+                    resourceBundle.getString("successful"));
+        } else {
+            alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("bankreport"),
                     resourceBundle.getString("error.occurred"));
         }
         alert.createAlert();

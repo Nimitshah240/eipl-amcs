@@ -46,15 +46,8 @@ import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberController implements MyInitialization, PopupCallback {
 
-    private final ObjectProperty<Member> propMember;
-    //    private Map<String, String> mapDetails;
-    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
-    public List<Member> memberList = new ArrayList<>();
-    public PopupCallback callback;
     @FXML
     AnchorPane root;
-    @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnImport, btnExport, btnSearch, btnClear, btnOk, btnClose1;
     @FXML
     private TableView<Member> tableMember;
     @FXML
@@ -68,21 +61,25 @@ public class MemberController implements MyInitialization, PopupCallback {
     @FXML
     private TableColumn<Member, MemberType> colMemberType;
     @FXML
+    Button btnClose, btnAdd, btnDelete, btnEdit, btnImport, btnExport, btnSearch, btnClear, btnOk, btnClose1;
+    @FXML
     private DatePicker dpFromDate;
+
     private ResourceBundle resourceBundle;
+    private ObjectProperty<Member> propMember;
+
     private List<Gender> genderList;
     private List<MilkType> milkTypeList;
     private List<MemberType> memberTypeList;
     private List<Bank> bankList;
     private List<Member> listMember;
+    //    private Map<String, String> mapDetails;
+    private Map<String, MemberDetail> mapDetails = new HashMap<>();
+
+    public List<Member> memberList = new ArrayList<>();
     private String memberCode;
     private Stage stage;
-    private StringBuilder errorMsg;
-    private List<MemberDto> listMemberDto;
-
-    public MemberController() {
-        propMember = new SimpleObjectProperty<>();
-    }
+    public PopupCallback callback;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -91,6 +88,10 @@ public class MemberController implements MyInitialization, PopupCallback {
     @Override
     public Node getRoot() {
         return root;
+    }
+
+    public MemberController() {
+        propMember = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -107,7 +108,7 @@ public class MemberController implements MyInitialization, PopupCallback {
 //        });
 
         txtCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            search(oldValue, newValue);
+            search((String) oldValue, (String) newValue);
         });
 
         btnClear.setOnAction(e -> {
@@ -318,6 +319,7 @@ public class MemberController implements MyInitialization, PopupCallback {
         alert.createAlert();
     }
 
+
     private void loadDetails() {
         var task = new AllMemberDetailsLoadTask();
         task.setOnSucceeded(e -> {
@@ -338,6 +340,10 @@ public class MemberController implements MyInitialization, PopupCallback {
         new Thread(task).start();
 
     }
+
+
+    private StringBuilder errorMsg;
+
 
     private void loadImportPreReq() {
         var task = new GenderLoadTask();
@@ -401,6 +407,8 @@ public class MemberController implements MyInitialization, PopupCallback {
 
 
     }
+
+    private List<MemberDto> listMemberDto;
 
     private void startImport(File file) {
         var task = new MemberImportTask(file, milkTypeList, genderList, memberTypeList, bankList);
@@ -472,8 +480,8 @@ public class MemberController implements MyInitialization, PopupCallback {
             colFirstName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() + " " +
                     data.getValue().getMiddleName() + " " + data.getValue().getLastName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstNameLocal() != null ?
-                    data.getValue().getFirstNameLocal() : " " +
-                    data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : " " + data.getValue().getLastNameLocal()
+                    data.getValue().getFirstNameLocal() : "" + " " +
+                    data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : "" + " " + data.getValue().getLastNameLocal()
                     != null ? data.getValue().getLastNameLocal() : ""
             ));
 //        colMiddleName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMiddleName()));
@@ -522,7 +530,7 @@ public class MemberController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || !respDelete.booleanValue()) {
+                        if (respDelete == null || respDelete.booleanValue() == false) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -559,6 +567,4 @@ public class MemberController implements MyInitialization, PopupCallback {
 //            new Thread(task).start();
 //        }
 //    }
-
-
 }
