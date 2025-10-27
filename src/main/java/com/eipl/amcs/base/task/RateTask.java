@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.eipl.amcs.MainApp.context;
 
 public class RateTask extends Task<Void> {
 
@@ -59,13 +58,13 @@ public class RateTask extends Task<Void> {
     private final MemberMilkPurchaseRateService memberMilkPurchaseRateService;
 
     public RateTask() {
-        formulaRepository = context.getBean(FormulaRepository.class);
-        milkQualityTypeService = context.getBean(MilkQualityTypeService.class);
-        milkTypeService = context.getBean(MilkTypeService.class);
-        rateTypeService = context.getBean(RateTypeService.class);
-        shiftService = context.getBean(ShiftService.class);
-        societyMilkPurchaseRateService = context.getBean(SocietyMilkPurchaseRateService.class);
-        memberMilkPurchaseRateService = context.getBean(MemberMilkPurchaseRateService.class);
+        formulaRepository = EmcsAppContext.getContext().getBean(FormulaRepository.class);
+        milkQualityTypeService = EmcsAppContext.getContext().getBean(MilkQualityTypeService.class);
+        milkTypeService = EmcsAppContext.getContext().getBean(MilkTypeService.class);
+        rateTypeService = EmcsAppContext.getContext().getBean(RateTypeService.class);
+        shiftService = EmcsAppContext.getContext().getBean(ShiftService.class);
+        societyMilkPurchaseRateService = EmcsAppContext.getContext().getBean(SocietyMilkPurchaseRateService.class);
+        memberMilkPurchaseRateService = EmcsAppContext.getContext().getBean(MemberMilkPurchaseRateService.class);
     }
 
 

@@ -3,10 +3,8 @@ package com.eipl.amcs;
 import com.eipl.amcs.auth.dto.IdentityDto;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.FxmlLoaderUtil;
-import com.eipl.amcs.base.LaunchScreenController;
 import com.eipl.amcs.base.Notification;
 import com.eipl.amcs.base.model.SentBoxCountTask;
-import com.eipl.amcs.config.AppConfig;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -32,9 +30,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.*;
 import java.net.Socket;
@@ -92,7 +88,6 @@ public class MainApp extends Application {
         return properties.getProperty(key, defaultValue);
     }
 
-    public static ConfigurableApplicationContext context;
 
     public static void main(String[] args) {
         try {
@@ -197,7 +192,7 @@ public class MainApp extends Application {
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
             try {
                 EmcsAppContext.initializeEmcsAppContext();
-                context = EmcsAppContext.getContext();
+//                context = EmcsAppContext.getContext();
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
             }

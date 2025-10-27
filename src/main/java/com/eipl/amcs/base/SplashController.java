@@ -123,8 +123,9 @@ public class SplashController implements MyInitialization {
         @Override
         protected Boolean call() throws Exception {
             try {
-                EmcsAppContext.initializeEmcsAppContext();
-                return EmcsAppContext.getContext() != null;
+                return true;
+//                EmcsAppContext.initializeEmcsAppContext();
+//                return EmcsAppContext.getContext() != null;
             } catch (Exception e) {
                 LOGGER.error("AppInitTask: ", e);
             }
