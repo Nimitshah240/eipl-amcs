@@ -28,7 +28,8 @@ public class AppConstant {
     public static final String EIPL_DB_PASS = "EAmcs2021";
     public static final String EIPL_DB_NAME = "eipl_amcs_db";
 
-    public static final String versionNo = "4.4";
+    public static final String client = "AMUL"; // OR JAIPURDUSS OR AMUL
+    public static final String versionNo = "4.8";
 
     public static final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
             AppConstant.Formatter1, // Replace with your actual formatters
@@ -38,15 +39,6 @@ public class AppConstant {
             AppConstant.Formatter5,
             AppConstant.Formatter6
     );
-    public static final String HEADER_IDENTITY = "identity";
-    public static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    public static final DateTimeFormatter DATE_TIME_FMT_SSSSSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-    public static final DateTimeFormatter SYNC_DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-    public static final DateTimeFormatter RFC_CALL_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
-    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-// SPRING BOOTS CONSTANTS
-    public static List<String> prioritizedTableNameList = Arrays.asList("tbl_bulk_notification", "rfc_call");
 
     public static LocalDate parseDateWithMultipleFormats(String dateStr) {
         for (DateTimeFormatter formatter : DATE_FORMATTERS) {
@@ -59,6 +51,7 @@ public class AppConstant {
         // Handle the case where none of the formatters could parse the date
         throw new IllegalArgumentException("Date format not recognized: " + dateStr);
     }
+
     public interface UrlPath {
         String PERMISSION = "permissions/";
         String CUSTOMER_NUMBER = "customers/next-code";
@@ -214,7 +207,7 @@ public class AppConstant {
         String STAFF_SALARY = "report/StaffSalaryPayment";
         String PATRAK_ONE = "report/PatrakOne";
         String UPDATE_CHECK = MainApp.getProperty("updater.url", "");
-        String AMULAMCS = "AMULAMCSS";
+        String AMULAMCS = "AMULAMCS";
         String GOKARNA = "GOKARNA";
         String JAIPUR = "JAIPUR";
         String IDENTITY_CHECK = "amcs-desktop/register";
@@ -245,7 +238,9 @@ public class AppConstant {
         // String DESIGNATION ="designation";
         String BILL_HEAD_NUMBER = "bill-head/next-code";
         String BILL_CRITERIA_NUMBER = "bill-criteria/next-code";
+        String SCHEME_RATE_APPLICABILITY = "scheme-rate-applicability";
     }
+
     public interface CollectionType {
         String MEMBER_COLL = "member_collection";
         String SOCIETY_COLL = "society_collection";
@@ -253,6 +248,7 @@ public class AppConstant {
         String DISPATCH = "dispatch";
         String RECEIPT = "receipt";
     }
+
     public interface DEVICE_TAG {
         String WS_TAG = "ws";
         String ANALYSER_TAG = "ma";
@@ -261,6 +257,7 @@ public class AppConstant {
         String ANALYSER4_TAG = "ma4";
         String SPLITTER_TAG = "sp";
     }
+
     public interface Props {
         String BASE_URL = "baseurl";
         String APP_REQUEST_DEBUG = "app.request.debug";
@@ -292,6 +289,12 @@ public class AppConstant {
         String VERSION = "identity.version";
         String BASE_URL_REALTIME = "baseurl.realtime";
     }
+
+    /**
+     * @updatedBy Nimit Shah
+     * @updatedOn - 28-07-2025
+     * @update - add 3 reports name for scheme rate.
+     */
     public interface ReportPath {
         String SHIFT_REPORT_CODEWISE = "ShiftReportCodeWise";
         String PRICE_DIFFERENCE = "PriceDifference";
@@ -405,11 +408,23 @@ public class AppConstant {
 //        String RtpMilkCollectionProfitloss="RtpMilkCollectionProfitloss";
         String RtpMilkCollectionProfitloss2 = "RtpMilkCollectionProfitloss2";
         String RtpMilkCollectionProfitloss2WithOutMilkType = "RtpMilkCollectionProfitloss2WithOutMilkType";
-
+        String SCHEME_RATE_SOCIETY_PURCHASE = "SchemeRateSocietyPurchaseReport";
+        String SCHEME_RATE_SOCIETY_PURCHASE_MEMBER_WISE = "SchemeRateSocietyPurchaseMemberWise";
+        String SCHEME_RATE_MEMBER_MILK_COLLECTION_SLIP = "SchemeRateMemberMilkCollectionSlip";
+        String PURCHASE_REGISTER_MONTH_WISE = "PurchaseRegisterMonthWise";
+        String PAYMENT_REGISTER_WITH_DEDUCTION = "PaymentRegisterWithDeduction";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
-
     }
 
+    public static final String HEADER_IDENTITY = "identity";
+    public static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    public static final DateTimeFormatter DATE_TIME_FMT_SSSSSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    public static final DateTimeFormatter SYNC_DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final DateTimeFormatter RFC_CALL_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // SPRING BOOTS CONSTANTS
+    public static List<String> prioritizedTableNameList = Arrays.asList("tbl_bulk_notification", "rfc_call");
 
     public interface EventCode {
         int LOCAL_MILK_SALE = 103;
@@ -424,5 +439,4 @@ public class AppConstant {
     public interface SubLedgerType {
         short MEMBER = (short) 1;
     }
-
 }

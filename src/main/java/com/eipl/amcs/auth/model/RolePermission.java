@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Table(name = "role_permissions")
 public class RolePermission extends BaseModelTxn {
     @Id
-    @Size(max = 15)
+    @Size(max = 25)
     private Integer code;
 
     @ManyToOne(fetch = FetchType.LAZY)

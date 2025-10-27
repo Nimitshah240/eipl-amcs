@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @Table(name = "dock")
 public class Dock extends BaseModel {
     @Id
-    @Size(max = 11)
+    @Size(max = 15)
     private String dockNo;
     @Size(max = 3)
     private String unionCode;

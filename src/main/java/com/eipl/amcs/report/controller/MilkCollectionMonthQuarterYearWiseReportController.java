@@ -31,13 +31,10 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkCollectionMonthQuarterYearWiseReportController implements MyInitialization {
 
-    String[] month = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    String[] quarter = {"All", "1", "2", "3", "4"};
-    String[] year = {"All", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose;
+    private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
     private Stage stage;
     private PopupCallback callback;
     @FXML
@@ -47,15 +44,21 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     @FXML
     private ComboBox<String> cboxType;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+
     private ResourceBundle resourceBundle;
-    private final MemberBillSummary dto = null;
-    private StringBuilder errorMsg;
+
+
+    String[] month = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    String[] quarter = {"All", "1", "2", "3", "4"};
+    String[] year = {"All", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
 
     @Override
     public Node getRoot() {
         return root;
     }
+
+    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -70,6 +73,8 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         this.resourceBundle = resourceBundle;
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
+        dpFromDate1.setValue(LocalDate.now());
+        dpToDate1.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -91,7 +96,9 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         setupComboBox();
 //        cboxStaff.getSelectionModel().select(0);
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
-        btnClose.setOnAction(e -> stage.close());
+        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
+        btnClose1.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
     }
 
     @Override
@@ -101,6 +108,8 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         cboxStaff.getSelectionModel().select(0);
         new AutoCompleteComboBoxListener<>(cboxStaff);
     }
+
+    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
 
@@ -190,5 +199,18 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         new Thread(task).start();
     }
 
-
+    private void validateAndGenerateReport1() {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            JasperPrint print = null;
+            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+            params.put("p_from_collection_date", java.sql.Date.valueOf(dpFromDate1.getValue()) + " 06:00:00");
+            params.put("p_to_collection_date", java.sql.Date.valueOf(dpToDate1.getValue()) + " 18:00:00");
+            params.put("p_locale", MainApp.locale);
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE, params);
+            JasperViewer.viewReport(print, false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

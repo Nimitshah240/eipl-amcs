@@ -63,7 +63,7 @@ public class GeneralConfigServiceImpl implements GeneralConfigService {
             else {
                 code = nextCodeService.getNextCode("GeneralConfig", "code", soc, 0);
             }
-            int c = Integer.parseInt(code);
+            long c = Long.parseLong(code);
             List<GeneralConfig> generalConfigList = new ArrayList<>(generalConfigRepository.findAll());
             Broadcasted broadcast;
             String json;

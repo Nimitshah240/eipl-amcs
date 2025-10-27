@@ -15,13 +15,15 @@ import java.io.OutputStream;
 import java.text.DecimalFormat;
 
 public class DisplaySerial implements SerialPortDataListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DisplaySerial.class);
-    private final HardwareDevice hardwareDevice;
+    private HardwareDevice hardwareDevice;
     private SerialPort serialPort;
     private OutputStream outputStream;
     private boolean isDeviceReady = false;
+
     private DecimalFormat qtyDecimalFormat;
     private DecimalFormat wgtDecimalFormat, rateDecimalFormat;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DisplaySerial.class);
 
     public DisplaySerial(HardwareDevice hardwareDevice, String commPort) {
         this.hardwareDevice = hardwareDevice;
@@ -67,8 +69,8 @@ public class DisplaySerial implements SerialPortDataListener {
 
     @Override
     public void serialEvent(SerialPortEvent event) {
-        if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-        }
+        if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
+            return;
     }
 
     public void sendCommand(String command) {
@@ -91,8 +93,10 @@ public class DisplaySerial implements SerialPortDataListener {
     }
 
     public void disconnect() {
-        serialPort.removeDataListener();
-        serialPort.closePort();
+        if (serialPort != null) {
+            serialPort.closePort();
+            serialPort.removeDataListener();
+        }
     }
 
     public void resetDisplay() {

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class SocietyMilkPurchaseRate extends BaseModel {
 
     @Id
-    @Size(max = 15)
+    @Size(max = 25)
     private String code;
     @Size(max = 255)
     private String description;

@@ -19,7 +19,7 @@ public class DockAudit extends BaseModelAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 11)
+    @Size(max = 15)
     private String dockNo;
     @Size(max = 3)
     private String unionCode;

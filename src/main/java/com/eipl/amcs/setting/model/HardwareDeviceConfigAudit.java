@@ -23,7 +23,7 @@ public class HardwareDeviceConfigAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 10)
+    @Size(max = 25)
     private String code;
     @Size(max = 10)
     private String commPort;

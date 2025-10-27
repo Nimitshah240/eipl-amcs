@@ -20,7 +20,7 @@ import javax.validation.constraints.Size;
 public class GeneralConfig extends BaseModelTxn {
 
     @Id
-    @Size(max = 10)
+    @Size(max = 25)
     private String code;
     @Column(name = "json_key")
     private String key;
