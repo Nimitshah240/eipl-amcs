@@ -1,10 +1,14 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.serialize.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,30 +49,44 @@ public class StaffSalaryProcess extends BaseModel {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BankSerialize.class)
+    @JsonDeserialize(using = BankDeserializer.class)
     @JoinColumn(name = "bank_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_bank_code"))
     private Bank bankCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BranchSerialize.class)
+    @JsonDeserialize(using = BranchDeserializer.class)
     @JoinColumn(name = "branch_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_branch_code"))
     private Branch branchCode;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_society_code"))
     private Society societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = DesignationSerialize.class)
+    @JsonDeserialize(using = DesignationDeserializer.class)
     @JoinColumn(name = "designation_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_designation_code"))
     private Designation designationCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = StaffSalaryHeadSerialize.class)
+    @JsonDeserialize(using = StaffSalaryHeadDeserializer.class)
     @JoinColumn(name = "salary_head_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_salary_head_code"))
     private StaffSalaryHead salaryHeadCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = StaffMemberSerialize.class)
+    @JsonDeserialize(using = StaffMemberDeserializer.class)
     @JoinColumn(name = "staff_member_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_staff_member_code"))
     private StaffMember staffMemberCode;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnionSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_staff_salary_process_union_code"))
     private Union unionCode;
 

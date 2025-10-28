@@ -1,10 +1,14 @@
 package com.eipl.amcs.master.operation.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.serialize.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,30 +43,48 @@ public class MemberDetailAudit extends BaseModelTxnAudit {
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = GenderSerialize.class)
+    @JsonDeserialize(using = GenderDeserializer.class)
     @JoinColumn(name = "gender_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Gender gender;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BankSerialize.class)
+    @JsonDeserialize(using = BankDeserializer.class)
     @JoinColumn(name = "bank_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Bank bank;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BranchSerialize.class)
+    @JsonDeserialize(using = BranchDeserializer.class)
     @JoinColumn(name = "branch_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Branch branch;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = StateSerialize.class)
+    @JsonDeserialize(using = StateDeserializer.class)
     @JoinColumn(name = "state_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private State state;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = DistrictSerialize.class)
+    @JsonDeserialize(using = DistrictDeserializer.class)
     @JoinColumn(name = "district_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private District district;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SubDistrictSerialize.class)
+    @JsonDeserialize(using = SubDistrictDeserializer.class)
     @JoinColumn(name = "sub_district_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private SubDistrict subDistrict;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VillageSerialize.class)
+    @JsonDeserialize(using = VillageDeserializer.class)
     @JoinColumn(name = "village_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Village village;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = HamletSerialize.class)
+    @JsonDeserialize(using = HamletDeserializer.class)
     @JoinColumn(name = "hamlet_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Hamlet hamlet;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberSerialize.class)
+    @JsonDeserialize(using = MemberDeserializer.class)
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Member member;
 

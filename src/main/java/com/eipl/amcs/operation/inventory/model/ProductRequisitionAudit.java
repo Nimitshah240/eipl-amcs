@@ -1,8 +1,12 @@
 package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +34,8 @@ public class ProductRequisitionAudit extends BaseModelTxnAudit {
     private String status;
     private String unionCode;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"union", "mcc", "plant", "bmc", "state", "district", "subDistrict", "village", "hamlet", "bank", "branch", "route"})
     private Society society;

@@ -2,10 +2,14 @@ package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,20 +49,28 @@ public class ProductReceiptTransaction extends BaseModelTxn {
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductReceiptSerialize.class)
+    @JsonDeserialize(using = ProductReceiptDeserializer.class)
     @JoinColumn(name = "grn_no", foreignKey = @ForeignKey(name = "fk_product_receipt_transaction_grn_no"))
     @JsonIgnoreProperties(value = {"society", "union", "customer"})
     private ProductReceipt productReceipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductSerialize.class)
+    @JsonDeserialize(using = ProductDeserializer.class)
     @JoinColumn(name = "product_code", foreignKey = @ForeignKey(name = "fk_product_receipt_transaction_product_code"))
     @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging"})
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "unit_code", foreignKey = @ForeignKey(name = "fk_product_receipt_transaction_unit_code"))
     private Unit unit;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
     @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(name = "fk_product_receipt_transaction_tax_code"))
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;

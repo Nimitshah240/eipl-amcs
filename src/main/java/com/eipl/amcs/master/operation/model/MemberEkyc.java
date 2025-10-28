@@ -1,6 +1,12 @@
 package com.eipl.amcs.master.operation.model;
 
+import com.eipl.amcs.deserialize.MemberDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.serialize.MemberSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +31,8 @@ public class MemberEkyc {
 //    @JsonIgnoreProperties(value = {"milkType", "memberType", "society"})
 //    private Member member;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonSerialize(using = MemberSerialize.class)
+    @JsonDeserialize(using = MemberDeserializer.class)
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_member_ekyc_member_code"))
     @JsonIgnoreProperties(value = {"milkType", "memberType", "society", "hibernateLazyInitializer", "handler"})
     private Member member;

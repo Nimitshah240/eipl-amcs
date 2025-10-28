@@ -1,6 +1,12 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.TaxDetailDeserializer;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.TaxDetailSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,9 +28,13 @@ public class TaxDepend extends BaseModel {
     private Short steps;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxDetailSerialize.class)
+    @JsonDeserialize(using = TaxDetailDeserializer.class)
     @JoinColumn(name = "tax_detail_code", foreignKey = @ForeignKey(name = "fk_tax_depends_tax_detail_code"))
     private TaxDetail taxDetail;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxDetailSerialize.class)
+    @JsonDeserialize(using = TaxDetailDeserializer.class)
     @JoinColumn(name = "tax_details_code", foreignKey = @ForeignKey(name = "fk_tax_depends_tax_details_code"))
     private TaxDetail taxDetails;
 

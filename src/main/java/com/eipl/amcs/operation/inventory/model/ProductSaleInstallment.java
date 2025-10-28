@@ -2,9 +2,15 @@ package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.MemberDeserializer;
+import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.serialize.MemberSerialize;
+import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,10 +49,14 @@ public class ProductSaleInstallment extends BaseModelTxn {
     private Integer type; // 1-product, 2-service, 3- cash adv, 4-farmer bill head
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyPaymentCycleSerialize.class)
+    @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_product_sale_member_installment_society_payment_cycle_code"))
     @JsonIgnoreProperties(value = {"society", "fromShift", "toShift", "milkType"})
     private SocietyPaymentCycle societyPaymentCycle;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberSerialize.class)
+    @JsonDeserialize(using = MemberDeserializer.class)
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_product_sale_member_installment_member_code"))
     @JsonIgnoreProperties(value = {"memberType", "society", "milkType"})
     private Member member;

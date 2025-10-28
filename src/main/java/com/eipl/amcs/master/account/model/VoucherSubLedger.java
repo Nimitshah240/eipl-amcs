@@ -2,7 +2,17 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.SubLedgerDeserializer;
+import com.eipl.amcs.deserialize.VoucherDeserializer;
+import com.eipl.amcs.deserialize.VoucherTransactionDeserializer;
+import com.eipl.amcs.deserialize.VoucherTypeDeserializer;
+import com.eipl.amcs.serialize.SubLedgerSerialize;
+import com.eipl.amcs.serialize.VoucherSerialize;
+import com.eipl.amcs.serialize.VoucherTransactionSerialize;
+import com.eipl.amcs.serialize.VoucherTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,14 +36,20 @@ public class VoucherSubLedger extends BaseModelTxn {
     private String narration;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SubLedgerSerialize.class)
+    @JsonDeserialize(using = SubLedgerDeserializer.class)
     @JoinColumn(name = "sub_ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_sub_ledger_sub_ledger_code"))
     @JsonIgnoreProperties(value = {"society"})
     private SubLedger subLedger;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VoucherSerialize.class)
+    @JsonDeserialize(using = VoucherDeserializer.class)
     @JoinColumn(name = "voucher_code", foreignKey = @ForeignKey(name = "fk_voucher_sub_ledger_voucher_code"))
     @JsonIgnoreProperties(value = {"society", "voucherType"})
     private Voucher voucher;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VoucherTransactionSerialize.class)
+    @JsonDeserialize(using = VoucherTransactionDeserializer.class)
     @JoinColumn(name = "voucher_transaction_code", foreignKey = @ForeignKey(name = "fk_voucher_sub_ledger_voucher_transaction_code"))
     @JsonIgnoreProperties(value = {"ledger", "voucher"})
     private VoucherTransaction voucherTransaction;

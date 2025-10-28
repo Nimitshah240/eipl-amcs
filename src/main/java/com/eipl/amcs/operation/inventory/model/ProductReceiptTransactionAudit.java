@@ -1,10 +1,20 @@
 package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.ProductDeserializer;
+import com.eipl.amcs.deserialize.ProductReceiptDeserializer;
+import com.eipl.amcs.deserialize.TaxDeserializer;
+import com.eipl.amcs.deserialize.UnitDeserializer;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.serialize.ProductReceiptSerialize;
+import com.eipl.amcs.serialize.ProductSerialize;
+import com.eipl.amcs.serialize.TaxSerialize;
+import com.eipl.amcs.serialize.UnitSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,20 +56,28 @@ public class ProductReceiptTransactionAudit extends BaseModelTxnAudit {
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductReceiptSerialize.class)
+    @JsonDeserialize(using = ProductReceiptDeserializer.class)
     @JoinColumn(name = "grn_no", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"society", "union", "customer"})
     private ProductReceipt productReceipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductSerialize.class)
+    @JsonDeserialize(using = ProductDeserializer.class)
     @JoinColumn(name = "product_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging"})
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "unit_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Unit unit;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
     @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;

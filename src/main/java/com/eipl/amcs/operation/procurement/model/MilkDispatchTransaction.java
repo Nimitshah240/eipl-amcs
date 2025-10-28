@@ -2,9 +2,19 @@ package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.MilkDispatchDeserializer;
+import com.eipl.amcs.deserialize.MilkQualityTypeDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.serialize.MilkDispatchSerialize;
+import com.eipl.amcs.serialize.MilkQualityTypeSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,13 +58,19 @@ public class MilkDispatchTransaction extends BaseModelTxn {
     private Integer convertedQuantityMode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkDispatchSerialize.class)
+    @JsonDeserialize(using = MilkDispatchDeserializer.class)
     @JoinColumn(name = "challan_no", foreignKey = @ForeignKey(name = "fk_milk_dispatch_transaction_challan_no"))
     @JsonIgnoreProperties(value = {"fromShift", "toShift", "society", "union"})
     private MilkDispatch milkDispatch;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkQualityTypeSerialize.class)
+    @JsonDeserialize(using = MilkQualityTypeDeserializer.class)
     @JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_milk_dispatch_transaction_milk_quality_types"))
     private MilkQualityType milkQualityType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_milk_dispatch_transaction_milk_types"))
     private MilkType milkType;
 

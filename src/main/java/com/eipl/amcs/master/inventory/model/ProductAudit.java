@@ -1,11 +1,15 @@
 package com.eipl.amcs.master.inventory.model;
 
 import com.eipl.amcs.base.BaseModelAudit;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,27 +50,41 @@ public class ProductAudit extends BaseModelAudit {
     private Boolean saleable;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "conversion_unit_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Unit conversionUnit;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "primary_uom_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Unit primaryUom;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductGroupSerialize.class)
+    @JsonDeserialize(using = ProductGroupDeserializer.class)
     @JoinColumn(name = "product_group_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"unit"})
     private ProductGroup productGroup;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
     @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductSerialize.class)
+    @JsonDeserialize(using = ProductDeserializer.class)
     @JoinColumn(name = "secondary_packaging_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Product secondaryPackaging;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnionSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;

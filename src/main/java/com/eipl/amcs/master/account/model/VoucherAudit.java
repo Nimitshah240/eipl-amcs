@@ -1,8 +1,14 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.VoucherTypeDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.VoucherTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,9 +39,13 @@ public class VoucherAudit extends BaseModelTxnAudit {
     private String remarks;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Society society;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VoucherTypeSerialize.class)
+    @JsonDeserialize(using = VoucherTypeDeserializer.class)
     @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private VoucherType voucherType;
     private String unionCode;

@@ -2,8 +2,14 @@ package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.TaxDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.TaxSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +37,8 @@ public class ProductRequisition extends BaseModelTxn {
     private String status;
     private String unionCode;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_product_requisition_society_code"))
     @JsonIgnoreProperties(value = {"union", "mcc", "plant", "bmc", "state", "district", "subDistrict", "village", "hamlet", "bank", "branch", "route"})
     private Society society;

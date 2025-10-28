@@ -2,8 +2,18 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.EventDeserializer;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.VoucherTypeDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.EventSerialize;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.VoucherTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,24 +35,37 @@ public class LedgerMappingEvent extends BaseModelTxn {
     private int eventcode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_event_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     private String unionCode;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = EventSerialize.class)
+    @JsonDeserialize(using = EventDeserializer.class)
     @JoinColumn(name = "event_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_event_event_code"))
     @JsonIgnoreProperties(value = {"society"})
     private Events events;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "credit_ledger_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_event_credit_ledger_code"))
     @JsonIgnoreProperties(value = {"society", "ledgerGroup"})
     private Ledger creditLedger;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "debit_ledger_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_event_debit_ledger_code"))
     @JsonIgnoreProperties(value = {"society", "ledgerGroup"})
     private Ledger debitLedger;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VoucherTypeSerialize.class)
+    @JsonDeserialize(using = VoucherTypeDeserializer.class)
     @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_event_voucher_type_code"))
     private VoucherType voucherType;
 

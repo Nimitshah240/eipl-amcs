@@ -2,8 +2,12 @@ package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +36,8 @@ public class MemberBillSummary extends BaseModelTxn {
     private short status; //1-PENDING
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyPaymentCycleSerialize.class)
+    @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_member_bill_summary_payment_cycle_code"))
     @JsonIgnoreProperties(value = {"society", "fromShift", "toShift"})
     private SocietyPaymentCycle paymentCycle;

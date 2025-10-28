@@ -1,8 +1,16 @@
 package com.eipl.amcs.master.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.deserialize.MilkQualityTypeDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.deserialize.SocietyMilkPurchaseRateDeserializer;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.serialize.MilkQualityTypeSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.serialize.SocietyMilkPurchaseRateSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,12 +39,18 @@ public class SocietyMilkPurchaseRateDetail extends BaseModelTxn {
     private BigDecimal rate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkQualityTypeSerialize.class)
+    @JsonDeserialize(using = MilkQualityTypeDeserializer.class)
     @JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_milk_quality_type_code"))
     private MilkQualityType milkQualityType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyMilkPurchaseRateSerialize.class)
+    @JsonDeserialize(using = SocietyMilkPurchaseRateDeserializer.class)
     @JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_details_rate_code"))
     private SocietyMilkPurchaseRate societyMilkPurchaseRate;
 

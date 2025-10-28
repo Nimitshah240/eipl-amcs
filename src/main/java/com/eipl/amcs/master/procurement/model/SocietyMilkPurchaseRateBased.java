@@ -1,10 +1,14 @@
 package com.eipl.amcs.master.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Formula;
+import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,16 +42,24 @@ public class SocietyMilkPurchaseRateBased extends BaseModelTxn {
     private int step;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = FormulaSerialize.class)
+    @JsonDeserialize(using = FormulaDeserializer.class)
     @JoinColumn(name = "formula_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_based_formula_code"))
     @JsonIgnoreProperties(value = {"union"})
     private Formula formula;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_based_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkQualityTypeSerialize.class)
+    @JsonDeserialize(using = MilkQualityTypeDeserializer.class)
     @JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_based_milk_quality_type_code"))
     private MilkQualityType milkQualityType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyMilkPurchaseRateSerialize.class)
+    @JsonDeserialize(using = SocietyMilkPurchaseRateDeserializer.class)
     @JoinColumn(name = "society_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_society_milk_purchase_rate_based_rate_code"))
     private SocietyMilkPurchaseRate societyMilkPurchaseRate;
 

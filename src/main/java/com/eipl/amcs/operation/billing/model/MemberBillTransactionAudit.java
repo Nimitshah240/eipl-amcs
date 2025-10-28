@@ -1,7 +1,13 @@
 package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.BillHeadDeserializer;
+import com.eipl.amcs.deserialize.MemberBillDeserializer;
 import com.eipl.amcs.master.operation.model.BillHead;
+import com.eipl.amcs.serialize.BillHeadSerialize;
+import com.eipl.amcs.serialize.MemberBillSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,10 +38,14 @@ public class MemberBillTransactionAudit extends BaseModelTxnAudit {
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberBillSerialize.class)
+    @JsonDeserialize(using = MemberBillDeserializer.class)
     @JoinColumn(name = "member_bill_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MemberBill memberBill;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BillHeadSerialize.class)
+    @JsonDeserialize(using = BillHeadDeserializer.class)
     @JoinColumn(name = "bill_head_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private BillHead billHead;
 }

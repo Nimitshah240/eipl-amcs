@@ -1,10 +1,18 @@
 package com.eipl.amcs.operation.share.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.FinancialYearDeserializer;
+import com.eipl.amcs.deserialize.MemberDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.FinancialYearSerialize;
+import com.eipl.amcs.serialize.MemberSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,17 +47,23 @@ public class ShareDividendAudit extends BaseModelTxnAudit {
     private String shareCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberSerialize.class)
+    @JsonDeserialize(using = MemberDeserializer.class)
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_share_dividend_member_code"))
     @JsonIgnoreProperties(value = {"milkType", "memberType", "society"})
     private Member member;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = FinancialYearSerialize.class)
+    @JsonDeserialize(using = FinancialYearDeserializer.class)
     @JoinColumn(name = "financial_year_code", foreignKey = @ForeignKey(name = "fk_financial_year_share_dividend_code"))
     private FinancialYear financialYearCode;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_share_dividend_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "route", "bmc", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;

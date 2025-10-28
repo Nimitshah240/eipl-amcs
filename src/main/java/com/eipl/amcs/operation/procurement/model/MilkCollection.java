@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -9,8 +10,11 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -62,33 +66,47 @@ public class MilkCollection extends BaseModelTxn {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyPaymentCycleSerialize.class)
+    @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_milk_collection_society_payment_cycle_code"))
     @JsonIgnoreProperties(value = {"society", "toShift", "fromShift"})
     private SocietyPaymentCycle societyPaymentCycle;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberSerialize.class)
+    @JsonDeserialize(using = MemberDeserializer.class)
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_milk_collection_member_code"))
     @JsonIgnoreProperties(value = {"milkType", "memberType", "society"})
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ShiftSerialize.class)
+    @JsonDeserialize(using = ShiftDeserializer.class)
     @JoinColumn(name = "shift_code", foreignKey = @ForeignKey(name = "fk_milk_collection_shift_code"))
     private Shift shift;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_milk_collection_milk_type_code"))
     private MilkType milkType;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkQualityTypeSerialize.class)
+    @JsonDeserialize(using = MilkQualityTypeDeserializer.class)
     @JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_milk_collection_milk_quality_code"))
     private MilkQualityType milkQualityType;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_milk_collection_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = DockSerialize.class)
+    @JsonDeserialize(using = DockDeserializer.class)
     @JoinColumn(name = "dock_no", foreignKey = @ForeignKey(name = "fk_milk_collection_dock_code"))
     @JsonIgnoreProperties(value = {"society"})
     private Dock dock;

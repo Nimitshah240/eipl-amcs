@@ -2,9 +2,17 @@ package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.MemberBillDeserializer;
+import com.eipl.amcs.deserialize.RouteDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.MemberBillSerialize;
+import com.eipl.amcs.serialize.RouteSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,10 +37,14 @@ public class ProductDispatch extends BaseModel {
     private String vehicleNo;
     private String unionCode;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_product_dispatch_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = RouteSerialize.class)
+    @JsonDeserialize(using = RouteDeserializer.class)
     @JoinColumn(name = "route_code", foreignKey = @ForeignKey(name = "fk_product_dispatch_route_code"))
     @JsonIgnoreProperties(value = {"society", "union"})
     private Route route;

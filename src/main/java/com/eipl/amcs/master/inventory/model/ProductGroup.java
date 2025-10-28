@@ -1,8 +1,12 @@
 package com.eipl.amcs.master.inventory.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.UnitDeserializer;
 import com.eipl.amcs.master.global.model.Unit;
+import com.eipl.amcs.serialize.UnitSerialize;
 import com.eipl.amcs.utils.CommonUtils;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +31,8 @@ public class ProductGroup extends BaseModel {
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "base_unit", foreignKey = @ForeignKey(name = "fk_product_groups_units_base_unit"))
     private Unit unit;
 

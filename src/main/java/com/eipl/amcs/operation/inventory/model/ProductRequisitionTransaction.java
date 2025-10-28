@@ -2,8 +2,16 @@ package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.ProductDeserializer;
+import com.eipl.amcs.deserialize.ProductRequisitionDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.serialize.ProductRequisitionSerialize;
+import com.eipl.amcs.serialize.ProductSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,10 +47,14 @@ public class ProductRequisitionTransaction extends BaseModelTxn {
     private String schemeAddType;
     private String status;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductSerialize.class)
+    @JsonDeserialize(using = ProductDeserializer.class)
     @JoinColumn(name = "product_code", foreignKey = @ForeignKey(name = "fk_product_requisition_transaction_product_code"))
     @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging", "union", "society"})
     private Product product;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductRequisitionSerialize.class)
+    @JsonDeserialize(using = ProductRequisitionDeserializer.class)
     @JoinColumn(name = "product_requisition_code", foreignKey = @ForeignKey(name = "fk_product_requisition_transaction_product_requisition_code"))
     @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging", "union", "society"})
     private ProductRequisition productRequisition;

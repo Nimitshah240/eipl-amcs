@@ -2,7 +2,11 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.LedgerTypeDeserializer;
+import com.eipl.amcs.serialize.LedgerTypeSerialize;
 import com.eipl.amcs.utils.CommonUtils;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +30,8 @@ public class LedgerGroup extends BaseModel {
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerTypeSerialize.class)
+    @JsonDeserialize(using = LedgerTypeDeserializer.class)
     @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(name = "fk_ledger_groups_ledger_type_code"))
     private LedgerType ledgerType;
 

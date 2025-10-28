@@ -2,8 +2,16 @@ package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.BillHeadDeserializer;
+import com.eipl.amcs.deserialize.MemberBillDeserializer;
+import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
 import com.eipl.amcs.master.operation.model.BillHead;
+import com.eipl.amcs.serialize.BillHeadSerialize;
+import com.eipl.amcs.serialize.MemberBillSerialize;
+import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,11 +40,15 @@ public class MemberBillTransaction extends BaseModelTxn {
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberBillSerialize.class)
+    @JsonDeserialize(using = MemberBillDeserializer.class)
     @JoinColumn(name = "member_bill_code", foreignKey = @ForeignKey(name = "fk_member_bill_transaction_member_bill_code"))
     @JsonIgnoreProperties(value = {"society", "union", "member", "paymentCycle"})
     private MemberBill memberBill;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BillHeadSerialize.class)
+    @JsonDeserialize(using = BillHeadDeserializer.class)
     @JoinColumn(name = "bill_head_code", foreignKey = @ForeignKey(name = "fk_member_bill_transaction_bill_head_code"))
     @JsonIgnoreProperties(value = {"society", "union"})
     private BillHead billHead;
