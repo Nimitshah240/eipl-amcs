@@ -14,11 +14,9 @@ import java.util.Optional;
 @Service
 public class IdentityDetailsServiceImpl implements IdentityDetailsService {
 
+    private static final Logger log = LoggerFactory.getLogger(IdentityDetailsServiceImpl.class);
     @Autowired
     private IdentityRepository identityRepository;
-
-
-    private static final Logger log = LoggerFactory.getLogger(IdentityDetailsServiceImpl.class);
 
     @Override
     public List<Identity> findAll() {

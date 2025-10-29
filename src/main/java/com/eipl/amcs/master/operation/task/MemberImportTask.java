@@ -23,11 +23,11 @@ import java.util.List;
 
 public class MemberImportTask extends Task<List<MemberDto>> {
 
-    private File file;
-    private List<MilkType> milkTypeList;
-    private List<Gender> genderList;
-    private List<MemberType> memberTypeList;
-    private List<Bank> bankList;
+    private final File file;
+    private final List<MilkType> milkTypeList;
+    private final List<Gender> genderList;
+    private final List<MemberType> memberTypeList;
+    private final List<Bank> bankList;
 
 
     public MemberImportTask(File file, List<MilkType> milkTypeList, List<Gender> genderList, List<MemberType> memberTypeList, List<Bank> bankList) {
@@ -177,7 +177,7 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     String cellMobile = formatter.formatCellValue(dataSheet.getRow(i).getCell(9));
                     String mobile = null;
                     try {
-                        mobile = cellMobile != null ? cellMobile : null;
+                        mobile = cellMobile;
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }

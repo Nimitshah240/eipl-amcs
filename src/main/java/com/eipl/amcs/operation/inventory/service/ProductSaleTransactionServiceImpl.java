@@ -19,6 +19,7 @@ import java.util.Optional;
 @Service
 public class ProductSaleTransactionServiceImpl implements ProductSaleTransactionService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductSaleTransactionServiceImpl.class);
     @Autowired
     private ProductSaleTransactionRepository saleTransRepository;
     @Autowired
@@ -27,9 +28,6 @@ public class ProductSaleTransactionServiceImpl implements ProductSaleTransaction
     private ProductSaleTaxRepository productSaleTaxRepository;
     @Autowired
     private ProductSaleTaxRepository saleTaxRepository;
-
-
-    private static final Logger log = LoggerFactory.getLogger(ProductSaleTransactionServiceImpl.class);
 
     @Override
     public List<ProductSaleTransaction> findAll() {

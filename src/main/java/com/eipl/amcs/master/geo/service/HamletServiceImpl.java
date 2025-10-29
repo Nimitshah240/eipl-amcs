@@ -16,12 +16,11 @@ import java.util.List;
 @Service
 public class HamletServiceImpl implements HamletService {
 
+    private static final Logger log = LoggerFactory.getLogger(HamletServiceImpl.class);
     @Autowired
     private HamletRepository hamletRepository;
     @Autowired
     private VillageRepository villageRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(HamletServiceImpl.class);
 
     @Override
     public List<Hamlet> findAll() {

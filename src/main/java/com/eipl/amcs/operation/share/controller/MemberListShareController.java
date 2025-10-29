@@ -11,7 +11,6 @@ import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.task.ShareIssueLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,7 +27,6 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.Date;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -37,43 +35,35 @@ import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberListShareController implements MyInitialization, PopupCallback {
 
+    private static Integer NOOFSHARE = 0;
+    private static BigDecimal SHAREAMOUNT = BigDecimal.ZERO;
+    public List<Member> memberList = new ArrayList<>();
+    public List<Member> memberList1 = new ArrayList<>();
+    public List<Share> shareList = new ArrayList<>();
     @FXML
     AnchorPane root;
+    @FXML
+    Button btnClose, btnShareHolder, btnClear, btnReport;
     @FXML
     private TableView<Member> tableMember;
     @FXML
     private TextField txtCode;
-
-
     @FXML
     private TableColumn<Member, String> colCode, colFirstName, colNoOfShare, colShareAmount;
-    @FXML
-    Button btnClose, btnShareHolder, btnClear, btnReport;
-
-
     private ResourceBundle resourceBundle;
-    private ObjectProperty<Member> propMember;
-
-
+    private final ObjectProperty<Member> propMember;
     //    private Map<String, String> mapDetails;
-    private Map<String, MemberDetail> mapDetails = new HashMap<>();
-
-    public List<Member> memberList = new ArrayList<>();
-    public List<Member> memberList1 = new ArrayList<>();
-    public List<Share> shareList = new ArrayList<>();
+    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     private String memberCode;
-    private static Integer NOOFSHARE = 0;
-    private static BigDecimal SHAREAMOUNT = BigDecimal.ZERO;
-
     private Map<Object, List<Share>> shareMap = new HashMap<>();
+
+    public MemberListShareController() {
+        propMember = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public MemberListShareController() {
-        propMember = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -94,7 +84,7 @@ public class MemberListShareController implements MyInitialization, PopupCallbac
         );
         btnReport.setOnAction(e -> validateAndGenerateReport());
         txtCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            search((String) oldValue, (String) newValue);
+            search(oldValue, newValue);
         });
 
     }

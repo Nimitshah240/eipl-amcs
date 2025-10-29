@@ -2,13 +2,11 @@ package com.eipl.amcs.operation.inventory.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.operation.inventory.model.ProductStock;
 import com.eipl.amcs.operation.inventory.task.ProductStockLoadTask;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -17,7 +15,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -53,12 +50,11 @@ public class ProductStockController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        try{
-        colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
-        colStock.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getStock().toBigInteger().doubleValue()));
+        try {
+            colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
+            colStock.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getStock().toBigInteger().doubleValue()));
 //        colUnit.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduct().getConversionUnit().getName()));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

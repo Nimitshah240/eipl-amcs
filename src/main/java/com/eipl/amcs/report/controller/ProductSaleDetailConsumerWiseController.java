@@ -9,9 +9,6 @@ import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.convertor.ProductLocalCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
-import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
-import com.eipl.amcs.master.inventory.task.ProductSaleRateByProductLoadTask;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
 import com.eipl.amcs.operation.inventory.dto.SaleTxnDto;
 import com.eipl.amcs.report.util.ReportGenerate;
@@ -50,6 +47,7 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
     private List<Product> listProduct;
     private ReceiptTxnDto receiptTxnDto;
     private SaleTxnDto saleTxnDto;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -109,8 +107,6 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
         new AutoCompleteComboBoxListener<>(cboxProductCode);
     }
 
-    private StringBuilder errorMsg;
-
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
@@ -131,7 +127,9 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRODUCT_SALE_DETAILS, params);
         JasperViewer.viewReport(print, false);
-    }    private void validateAndGenerateReportThree() {
+    }
+
+    private void validateAndGenerateReportThree() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));

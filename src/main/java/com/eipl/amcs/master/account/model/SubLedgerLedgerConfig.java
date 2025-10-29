@@ -3,8 +3,14 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,11 +29,15 @@ public class SubLedgerLedgerConfig extends BaseModelTxn {
     private String code;
     private Integer subLedgerType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_ledger_subledger_mapping_ledger_code"))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_ledger_sub_ledger_mapping_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;

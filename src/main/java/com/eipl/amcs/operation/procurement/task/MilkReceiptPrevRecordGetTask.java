@@ -1,22 +1,14 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkReceipt;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.operation.procurement.repository.MilkReceiptRepository;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 public class MilkReceiptPrevRecordGetTask extends Task<MilkReceipt> {
-    private LocalDateTime fromDate;
+    private final LocalDateTime fromDate;
 
     public MilkReceiptPrevRecordGetTask(LocalDateTime fromDate) {
         this.fromDate = fromDate;
@@ -26,14 +18,19 @@ public class MilkReceiptPrevRecordGetTask extends Task<MilkReceipt> {
     @Override
     protected MilkReceipt call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT + "/prev-record";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("fromDate", fromDate.toString());
-            ResponseEntity<MilkReceipt> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkReceipt.class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
-                return null;
-            return response.getBody();
+
+            MilkReceiptRepository repository = EmcsAppContext.getContext().getBean(MilkReceiptRepository.class);
+            return repository.findPreviousRecordOfGoodMilkType(fromDate).get();
+
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT + "/prev-record";
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+//                    .queryParam("fromDate", fromDate.toString());
+//            ResponseEntity<MilkReceipt> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkReceipt.class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

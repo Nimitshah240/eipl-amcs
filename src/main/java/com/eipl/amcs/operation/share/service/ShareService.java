@@ -21,9 +21,11 @@ public interface ShareService {
     Share cancel(Share share);
 
     Share cancel(String id, String identityInfo);
+
     Share delete(String id, String identityInfo);
 
     List<Share> findAllData(LocalDate fromDt, LocalDate toDt);
+
     List<Share> findByMember(Member member);
 
     Share revert(String id, String identityInfo);

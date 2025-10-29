@@ -16,6 +16,7 @@ public interface ShareDividendRepository extends BaseRepository<ShareDividend, S
     @Override
     @EntityGraph(attributePaths = {"member", "financialYear", "society"})
     Optional<ShareDividend> findById(String id);
+
     @EntityGraph(attributePaths = {"member", "financialYear", "society"})
     List<ShareDividend> findByDisbursementDateBetween(LocalDate fromDt, LocalDate toDt, Sort disbursementDate);
 }

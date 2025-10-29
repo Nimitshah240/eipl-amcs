@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.operation.administartion.dto.StaffMember;
-import com.eipl.amcs.operation.administartion.dto.converter.StaffMemberConvertor;
+import com.eipl.amcs.master.account.model.StaffMember;
+import com.eipl.amcs.operation.administartion.converter.StaffMemberConvertor;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.report.util.ReportGenerate;
@@ -38,13 +38,14 @@ public class StaffSalaryReportController implements MyInitialization {
 
 
     private ResourceBundle resourceBundle;
+    private MemberBillSummary dto = null;
+    private MemberBillSummary propSummary;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -53,9 +54,6 @@ public class StaffSalaryReportController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
-    private MemberBillSummary propSummary;
-
 
     public void setSummay(MemberBillSummary dto) {
         if (dto != null) {
@@ -79,8 +77,6 @@ public class StaffSalaryReportController implements MyInitialization {
         cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
         cboxStaff.getSelectionModel().select(0);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
 

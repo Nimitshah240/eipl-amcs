@@ -65,11 +65,12 @@ public class SocietyMilkPurchaseRateDetailController implements MyInitialization
             colSocietyMilkPurchaseRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSocietyMilkPurchaseRate()));
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
         } catch (Exception e) {
+            System.out.println("SocietyMilkPurchaseRateDetail setuptable Exception");
             e.printStackTrace();
         }
     }
 
-    //  task API NOT available
+
     @Override
     public void loadData() {
         var task = new SocietyMilkPurchaseRateDetailLoadTask();

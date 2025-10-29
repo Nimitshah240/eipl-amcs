@@ -6,7 +6,6 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.model.TaxDetail;
@@ -16,10 +15,10 @@ import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
-import com.eipl.amcs.operation.inventory.model.ProductReceiptTax;
-import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTax;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -40,6 +39,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ProductReceiptTransactionAddController implements MyInitialization {
+    private final int SCALE = 2;
+    private final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
     @FXML
     private StackPane root;
     @FXML
@@ -52,17 +53,13 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
     private TextField txtRate, txtQuantity, txtAmount, txtDiscount, txtTaxAmount, txtTotalAmount, txtRemark;
     @FXML
     private Button btnSave, btnClose;
-
     private ReceiptTxnDto receiptTxnDto;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private PopupCallback callback;
     private Map<TaxDetail, BigDecimal> taxBifurcation = null;
-
-    private final int SCALE = 2;
-    private final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
+    private ReceiptTxnTaxDto receiptTxnTaxDto;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -147,8 +144,6 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
 
     }
 
-    private ReceiptTxnTaxDto receiptTxnTaxDto;
-
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {
@@ -226,7 +221,7 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
             BigDecimal taxableAmt = new BigDecimal(txtAmount.getText()).subtract(discount).setScale(SCALE, RATE_ROUND);
 
             BigDecimal taxAmount = BigDecimal.ZERO;
-            if (!(cboxTax.getValue()==null)&&!cboxTax.getValue().getName().equalsIgnoreCase("NIL")) {
+            if (!(cboxTax.getValue() == null) && !cboxTax.getValue().getName().equalsIgnoreCase("NIL")) {
                 taxBifurcation = CommonUtils.calculateAndFetchTaxBifurcation(receiptTxnDto.getTaxDtoList().stream()
                         .filter(p -> p.getTax().getCode().equalsIgnoreCase(cboxTax.getValue().getCode())).findFirst().orElse(null), taxableAmt);
                 if (taxBifurcation != null) {

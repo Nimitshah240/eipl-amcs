@@ -4,26 +4,20 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.service.GenderService;
-import com.eipl.amcs.master.global.service.MemberTypeService;
-import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.global.task.GenderLoadTask;
+import com.eipl.amcs.master.global.task.MemberTypeLoadTask;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
-import com.eipl.amcs.master.operation.repository.MemberRepository;
-import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.master.operation.task.MemberImportTask;
+import com.eipl.amcs.master.operation.task.*;
 import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.service.BankService;
-import com.eipl.amcs.util.CommonUtil;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -35,7 +29,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.commons.collections4.ListUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -49,7 +42,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.MainApp.context;
 import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberController implements MyInitialization, PopupCallback {
@@ -81,24 +73,13 @@ public class MemberController implements MyInitialization, PopupCallback {
     private List<MemberType> memberTypeList;
     private List<Bank> bankList;
     private List<Member> listMember;
+    //    private Map<String, String> mapDetails;
     private Map<String, MemberDetail> mapDetails = new HashMap<>();
 
     public List<Member> memberList = new ArrayList<>();
     private String memberCode;
     private Stage stage;
     public PopupCallback callback;
-    private List<MemberDto> listMemberDto;
-
-
-    private MemberService service;
-    private NextCodeService nextCodeService;
-    private MemberRepository repository;
-    private MemberDetailRepository detailRepository;
-    private GenderService genderService;
-    private MilkTypeService milkTypeService;
-    private BankService bankService;
-    private MemberTypeService memberTypeService;
-
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -109,28 +90,22 @@ public class MemberController implements MyInitialization, PopupCallback {
         return root;
     }
 
-
     public MemberController() {
-
-        service = context.getBean(MemberService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-        repository = context.getBean(MemberRepository.class);
-        detailRepository = context.getBean(MemberDetailRepository.class);
-        genderService = context.getBean(GenderService.class);
-        bankService = context.getBean(BankService.class);
-        milkTypeService = context.getBean(MilkTypeService.class);
-        memberTypeService = context.getBean(MemberTypeService.class);
         propMember = new SimpleObjectProperty<>();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        setupTable();
         loadDetails();
         loadData();
-        setupTable();
         btnClose.setOnAction(e ->
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+//        btnSearch.setOnAction(e -> {
+//            memberCode = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtCode.getText()));
+//            tableMember.setItems(FXCollections.observableList(memberList.stream().filter(e1 -> e1.getCode().equalsIgnoreCase(memberCode)).collect(Collectors.toList())));
+//        });
 
         txtCode.textProperty().addListener((observable, oldValue, newValue) -> {
             search((String) oldValue, (String) newValue);
@@ -145,17 +120,24 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_ADD"))
                 throw new UnAuthorizedAccessException();
-            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-            controller.setMember(null);
-            MainApp.getContentPane().setCenter(controller.getRoot());
+//            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+//            controller.setMember(null);
+//            MainApp.getContentPane().setCenter(controller.getRoot());
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", null, this);
         });
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_EDIT"))
                 throw new UnAuthorizedAccessException();
-            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil()
-                    .loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-            controller.setMember(propMember.get());
-            MainApp.getContentPane().setCenter((controller).getRoot());
+
+//            if (propMember.get() != null) {
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", propMember.get(), this);
+//            }else {
+//            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil()
+//                    .loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+//            controller.setMember(propMember.get());
+//            MainApp.getContentPane().setCenter((controller).getRoot());
+
+//            }
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_DELETE"))
@@ -337,40 +319,96 @@ public class MemberController implements MyInitialization, PopupCallback {
         alert.createAlert();
     }
 
+
     private void loadDetails() {
-        try {
-            List<MemberDetail> list = service.findAllMemberDetails();
-            if (!list.isEmpty()) {
+        var task = new AllMemberDetailsLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MemberDetail> list = task.get();
                 for (MemberDetail memberDetail : list) {
                     mapDetails.put(memberDetail.getCode(), memberDetail);
                 }
                 setupTable();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            } catch (ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+
+
+        new Thread(task).start();
+
     }
+
+
+    private StringBuilder errorMsg;
+
 
     private void loadImportPreReq() {
-        try {
-            genderList = genderService.findAll();
-            milkTypeList = milkTypeService.findAll();
-            memberTypeList = memberTypeService.findAll();
-            bankList = bankService.findAll();
+        var task = new GenderLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                genderList = task.get();
+                var task1 = new MilkTypeLoadTask();
+                task1.setOnSucceeded(ew -> {
+                    try {
+                        milkTypeList = task1.get();
+                        var task2 = new MemberTypeLoadTask();
+                        task2.setOnSucceeded(eee -> {
+                            try {
+                                memberTypeList = task2.get();
+                                var task3 = new BankLoadTask();
+                                task3.setOnSucceeded(ee -> {
+                                    try {
+                                        bankList = task3.get();
 
-            File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("member"));
-            if (file == null) {
-                MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("member"),
-                        resourceBundle.getString("select.file"));
-                alert.createAlert();
-                return;
+
+                                        File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("member"));
+                                        if (file == null) {
+                                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                                                    resourceBundle.getString("select.file"));
+                                            alert.createAlert();
+                                            return;
+                                        }
+
+//                                        if (!file.getName().contains(MainApp.identityDto.getSociety().getCode())) {
+//                                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("member"),
+//                                                    resourceBundle.getString("invalid.file"));
+//                                            alert.createAlert();
+//                                            return;
+//                                        }
+
+                                        MainApp.paneDrop.setVisible(true);
+//                                        MainApp.lblMessage.setText("Preparing Members...");
+                                        startImport(file);
+
+
+                                    } catch (InterruptedException | ExecutionException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                });
+                                new Thread(task3).start();
+                            } catch (InterruptedException | ExecutionException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                        new Thread(task2).start();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task1).start();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-            MainApp.paneDrop.setVisible(true);
-            startImport(file);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+        new Thread(task).start();
+
+
     }
+
+    private List<MemberDto> listMemberDto;
 
     private void startImport(File file) {
         var task = new MemberImportTask(file, milkTypeList, genderList, memberTypeList, bankList);
@@ -387,50 +425,52 @@ public class MemberController implements MyInitialization, PopupCallback {
                 MainApp.lblMessage.setText("Importing Members...");
                 startImportProcess();
             } catch (InterruptedException | ExecutionException ex) {
-                throw new RuntimeException(ex);
+                ex.printStackTrace();
             }
         });
         new Thread(task).start();
     }
 
+    private boolean validate() {
+        return true;
+    }
+
     private void startImportProcess() {
         Set<MemberDto> set = new HashSet<>(listMemberDto);
         List<MemberDto> filteredList = new ArrayList<>(set);
+        var task = new MemberListSaveTask(filteredList, true);
 
-        List<MemberImportDto> listRes = new ArrayList<>();
-        List<List<MemberDto>> listTemp = ListUtils.partition(filteredList, AppConstant.MIGRATION_LIST_SIZE);
-        int current = 1;
-        for (List<MemberDto> memberDtos : listTemp) {
+        task.setOnSucceeded(e -> {
             try {
-                listRes.addAll(service.importMembers(memberDtos, CommonUtil.setIdentityHeader()));
-                current++;
-                lblStatus.setText("Processing " + current * AppConstant.MIGRATION_LIST_SIZE + " of " + listTemp.size() * AppConstant.MIGRATION_LIST_SIZE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        MainApp.paneDrop.setVisible(false);
-        if (listRes == null || listRes.isEmpty()) {
-            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("member"),
-                    resourceBundle.getString("error.occurred"));
-            alert.createAlert();
-            return;
-        }
-        StringBuilder builder = new StringBuilder();
-        builder.append("Import success: ");
-        builder.append(listRes.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-        builder.append("\n");
-        builder.append("Import fail: ");
-        lblStatus.textProperty().unbind();
-        lblStatus.setText("");
-        builder.append(listRes.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-        builder.append("\n");
+                MainApp.paneDrop.setVisible(false);
+                List<MemberImportDto> list = task.get();
+                if (list == null || list.isEmpty()) {
+                    MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                            resourceBundle.getString("error.occurred"));
+                    alert.createAlert();
+                    return;
+                }
+                StringBuilder builder = new StringBuilder();
+                builder.append("Import success: ");
+                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
+                builder.append("\n");
+                builder.append("Import fail: ");
+                lblStatus.textProperty().unbind();
+                lblStatus.setText("");
+                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
+                builder.append("\n");
 
-        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("member"),
-                builder.toString());
-        alert.createAlert();
-        loadData();
-        loadDetails();
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                        builder.toString());
+                alert.createAlert();
+                loadData();
+                loadDetails();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+        lblStatus.textProperty().bind(task.messageProperty());
     }
 
     @Override
@@ -440,8 +480,12 @@ public class MemberController implements MyInitialization, PopupCallback {
             colFirstName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() + " " +
                     data.getValue().getMiddleName() + " " + data.getValue().getLastName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstNameLocal() != null ?
-                    data.getValue().getFirstNameLocal() : data.getValue().getMiddleNameLocal()
+                    data.getValue().getFirstNameLocal() : "" + " " +
+                    data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : "" + " " + data.getValue().getLastNameLocal()
+                    != null ? data.getValue().getLastNameLocal() : ""
             ));
+//        colMiddleName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMiddleName()));
+//        colLastName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLastName()));
             colAccountNo.setCellValueFactory(data -> new SimpleStringProperty(
                     mapDetails.get(data.getValue().getCode()) != null ?
                             mapDetails.get(data.getValue().getCode()).getAccountNo() != null ? mapDetails.get(data.getValue().getCode()).getAccountNo() : "" : ""));
@@ -451,22 +495,27 @@ public class MemberController implements MyInitialization, PopupCallback {
             colIsActive.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
             propMember.bind(tableMember.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
+            System.out.println("BillCriteria setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            tableMember.setItems(null);
-            memberList = service.findAllBySociety(MainApp.identityDto.getSociety().getCode());
-            if (memberList != null) {
-                listMember = memberList;
-                tableMember.setItems(FXCollections.observableList(memberList));
+        tableMember.setItems(null);
+        MemberLoadTask task = new MemberLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                memberList = task.get();
+                if (memberList != null) {
+                    listMember = memberList;
+                    tableMember.setItems(FXCollections.observableList(memberList));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -477,10 +526,45 @@ public class MemberController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             Member dto = propMember.get();
             if (dto != null) {
-                service.delete(dto.getCode(), CommonUtil.setIdentityHeader());
-                loadData();
+                var task = new MemberDeleteTask(dto.getCode());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || respDelete.booleanValue() == false) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
         }
 
     }
+
+    private void fetchMemberDetails() {
+    }
+
+
+//    void loadMemberDetail(){
+//        for (Member m : listMember) {
+//            var task=new MemberDetailLoadTask(m.getCode());
+//            task.setOnSucceeded(e->{
+//                try {
+//                    MemberDetail list =  task.get();
+//                    mapDetails.put(m.getCode(),list.getGender().getName());
+//                } catch (InterruptedException ex) {
+//                    ex.printStackTrace();
+//                } catch (ExecutionException ex) {
+//                    ex.printStackTrace();
+//                }
+//            });
+//            new Thread(task).start();
+//        }
+//    }
 }

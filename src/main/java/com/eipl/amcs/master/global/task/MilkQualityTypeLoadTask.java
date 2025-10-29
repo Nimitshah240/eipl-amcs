@@ -2,15 +2,12 @@ package com.eipl.amcs.master.global.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.MilkQualityType;
-import com.eipl.amcs.master.global.service.MemberTypeService;
 import com.eipl.amcs.master.global.service.MilkQualityTypeService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-
-import static com.eipl.amcs.MainApp.context;
 
 public class MilkQualityTypeLoadTask extends Task<List<MilkQualityType>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkQualityTypeLoadTask.class);
@@ -20,6 +17,8 @@ public class MilkQualityTypeLoadTask extends Task<List<MilkQualityType>> {
         try {
             MilkQualityTypeService service = EmcsAppContext.getContext().getBean(MilkQualityTypeService.class);
             List<MilkQualityType> list = service.findAll();
+            if (list == null || list.isEmpty())
+                return null;
             return list;
         } catch (Exception e) {
             LOGGER.error("MilkQualityTypes fetch", e);

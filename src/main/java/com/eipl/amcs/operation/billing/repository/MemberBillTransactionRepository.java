@@ -15,14 +15,14 @@ import java.util.Map;
 @Repository
 public interface MemberBillTransactionRepository extends BaseRepository<MemberBillTransaction, String> {
 
-	@EntityGraph(attributePaths = { "memberBill", "billHead" })
-	public List<MemberBillTransaction> findByMemberBill(MemberBill memberBill);
+    @EntityGraph(attributePaths = {"memberBill", "billHead"})
+    List<MemberBillTransaction> findByMemberBill(MemberBill memberBill);
 
-	@Query(value = "CALL process_member_billing(:p_society_payment_cycle_code, :p_prev_society_payment_cycle_code,:p_from_date,:p_to_date,:p_processed,:p_society_code,:p_user_code);", nativeQuery = true)
-	List<Map<String, Object>> findBillTransaction(@Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
-			@Param("p_prev_society_payment_cycle_code") String prevSocietyPaymentCycleCode,
-			@Param("p_from_date") LocalDateTime fromDate, @Param("p_to_date") LocalDateTime toDate,
-			@Param("p_processed") Integer processed, @Param("p_society_code") String societyCode,
-			@Param("p_user_code") String userCode);
+    @Query(value = "CALL process_member_billing(:p_society_payment_cycle_code, :p_prev_society_payment_cycle_code,:p_from_date,:p_to_date,:p_processed,:p_society_code,:p_user_code);", nativeQuery = true)
+    List<Map<String, Object>> findBillTransaction(@Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
+                                                  @Param("p_prev_society_payment_cycle_code") String prevSocietyPaymentCycleCode,
+                                                  @Param("p_from_date") LocalDateTime fromDate, @Param("p_to_date") LocalDateTime toDate,
+                                                  @Param("p_processed") Integer processed, @Param("p_society_code") String societyCode,
+                                                  @Param("p_user_code") String userCode);
 
 }

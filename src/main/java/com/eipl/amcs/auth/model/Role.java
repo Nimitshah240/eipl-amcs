@@ -15,16 +15,16 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseModel {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer code;
-	@Size(max = 50)
-	private String name;
-	@Size(max = 3)
-	private String unionCode;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer code;
+    @Size(max = 50)
+    private String name;
+    @Size(max = 3)
+    private String unionCode;
 
-	@Override
-	public String getTableName() {
-		return "roles";
-	}
+    @Override
+    public String getTableName() {
+        return "roles";
+    }
 }

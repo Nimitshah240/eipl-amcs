@@ -1,7 +1,13 @@
 package com.eipl.amcs.master.geo.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.StateDeserializer;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.StateSerialize;
 import com.eipl.amcs.utils.CommonUtils;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +33,8 @@ public class District extends BaseModel {
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = StateSerialize.class)
+    @JsonDeserialize(using = StateDeserializer.class)
     @JoinColumn(name = "state_code", foreignKey = @ForeignKey(name = "fk_districts_states_code"))
     private State state;
 

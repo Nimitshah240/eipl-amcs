@@ -2,11 +2,16 @@ package com.eipl.amcs.master.inventory.model;
 
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.serialize.*;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,31 +49,51 @@ public class Product extends BaseModel {
     private Boolean saleable;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "conversion_unit_code", foreignKey = @ForeignKey(name = "fk_products_conversion_unit"))
     private Unit conversionUnit;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "primary_uom_code", foreignKey = @ForeignKey(name = "fk_products_primary_uom"))
     private Unit primaryUom;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductGroupSerialize.class)
+    @JsonDeserialize(using = ProductGroupDeserializer.class)
     @JoinColumn(name = "product_group_code", foreignKey = @ForeignKey(name = "fk_products_product_group_code"))
     @JsonIgnoreProperties(value = {"unit"})
     private ProductGroup productGroup;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
     @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(name = "fk_products_tax_code"))
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductSerialize.class)
+    @JsonDeserialize(using = ProductDeserializer.class)
     @JoinColumn(name = "secondary_packaging_code", foreignKey = @ForeignKey(name = "fk_products_secondary_packaging"))
     private Product secondaryPackaging;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnionSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_products_union_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_products_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})
     private Society society;
+
+    public Product(String code, String name, String nameLocal) {
+        this.code = code;
+        this.name = name;
+        this.nameLocal = nameLocal;
+    }
 
     @Override
     public String getTableName() {
@@ -114,9 +139,9 @@ public class Product extends BaseModel {
         return audit;
     }
 
-    public Product(String code, String name, String nameLocal) {
-        this.code = code;
-        this.name = name;
-        this.nameLocal = nameLocal;
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
+
 }

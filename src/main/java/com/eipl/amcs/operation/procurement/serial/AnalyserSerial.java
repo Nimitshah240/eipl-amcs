@@ -4,7 +4,6 @@ import com.eipl.amcs.master.procurement.model.HardwareDevice;
 import com.eipl.amcs.operation.procurement.serial.exception.CommportNotBindException;
 import com.eipl.amcs.operation.procurement.serial.exception.DeviceNotFoundException;
 import com.eipl.amcs.operation.procurement.serial.exception.UnableToOpenSerialPort;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
@@ -18,20 +17,19 @@ import java.util.Map;
 
 public class AnalyserSerial implements SerialPortDataListener {
 
-    private HardwareDevice hardwareDevice;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnalyserSerial.class);
+    int countToPick = 3;
+    private final HardwareDevice hardwareDevice;
     private SerialPort serialPort;
     private InputStream inputStream;
     private OutputStream outputStream;
     private String response = "";
     private String tempResp = "";
     private boolean isDeviceReady = false;
-    private String tag;
-
+    private final String tag;
     private DeviceCallback callback;
     private char endChar;
     private boolean isParsing = false;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AnalyserSerial.class);
 
     public AnalyserSerial(HardwareDevice hardwareDevice, String commPort, String tag, DeviceCallback callback) {
         this.hardwareDevice = hardwareDevice;
@@ -138,8 +136,6 @@ public class AnalyserSerial implements SerialPortDataListener {
                 response = response.replace(s, "");
         }
     }
-
-    int countToPick = 3;
 
     private void preCheckForSeparatorLogic() {
         int i = 1;

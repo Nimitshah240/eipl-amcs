@@ -24,14 +24,6 @@ public class CheckComboBox<T> extends Control {
 
     private final ObservableList<T> items;
     private final Map<T, BooleanProperty> itemBooleanMap;
-    private CheckComboBoxSkin<T> checkComboBoxSkin;
-
-
-    /**************************************************************************
-     *
-     * Constructors
-     *
-     **************************************************************************/
     /**************************************************************************
      *
      * Properties
@@ -41,11 +33,16 @@ public class CheckComboBox<T> extends Control {
     // --- Check Model
     private final ObjectProperty<IndexedCheckModel<T>> checkModel =
             new SimpleObjectProperty<>(this, "checkModel"); //$NON-NLS-1$
+
+
+    /**************************************************************************
+     *
+     * Constructors
+     *
+     **************************************************************************/
     // --- converter
     private final ObjectProperty<StringConverter<T>> converter =
             new SimpleObjectProperty<StringConverter<T>>(this, "converter");
-
-
     /**************************************************************************
      *
      * Public API
@@ -55,6 +52,7 @@ public class CheckComboBox<T> extends Control {
     private final StringProperty title = new SimpleStringProperty(null);
     // --- show how many items are checked over total
     private final BooleanProperty showCheckedCount = new SimpleBooleanProperty(false);
+    private CheckComboBoxSkin<T> checkComboBoxSkin;
 
     /**
      * Creates a new CheckComboBox instance with an empty list of choices.

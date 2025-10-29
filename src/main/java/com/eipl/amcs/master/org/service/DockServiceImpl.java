@@ -20,12 +20,11 @@ import java.util.stream.Collectors;
 @Service
 public class DockServiceImpl implements DockService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DockServiceImpl.class);
     @Autowired
     private DockRepository dockRepository;
     @Autowired
     private DockMilkTypeRepository dockMilkTypeRepository;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DockServiceImpl.class);
 
     @Override
     public List<DockMilkTypeDto> findAll() {

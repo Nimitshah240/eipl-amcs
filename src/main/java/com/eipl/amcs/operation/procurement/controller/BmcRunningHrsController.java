@@ -9,7 +9,7 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.operation.procurement.dto.BmcRunningHrs;
+import com.eipl.amcs.operation.procurement.model.BmcRunningHours;
 import com.eipl.amcs.operation.procurement.task.BmcRunningHrsDeleteTask;
 import com.eipl.amcs.operation.procurement.task.BmcRunningHrsLoadTask;
 import com.eipl.amcs.operation.procurement.task.BmcRunningHrsSaveTask;
@@ -38,9 +38,16 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class BmcRunningHrsController implements MyInitialization {
+    private final ObjectProperty<BmcRunningHours> bmcRunningHrsObjectProperty;
+    public String invoice = "";
+    @FXML
+    TableView<BmcRunningHours> tableBMCRunningHrs;
+    @FXML
+    GridPane gridMaster;
+    @FXML
+    VBox vbox;
     @FXML
     private StackPane root;
-
     @FXML
     private E_TextField txtBmcRunningHrs, txtDgRunningHrs, txtAmount, txtSocietyCode, txtPowerGrid;
     @FXML
@@ -48,27 +55,24 @@ public class BmcRunningHrsController implements MyInitialization {
     @FXML
     private DatePicker dpDate;
     @FXML
-    private TableColumn<BmcRunningHrs, String> colSocietyCode;
+    private TableColumn<BmcRunningHours, String> colSocietyCode;
     @FXML
-    private TableColumn<BmcRunningHrs, Long> colCode;
+    private TableColumn<BmcRunningHours, Long> colCode;
     @FXML
-    private TableColumn<BmcRunningHrs, Integer> colBmcRunningHrs, colDgRunningHrs, colPowerGrid;
+    private TableColumn<BmcRunningHours, Integer> colBmcRunningHrs, colDgRunningHrs, colPowerGrid;
     @FXML
-    TableView<BmcRunningHrs> tableBMCRunningHrs;
-    @FXML
-    private TableColumn<BmcRunningHrs, BigDecimal> colAmount;
-
+    private TableColumn<BmcRunningHours, BigDecimal> colAmount;
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
-    private BmcRunningHrs dto = null;
+    private final StringBuilder errorMsg = null;
+    private BmcRunningHours dto = null;
     private PopupCallback callback;
     private BigDecimal rate;
-    public String invoice = "";
-    @FXML
-    GridPane gridMaster;
-    @FXML
-    VBox vbox;
+    private BmcRunningHours bmcRunningHrs;
+
+    public BmcRunningHrsController() {
+        bmcRunningHrsObjectProperty = new SimpleObjectProperty<>();
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -83,15 +87,7 @@ public class BmcRunningHrsController implements MyInitialization {
         return root;
     }
 
-    private final ObjectProperty<BmcRunningHrs> bmcRunningHrsObjectProperty;
-
-    public BmcRunningHrsController() {
-        bmcRunningHrsObjectProperty = new SimpleObjectProperty<>();
-    }
-
-    private BmcRunningHrs bmcRunningHrs;
-
-    public void setBmcRunningHrsDto(BmcRunningHrs dto) {
+    public void setBmcRunningHrsDto(BmcRunningHours dto) {
         try {
             if (dto != null) {
                 this.dto = dto;
@@ -114,13 +110,7 @@ public class BmcRunningHrsController implements MyInitialization {
         txtSocietyCode.setDisable(true);
         txtAmount.setDisable(true);
         bmcRunningHrsObjectProperty.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnDelete.setDisable(false);
-
-            } else {
-                btnDelete.setDisable(true);
-
-            }
+            btnDelete.setDisable(newValue == null);
         });
 
         btnSave.setOnAction(e -> {
@@ -168,14 +158,14 @@ public class BmcRunningHrsController implements MyInitialization {
         dpDate.setConverter(new LocalDateConvertor());
     }
 
-    private void setControls(BmcRunningHrs bmcRunningHrs) {
+    private void setControls(BmcRunningHours bmcRunningHrs) {
         txtDgRunningHrs.setText(String.valueOf(bmcRunningHrs.getRunningHoursDg()));
         txtPowerGrid.setText(String.valueOf(bmcRunningHrs.getRunningHoursPower()));
         txtBmcRunningHrs.setText(String.valueOf(bmcRunningHrs.getTotalRunningHours()));
     }
 
     public void validateAndSave() {
-        bmcRunningHrs = new BmcRunningHrs();
+        bmcRunningHrs = new BmcRunningHours();
         setValuesInObject();
         var task = new BmcRunningHrsSaveTask(bmcRunningHrs, (short) 0);
         task.setOnSucceeded(e -> {
@@ -183,7 +173,6 @@ public class BmcRunningHrsController implements MyInitialization {
             clearControls();
         });
         new Thread(task).start();
-        return;
 
     }
 
@@ -208,7 +197,7 @@ public class BmcRunningHrsController implements MyInitialization {
 //        } catch (NumberFormatException e) {
 //
 //        }
-        bmcRunningHrs.setActive(true);
+        bmcRunningHrs.setIsActive(true);
 
     }
 
@@ -227,7 +216,6 @@ public class BmcRunningHrsController implements MyInitialization {
             clearControls();
         });
         new Thread(task).start();
-        return;
 
     }
 
@@ -254,7 +242,7 @@ public class BmcRunningHrsController implements MyInitialization {
         BmcRunningHrsLoadTask task = new BmcRunningHrsLoadTask();
         task.setOnSucceeded(e -> {
             try {
-                List<BmcRunningHrs> list = task.get();
+                List<BmcRunningHours> list = task.get();
                 if (list != null)
                     tableBMCRunningHrs.setItems(FXCollections.observableList(list));
             } catch (InterruptedException | ExecutionException ex) {
@@ -281,13 +269,13 @@ public class BmcRunningHrsController implements MyInitialization {
                 resourceBundle.getString("alert.delete"));
         Optional<ButtonType> resp = alert.createConfirmationAlert();
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
-            BmcRunningHrs dto = bmcRunningHrsObjectProperty.get();
+            BmcRunningHours dto = bmcRunningHrsObjectProperty.get();
             if (dto != null) {
                 var task = new BmcRunningHrsDeleteTask(dto.getCode());
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("BmcRunningHrs"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

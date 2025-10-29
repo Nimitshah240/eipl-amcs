@@ -13,10 +13,9 @@ import java.util.List;
 @Service
 public class StateServiceImpl implements StateService {
 
+    private static final Logger log = LoggerFactory.getLogger(StateServiceImpl.class);
     @Autowired
     private StateRepository stateRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(StateServiceImpl.class);
 
     @Override
     public List<State> findAll() {

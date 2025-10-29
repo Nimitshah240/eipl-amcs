@@ -20,11 +20,12 @@ public interface ShareDividendService {
     ShareDividend update(ShareDividend obj, String identityHeader);
 
     Share cancel(Share share);
+
     Share cancel(String id, String identityInfo);
 
     List<ShareDividend> findAllData(LocalDate fromDt, LocalDate toDt);
 
     ShareDividend delete(String id, String identityInfo);
 
-    ShareDividend deleteAll( LocalDate fromDt, LocalDate toDt);
+    ShareDividend deleteAll(LocalDate fromDt, LocalDate toDt);
 }

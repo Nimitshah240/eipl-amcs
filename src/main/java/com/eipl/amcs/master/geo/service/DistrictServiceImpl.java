@@ -16,12 +16,11 @@ import java.util.List;
 @Service
 public class DistrictServiceImpl implements DistrictService {
 
+    private static final Logger log = LoggerFactory.getLogger(DistrictServiceImpl.class);
     @Autowired
     private DistrictRepository districtRepository;
     @Autowired
     private StateRepository stateRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(DistrictServiceImpl.class);
 
     @Override
     public List<District> findAll() {

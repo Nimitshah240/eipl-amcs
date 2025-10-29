@@ -7,14 +7,12 @@ import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
-import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 public class FriendsMilkCollectionDbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public FriendsMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath,
                                            String cowRange, String buffRange, LocalDate fromDate, LocalDate toDate) {
@@ -85,7 +83,7 @@ public class FriendsMilkCollectionDbSaveTask extends Task<Boolean> {
                 for (String month : listMonth) {
                     statement = connection.createStatement();
                     resultSet = statement.executeQuery("select * from dockside where format(Dump_Date, 'yyyy-MM-dd') >= '" +
-                            fromDate.toString() + "' AND  format(Dump_Date, 'yyyy-MM-dd') <= '" +toDate.toString() + "'");
+                            fromDate.toString() + "' AND  format(Dump_Date, 'yyyy-MM-dd') <= '" + toDate.toString() + "'");
 //                    resultSet = statement.executeQuery("select * from dockside where format(Dump_Date, 'mmm yyyy') = '" + month + "'");
                     List<Map<String, Object>> mapCollection = new ArrayList<>();
                     String shift = null;
@@ -164,7 +162,7 @@ public class FriendsMilkCollectionDbSaveTask extends Task<Boolean> {
                             for (Map<String, Object> map : maps) {
                                 pstmt.setString(1, map.get("code").toString());
                                 pstmt.setInt(2, (int) map.get("sampleno"));
-                                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                                pstmt.setObject(3, map.get("collectiondate"));
                                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

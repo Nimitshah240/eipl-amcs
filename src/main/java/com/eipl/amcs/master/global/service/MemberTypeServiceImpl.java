@@ -13,10 +13,9 @@ import java.util.List;
 @Service
 public class MemberTypeServiceImpl implements MemberTypeService {
 
+    private static final Logger log = LoggerFactory.getLogger(MemberTypeServiceImpl.class);
     @Autowired
     private MemberTypeRepository memberTypeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(MemberTypeServiceImpl.class);
 
     @Override
     public List<MemberType> findAll() {

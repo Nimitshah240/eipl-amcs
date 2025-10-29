@@ -16,14 +16,11 @@ import java.util.List;
 @Service
 public class CommitteeMembersServiceImpl implements CommitteeMembersService {
 
+    private static final Logger log = LoggerFactory.getLogger(CommitteeMembersServiceImpl.class);
     @Autowired
     private CommitteeMembersRepository committeeMembersRepository;
     @Autowired
     private NextCodeRepository nextCodeRepository;
-
-
-    private static final Logger log = LoggerFactory.getLogger(CommitteeMembersServiceImpl.class);
-
 
     @Override
     public List<CommitteeMembers> findAll() {

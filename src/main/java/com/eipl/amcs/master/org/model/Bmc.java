@@ -1,8 +1,12 @@
 package com.eipl.amcs.master.org.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.*;
 import com.eipl.amcs.master.geo.model.*;
+import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,29 +45,43 @@ public class Bmc extends BaseModel {
     private String contactPersonMobileNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnionSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_bmc_union_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MccSerialize.class)
+    @JsonDeserialize(using = MccDeserializer.class)
     @JoinColumn(name = "mcc_code", foreignKey = @ForeignKey(name = "fk_bmc_mcc_code"))
     @JsonIgnoreProperties(value = {"union", "plant", "state", "district", "subDistrict", "village", "hamlet"})
     private Mcc mcc;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = StateSerialize.class)
+    @JsonDeserialize(using = StateDeserializer.class)
     @JoinColumn(name = "state_code", foreignKey = @ForeignKey(name = "fk_bmc_state_code"))
     private State state;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = DistrictSerialize.class)
+    @JsonDeserialize(using = DistrictDeserializer.class)
     @JoinColumn(name = "district_code", foreignKey = @ForeignKey(name = "fk_bmc_district_code"))
     @JsonIgnoreProperties(value = {"state"})
     private District district;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SubDistrictSerialize.class)
+    @JsonDeserialize(using = SubDistrictDeserializer.class)
     @JoinColumn(name = "sub_district_code", foreignKey = @ForeignKey(name = "fk_bmc_sub_district_code"))
     @JsonIgnoreProperties(value = {"district"})
     private SubDistrict subDistrict;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VillageSerialize.class)
+    @JsonDeserialize(using = VillageDeserializer.class)
     @JoinColumn(name = "village_code", foreignKey = @ForeignKey(name = "fk_bmc_village_code"))
     @JsonIgnoreProperties(value = {"subDistrict"})
     private Village village;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = HamletSerialize.class)
+    @JsonDeserialize(using = HamletDeserializer.class)
     @JoinColumn(name = "hamlet_code", foreignKey = @ForeignKey(name = "fk_bmc_hamlet_code"))
     @JsonIgnoreProperties(value = {"village"})
     private Hamlet hamlet;

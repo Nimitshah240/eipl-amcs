@@ -1,8 +1,14 @@
 package com.eipl.amcs.master.geo.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.StateDeserializer;
+import com.eipl.amcs.deserialize.VillageDeserializer;
+import com.eipl.amcs.serialize.StateSerialize;
+import com.eipl.amcs.serialize.VillageSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +33,8 @@ public class Hamlet extends BaseModel {
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VillageSerialize.class)
+    @JsonDeserialize(using = VillageDeserializer.class)
     @JoinColumn(name = "village_code", foreignKey = @ForeignKey(name = "fk_hamlets_villages_code"))
     @JsonIgnoreProperties(value = {"subDistrict"})
     private Village village;

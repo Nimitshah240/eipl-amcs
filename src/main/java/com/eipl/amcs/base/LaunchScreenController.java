@@ -10,7 +10,7 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ResourceBundle;
 
 
 public class LaunchScreenController implements MyInitialization {

@@ -15,42 +15,41 @@ import java.util.Optional;
 @Service
 public class ProductSaleTaxServiceImpl implements ProductSaleTaxService {
 
-	@Autowired
-	private ProductSaleTaxRepository saleTaxRepository;
+    private static final Logger log = LoggerFactory.getLogger(ProductSaleTaxServiceImpl.class);
+    @Autowired
+    private ProductSaleTaxRepository saleTaxRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductSaleTaxServiceImpl.class);
+    @Override
+    public List<ProductSaleTax> findAll() {
+        List<ProductSaleTax> list = saleTaxRepository.findAll(Sort.by("code"));
+        log.info("ProductSaleToMemberTaxCalculated findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public List<ProductSaleTax> findAll() {
-		List<ProductSaleTax> list = saleTaxRepository.findAll(Sort.by("code"));
-		log.info("ProductSaleToMemberTaxCalculated findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public ProductSaleTax save(ProductSaleTax productSaleToMemberTaxCalculated) {
+        return saleTaxRepository.save(productSaleToMemberTaxCalculated);
+    }
 
-	@Override
-	public ProductSaleTax save(ProductSaleTax productSaleToMemberTaxCalculated) {
-		return saleTaxRepository.save(productSaleToMemberTaxCalculated);
-	}
+    @Override
+    public ProductSaleTax update(ProductSaleTax productSaleToMemberTaxCalculated) {
+        return saleTaxRepository.save(productSaleToMemberTaxCalculated);
+    }
 
-	@Override
-	public ProductSaleTax update(ProductSaleTax productSaleToMemberTaxCalculated) {
-		return saleTaxRepository.save(productSaleToMemberTaxCalculated);
-	}
+    @Override
+    public Optional<ProductSaleTax> findById(String code) {
+        return saleTaxRepository.findById(code);
+    }
 
-	@Override
-	public Optional<ProductSaleTax> findById(String code) {
-		return saleTaxRepository.findById(code);
-	}
+    @Override
+    public void delete(String code) {
+        saleTaxRepository.deleteById(code);
+    }
 
-	@Override
-	public void delete(String code) {
-		saleTaxRepository.deleteById(code);
-	}
-
-	@Override
-	@Transactional
-	public void delete(ProductSaleTax productSaleToMemberTaxCalculated) {
-		saleTaxRepository.deleteById(productSaleToMemberTaxCalculated.getCode());
-	}
+    @Override
+    @Transactional
+    public void delete(ProductSaleTax productSaleToMemberTaxCalculated) {
+        saleTaxRepository.deleteById(productSaleToMemberTaxCalculated.getCode());
+    }
 
 }

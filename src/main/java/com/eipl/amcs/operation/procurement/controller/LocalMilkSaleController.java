@@ -11,7 +11,6 @@ import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
-import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
@@ -40,6 +39,7 @@ import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<LocalMilkSale> propLocalMilkSaleDto;
     @FXML
     private StackPane root;
     @FXML
@@ -62,9 +62,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
     private TableColumn<LocalMilkSale, BigDecimal> colQuantity, colRate, colAmount;
     @FXML
     private Button btnAdd, btnClose, btnEdit, btnDelete, btnSearch;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<LocalMilkSale> propLocalMilkSaleDto;
     private String name;
     private List<Member> listMembers;
     private List<Customer> listCustomers;
@@ -146,7 +144,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

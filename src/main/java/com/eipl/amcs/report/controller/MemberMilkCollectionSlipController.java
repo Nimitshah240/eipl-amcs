@@ -37,6 +37,9 @@ import java.util.stream.Collectors;
 
 public class MemberMilkCollectionSlipController implements MyInitialization {
 
+    List<Map<String, Object>> data = new ArrayList<>();
+    List<Map<String, Object>> productSaleData = new ArrayList<>();
+    String slipLanguage = "";
     @FXML
     private StackPane root;
     @FXML
@@ -49,21 +52,25 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
     private List<SocietyPaymentCycle> paymentCycleList = new ArrayList<>();
     private ResourceBundle resourceBundle;
-
-
     private File slipFile = null;
+    private final ArrayList<String> masterLines = new ArrayList<>();
+    private PrinterHelper printerHelper;
 
-    List<Map<String, Object>> data = new ArrayList<>();
-    List<Map<String, Object>> productSaleData = new ArrayList<>();
-    private ArrayList<String> masterLines = new ArrayList<>();
-    String slipLanguage = "";
+    public static String leftPadding(String input, char ch, int L) {
+        String result = String.format("%" + L + "s", input).replace(' ', ch);
+        return result;
+    }
+
+    // Function to perform right padding
+    public static String rightPadding(String input, char ch, int L) {
+        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
+        return result;
+    }
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private PrinterHelper printerHelper;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,7 +85,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
             if (txtRange.getText().equalsIgnoreCase("0") || txtRange.getText() == null || txtRange.getText().equalsIgnoreCase(""))
                 loadTextFile();
             else {
-                String arr[] = txtRange.getText().split("-");
+                String[] arr = txtRange.getText().split("-");
                 for (int i = Integer.parseInt(arr[0]); i <= Integer.parseInt(arr[1]); i++) {
                     String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", i);
                     loadTextFilePartTwo(code);
@@ -89,7 +96,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
             if (txtRange.getText().equalsIgnoreCase("0") || txtRange.getText() == null || txtRange.getText().equalsIgnoreCase(""))
                 validateAndGenerateReport();
             else {
-                String arr[] = txtRange.getText().split("-");
+                String[] arr = txtRange.getText().split("-");
                 for (int i = Integer.parseInt(arr[0]); i <= Integer.parseInt(arr[1]); i++) {
                     String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", i);
                     validateAndGenerateReport2(code);
@@ -220,7 +227,6 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
         }
     }
 
-
     private void loadTextFileForDeduction(String code) {
         String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
         String query = "call rpt_member_milk_collection_slip_head_wise('" + MainApp.identityDto.getSociety().getCode() + "','" +
@@ -233,17 +239,14 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                 map.put("member_code", rs.getString("member_code"));
                 map.put("head_name", rs.getString("head_name"));
                 map.put("amount", rs.getString("amount"));
-                StringBuilder sb = new StringBuilder();
-//                27,8
+                //                27,8
 
-                sb.append(map.get("head_name").toString() + " - " + map.get("amount").toString());
-                masterLines.add(sb.toString());
+                masterLines.add(map.get("head_name").toString() + " - " + map.get("amount").toString());
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     private void placeVariables(List<Map<String, Object>> mapList) {
 
@@ -286,7 +289,6 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                 stringBuilder.setLength(0);
 
                 loadTextFileForDeduction((String) val.get(0).get("member_original_code"));
-                stringBuilder.append("");
 
 
                 for (int i = 0; i < Integer.parseInt(MainApp.getProperty("no.of.enters.collection.slip", "0")); i++) {
@@ -342,18 +344,6 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                 masterLines.clear();
             }
         });
-    }
-
-
-    public static String leftPadding(String input, char ch, int L) {
-        String result = String.format("%" + L + "s", input).replace(' ', ch);
-        return result;
-    }
-
-    // Function to perform right padding
-    public static String rightPadding(String input, char ch, int L) {
-        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
-        return result;
     }
 
     private void print(List<String> masterLines) {

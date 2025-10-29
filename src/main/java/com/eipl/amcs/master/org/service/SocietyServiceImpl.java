@@ -12,10 +12,9 @@ import java.util.List;
 
 @Service
 public class SocietyServiceImpl implements SocietyService {
+    private static final Logger log = LoggerFactory.getLogger(SocietyServiceImpl.class);
     @Autowired
     private SocietyRepository societyRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(SocietyServiceImpl.class);
 
     @Override
     public List<Society> findAll() {

@@ -49,6 +49,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleAddEditController implements MyInitialization {
+    public String invoice = "";
     @FXML
     private StackPane root;
     @FXML
@@ -67,14 +68,12 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     private E_Button btnSaveUpdate, btnClose;
     @FXML
     private E_DatePicker dpSellDate;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private LocalMilkSale dto = null;
     private PopupCallback callback;
     private BigDecimal rate;
-    public String invoice = "";
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -229,15 +228,15 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 //        ls.setMilkType(cboxMilkType.getValue());
 //        ls.setMilkClass(cboxClass.getValue());
 //        ls.setSaleDate(dpSellDate.getValue());
-////        ls.setQuantity(new BigDecimal(txtQuantity.getText().trim()));
-////        ls.setRate(new BigDecimal(txtRate.getText().trim()));
-////        ls.setAmount(new BigDecimal(txtAmount.getText().trim()));
-////        ls.setCash(new BigDecimal(txtCash.getText().trim()));
-////        ls.setCredit(new BigDecimal(txtCredit.getText().trim()));
-////        ls.setCoupon(new BigDecimal(txtCoupon.getText().trim()));
+
+    /// /        ls.setQuantity(new BigDecimal(txtQuantity.getText().trim()));
+    /// /        ls.setRate(new BigDecimal(txtRate.getText().trim()));
+    /// /        ls.setAmount(new BigDecimal(txtAmount.getText().trim()));
+    /// /        ls.setCash(new BigDecimal(txtCash.getText().trim()));
+    /// /        ls.setCredit(new BigDecimal(txtCredit.getText().trim()));
+    /// /        ls.setCoupon(new BigDecimal(txtCoupon.getText().trim()));
 //        return ls;
 //    }
-
     private void setValuesInObject() {
         dto.setConsumerCode(generateCode(txtConsumerCode.getText().trim()));
         dto.setInvoiceNo(invoice);

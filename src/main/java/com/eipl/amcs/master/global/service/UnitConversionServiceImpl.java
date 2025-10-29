@@ -14,11 +14,9 @@ import java.util.List;
 @Service
 public class UnitConversionServiceImpl implements UnitConversionService {
 
+    private static final Logger log = LoggerFactory.getLogger(UnitConversionServiceImpl.class);
     @Autowired
     private UnitConversionRepository unitConversionRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(UnitConversionServiceImpl.class);
-
 
     @Override
     public List<UnitConversion> findAll() {

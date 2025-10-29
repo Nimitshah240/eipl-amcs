@@ -2,7 +2,6 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.master.global.model.MilkClass;
@@ -17,19 +16,11 @@ import com.eipl.amcs.master.operation.model.CustomerDto;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerSaveTask;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
-import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
-import com.eipl.amcs.operation.inventory.dto.ProductSaleMigrateDto;
-import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.task.LocalMilkSaleMigrationListSaveTask;
-import com.eipl.amcs.operation.procurement.task.ProductSaleMigrationListSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -52,25 +43,21 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
     StackPane root;
 //    @FXML
 //    TableView<ProductSale> tableData;
-
-    private ResourceBundle resourceBundle;
     @FXML
     TextField txtFilePath;
     @FXML
-    Button  btnClose, btnGenerate,btnBrowse;
-
-
-
+    Button btnClose, btnGenerate, btnBrowse;
+    String milkTypeStr = null;
+    Random r = new Random();
+    int result;
+    List<ProductSale> list = new ArrayList<>();
+    private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<MilkClass> classList;
     private List<Customer> customerList;
-    String milkTypeStr = null;
     private Stage stage;
     private String selectedFilePath;
-    Random r = new Random();
-    int result;
-
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -81,13 +68,11 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
         return root;
     }
 
-    List<ProductSale> list = new ArrayList<>();
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupTable();
-     //   btnSave.setOnAction(e -> startImportProcess());
+        //   btnSave.setOnAction(e -> startImportProcess());
         btnClose.setOnAction(e -> this.stage.close());
         btnGenerate.setOnAction(e -> {
             loadImportPreReq(txtFilePath.getText());
@@ -159,7 +144,7 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
                                         customerList = new ArrayList<>();
                                         customerList = task3.get();
                                         if (customerList != null && !customerList.isEmpty()) {
-                                           setData(path);
+                                            setData(path);
                                             System.out.println("done");
                                         } else {
                                             Customer c = new Customer();
@@ -220,7 +205,7 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
             List<ProductSale> list = new ArrayList<>();
             try {
                 String urlDb = "jdbc:ucanaccess://" + path;
-            //    String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
+                //    String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
                 Map<String, Integer> mapShift = new HashMap<>();
                 for (Shift shift : shiftList) {
                     mapShift.put(shift.getName().substring(0, 1).toUpperCase(), shift.getCode());
@@ -235,10 +220,10 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
 
                 LocalTime morningTime = LocalTime.of(6, 0);
                 LocalTime eveningTime = LocalTime.of(18, 0);
-               //try (Connection connection = DriverManager.getConnection(connectionUrl);
-                  //  Statement stmt = connection.createStatement();) {
+                //try (Connection connection = DriverManager.getConnection(connectionUrl);
+                //  Statement stmt = connection.createStatement();) {
 
-                try (Connection connection = DriverManager.getConnection(urlDb, "", "Oracle8.0"))  {
+                try (Connection connection = DriverManager.getConnection(urlDb, "", "Oracle8.0")) {
 //                    Statement statement = connection.createStatement();
 //                    ResultSet resultSet = statement.executeQuery("select * from LocalSales");
 //                    List<String> listMonth = new ArrayList<>();
@@ -254,65 +239,65 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
                     Statement statement = connection.createStatement();
 
                     ResultSet resultSet = statement.executeQuery("select * from Kapat");
-                        List<Map<String, Object>> mapCollection = new ArrayList<>();
-                        String shift = null;
-                        int i = 0;
-                         while (resultSet.next()) {
-                             i+=1;
-                           Map<String, Object> map = new HashMap<>();
-                            map.put("code", resultSet.getString("Memcode")+"-"+(resultSet.getString("Payment")));
-                            map.put("amount", new BigDecimal(resultSet.getString("Payment")));
-                             map.put("qty", new BigDecimal(resultSet.getString("Liters")));
-                            // map.put("rate",((BigDecimal)map.get("amount")).divide((BigDecimal) map.get("qty")));
-                            map.put("rate",new BigDecimal(resultSet.getString("Kapat1")));
-                            map.put("unioncode", MainApp.identityDto.getUnion().getCode());
-                            shift = resultSet.getString("shift");
-                            LocalDate date = resultSet.getDate("Date").toLocalDate();
-                            map.put("Date",date);
-                            if (shift == null || shift.isEmpty() || shift.equalsIgnoreCase("M")) {
-                                map.put("shift", mapShift.get("M"));
-                                map.put("collectiondate", LocalDateTime.of(date, morningTime));
-                            } else {
-                                map.put("shift", mapShift.get(shift.toUpperCase()));
-                                map.put("collectiondate", LocalDateTime.of(date, eveningTime));
-                            }
-
-                             result = r.nextInt(100-10) + 10;
-                            int result2 = r.nextInt(10-1) + 1;
-                             int result3 = r.nextInt(10-1) + 1;
-                           map.put("code",resultSet.getString("Date").substring(0,10)+"-"+((BigDecimal) map.get("qty")).intValue()+"-"+result2+"-"+result3+"-"+result);
-                           //  System.out.println(map.get("Memcode"));
-                          //   map.put("code",((BigDecimal) map.get("qty")).intValue()+result2+"-"+result3+"-"+date+"-"+i+result);
-                             System.out.println(map.get("code"));
-                            mapCollection.add(map);
+                    List<Map<String, Object>> mapCollection = new ArrayList<>();
+                    String shift = null;
+                    int i = 0;
+                    while (resultSet.next()) {
+                        i += 1;
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("code", resultSet.getString("Memcode") + "-" + (resultSet.getString("Payment")));
+                        map.put("amount", new BigDecimal(resultSet.getString("Payment")));
+                        map.put("qty", new BigDecimal(resultSet.getString("Liters")));
+                        // map.put("rate",((BigDecimal)map.get("amount")).divide((BigDecimal) map.get("qty")));
+                        map.put("rate", new BigDecimal(resultSet.getString("Kapat1")));
+                        map.put("unioncode", MainApp.identityDto.getUnion().getCode());
+                        shift = resultSet.getString("shift");
+                        LocalDate date = resultSet.getDate("Date").toLocalDate();
+                        map.put("Date", date);
+                        if (shift == null || shift.isEmpty() || shift.equalsIgnoreCase("M")) {
+                            map.put("shift", mapShift.get("M"));
+                            map.put("collectiondate", LocalDateTime.of(date, morningTime));
+                        } else {
+                            map.put("shift", mapShift.get(shift.toUpperCase()));
+                            map.put("collectiondate", LocalDateTime.of(date, eveningTime));
                         }
-                        resultSet.close();
-                        statement.close();
+
+                        result = r.nextInt(100 - 10) + 10;
+                        int result2 = r.nextInt(10 - 1) + 1;
+                        int result3 = r.nextInt(10 - 1) + 1;
+                        map.put("code", resultSet.getString("Date").substring(0, 10) + "-" + ((BigDecimal) map.get("qty")).intValue() + "-" + result2 + "-" + result3 + "-" + result);
+                        //  System.out.println(map.get("Memcode"));
+                        //   map.put("code",((BigDecimal) map.get("qty")).intValue()+result2+"-"+result3+"-"+date+"-"+i+result);
+                        System.out.println(map.get("code"));
+                        mapCollection.add(map);
+                    }
+                    resultSet.close();
+                    statement.close();
 
 
-                        // split map and save in mysql
-                        List<List<Map<String, Object>>> listTemp = ListUtils.partition(mapCollection, AppConstant.MIGRATION_LIST_SIZE);
-                        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
-                        try (Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
-                            String sql = "INSERT INTO product_sale(invoice_no,invoice_date,consumer_code,consumer_type,transaction_type," +
-                                    "amount,net_amount)" +
-                                    "VALUES (?,?,?,?,?,?,?)";
-                            int current = 1;
-                            connMySql.setAutoCommit(false);
-                            for (List<Map<String, Object>> maps : listTemp) {
-                                PreparedStatement pstmt = connMySql.prepareStatement(sql);
-                                for (Map<String, Object> map : maps) {
+                    // split map and save in mysql
+                    List<List<Map<String, Object>>> listTemp = ListUtils.partition(mapCollection, AppConstant.MIGRATION_LIST_SIZE);
+                    String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+                    try (Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
+                        String sql = "INSERT INTO product_sale(invoice_no,invoice_date,consumer_code,consumer_type,transaction_type," +
+                                "amount,net_amount)" +
+                                "VALUES (?,?,?,?,?,?,?)";
+                        int current = 1;
+                        connMySql.setAutoCommit(false);
+                        for (List<Map<String, Object>> maps : listTemp) {
+                            PreparedStatement pstmt = connMySql.prepareStatement(sql);
+                            for (Map<String, Object> map : maps) {
 
-                                    pstmt.setString(1, map.get("code").toString());
-                                    pstmt.setObject(2, map.get("date"));
-                                    pstmt.setObject(3, map.get(""));
-                                    pstmt.setString(4, String.valueOf(1));
-                                    pstmt.setInt(5,  2);
+                                pstmt.setString(1, map.get("code").toString());
+                                pstmt.setObject(2, map.get("date"));
+                                pstmt.setObject(3, map.get(""));
+                                pstmt.setString(4, String.valueOf(1));
+                                pstmt.setInt(5, 2);
 //                                    pstmt.setShort(7, (short) 1);
 //                                    pstmt.setShort(8, (short) 1);
 
-                                    pstmt.setBigDecimal(6, ((BigDecimal) map.get("rate")).setScale(2, RoundingMode.HALF_UP));
-                                    pstmt.setBigDecimal(7, (BigDecimal) map.get("amount"));
+                                pstmt.setBigDecimal(6, ((BigDecimal) map.get("rate")).setScale(2, RoundingMode.HALF_UP));
+                                pstmt.setBigDecimal(7, (BigDecimal) map.get("amount"));
 
 //                                    pstmt.setBigDecimal(12, BigDecimal.valueOf(11));
 //                                    pstmt.setInt(13,2);
@@ -325,18 +310,18 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
 //                                    pstmt.setString(20, MainApp.identityDto.getDock().getDockNo());
 //                                    pstmt.setObject(21, LocalDateTime.now());
 //                                    pstmt.setString(22, "MIGR");
-                                    pstmt.addBatch();
-                                }
-                                pstmt.executeBatch();
-                                pstmt.close();
-                                current++;
+                                pstmt.addBatch();
                             }
-                            connMySql.commit();
-                            connMySql.setAutoCommit(true);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            pstmt.executeBatch();
+                            pstmt.close();
+                            current++;
                         }
-                    } catch (SQLException e) {
+                        connMySql.commit();
+                        connMySql.setAutoCommit(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } catch (Exception e) {

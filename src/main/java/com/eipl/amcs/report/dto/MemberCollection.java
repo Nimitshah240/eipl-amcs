@@ -1,9 +1,7 @@
 package com.eipl.amcs.report.dto;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class MemberCollection {
     private Timestamp from_date;
@@ -33,7 +31,7 @@ public class MemberCollection {
     private BigDecimal avg_clr;
     private BigDecimal kg_clr;
 
-    public MemberCollection(){
+    public MemberCollection() {
     }
 
     public Timestamp getFrom_date() {

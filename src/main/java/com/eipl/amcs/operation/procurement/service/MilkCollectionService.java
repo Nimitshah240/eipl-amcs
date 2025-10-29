@@ -15,45 +15,48 @@ import java.util.Optional;
 
 public interface MilkCollectionService {
 
-	List<MilkCollection> findAllBetween(LocalDateTime fromDt, LocalDateTime toDt);
-	List<MilkCollection> findAllCollectionByDate(LocalDateTime fromDt, LocalDateTime toDt,String heades);
+    List<MilkCollection> findAllBetween(LocalDateTime fromDt, LocalDateTime toDt);
 
-	MilkCollection save(MilkCollection collection, String identityInfo);
+    List<MilkCollection> findAllCollectionByDate(LocalDateTime fromDt, LocalDateTime toDt, String heades);
 
-	MilkCollection update(MilkCollection collection, String identityInfo);
+    MilkCollection save(MilkCollection collection, String identityInfo);
 
-	void delete(String code, String identityInfo);
+    MilkCollection update(MilkCollection collection, String identityInfo);
 
-	MilkCollectionPreReqDto fetchPreRequsite(LocalDateTime date, Integer shiftCode, String societyCode);
+    void delete(String code, String identityInfo);
 
-	Number fetchNextSampleNo(LocalDateTime dt, String dockCode);
+    MilkCollectionPreReqDto fetchPreRequsite(LocalDateTime date, Integer shiftCode, String societyCode);
+
+    Number fetchNextSampleNo(LocalDateTime dt, String dockCode);
 //	Number fetchNextSampleNo(LocalDateTime dt, String dockCode ,  int milkTypeCode);
 
-	List<CollectionImportDto> importCollections(List<MilkCollection> dtoList, String header);
+    List<CollectionImportDto> importCollections(List<MilkCollection> dtoList, String header);
 
-	List<CollectionImportDto> migrateCollections(List<MilkCollection> dtoList, String header);
+    List<CollectionImportDto> migrateCollections(List<MilkCollection> dtoList, String header);
 
-	List<MilkCollection> findAllCollection(LocalDateTime date);
+    List<MilkCollection> findAllCollection(LocalDateTime date);
 
-	Optional<MilkCollection> findById(String code);
-	Map<String, BigDecimal> findAvgFatAndSnf(String code, int no, String milktype, LocalDate date,int shiftCode);
+    Optional<MilkCollection> findById(String code);
 
-	Map<String, BigDecimal> findTotals(String code, String no,int milkType);
+    Map<String, BigDecimal> findAvgFatAndSnf(String code, int no, String milktype, LocalDate date, int shiftCode);
 
-	List<MilkCollection> findByMemberAndDate(LocalDateTime date, String code);
-	
-	MilkCollectionSummaryData saveMilkCollectionSummaryData(MilkCollectionSummaryData collection, String identityInfo);
+    Map<String, BigDecimal> findTotals(String code, String no, int milkType);
 
-	List<MilkCollection> findAllSummaryDataBetween(LocalDateTime fromDt, LocalDateTime toDt);
+    List<MilkCollection> findByMemberAndDate(LocalDateTime date, String code);
 
-	MilkCollectionSummaryData updateMilkCollectionSummaryData(MilkCollectionSummaryData data, String identityHeader);
+    MilkCollectionSummaryData saveMilkCollectionSummaryData(MilkCollectionSummaryData collection, String identityInfo);
 
-	List<CollectionImportDto> importCollectionSummaryData(List<MilkCollectionSummaryData> data, String identityHeader);
+    List<MilkCollection> findAllSummaryDataBetween(LocalDateTime fromDt, LocalDateTime toDt);
 
-	List<MilkCollection> findAllCollectionByMember(LocalDateTime fromDt,LocalDateTime toDate,String code);
-	BigDecimal findTotalAmount(String societyPaymentCycle, String code);
+    MilkCollectionSummaryData updateMilkCollectionSummaryData(MilkCollectionSummaryData data, String identityHeader);
 
-	List<MilkCollection> findAllCollectionByDockNo(LocalDateTime fromDt, LocalDateTime toDt, String dockNo);
+    List<CollectionImportDto> importCollectionSummaryData(List<MilkCollectionSummaryData> data, String identityHeader);
 
-	MemberWiseCollectionDto findAllInOne(String code, int parseInt, String milktype, LocalDate d, int shiftCode,String paymentCycleCode);
+    List<MilkCollection> findAllCollectionByMember(LocalDateTime fromDt, LocalDateTime toDate, String code);
+
+    BigDecimal findTotalAmount(String societyPaymentCycle, String code);
+
+    List<MilkCollection> findAllCollectionByDockNo(LocalDateTime fromDt, LocalDateTime toDt, String dockNo);
+
+    MemberWiseCollectionDto findAllInOne(String code, int parseInt, String milktype, LocalDate d, int shiftCode, String paymentCycleCode);
 }

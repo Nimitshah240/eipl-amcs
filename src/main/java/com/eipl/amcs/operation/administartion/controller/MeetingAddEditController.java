@@ -12,13 +12,14 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.operation.administartion.dto.MeetingAgenda;
+import com.eipl.amcs.master.account.model.MeetingAgenda;
 import com.eipl.amcs.operation.administartion.task.MeetingAgendaNumberLoadTask;
 import com.eipl.amcs.operation.administartion.task.MeetingAgendaSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -221,13 +222,13 @@ public class MeetingAddEditController implements MyInitialization {
         cboxMeetingType.getSelectionModel().select(0);
         dpDate.setConverter(new LocalDateConvertor());
         dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpDate.setValue(dpDate.getConverter().fromString(dpDate.getEditor().getText()));
             }
         });
         dpMeetingDate.setConverter(new LocalDateConvertor());
         dpMeetingDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpMeetingDate.setValue(dpMeetingDate.getConverter().fromString(dpMeetingDate.getEditor().getText()));
             }
         });

@@ -1,33 +1,33 @@
 package com.eipl.amcs.utils;
 
+import com.eipl.amcs.master.account.model.Tax;
+import com.eipl.amcs.master.account.model.TaxDetail;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.model.TaxDetail;
-
 public class TaxCalculationUtil {
 
-//	private TaxDetailService taxDetailService;
-	Tax tax = null;
-	BigDecimal grossAmount = BigDecimal.valueOf(0);
+    //	private TaxDetailService taxDetailService;
+    Tax tax = null;
+    BigDecimal grossAmount = BigDecimal.valueOf(0);
 
-	public TaxCalculationUtil(Tax tax, BigDecimal grossAmount) {
-		this.tax = tax;
-		this.grossAmount = grossAmount;
+    public TaxCalculationUtil(Tax tax, BigDecimal grossAmount) {
+        this.tax = tax;
+        this.grossAmount = grossAmount;
 //		taxDetailService = SpringBootstrap.getContext().getBean(TaxDetailService.class);
-	}
+    }
 
-	public BigDecimal getGrossAmount() {
-		return grossAmount;
-	}
+    public BigDecimal getGrossAmount() {
+        return grossAmount;
+    }
 
-	public void setGrossAmount(BigDecimal grossAmount) {
-		this.grossAmount = grossAmount;
-	}
+    public void setGrossAmount(BigDecimal grossAmount) {
+        this.grossAmount = grossAmount;
+    }
 
-	public String calculateTaxReverese() {
+    public String calculateTaxReverese() {
 
 //		double originalAmountAddition = 0;
 //		double originalAmountDeduction = 0;
@@ -95,10 +95,10 @@ public class TaxCalculationUtil {
 //			originalAmountDeduction = (grossAmount * 100) / originalAmountDeduction;
 
 //		return String.valueOf(originalAmountAddition - originalAmountDeduction);
-		return "0";
-	}
+        return "0";
+    }
 
-	public String calculateTax() {
+    public String calculateTax() {
 
 //		double taxAmount = 0;
 //		List<TaxDetail> taxDetail = null;
@@ -141,17 +141,17 @@ public class TaxCalculationUtil {
 //			taxAmount = taxAmount + entry.getValue();
 //		}
 //		return MainApp.DECIMAL_FORMAT_3_DIGIT.format(taxAmount - grossAmount);
-		return "0";
-	}
+        return "0";
+    }
 
-	public Map<TaxDetail, Double> calculateTaxWithDetail() {
+    public Map<TaxDetail, Double> calculateTaxWithDetail() {
 
 //		List<TaxDetail> taxDetail = null;
 //
 //		taxDetail = taxDetailService.fetchAllByTax(tax);
 //
 //		Map<Integer, Double> taxes = new HashMap<>();
-		Map<TaxDetail, Double> taxDetailValue = new HashMap<>();
+        Map<TaxDetail, Double> taxDetailValue = new HashMap<>();
 //
 //		taxes.put(1, grossAmount);
 //
@@ -185,7 +185,7 @@ public class TaxCalculationUtil {
 //		}
 //		return taxDetailValue;
 
-		return taxDetailValue;
-	}
+        return taxDetailValue;
+    }
 
 }

@@ -27,13 +27,12 @@ import java.util.Optional;
 @Service
 public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleService {
 
+    @PersistenceContext
+    EntityManager entityManager;
     @Autowired
     private SocietyPaymentCycleRepository societyPaymentCycleRepository;
     @Autowired
     private NextCodeRepository nextCodeRepository;
-
-    @PersistenceContext
-    EntityManager entityManager;
 
     @Override
     public List<SocietyPaymentCycle> findAll() {
@@ -125,7 +124,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
 
     @Override
     public boolean checkDateRangeConflict(String str1, String str2, LocalDateTime fromDate, LocalDateTime toDate) {
-        return societyPaymentCycleRepository.checkDateRangeConflict(str1, str2, fromDate, toDate).size() > 0 ? false : true;
+        return societyPaymentCycleRepository.checkDateRangeConflict(str1, str2, fromDate, toDate).size() <= 0;
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.eipl.amcs.master.geo.model.SubDistrict;
 import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.org.service.BranchService;
+import com.eipl.amcs.master.org.task.BranchLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -22,8 +22,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class BranchController implements MyInitialization {
 
@@ -46,13 +45,6 @@ public class BranchController implements MyInitialization {
     @FXML
     private StackPane root;
     private ResourceBundle resourceBundle;
-
-    private BranchService branchService;
-
-    public BranchController() {
-        branchService = context.getBean(BranchService.class);
-        ;
-    }
 
     @Override
     public Node getRoot() {
@@ -80,19 +72,25 @@ public class BranchController implements MyInitialization {
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
         } catch (Exception e) {
+            System.out.println("Branch setuptable Exception");
             e.printStackTrace();
         }
     }
 
+
     @Override
     public void loadData() {
-        try {
-            List<Branch> list = branchService.findAll();
-            if (list != null)
-                tableBranch.setItems(FXCollections.observableList(list));
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        var task = new BranchLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Branch> list = task.get();
+                if (list != null)
+                    tableBranch.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
 

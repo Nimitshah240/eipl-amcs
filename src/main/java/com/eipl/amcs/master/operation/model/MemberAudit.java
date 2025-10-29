@@ -1,9 +1,17 @@
 package com.eipl.amcs.master.operation.model;
 
 import com.eipl.amcs.base.BaseModelAudit;
+import com.eipl.amcs.deserialize.MemberTypeDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.MemberTypeSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,12 +51,18 @@ public class MemberAudit extends BaseModelAudit {
     private BigDecimal creditLimit;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MilkType milktype;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberTypeSerialize.class)
+    @JsonDeserialize(using = MemberTypeDeserializer.class)
     @JoinColumn(name = "member_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MemberType memberType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Society society;
 

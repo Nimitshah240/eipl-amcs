@@ -14,6 +14,7 @@ public interface ProductRequisitionService {
     List<ProductRequisition> findAll();
 
     ProductRequisitionDto save(ProductRequisitionDto dto, String identityInfo);
+
     ProductRequisition save(ProductRequisition dto, String identityInfo);
 
     ProductRequisitionTransaction save(ProductRequisitionTransaction dto, String identityInfo);

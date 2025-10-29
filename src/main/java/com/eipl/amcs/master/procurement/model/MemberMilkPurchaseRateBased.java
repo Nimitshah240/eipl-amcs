@@ -1,10 +1,20 @@
 package com.eipl.amcs.master.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.deserialize.FormulaDeserializer;
+import com.eipl.amcs.deserialize.MemberMilkPurchaseRateDeserializer;
+import com.eipl.amcs.deserialize.MilkQualityTypeDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Formula;
+import com.eipl.amcs.serialize.FormulaSerialize;
+import com.eipl.amcs.serialize.MemberMilkPurchaseRateSerialize;
+import com.eipl.amcs.serialize.MilkQualityTypeSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,16 +48,24 @@ public class MemberMilkPurchaseRateBased extends BaseModelTxn {
     private int step;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = FormulaSerialize.class)
+    @JsonDeserialize(using = FormulaDeserializer.class)
     @JoinColumn(name = "formula_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_based_formula_code"))
     @JsonIgnoreProperties(value = {"union"})
     private Formula formula;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_based_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkQualityTypeSerialize.class)
+    @JsonDeserialize(using = MilkQualityTypeDeserializer.class)
     @JoinColumn(name = "milk_quality_type_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_based_milk_quality_type_code"))
     private MilkQualityType milkQualityType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberMilkPurchaseRateSerialize.class)
+    @JsonDeserialize(using = MemberMilkPurchaseRateDeserializer.class)
     @JoinColumn(name = "member_milk_purchase_rate_code", foreignKey = @ForeignKey(name = "fk_member_milk_purchase_rate_based_rate_code"))
     private MemberMilkPurchaseRate memberMilkPurchaseRate;
 

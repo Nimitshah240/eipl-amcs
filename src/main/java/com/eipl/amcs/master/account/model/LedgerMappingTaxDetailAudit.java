@@ -1,8 +1,16 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.TaxDetailDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.TaxDetailSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,16 +28,22 @@ public class LedgerMappingTaxDetailAudit extends BaseModelTxnAudit {
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxDetailSerialize.class)
+    @JsonDeserialize(using = TaxDetailDeserializer.class)
     @JoinColumn(name = "tax_detail", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"basicTax", "tax"})
     private TaxDetail taxDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;

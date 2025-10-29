@@ -22,22 +22,19 @@ import java.util.ResourceBundle;
 
 public class SyncDataListController implements MyInitialization {
 
+    private final ObservableList<TableData> tableDataList = FXCollections.observableArrayList();
     @FXML
     private StackPane root;
-
     @FXML
     private TableView<TableData> tablePendingSync;
-
     @FXML
     private TableColumn<TableData, String> colTableName;
-
     @FXML
     private E_Button btnClose;
     @FXML
     private TableColumn<TableData, Integer> colPendingData;
     private Stage stage;
     private PopupCallback callback;
-    private final ObservableList<TableData> tableDataList = FXCollections.observableArrayList();
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -87,15 +84,15 @@ public class SyncDataListController implements MyInitialization {
         new Thread(task).start();
     }
 
+    public void setCallback(PopupCallback callback) {
+        this.callback = callback;
+    }
+
     @Getter
     @AllArgsConstructor
     public static class TableData {
         private final String tableName;
         private final int pendingCount;
-    }
-
-    public void setCallback(PopupCallback callback) {
-        this.callback = callback;
     }
 
 }

@@ -1,9 +1,17 @@
 package com.eipl.amcs.master.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.MilkClassDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.MilkClassSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +41,18 @@ public class LocalMilkSaleRateAudit extends BaseModelTxnAudit {
     private LocalDate wefDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkClassSerialize.class)
+    @JsonDeserialize(using = MilkClassDeserializer.class)
     @JoinColumn(name = "milk_class_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MilkClass milkClass;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Society society;
 

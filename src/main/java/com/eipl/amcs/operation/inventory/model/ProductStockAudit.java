@@ -1,9 +1,15 @@
 package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.ProductDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.ProductSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,30 +27,34 @@ import java.math.BigDecimal;
 @Table(name = "product_stock_audit")
 public class ProductStockAudit extends BaseModelTxnAudit {
 
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Size(max = 15)
-	private String code;
-	@Digits(integer = 7, fraction = 3)
-	private BigDecimal stock;
-	@Size(max = 3)
-	private String unionCode;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = { "conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging" })
-	private Product product;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-	@JsonIgnoreProperties(value = { "branch", "union", "mcc", "bmc", "route", "state", "district", "subDistrict",
-			"village", "hamlet", "bank", "plant" })
-	private Society society;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Size(max = 15)
+    private String code;
+    @Digits(integer = 7, fraction = 3)
+    private BigDecimal stock;
+    @Size(max = 3)
+    private String unionCode;
 
-	@Override
-	public String getTableName() {
-		return "product_stock_audit";
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = ProductSerialize.class)
+    @JsonDeserialize(using = ProductDeserializer.class)
+    @JoinColumn(name = "product_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging"})
+    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
+    @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"branch", "union", "mcc", "bmc", "route", "state", "district", "subDistrict",
+            "village", "hamlet", "bank", "plant"})
+    private Society society;
+
+    @Override
+    public String getTableName() {
+        return "product_stock_audit";
+    }
 
 }

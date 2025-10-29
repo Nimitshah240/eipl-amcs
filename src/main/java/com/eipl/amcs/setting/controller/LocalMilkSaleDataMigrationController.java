@@ -15,18 +15,13 @@ import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.CustomerDetails;
 import com.eipl.amcs.master.operation.model.CustomerDto;
-import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerSaveTask;
-import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleMigrationListSaveTask;
-import com.eipl.amcs.operation.procurement.task.MilkCollectionMigrationListSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -37,17 +32,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.sql.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleDataMigrationController implements MyInitialization {
@@ -59,19 +55,20 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
     TableColumn<LocalMilkSale, Number> colQty, colRate, colAmount;
     @FXML
     TableColumn<LocalMilkSale, LocalDate> colSaleDate;
-    private ResourceBundle resourceBundle;
     @FXML
     TextField txtFilePath;
     @FXML
-    Button btnSave, btnClose,btnBrowse,btnGenerate;
-
+    Button btnSave, btnClose, btnBrowse, btnGenerate;
+    String milkTypeStr = null;
+    List<LocalMilkSale> list = new ArrayList<>();
+    private ResourceBundle resourceBundle;
     private String selectedFilePath = null;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<MilkClass> classList;
     private List<Customer> customerList;
-    String milkTypeStr = null;
     private Stage stage;
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -81,8 +78,6 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
         return root;
     }
 
-    List<LocalMilkSale> list = new ArrayList<>();
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
@@ -90,7 +85,7 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
         btnSave.setOnAction(e -> startImportProcess());
         btnClose.setOnAction(e -> this.stage.close());
         btnGenerate.setOnAction(e -> {
-            loadImportPreReq("SkyWay",txtFilePath.getText());
+            loadImportPreReq("SkyWay", txtFilePath.getText());
         });
         btnBrowse.setOnAction(e -> {
             File file = CommonUtils.openFileDialog("Data");
@@ -153,24 +148,24 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
                                     try {
                                         customerList = new ArrayList<>();
                                         customerList = task3.get();
-                                        if (customerList != null&&!customerList.isEmpty()) {
+                                        if (customerList != null && !customerList.isEmpty()) {
                                             setData(from, path);
                                         } else {
                                             Customer c = new Customer();
-                                            c.setCode(MainApp.identityDto.getSociety().getCode()+"0001");
+                                            c.setCode(MainApp.identityDto.getSociety().getCode() + "0001");
                                             c.setUnion(MainApp.identityDto.getUnion());
                                             c.setSociety(MainApp.identityDto.getSociety());
                                             c.setType(6);
                                             c.setName("Conusmer");
                                             c.setActive(true);
                                             CustomerDetails cd = new CustomerDetails();
-                                            CustomerDto dto = new CustomerDto(c,cd);
-                                            var task5 = new CustomerSaveTask(dto,(short) 0);
-                                            task5.setOnSucceeded(e5->{
+                                            CustomerDto dto = new CustomerDto(c, cd);
+                                            var task5 = new CustomerSaveTask(dto, (short) 0);
+                                            task5.setOnSucceeded(e5 -> {
                                                 var task6 = new CustomerLoadTask();
-                                                task6.setOnSucceeded(e6->{
+                                                task6.setOnSucceeded(e6 -> {
                                                     try {
-                                                        customerList=task6.get();
+                                                        customerList = task6.get();
                                                     } catch (InterruptedException ex) {
                                                         ex.printStackTrace();
                                                     } catch (ExecutionException ex) {
@@ -220,7 +215,7 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
         } else if (type.equalsIgnoreCase("SkyWay")) {
             try {
 //                List<LocalMilkSale> list = new ArrayList<>();
-                List<String> lines = Files.readAllLines(new File(path).toPath(), Charset.forName("UTF-8"));
+                List<String> lines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     String[] arr = line.split(",");
                     LocalMilkSale m = new LocalMilkSale();
@@ -263,8 +258,8 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
                     m.setPaymentMode((short) 0);
                     m.setCash(m.getAmount());
 
-                    m.setQuantityMode((short)0);
-                    m.setConvertedQuantityMode((short)1);
+                    m.setQuantityMode((short) 0);
+                    m.setConvertedQuantityMode((short) 1);
                     m.setConvertedQuantity(CommonUtils.convertQty(AppConstant.CollectionType.LOCAL_SALE, m.getQuantity().toString()));
 
                     m.setCoupon(BigDecimal.ZERO);

@@ -6,7 +6,7 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.service.UnionService;
+import com.eipl.amcs.master.org.task.UnionLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,8 +21,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class UnionController implements MyInitialization {
 
@@ -41,12 +40,6 @@ public class UnionController implements MyInitialization {
     @FXML
     private StackPane root;
     private ResourceBundle resourceBundle;
-
-    private UnionService service;
-
-    public UnionController() {
-        service = context.getBean(UnionService.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -70,6 +63,7 @@ public class UnionController implements MyInitialization {
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
             colRegistrationCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
+
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
@@ -80,19 +74,24 @@ public class UnionController implements MyInitialization {
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
         } catch (Exception e) {
+            System.out.println("Union setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Union> list = service.findAll();
-            if (list != null)
-                tableUnion.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new UnionLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Union> list = task.get();
+                if (list != null)
+                    tableUnion.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
 

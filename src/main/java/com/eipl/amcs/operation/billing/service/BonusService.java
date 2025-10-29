@@ -19,9 +19,9 @@ public interface BonusService {
 
     List<Bonus> loadData(LocalDateTime fromDate, LocalDateTime toDate, Integer milkType);
 
-    Map<String,Object> loadDataBonus(LocalDate fromDate, LocalDate toDate, String memberCode);
+    Map<String, Object> loadDataBonus(LocalDate fromDate, LocalDate toDate, String memberCode);
 
-    List<Map<String, Object>>  loadDataBonusSummary(LocalDate fromDate, LocalDate toDate);
+    List<Map<String, Object>> loadDataBonusSummary(LocalDate fromDate, LocalDate toDate);
 
     BonusDto saveDto(String identityInfo, BonusDto dto, short s);
 

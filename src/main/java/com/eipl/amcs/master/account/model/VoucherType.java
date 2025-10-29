@@ -21,47 +21,47 @@ import javax.validation.constraints.Size;
 @Table(name = "voucher_types")
 public class VoucherType extends BaseModel {
 
-	@Id
-	private Integer code;
-	@Size(max = 100)
-	private String name;
-	@Size(max = 255)
-	private String nameLocal;
+    @Id
+    private Integer code;
+    @Size(max = 100)
+    private String name;
+    @Size(max = 255)
+    private String nameLocal;
 
-	@Override
-	public String getTableName() {
-		return "voucher_types";
-	}
+    @Override
+    public String getTableName() {
+        return "voucher_types";
+    }
 
 
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		VoucherTypeAudit audit = new VoucherTypeAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        VoucherTypeAudit audit = new VoucherTypeAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCode(this.getCode());
-		audit.setName(this.getName());
-		audit.setNameLocal(this.getNameLocal());
+        audit.setCode(this.getCode());
+        audit.setName(this.getName());
+        audit.setNameLocal(this.getNameLocal());
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
 
-		return audit;
-	}
+        return audit;
+    }
 
-	@Override
-	public String toString() {
-		return CommonUtils.getLocalString(this.name, this.nameLocal);
-	}
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 }

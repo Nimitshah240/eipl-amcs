@@ -3,7 +3,7 @@ package com.eipl.amcs.master.geo.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.geo.model.State;
-import com.eipl.amcs.master.geo.service.StateService;
+import com.eipl.amcs.master.geo.task.StateLoadTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -16,8 +16,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class StateController implements MyInitialization {
     @FXML
@@ -31,15 +30,9 @@ public class StateController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private StateService stateService;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public StateController() {
-        stateService = context.getBean(StateService.class);
     }
 
     @Override
@@ -58,18 +51,23 @@ public class StateController implements MyInitialization {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         } catch (Exception e) {
+            System.out.println("State setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<State> list = stateService.findAll();
-            if (list != null)
-                tableStates.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new StateLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<State> list = task.get();
+                if (list != null)
+                    tableStates.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

@@ -1,10 +1,9 @@
 package com.eipl.amcs.utils;
 
-import com.eipl.amcs.MainApp;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Base64;
@@ -19,7 +18,7 @@ public class ActivationUtil {
         try {
             if (message.length() != 0)
                 return Base64.getEncoder()
-                        .encodeToString(encryptDecrypt(Cipher.ENCRYPT_MODE, message.getBytes("UTF-8"), key));
+                        .encodeToString(encryptDecrypt(Cipher.ENCRYPT_MODE, message.getBytes(StandardCharsets.UTF_8), key));
             else
                 return null;
         } catch (Exception e) {
@@ -31,7 +30,7 @@ public class ActivationUtil {
         try {
             if (message.length() != 0)
                 return Base64.getEncoder()
-                        .encodeToString(encryptDecrypt(Cipher.ENCRYPT_MODE, message.getBytes("UTF-8")));
+                        .encodeToString(encryptDecrypt(Cipher.ENCRYPT_MODE, message.getBytes(StandardCharsets.UTF_8)));
             else
                 return null;
         } catch (Exception e) {
@@ -41,7 +40,7 @@ public class ActivationUtil {
 
     public static String decrypt(String message, String... key) {
         try {
-            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message), key), "UTF-8");
+            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message), key), StandardCharsets.UTF_8);
         } catch (Exception e) {
             return message;
         }
@@ -49,7 +48,7 @@ public class ActivationUtil {
 
     public static String decrypt(String message) {
         try {
-            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message)), "UTF-8");
+            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             return message;
         }
@@ -57,7 +56,7 @@ public class ActivationUtil {
 
     public static String decryptDate(String message, String... key) {
         try {
-            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message), key), "UTF-8");
+            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message), key), StandardCharsets.UTF_8);
         } catch (Exception e) {
             return null;
         }
@@ -65,7 +64,7 @@ public class ActivationUtil {
 
     public static String decryptDate(String message) {
         try {
-            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message)), "UTF-8");
+            return new String(encryptDecrypt(Cipher.DECRYPT_MODE, Base64.getDecoder().decode(message)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             return null;
         }
@@ -74,8 +73,8 @@ public class ActivationUtil {
     private static byte[] encryptDecrypt(final int mode, final byte[] message, String... key) throws Exception {
         final Cipher cipher = Cipher.getInstance(algoPadding, "SunJCE");
         final SecretKeySpec keySpec = new SecretKeySpec(
-                key != null && key.length > 0 ? key[0].getBytes("UTF-8") : ActivationUtil.key.getBytes("UTF-8"), algo);
-        final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes("UTF-8"));
+                key != null && key.length > 0 ? key[0].getBytes(StandardCharsets.UTF_8) : ActivationUtil.key.getBytes(StandardCharsets.UTF_8), algo);
+        final IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(StandardCharsets.UTF_8));
         cipher.init(mode, keySpec, ivSpec);
         return cipher.doFinal(message);
     }

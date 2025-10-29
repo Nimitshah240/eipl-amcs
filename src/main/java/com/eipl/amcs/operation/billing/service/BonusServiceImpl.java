@@ -68,15 +68,15 @@ public class BonusServiceImpl implements BonusService {
     }
 
     @Override
-    public Map<String,Object> loadDataBonus(LocalDate fromDate, LocalDate toDate, String memberCode) {
-        Map<String,Object> map = bonusRepository.loadDataBonus(fromDate,toDate,memberCode);
+    public Map<String, Object> loadDataBonus(LocalDate fromDate, LocalDate toDate, String memberCode) {
+        Map<String, Object> map = bonusRepository.loadDataBonus(fromDate, toDate, memberCode);
         return map;
     }
 
     @Override
-    public List<Map<String, Object>>  loadDataBonusSummary(LocalDate fromDate, LocalDate toDate) {
-        List<Map<String, Object>>   map = bonusRepository.loadDataBonusSummary(fromDate,toDate);
-         return map;
+    public List<Map<String, Object>> loadDataBonusSummary(LocalDate fromDate, LocalDate toDate) {
+        List<Map<String, Object>> map = bonusRepository.loadDataBonusSummary(fromDate, toDate);
+        return map;
     }
 
 

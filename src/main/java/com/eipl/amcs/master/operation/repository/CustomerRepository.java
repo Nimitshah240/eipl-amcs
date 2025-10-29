@@ -31,7 +31,7 @@ public interface CustomerRepository extends BaseRepository<Customer, String> {
     Long checkCode(String str);
 
     @EntityGraph(attributePaths = {"union", "society"})
-    public Customer findByCode(String Code);
+    Customer findByCode(String Code);
 
     @Override
     @EntityGraph(attributePaths = {"union", "society"})

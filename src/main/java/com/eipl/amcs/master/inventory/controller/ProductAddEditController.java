@@ -3,22 +3,23 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Tax;
-import com.eipl.amcs.master.account.service.TaxService;
+import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.model.Unit;
-import com.eipl.amcs.master.global.service.UnitService;
+import com.eipl.amcs.master.global.task.UnitLoadTask;
 import com.eipl.amcs.master.inventory.convertor.ProductGroupConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
-import com.eipl.amcs.master.inventory.service.ProductGroupService;
-import com.eipl.amcs.master.inventory.service.ProductService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductNumberLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -33,8 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class ProductAddEditController implements MyInitialization {
     @FXML
@@ -54,21 +54,6 @@ public class ProductAddEditController implements MyInitialization {
     private StringBuilder errorMsg = null;
     private Product dto = null;
     private List<Unit> unitList = new ArrayList<>();
-
-    private ProductService productService;
-    private ProductGroupService productGroupService;
-    private UnitService unitService;
-    private NextCodeService nextCodeService;
-    private TaxService taxService;
-
-
-    public ProductAddEditController() {
-        productService = context.getBean(ProductService.class);
-        productGroupService = context.getBean(ProductGroupService.class);
-        unitService = context.getBean(UnitService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-        taxService = context.getBean(TaxService.class);
-    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -138,15 +123,19 @@ public class ProductAddEditController implements MyInitialization {
     }
 
     private void getNextProductCode() {
-        try {
-            String nextCode = nextCodeService.getNextCode("Product", "code", MainApp.identityDto.getSociety().getCode(), 0);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-            txtCode.setText(nextCode);
-            txtReferenceCode.setText(nextCode.replace(MainApp.identityDto.getSociety().getCode(), ""));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ProductNumberLoadTask(MainApp.identityDto.getSociety().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                String nextCode = task.get();
+                if (nextCode == null || nextCode.isEmpty())
+                    return;
+                txtCode.setText(nextCode);
+                txtReferenceCode.setText(nextCode.replace(MainApp.identityDto.getSociety().getCode(), ""));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private Product setValuesInObject() {
@@ -183,35 +172,64 @@ public class ProductAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        Product product = productService.save(dto, CommonUtil.setIdentityHeader());
-        if (product != null) {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                    resourceBundle.getString("product.insert.successful"));
-            alert.createAlert();
-            this.callback.reloadData(true);
-            this.stage.close();
-        } else {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                    "Fail");
-            alert.createAlert();
-        }
+        var task = new ProductSaveTask(dto, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
 
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                        resourceBundle.getString("product.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            Product product = productService.update(dto, CommonUtil.setIdentityHeader());
-            if (product != null) {
+        var task = new ProductSaveTask(dto, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
                         resourceBundle.getString("product.update.successful"));
                 alert.createAlert();
                 this.callback.reloadData(true);
                 this.stage.close();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -220,37 +238,47 @@ public class ProductAddEditController implements MyInitialization {
         cboxTaxName.setConverter(new TaxConvertor(cboxTaxName));
     }
 
-
     private void loadProductGroup() {
-        try {
-            List<ProductGroup> list = productGroupService.findAll();
-            if (list != null)
-                cboxProductGroup.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new ProductGroupLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<ProductGroup> list = task.get();
+                if (list != null)
+                    cboxProductGroup.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
 
     private void loadUnit() {
-        try {
-            unitList = unitService.findAll();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new UnitLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                unitList = task.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
-
     private void loadTax() {
-        try {
-            List<Tax> list = CommonUtils.getTaxFromDto(taxService.findAll());
-            if (list != null)
-                cboxTaxName.setItems(FXCollections.observableList(list));
-            if (dto == null) {
-                cboxTaxName.getSelectionModel().select(list.stream().filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
+        var task = new TaxLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Tax> list = CommonUtils.getTaxFromDto(task.get());
+                if (list != null)
+                    cboxTaxName.setItems(FXCollections.observableList(list));
+                if (dto == null) {
+                    cboxTaxName.getSelectionModel().select(list.stream().filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 }

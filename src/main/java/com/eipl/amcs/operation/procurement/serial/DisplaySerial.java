@@ -93,8 +93,10 @@ public class DisplaySerial implements SerialPortDataListener {
     }
 
     public void disconnect() {
-        serialPort.removeDataListener();
-        serialPort.closePort();
+        if (serialPort != null) {
+            serialPort.closePort();
+            serialPort.removeDataListener();
+        }
     }
 
     public void resetDisplay() {

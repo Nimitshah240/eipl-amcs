@@ -12,10 +12,15 @@ public class EmcsAppContext {
 
     public static void initializeEmcsAppContext() {
         try {
-            context = new AnnotationConfigApplicationContext(AppConfig.class);
+            System.out.println("---------------------------- Nimit : Starting ---------------------------------------------");
+            context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+            System.out.println("---------------------------- Nimit : Completed ---------------------------------------------");
+
             LOGGER.info("EmcsAppContextInitialization Success");
         } catch (Exception e) {
+            System.out.println("---------------------------- Nimit : Error ---------------------------------------------");
             LOGGER.error("EmcsAppContextInitialization Error", e);
+            System.out.println("---------------------------- Nimit : Error ---------------------------------------------");
         }
     }
 

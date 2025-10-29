@@ -12,10 +12,9 @@ import java.util.List;
 
 @Service
 public class ProductGroupServiceImpl implements ProductGroupService {
+    private static final Logger log = LoggerFactory.getLogger(ProductGroupServiceImpl.class);
     @Autowired
     private ProductGroupRepository productGroupRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(ProductGroupServiceImpl.class);
 
     @Override
     public List<ProductGroup> findAll() {

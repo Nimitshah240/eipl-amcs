@@ -31,7 +31,7 @@ public interface MemberRepository extends BaseRepository<Member, String> {
     Optional<Member> findById(String code);
 
     @EntityGraph(attributePaths = {"milkType", "memberType"})
-    public Member findByCode(String Code);
+    Member findByCode(String Code);
 
     @Query(value = "CALL rpt_member_collection_summary(:p_from_collection_date, :p_to_collection_date, :p_society_code, :p_ltr_kg);", nativeQuery = true)
     List<MemberCollectionSummary> findMemberCollectionReport(@Param("p_from_collection_date") LocalDateTime fromDate,

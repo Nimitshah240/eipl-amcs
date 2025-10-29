@@ -14,7 +14,6 @@ public class IdentityPayload implements Serializable {
     }
 
 
-
     public IdentityPayload() {
     }
 

@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
-import com.eipl.amcs.master.operation.repository.SchemeRateApplicabilityRepository;
+import com.eipl.amcs.master.operation.task.SchemeRateApplicabilityLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,8 +20,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class SchemeRateController implements MyInitialization, PopupCallback {
 
@@ -41,17 +40,19 @@ public class SchemeRateController implements MyInitialization, PopupCallback {
 
     private ResourceBundle resourceBundle;
 
-    private SchemeRateApplicabilityRepository schemeRateApplicabilityRepository;
-
-    public SchemeRateController() {
-        schemeRateApplicabilityRepository = context.getBean(SchemeRateApplicabilityRepository.class);
-    }
-
     @Override
     public Node getRoot() {
         return null;
     }
 
+    /**
+     * Method use to setup data for scheme rate screen.
+     *
+     * @param url
+     * @param resourceBundle
+     * @author Nimit Shah
+     * @createdOn 23-07-2025
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
@@ -62,6 +63,12 @@ public class SchemeRateController implements MyInitialization, PopupCallback {
         setupTable();
     }
 
+    /**
+     * Method use to set table with the data of SchemeRateApplicability.
+     *
+     * @author Nimit Shah
+     * @createdOn 23-07-2025
+     */
     @Override
     public void setupTable() {
         try {
@@ -78,15 +85,25 @@ public class SchemeRateController implements MyInitialization, PopupCallback {
         }
     }
 
+    /**
+     * Method use to call load task to get data of SchemeRateApplicability.
+     *
+     * @author Nimit Shah
+     * @createdOn 23-07-2025
+     */
     @Override
     public void loadData() {
-        try {
-            tableSchemeRateApplicability.setItems(null);
-            List<SchemeRateApplicability> list = schemeRateApplicabilityRepository.findByIsActiveTrue();
-            if (list != null)
-                tableSchemeRateApplicability.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        tableSchemeRateApplicability.setItems(null);
+        var task = new SchemeRateApplicabilityLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<SchemeRateApplicability> list = task.get();
+                if (list != null)
+                    tableSchemeRateApplicability.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

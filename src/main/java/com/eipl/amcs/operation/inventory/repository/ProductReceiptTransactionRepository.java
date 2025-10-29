@@ -13,16 +13,16 @@ import java.util.Optional;
 @Repository
 public interface ProductReceiptTransactionRepository extends BaseRepository<ProductReceiptTransaction, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "productReceipt", "product", "tax", "unit" })
-	Optional<ProductReceiptTransaction> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit"})
+    Optional<ProductReceiptTransaction> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "productReceipt", "product", "tax", "unit" })
-	List<ProductReceiptTransaction> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit"})
+    List<ProductReceiptTransaction> findAll(Sort sort);
 
-	void deleteByProductReceipt(ProductReceipt productReceipt);
+    void deleteByProductReceipt(ProductReceipt productReceipt);
 
-	@EntityGraph(attributePaths = { "productReceipt", "product", "tax", "unit" })
-	List<ProductReceiptTransaction> findByProductReceipt(ProductReceipt productreceipt);
+    @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit"})
+    List<ProductReceiptTransaction> findByProductReceipt(ProductReceipt productreceipt);
 }

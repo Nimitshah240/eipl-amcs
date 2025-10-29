@@ -34,7 +34,7 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose;
+    private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
     private Stage stage;
     private PopupCallback callback;
     @FXML
@@ -44,7 +44,7 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     @FXML
     private ComboBox<String> cboxType;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
 
     private ResourceBundle resourceBundle;
 
@@ -73,15 +73,17 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         this.resourceBundle = resourceBundle;
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
+        dpFromDate1.setValue(LocalDate.now());
+        dpToDate1.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -94,7 +96,9 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         setupComboBox();
 //        cboxStaff.getSelectionModel().select(0);
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
-        btnClose.setOnAction(e -> stage.close());
+        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
+        btnClose1.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
     }
 
     @Override
@@ -195,5 +199,18 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         new Thread(task).start();
     }
 
-
+    private void validateAndGenerateReport1() {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            JasperPrint print = null;
+            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+            params.put("p_from_collection_date", java.sql.Date.valueOf(dpFromDate1.getValue()) + " 06:00:00");
+            params.put("p_to_collection_date", java.sql.Date.valueOf(dpToDate1.getValue()) + " 18:00:00");
+            params.put("p_locale", MainApp.locale);
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE, params);
+            JasperViewer.viewReport(print, false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

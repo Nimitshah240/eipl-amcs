@@ -2,8 +2,16 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.TaxDetailDeserializer;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.TaxDetailSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,16 +29,22 @@ public class LedgerMappingTaxDetail extends BaseModelTxn {
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxDetailSerialize.class)
+    @JsonDeserialize(using = TaxDetailDeserializer.class)
     @JoinColumn(name = "tax_detail", foreignKey = @ForeignKey(name = "fk_tax_detail_ledger_mapping_tax_detail_code"))
     @JsonIgnoreProperties(value = {"basicTax", "tax"})
     private TaxDetail taxDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_tax_detail_ledger_mapping_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_tax_detail_ledger_mapping_ledger_code"))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;

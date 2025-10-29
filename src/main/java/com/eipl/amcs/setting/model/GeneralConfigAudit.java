@@ -19,9 +19,9 @@ public class GeneralConfigAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Size(max = 10)
+    @Size(max = 25)
     private String code;
-    @Column(name="json_key")
+    @Column(name = "json_key")
     private String key;
     private String value;
 

@@ -33,6 +33,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.client;
+
 public class ActivationController implements MyInitialization {
 
     @FXML
@@ -51,6 +53,9 @@ public class ActivationController implements MyInitialization {
     private StringBuilder errorMsg;
     private String union, society, dock, activationKey, sampleNo;
     private boolean flag = false;
+    private boolean societyCheckFlag = false;
+    private boolean dockCheckFlag = false;
+    private boolean validateCheckFlag = false;
 
     @Override
     public Node getRoot() {
@@ -65,7 +70,8 @@ public class ActivationController implements MyInitialization {
 //        txtSystemId.setText(SystemUtils.getSystemMAC());
 
         btnActivate.setOnAction(e -> {
-            if (txtDock.getText().substring(8, 9).equalsIgnoreCase("1"))
+            setFlag();
+            if (validateCheckFlag)
                 validateAndMakeFile();
             else {
                 errorMsg = new StringBuilder();
@@ -77,14 +83,14 @@ public class ActivationController implements MyInitialization {
                 }
 
                 this.union = txtUnion.getText();
-                if (txtSociety.getText().length() != 7) {
+                if (!societyCheckFlag) {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                             "Please Enter Valid Society No.");
                     alert.createAlert();
                     return;
                 }
                 this.society = txtSociety.getText();
-                if (txtDock.getText().length() != 9) {
+                if (!dockCheckFlag) {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                             "Please Enter Valid Dock No.");
                     alert.createAlert();
@@ -100,8 +106,10 @@ public class ActivationController implements MyInitialization {
             }
         });
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (txtDock.getText().length() == 9) {
-                if (!newValue.substring(8, 9).equalsIgnoreCase("1")) {
+            setFlag();
+            if (dockCheckFlag) {
+//                System.out.println(newValue.substring(8, 9));
+                if (!validateCheckFlag) {
                     lblSampleNo.setText("Server Details");
                     txtCowRange.setDisable(true);
                     txtBuffRange.setDisable(true);
@@ -124,6 +132,7 @@ public class ActivationController implements MyInitialization {
         }
         if (prop != null && !prop.isEmpty()) {
             prop.forEach((k, v) -> properties1.put(k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
+//            prop.forEach((k, v) -> mapProp.put((String) k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
         }
         saveData();
     }
@@ -136,6 +145,8 @@ public class ActivationController implements MyInitialization {
             GeneralConfig generalConfig = new GeneralConfig();
             generalConfig.setKey((String) k);
             generalConfig.setValue((String) v);
+//          generalConfig.setSociety(MainApp.identityDto.getSociety());
+
             list.add(generalConfig);
         });
         var task = new GeneralConfigSaveTask(list);
@@ -170,15 +181,16 @@ public class ActivationController implements MyInitialization {
             return;
         }
 
+        setFlag();
         this.union = txtUnion.getText();
-        if (txtSociety.getText().length() != 7) {
+        if (!societyCheckFlag) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                     "Please Enter Valid Society No.");
             alert.createAlert();
             return;
         }
         this.society = txtSociety.getText();
-        if (txtDock.getText().length() != 9) {
+        if (!dockCheckFlag) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                     "Please Enter Valid Dock No.");
             alert.createAlert();
@@ -189,7 +201,43 @@ public class ActivationController implements MyInitialization {
         makeFile();
         createMembers();
 
+
+//        this.activationKey = txtActivation.getText();
+//        if (this.activationKey.equalsIgnoreCase(appKeyGenerator())) {
+//            makeFile();
+//
+//            if (this.flag) {
+//                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+//                        resourceBundle.getString("activation.success"));
+//                Optional<ButtonType> resp = alert.createConfirmationAlert();
+//                if (resp.isPresent() && resp.get() == ButtonType.OK) {
+//                    System.exit(0);
+//                }
+//            }
+//        } else {
+//            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+//                    resourceBundle.getString("activationkeyfail"));
+//            alert.createAlert();
+//            return;
+//        }
+
     }
+
+//    private void checkMembers() {
+//        var task = new MemberCodeLoadTask(txtServerDetail.getText(), this.society);
+//        task.setOnSucceeded(e -> {
+//            try {
+//                String resp = task.get();
+//                if (resp == null || resp.isEmpty() || resp.endsWith("0001"))
+//                    createMembers();
+//                else
+//                    confirmAndClose();
+//            } catch (InterruptedException | ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task).start();
+//    }
 
     private void createMembers() {
         if (txtCowRange.getText() == null || txtCowRange.getText().isEmpty() ||
@@ -231,6 +279,10 @@ public class ActivationController implements MyInitialization {
                             resourceBundle.getString("activation.success"));
                     alert.createAlert();
                     Platform.exit();
+//                    Optional<ButtonType> resp = alert.createConfirmationAlert();
+//                    if (resp.isPresent() && resp.get() == ButtonType.OK) {
+//                        Platform.exit();
+//                    }
                 });
                 new Thread(task1).start();
             } catch (Exception exception) {
@@ -242,6 +294,12 @@ public class ActivationController implements MyInitialization {
 
     private void confirmAndClose() {
         callApi();
+//        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+//                resourceBundle.getString("activation.success"));
+//        Optional<ButtonType> resp = alert.createConfirmationAlert();
+//        if (resp.isPresent() && resp.get() == ButtonType.OK) {
+//            Platform.exit();
+//        }
     }
 
     private void makeFile() {
@@ -249,6 +307,7 @@ public class ActivationController implements MyInitialization {
             File appProperties = new File("resources/app.properties");
             if (appProperties.createNewFile()) {
                 Files.write(appProperties.toPath(), writeAppProperty(), Charset.forName("UTF-8"));
+                System.out.println("Created app.properties");
                 loadProperties();
                 this.flag = true;
             }
@@ -269,6 +328,14 @@ public class ActivationController implements MyInitialization {
         if (txtDock.getText().trim() == null || !CommonUtils.isNumeric(txtDock.getText().trim())) {
             errorMsg.append(resourceBundle.getString("docknullerror") + "\n");
         }
+//        if(txtActivation.getText().trim()==null){
+//            errorMsg.append(resourceBundle.getString("addkey") + "\n");
+//        }
+//        if(txtSampleMilkNo.getText().trim()==null ){
+//            errorMsg.append(resourceBundle.getString("mobilenonullerror"));
+//        }
+
+
         return errorMsg.length() == 0;
 
     }
@@ -277,11 +344,12 @@ public class ActivationController implements MyInitialization {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(txtServerDetail.getText().getBytes(StandardCharsets.UTF_8))));
 //        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("https://amulamcs.yamatech.app/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
+//        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://jaipurduss.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
         lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://amulamcsuat.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
 //        lines.add("baseurl=" + new String(Base64.getEncoder().encode("http://192.168.3.171:8080/eipl-amcs/".getBytes())));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
-        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati".getBytes(StandardCharsets.UTF_8))));
+        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
         lines.add("#Identity details");
         lines.add("identity.union=" + new String(Base64.getEncoder().encode(union.getBytes())));
         lines.add("identity.society=" + new String(Base64.getEncoder().encode(society.getBytes())));
@@ -328,7 +396,9 @@ public class ActivationController implements MyInitialization {
         lines.add("#0-actual amount, 1-decimal truncate");
         lines.add("payment.option=" + new String(Base64.getEncoder().encode("0".getBytes())));
 
-        lines.add("slip.language=" + new String(Base64.getEncoder().encode("en".getBytes())));
+        lines.add("slip.language=" + new String(Base64.getEncoder().encode("English".getBytes())));
+        lines.add("application.language=" + new String(Base64.getEncoder().encode("Hindi".getBytes())));
+
 //        lines.add("backuppath=" + new String(Base64.getEncoder().encode(("").getBytes())));
 //        lines.add("backuppath=" + new String(Base64.getEncoder().encode(("D:\\backup").getBytes())));
         File file = new File("D:");
@@ -386,11 +456,32 @@ public class ActivationController implements MyInitialization {
             if (resultForKeyGen != null)
                 resultForKeyGen = resultForKeyGen.substring(resultForKeyGen.length() - 16);
             resultForKeyGen = resultForKeyGen.replaceAll("[^a-zA-Z0-9]", "");
+            System.out.println(resultForKeyGen);
             return resultForKeyGen.toUpperCase();
 //            }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    private void setFlag() {
+        try {
+            switch (client) {
+                case "AMUL":
+                    validateCheckFlag = txtDock.getText().length() >= 9 && txtDock.getText().substring(8, 9).equalsIgnoreCase("1");
+                    societyCheckFlag = txtSociety.getText().length() == 7;
+                    dockCheckFlag = txtDock.getText().length() == 9;
+                    break;
+                case "JAIPURDUSS":
+                    validateCheckFlag = txtDock.getText().length() >= 12 && txtDock.getText().substring(11, 12).equalsIgnoreCase("1");
+                    societyCheckFlag = txtSociety.getText().length() == 10;
+                    dockCheckFlag = txtDock.getText().length() == 12;
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("error : " + e);
+            throw new RuntimeException(e);
         }
     }
 }

@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductReceiptService {
-	List<ProductReceipt> findAll(LocalDate fromDt, LocalDate toDt);
+    List<ProductReceipt> findAll(LocalDate fromDt, LocalDate toDt);
 
-	ProductReceiptDto save(ProductReceiptDto productReceiptDto, String identityInfo);
+    ProductReceiptDto save(ProductReceiptDto productReceiptDto, String identityInfo);
 
-	ProductReceiptDto update(ProductReceiptDto productReceiptDto, String identityInfo);
+    ProductReceiptDto update(ProductReceiptDto productReceiptDto, String identityInfo);
 
-	Optional<ProductReceipt> findById(String grnNo);
+    Optional<ProductReceipt> findById(String grnNo);
 
-	void delete(String grnNo, String identityInfo);
+    void delete(String grnNo, String identityInfo);
 
-	void delete(ProductReceipt productReceipt, String identityInfo);
+    void delete(ProductReceipt productReceipt, String identityInfo);
 }

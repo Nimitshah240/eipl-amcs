@@ -21,9 +21,9 @@ import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import com.eipl.amcs.master.procurement.task.MemberMilkPurchaseRateLoadTask;
 import com.eipl.amcs.operation.procurement.convertor.MemberMilkPurchaseRateConvertor;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
 import com.eipl.amcs.operation.procurement.dto.MilkRateAndDetailsDto;
+import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -46,6 +46,12 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class RateRecalculateController implements MyInitialization, PopupCallback {
+    protected final int SCALE = 2;
+    protected final RoundingMode ROUND = RoundingMode.HALF_UP;
+    protected Map<String, BigDecimal> mapRateDetails;
+    protected MemberMilkPurchaseRate memberMilkPurchaseRate;
+    protected MilkCollectionPreReqDto collectionPreReqDto;
+    protected List<MemberMilkPurchaseRateBased> memberRateBasedList;
     @FXML
     StackPane root;
     @FXML
@@ -59,27 +65,22 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
     @FXML
     TableColumn<MilkCollection, LocalDate> colDate;
     @FXML
-    private ComboBox<MemberMilkPurchaseRate> cboxRateChart;
-    @FXML
     TableColumn<MilkCollection, String> colMemberName;
-    private ResourceBundle resourceBundle;
     @FXML
     DatePicker dpFromDate, dpToDate;
     @FXML
     ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
     Button btnSearch, btnRecalculate, btnSubmit, btnClose;
-    protected Map<String, BigDecimal> mapRateDetails;
+    int index = 0;
+    String mapKey = null;
+    @FXML
+    private ComboBox<MemberMilkPurchaseRate> cboxRateChart;
+    private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<Member> memberList;
     private List<MilkCollection> listMilkCollection;
-    protected MemberMilkPurchaseRate memberMilkPurchaseRate;
-    protected final int SCALE = 2;
-    int index = 0;
-    protected final RoundingMode ROUND = RoundingMode.HALF_UP;
-    protected MilkCollectionPreReqDto collectionPreReqDto;
-    protected List<MemberMilkPurchaseRateBased> memberRateBasedList;
 
     @Override
     public Node getRoot() {
@@ -114,7 +115,6 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
         startImportProcess();
     }
 
-
     private void calculateData() {
         for (MilkCollection milkCollection : listMilkCollection) {
             milkCollection.setNewRate(new BigDecimal(fetchRate(milkCollection.getFat().toString(), milkCollection.getSnf().toString(),
@@ -126,20 +126,17 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
         tableCollection.refresh();
     }
 
-
     protected String calculateAmount(String rate, String qty) {
         mapKey = null;
         return new BigDecimal(rate).multiply(new BigDecimal(qty)).setScale(SCALE, ROUND).toString();
     }
-
-    String mapKey = null;
 
     protected String fetchRate(String fat, String snf, MilkType milkType, MilkQualityType milkQualityType) {
 //        if (!fat.isEmpty() && !snf.isEmpty() && milkType != null && milkQualityType != null) {
         BigDecimal snfVal = null;
         if (memberMilkPurchaseRate.getRateType().getCode().intValue() == 1) {
             snfVal = new BigDecimal(0).setScale(SCALE, ROUND);
-        }else if (memberMilkPurchaseRate.getRateType().getCode().intValue() == 2) {
+        } else if (memberMilkPurchaseRate.getRateType().getCode().intValue() == 2) {
             snfVal = new BigDecimal(snf).setScale(SCALE, ROUND);
         }
         if (milkQualityType != null) {
@@ -227,17 +224,16 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
                     alert.createAlert();
                     return;
                 }
-                StringBuilder builder = new StringBuilder();
-                builder.append("Import success: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-                builder.append("\n");
-                builder.append("Import fail: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-                builder.append("\n");
+                String builder = "Import success: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count() +
+                        "\n" +
+                        "Import fail: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count() +
+                        "\n";
 
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"),
-                        builder.toString());
+                        builder);
                 alert.createAlert();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

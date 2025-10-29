@@ -12,10 +12,9 @@ import java.util.List;
 @Service
 public class GenderServiceImpl implements GenderService {
 
+    private static final Logger log = LoggerFactory.getLogger(GenderServiceImpl.class);
     @Autowired
     private GenderRepository genderRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(GenderServiceImpl.class);
 
     @Override
     public List<Gender> findAll() {

@@ -11,6 +11,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,11 +28,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class SkywayMilkCollectionDbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public SkywayMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath,
                                           String cowRange, String buffRange) {
@@ -69,7 +70,7 @@ public class SkywayMilkCollectionDbSaveTask extends Task<Boolean> {
             final AtomicInteger temp = new AtomicInteger(0);
             List<Map<String, Object>> mapCollection = new ArrayList<>();
             AtomicInteger i = new AtomicInteger(1);
-            try (Stream<String> lines = Files.lines(new File(filePath).toPath(), Charset.forName("UTF-8"))) {
+            try (Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
                 lines.forEach(line -> {
                     Map<String, Object> map = new HashMap<>();
                     String[] arr = line.split(",");
@@ -146,7 +147,7 @@ public class SkywayMilkCollectionDbSaveTask extends Task<Boolean> {
             for (Map<String, Object> map : listTemp) {
                 pstmt.setString(1, map.get("code").toString());
                 pstmt.setInt(2, (int) map.get("sampleno"));
-                pstmt.setObject(3, (LocalDateTime) map.get("collectiondate"));
+                pstmt.setObject(3, map.get("collectiondate"));
                 pstmt.setBigDecimal(4, (BigDecimal) map.get("fat"));
                 pstmt.setBigDecimal(5, (BigDecimal) map.get("snf"));
                 pstmt.setBigDecimal(6, BigDecimal.ZERO);

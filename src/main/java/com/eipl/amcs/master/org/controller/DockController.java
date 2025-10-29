@@ -8,10 +8,9 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
-import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.service.DockService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.org.task.DockDeleteTask;
+import com.eipl.amcs.master.org.task.DockLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,11 +27,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class DockController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<DockMilkTypeDto> propDockMilkTypeDto;
     @FXML
     TableView<DockMilkTypeDto> tableDock;
     @FXML
@@ -44,13 +43,9 @@ public class DockController implements MyInitialization, PopupCallback {
     @FXML
     private StackPane root;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<DockMilkTypeDto> propDockMilkTypeDto;
-
-    private DockService dockService;
 
     public DockController() {
         propDockMilkTypeDto = new SimpleObjectProperty<>();
-        dockService = context.getBean(DockService.class);
     }
 
     @Override
@@ -104,19 +99,24 @@ public class DockController implements MyInitialization, PopupCallback {
 
             propDockMilkTypeDto.bind(tableDock.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
+            System.out.println("Dock setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<DockMilkTypeDto> list = dockService.findAll();
-            if (list != null)
-                tableDock.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new DockLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<DockMilkTypeDto> list = task.get();
+                if (list != null)
+                    tableDock.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -127,18 +127,22 @@ public class DockController implements MyInitialization, PopupCallback {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             DockMilkTypeDto dto = propDockMilkTypeDto.get();
             if (dto != null) {
-                try {
-                    Optional<Dock> dockData = dockService.findById(dto.getDock().getDockNo());
-                    if (dockData == null || !dockData.isPresent())
-                        return;
-                    dockService.delete(dockData.get(), CommonUtil.setIdentityHeader());
-                    loadData();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
-                            resourceBundle.getString("error.occurred"));
-                    alert1.createAlert();
-                }
+                var task = new DockDeleteTask(dto.getDock().getDockNo());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || !respDelete.booleanValue()) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
         }
     }

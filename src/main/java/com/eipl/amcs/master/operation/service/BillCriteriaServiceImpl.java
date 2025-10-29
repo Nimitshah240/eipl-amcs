@@ -15,10 +15,9 @@ import java.util.Optional;
 
 @Service
 public class BillCriteriaServiceImpl implements BillCriteriaService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BillCriteriaController.class);
     @Autowired
     private BillCriteriaRepository repository;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BillCriteriaController.class);
 
     @Override
     public List<BillCriteria> findAll() {

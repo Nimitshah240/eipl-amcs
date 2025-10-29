@@ -56,15 +56,14 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     @FXML
     private ToggleGroup paymentMode;
 
-    private ObjectProperty<MemberBillSummary> propSummary;
+    private final ObjectProperty<MemberBillSummary> propSummary;
 
     private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg;
 
     public MemberBillSummaryController() {
         propSummary = new SimpleObjectProperty<>();
     }
-
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -158,6 +157,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     }
 
 //        else {
+
     ///            if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_ADD"))
     ///                throw new UnAuthorizedAccessException();
 //            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BankReportPopup", null, this);

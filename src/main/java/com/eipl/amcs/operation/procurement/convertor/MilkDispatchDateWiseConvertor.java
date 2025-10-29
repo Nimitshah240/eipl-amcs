@@ -14,10 +14,10 @@ public class MilkDispatchDateWiseConvertor extends StringConverter<MilkDispatch>
 
     @Override
     public String toString(MilkDispatch Unit) {
-        if (Unit == null || Unit.getFromDate() ==null || Unit.getToDate() ==null || Unit.getFromShift() ==null || Unit.getToShift()==null)
+        if (Unit == null || Unit.getFromDate() == null || Unit.getToDate() == null || Unit.getFromShift() == null || Unit.getToShift() == null)
             return null;
-        return Unit.getFromDate().toLocalDate()+"-"+Unit.getFromShift().getName().substring(0,1)+" "+
-                Unit.getToDate().toLocalDate()+"-"+Unit.getToShift().getName().substring(0,1);
+        return Unit.getFromDate().toLocalDate() + "-" + Unit.getFromShift().getName().charAt(0) + " " +
+                Unit.getToDate().toLocalDate() + "-" + Unit.getToShift().getName().charAt(0);
     }
 
     @Override

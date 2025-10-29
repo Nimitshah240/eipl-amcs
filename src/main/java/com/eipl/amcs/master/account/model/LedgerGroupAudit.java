@@ -1,6 +1,12 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelAudit;
+import com.eipl.amcs.deserialize.LedgerTypeDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.serialize.LedgerTypeSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +30,8 @@ public class LedgerGroupAudit extends BaseModelAudit {
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerTypeSerialize.class)
+    @JsonDeserialize(using = LedgerTypeDeserializer.class)
     @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private LedgerType ledgerType;
 

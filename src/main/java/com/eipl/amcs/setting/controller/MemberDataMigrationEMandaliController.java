@@ -11,14 +11,11 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MemberTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
+import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.task.MemberListSaveTask;
 import com.eipl.amcs.setting.task.EMandaliMemberDbProcess;
-import com.eipl.amcs.setting.task.EMandaliMemberFileProcess;
-import com.eipl.amcs.setting.task.FriendsMemberFileProcess;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -27,7 +24,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -43,17 +39,17 @@ public class MemberDataMigrationEMandaliController implements MyInitialization {
     @FXML
     private Button btnSave, btnClose, btnGenerate;
     @FXML
-    private TextField txtCow, txtBuffalo,txtdatabase;
+    private TextField txtCow, txtBuffalo, txtdatabase;
     @FXML
     private Label lblStatus;
 
     private Stage stage;
     private ResourceBundle resourceBundle;
     private List<MemberDto> listDto = new ArrayList<>();
-    private Map<String, MilkType> mapMilkType = new HashMap<>();
-    private Map<String, Gender> mapGender = new HashMap<>();
+    private final Map<String, MilkType> mapMilkType = new HashMap<>();
+    private final Map<String, Gender> mapGender = new HashMap<>();
     private MemberType memberType;
-    private String selectedFilePath = null;
+    private final String selectedFilePath = null;
 
 
     public MemberDataMigrationEMandaliController() {
@@ -85,7 +81,7 @@ public class MemberDataMigrationEMandaliController implements MyInitialization {
 //            if (txtFilePath.getText().endsWith(".txt"))
 //                startFileProcess();
 //            else if (txtFilePath.getText().endsWith(".mdb"))
-                startAccessDbProcess();
+            startAccessDbProcess();
         });
 //        btnBrowse.setOnAction(e -> {
 //            File file = CommonUtils.openFileDialog("Data");
@@ -303,7 +299,7 @@ public class MemberDataMigrationEMandaliController implements MyInitialization {
     private void startAccessDbProcess() {
         lblStatus.setText("Preparing data...");
         var task = new EMandaliMemberDbProcess(mapMilkType, mapGender, memberType,
-                txtCow.getText(), txtBuffalo.getText(),txtdatabase.getText());
+                txtCow.getText(), txtBuffalo.getText(), txtdatabase.getText());
         task.setOnSucceeded(e -> {
             lblStatus.setText("");
             try {

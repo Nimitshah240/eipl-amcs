@@ -10,8 +10,8 @@ import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
 public class LoginTask extends Task<Object> {
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     public LoginTask(String username, String password) {
         this.username = username;

@@ -3,12 +3,12 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.service.CustomerService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.operation.task.CustomerDeleteTask;
+import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,11 +26,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class CustomerController implements MyInitialization {
 
+    private final ObjectProperty<Customer> propCustomer;
     @FXML
     AnchorPane root;
     @FXML
@@ -39,22 +39,15 @@ public class CustomerController implements MyInitialization {
     TableColumn<Customer, String> colCode, colName, colLocalName, colMobileNo, colStatus, colType;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
+    private ResourceBundle resourceBundle;
 
-    private CustomerService service;
-    private NextCodeService nextCodeService;
+    public CustomerController() {
+        propCustomer = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    private ResourceBundle resourceBundle;
-    private ObjectProperty<Customer> propCustomer;
-
-    public CustomerController() {
-        service = context.getBean(CustomerService.class);
-        nextCodeService = context.getBean(NextCodeService.class);
-        propCustomer = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -105,24 +98,31 @@ public class CustomerController implements MyInitialization {
             colType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getType().shortValue())));
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+//        colType.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()==3?"Customer":data.getValue().getType()==4?"Institute":"Consumer"));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
             colMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMobileNo()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
             propCustomer.bind(tableCustomer.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
+            System.out.println("BillCriteria setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            tableCustomer.setItems(null);
-            List<Customer> list = service.findAllBySociety(MainApp.identityDto.getSociety().getCode());
-            if (list != null) tableCustomer.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        tableCustomer.setItems(null);
+        CustomerLoadTask task = new CustomerLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Customer> list = task.get();
+                if (list != null)
+                    tableCustomer.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -133,11 +133,22 @@ public class CustomerController implements MyInitialization {
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             Customer dto = propCustomer.get();
             if (dto != null) {
-                Optional<Customer> customerData = service.findById(dto.getCode());
-                if (customerData != null || customerData.isPresent()) {
-                    service.delete(customerData.get().getCode(), CommonUtil.setIdentityHeader());
-                    loadData();
-                }
+                var task = new CustomerDeleteTask(dto.getCode());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || !respDelete.booleanValue()) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
         }
     }

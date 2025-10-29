@@ -22,6 +22,7 @@ import java.util.Optional;
 @Service
 public class SubLedgerServiceImpl implements SubLedgerService {
 
+    private static final Logger log = LoggerFactory.getLogger(SubLedgerServiceImpl.class);
     @Autowired
     private LedgerRepository ledgerRepository;
     @Autowired
@@ -30,9 +31,6 @@ public class SubLedgerServiceImpl implements SubLedgerService {
     private SocietyRepository societyRepository;
     @Autowired
     private LedgerSubLedgerMappingRepository ledgerSubLedgerMappingRepository;
-
-
-    private static final Logger log = LoggerFactory.getLogger(SubLedgerServiceImpl.class);
 
     @Override
     public List<SubLedger> findAll() {

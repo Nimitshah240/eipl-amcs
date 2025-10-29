@@ -1,22 +1,18 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.dto.MilkReceiptDto;
+import com.eipl.amcs.operation.procurement.model.MilkReceipt;
+import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
+import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 public class MilkReceiptSaveTask extends Task<Object> {
 
-    private MilkReceiptDto dto;
-    private short update;
+    private final MilkReceiptDto dto;
+    private final short update;
 
     public MilkReceiptSaveTask(MilkReceiptDto dto, short update) {
         this.dto = dto;
@@ -26,16 +22,26 @@ public class MilkReceiptSaveTask extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT+"/a";
+            MilkReceiptService service = EmcsAppContext.getContext().getBean(MilkReceiptService.class);
+            MilkReceipt dtoResult;
 
-            ResponseEntity<MilkReceiptDto> response = this.update == 0 ?
-                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MilkReceiptDto.class) :
-                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MilkReceiptDto.class);
+            if (this.update == 0) {
+                dtoResult = service.save(dto, CommonUtil.setIdentityHeader());
+            } else {
+                dtoResult = service.update(dto, CommonUtil.setIdentityHeader());
+            }
+            return dtoResult;
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT+"/a";
+//
+//            ResponseEntity<MilkReceiptDto> response = this.update == 0 ?
+//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MilkReceiptDto.class) :
+//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MilkReceiptDto.class);
+//
+//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
+//                return null;
+//            return response.getBody();
 
-            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-                return null;
-            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

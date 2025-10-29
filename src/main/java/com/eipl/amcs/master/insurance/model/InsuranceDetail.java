@@ -20,6 +20,7 @@ import java.time.LocalDate;
 @Table(name = "insurance_detail")
 public class InsuranceDetail extends BaseModelTxn {
 
+    protected String xCol1;
     @Id
     private String insuranceDetailCode;
     private Integer insuranceMasterCode;
@@ -48,7 +49,6 @@ public class InsuranceDetail extends BaseModelTxn {
     private Integer originatingType;
     private String xCol4;
     private String xCol5;
-    protected String xCol1;
     private String sysUpdatedBy;
 
     @Override

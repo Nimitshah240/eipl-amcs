@@ -11,9 +11,9 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MemberTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
+import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDto;
-import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.task.MemberListSaveTask;
 import com.eipl.amcs.setting.task.SkyWayVersionOneMemberFileProcess;
 import com.eipl.amcs.setting.task.SkyWayVersionTwoMemberFileProcess;
@@ -60,8 +60,8 @@ public class MemberDataMigrationSkyWayController implements MyInitialization {
     private Stage stage;
     private ResourceBundle resourceBundle;
     private List<MemberDto> listDto = new ArrayList<>();
-    private Map<String, MilkType> mapMilkType = new HashMap<>();
-    private Map<String, Gender> mapGender = new HashMap<>();
+    private final Map<String, MilkType> mapMilkType = new HashMap<>();
+    private final Map<String, Gender> mapGender = new HashMap<>();
     private MemberType memberType;
     private String selectedFilePath = null;
 

@@ -56,15 +56,15 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
     private Button btnAdd, btnEdit, btnDelete, btnClose, btnDispatchNote;
 
     private ResourceBundle resourceBundle;
-    private ObjectProperty<MilkDispatch> propMilkDispatch;
+    private final ObjectProperty<MilkDispatch> propMilkDispatch;
+
+    public MilkDispatchController() {
+        propMilkDispatch = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public MilkDispatchController() {
-        propMilkDispatch = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -108,7 +108,8 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
         });
 
         btnDispatchNote.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkDispatchReportPopup", propMilkDispatch.get(), this);}
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkDispatchReportPopup", propMilkDispatch.get(), this);
+                }
         );
     }
 

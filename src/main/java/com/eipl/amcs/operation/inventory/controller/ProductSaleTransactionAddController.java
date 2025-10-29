@@ -40,6 +40,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ProductSaleTransactionAddController implements MyInitialization {
+    private final int SCALE = 2;
+    private final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
     @FXML
     private StackPane root;
     @FXML
@@ -52,18 +54,14 @@ public class ProductSaleTransactionAddController implements MyInitialization {
     private E_NumericField txtRate, txtQuantity, txtAmount, txtDiscount, txtTaxAmount, txtCurrentStock, txtNetAmount;
     @FXML
     private Button btnSaveUpdate, btnClose;
-
     private SaleTxnDto saleTxnDto;
     private ProductStock productStock = null;
-
     private Stage stage;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private PopupCallback callback;
     private Map<TaxDetail, BigDecimal> taxBifurcation = null;
-
-    private final int SCALE = 2;
-    private final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
+    private SaleTxnTaxDto saleTxnTaxDto;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -89,14 +87,12 @@ public class ProductSaleTransactionAddController implements MyInitialization {
                         "Data Not Available!");
                 alert.createAlert();
                 stage.close();
-                return;
             }
         } catch (Exception e) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), "Product",
                     "Data Not Available!");
             alert.createAlert();
             stage.close();
-            return;
         }
     }
 
@@ -158,8 +154,6 @@ public class ProductSaleTransactionAddController implements MyInitialization {
 //        cboxUnit.setConverter(new UnitConvertor(cboxUnit));
         cboxTaxCode.setConverter(new TaxConvertor(cboxTaxCode));
     }
-
-    private SaleTxnTaxDto saleTxnTaxDto;
 
     private void validateAndSave() {
         errorMsg = new StringBuilder();

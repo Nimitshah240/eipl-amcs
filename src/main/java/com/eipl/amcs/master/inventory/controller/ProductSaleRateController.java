@@ -5,15 +5,15 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
-import com.eipl.amcs.master.inventory.service.ProductSaleRateService;
-import com.eipl.amcs.master.inventory.service.ProductService;
+import com.eipl.amcs.master.inventory.task.ProductSaleRateDeleteTask;
+import com.eipl.amcs.master.inventory.task.ProductSaleRateLoadTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,11 +31,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class ProductSaleRateController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<ProductSaleRate> propSaleRateDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -54,18 +54,12 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
     TableColumn<ProductSaleRate, Union> colUnion;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<ProductSaleRate> propSaleRateDto;
-
-    private ProductSaleRateService productSaleRateService;
-    private ProductService productService;
 
     public ProductSaleRateController() {
-        productService = context.getBean(ProductService.class);
         propSaleRateDto = new SimpleObjectProperty<>();
-        productSaleRateService = context.getBean(ProductSaleRateService.class);
     }
+
 
     @Override
     public Node getRoot() {
@@ -116,8 +110,10 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
             colSecretaryCommissionRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSecretaryCommissionRate()));
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate()));
             colWefDate.setCellFactory(new LocalDateCellFactory<>());
+
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             propSaleRateDto.bind(tableProductSaleRate.getSelectionModel().selectedItemProperty());
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -126,33 +122,44 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
     @Override
     public void loadData() {
         tableProductSaleRate.setItems(null);
-        try {
-            List<ProductSaleRate> list = productSaleRateService.findAll();
-            if (list != null)
-                tableProductSaleRate.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ProductSaleRateLoadTask task = new ProductSaleRateLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<ProductSaleRate> list = task.get();
+                if (list != null)
+                    tableProductSaleRate.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void deleteData() {
-        try {
-            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
-                    resourceBundle.getString("alert.delete"));
-            Optional<ButtonType> resp = alert.createConfirmationAlert();
-            if (resp.isPresent() && resp.get() == ButtonType.OK) {
-                ProductSaleRate dto = propSaleRateDto.get();
-                if (dto != null) {
-                    Optional<ProductSaleRate> productData = productSaleRateService.findById(dto.getCode());
-                    if (productData == null || !productData.isPresent())
-                        return;
-                    productSaleRateService.delete(productData.get(), CommonUtil.setIdentityHeader());
-                    loadData();
-                }
+        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                resourceBundle.getString("alert.delete"));
+        Optional<ButtonType> resp = alert.createConfirmationAlert();
+        if (resp.isPresent() && resp.get() == ButtonType.OK) {
+            ProductSaleRate dto = propSaleRateDto.get();
+            if (dto != null) {
+                var task = new ProductSaleRateDeleteTask(dto.getCode());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || !respDelete.booleanValue()) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 

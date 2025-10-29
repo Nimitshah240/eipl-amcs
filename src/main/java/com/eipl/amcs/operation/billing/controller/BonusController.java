@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -17,12 +16,10 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
-import com.eipl.amcs.operation.billing.model.Bonus;
 import com.eipl.amcs.operation.billing.dto.BonusDto;
+import com.eipl.amcs.operation.billing.model.Bonus;
 import com.eipl.amcs.operation.billing.model.BonusSummary;
-import com.eipl.amcs.operation.billing.model.MemberBillTransaction;
 import com.eipl.amcs.operation.billing.task.BonusEditTask;
 import com.eipl.amcs.operation.billing.task.BonusListLoadTask;
 import com.eipl.amcs.operation.billing.task.BonusLoadTask;
@@ -40,7 +37,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
@@ -52,6 +48,11 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class BonusController extends SocietyPaymentCycleEditController implements MyInitialization, PopupCallback {
+    public List<MilkType> milkTypeList = new ArrayList<>();
+    BigDecimal qty = BigDecimal.ZERO;
+    BigDecimal amt = BigDecimal.ZERO;
+    BigDecimal kapaat = BigDecimal.ZERO;
+    BigDecimal bonus = BigDecimal.ZERO;
     @FXML
     private StackPane root;
     @FXML
@@ -60,11 +61,9 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private ComboBox<String> cboxType, cboxCriteria;
-    private StringBuilder errorMsg = null;
-
+    private final StringBuilder errorMsg = null;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
-
     private Stage stage;
     @FXML
     private TextField txtBonusValue;
@@ -76,25 +75,22 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     private TableColumn<Bonus, String> colMemberCode, colMemberName, colStatus, colType, colKapaat, colRemarks, colTotal;
     @FXML
     private TableColumn<Bonus, Number> colMilkQty, colMilkAmount, colBonusAmt;
-
-    BigDecimal qty = BigDecimal.ZERO;
-    BigDecimal amt = BigDecimal.ZERO;
-    BigDecimal kapaat = BigDecimal.ZERO;
-    BigDecimal bonus = BigDecimal.ZERO;
     private BonusSummary bonusSummary;
     private List<Bonus> bonusList;
     private ResourceBundle resourceBundle;
-    private ObjectProperty<Bonus> propBonus;
+    private final ObjectProperty<Bonus> propBonus;
     private BonusDto dto = null;
     private List<String> criteriaList;
     private List<String> typeList;
     private BigDecimal totalAmt = BigDecimal.ZERO;
-    public List<MilkType> milkTypeList = new ArrayList<>();
+
+    public BonusController() {
+        propBonus = new SimpleObjectProperty<>();
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
 
     public void setBonusSummary(BonusSummary bonusSummary) {
         this.bonusSummary = bonusSummary;
@@ -125,10 +121,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             }
         });
         new Thread(task).start();
-    }
-
-    public BonusController() {
-        propBonus = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -313,10 +305,11 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             colMilkAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkAmount()));
             propBonus.bind(tableBonus.getSelectionModel().selectedItemProperty());
 
-    }catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
     private void setControls() {
         for (Bonus b : bonusList) {
             b.setxCol3(String.valueOf(b.getBonusAmount().subtract(

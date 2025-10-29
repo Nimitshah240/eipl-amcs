@@ -37,22 +37,19 @@ import java.util.stream.Collectors;
 
 public class ShareIssueController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<Share> propShareIssue;
     @FXML
     private StackPane root;
-
     @FXML
     private TableView<Share> tableShareIssue;
     @FXML
     private TableColumn<Share, String> colVoucherNo, colConsumerName, colNoOfShare, colMemberCode, colMemberName;
     @FXML
     private TableColumn<Share, LocalDate> colDate;
-
-
     @FXML
     private TableColumn<Share, BigDecimal> colAmount;
     @FXML
-    private Button btnAdd, btnCancel,btnClose, btnDelete, btnReport;
-    private final ObjectProperty<Share> propShareIssue;
+    private Button btnAdd, btnCancel, btnClose, btnDelete, btnReport;
     private ResourceBundle resourceBundle;
 
     private String name;
@@ -82,7 +79,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
                 btnCancel.setDisable(false);
             } else {
                 btnDelete.setDisable(true);
-               btnCancel.setDisable(true);
+                btnCancel.setDisable(true);
             }
         });
 
@@ -115,7 +112,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -130,6 +127,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
             }
         }
     }
+
     @Override
     public void deleteData() {
         MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
@@ -142,7 +140,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

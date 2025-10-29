@@ -22,7 +22,6 @@ public class IdentityServiceImpl implements IdentityService {
     IdentityRepository identityRepository;
 
 
-
     @Override
     public IdentityDto fetchIdentity(String dockNumber, String societyCode, String unionCode) {
         IdentityDto dto = new IdentityDto();

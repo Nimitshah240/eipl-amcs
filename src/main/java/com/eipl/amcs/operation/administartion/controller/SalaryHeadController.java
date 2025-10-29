@@ -6,7 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.operation.administartion.dto.StaffSalaryHead;
+import com.eipl.amcs.master.account.model.StaffSalaryHead;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadDeleteTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadLoadTask;
 import javafx.beans.property.ObjectProperty;
@@ -28,19 +28,16 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class SalaryHeadController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<StaffSalaryHead> propStaffSalaryHeadDto;
     @FXML
     AnchorPane root;
     @FXML
     TableView<StaffSalaryHead> tableSalaryHead;
     @FXML
     TableColumn<StaffSalaryHead, String> colType, colName;
-
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
-
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<StaffSalaryHead> propStaffSalaryHeadDto;
 
 
     public SalaryHeadController() {
@@ -124,7 +121,7 @@ public class SalaryHeadController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("staffsalaryhead"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

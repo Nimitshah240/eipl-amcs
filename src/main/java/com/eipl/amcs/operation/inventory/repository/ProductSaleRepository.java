@@ -13,15 +13,15 @@ import java.util.Optional;
 @Repository
 public interface ProductSaleRepository extends BaseRepository<ProductSale, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "dock", "union", "society" })
-	Optional<ProductSale> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"dock", "union", "society"})
+    Optional<ProductSale> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "dock", "union", "society" })
-	List<ProductSale> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"dock", "union", "society"})
+    List<ProductSale> findAll(Sort sort);
 
-	@EntityGraph(attributePaths = { "dock", "union", "society" })
-	List<ProductSale> findByInvoiceDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
+    @EntityGraph(attributePaths = {"dock", "union", "society"})
+    List<ProductSale> findByInvoiceDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
 
 }

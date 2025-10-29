@@ -25,13 +25,11 @@ import java.util.List;
 
 public class MilkCollectionImportTask extends Task<List<MilkCollection>> {
 
-    private File file;
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private List<Member> memberList;
-
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionImportTask.class);
+    private final File file;
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final List<Member> memberList;
 
     public MilkCollectionImportTask(File file, List<MilkType> milkTypeList, List<Shift> shiftList, List<Member> memberList) {
         this.file = file;
@@ -71,7 +69,7 @@ public class MilkCollectionImportTask extends Task<List<MilkCollection>> {
                 String val = formatter.formatCellValue(dataSheet.getRow(i).getCell(1));
 //                LocalDate collectionDate = CommonUtils.excelDate(val);
                 DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                LocalDate collectionDate =  LocalDate.parse(val,formatters);
+                LocalDate collectionDate = LocalDate.parse(val, formatters);
                 if (collectionDate == null) {
                     continue;
                 }
@@ -181,7 +179,7 @@ public class MilkCollectionImportTask extends Task<List<MilkCollection>> {
                 milkCollection.setDock(MainApp.identityDto.getDock());
 
                 list.add(milkCollection);
-                i+=1;
+                i += 1;
             }
             return list;
         } catch (Exception e) {

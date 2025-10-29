@@ -1,6 +1,12 @@
 package com.eipl.amcs.master.global.model;
 
 import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.deserialize.StateDeserializer;
+import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.serialize.StateSerialize;
+import com.eipl.amcs.serialize.UnitSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,9 +30,13 @@ public class UnitConversion extends BaseModel {
     private BigDecimal conversionFactor;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "from_unit", foreignKey = @ForeignKey(name = "fk_unit_conversions_units_from_unit"))
     private Unit fromUnit;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnitSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "to_unit", foreignKey = @ForeignKey(name = "fk_unit_conversions_units_to_unit"))
     private Unit toUnit;
 

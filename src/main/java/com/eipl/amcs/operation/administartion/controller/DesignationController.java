@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.operation.administartion.dto.Designation;
+import com.eipl.amcs.master.account.model.Designation;
 import com.eipl.amcs.operation.administartion.task.DesignationLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class DesignationController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<Designation> propDesignation;
     @FXML
     StackPane root;
     @FXML
@@ -34,8 +35,7 @@ public class DesignationController implements MyInitialization, PopupCallback {
     @FXML
     Button btnClose;
     private Stage stage;
-
-    private final ObjectProperty<Designation> propDesignation;
+    private ResourceBundle resourceBundle;
 
     public DesignationController() {
         propDesignation = new SimpleObjectProperty<>();
@@ -44,8 +44,6 @@ public class DesignationController implements MyInitialization, PopupCallback {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -66,10 +64,10 @@ public class DesignationController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        try{
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().toString()));
-        colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-    }catch (Exception e) {
+        try {
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().toString()));
+            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+        } catch (Exception e) {
             System.out.println("Designation setuptable Exception");
             e.printStackTrace();
         }

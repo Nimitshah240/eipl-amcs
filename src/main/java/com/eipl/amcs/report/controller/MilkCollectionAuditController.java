@@ -53,13 +53,13 @@ public class MilkCollectionAuditController implements MyInitialization {
         dpToDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -79,8 +79,8 @@ public class MilkCollectionAuditController implements MyInitialization {
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
-        params.put("p_from_date", CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(),cboxFromShift.getValue()));
-        params.put("p_to_date", CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(),cboxToShift.getValue()));
+        params.put("p_from_date", CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
+        params.put("p_to_date", CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()));
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_locale", MainApp.locale);
         JasperPrint print = null;

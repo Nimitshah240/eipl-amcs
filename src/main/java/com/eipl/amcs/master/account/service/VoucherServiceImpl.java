@@ -22,6 +22,7 @@ import java.util.Optional;
 @Service
 public class VoucherServiceImpl implements VoucherService {
 
+    private static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
     @Autowired
     private NextCodeService nextCodeService;
     @Autowired
@@ -40,9 +41,6 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherTransactionRepository voucherTxnRepository;
     @Autowired
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(VoucherServiceImpl.class);
-
 
     @Override
     public List<VoucherDto> findAll() {

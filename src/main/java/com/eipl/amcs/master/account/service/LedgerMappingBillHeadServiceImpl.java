@@ -16,11 +16,9 @@ import java.util.Optional;
 @Service
 public class LedgerMappingBillHeadServiceImpl implements LedgerMappingBillHeadService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerMappingBillHeadServiceImpl.class);
     @Autowired
     private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerMappingBillHeadServiceImpl.class);
-
 
     @Override
     public List<LedgerMappingBillHead> findAll() {

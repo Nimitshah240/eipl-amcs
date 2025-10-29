@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class BasicTaxServiceImpl implements BasicTaxService {
 
+    private static final Logger log = LoggerFactory.getLogger(BasicTaxServiceImpl.class);
     @Autowired
     private BasicTaxRepository basicTaxRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(BasicTaxServiceImpl.class);
 
     @Override
     public List<BasicTax> findAll() {

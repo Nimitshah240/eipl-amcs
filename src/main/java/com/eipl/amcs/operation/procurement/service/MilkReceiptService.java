@@ -12,26 +12,26 @@ import java.util.Optional;
 
 
 public interface MilkReceiptService {
-	List<MilkReceipt> findAll();
+    List<MilkReceipt> findAll();
 
-	MilkReceipt save(MilkReceiptDto MilkReceipt, String identityInfo);
+    MilkReceipt save(MilkReceiptDto MilkReceipt, String identityInfo);
 
-	MilkReceipt update(MilkReceiptDto MilkReceipt, String identityInfo);
+    MilkReceipt update(MilkReceiptDto MilkReceipt, String identityInfo);
 
-	Optional<MilkReceipt> findById(String code);
+    Optional<MilkReceipt> findById(String code);
 
-	void delete(String code, String identityInfo);
+    void delete(String code, String identityInfo);
 
-	void delete(MilkReceipt MilkReceipt, String identityInfo);
-	
-	SocietyMilkPurchaseRate fetchPurchaseRateCode(LocalDateTime date, Integer shiftCode, String societyCode);
+    void delete(MilkReceipt MilkReceipt, String identityInfo);
 
-	List<MilkReceiptTransaction> findDetailByChallanNo(String challanNo);
+    SocietyMilkPurchaseRate fetchPurchaseRateCode(LocalDateTime date, Integer shiftCode, String societyCode);
 
-	Optional<MilkReceiptTransaction> findTransactionById(String code);
+    List<MilkReceiptTransaction> findDetailByChallanNo(String challanNo);
 
-	void deleteTransaction(MilkReceiptTransaction milkReceiptTransaction, String identityInfo);
+    Optional<MilkReceiptTransaction> findTransactionById(String code);
 
-	List<MilkReceiptSummaryDto> fetchMilkReceiptSummary(LocalDateTime fromDt, LocalDateTime toDt);
+    void deleteTransaction(MilkReceiptTransaction milkReceiptTransaction, String identityInfo);
+
+    List<MilkReceiptSummaryDto> fetchMilkReceiptSummary(LocalDateTime fromDt, LocalDateTime toDt);
 
 }

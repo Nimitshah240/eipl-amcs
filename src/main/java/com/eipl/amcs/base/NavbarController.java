@@ -1,8 +1,14 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.auth.dto.Permission;
 import com.eipl.amcs.auth.dto.PermissionComparator;
+import com.eipl.amcs.auth.model.Permission;
+import com.eipl.amcs.auth.model.RolePermission;
+import com.eipl.amcs.auth.model.User;
+import com.eipl.amcs.auth.model.UserRole;
+import com.eipl.amcs.auth.service.RolePermissionService;
+import com.eipl.amcs.auth.service.UserRoleService;
+import com.eipl.amcs.auth.service.UserService;
 import com.eipl.amcs.base.model.*;
 import com.eipl.amcs.base.task.FtpDetailsCheckTask;
 import com.eipl.amcs.base.task.SentboxSaveTask;
@@ -53,9 +59,6 @@ import javafx.scene.text.Font;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.net.URL;
@@ -64,27 +67,24 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class NavbarController implements MyInitialization {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NavbarController.class);
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
     @FXML
     AnchorPane root;
     @FXML
     Button btnDashboard;
+    ObjectMapper mapper = new ObjectMapper();
     @FXML
     private VBox menuVbox;
     @FXML
     private Label lblVersion;
-
-
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NavbarController.class);
-    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-    ObjectMapper mapper = new ObjectMapper();
-
 
     @Override
     public Node getRoot() {
@@ -138,7 +138,7 @@ public class NavbarController implements MyInitialization {
     private void saveSentbox(List<Subscribed> list) {
         SentboxSaveTask task = new SentboxSaveTask(list, (short) 0);
         task.setOnSucceeded(e -> {
-     });
+        });
         new Thread(task).start();
     }
 
@@ -446,7 +446,7 @@ public class NavbarController implements MyInitialization {
                         content.append(",");
                     }
                     task1.setOnSucceeded(ee -> {
-                        SyncCheckAcknowledgementTask syncCheckAcknowledgementTask = new SyncCheckAcknowledgementTask(content.toString().substring(0, content.length() - 1));
+                        SyncCheckAcknowledgementTask syncCheckAcknowledgementTask = new SyncCheckAcknowledgementTask(content.substring(0, content.length() - 1));
                         syncCheckAcknowledgementTask.setOnSucceeded(eee -> {
                         });
                         new Thread(syncCheckAcknowledgementTask).start();
@@ -560,7 +560,7 @@ public class NavbarController implements MyInitialization {
             code.append(notification.getBulkNotificationId());
             code.append(",");
         }
-        var task = new NotificationAcknowledgementTask(code.toString().substring(0, code.length() - 1));
+        var task = new NotificationAcknowledgementTask(code.substring(0, code.length() - 1));
         task.setOnSucceeded(e -> {
         });
         new Thread(task).start();
@@ -641,33 +641,55 @@ public class NavbarController implements MyInitialization {
         });
     }
 
+    private void ftpBackup() {
+        //FTP Backup
+        if (LocalDate.now().getDayOfMonth() == 30) {
+            FtpDetailsCheckTask task = new FtpDetailsCheckTask();
+            new Thread(task).start();
+        }
+    }
+
     class MenuGenerateTask extends Task<Short> {
 
         @Override
         protected Short call() throws Exception {
             try {
-                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.AUTH + "/permission/{username}";
-                Map<String, Object> uriVariables = new HashMap<>();
-                uriVariables.put("username", MainApp.getUser().getUsername());
-                ResponseEntity<Permission[]> response = restTemplate.getForEntity(url, Permission[].class, uriVariables);
-                if (response.getBody() == null)
-                    return 0;
+//                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.AUTH + "/permission/{username}";
+//                Map<String, Object> uriVariables = new HashMap<>();
+//                uriVariables.put("username", MainApp.getUser().getUsername());
+//                ResponseEntity<Permission[]> response = restTemplate.getForEntity(url, Permission[].class, uriVariables);
 
-                if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
-                    return 500;
-                if (response.getStatusCode() == HttpStatus.NOT_FOUND)
-                    return 404;
+                UserService service = EmcsAppContext.getContext().getBean(UserService.class);
+                UserRoleService userRoleService = EmcsAppContext.getContext().getBean(UserRoleService.class);
+                RolePermissionService rolePermissionService = EmcsAppContext.getContext().getBean(RolePermissionService.class);
+                String username = MainApp.getUser().getUsername();
+                Optional<User> user = service.findByUsername(username);
+                if (user.isEmpty()) {
+                    return null;
+                }
 
-                LOGGER.info("Permission fetched: {}", response.getBody().length);
+                List<UserRole> userRoles = userRoleService.findAllByUser(user.get());
+                if (userRoles == null || userRoles.isEmpty()) {
+                    return null;
+                }
 
-                permissions = Arrays.asList(response.getBody());
+                List<RolePermission> rolePermissions = rolePermissionService.findAllRolePermissionByRoles(
+                        userRoles.stream().map(m -> m.getRole()).collect(Collectors.toList()));
+                if (userRoles.isEmpty()) {
+                    return null;
+                }
+
+                permissions = rolePermissions.stream().map(m -> m.getPermission())
+                        .collect(Collectors.toList());
+
                 permissions.sort(Comparator.comparing(Permission::getCode));
+
                 menu = new TreeMap<>(new PermissionComparator());
 
                 permissions.forEach(r -> {
                     if (r.getType() != null && r.getType().equals("MENU")) {
-                        if (r.getParentCode() == null || r.getParentCode().intValue() == 0) {
+                        if (r.getParentCode() == null || r.getParentCode() == 0) {
                             menu.put(r, new TreeMap<>(new PermissionComparator()));
                         }
                     }
@@ -699,20 +721,12 @@ public class NavbarController implements MyInitialization {
             return (short) 0;
         }
     }
-
-    private void ftpBackup() {
-        //FTP Backup
-        if (LocalDate.now().getDayOfMonth() == 30) {
-            FtpDetailsCheckTask task = new FtpDetailsCheckTask();
-            new Thread(task).start();
-        }
-    }
 }
 
 
 class ReSyncTask extends Task<List> {
 
-    private List<Map<String, Object>> list;
+    private final List<Map<String, Object>> list;
 
     public ReSyncTask(List<Map<String, Object>> list) {
         this.list = list;

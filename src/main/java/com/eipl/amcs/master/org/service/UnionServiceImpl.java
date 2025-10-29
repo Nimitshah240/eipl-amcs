@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class UnionServiceImpl implements UnionService {
 
+    private static final Logger log = LoggerFactory.getLogger(UnionServiceImpl.class);
     @Autowired
     private UnionRepository unionRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(UnionServiceImpl.class);
 
     @Override
     public List<Union> findAll() {

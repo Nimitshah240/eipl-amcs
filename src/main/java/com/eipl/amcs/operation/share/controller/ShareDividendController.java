@@ -9,7 +9,6 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.master.operation.controller.MemberAddEditController;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.share.model.Share;
@@ -39,9 +38,10 @@ import java.util.stream.Collectors;
 
 public class ShareDividendController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<Share> propShareIssue;
+    ShareDividend shareDividend;
     @FXML
     private StackPane root;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
     @FXML
@@ -50,36 +50,29 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
     private TableColumn<Share, String> colVoucherNo, colConsumerName, colNoOfShare, colMemberCode, colMemberName, colDividend;
     @FXML
     private TableColumn<Share, LocalDate> colDate;
-
     @FXML
     private TableColumn<Share, BigDecimal> colAmount;
     @FXML
     private ComboBox cboxType;
     @FXML
     private TextField txtValue;
-
     @FXML
     private Button btnSave, btnClose, btnGenerate, btnReport, btnView;
-    private final ObjectProperty<Share> propShareIssue;
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
     private Stage stage;
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     private String name;
     private List<Member> listMembers;
     private List<Share> shareList = new ArrayList<>();
-    private List<ShareDividend> shareDividendList = new ArrayList<>();
-
-    ShareDividend shareDividend;
+    private final List<ShareDividend> shareDividendList = new ArrayList<>();
 
     public ShareDividendController() {
         propShareIssue = new SimpleObjectProperty<>();
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
     @Override
     public Node getRoot() {

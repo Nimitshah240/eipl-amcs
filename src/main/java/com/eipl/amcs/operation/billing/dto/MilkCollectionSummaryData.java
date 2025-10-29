@@ -18,15 +18,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MilkCollectionSummaryData {
 
-	private LocalDate date;
-	private SocietyPaymentCycle paymentCycle;
-	private Member member;
-	private MilkType milkType;
-	private BigDecimal milkQuantity;
-	private BigDecimal milkAmount;
-	private Dock dock;
-	private Society society;
-	private MilkQualityType milkQualityType;
-	private String union;
-	
+    private LocalDate date;
+    private SocietyPaymentCycle paymentCycle;
+    private Member member;
+    private MilkType milkType;
+    private BigDecimal milkQuantity;
+    private BigDecimal milkAmount;
+    private Dock dock;
+    private Society society;
+    private MilkQualityType milkQualityType;
+    private String union;
+
 }

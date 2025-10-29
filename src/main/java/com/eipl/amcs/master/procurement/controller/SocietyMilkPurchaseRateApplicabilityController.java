@@ -65,14 +65,13 @@ public class SocietyMilkPurchaseRateApplicabilityController implements MyInitial
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
             colSocietyMilkPurchaseRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSocietyMilkPurchaseRate()));
         } catch (Exception e) {
+            System.out.println("SocietyMilkPurchaseRateApplicability setuptable Exception");
             e.printStackTrace();
         }
     }
 
-    // task API not available
     @Override
     public void loadData() {
-//        NO API AVIALABLE
         var task = new SocietyMilkPurchaseRateApplicabilityLoadTask();
         task.setOnSucceeded(e -> {
             try {

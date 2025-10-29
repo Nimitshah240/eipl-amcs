@@ -3,7 +3,7 @@ package com.eipl.amcs.master.org.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.service.BankService;
+import com.eipl.amcs.master.org.task.BankLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,8 +17,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class BankController implements MyInitialization {
 
@@ -39,12 +38,6 @@ public class BankController implements MyInitialization {
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    private BankService bankService;
-
-    public BankController() {
-        bankService = context.getBean(BankService.class);
     }
 
     @Override
@@ -71,19 +64,24 @@ public class BankController implements MyInitialization {
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                     resourceBundle.getString("active") : resourceBundle.getString("inactive")));
         } catch (Exception e) {
+            System.out.println("Bank setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Bank> list = bankService.findAll();
-            if (list != null)
-                tableBank.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new BankLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Bank> list = task.get();
+                if (list != null)
+                    tableBank.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
 

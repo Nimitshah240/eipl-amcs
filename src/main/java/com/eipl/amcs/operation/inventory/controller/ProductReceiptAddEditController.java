@@ -19,7 +19,11 @@ import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.operation.convertor.CustomerConvertor;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
-import com.eipl.amcs.operation.inventory.dto.*;
+import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
+import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
+import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
+import com.eipl.amcs.operation.inventory.model.ProductReceipt;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptGetNextCodeTask;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptTransactionsByGrnNoLoadTask;
@@ -38,15 +42,12 @@ import javafx.scene.layout.StackPane;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import com.eipl.amcs.operation.inventory.model.ProductReceipt;
-import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 
 public class ProductReceiptAddEditController implements MyInitialization, PopupCallback {
     @FXML
@@ -71,10 +72,10 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private TableColumn<ProductReceiptTransaction, Unit> colUnit;
 
-    private ObjectProperty<ProductReceiptTransaction> propReceiptTxn;
+    private final ObjectProperty<ProductReceiptTransaction> propReceiptTxn;
 
-    private List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
-    private ObservableList<ProductReceiptTransaction> listProductReceiptTransaction;
+    private final List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
+    private final ObservableList<ProductReceiptTransaction> listProductReceiptTransaction;
     private List<ProductReceiptTransaction> listTransactions;
     private ProductReceipt productReceipt;
     private ResourceBundle resourceBundle;
@@ -121,11 +122,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         btnDelete.setOnAction(e -> deleteData());
 
         propReceiptTxn.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnDelete.setDisable(false);
-            } else {
-                btnDelete.setDisable(true);
-            }
+            btnDelete.setDisable(newValue == null);
         });
 
 
@@ -207,7 +204,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         cboxParty.setConverter(new CustomerConvertor(cboxParty));
         dpChallanDate.setConverter(new LocalDateConvertor());
         dpChallanDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpChallanDate.setValue(dpChallanDate.getConverter().fromString(dpChallanDate.getEditor().getText()));
             }
         });
@@ -302,7 +299,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         List<ReceiptTxnTaxDto> list2 = new ArrayList<>();
         for (ReceiptTxnTaxDto txnTaxDto : receiptTxnTaxDtoList) {
             for (ProductReceiptTransaction productSaleTransaction : listProductReceiptTransaction) {
-                if(txnTaxDto.getTransaction()==productSaleTransaction)
+                if (txnTaxDto.getTransaction() == productSaleTransaction)
                     list2.add(txnTaxDto);
             }
         }
@@ -368,7 +365,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 if (list != null) {
                     cboxParty.setItems(FXCollections.observableArrayList(list));
                     new AutoCompleteComboBoxListener<>(cboxParty);
-                    if (cboxParty.getItems()!= null) {
+                    if (cboxParty.getItems() != null) {
                         cboxParty.getSelectionModel().select(0);
                     }
                 }

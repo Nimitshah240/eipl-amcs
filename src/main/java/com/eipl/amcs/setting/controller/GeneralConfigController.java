@@ -11,11 +11,9 @@ import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.setting.model.GeneralConfig;
 import com.eipl.amcs.setting.task.GeneralConfigSaveTask;
-import com.eipl.amcs.setting.task.HardwareDeviceConfigSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.task.DbBackupTask;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,7 +21,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-//import net.ucanaccess.console.Main;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +31,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class GeneralConfigController implements MyInitialization {
 
@@ -46,7 +42,7 @@ public class GeneralConfigController implements MyInitialization {
     private Tab tabMilkConfig, tabProductConfig, tabPaymentMode;
     @FXML
     private TextField txtLtrToKg, txtClrConst1, txtClrConst2, txtDefaultSnfValue, txtSampleSize, txtAvgPBasedOnPrevShift,
-            txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs,txtCollectionSlip,txtDecimalValue;
+            txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs, txtCollectionSlip, txtDecimalValue;
     @FXML
     private ComboBox<String> cboxDefaultSnf, cboxWeightSetting, cboxQualitySetting, cboxMemberCollectionQtyMode,
             cboxBmcCollectionQtyMode, cboxLocalMilkSaleQtyMode, cboxDispatchMilkQtyMode, cboxReceiptMilkQtyMode, cboxPaymentMode,
@@ -57,7 +53,7 @@ public class GeneralConfigController implements MyInitialization {
     @FXML
     private Button btnSave, btnClose, btnSave1, btnClose1, btnSave2, btnClose2, btnBrowse, btnBackup;
     @FXML
-    private ComboBox<String> cboxSlipLanguage;
+    private ComboBox<String> cboxSlipLanguage, cboxApplicationLanguage;
 
 
     private ResourceBundle resourceBundle;
@@ -123,6 +119,7 @@ public class GeneralConfigController implements MyInitialization {
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                System.out.println(newValue.getId());
             }
         });
 
@@ -148,7 +145,7 @@ public class GeneralConfigController implements MyInitialization {
 
 
         btnBackup.setOnAction(e -> {
-            String backupPath = MainApp.getProperty("backuppath", null).replace(" ","");
+            String backupPath = MainApp.getProperty("backuppath", null).replace(" ", "");
             if (backupPath == null || backupPath.isEmpty())
                 return;
             var task = new DbBackupTask(backupPath);
@@ -188,13 +185,14 @@ public class GeneralConfigController implements MyInitialization {
         txtAvgPBasedOnPrevShift.setText(MainApp.getProperty("avg.param.prev.shiftcount", "5"));
         txtAvgPIfMachineOff.setText(MainApp.getProperty("avg.param.capture.value", "5"));
         chkAvgParam.setSelected(MainApp.getProperty("avg.param.capture", "1").equalsIgnoreCase("1") ? true : false);
-        txtDecimalValue.setText(MainApp.getProperty("decimalvalue","2"));
+        txtDecimalValue.setText(MainApp.getProperty("decimalvalue", "2"));
         txtHrs.setText(MainApp.getProperty("hrs", "72"));
         txtSampleMilk.setText(MainApp.getProperty("samplemilk", ""));
         txtBackupPath.setText(MainApp.getProperty("backuppath", ""));
         txtSpace.setText(MainApp.getProperty("no.of.enter", "0"));
         txtCollectionSlip.setText(MainApp.getProperty("no.of.enters.collection.slip", "0"));
         cboxSlipLanguage.getSelectionModel().select(MainApp.getProperty("slip.language", ""));
+        cboxApplicationLanguage.getSelectionModel().select(MainApp.getProperty("application.language", "English"));
         try {
             cboxQualityMachine.getSelectionModel().select(arrQuality[Integer.parseInt(MainApp.getProperty("masetting", "")) - 1]);
         } catch (Exception e) {
@@ -206,11 +204,12 @@ public class GeneralConfigController implements MyInitialization {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(MainApp.getProperty("baseurl", "http://localhost:8080/eipl-amcs/").getBytes())));
 //        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("https://amulamcs.yamatech.app/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
+//        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://jaipurduss.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
         lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://amulamcsuat.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
 //        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati".getBytes(StandardCharsets.UTF_8))));
-        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati".getBytes(StandardCharsets.UTF_8))));
+        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
         lines.add("#Identity details");
         lines.add("identity.union=" + new String(Base64.getEncoder().encode(MainApp.identityDto.getUnion().getCode().getBytes())));
         lines.add("identity.society=" + new String(Base64.getEncoder().encode(MainApp.identityDto.getSociety().getCode().getBytes())));
@@ -218,7 +217,8 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("identity.id=" + new String(Base64.getEncoder().encode(MainApp.systemId.getBytes())));
         lines.add("identity.version=" + new String(Base64.getEncoder().encode(AppConstant.versionNo.getBytes())));
         lines.add("identity.activation=" + new String(Base64.getEncoder().encode(MainApp.getProperty("identity.activation", "").getBytes())));
-        lines.add("updater.url=" + new String(Base64.getEncoder().encode("http://client.emilkpro.in/webservice/eipl/v1/free-access/latest-app".getBytes())));        lines.add("#Configurations");
+        lines.add("updater.url=" + new String(Base64.getEncoder().encode("http://client.emilkpro.in/webservice/eipl/v1/free-access/latest-app".getBytes())));
+        lines.add("#Configurations");
         lines.add("default.creditlimit=" + new String(Base64.getEncoder().encode("100000".getBytes())));
         lines.add("ltr.to.kg=" + new String(Base64.getEncoder().encode((txtLtrToKg.getText().trim() != null ? txtLtrToKg.getText() : "1.028").getBytes())));
         lines.add("clr.const1=" + new String(Base64.getEncoder().encode((txtClrConst1.getText().trim() != null ? txtClrConst1.getText() : "0.21").getBytes())));
@@ -259,6 +259,7 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("product.salerate=" + new String(Base64.getEncoder().encode((chkSaleRate.isSelected() ? "1" : "0").getBytes())));
 
         lines.add("slip.language=" + new String(Base64.getEncoder().encode(cboxSlipLanguage.getValue().getBytes())));
+        lines.add("application.language=" + new String(Base64.getEncoder().encode(cboxApplicationLanguage.getValue().getBytes())));
         lines.add("backuppath=" + new String(Base64.getEncoder().encode((txtBackupPath.getText() == null || txtBackupPath.getText().isEmpty() ? "" : txtBackupPath.getText()).getBytes())));
         lines.add("masetting=" + new String(Base64.getEncoder().encode(String.valueOf(cboxQualityMachine.getSelectionModel().getSelectedIndex() + 1).getBytes())));
         lines.add("decimalvalue=" + new String(Base64.getEncoder().encode(txtDecimalValue.getText().getBytes())));
@@ -286,6 +287,7 @@ public class GeneralConfigController implements MyInitialization {
             }
         } catch (IOException | NullPointerException ex) {
             if (old.renameTo(appProperty)) {
+                System.out.println("Changes not applied");
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("generalconfiguration"),
                         resourceBundle.getString("changes.not.applied"));
                 alert.createAlert();
@@ -311,13 +313,14 @@ public class GeneralConfigController implements MyInitialization {
     public void saveData() {
         MainApp.loadProperties();
         List<GeneralConfig> list = new ArrayList<>();
-        MainApp.properties.forEach((k,v)->{
+        MainApp.properties.forEach((k, v) -> {
             GeneralConfig generalConfig = new GeneralConfig();
             generalConfig.setKey((String) k);
             generalConfig.setValue((String) v);
             generalConfig.setSociety(MainApp.identityDto.getSociety());
             list.add(generalConfig);
         });
+        System.out.println(list);
         var task = new GeneralConfigSaveTask(list);
         task.setOnSucceeded(e -> {
             try {
@@ -370,7 +373,7 @@ public class GeneralConfigController implements MyInitialization {
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "English").split(",");
         cboxSlipLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
-//        cboxSlipLanguage.getSelectionModel().select(0);
+        cboxApplicationLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
 
 
 //        cboxQualityMachine.getItems().addAll("Single MA", "Dual MA By Milk", "Dual MA By Sequence");

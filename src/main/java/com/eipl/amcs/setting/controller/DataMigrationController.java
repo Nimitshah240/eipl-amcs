@@ -2,13 +2,6 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.InformationAlert;
-import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.alert.WarningAlert;
-import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.operation.procurement.task.MilkCollectionListSaveTask;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,36 +13,32 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 
 public class DataMigrationController implements MyInitialization {
-    @FXML
-    StackPane root;
-    private ResourceBundle resourceBundle;
-    @FXML
-    ComboBox<String> cboxFrom, cboxType;
-    @FXML
-    Button btnImport;
-    @FXML
-    BorderPane paneContainer;
-
-    private List<String> vendorList;
-    private List<String> operationTypeList;
-    private String path = null;
-
     private final String VENDOR_PROMPT = "Prompt";
     private final String VENDOR_SKYWAY = "SkyWay";
     private final String VENDOR_FRIENDS = "Friends";
     private final String VENDOR_E_MANDLI = "E-Mandli";
     private final String VENDOR_PROMPT_SQL_SERVER = "Prompt SQL Server";
     private final String VENDOR_HISAABMITRA = "Hisaab Mitra";
-
     private final String OP_MEMBER = "Member";
     private final String OP_MILK_COLLECTION = "Milk Collection";
     private final String OP_MILK_SALE = "Local Milk Sale";
     private final String OP_MILK_DISPATCH = "Milk Dispatch";
     private final String OP_PRODUCT = "Product";
     private final String OP_PRODUCT_SALE = "Product Sale";
+    @FXML
+    StackPane root;
+    @FXML
+    ComboBox<String> cboxFrom, cboxType;
+    @FXML
+    Button btnImport;
+    @FXML
+    BorderPane paneContainer;
+    private ResourceBundle resourceBundle;
+    private final List<String> vendorList;
+    private final List<String> operationTypeList;
+    private final String path = null;
 
 
     public DataMigrationController() {

@@ -23,35 +23,27 @@ import java.util.*;
 
 public class ShareCancelReportController implements MyInitialization {
 
+    public PopupCallback callback;
+    public Bonus bonus;
+    public Map<String, Object> map;
+    List<Bonus> bonusList = new ArrayList<>();
     @FXML
     private StackPane root;
     @FXML
     private Button btnGenerate, btnClose;
     private Stage stage;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-
-    public PopupCallback callback;
-
-
     private ResourceBundle resourceBundle;
-
 
     @Override
     public Node getRoot() {
         return root;
     }
 
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    List<Bonus> bonusList = new ArrayList<>();
-    public Bonus bonus;
-    public Map<String, Object> map;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

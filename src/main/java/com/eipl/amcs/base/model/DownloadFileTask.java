@@ -12,23 +12,21 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.*;
 
 public class DownloadFileTask extends Task<Map<String, Object>> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadFileTask.class);
     public String url;
 
     public DownloadFileTask(String url) {
         this.url = url;
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadFileTask.class);
 
     @Override
     protected Map<String, Object> call() throws Exception {
@@ -45,6 +43,7 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                 File file2 = new File(file, "update.zip");
 
                 Files.copy(response.getBody(), Path.of(file2.getAbsolutePath()));
+                System.out.println("Downloaded");
                 startUpdateProcess(file2);
                 return null;
             };
@@ -61,12 +60,14 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
 
 
         try {
+            System.out.println("Starting update process...");
             String backupPath = MainApp.getProperty("backuppath", null);
             if (backupPath != null) {
                 backupPath = backupPath.replace(" ", "");
             }
             var task = new DbBackupTask(backupPath);
             task.setOnSucceeded(e -> {
+                System.out.println("Backup Done");
             });
             new Thread(task).start();
 
@@ -94,6 +95,7 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
 
                         String appPath = System.getProperty("user.home") + "\\eipl-amcs\\application";
                         File appDirPath = new File(appPath);
+                        Path liquibase2 = Paths.get(String.valueOf(appDirPath), "liquibase2");
 
                         String version = null;
                         for (File f : tempDir.listFiles()) {
@@ -126,9 +128,12 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
 
                             } else if (f.getName().endsWith(".xml")) {
                                 try {
-
-                                    // liquibase2 change log
-                                    File libDir = new File(appDirPath, "liquibase2/db-repository");
+                                    File libDir = null;
+                                    if (Files.isDirectory(liquibase2)) {
+                                        libDir = new File(appDirPath, "liquibase2/db-repository");
+                                    } else {
+                                        libDir = new File(appDirPath, "liquibase/db-repository");
+                                    }
                                     Files.copy(f.toPath(), new File(libDir, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -150,9 +155,13 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
 
                             } else if (f.getName().endsWith(".csv") || f.getName().endsWith(".sql")) {
                                 try {// liquibase2 initial data
-                                    File libDir = new File(appDirPath, "liquibase2/db-repository/initial-data");
+                                    File libDir = null;
+                                    if (Files.isDirectory(liquibase2)) {
+                                        libDir = new File(appDirPath, "liquibase2/db-repository/initial-data");
+                                    } else {
+                                        libDir = new File(appDirPath, "liquibase/db-repository/initial-data");
+                                    }
                                     Files.copy(f.toPath(), new File(libDir, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -168,6 +177,24 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                                 try {
                                     // message prop
                                     File libDir = new File(appDirPath, "resources/messages");
+                                    Files.copy(f.toPath(), new File(libDir, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+
+                                }
+                            } else if (f.getName().endsWith(".ttf")) {
+                                try {
+                                    // message prop
+                                    File libDir = new File(appDirPath, "resources/noto");
+                                    Files.copy(f.toPath(), new File(libDir, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+
+                                }
+                            } else if ((f.getName().startsWith("PrintSlip") || f.getName().startsWith("BonusSlip")) && f.getName().endsWith(".txt")) {
+                                try {
+                                    // message prop
+                                    File libDir = new File(appDirPath, "resources/collection");
                                     Files.copy(f.toPath(), new File(libDir, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -208,7 +235,13 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
 //                        Process process = Runtime.getRuntime().exec("cmd /c ..\\liquibase update", null, liquibaseDbRepo);
 //                        int res = process.waitFor();
 //                        System.out.println("Liquibase res: " + res);
-                        File liquibaseDbRepo = new File(appDirPath, "liquibase2/db-repository");
+
+                        File liquibaseDbRepo = null;
+                        if (Files.isDirectory(liquibase2)) {
+                            liquibaseDbRepo = new File(appDirPath, "liquibase2/db-repository");
+                        } else {
+                            liquibaseDbRepo = new File(appDirPath, "liquibase/db-repository");
+                        }
 
 // Run 'liquibase clearCheckSums'
                         Process clearProcess = Runtime.getRuntime().exec("cmd /c ..\\liquibase clearCheckSums", null, liquibaseDbRepo);
@@ -237,7 +270,9 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                                 List<String> newLines = new ArrayList<>();
                                 for (String line : lines) {
                                     if (line.contains("identity.version")) {
+                                        System.out.println(version);
                                         newLines.add("identity.version=" + new String(Base64.getEncoder().encode(version.getBytes())));
+                                        System.out.println("app pro changed");
                                     } else {
                                         newLines.add(line);
                                     }
@@ -253,6 +288,7 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                         }
                     }
                 } catch (Exception ee) {
+                    System.out.println(ee.getMessage());
                     ee.printStackTrace();
                 }
             }

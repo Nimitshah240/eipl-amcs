@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ProductReceiptController implements MyInitialization {
+    private final ObjectProperty<ProductReceipt> propProductReceiptDto;
     @FXML
     StackPane root;
     @FXML
@@ -42,19 +43,18 @@ public class ProductReceiptController implements MyInitialization {
     @FXML
     TableColumn<ProductReceipt, LocalDate> colGrnDate, colChallanDate;
     @FXML
+    Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
+    @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
-    private final ObjectProperty<ProductReceipt> propProductReceiptDto;
+
+    public ProductReceiptController() {
+        propProductReceiptDto = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public ProductReceiptController() {
-        propProductReceiptDto = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class ProductReceiptController implements MyInitialization {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product.receipt"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();

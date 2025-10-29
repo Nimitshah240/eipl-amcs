@@ -3,10 +3,20 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.BillCriteriaDeserializer;
+import com.eipl.amcs.deserialize.BillHeadDeserializer;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.BillCriteriaSerialize;
+import com.eipl.amcs.serialize.BillHeadSerialize;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,23 +38,31 @@ public class LedgerMappingBillHead extends BaseModelTxn {
     private Boolean creditDebit;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_bill_head_ledger_code"))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BillHeadSerialize.class)
+    @JsonDeserialize(using = BillHeadDeserializer.class)
     @JoinColumn(name = "bill_head_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_bill_head_bill_head_code"))
-    @JsonIgnoreProperties(value = { "society", "union"})
+    @JsonIgnoreProperties(value = {"society", "union"})
     private BillHead billHead;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_bill_head_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BillCriteriaSerialize.class)
+    @JsonDeserialize(using = BillCriteriaDeserializer.class)
     @JoinColumn(name = "bill_criteria_code", foreignKey = @ForeignKey(name = "fk_ledger_mapping_bill_head_bill_criteria_code"))
-    @JsonIgnoreProperties(value = {"formulaCode","union","society"})
+    @JsonIgnoreProperties(value = {"formulaCode", "union", "society"})
     private BillCriteria billCriteria;
 
     private String unionCode;
@@ -54,7 +72,6 @@ public class LedgerMappingBillHead extends BaseModelTxn {
     public String getTableName() {
         return "ledger_mapping_bill_head";
     }
-
 
 
     @Override
@@ -88,7 +105,6 @@ public class LedgerMappingBillHead extends BaseModelTxn {
 
         return audit;
     }
-
 
 
 }

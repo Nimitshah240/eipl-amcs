@@ -2,19 +2,17 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.apierror.ApiValidationError;
 import com.eipl.amcs.master.account.converter.LedgerGroupConvertor;
 import com.eipl.amcs.master.account.converter.LedgerTypeConvertor;
+import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
 import com.eipl.amcs.master.account.model.*;
-import com.eipl.amcs.master.account.service.LedgerGroupService;
-import com.eipl.amcs.master.account.service.LedgerService;
-import com.eipl.amcs.master.account.service.LedgerTypeService;
-import com.eipl.amcs.master.account.service.SubLedgerService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.master.account.task.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -28,8 +26,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 
 public class LedgerAddEditController implements MyInitialization {
+    private final ObjectProperty<SubLedger> propDto;
     @FXML
     private StackPane root;
     @FXML
@@ -42,12 +42,10 @@ public class LedgerAddEditController implements MyInitialization {
     private CheckBox chkBoxSubLedger, chkBoxSelectAll;
     @FXML
     private E_TextField txtCode, txtName, txtLocalName;
-
     @FXML
     private TableColumn<SubLedger, Boolean> colSelect;
     @FXML
     private TableColumn<SubLedger, String> colSubLedger, colCode, colName, colLocalName;
-
     @FXML
     private TableView<SubLedger> tableSubLedgerData;
     private List<SubLedger> listSubLedger;
@@ -55,23 +53,10 @@ public class LedgerAddEditController implements MyInitialization {
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private Ledger ledger = null;
-
     private List<LedgerGroup> ledgerGroupList;
-    private LedgerTypeService ledgerTypeService;
-    private LedgerService ledgerService;
-    private NextCodeService nextCodeService;
-    private SubLedgerService subLedgerService;
-    private LedgerGroupService ledgerGroupService;
-
-    private ObjectProperty<SubLedger> propDto;
 
 
     public LedgerAddEditController() {
-        ledgerTypeService = MainApp.context.getBean(LedgerTypeService.class);
-        ledgerService = MainApp.context.getBean(LedgerService.class);
-        nextCodeService = MainApp.context.getBean(NextCodeService.class);
-        ledgerGroupService = MainApp.context.getBean(LedgerGroupService.class);
-        subLedgerService = MainApp.context.getBean(SubLedgerService.class);
         propDto = new SimpleObjectProperty<>();
     }
 
@@ -93,15 +78,36 @@ public class LedgerAddEditController implements MyInitialization {
 
     }
 
-    public void loadSubLedger() {
-        try {
-            listSubLedger = subLedgerService.findAll();
-            if (listSubLedger != null) {
-                tableSubLedgerData.setItems(FXCollections.observableList(listSubLedger));
+    private void loadSubLedgerDetail() {
+
+        var task1 = new LedgerSubLedgerMappingDtoLoadTask(ledger, null);
+        task1.setOnSucceeded(e -> {
+            try {
+                LedgerSubLedgerDto dto = task1.get();
+                if (dto.getSubLedgerList() != null) {
+                    tableSubLedgerData.setItems(FXCollections.observableList(dto.getSubLedgerList()));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task1).start();
+    }
+
+
+    public void loadSubLedger() {
+        var task = new SubLedgerLoadTask();
+        task.setOnSucceeded(ee -> {
+            try {
+                listSubLedger = task.get();
+                if (listSubLedger != null) {
+                    tableSubLedgerData.setItems(FXCollections.observableList(listSubLedger));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -194,14 +200,18 @@ public class LedgerAddEditController implements MyInitialization {
     }
 
     private void getNextLedgerCode() {
-        try {
-            String nextCode = nextCodeService.getNextCode("Ledger", "code", MainApp.identityDto.getSociety().getCode(), 0);
-            if (nextCode == null || nextCode.isEmpty())
-                return;
-            txtCode.setText(nextCode);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new LedgerNumberLoadTask(MainApp.identityDto.getSociety().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                String nextCode = task.get();
+                if (nextCode == null || nextCode.isEmpty())
+                    return;
+                txtCode.setText(nextCode);
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private Ledger setValuesInObject() {
@@ -225,21 +235,36 @@ public class LedgerAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-        try {
-            ledgerService.save(ledger, CommonUtil.setIdentityHeader());
-            if (listSubLedger != null)
-                saveMapping();
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
-                    resourceBundle.getString("ledger.insert.successful"));
-            alert.createAlert();
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
+        var task = new LedgerSaveTask(ledger, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
-                    "Error");
-            alert.createAlert();
-        }
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+
+
+                }
+                if (listSubLedger != null)
+                    saveMapping();
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
+                        resourceBundle.getString("ledger.insert.successful"));
+                alert.createAlert();
+                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private void saveMapping() {
@@ -254,23 +279,41 @@ public class LedgerAddEditController implements MyInitialization {
                 ledgerSubLedgerMappingList.add(o);
             }
         }
-        ledgerService.save(ledgerSubLedgerMappingList, CommonUtil.setIdentityHeader());
+        var task = new LedgerSubLedgerMappingSaveTask(ledgerSubLedgerMappingList, (short) 0);
+        task.setOnSucceeded(e -> {
+
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void updateData() {
-        try {
-            ledgerService.update(ledger, CommonUtil.setIdentityHeader());
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
-                    resourceBundle.getString("ledger.update.successful"));
-            alert.createAlert();
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
-                    "Error");
-            alert.createAlert();
-        }
+        var task = new LedgerSaveTask(ledger, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                if (obj instanceof ApiError) {
+                    ApiError error = (ApiError) obj;
+                    StringBuilder sb = new StringBuilder();
+
+                    for (ApiValidationError subError : error.getSubErrors()) {
+                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
+                            sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledger"),
+                        resourceBundle.getString("ledger.update.successful"));
+                alert.createAlert();
+                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -280,36 +323,48 @@ public class LedgerAddEditController implements MyInitialization {
     }
 
     private void loadLedgerGroup() {
-        try {
-            ledgerGroupList = ledgerGroupService.findAll();
-            loadControls();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        var task = new LedgerGroupLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                ledgerGroupList = task.get();
+                loadControls();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
-
 
     private void loadLedgerType() {
-        try {
-            List<LedgerType> list = ledgerTypeService.findAll();
-            if (list != null) {
-                cboxLedgerType.setItems(FXCollections.observableList(list));
+        var task = new LedgerTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<LedgerType> list = task.get();
+                if (list != null) {
+                    cboxLedgerType.setItems(FXCollections.observableList(list));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 
+
     public void loadLedgerGroupByType() {
-        try {
-            List<LedgerGroup> list = ledgerGroupService.findByLedgerType(cboxLedgerType.getValue().getCode());
-            if (list != null) {
-                cboxLedgerGroup.setItems(FXCollections.observableList(list));
-                cboxLedgerGroup.getSelectionModel().select(0);
+        var task = new LedgerGroupByLegderTypeLoadTask(cboxLedgerType.getValue().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                List<LedgerGroup> list = task.get();
+                if (list != null) {
+                    cboxLedgerGroup.setItems(FXCollections.observableList(list));
+                    cboxLedgerGroup.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
+        new Thread(task).start();
     }
 
 

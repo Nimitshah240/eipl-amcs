@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRateService {
 
+    private final static Logger logger = LoggerFactory.getLogger(MemberMilkPurchaseRateServiceImpl.class);
     @Autowired
     private MemberMilkPurchaseRateRepository memberMilkPurchaseRateRepository;
     @Autowired
@@ -46,11 +47,8 @@ public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRate
     private MilkQualityTypeRepository milkQualityRepository;
     @Autowired
     private NextCodeRepository nextCodeRepository;
-
     private Map<Integer, MilkType> mapMilkType;
     private Map<Integer, MilkQualityType> mapMilkQualityType;
-
-    private final static Logger logger = LoggerFactory.getLogger(MemberMilkPurchaseRateServiceImpl.class);
 
     @Override
     public List<MemberMilkPurchaseRate> findAll() {

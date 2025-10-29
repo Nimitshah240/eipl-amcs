@@ -8,10 +8,10 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.apierror.ApiError;
 import com.eipl.amcs.exception.apierror.ApiValidationError;
-import com.eipl.amcs.operation.administartion.dto.StaffMember;
-import com.eipl.amcs.operation.administartion.dto.StaffSalaryHead;
-import com.eipl.amcs.operation.administartion.dto.StaffSalaryMapping;
-import com.eipl.amcs.operation.administartion.dto.converter.StaffMemberConvertor;
+import com.eipl.amcs.master.account.model.StaffMember;
+import com.eipl.amcs.master.account.model.StaffSalaryHead;
+import com.eipl.amcs.master.account.model.StaffSalaryMapping;
+import com.eipl.amcs.operation.administartion.converter.StaffMemberConvertor;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryMappingLoadTask;
@@ -50,20 +50,15 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     Button btnClose, btnSave;
     @FXML
     DatePicker dpDate;
-
-    private List<StaffMember> listStaffMembers;
-    private StaffSalaryMapping dto;
-
-    private List<StaffSalaryHead> listStaffSalaryHead;
-    private List<StaffSalaryMapping> staffSalaryMappingList;
-
-    @FXML
-    private GridPane gridMaster;
-
-    private StringBuilder errorMsg = null;
-
     @FXML
     ComboBox<StaffMember> cboxStaff;
+    private List<StaffMember> listStaffMembers;
+    private StaffSalaryMapping dto;
+    private List<StaffSalaryHead> listStaffSalaryHead;
+    private List<StaffSalaryMapping> staffSalaryMappingList;
+    @FXML
+    private GridPane gridMaster;
+    private final StringBuilder errorMsg = null;
     private ResourceBundle resourceBundle;
 
 

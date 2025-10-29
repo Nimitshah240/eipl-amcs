@@ -1,7 +1,6 @@
 package com.eipl.amcs.base.repository;
 
 import com.eipl.amcs.base.Identity;
-import org.hibernate.validator.constraints.Currency;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 

@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class BmcServiceImpl implements BmcService {
 
+    private static final Logger log = LoggerFactory.getLogger(BmcServiceImpl.class);
     @Autowired
     private BmcRepository bmcRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(BmcServiceImpl.class);
 
     @Override
     public List<Bmc> findAll() {

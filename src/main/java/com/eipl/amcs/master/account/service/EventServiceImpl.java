@@ -13,10 +13,9 @@ import java.util.List;
 @Service
 public class EventServiceImpl implements EventService {
 
+    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
     @Autowired
     private EventRepository eventRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
 
     @Override
     public List<Events> findAll() {

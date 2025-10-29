@@ -15,7 +15,11 @@ import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.master.procurement.converter.SocietyPaymentCycleConvertor;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
-import com.eipl.amcs.operation.inventory.dto.*;
+import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
+import com.eipl.amcs.operation.inventory.dto.SaleTxnTaxDto;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
+import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
+import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 import com.eipl.amcs.operation.inventory.task.ProductSaleGetNextCodeTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleSaveTask;
 import com.eipl.amcs.operation.procurement.task.MemberTotalAmountLoadTask;
@@ -38,11 +42,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
-import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 
 public class KapaatAddEditController implements MyInitialization {
+    StringBuilder sb = new StringBuilder();
     @FXML
     private StackPane root;
     @FXML
@@ -59,10 +61,20 @@ public class KapaatAddEditController implements MyInitialization {
     @FXML
     private Label lblTotal;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg = null;
+    private final StringBuilder errorMsg = null;
     private PopupCallback callback;
     private List<Product> productList;
     private List<SocietyPaymentCycle> paymentCycleList;
+    private BigDecimal netPayable = BigDecimal.ZERO;
+    private BigDecimal due = BigDecimal.ZERO;
+    private BigDecimal productSaleAmount = BigDecimal.ZERO;
+    private Member member;
+    private String memberCode;
+    private ProductSaleDto productSaleDto;
+    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
+    private final List<ProductSaleTransaction> transactionList = new ArrayList<>();
+    private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
+    private String invoiceNo;
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -71,18 +83,6 @@ public class KapaatAddEditController implements MyInitialization {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    private BigDecimal netPayable = BigDecimal.ZERO;
-    private BigDecimal due = BigDecimal.ZERO;
-    private BigDecimal productSaleAmount = BigDecimal.ZERO;
-    private Member member;
-    private String memberCode;
-    private ProductSaleDto productSaleDto;
-    private List<ProductSaleInstallment> installmentList = new ArrayList<>();
-    private List<ProductSaleTransaction> transactionList = new ArrayList<>();
-    private List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
-    private String invoiceNo;
-    StringBuilder sb = new StringBuilder();
 
     @Override
     public Node getRoot() {
@@ -132,7 +132,6 @@ public class KapaatAddEditController implements MyInitialization {
                     this.stage.close();
                     break;
                 default:
-                    return;
             }
         });
     }
@@ -164,7 +163,6 @@ public class KapaatAddEditController implements MyInitialization {
                     txtDue.setText("0");
                     txtTotal.setText(balance.toString());
                 } else {
-                    return;
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 throw new RuntimeException(ex);
@@ -317,13 +315,11 @@ public class KapaatAddEditController implements MyInitialization {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
                         resourceBundle.getString("error.occurred"));
                 alert.createAlert();
-                return;
             }
         } catch (Exception e) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
                     resourceBundle.getString("error.occurred"));
             alert.createAlert();
-            return;
         }
     }
 

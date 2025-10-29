@@ -25,14 +25,13 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private SocietyRepository socRepository;
     @Autowired
     private ProductSaleRateRepository saleRateRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Override
     public List<Product> findAll() {
@@ -117,9 +116,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean checkName(String name, String code) {
         List<Product> list = productRepository.checkName(name, code);
-        if (list != null)
-            return false;
-        return true;
+        return list == null;
     }
 
     @Override

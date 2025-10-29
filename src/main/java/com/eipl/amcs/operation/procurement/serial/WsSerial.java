@@ -17,18 +17,16 @@ import java.io.OutputStream;
 import java.util.Map;
 
 public class WsSerial implements SerialPortDataListener {
-    private HardwareDevice hardwareDevice;
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsSerial.class);
+    private static String response = "";
+    private final HardwareDevice hardwareDevice;
     private SerialPort serialPort;
     private InputStream inputStream;
     private OutputStream outputStream;
-    private static String response = "";
-    private StringBuffer readBuffer = new StringBuffer();
-
+    private final StringBuffer readBuffer = new StringBuffer();
     private boolean isDeviceReady = false;
-    private char endChar;
+    private final char endChar;
     private DeviceCallback callback;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WsSerial.class);
 
     public WsSerial(HardwareDevice hardwareDevice, String commPort, DeviceCallback callback) {
         this.hardwareDevice = hardwareDevice;

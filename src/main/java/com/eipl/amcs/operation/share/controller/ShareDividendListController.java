@@ -14,7 +14,10 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.model.ShareDividend;
-import com.eipl.amcs.operation.share.task.*;
+import com.eipl.amcs.operation.share.task.ShareDividendAllDeleteTask;
+import com.eipl.amcs.operation.share.task.ShareDividendListDeleteTask;
+import com.eipl.amcs.operation.share.task.ShareDividendListSaveTask;
+import com.eipl.amcs.operation.share.task.ShareDividendLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,11 +27,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import com.eipl.amcs.operation.share.task.ShareDividendAllDeleteTask;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,13 +37,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class ShareDividendListController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<ShareDividend> propShareIssue;
+    ShareDividend shareDividend;
     @FXML
     private StackPane root;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
     @FXML
@@ -51,33 +52,25 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
     private TableColumn<ShareDividend, String> colVoucherNo, colConsumerName, colNoOfShare, colMemberCode, colMemberName, colDividend;
     @FXML
     private TableColumn<ShareDividend, LocalDate> colDate;
-
     @FXML
     private TableColumn<ShareDividend, BigDecimal> colAmount;
-
-
     @FXML
     private Button btnClose, btnSearch, btnDelete, btnDeleteAll;
-    private final ObjectProperty<ShareDividend> propShareIssue;
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
     private Stage stage;
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     private String name;
     private List<Member> listMembers;
-    private List<Share> shareList = new ArrayList<>();
-    private List<ShareDividend> shareDividendList = new ArrayList<>();
-
-    ShareDividend shareDividend;
+    private final List<Share> shareList = new ArrayList<>();
+    private final List<ShareDividend> shareDividendList = new ArrayList<>();
 
     public ShareDividendListController() {
         propShareIssue = new SimpleObjectProperty<>();
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
     @Override
     public Node getRoot() {
@@ -121,13 +114,7 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
 
         });
         propShareIssue.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                btnDelete.setDisable(false);
-
-            } else {
-                btnDelete.setDisable(true);
-
-            }
+            btnDelete.setDisable(newValue == null);
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/share/ShareDividend.fxml")));
@@ -176,7 +163,7 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("sharedividend"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -199,11 +186,11 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
         Optional<ButtonType> resp = alert.createConfirmationAlert();
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
 
-            var task = new ShareDividendAllDeleteTask(dpFromDate.getValue(),dpToDate.getValue());
+            var task = new ShareDividendAllDeleteTask(dpFromDate.getValue(), dpToDate.getValue());
             task.setOnSucceeded(e -> {
                 try {
                     Boolean respDelete = task.get();
-                    if (respDelete == null || respDelete.booleanValue() == false) {
+                    if (respDelete == null || !respDelete.booleanValue()) {
                         MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("sharedividend"),
                                 resourceBundle.getString("error.occurred"));
                         alert1.createAlert();

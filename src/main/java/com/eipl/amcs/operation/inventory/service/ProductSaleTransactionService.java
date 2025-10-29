@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductSaleTransactionService {
-	List<ProductSaleTransaction> findAll();
+    List<ProductSaleTransaction> findAll();
 
-	ProductSaleTransaction save(ProductSaleTransaction productSaleToMemberTransaction);
+    ProductSaleTransaction save(ProductSaleTransaction productSaleToMemberTransaction);
 
-	ProductSaleTransaction update(ProductSaleTransaction productSaleToMemberTransaction);
+    ProductSaleTransaction update(ProductSaleTransaction productSaleToMemberTransaction);
 
-	Optional<ProductSaleTransaction> findById(String invoiceTransactionNo);
+    Optional<ProductSaleTransaction> findById(String invoiceTransactionNo);
 
-	void delete(String invoiceTransactionNo);
+    void delete(String invoiceTransactionNo);
 
-	void delete(ProductSaleTransaction productSaleToMemberTransaction);
-	
-	List<SaleTxnTaxDto> findByProductSale(String code);
+    void delete(ProductSaleTransaction productSaleToMemberTransaction);
+
+    List<SaleTxnTaxDto> findByProductSale(String code);
 
 }

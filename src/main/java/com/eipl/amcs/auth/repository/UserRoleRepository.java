@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
 
-	@EntityGraph(type = EntityGraphType.FETCH, attributePaths = { "user", "role", "society" })
-	List<UserRole> findAllByUser(User user);
+    @EntityGraph(type = EntityGraphType.FETCH, attributePaths = {"user", "role", "society"})
+    List<UserRole> findAllByUser(User user);
 }

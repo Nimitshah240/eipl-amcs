@@ -1,11 +1,11 @@
 package com.eipl.amcs.operation.inventory.dto;
 
+import com.eipl.amcs.operation.inventory.model.ProductSaleTax;
+import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTax;
 
 import java.util.List;
 

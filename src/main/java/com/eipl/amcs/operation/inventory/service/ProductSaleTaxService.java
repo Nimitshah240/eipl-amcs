@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductSaleTaxService {
-	List<ProductSaleTax> findAll();
+    List<ProductSaleTax> findAll();
 
-	ProductSaleTax save(ProductSaleTax productSaleToMemberTaxCalculated);
+    ProductSaleTax save(ProductSaleTax productSaleToMemberTaxCalculated);
 
-	ProductSaleTax update(ProductSaleTax productSaleToMemberTaxCalculated);
+    ProductSaleTax update(ProductSaleTax productSaleToMemberTaxCalculated);
 
-	Optional<ProductSaleTax> findById(String code);
+    Optional<ProductSaleTax> findById(String code);
 
-	void delete(String code);
+    void delete(String code);
 
-	void delete(ProductSaleTax productSaleToMemberTaxCalculated);
+    void delete(ProductSaleTax productSaleToMemberTaxCalculated);
 }

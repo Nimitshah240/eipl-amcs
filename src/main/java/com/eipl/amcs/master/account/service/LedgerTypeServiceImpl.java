@@ -14,11 +14,9 @@ import java.util.Optional;
 @Service
 public class LedgerTypeServiceImpl implements LedgerTypeService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerTypeServiceImpl.class);
     @Autowired
     private LedgerTypeRepository typeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerTypeServiceImpl.class);
-
 
     @Override
     public List<LedgerType> findAll() {

@@ -37,11 +37,12 @@ public class DairySaleRegisterReportController implements MyInitialization {
     @FXML
     private ComboBox cboxmilkType;
     @FXML
-    private ComboBox<Shift> cboxFromShift,cboxToShift;
+    private ComboBox<Shift> cboxFromShift, cboxToShift;
 
 
     private ResourceBundle resourceBundle;
     private MemberCollection memberCollection;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -55,14 +56,14 @@ public class DairySaleRegisterReportController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -80,14 +81,12 @@ public class DairySaleRegisterReportController implements MyInitialization {
 
     }
 
-    private StringBuilder errorMsg;
-
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        params.put("p_from_date",  dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
-        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning")?"06:00:00":"18:00:00"));
-        params.put("p_milk_type", cboxmilkType.getSelectionModel().getSelectedIndex() +1);
+        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_milk_type", cboxmilkType.getSelectionModel().getSelectedIndex() + 1);
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.DAIRY_SALE_REGISTER, params);
         JasperViewer.viewReport(print, false);

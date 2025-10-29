@@ -14,9 +14,6 @@ import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.setting.dto.MilkCollectionMigration;
 import com.eipl.amcs.setting.task.EMandaliMilkCollectionDbProcess;
 import com.eipl.amcs.setting.task.EMandaliMilkCollectionDbSaveTask;
-import com.eipl.amcs.setting.task.FriendsMilkCollectionDbProcess;
-import com.eipl.amcs.setting.task.FriendsMilkCollectionDbSaveTask;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -25,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,33 +37,28 @@ public class MilkCollectionDataMigrationEMandaliController implements MyInitiali
     TableView<MilkCollectionMigration> tableData;
     @FXML
     TableColumn<MilkCollectionMigration, String> colMonth, colCount;
+    String milkTypeStr = null;
+    List<MilkCollection> list = new ArrayList<>();
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     @FXML
-    private TextField  txtCow, txtBuffalo,txtdatabase;
+    private TextField txtCow, txtBuffalo, txtdatabase;
     @FXML
     private Button btnSave, btnClose, btnGenerate;
     @FXML
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private Label lblStatus;
-
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private String selectedFilePath;
-
-
     private List<Member> memberList;
-    String milkTypeStr = null;
+    private Stage stage;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    List<MilkCollection> list = new ArrayList<>();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-
-    private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -106,7 +97,7 @@ public class MilkCollectionDataMigrationEMandaliController implements MyInitiali
 
     private void startAccessDbProcess() {
         lblStatus.setText("Preparing data...");
-        var task = new EMandaliMilkCollectionDbProcess(selectedFilePath,txtdatabase.getText(),dpFromDate.getValue(), dpToDate.getValue());
+        var task = new EMandaliMilkCollectionDbProcess(selectedFilePath, txtdatabase.getText(), dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 lblStatus.setText("");
@@ -152,7 +143,7 @@ public class MilkCollectionDataMigrationEMandaliController implements MyInitiali
 
     private void startImportProcess() {
         var task = new EMandaliMilkCollectionDbSaveTask(milkTypeList, shiftList,
-                txtCow.getText(), txtBuffalo.getText(),txtdatabase.getText(),dpFromDate.getValue(),dpToDate.getValue());
+                txtCow.getText(), txtBuffalo.getText(), txtdatabase.getText(), dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 Boolean res = task.get();

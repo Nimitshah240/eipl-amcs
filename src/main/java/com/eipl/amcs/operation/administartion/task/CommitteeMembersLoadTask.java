@@ -1,17 +1,12 @@
 package com.eipl.amcs.operation.administartion.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.operation.administartion.dto.CommitteeMembers;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.master.account.model.CommitteeMembers;
+import com.eipl.amcs.master.account.service.CommitteeMembersService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class CommitteeMembersLoadTask extends Task<List<CommitteeMembers>> {
@@ -20,16 +15,23 @@ public class CommitteeMembersLoadTask extends Task<List<CommitteeMembers>> {
     @Override
     protected List<CommitteeMembers> call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.COMMITTEE_MEMBERS;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("society", MainApp.identityDto.getSociety().getCode());
+            CommitteeMembersService service = EmcsAppContext.getContext().getBean(CommitteeMembersService.class);
 
-            ResponseEntity<CommitteeMembers[]> response = restTemplate.getForEntity(url, CommitteeMembers[].class);
-            if (response == null || response.getStatusCode() != HttpStatus.OK)
+            List<CommitteeMembers> list = service.findAll();
+
+            if (list == null || list.isEmpty())
                 return null;
-            LOGGER.info("CommitteeMembers fetched: {}", response.getBody().length);
-            return Arrays.asList(response.getBody());
+            return list;
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.COMMITTEE_MEMBERS;
+////            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
+////                    .queryParam("society", MainApp.identityDto.getSociety().getCode());
+//
+//            ResponseEntity<CommitteeMembers[]> response = restTemplate.getForEntity(url, CommitteeMembers[].class);
+//            if (response == null || response.getStatusCode() != HttpStatus.OK)
+//                return null;
+//            LOGGER.info("CommitteeMembers fetched: {}", response.getBody().length);
+//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("CommitteeMembers fetch", e);
         }

@@ -10,11 +10,11 @@ import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.master.inventory.model.ProductAndSaleRateDto;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
-import com.eipl.amcs.operation.procurement.dto.ProductAndSaleRateDto;
 import com.eipl.amcs.operation.procurement.task.ProductMigrationListSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleObjectProperty;
@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +50,15 @@ public class ProductDataMigrationController implements MyInitialization {
     TextField txtFilePath;
     @FXML
     Button btnSave, btnClose, btnGenerate, btnBrowse;
+    String milkTypeStr = null;
+    List<ProductAndSaleRateDto> list = new ArrayList<>();
+    List<Product> productList = new ArrayList<>();
     private List<ProductGroup> groupList;
     private List<Unit> unitList;
     private List<Tax> taxList;
-    String milkTypeStr = null;
     private String selectedFilePath = null;
     private Stage stage;
+    private ResourceBundle resourceBundle;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -64,10 +68,6 @@ public class ProductDataMigrationController implements MyInitialization {
     public Node getRoot() {
         return root;
     }
-
-    List<ProductAndSaleRateDto> list = new ArrayList<>();
-    List<Product> productList = new ArrayList<>();
-    private ResourceBundle resourceBundle;
 
 //    List<ProductSaleRate> listSaleRate = new ArrayList<>();
 
@@ -172,7 +172,7 @@ public class ProductDataMigrationController implements MyInitialization {
 //                while (resultSet.next()) {
         } else if (type.equalsIgnoreCase("SkyWay")) {
             try {
-                List<String> lines = Files.readAllLines(new File(path).toPath(), Charset.forName("UTF-8"));
+                List<String> lines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     String[] arr = line.split(",");
                     Product m = new Product();

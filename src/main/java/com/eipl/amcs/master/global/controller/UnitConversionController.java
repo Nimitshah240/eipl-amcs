@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.model.UnitConversion;
-import com.eipl.amcs.master.global.service.UnitConversionService;
+import com.eipl.amcs.master.global.task.UnitConversionLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -18,8 +18,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class UnitConversionController implements MyInitialization {
     @FXML
@@ -33,15 +32,9 @@ public class UnitConversionController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private UnitConversionService unitConversionService;
-
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public UnitConversionController() {
-        unitConversionService = context.getBean(UnitConversionService.class);
     }
 
     @Override
@@ -61,30 +54,24 @@ public class UnitConversionController implements MyInitialization {
             colFromUnit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromUnit()));
             colToUnit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToUnit()));
         } catch (Exception e) {
+            System.out.println("UnitConversion setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<UnitConversion> list = unitConversionService.findAll();
-            if (list != null)
-                tableUnitConversions.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-//        var task = new UnitConversionLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<UnitConversion> list = task.get();
-//                if (list != null)
-//                    tableUnitConversions.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
+        var task = new UnitConversionLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<UnitConversion> list = task.get();
+                if (list != null)
+                    tableUnitConversions.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
+

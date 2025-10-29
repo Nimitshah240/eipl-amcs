@@ -15,13 +15,13 @@ import java.util.Map;
 @RequestMapping("/home")
 public class HomeController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
-	@GetMapping
-	public ResponseEntity<String> healthCheck(@RequestHeader Map<String, String> headers) {
-		headers.forEach((k, v) -> {
-			LOGGER.info("Header {} = {}", k, v);
-		});
-		return new ResponseEntity<String>("OK", HttpStatus.OK);
-	}
+    @GetMapping
+    public ResponseEntity<String> healthCheck(@RequestHeader Map<String, String> headers) {
+        headers.forEach((k, v) -> {
+            LOGGER.info("Header {} = {}", k, v);
+        });
+        return new ResponseEntity<String>("OK", HttpStatus.OK);
+    }
 }

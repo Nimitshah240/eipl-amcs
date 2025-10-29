@@ -16,20 +16,7 @@ public class LedgerBalance {
         this.balance = balance;
     }
 
-    @Override
-    public String toString() {
-        return this.getLedgerCode() + "-" + this.getLedgerName();
-    }
-
     public LedgerBalance() {
-    }
-
-    public int getIncomeExpense() {
-        return incomeExpense;
-    }
-
-    public void setIncomeExpense(int incomeExpense) {
-        this.incomeExpense = incomeExpense;
     }
 
     public LedgerBalance(String ledgerCode, String ledgerName, double debit, double credit, double balance, int incomeExpense) {
@@ -38,6 +25,19 @@ public class LedgerBalance {
         this.debit = debit;
         this.credit = credit;
         this.balance = balance;
+        this.incomeExpense = incomeExpense;
+    }
+
+    @Override
+    public String toString() {
+        return this.getLedgerCode() + "-" + this.getLedgerName();
+    }
+
+    public int getIncomeExpense() {
+        return incomeExpense;
+    }
+
+    public void setIncomeExpense(int incomeExpense) {
         this.incomeExpense = incomeExpense;
     }
 

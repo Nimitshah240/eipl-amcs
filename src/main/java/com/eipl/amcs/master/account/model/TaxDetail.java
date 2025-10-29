@@ -1,7 +1,15 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.deserialize.BasicTaxDeserializer;
+import com.eipl.amcs.deserialize.TaxDeserializer;
+import com.eipl.amcs.deserialize.TaxDetailDeserializer;
+import com.eipl.amcs.serialize.BasicTaxSerialize;
+import com.eipl.amcs.serialize.TaxDetailSerialize;
+import com.eipl.amcs.serialize.TaxSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,9 +32,13 @@ public class TaxDetail extends BaseModelTxn {
     private Double percentage;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BasicTaxSerialize.class)
+    @JsonDeserialize(using = BasicTaxDeserializer.class)
     @JoinColumn(name = "basic_tax_code", foreignKey = @ForeignKey(name = "fk_tax_detail_basic_tax_code"))
     private BasicTax basicTax;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
     @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(name = "fk_tax_detail_tax_code"))
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;

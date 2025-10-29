@@ -2,10 +2,20 @@ package com.eipl.amcs.master.procurement.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.MilkClassDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.UnionDeserializer;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.serialize.MilkClassSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +43,18 @@ public class LocalMilkSaleRate extends BaseModelTxn {
     private LocalDate wefDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_local_sale_rate_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkClassSerialize.class)
+    @JsonDeserialize(using = MilkClassDeserializer.class)
     @JoinColumn(name = "milk_class_code", foreignKey = @ForeignKey(name = "fk_local_sale_rate_milk_class_code"))
     private MilkClass milkClass;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_local_milk_sale_rate_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})

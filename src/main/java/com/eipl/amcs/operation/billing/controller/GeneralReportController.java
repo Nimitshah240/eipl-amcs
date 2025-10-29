@@ -7,7 +7,6 @@ import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
-import com.eipl.amcs.report.dto.PaymentForBank;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -37,13 +36,14 @@ public class GeneralReportController implements MyInitialization {
 
 
     private ResourceBundle resourceBundle;
+    private MemberBillSummary dto = null;
+    private MemberBillSummary propSummary;
+    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -52,9 +52,6 @@ public class GeneralReportController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
-    private MemberBillSummary propSummary;
-
 
     public void setSummay(MemberBillSummary dto) {
         if (dto != null) {
@@ -78,8 +75,6 @@ public class GeneralReportController implements MyInitialization {
         cboxMilkType.getSelectionModel().select(0);
     }
 
-    private StringBuilder errorMsg;
-
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
@@ -90,7 +85,7 @@ public class GeneralReportController implements MyInitialization {
         JasperPrint print = null;
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_ALL, params);
         JasperViewer.viewReport(print, false);
-        
+
 
     }
 

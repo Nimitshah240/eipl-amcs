@@ -17,12 +17,9 @@ import java.util.Optional;
 @Service
 public class StaffSalaryHeadServiceImpl implements StaffSalaryHeadService {
 
+    private static final Logger log = LoggerFactory.getLogger(StaffSalaryHeadServiceImpl.class);
     @Autowired
     private StaffSalaryHeadRepository staffSalaryHeadRepository;
-
-
-    private static final Logger log = LoggerFactory.getLogger(StaffSalaryHeadServiceImpl.class);
-
 
     @Override
     public List<StaffSalaryHead> findAll() {

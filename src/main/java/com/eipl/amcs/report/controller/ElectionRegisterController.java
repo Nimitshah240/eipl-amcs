@@ -9,10 +9,6 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.org.convertor.DockConvertor;
-import com.eipl.amcs.master.org.model.Dock;
-import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
-import com.eipl.amcs.master.org.task.DockLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -31,7 +27,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class ElectionRegisterController implements MyInitialization {
 
@@ -40,19 +35,20 @@ public class ElectionRegisterController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpToDate,dpFromDate;
+    private DatePicker dpToDate, dpFromDate;
     @FXML
     private ComboBox<MilkType> cboxReportType;
 
     @FXML
-    private ComboBox<String>  cboxQtyAmount;
+    private ComboBox<String> cboxQtyAmount;
     @FXML
-    private ComboBox<Shift>  cboxFromShift,cboxToShift;
+    private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
     private E_NumericField txtLimit;
 
     private ResourceBundle resourceBundle;
     private List<MilkType> listMilkType;
+
     @Override
     public Node getRoot() {
         return root;
@@ -64,14 +60,14 @@ public class ElectionRegisterController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue){
+            if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
@@ -95,16 +91,16 @@ public class ElectionRegisterController implements MyInitialization {
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        params.put("p_animal_type",cboxReportType.getValue().getCode());
+        params.put("p_animal_type", cboxReportType.getValue().getCode());
         params.put("p_limit", Integer.parseInt(txtLimit.getText()));
-        params.put("p_qty_amount", cboxQtyAmount.getSelectionModel().getSelectedIndex()==0?1:2);
+        params.put("p_qty_amount", cboxQtyAmount.getSelectionModel().getSelectedIndex() == 0 ? 1 : 2);
         params.put("p_locale", MainApp.locale);
         JasperPrint print = null;
-       if(cboxReportType.getValue().getName().equalsIgnoreCase(MainApp.bundle.getString("all"))){
-           print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER, params);
-       }else {
-           print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER_MILK_TYPE, params);
-       }
+        if (cboxReportType.getValue().getName().equalsIgnoreCase(MainApp.bundle.getString("all"))) {
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER, params);
+        } else {
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER_MILK_TYPE, params);
+        }
 
         JasperViewer.viewReport(print, false);
     }
@@ -119,7 +115,7 @@ public class ElectionRegisterController implements MyInitialization {
         task1.setOnSucceeded(e -> {
             try {
                 List<MilkType> list = task1.get();
-                if (list != null&&!list.isEmpty()) {
+                if (list != null && !list.isEmpty()) {
                     listMilkType = new ArrayList<>();
                     listMilkType.add(0, new MilkType(0, MainApp.bundle.getString("all")));
                     listMilkType.addAll(list);

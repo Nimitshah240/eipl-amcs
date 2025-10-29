@@ -1,11 +1,12 @@
 package com.eipl.amcs.operation.inventory.dto;
 
+import com.eipl.amcs.operation.inventory.model.ProductRequisition;
+import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
-import com.eipl.amcs.operation.inventory.model.ProductRequisition;
+
 import java.util.List;
 
 @Setter

@@ -16,11 +16,9 @@ import java.util.Optional;
 @Service
 public class LedgerMappingProductGroupServiceImpl implements LedgerMappingProductGroupService {
 
+    private static final Logger log = LoggerFactory.getLogger(LedgerMappingProductGroupServiceImpl.class);
     @Autowired
     private LedgerMappingProductGroupRepository ledgerMappingProductGroupRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(LedgerMappingProductGroupServiceImpl.class);
-
 
     @Override
     public List<LedgerMappingProductGroup> findAll() {

@@ -2,8 +2,12 @@ package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,61 +22,63 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "member_bill_summary")
 public class MemberBillSummary extends BaseModelTxn {
-	@Id
-	private String code;
-	private BigDecimal milkQty;
-	private BigDecimal milkAmount;
-	private BigDecimal productSaleAmount;
-	private BigDecimal localSaleAmount;
-	private BigDecimal loanAmount;
-	private BigDecimal otherAddAmount;
-	private BigDecimal otherDedAmount;
-	private BigDecimal netAmount;
-	private BigDecimal disbursedAmount;
-	private short status; //1-PENDING
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_member_bill_summary_payment_cycle_code"))
-	@JsonIgnoreProperties(value = {"society", "fromShift", "toShift"})
-	private SocietyPaymentCycle paymentCycle;
+    @Id
+    private String code;
+    private BigDecimal milkQty;
+    private BigDecimal milkAmount;
+    private BigDecimal productSaleAmount;
+    private BigDecimal localSaleAmount;
+    private BigDecimal loanAmount;
+    private BigDecimal otherAddAmount;
+    private BigDecimal otherDedAmount;
+    private BigDecimal netAmount;
+    private BigDecimal disbursedAmount;
+    private short status; //1-PENDING
 
-	@Override
-	public String getTableName() {
-		return "member_bill_summary";
-	}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyPaymentCycleSerialize.class)
+    @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
+    @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_member_bill_summary_payment_cycle_code"))
+    @JsonIgnoreProperties(value = {"society", "fromShift", "toShift"})
+    private SocietyPaymentCycle paymentCycle;
 
-	@Override
-	public Object getId() {
-		return this.getCode();
-	}
+    @Override
+    public String getTableName() {
+        return "member_bill_summary";
+    }
 
-	@Override
-	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-		MemberBillSummaryAudit audit = new MemberBillSummaryAudit();
-		audit.setOperationType(operation);
-		audit.setAuditCreatedBy(user);
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
 
-		audit.setCode(this.getCode());
-		audit.setMilkAmount(this.getMilkAmount());
-		audit.setMilkQty(this.getMilkQty());
-		audit.setProductSaleAmount(this.getProductSaleAmount());
-		audit.setLocalSaleAmount(this.getLocalSaleAmount());
-		audit.setLoanAmount(this.getLoanAmount());
-		audit.setOtherAddAmount(this.getOtherAddAmount());
-		audit.setNetAmount(this.getNetAmount());
-		audit.setOtherDedAmount(this.getOtherDedAmount());
-		audit.setDisbursedAmount(this.getDisbursedAmount());
-		audit.setStatus(this.getStatus());
-		audit.setPaymentCycle(this.getPaymentCycle());
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        MemberBillSummaryAudit audit = new MemberBillSummaryAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
 
-		audit.setCreatedAt(this.getCreatedAt());
-		audit.setCreatedBy(this.getCreatedBy());
-		audit.setUpdatedAt(this.getUpdatedAt());
-		audit.setUpdatedBy(this.getUpdatedBy());
-		audit.setXCol1(this.getXCol1());
-		audit.setXCol2(this.getXCol2());
-		audit.setXCol3(this.getXCol3());
+        audit.setCode(this.getCode());
+        audit.setMilkAmount(this.getMilkAmount());
+        audit.setMilkQty(this.getMilkQty());
+        audit.setProductSaleAmount(this.getProductSaleAmount());
+        audit.setLocalSaleAmount(this.getLocalSaleAmount());
+        audit.setLoanAmount(this.getLoanAmount());
+        audit.setOtherAddAmount(this.getOtherAddAmount());
+        audit.setNetAmount(this.getNetAmount());
+        audit.setOtherDedAmount(this.getOtherDedAmount());
+        audit.setDisbursedAmount(this.getDisbursedAmount());
+        audit.setStatus(this.getStatus());
+        audit.setPaymentCycle(this.getPaymentCycle());
 
-		return audit;
-	}
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
+
+        return audit;
+    }
 }

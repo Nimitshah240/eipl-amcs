@@ -13,10 +13,9 @@ import java.util.List;
 
 @Service
 public class BankServiceImpl implements BankService {
+    private static final Logger log = LoggerFactory.getLogger(BankServiceImpl.class);
     @Autowired
     private BankRepository bankRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(BankServiceImpl.class);
 
     @Override
     public List<Bank> findAll() {

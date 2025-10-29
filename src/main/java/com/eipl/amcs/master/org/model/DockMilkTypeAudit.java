@@ -1,8 +1,14 @@
 package com.eipl.amcs.master.org.model;
 
 import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.deserialize.DockDeserializer;
+import com.eipl.amcs.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.serialize.DockSerialize;
+import com.eipl.amcs.serialize.MilkTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,10 +31,14 @@ public class DockMilkTypeAudit extends BaseModelTxnAudit {
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = DockSerialize.class)
+    @JsonDeserialize(using = DockDeserializer.class)
     @JoinColumn(name = "dock_no", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"society"})
     private Dock dock;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MilkType milkType;
 

@@ -3,7 +3,7 @@ package com.eipl.amcs.master.global.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.service.MilkTypeService;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,8 +17,7 @@ import javafx.scene.layout.StackPane;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class MilkTypeController implements MyInitialization {
     @FXML
@@ -32,18 +31,10 @@ public class MilkTypeController implements MyInitialization {
     @FXML
     Button btnClose;
 
-    private MilkTypeService milkTypeService;
-
-
     @Override
     public Node getRoot() {
         return root;
     }
-
-    public MilkTypeController() {
-        milkTypeService = context.getBean(MilkTypeService.class);
-    }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,30 +52,23 @@ public class MilkTypeController implements MyInitialization {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         } catch (Exception e) {
+            System.out.println("MilkType setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<MilkType> list = milkTypeService.findAll();
-            if (list != null)
-                tableMilkTypes.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-//        var task = new MilkTypeLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<MilkType> list = task.get();
-//                if (list != null)
-//                    tableMilkTypes.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
+        var task = new MilkTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task.get();
+                if (list != null)
+                    tableMilkTypes.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

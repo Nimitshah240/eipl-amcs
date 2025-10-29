@@ -5,14 +5,15 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
-import com.eipl.amcs.master.inventory.service.ProductPurchaseRateService;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateDeleteTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateLoadTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.util.CommonUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,11 +31,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class ProductPurchaseRateController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<ProductPurchaseRate> propPurchaseRateDto;
     @FXML
     AnchorPane root;
     @FXML
@@ -53,16 +54,12 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
     TableColumn<ProductPurchaseRate, Union> colUnion;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<ProductPurchaseRate> propPurchaseRateDto;
-
-    private ProductPurchaseRateService productPurchaseRateService;
 
     public ProductPurchaseRateController() {
-        productPurchaseRateService = context.getBean(ProductPurchaseRateService.class);
         propPurchaseRateDto = new SimpleObjectProperty<>();
     }
+
 
     @Override
     public Node getRoot() {
@@ -113,9 +110,12 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate()));
             colWefDate.setCellFactory(new LocalDateCellFactory<>());
+
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             propPurchaseRateDto.bind(tableProductPurchaseRate.getSelectionModel().selectedItemProperty());
+
         } catch (Exception e) {
+            System.out.println("ProductPurchaseRate setuptable Exception");
             e.printStackTrace();
         }
     }
@@ -123,13 +123,17 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
     @Override
     public void loadData() {
         tableProductPurchaseRate.setItems(null);
-        try {
-            List<ProductPurchaseRate> list = productPurchaseRateService.findAll();
-            if (list != null)
-                tableProductPurchaseRate.setItems(FXCollections.observableList(list));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ProductPurchaseRateLoadTask task = new ProductPurchaseRateLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<ProductPurchaseRate> list = task.get();
+                if (list != null)
+                    tableProductPurchaseRate.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
@@ -140,15 +144,22 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             ProductPurchaseRate dto = propPurchaseRateDto.get();
             if (dto != null) {
-                try {
-                    Optional<ProductPurchaseRate> productData = productPurchaseRateService.findById(dto.getCode());
-                    if (productData == null || !productData.isPresent())
-                        return;
-                    productPurchaseRateService.delete(productData.get(), CommonUtil.setIdentityHeader());
-                    loadData();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                var task = new ProductPurchaseRateDeleteTask(dto.getCode());
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = task.get();
+                        if (respDelete == null || !respDelete.booleanValue()) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        loadData();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
             }
         }
     }

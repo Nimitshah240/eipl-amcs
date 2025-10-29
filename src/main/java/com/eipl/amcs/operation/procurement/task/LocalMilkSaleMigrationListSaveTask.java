@@ -1,23 +1,16 @@
 package com.eipl.amcs.operation.procurement.task;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.operation.procurement.service.LocalMilkSaleService;
+import com.eipl.amcs.util.CommonUtil;
 import javafx.concurrent.Task;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Queue;
 
 public class LocalMilkSaleMigrationListSaveTask extends Task<Integer> {
     private final List<LocalMilkSale> dtoList;
-    private int max;
+    private final int max;
 
     public LocalMilkSaleMigrationListSaveTask(List<LocalMilkSale> dtoList, int max) {
         this.dtoList = dtoList;
@@ -27,9 +20,12 @@ public class LocalMilkSaleMigrationListSaveTask extends Task<Integer> {
     @Override
     protected Integer call() throws Exception {
         try {
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/migrate";
-            ResponseEntity<LocalMilkSale[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), LocalMilkSale[].class);
+            LocalMilkSaleService service = EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
+            service.migrateCollections(dtoList, CommonUtil.setIdentityHeader());
+
+//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
+//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/migrate";
+//            ResponseEntity<LocalMilkSale[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), LocalMilkSale[].class);
             return null;
         } catch (Exception e) {
             e.printStackTrace();

@@ -23,6 +23,7 @@ public interface ShareRepository extends BaseRepository<Share, String> {
 
     @EntityGraph(attributePaths = {"member", "transferredFrom", "society"})
     List<Share> findByIssueDateBetween(LocalDate startDate, LocalDate endDate, Sort sort);
+
     @EntityGraph(attributePaths = {"member", "transferredFrom", "society"})
     List<Share> findByMember(Member member);
 

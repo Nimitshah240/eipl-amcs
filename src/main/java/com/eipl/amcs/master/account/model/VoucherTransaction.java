@@ -2,8 +2,16 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.LedgerDeserializer;
+import com.eipl.amcs.deserialize.VoucherDeserializer;
+import com.eipl.amcs.deserialize.VoucherTransactionDeserializer;
+import com.eipl.amcs.serialize.LedgerSerialize;
+import com.eipl.amcs.serialize.VoucherSerialize;
+import com.eipl.amcs.serialize.VoucherTransactionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,10 +36,14 @@ public class VoucherTransaction extends BaseModelTxn {
     private String narration;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_transaction_ledger_code"))
     @JsonIgnoreProperties(value = {"society", "ledgerGroup"})
     private Ledger ledger;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = VoucherSerialize.class)
+    @JsonDeserialize(using = VoucherDeserializer.class)
     @JoinColumn(name = "voucher_code", foreignKey = @ForeignKey(name = "fk_voucher_transaction_voucher_code"))
     @JsonIgnoreProperties(value = {"society", "voucherType"})
     private Voucher voucher;

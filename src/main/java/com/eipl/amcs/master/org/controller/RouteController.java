@@ -5,7 +5,8 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.service.RouteService;
+import com.eipl.amcs.master.org.task.RouteLoadTask;
+import com.eipl.amcs.master.org.task.RouteSaveTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,8 +22,7 @@ import java.net.URL;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import static com.eipl.amcs.MainApp.context;
+import java.util.concurrent.ExecutionException;
 
 public class RouteController implements MyInitialization {
 
@@ -42,12 +42,6 @@ public class RouteController implements MyInitialization {
     Button btnClose, btnSave;
     @FXML
     private StackPane root;
-
-    private RouteService routeService;
-
-    public RouteController() {
-        routeService = context.getBean(RouteService.class);
-    }
 
     @Override
     public Node getRoot() {
@@ -137,28 +131,33 @@ public class RouteController implements MyInitialization {
                 }
             });
         } catch (Exception e) {
+            System.out.println("Route setuptable Exception");
             e.printStackTrace();
         }
     }
 
     @Override
     public void loadData() {
-        try {
-            List<Route> list = routeService.findAll();
-            if (list != null)
-                tableRoute.setItems(FXCollections.observableList(list));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        var task = new RouteLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Route> list = task.get();
+                if (list != null)
+                    tableRoute.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override
     public void saveData() {
-        try {
-            routeService.save(tableRoute.getItems().get(0));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        RouteSaveTask task = new RouteSaveTask(tableRoute.getItems().get(0));
+        task.setOnSucceeded(e -> {
+            //           loadData();
+        });
+        new Thread(task).start();
     }
 }
 

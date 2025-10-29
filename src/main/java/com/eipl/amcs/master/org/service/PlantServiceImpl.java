@@ -14,10 +14,9 @@ import java.util.List;
 @Service
 public class PlantServiceImpl implements PlantService {
 
+    private static final Logger log = LoggerFactory.getLogger(PlantServiceImpl.class);
     @Autowired
     private PlantRepository plantRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(PlantServiceImpl.class);
 
     @Override
     public List<Plant> findAll() {

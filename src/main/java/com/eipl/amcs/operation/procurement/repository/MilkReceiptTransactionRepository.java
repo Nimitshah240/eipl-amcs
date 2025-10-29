@@ -13,17 +13,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MilkReceiptTransactionRepository extends BaseRepository<MilkReceiptTransaction, String>{
-	
-	@EntityGraph(attributePaths = {"milkReceipt","milkQualityType","milkType"})
-	List<MilkReceiptTransaction> findByMilkReceipt(MilkReceipt milkReceipt);
-	
-	@EntityGraph(attributePaths = {"milkReceipt","milkQualityType","milkType"})
-	void deleteByMilkReceipt(MilkReceipt challanNo);
-	
-	@Override
-	@EntityGraph(attributePaths = {"milkReceipt","milkQualityType","milkType"})
-	Optional<MilkReceiptTransaction> findById(String id);
+public interface MilkReceiptTransactionRepository extends BaseRepository<MilkReceiptTransaction, String> {
+
+    @EntityGraph(attributePaths = {"milkReceipt", "milkQualityType", "milkType"})
+    List<MilkReceiptTransaction> findByMilkReceipt(MilkReceipt milkReceipt);
+
+    @EntityGraph(attributePaths = {"milkReceipt", "milkQualityType", "milkType"})
+    void deleteByMilkReceipt(MilkReceipt challanNo);
+
+    @Override
+    @EntityGraph(attributePaths = {"milkReceipt", "milkQualityType", "milkType"})
+    Optional<MilkReceiptTransaction> findById(String id);
 
     Optional<MilkReceiptTransaction> findByMilkReceiptAndMilkTypeAndMilkQualityType(MilkReceipt milkReceipt, MilkType mtype, MilkQualityType mcat);
 

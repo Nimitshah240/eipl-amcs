@@ -12,4 +12,5 @@ public interface UnitRepository extends BaseRepository<Unit, Integer> {
 
     @Override
     List<Unit> findAll(Sort sort);
+
 }

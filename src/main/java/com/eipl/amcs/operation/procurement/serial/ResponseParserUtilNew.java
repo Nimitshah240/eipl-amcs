@@ -10,10 +10,9 @@ import java.util.Map;
 
 public class ResponseParserUtilNew {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseParserUtilNew.class);
     static String serialRespAdtParam;
     static String adtParam;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseParserUtilNew.class);
 
     public synchronized static Map<String, String> parse(String data, String regExpression) {
         if (data == null || data.isEmpty())

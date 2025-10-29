@@ -18,13 +18,11 @@ import java.util.Optional;
 @Service
 public class StaffSalaryMappingServiceImpl implements StaffSalaryMappingService {
 
+    private static final Logger log = LoggerFactory.getLogger(StaffSalaryMappingServiceImpl.class);
     @Autowired
     private StaffSalaryMappingRepository staffSalaryMappingRepository;
     @Autowired
     private NextCodeService nextCodeService;
-
-
-    private static final Logger log = LoggerFactory.getLogger(StaffSalaryMappingServiceImpl.class);
 
     @Override
     public List<StaffSalaryMapping> findAll() {

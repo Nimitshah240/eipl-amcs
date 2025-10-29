@@ -52,15 +52,15 @@ public class MilkReceiptController implements MyInitialization {
     private Button btnAdd, btnEdit, btnDelete, btnClose;
 
     private ResourceBundle resourceBundle;
-    private ObjectProperty<MilkReceipt> propMilkReceipt;
+    private final ObjectProperty<MilkReceipt> propMilkReceipt;
+
+    public MilkReceiptController() {
+        propMilkReceipt = new SimpleObjectProperty<>();
+    }
 
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public MilkReceiptController() {
-        propMilkReceipt = new SimpleObjectProperty<>();
     }
 
     @Override

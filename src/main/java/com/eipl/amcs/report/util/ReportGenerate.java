@@ -1,16 +1,22 @@
 package com.eipl.amcs.report.util;
 
+import ch.qos.logback.classic.Logger;
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.utils.AppConstant;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Map;
 
 public class ReportGenerate {
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ReportGenerate.class);
     private static JasperPrint jasperPrint;
 
     public static JasperPrint getReportDataSourceViewer(String path, Map<String, Object> params,
@@ -50,12 +56,19 @@ public class ReportGenerate {
                 return JasperFillManager.fillReport(getPath(path), params, connection);
             }
         } catch (Exception e) {
+            ReportGenerate.showError(e);
             e.printStackTrace();
         }
         return null;
     }
 
-
+    /**
+     * @param path
+     * @return String
+     * @updatedBy Nimit Shah
+     * @updatedOn - 28-07-2025
+     * @update - add 3 reports path for scheme rate.
+     */
     private static String getPath(String path) {
         switch (path) {
 
@@ -287,9 +300,23 @@ public class ReportGenerate {
 
             case AppConstant.ReportPath.SHARE_MEMBER:
                 return "resources/report/milkcollection/ShareMember.jasper";
+            case AppConstant.ReportPath.SCHEME_RATE_SOCIETY_PURCHASE:
+                return "resources/report/milkcollection/SchemeRateSocietyPurchaseReport.jasper";
+            case AppConstant.ReportPath.SCHEME_RATE_SOCIETY_PURCHASE_MEMBER_WISE:
+                return "resources/report/milkcollection/SchemeRateSocietyPurchaseMemberWise.jasper";
+            case AppConstant.ReportPath.SCHEME_RATE_MEMBER_MILK_COLLECTION_SLIP:
+                return "resources/report/milkcollection/SchemeRateMemberMilkCollectionSlip.jasper";
+            case AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE:
+                return "resources/report/milkcollection/PurchaseRegisterMonthWise.jasper";
+            case AppConstant.ReportPath.PAYMENT_REGISTER_WITH_DEDUCTION:
+                return "resources/report/milkcollection/PaymentRegisterWithDeduction.jasper";
         }
         return null;
+    }
 
-
+    public static void showError(Exception e) {
+        LOGGER.error("Report Error : ", e);
+        MyAlert alert = new ErrorAlert(MainApp.getStage(), "Report Error", "Error in Generating Report.");
+        alert.createAlert();
     }
 }

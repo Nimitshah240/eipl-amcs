@@ -1,7 +1,6 @@
 package com.eipl.amcs.setting.task;
 
 import com.eipl.amcs.setting.dto.MilkCollectionMigration;
-import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 
 import java.sql.Connection;
@@ -13,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EMandaliMilkCollectionDbProcess extends Task<List<MilkCollectionMigration>> {
-    private String filePath;
-    private String dbName;
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    private final String filePath;
+    private final String dbName;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
-    public EMandaliMilkCollectionDbProcess(String filePath, String dbName,LocalDate fromDate, LocalDate toDate) {
+    public EMandaliMilkCollectionDbProcess(String filePath, String dbName, LocalDate fromDate, LocalDate toDate) {
         this.filePath = filePath;
         this.dbName = dbName;
         this.fromDate = fromDate;
@@ -32,28 +31,24 @@ public class EMandaliMilkCollectionDbProcess extends Task<List<MilkCollectionMig
             String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
 
 //            String urlDb = "jdbc:ucanaccess://" + filePath;
-            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement();) {
+            try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
 
 //            try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
 
 
-
                 Statement statement = connection.createStatement();
 
-                String a = ("select    CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4)) as [Month]"+
-                        ",count(*) as count"+
-                        " from farmercollection "+
-                        "where cast(dtdate as DATE)>= '"+ fromDate.toString() +"' and cast(dtdate as DATE) <='"+toDate.toString()+
+                String a = ("select    CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4)) as [Month]" +
+                        ",count(*) as count" +
+                        " from farmercollection " +
+                        "where cast(dtdate as DATE)>= '" + fromDate.toString() + "' and cast(dtdate as DATE) <='" + toDate.toString() +
                         "' GROUP BY CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4))");
 
-                ResultSet resultSet = statement.executeQuery("select    CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4)) as [Month]"+
-                        ",count(*) as count"+
-                        " from farmercollection "+
-                        "where cast(dtdate as DATE)>= '"+ fromDate.toString() +"' and cast(dtdate as DATE) <='"+toDate.toString()+
+                ResultSet resultSet = statement.executeQuery("select    CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4)) as [Month]" +
+                        ",count(*) as count" +
+                        " from farmercollection " +
+                        "where cast(dtdate as DATE)>= '" + fromDate + "' and cast(dtdate as DATE) <='" + toDate +
                         "' GROUP BY CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4))");
-
-
-
 
 
 //                ResultSet resultSet = statement.executeQuery("select cast(DATENAME(MM,dtDate)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,dtDate) as varchar(4)) as month, count(*) as count from farmercollection" +

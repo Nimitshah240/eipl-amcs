@@ -13,34 +13,28 @@ import com.eipl.amcs.operation.procurement.task.MilkCollectionListSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
-//import net.ucanaccess.console.Main;
-import org.apache.poi.ss.usermodel.Cell;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class AmcsMilkCollectionDbSaveTask extends Task<Boolean> {
-    private List<MilkType> milkTypeList;
-    private List<Shift> shiftList;
-    private List<Member> memberList;
-    private String filePath;
-    private String cowRange;
-    private String buffRange;
     List<MilkCollection> collectionList = new ArrayList<>();
+    private final List<MilkType> milkTypeList;
+    private final List<Shift> shiftList;
+    private final List<Member> memberList;
+    private final String filePath;
+    private final String cowRange;
+    private final String buffRange;
 
     public AmcsMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath, String cowRange, String buffRange, List<Member> memberList) {
         this.milkTypeList = milkTypeList;
@@ -63,7 +57,7 @@ public class AmcsMilkCollectionDbSaveTask extends Task<Boolean> {
             for (MilkType milkType : milkTypeList) {
                 mapMilkType.put(milkType.getName().toUpperCase().substring(0, 1), milkType.getCode());
             }
-            try (Stream<String> lines = Files.lines(new File(filePath).toPath(), Charset.forName("UTF-8"))) {
+            try (Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
                 lines.forEach(line -> {
                     MilkCollection mc = new MilkCollection();
 //                    String line1 = new String(Base64.getDecoder().decode(line.getBytes()));
@@ -150,15 +144,14 @@ public class AmcsMilkCollectionDbSaveTask extends Task<Boolean> {
                     alert.createAlert();
                     return;
                 }
-                StringBuilder builder = new StringBuilder();
-                builder.append("Import success: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-                builder.append("\n");
-                builder.append("Import fail: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-                builder.append("\n");
+                String builder = "Import success: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count() +
+                        "\n" +
+                        "Import fail: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count() +
+                        "\n";
 
-                MyAlert alert = new InformationAlert(MainApp.getStage(), "Milk Collection", builder.toString());
+                MyAlert alert = new InformationAlert(MainApp.getStage(), "Milk Collection", builder);
                 alert.createAlert();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

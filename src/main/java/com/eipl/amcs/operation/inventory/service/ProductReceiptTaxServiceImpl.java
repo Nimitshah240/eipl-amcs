@@ -16,42 +16,41 @@ import java.util.Optional;
 @Service
 public class ProductReceiptTaxServiceImpl implements ProductReceiptTaxService {
 
-	@Autowired
-	private ProductReceiptTaxRepository receiptTaxRepository;
+    private static final Logger log = LoggerFactory.getLogger(ProductReceiptTaxServiceImpl.class);
+    @Autowired
+    private ProductReceiptTaxRepository receiptTaxRepository;
 
-	private static final Logger log = LoggerFactory.getLogger(ProductReceiptTaxServiceImpl.class);
+    @Override
+    public List<ProductReceiptTax> findAll() {
+        List<ProductReceiptTax> list = receiptTaxRepository.findAll(Sort.by("code"));
+        log.info("ProductReceiptTax findAll {} items fetched", list.size());
+        return list;
+    }
 
-	@Override
-	public List<ProductReceiptTax> findAll() {
-		List<ProductReceiptTax> list = receiptTaxRepository.findAll(Sort.by("code"));
-		log.info("ProductReceiptTax findAll {} items fetched", list.size());
-		return list;
-	}
+    @Override
+    public ProductReceiptTax save(ProductReceiptTax productReceiptTax) {
+        return receiptTaxRepository.save(productReceiptTax);
+    }
 
-	@Override
-	public ProductReceiptTax save(ProductReceiptTax productReceiptTax) {
-		return receiptTaxRepository.save(productReceiptTax);
-	}
+    @Override
+    public ProductReceiptTax update(ProductReceiptTax productReceiptTax) {
+        return receiptTaxRepository.save(productReceiptTax);
+    }
 
-	@Override
-	public ProductReceiptTax update(ProductReceiptTax productReceiptTax) {
-		return receiptTaxRepository.save(productReceiptTax);
-	}
+    @Override
+    public Optional<ProductReceiptTax> findById(String code) {
+        return receiptTaxRepository.findById(code);
+    }
 
-	@Override
-	public Optional<ProductReceiptTax> findById(String code) {
-		return receiptTaxRepository.findById(code);
-	}
+    @Override
+    public void delete(String code) {
+        receiptTaxRepository.deleteById(code);
+    }
 
-	@Override
-	public void delete(String code) {
-		receiptTaxRepository.deleteById(code);
-	}
-
-	@Override
-	@Transactional
-	public void delete(ProductReceiptTax productReceiptTax) {
-		receiptTaxRepository.deleteById(productReceiptTax.getCode());
-	}
+    @Override
+    @Transactional
+    public void delete(ProductReceiptTax productReceiptTax) {
+        receiptTaxRepository.deleteById(productReceiptTax.getCode());
+    }
 
 }

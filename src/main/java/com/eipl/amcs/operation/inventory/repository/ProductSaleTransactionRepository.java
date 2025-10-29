@@ -13,17 +13,17 @@ import java.util.Optional;
 @Repository
 public interface ProductSaleTransactionRepository extends BaseRepository<ProductSaleTransaction, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "productSale", "product" })
-	Optional<ProductSaleTransaction> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"productSale", "product"})
+    Optional<ProductSaleTransaction> findById(String id);
 
-	@Override
-	@EntityGraph(attributePaths = { "productSale", "product" })
-	List<ProductSaleTransaction> findAll(Sort sort);
+    @Override
+    @EntityGraph(attributePaths = {"productSale", "product"})
+    List<ProductSaleTransaction> findAll(Sort sort);
 
-	void deleteByProductSale(ProductSale productSale);
+    void deleteByProductSale(ProductSale productSale);
 
-	@EntityGraph(attributePaths = { "productSale", "product" })
-	List<ProductSaleTransaction> findByProductSale(ProductSale productSale);
+    @EntityGraph(attributePaths = {"productSale", "product"})
+    List<ProductSaleTransaction> findByProductSale(ProductSale productSale);
 
 }

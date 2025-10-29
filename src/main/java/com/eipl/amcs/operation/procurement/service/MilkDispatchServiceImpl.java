@@ -1,6 +1,5 @@
 package com.eipl.amcs.operation.procurement.service;
 
-import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -41,6 +40,7 @@ import java.util.Optional;
 
 @Service
 public class MilkDispatchServiceImpl implements MilkDispatchService {
+    private static final Logger log = LoggerFactory.getLogger(MilkDispatchServiceImpl.class);
     @Autowired
     private MilkDispatchRepository dispatchRepository;
     @Autowired
@@ -57,8 +57,6 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
     private LocalMilkSaleRepository localMilkSaleRepository;
     @Autowired
     private MilkTypeRepository milkTypeRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(MilkDispatchServiceImpl.class);
 
     @Override
     // @Cacheable(value = "MilkDispatchsCache")

@@ -13,10 +13,9 @@ import java.util.List;
 @Service
 public class SocietyMilkPurchaseRateApplicabilityServiceImpl implements SocietyMilkPurchaseRateApplicabilityService {
 
+    private static final Logger log = LoggerFactory.getLogger(SocietyMilkPurchaseRateApplicabilityServiceImpl.class);
     @Autowired
     private SocietyMilkPurchaseRateApplicabilityRepository societyMilkPurchaseRateApplicabilityRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(SocietyMilkPurchaseRateApplicabilityServiceImpl.class);
 
     @Override
     public List<SocietyMilkPurchaseRateApplicability> findAll() {

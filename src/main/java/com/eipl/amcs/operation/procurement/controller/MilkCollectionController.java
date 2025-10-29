@@ -18,8 +18,8 @@ import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.master.org.convertor.DockConvertor;
-import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
+import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.task.DockLoadTask;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
@@ -69,20 +69,20 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
     @FXML
     TableColumn<MilkCollection, LocalDate> colDate;
     @FXML
-    private ComboBox<Dock> cboxDock;
-    @FXML
     TableColumn<MilkCollection, String> colMemberName;
-    private ResourceBundle resourceBundle;
     @FXML
     DatePicker dpFromDate, dpToDate;
     @FXML
     ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
     Button btnSearch, btnClose, btnStartCollection, btnImport, btnExport, btnSync;
-
+    @FXML
+    private ComboBox<Dock> cboxDock;
+    private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<Member> memberList;
+    private List<MilkCollection> listMilkCollection;
 
     @Override
     public Node getRoot() {
@@ -148,7 +148,6 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                 MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml"))));
         btnStartCollection.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkCollectionAdd.fxml"))));
     }
-
 
     private void exportExcel(List<MilkCollection> list) {
         boolean exported = true;
@@ -258,9 +257,6 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
         alert.createAlert();
     }
 
-
-    private List<MilkCollection> listMilkCollection;
-
     private void startImport(File file) {
         var task = new MilkCollectionImportTask(file, milkTypeList, shiftList, memberList);
         task.setOnSucceeded(e -> {
@@ -294,16 +290,15 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                     alert.createAlert();
                     return;
                 }
-                StringBuilder builder = new StringBuilder();
-                builder.append("Import success: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
-                builder.append("\n");
-                builder.append("Import fail: ");
-                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
-                builder.append("\n");
+                String builder = "Import success: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count() +
+                        "\n" +
+                        "Import fail: " +
+                        list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count() +
+                        "\n";
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"),
-                        builder.toString());
+                        builder);
                 alert.createAlert();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

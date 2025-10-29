@@ -23,9 +23,9 @@ import com.eipl.amcs.master.inventory.repository.ProductGroupRepository;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
-import com.eipl.amcs.master.operation.repository.CustomerRepository;
-import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
-import com.eipl.amcs.master.operation.repository.MemberRepository;
+import com.eipl.amcs.master.operation.model.SchemeRate;
+import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
+import com.eipl.amcs.master.operation.repository.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Society;
@@ -52,8 +52,8 @@ import com.eipl.amcs.sync.model.Subscribed;
 import com.eipl.amcs.sync.repository.BroadcastedLogRepository;
 import com.eipl.amcs.sync.repository.BroadcastedRepository;
 import com.eipl.amcs.sync.repository.SubscribedRepository;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.EncryptionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,7 +85,7 @@ public class BroadcastedService {
     @Autowired
     private BroadcastedProducer producer;
     @Autowired
-    private BroadcastedRepository broadcastedRepository;
+    private BroadcastedRepository repository;
     @Autowired
     private SubscribedRepository subscribedRepository;
     @Autowired
@@ -113,7 +113,7 @@ public class BroadcastedService {
     @Autowired
     private AllowDcsManualCollectionRangeRepository allowDcsManualCollectionRangeRepository;
     @Autowired
-    private MilkCollectionService milkCollectionService;
+    private MilkCollectionService milkCollectionRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -158,6 +158,12 @@ public class BroadcastedService {
     @Autowired
     private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
 
+    @Autowired
+    private SchemeRateRepository schemeRateRepository;
+
+    @Autowired
+    private SchemeRateApplicabilityRepository schemeRateApplicabilityRepository;
+
 
     ObjectMapper mapper = new ObjectMapper();
     Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
@@ -166,7 +172,7 @@ public class BroadcastedService {
         List<Broadcasted> list;
         LOGGER.info("In send broadcasted msg All");
         try {
-            list = broadcastedRepository.findAllByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
+            list = repository.findAllByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
             for (List<Broadcasted> part : ListUtils.partition(list, 10)) {
                 producer.produce(part);
 //                part.forEach(item -> {
@@ -180,14 +186,15 @@ public class BroadcastedService {
     }
 
     public Map<String, List<Broadcasted>> getGroupedByTableName() {
-        List<Broadcasted> all = broadcastedRepository.findAll();
+        List<Broadcasted> all = repository.findAll();
         return all.stream().collect(Collectors.groupingBy(Broadcasted::getTableName));
     }
 
     @Scheduled(fixedDelay = 10000)
     public void sendBroadcasted() {
+        LOGGER.info("In send broadcasted msg");
         try {
-            List<Broadcasted> list = broadcastedRepository.findTop50ByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
+            List<Broadcasted> list = repository.findTop50ByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
             if (list == null || list.isEmpty())
                 return;
             producer.produce(list);
@@ -198,8 +205,9 @@ public class BroadcastedService {
 
     @Scheduled(fixedDelay = 10000)
     public void sendInbox() {
+        LOGGER.info("Sending Inbox");
         try {
-            List<Broadcasted> list = broadcastedRepository.findTop100ByTableNameInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
+            List<Broadcasted> list = repository.findTop100ByTableNameInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
             if (list == null || list.isEmpty())
                 return;
             producer.produceInbox(list);
@@ -210,6 +218,7 @@ public class BroadcastedService {
 
     @Scheduled(fixedDelay = 10000)
     public void processSubscribed() {
+        LOGGER.info("In Process Subscribed Message");
         try {
             List<Subscribed> list = subscribedRepository.findTop100ByTableNameInOrderByCreatedAt(AppConstant.prioritizedTableNameList);
             if (list == null || list.isEmpty()) {
@@ -227,6 +236,16 @@ public class BroadcastedService {
         }
     }
 
+    /**
+     * @param list
+     * @param society
+     * @param shiftList
+     * @param milkTypeList
+     * @param milkQualityTypeList
+     * @updatedBy Nimit Shah
+     * @updatedOn - 23-07-2025
+     * @update - update to get sysUpdatedBy column of insuranceDetail data and schemeRate & SchemeRateApplicability data from portal.
+     */
     private void process(List<Subscribed> list, Society society, List<Shift> shiftList, List<MilkType> milkTypeList, List<MilkQualityType> milkQualityTypeList) throws JsonProcessingException {
         for (Subscribed subscribed : list) {
             Map jsonText = mapper.readValue(subscribed.getDataText(), Map.class);
@@ -684,6 +703,8 @@ public class BroadcastedService {
                                 insuranceDetail.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
                                 insuranceDetail.setxCol4(jsonText.get("xCol4") != null ? String.valueOf(jsonText.get("xCol4")) : null);
                                 insuranceDetail.setxCol5(jsonText.get("xCol5") != null ? String.valueOf(jsonText.get("xCol5")) : null);
+                                insuranceDetail.setSysUpdatedBy(jsonText.get("sysUpdatedBy") != null ? String.valueOf(jsonText.get("sysUpdatedBy")) : null);
+
                                 insuranceDetailRepository.save(insuranceDetail);
                                 break;
                             case "DELETE":
@@ -818,11 +839,102 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                case "tbl_scheme_rate":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                SchemeRate schemeRate = new SchemeRate();
+                                schemeRate.setSchemeRateCode(jsonText.get("schemeRateCode") != null ? (String) jsonText.get("schemeRateCode") : null);
+                                schemeRate.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null);
+                                schemeRate.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtil.Formatter4) : null);
+                                schemeRate.setFromShift(jsonText.get("fromShift") != null ? (Integer) jsonText.get("fromShift") : null);
+                                schemeRate.setToShift(jsonText.get("toShift") != null ? (Integer) jsonText.get("toShift") : null);
+                                schemeRate.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
+                                schemeRate.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
+                                schemeRate.setDescription(jsonText.get("description") != null ? (String) jsonText.get("description") : null);
+                                schemeRate.setIsActive(jsonText.get("isMccWiseRate") != null ? String.valueOf(jsonText.get("isMccWiseRate")).equalsIgnoreCase("1") : null);
+                                schemeRate.setIsActive(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
+                                schemeRate.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
+                                schemeRate.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
+                                schemeRate.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                                schemeRate.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                schemeRate.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4) : null);
+                                schemeRate.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                schemeRate.setOriginatingOrgCode(jsonText.get("originatingOrgCode") != null ? (String) jsonText.get("originatingOrgCode") : null);
+                                schemeRate.setOriginatingOrgType(jsonText.get("originatingOrgType") != null ? (String) jsonText.get("originatingOrgType") : null);
+                                schemeRate.setOriginatingType(jsonText.get("originatingType") != null ? (Integer) jsonText.get("originatingType") : null);
+                                schemeRate.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                schemeRate.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                schemeRate.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                schemeRate.setxCol4(jsonText.get("xCol4") != null ? String.valueOf(jsonText.get("xCol4")) : null);
+                                schemeRate.setxCol5(jsonText.get("xCol5") != null ? String.valueOf(jsonText.get("xCol5")) : null);
+                                schemeRateRepository.save(schemeRate);
+                                break;
+                            case "DELETE":
+                                schemeRateRepository.deleteBySchemeRateCode((String) jsonText.get("schemeRateCode"));
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "tbl_scheme_rate_applicability":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                SchemeRateApplicability schemeRateApplicability = new SchemeRateApplicability();
+                                schemeRateApplicability.setSchemeRateAppCode(jsonText.get("schemeRateAppCode") != null ? (Integer) jsonText.get("schemeRateAppCode") : null);
+                                schemeRateApplicability.setSchemeRateCode(jsonText.get("schemeRateCode") != null ? (String) jsonText.get("schemeRateCode") : null);
+                                schemeRateApplicability.setFromShift(jsonText.get("fromShift") != null ? (Integer) jsonText.get("fromShift") : null);
+                                schemeRateApplicability.setToShift(jsonText.get("toShift") != null ? (Integer) jsonText.get("toShift") : null);
+                                LocalDateTime fromDate = jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null;
+                                Shift shift = shiftRepository.findById(schemeRateApplicability.getFromShift()).orElseThrow(() -> null);
+                                fromDate = fromDate.with(CommonUtil.getTimeFromShift(shift));
+                                schemeRateApplicability.setFromDate(fromDate != null ? fromDate : null);
+                                LocalDateTime toDate = jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtil.Formatter4) : null;
+                                shift = shiftRepository.findById(schemeRateApplicability.getToShift()).orElseThrow(() -> null);
+                                toDate = toDate.with(CommonUtil.getTimeFromShift(shift));
+                                schemeRateApplicability.setToDate(toDate != null ? toDate : null);
+                                schemeRateApplicability.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
+                                schemeRateApplicability.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
+                                schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? (String) jsonText.get("applicableFor") : null);
+                                schemeRateApplicability.setApplicableCode(jsonText.get("applicableCode") != null ? (String) jsonText.get("applicableCode") : null);
+                                schemeRateApplicability.setIsMemberRate(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
+                                schemeRateApplicability.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
+                                schemeRateApplicability.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
+                                schemeRateApplicability.setApprovedAt(jsonText.get("approvedAt") != null ? LocalDateTime.parse((String) jsonText.get("approvedAt"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setApprovedBy(jsonText.get("approvedBy") != null ? (String) jsonText.get("approvedBy") : null);
+                                schemeRateApplicability.setTabDownloadDatetime(jsonText.get("tabDownloadDatetime") != null ? LocalDateTime.parse((String) jsonText.get("tabDownloadDatetime"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                schemeRateApplicability.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                schemeRateApplicability.setOriginatingOrgCode(jsonText.get("originatingOrgCode") != null ? (String) jsonText.get("originatingOrgCode") : null);
+                                schemeRateApplicability.setOriginatingOrgType(jsonText.get("originatingOrgType") != null ? (String) jsonText.get("originatingOrgType") : null);
+                                schemeRateApplicability.setOriginatingType(jsonText.get("originatingType") != null ? (Integer) jsonText.get("originatingType") : null);
+                                schemeRateApplicability.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                schemeRateApplicability.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                schemeRateApplicability.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                schemeRateApplicability.setxCol4(jsonText.get("xCol4") != null ? String.valueOf(jsonText.get("xCol4")) : null);
+                                schemeRateApplicability.setxCol5(jsonText.get("xCol5") != null ? String.valueOf(jsonText.get("xCol5")) : null);
+                                schemeRateApplicability.setDescription(jsonText.get("description") != null ? (String) jsonText.get("description") : null);
+                                schemeRateApplicabilityRepository.save(schemeRateApplicability);
+                                break;
+                            case "DELETE":
+                                schemeRateApplicabilityRepository.deleteBySchemeRateAppCode((Integer) jsonText.get("schemeRateAppCode"));
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case "tbl_force_sync_request":
                     switch ((String) jsonText.get("tableName")) {
                         case "tbl_milk_collection":
                             try {
-                                milkCollectionService.findAllCollectionByDate(LocalDateTime.parse((String) jsonText.get("fromDatetime"), CommonUtil.Formatter4), LocalDateTime.parse((String) jsonText.get("toDatetime"), CommonUtil.Formatter4), "");
+                                milkCollectionRepository.findAllCollectionByDate(LocalDateTime.parse((String) jsonText.get("fromDatetime"), CommonUtil.Formatter4), LocalDateTime.parse((String) jsonText.get("toDatetime"), CommonUtil.Formatter4), "");
                                 break;
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -872,7 +984,9 @@ public class BroadcastedService {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
                         default:
+                            System.out.println("Default case");
                             break;
                     }
                     break;
@@ -886,7 +1000,9 @@ public class BroadcastedService {
     }
 
 
-    protected void fetchRate(String fat, String snf, String qty, MilkType milkType, MilkQualityType milkQualityType, SocietyMilkPurchaseRate societyMilkPurchaseRate, MilkReceiptTransaction transaction, MilkReceipt milkReceipt) {
+    protected void fetchRate(String fat, String snf, String qty, MilkType milkType, MilkQualityType
+            milkQualityType, SocietyMilkPurchaseRate societyMilkPurchaseRate, MilkReceiptTransaction
+                                     transaction, MilkReceipt milkReceipt) {
         if (!fat.isEmpty() && !snf.isEmpty() && milkType != null && milkQualityType != null) {
             List<SocietyMilkPurchaseRateBased> listBased;
             listBased = societyMilkPurchaseRateService.fetchRateBased(societyMilkPurchaseRate.getCode());

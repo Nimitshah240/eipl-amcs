@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProductSaleInstallmentController implements MyInitialization {
+    private final StringBuilder errorMsg = null;
     @FXML
     StackPane root;
     @FXML
@@ -32,19 +33,15 @@ public class ProductSaleInstallmentController implements MyInitialization {
     TableColumn<ProductSaleInstallment, String> colStatus, colSrNo;
     @FXML
     Button btnClose;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yy");
     private List<ProductSaleInstallment> list = null;
-
-
     private Stage stage;
     private PopupCallback callback;
+    private ResourceBundle resourceBundle;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yy");
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;

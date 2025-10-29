@@ -6,24 +6,17 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
-import com.eipl.amcs.master.global.model.MilkClass;
-import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.model.Unit;
-import com.eipl.amcs.master.global.task.MilkClassLoadTask;
-import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
-import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.CustomerDetails;
 import com.eipl.amcs.master.operation.model.CustomerDto;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.CustomerSaveTask;
-import com.eipl.amcs.operation.inventory.dto.*;
-import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.task.LocalMilkSaleMigrationListSaveTask;
+import com.eipl.amcs.operation.inventory.dto.ProductSaleMigrateDto;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
+import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 import com.eipl.amcs.operation.procurement.task.ProductSaleMigrationListSaveTask;
-import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -39,17 +32,14 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
 
 public class ProductSaleDataMigrationController implements MyInitialization {
     @FXML
@@ -62,15 +52,16 @@ public class ProductSaleDataMigrationController implements MyInitialization {
     TableColumn<ProductSale, Number> colAmount;
     @FXML
     TableColumn<ProductSale, LocalDate> colSaleDate;
-    private ResourceBundle resourceBundle;
     @FXML
     Button btnSave, btnClose, btnBrowse, btnGenerate;
     @FXML
     TextField txtFilePath;
-
+    String milkTypeStr = null;
+    List<ProductSaleMigrateDto> listDto = new ArrayList<>();
+    List<ProductSale> list = new ArrayList<>();
+    private ResourceBundle resourceBundle;
     private List<Unit> unitList;
     private List<Customer> customerList;
-    String milkTypeStr = null;
     private Stage stage;
     private String selectedFilePath = null;
 
@@ -82,9 +73,6 @@ public class ProductSaleDataMigrationController implements MyInitialization {
     public Node getRoot() {
         return root;
     }
-
-    List<ProductSaleMigrateDto> listDto = new ArrayList<>();
-    List<ProductSale> list = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -191,7 +179,7 @@ public class ProductSaleDataMigrationController implements MyInitialization {
         } else if (type.equalsIgnoreCase("SkyWay")) {
             try {
 //                List<LocalMilkSale> list = new ArrayList<>();
-                List<String> lines = Files.readAllLines(new File(path).toPath(), Charset.forName("UTF-8"));
+                List<String> lines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     String[] arr = line.split(",");
                     ProductSale m = new ProductSale();

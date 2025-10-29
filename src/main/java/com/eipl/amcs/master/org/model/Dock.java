@@ -2,7 +2,11 @@ package com.eipl.amcs.master.org.model;
 
 import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,13 +22,15 @@ import javax.validation.constraints.Size;
 @Table(name = "dock")
 public class Dock extends BaseModel {
     @Id
-    @Size(max = 11)
+    @Size(max = 15)
     private String dockNo;
     @Size(max = 3)
     private String unionCode;
     private Short isDefault;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_dock_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})

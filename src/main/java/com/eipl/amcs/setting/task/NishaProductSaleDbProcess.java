@@ -1,7 +1,6 @@
 package com.eipl.amcs.setting.task;
 
 import com.eipl.amcs.operation.inventory.model.ProductSale;
-import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import javafx.concurrent.Task;
 
 import java.sql.Connection;
@@ -13,14 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NishaProductSaleDbProcess extends Task<List<ProductSale>> {
-    private String filePath;
-    private LocalDateTime saleDate;
-
+    private final String filePath;
+    private final LocalDateTime saleDate;
 
 
     public NishaProductSaleDbProcess(String filePath, LocalDateTime saleDate) {
         this.filePath = filePath;
-       this.saleDate=saleDate;
+        this.saleDate = saleDate;
 
     }
 
@@ -30,7 +28,7 @@ public class NishaProductSaleDbProcess extends Task<List<ProductSale>> {
         try {
             String urlDb = "jdbc:ucanaccess://" + filePath;
 
-            try (Connection connection = DriverManager.getConnection(urlDb, "","Oracle8.0")) {
+            try (Connection connection = DriverManager.getConnection(urlDb, "", "Oracle8.0")) {
                 Statement statement = connection.createStatement();
 //
                 ResultSet resultSet = statement.executeQuery("select * from Kapat");
@@ -41,8 +39,7 @@ public class NishaProductSaleDbProcess extends Task<List<ProductSale>> {
                     migration.setAmount(resultSet.getBigDecimal("Payment"));
 
 
-
-                   // migration.setSaleDate(resultSet.getDate("date"));
+                    // migration.setSaleDate(resultSet.getDate("date"));
 
 
                     list.add(migration);

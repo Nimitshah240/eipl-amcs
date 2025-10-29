@@ -40,7 +40,7 @@ public class ShareRateAddEditController implements MyInitialization {
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
-    private ShareRate dto = null;
+    private final ShareRate dto = null;
     private ShareRate shareRate = null;
     private BigDecimal rate;
 

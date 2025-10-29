@@ -1,9 +1,9 @@
 package com.eipl.amcs.utils;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.model.TaxDetail;
-import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
 import com.udojava.evalex.Expression;
@@ -16,20 +16,49 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.sql.Date;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CommonUtils {
 
+    //    public static final MathContext MY_DECIMAL32 =  MathContext.DECIMAL128; ///new MathContext(10, RoundingMode.HALF_UP);
+    public static final MathContext MY_DECIMAL32 = new MathContext(34, RoundingMode.HALF_UP);
+    public static final DateTimeFormatter FMT_DATE_EXCEL = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    final static int CHAR_PER_LINE = 40;
+    final static String SPACE = " ";
+    final static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
     private static final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
+    private static final int SCALE = 2;
+    private static final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
+    public static List<String> meetingTypeList;
+    private static final List<CustomerTypeKeyValDto> customerTypeList;
+
+    static {
+        meetingTypeList = new ArrayList<>();
+        meetingTypeList.add("Managing Committee Meeting");
+        meetingTypeList.add("Annual General Meeting");
+        meetingTypeList.add("Special General Meeting");
+        meetingTypeList.add("Extension Meeting");
+        meetingTypeList.add("Gram Sabha");
+    }
+
+    static {
+        customerTypeList = new ArrayList<>();
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 1, getResourceString(MainApp.getBundle(), "member"), true, true, false));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 2, getResourceString(MainApp.getBundle(), "nonmember"), true, true, false));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 3, getResourceString(MainApp.getBundle(), "vendor"), false, true, true));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 4, getResourceString(MainApp.getBundle(), "institute"), true, true, true));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 5, getResourceString(MainApp.getBundle(), "retailsale"), true, false, true));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 6, getResourceString(MainApp.getBundle(), "consumer"), true, true, true));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 7, getResourceString(MainApp.getBundle(), "other"), false, false, true));
+    }
 
     public static boolean isNumeric(String strNum) {
         if (strNum == null || strNum.isEmpty()) {
@@ -230,12 +259,6 @@ public class CommonUtils {
         return fileChooser.showDialog(MainApp.getStage());
     }
 
-    private static final int SCALE = 2;
-    private static final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
-
-    //    public static final MathContext MY_DECIMAL32 =  MathContext.DECIMAL128; ///new MathContext(10, RoundingMode.HALF_UP);
-    public static final MathContext MY_DECIMAL32 = new MathContext(34, RoundingMode.HALF_UP);
-
     public static Map<TaxDetail, BigDecimal> calculateAndFetchTaxBifurcation(TaxDto taxDto, BigDecimal val) {
         Map<TaxDetail, BigDecimal> taxBifurcation = new HashMap<>();
         if (taxDto == null || taxDto.getTaxDetails() == null)
@@ -271,9 +294,6 @@ public class CommonUtils {
             return null;
         return val.setScale(1, RATE_ROUND);
     }
-
-    public static final DateTimeFormatter FMT_DATE_EXCEL = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
 
     public static LocalDate excelDate(String str) {
         if (str == null || str.isEmpty())
@@ -344,19 +364,6 @@ public class CommonUtils {
         }
     }
 
-
-    public static List<String> meetingTypeList;
-
-    static {
-        meetingTypeList = new ArrayList<>();
-        meetingTypeList.add("Managing Committee Meeting");
-        meetingTypeList.add("Annual General Meeting");
-        meetingTypeList.add("Special General Meeting");
-        meetingTypeList.add("Extension Meeting");
-        meetingTypeList.add("Gram Sabha");
-    }
-
-
     public static String getMeetingType(short type) {
         switch (type) {
             case 1:
@@ -390,7 +397,6 @@ public class CommonUtils {
                 return (short) 0;
         }
     }
-
 
     public static String getCustomerTypeString(short val) {
         switch (val) {
@@ -464,19 +470,6 @@ public class CommonUtils {
         }
     }
 
-    private static List<CustomerTypeKeyValDto> customerTypeList;
-
-    static {
-        customerTypeList = new ArrayList<>();
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 1, getResourceString(MainApp.getBundle(), "member"), true, true, false));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 2, getResourceString(MainApp.getBundle(), "nonmember"), true, true, false));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 3, getResourceString(MainApp.getBundle(), "vendor"), false, true, true));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 4, getResourceString(MainApp.getBundle(), "institute"), true, true, true));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 5, getResourceString(MainApp.getBundle(), "retailsale"), true, false, true));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 6, getResourceString(MainApp.getBundle(), "consumer"), true, true, true));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 7, getResourceString(MainApp.getBundle(), "other"), false, false, true));
-    }
-
     public static List<CustomerTypeKeyValDto> getCustomerTypesForLocalMilkSale() {
         return customerTypeList.stream()
                 .filter(p -> p.isLocalSale()).collect(Collectors.toList());
@@ -518,9 +511,6 @@ public class CommonUtils {
         return "";
     }
 
-    final static int CHAR_PER_LINE = 40;
-    final static String SPACE = " ";
-
     public static String centerAlign(String str) {
         int cut = (CHAR_PER_LINE - str.length()) / 2;
         return (String.format("%0" + cut + "d", 0).replace("0", SPACE))
@@ -528,14 +518,12 @@ public class CommonUtils {
                 + (String.format("%0" + cut + "d", 0).replace("0", SPACE));
     }
 
-
     public static String rightAlignString(String value, int columnWidth, String padChar) {
         if (value.length() == columnWidth)
             return value;
         return String.format("%0" + (columnWidth - value.length() == 0 ? columnWidth : Math.abs(columnWidth - value.length())) + "d", 0).replace("0", padChar) +
                 value;
     }
-
 
     public static BigDecimal convertQtyToKg(String qty) {
         return new BigDecimal(qty).multiply(new BigDecimal(MainApp.getProperty(AppConstant.Props.LTR_TO_KG, "0"))).setScale(2, RoundingMode.HALF_UP);
@@ -610,8 +598,6 @@ public class CommonUtils {
             return BigDecimal.ZERO;
         return scale2RoundUp(val.divide(new BigDecimal(quantity), MY_DECIMAL32));
     }
-
-    final static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
 
     public static String fetchCollectionSlipDateFormatted(LocalDate date) {
         if (date == null)

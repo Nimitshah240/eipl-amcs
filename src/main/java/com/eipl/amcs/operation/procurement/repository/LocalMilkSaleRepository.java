@@ -14,17 +14,17 @@ import java.util.Optional;
 @Repository
 public interface LocalMilkSaleRepository extends BaseRepository<LocalMilkSale, String> {
 
-	@Override
-	@EntityGraph(attributePaths = { "shift","milkType","milkClass","society","dock"})
-	List<LocalMilkSale> findAll(Sort sort);
-	
-	@EntityGraph(attributePaths = { "shift","milkType","milkClass","society","dock"})
-	List<LocalMilkSale> findBySaleDateBetween(LocalDate startDate, LocalDate endDate,Sort sort);
-	
-	@EntityGraph(attributePaths = { "shift","milkType","milkClass","society","dock"})
-	List<LocalMilkSale> findBySaleDateBetween(LocalDateTime startDate, LocalDateTime endDate,Sort sort);
-	
-	@Override
-	@EntityGraph(attributePaths = { "shift","milkType","milkClass","society","dock"})
-	Optional<LocalMilkSale> findById(String id);
+    @Override
+    @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
+    List<LocalMilkSale> findAll(Sort sort);
+
+    @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
+    List<LocalMilkSale> findBySaleDateBetween(LocalDate startDate, LocalDate endDate, Sort sort);
+
+    @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
+    List<LocalMilkSale> findBySaleDateBetween(LocalDateTime startDate, LocalDateTime endDate, Sort sort);
+
+    @Override
+    @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
+    Optional<LocalMilkSale> findById(String id);
 }

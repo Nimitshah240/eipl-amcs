@@ -30,7 +30,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import javax.security.auth.callback.Callback;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,6 +42,8 @@ import java.util.stream.Collectors;
 
 public class BonusReportController implements MyInitialization {
 
+    public PopupCallback callback;
+    List<PaymentForBank> list;
     @FXML
     private StackPane root;
     @FXML
@@ -50,22 +51,17 @@ public class BonusReportController implements MyInitialization {
     private Stage stage;
     @FXML
     private ComboBox<Bank> cboxBank;
-
-    List<PaymentForBank> list;
-
-    public PopupCallback callback;
     @FXML
     private ComboBox<String> cboxReportType;
 
 
     private ResourceBundle resourceBundle;
+    private BonusSummary dto = null;
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private BonusSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;

@@ -12,26 +12,26 @@ import java.util.Optional;
 
 
 public interface MilkDispatchService {
-	List<MilkDispatch> findAll();
+    List<MilkDispatch> findAll();
 
-	MilkDispatch save(MilkDispatchDto MilkDispatch, String identityInfo);
+    MilkDispatch save(MilkDispatchDto MilkDispatch, String identityInfo);
 
-	MilkDispatch update(MilkDispatchDto MilkDispatch, String identityInfo);
+    MilkDispatch update(MilkDispatchDto MilkDispatch, String identityInfo);
 
-	Optional<MilkDispatch> findById(String code);
+    Optional<MilkDispatch> findById(String code);
 
-	void delete(String code, String identityInfo);
+    void delete(String code, String identityInfo);
 
-	void delete(MilkDispatch MilkDispatch, String identityInfo);
-	
-	SocietyMilkPurchaseRate fetchPurchaseRateCode(LocalDateTime date, Integer shiftCode, String societyCode);
+    void delete(MilkDispatch MilkDispatch, String identityInfo);
 
-	List<MilkDispatchTransaction> findDetailByChallanNo(String challanNo);
+    SocietyMilkPurchaseRate fetchPurchaseRateCode(LocalDateTime date, Integer shiftCode, String societyCode);
 
-	Optional<MilkDispatchTransaction> findTransactionById(String code);
+    List<MilkDispatchTransaction> findDetailByChallanNo(String challanNo);
 
-	void deleteTransaction(MilkDispatchTransaction milkDispatchTransaction, String identityInfo);
+    Optional<MilkDispatchTransaction> findTransactionById(String code);
 
-	List<MilkDispatchSummaryDto> fetchMilkDispatchSummary(LocalDateTime fromDt, LocalDateTime toDt);
+    void deleteTransaction(MilkDispatchTransaction milkDispatchTransaction, String identityInfo);
+
+    List<MilkDispatchSummaryDto> fetchMilkDispatchSummary(LocalDateTime fromDt, LocalDateTime toDt);
 
 }

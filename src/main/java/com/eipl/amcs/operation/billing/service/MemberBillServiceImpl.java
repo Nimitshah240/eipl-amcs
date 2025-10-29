@@ -142,10 +142,7 @@ public class MemberBillServiceImpl implements MemberBillService {
             a.setSociety(Hibernate.unproxy(a.getSociety(), Society.class));
             a.setPaymentCycle(paymentCycle);
         }
-        if (list != null) {
-            return list;
-        }
-        return null;
+        return list;
     }
 
     @Override
@@ -195,7 +192,7 @@ public class MemberBillServiceImpl implements MemberBillService {
                     }
                 }
             }
-            System.out.println("");
+            System.out.println();
             MemberDetail memberDetail = memberDetailList.stream().filter(p -> map.get("member_code").toString().equals(p.getCode()))
                     .findAny().orElse(null);
             member.setMemberType(Hibernate.unproxy(member.getMemberType(), MemberType.class));
@@ -772,7 +769,7 @@ public class MemberBillServiceImpl implements MemberBillService {
                     if (subLedger.isPresent()) {
                         vTxn.setVoucherSubLedgers(new ArrayList<>());
                         voucherSubLedger = VoucherUtil.getVoucherSubLedger(voucher, vTxn, String.valueOf(ss), amt, ledgerMappingBillHead.getCreditDebit(),
-                                memberBillTransaction.getBillHead().getName() + " of Amount: " + amt.toString(), subLedger.get());
+                                memberBillTransaction.getBillHead().getName() + " of Amount: " + amt, subLedger.get());
                         if (voucherSubLedger != null)
                             vTxn.getVoucherSubLedgers().add(voucherSubLedger);
                         ss++;

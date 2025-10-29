@@ -3,7 +3,6 @@ package com.eipl.amcs.base.model;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.network.IdentityPayloadForAcknowledgement;
-import com.eipl.amcs.network.RealTimeMultipleResponse;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
 import com.eipl.amcs.utils.AppConstant;
@@ -16,25 +15,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-public class NotificationAcknowledgementTask extends Task<Map<String,Object>> {
+public class NotificationAcknowledgementTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationAcknowledgementTask.class);
 
-    private String bulkNotificationId;
+    private final String bulkNotificationId;
 
     public NotificationAcknowledgementTask(String bulkNotificationId) {
         this.bulkNotificationId = bulkNotificationId;
     }
 
     @Override
-    protected Map<String,Object> call() throws Exception {
+    protected Map<String, Object> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url =  MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.NOTIFICATON_ACK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.NOTIFICATON_ACK;
 
             IdentityPayloadForAcknowledgement payload = new IdentityPayloadForAcknowledgement(bulkNotificationId);
             RealTimeRequest<IdentityPayloadForAcknowledgement> requestPayload = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payload);
@@ -44,7 +40,7 @@ public class NotificationAcknowledgementTask extends Task<Map<String,Object>> {
                 return null;
 
             RealTimeResponse respBody = response.getBody();
-            if(!"success".equalsIgnoreCase(respBody.getStatus()))
+            if (!"success".equalsIgnoreCase(respBody.getStatus()))
                 return null;
 
             return response.getBody().getData();

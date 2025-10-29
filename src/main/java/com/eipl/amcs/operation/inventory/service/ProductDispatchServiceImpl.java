@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.inventory.service;
 
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.operation.inventory.bootdto.ProductDispatchDto;
+import com.eipl.amcs.operation.inventory.dto.ProductDispatchDto;
 import com.eipl.amcs.operation.inventory.model.ProductDispatch;
 import com.eipl.amcs.operation.inventory.model.ProductDispatchTransaction;
 import com.eipl.amcs.operation.inventory.model.ProductRequisition;

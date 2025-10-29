@@ -2,11 +2,21 @@ package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.deserialize.MemberDeserializer;
+import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.deserialize.UnionDeserializer;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.serialize.MemberSerialize;
+import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
+import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,21 +62,29 @@ public class MemberBill extends BaseModelTxn {
     private LocalDate disbursedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_member_bill_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = UnionSerialize.class)
+    @JsonDeserialize(using = UnionDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_member_bill_union_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberSerialize.class)
+    @JsonDeserialize(using = MemberDeserializer.class)
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_member_bill_member_code"))
     @JsonIgnoreProperties(value = {"milkType", "memberType", "society"})
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietyPaymentCycleSerialize.class)
+    @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_member_bill_payment_cycle_code"))
     @JsonIgnoreProperties(value = {"society", "fromShift", "toShift"})
     private SocietyPaymentCycle paymentCycle;

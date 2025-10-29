@@ -2,15 +2,15 @@ package com.eipl.amcs.operation.administartion.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.base.Notification;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 
@@ -36,17 +36,16 @@ public class NotificationController implements MyInitialization {
     TableColumn<Notification, String> colMessage, colPeriod;
     @FXML
     Button btnClose;
-    private ObjectProperty<Notification> propData;
-
-    @Override
-    public Node getRoot() {
-        return root;
-    }
+    private final ObjectProperty<Notification> propData;
 
     public NotificationController() {
         propData = new SimpleObjectProperty<>();
     }
 
+    @Override
+    public Node getRoot() {
+        return root;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
