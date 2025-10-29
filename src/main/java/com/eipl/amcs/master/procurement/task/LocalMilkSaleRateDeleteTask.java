@@ -3,7 +3,7 @@ package com.eipl.amcs.master.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
 import com.eipl.amcs.master.procurement.service.LocalMilkSaleRateService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class LocalMilkSaleRateDeleteTask extends Task<Boolean> {
             Optional<LocalMilkSaleRate> localMilkSaleRateData = service.findById(code);
             if (localMilkSaleRateData == null || !localMilkSaleRateData.isPresent())
                 return null;
-            service.delete(localMilkSaleRateData.get(), CommonUtil.setIdentityHeader());
+            service.delete(localMilkSaleRateData.get(), CommonUtils.setIdentityHeader());
             return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

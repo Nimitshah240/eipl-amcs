@@ -4,7 +4,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.dto.FinalizeDto;
 import com.eipl.amcs.operation.billing.service.MemberBillService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -27,7 +27,7 @@ public class MemberBillDisburseLoadTask extends Task<Object> {
             SocietyPaymentCycle paymentCycle = dto.getPaymentCycle();
             List<String> memberList = dto.getMemberCodeList();
 
-            service.disburse(paymentCycle, memberList, CommonUtil.setIdentityHeader());
+            service.disburse(paymentCycle, memberList, CommonUtils.setIdentityHeader());
 //
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING +"/disburse";

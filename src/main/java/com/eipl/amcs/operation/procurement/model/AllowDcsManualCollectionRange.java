@@ -1,6 +1,6 @@
 package com.eipl.amcs.operation.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;

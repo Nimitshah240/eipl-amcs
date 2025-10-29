@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.administartion.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.master.account.service.StaffMemberService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -23,9 +23,9 @@ public class StaffMemberSaveTask extends Task<Object> {
         try {
             StaffMemberService service = EmcsAppContext.getContext().getBean(StaffMemberService.class);
             if (this.update == 0) {
-                service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtils.setIdentityHeader());
             } else {
-                service.update(dto, CommonUtil.setIdentityHeader());
+                service.update(dto, CommonUtils.setIdentityHeader());
             }
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

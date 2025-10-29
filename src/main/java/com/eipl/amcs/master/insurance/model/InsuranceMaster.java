@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.insurance.model;
 
-import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

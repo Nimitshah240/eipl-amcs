@@ -28,7 +28,7 @@ import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.setting.repository.HardwareDeviceConfigRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
@@ -486,7 +486,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
         Optional<MilkCollection> collectionData = milkCollectionRepository.findByCollectionDateAndMemberAndMilkType(collectionDate,
                 collection.getMember(), collection.getMilkType());
         if (collectionData.isPresent()) {
-            FieldError nameNotValid = CommonUtil.getFieldError("MilkCollection", "date",
+            FieldError nameNotValid = CommonUtils.getFieldError("MilkCollection", "date",
                     collection.getDate().toString(), "collectionrecord.alreadyexists");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
@@ -559,13 +559,13 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     public Map<String, BigDecimal> findAvgFatAndSnf(String code, int no, String milktype, LocalDate date,
                                                     int shiftCode) {
         List<Timestamp> listDates = milkCollectionRepository.findLastDates(milktype,
-                CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
+                CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
         Map<String, BigDecimal> avg = new HashMap<>();
         Map<String, BigDecimal> total = new HashMap<>();
 //		total = milkCollectionRepository.findTotals(code, no, Integer.parseInt(milktype));
         if (!listDates.isEmpty()) {
             avg = milkCollectionRepository.findAvgFatAndSnf(code, listDates.get(listDates.size() - 1).toLocalDateTime(),
-                    CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
+                    CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
             return avg;
         } else
             return null;
@@ -668,7 +668,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
 
         MemberWiseCollectionDto dto = new MemberWiseCollectionDto();
         List<Timestamp> listDates = milkCollectionRepository.findLastDates(milktype,
-                CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
+                CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
         Map<String, BigDecimal> avg;
         Map<String, BigDecimal> total;
         total = milkCollectionRepository.findTotals(code, paymentCycleCode, Integer.parseInt(milktype));
@@ -676,11 +676,11 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
         List<MilkCollection> collectionList = new ArrayList<>();
         if (listDates.size() != 0) {
             collectionList = milkCollectionRepository.findByMemberAndCollectionDateBetweenAndMilkTypeOrderByCollectionDateDesc(member, listDates.get(listDates.size() - 1).toLocalDateTime(),
-                    CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), milkTypeRepository.getById(Integer.parseInt(milktype)));
+                    CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), milkTypeRepository.getById(Integer.parseInt(milktype)));
         }
         if (!listDates.isEmpty()) {
             avg = milkCollectionRepository.findAvgFatAndSnf(code, listDates.get(listDates.size() - 1).toLocalDateTime(),
-                    CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
+                    CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
             dto.setAvg(avg);
         } else {
             dto.setAvg(null);

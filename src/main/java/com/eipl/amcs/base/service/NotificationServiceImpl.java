@@ -1,6 +1,6 @@
 package com.eipl.amcs.base.service;
 
-import com.eipl.amcs.base.Notification;
+import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

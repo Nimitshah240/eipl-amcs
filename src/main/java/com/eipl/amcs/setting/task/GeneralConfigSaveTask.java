@@ -3,7 +3,7 @@ package com.eipl.amcs.setting.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.setting.model.GeneralConfig;
 import com.eipl.amcs.setting.service.GeneralConfigService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -22,7 +22,7 @@ public class GeneralConfigSaveTask extends Task<Object> {
         try {
 
             GeneralConfigService service = EmcsAppContext.getContext().getBean(GeneralConfigService.class);
-            List<GeneralConfig> list = service.save(generalConfigList, CommonUtil.setIdentityHeader());
+            List<GeneralConfig> list = service.save(generalConfigList, CommonUtils.setIdentityHeader());
             if (list == null || list.isEmpty())
                 return null;
             return list;

@@ -3,7 +3,7 @@ package com.eipl.amcs.master.operation.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -23,9 +23,9 @@ public class MemberSaveTask extends Task<Object> {
             MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
             MemberDto dtoNew = null;
             if (this.update == 0) {
-                dtoNew = service.save(dto, CommonUtil.setIdentityHeader());
+                dtoNew = service.save(dto, CommonUtils.setIdentityHeader());
             } else {
-                dtoNew = service.update(dto, CommonUtil.setIdentityHeader());
+                dtoNew = service.update(dto, CommonUtils.setIdentityHeader());
             }
             if (dtoNew == null) {
                 dtoNew.getMember().setSociety(dto.getMember().getSociety());

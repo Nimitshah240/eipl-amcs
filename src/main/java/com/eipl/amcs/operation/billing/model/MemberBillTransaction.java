@@ -1,14 +1,12 @@
 package com.eipl.amcs.operation.billing.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.BillHeadDeserializer;
-import com.eipl.amcs.deserialize.MemberBillDeserializer;
-import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.json.deserialize.BillHeadDeserializer;
+import com.eipl.amcs.json.deserialize.MemberBillDeserializer;
 import com.eipl.amcs.master.operation.model.BillHead;
-import com.eipl.amcs.serialize.BillHeadSerialize;
-import com.eipl.amcs.serialize.MemberBillSerialize;
-import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
+import com.eipl.amcs.json.serialize.BillHeadSerialize;
+import com.eipl.amcs.json.serialize.MemberBillSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

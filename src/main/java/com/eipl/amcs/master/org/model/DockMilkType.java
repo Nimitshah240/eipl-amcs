@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.DockDeserializer;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.deserialize.DockDeserializer;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.serialize.DockSerialize;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.json.serialize.DockSerialize;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

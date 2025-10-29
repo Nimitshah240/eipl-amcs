@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.inventory.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 import com.eipl.amcs.operation.inventory.service.ProductRequisitionService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -22,7 +22,7 @@ public class ProductRequisitionManualSaveTask extends Task<Object> {
         try {
             ProductRequisitionService service = EmcsAppContext.getContext().getBean(ProductRequisitionService.class);
             if (this.update == 0) {
-                service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtils.setIdentityHeader());
             }
             return true;
         } catch (HttpStatusCodeException e) {

@@ -1,6 +1,6 @@
 package com.eipl.amcs.setting.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.HardwareDevice;

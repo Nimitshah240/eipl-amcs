@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.BmcRecording;
 import com.eipl.amcs.operation.procurement.service.BmcRecordingService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -24,7 +24,7 @@ public class BmcRecordingParameterSaveTask extends Task<Object> {
         try {
             BmcRecordingService service = EmcsAppContext.getContext().getBean(BmcRecordingService.class);
             if (this.update == 0) {
-                service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtils.setIdentityHeader());
             } else {
                 service.update(dto);
             }

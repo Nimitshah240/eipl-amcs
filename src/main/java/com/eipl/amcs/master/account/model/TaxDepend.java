@@ -1,10 +1,8 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.TaxDetailDeserializer;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.TaxDetailSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.TaxDetailDeserializer;
+import com.eipl.amcs.json.serialize.TaxDetailSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

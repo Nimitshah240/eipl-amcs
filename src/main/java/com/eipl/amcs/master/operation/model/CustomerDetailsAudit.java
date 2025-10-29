@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

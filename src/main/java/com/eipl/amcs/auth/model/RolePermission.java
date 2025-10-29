@@ -1,6 +1,6 @@
 package com.eipl.amcs.auth.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.org.model.Society;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

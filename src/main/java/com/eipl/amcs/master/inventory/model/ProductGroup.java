@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.inventory.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.UnitDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.UnitDeserializer;
 import com.eipl.amcs.master.global.model.Unit;
-import com.eipl.amcs.serialize.UnitSerialize;
+import com.eipl.amcs.json.serialize.UnitSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

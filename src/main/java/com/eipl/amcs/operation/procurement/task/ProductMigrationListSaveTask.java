@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.inventory.model.ProductAndSaleRateDto;
 import com.eipl.amcs.master.inventory.service.ProductService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class ProductMigrationListSaveTask extends Task<Integer> {
     protected Integer call() throws Exception {
         try {
             ProductService service = EmcsAppContext.getContext().getBean(ProductService.class);
-            service.migrateCollections(dtoList, CommonUtil.setIdentityHeader());
+            service.migrateCollections(dtoList, CommonUtils.setIdentityHeader());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT + "/migrate";

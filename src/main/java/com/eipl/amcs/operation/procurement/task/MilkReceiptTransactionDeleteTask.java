@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkReceiptTransaction;
 import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.util.Optional;
@@ -24,7 +24,7 @@ public class MilkReceiptTransactionDeleteTask extends Task<Boolean> {
 
             if (receiptData == null || !receiptData.isPresent())
                 return null;
-            service.deleteTransaction(receiptData.get(), CommonUtil.setIdentityHeader());
+            service.deleteTransaction(receiptData.get(), CommonUtils.setIdentityHeader());
 
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

@@ -1,6 +1,7 @@
 package com.eipl.amcs.base;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.controller.MappingPopupController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;

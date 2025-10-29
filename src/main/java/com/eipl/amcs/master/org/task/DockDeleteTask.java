@@ -3,7 +3,7 @@ package com.eipl.amcs.master.org.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.service.DockService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class DockDeleteTask extends Task<Boolean> {
             Optional<Dock> dockData = service.findById(dockNo);
             if (dockData == null || !dockData.isPresent())
                 return null;
-            service.delete(dockData.get(), CommonUtil.setIdentityHeader());
+            service.delete(dockData.get(), CommonUtils.setIdentityHeader());
             return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

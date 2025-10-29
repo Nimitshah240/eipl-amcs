@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.administartion.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.Notification;
+import com.eipl.amcs.base.model.Notification;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

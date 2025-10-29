@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;

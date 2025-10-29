@@ -3,7 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.service.VoucherService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -24,9 +24,9 @@ public class VoucherSaveTask extends Task<Object> {
         try {
             VoucherService service = EmcsAppContext.getContext().getBean(VoucherService.class);
             if (update == 0) {
-                service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtils.setIdentityHeader());
             } else {
-                service.update(dto, CommonUtil.setIdentityHeader());
+                service.update(dto, CommonUtils.setIdentityHeader());
             }
             return true;
 

@@ -19,7 +19,7 @@ import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.service.SocietyService;
 import com.eipl.amcs.master.org.service.UnionService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
@@ -110,7 +110,7 @@ public class MemberCreateTask extends Task<Boolean> {
             int current = 1;
             for (List<MemberDto> memberDtos : listTemp) {
                 try {
-                    List<MemberImportDto> memberImportDtos = memberService.importMembers(memberDtos, CommonUtil.setIdentityHeader());
+                    List<MemberImportDto> memberImportDtos = memberService.importMembers(memberDtos, CommonUtils.setIdentityHeader());
                     if (memberImportDtos == null || memberImportDtos.isEmpty())
                         continue;
                     updateMessage("Processing " + current * AppConstant.MIGRATION_LIST_SIZE + " of " + listTemp.size() * AppConstant.MIGRATION_LIST_SIZE);

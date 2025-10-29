@@ -1,7 +1,7 @@
 package com.eipl.amcs.utils;
 
 
-import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.error.ApiError;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

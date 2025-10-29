@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -24,9 +24,9 @@ public class MilkCollectionSaveTask extends Task<Object> {
 
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             if (this.update == 0) {
-                collections = service.save(collection, CommonUtil.setIdentityHeader());
+                collections = service.save(collection, CommonUtils.setIdentityHeader());
             } else {
-                collections = service.update(collection, CommonUtil.setIdentityHeader());
+                collections = service.update(collection, CommonUtils.setIdentityHeader());
             }
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

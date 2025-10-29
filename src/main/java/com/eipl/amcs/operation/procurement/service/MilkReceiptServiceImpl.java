@@ -21,7 +21,7 @@ import com.eipl.amcs.operation.procurement.repository.LocalMilkSaleRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkReceiptRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkReceiptTransactionRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +88,7 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         List<MilkReceipt> milkReceiptList = milkReceiptRepository.findAll();
         Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> p.getMilkDispatch() != null && p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
         if (!milkReceipt1.isEmpty()) {
-            FieldError wefdateNotValid = CommonUtil.getFieldError("milkreceipt", "MilkDispatch",
+            FieldError wefdateNotValid = CommonUtils.getFieldError("milkreceipt", "MilkDispatch",
                     milkReceipt.getMilkDispatch().getChallanNo(), "challanno.not.valid");
             throw new BusinessValidationFailException(getClass(), wefdateNotValid);
         }
@@ -118,7 +118,7 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         List<MilkReceipt> milkReceiptList = milkReceiptRepository.findAll();
         Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> !p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
         if (!milkReceipt1.isEmpty()) {
-            FieldError wefdateNotValid = CommonUtil.getFieldError("milkreceipt", "MilkDispatch",
+            FieldError wefdateNotValid = CommonUtils.getFieldError("milkreceipt", "MilkDispatch",
                     milkReceipt.getMilkDispatch().getChallanNo(), "challanno.not.valid");
             throw new BusinessValidationFailException(getClass(), wefdateNotValid);
         }

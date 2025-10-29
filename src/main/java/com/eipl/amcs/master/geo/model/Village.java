@@ -1,10 +1,8 @@
 package com.eipl.amcs.master.geo.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.StateDeserializer;
-import com.eipl.amcs.deserialize.SubDistrictDeserializer;
-import com.eipl.amcs.serialize.StateSerialize;
-import com.eipl.amcs.serialize.SubDistrictSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.SubDistrictDeserializer;
+import com.eipl.amcs.json.serialize.SubDistrictSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

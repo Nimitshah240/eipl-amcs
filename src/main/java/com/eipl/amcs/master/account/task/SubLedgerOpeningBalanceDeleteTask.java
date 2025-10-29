@@ -2,7 +2,7 @@ package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.service.SubLedgerOpeningBalanceService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 public class SubLedgerOpeningBalanceDeleteTask extends Task<Boolean> {
@@ -16,7 +16,7 @@ public class SubLedgerOpeningBalanceDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             SubLedgerOpeningBalanceService service = EmcsAppContext.getContext().getBean(SubLedgerOpeningBalanceService.class);
-            service.delete(code, CommonUtil.setIdentityHeader());
+            service.delete(code, CommonUtils.setIdentityHeader());
             return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

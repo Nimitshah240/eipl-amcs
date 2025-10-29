@@ -1,16 +1,13 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.ProductReceiptDeserializer;
-import com.eipl.amcs.deserialize.ProductReceiptTransactionDeserializer;
-import com.eipl.amcs.deserialize.ProductRequisitionTransactionDeserializer;
-import com.eipl.amcs.deserialize.TaxDetailDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.ProductReceiptDeserializer;
+import com.eipl.amcs.json.deserialize.ProductReceiptTransactionDeserializer;
+import com.eipl.amcs.json.deserialize.TaxDetailDeserializer;
 import com.eipl.amcs.master.account.model.TaxDetail;
-import com.eipl.amcs.operation.inventory.service.ProductReceiptTransactionService;
-import com.eipl.amcs.serialize.ProductReceiptSerialize;
-import com.eipl.amcs.serialize.ProductReceiptTransactionSerialize;
-import com.eipl.amcs.serialize.ProductRequisitionTransactionSerialize;
-import com.eipl.amcs.serialize.TaxDetailSerialize;
+import com.eipl.amcs.json.serialize.ProductReceiptSerialize;
+import com.eipl.amcs.json.serialize.ProductReceiptTransactionSerialize;
+import com.eipl.amcs.json.serialize.TaxDetailSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

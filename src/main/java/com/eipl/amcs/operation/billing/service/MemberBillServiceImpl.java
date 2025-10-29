@@ -677,7 +677,7 @@ public class MemberBillServiceImpl implements MemberBillService {
             createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo);
 
 
-//            int vn = CommonUtil.strToInt(voucherNo.substring(7)) + 1;
+//            int vn = CommonUtils.strToInt(voucherNo.substring(7)) + 1;
 //            voucherNo = memberBill.getSociety().getCode() + vn;
 
 

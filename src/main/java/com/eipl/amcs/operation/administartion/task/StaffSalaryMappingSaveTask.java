@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.administartion.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.StaffSalaryMapping;
 import com.eipl.amcs.master.account.service.StaffSalaryMappingService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -27,7 +27,7 @@ public class StaffSalaryMappingSaveTask extends Task<Object> {
             StaffSalaryMappingService service = EmcsAppContext.getContext().getBean(StaffSalaryMappingService.class);
 
             if (this.update == 0) {
-                return service.save(paymentCycleList, CommonUtil.setIdentityHeader());
+                return service.save(paymentCycleList, CommonUtils.setIdentityHeader());
             }
 
 //

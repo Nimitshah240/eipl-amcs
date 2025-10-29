@@ -1,14 +1,14 @@
 package com.eipl.amcs.master.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.ShiftDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.SocietyMilkPurchaseRateDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.ShiftDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyMilkPurchaseRateDeserializer;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.ShiftSerialize;
-import com.eipl.amcs.serialize.SocietyMilkPurchaseRateSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.ShiftSerialize;
+import com.eipl.amcs.json.serialize.SocietyMilkPurchaseRateSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

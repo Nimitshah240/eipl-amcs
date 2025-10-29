@@ -1,6 +1,6 @@
 package com.eipl.amcs.base.service;
 
-import com.eipl.amcs.base.Identity;
+import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.repository.IdentityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

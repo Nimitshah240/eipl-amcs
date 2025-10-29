@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.account.dto;
 
-import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.master.account.model.CashAdvance;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import lombok.AllArgsConstructor;

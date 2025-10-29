@@ -2,7 +2,7 @@ package com.eipl.amcs.master.procurement.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.base.task.RateTask;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;

@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.administartion.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.service.MeetingAgendaService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 public class MomActionDeleteTask extends Task<Boolean> {
@@ -16,7 +16,7 @@ public class MomActionDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             MeetingAgendaService service = EmcsAppContext.getContext().getBean(MeetingAgendaService.class);
-            service.deleteMomAction(code, CommonUtil.setIdentityHeader());
+            service.deleteMomAction(code, CommonUtils.setIdentityHeader());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MOM_ACTION + "/{code}";

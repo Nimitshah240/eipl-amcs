@@ -7,7 +7,7 @@ import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.repository.ProductPurchaseRateRepository;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
         if (chk == null || chk.isBefore(productPurchaseRate.getWefDate())) {
 
         } else {
-            FieldError wefdateNotValid = CommonUtil.getFieldError("productpurchaserate", "wefdate",
+            FieldError wefdateNotValid = CommonUtils.getFieldError("productpurchaserate", "wefdate",
                     productPurchaseRate.getCode(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefdateNotValid);
         }

@@ -1,6 +1,6 @@
 package com.eipl.amcs.base.repository;
 
-import com.eipl.amcs.base.Identity;
+import com.eipl.amcs.base.model.Identity;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 

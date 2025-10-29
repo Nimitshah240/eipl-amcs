@@ -1,14 +1,14 @@
 package com.eipl.amcs.master.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.MemberMilkPurchaseRateDeserializer;
-import com.eipl.amcs.deserialize.MilkQualityTypeDeserializer;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MemberMilkPurchaseRateDeserializer;
+import com.eipl.amcs.json.deserialize.MilkQualityTypeDeserializer;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.serialize.MemberMilkPurchaseRateSerialize;
-import com.eipl.amcs.serialize.MilkQualityTypeSerialize;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
+import com.eipl.amcs.json.serialize.MemberMilkPurchaseRateSerialize;
+import com.eipl.amcs.json.serialize.MilkQualityTypeSerialize;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

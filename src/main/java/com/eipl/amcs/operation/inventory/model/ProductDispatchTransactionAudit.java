@@ -1,10 +1,10 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.eipl.amcs.operation.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

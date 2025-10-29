@@ -2,7 +2,7 @@ package com.eipl.amcs.master.operation.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.service.BillCriteriaService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 /**
@@ -29,7 +29,7 @@ public class BillCriteriaDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             BillCriteriaService service = EmcsAppContext.getContext().getBean(BillCriteriaService.class);
-            service.delete(code, CommonUtil.setIdentityHeader());
+            service.delete(code, CommonUtils.setIdentityHeader());
             return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

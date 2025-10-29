@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 public class MilkReceiptDeleteTask extends Task<Boolean> {
@@ -19,7 +19,7 @@ public class MilkReceiptDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             MilkReceiptService service = EmcsAppContext.getContext().getBean(MilkReceiptService.class);
-            service.delete(receipt.getCode(), CommonUtil.setIdentityHeader());
+            service.delete(receipt.getCode(), CommonUtils.setIdentityHeader());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT + "/delete";

@@ -1,6 +1,6 @@
 package com.eipl.amcs.setting.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

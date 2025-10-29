@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.inventory.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.inventory.service.ProductRequisitionService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class ProductRequisitionDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             ProductRequisitionService service = EmcsAppContext.getContext().getBean(ProductRequisitionService.class);
-            service.delete(grnNo, CommonUtil.setIdentityHeader());
+            service.delete(grnNo, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

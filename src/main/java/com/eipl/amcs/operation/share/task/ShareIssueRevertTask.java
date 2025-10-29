@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.share.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.share.service.ShareService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 public class ShareIssueRevertTask extends Task<Boolean> {
@@ -16,7 +16,7 @@ public class ShareIssueRevertTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             ShareService service = EmcsAppContext.getContext().getBean(ShareService.class);
-            service.revert(code, CommonUtil.setIdentityHeader());
+            service.revert(code, CommonUtils.setIdentityHeader());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE + "/revert/{code}";

@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.procurement.task.MemberBillLoadByDateTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;

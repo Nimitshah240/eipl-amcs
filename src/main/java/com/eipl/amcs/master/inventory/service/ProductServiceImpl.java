@@ -8,7 +8,7 @@ import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.inventory.repository.ProductSaleRateRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 
         boolean chk = checkName(product.getName(), product.getCode());
         if (chk) {
-            FieldError nameNotValid = CommonUtil.getFieldError("product", "name", product.getName(), "name.not.valid");
+            FieldError nameNotValid = CommonUtils.getFieldError("product", "name", product.getName(), "name.not.valid");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
 //		Product newData = productRepository.customSave(product, identityInfo);
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
     public Product update(Product product, String identityInfo) {
         boolean chk = checkName(product.getName(), product.getCode());
         if (chk) {
-            FieldError nameNotValid = CommonUtil.getFieldError("product", "name", product.getName(), "name.not.valid");
+            FieldError nameNotValid = CommonUtils.getFieldError("product", "name", product.getName(), "name.not.valid");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
         Product newData = productRepository.save(product);

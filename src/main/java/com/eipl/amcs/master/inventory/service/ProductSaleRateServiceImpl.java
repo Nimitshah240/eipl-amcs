@@ -5,7 +5,7 @@ import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.repository.ProductSaleRateRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
 //		if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
 //
 //		} else {
-//			FieldError wefDateNotValid = CommonUtil.getFieldError("productsalerate", "wefDate",
+//			FieldError wefDateNotValid = CommonUtils.getFieldError("productsalerate", "wefDate",
 //					productSaleRate.getCode(), "wefdate.not.valid");
 //			throw new BusinessValidationFailException(getClass(), wefDateNotValid);
 //		}
@@ -53,7 +53,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
         if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
 
         } else {
-            FieldError wefDateNotValid = CommonUtil.getFieldError("productsalerate", "wefDate",
+            FieldError wefDateNotValid = CommonUtils.getFieldError("productsalerate", "wefDate",
                     productSaleRate.getCode(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
@@ -72,7 +72,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
         if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
 
         } else {
-            FieldError wefDateNotValid = CommonUtil.getFieldError("productsalerate", "name", productSaleRate.getCode(),
+            FieldError wefDateNotValid = CommonUtils.getFieldError("productsalerate", "name", productSaleRate.getCode(),
                     "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }

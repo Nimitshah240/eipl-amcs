@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.share.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.share.model.ShareRate;
 import com.eipl.amcs.operation.share.service.ShareRateService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class ShareRateDeleteTask extends Task<Boolean> {
             Optional<ShareRate> shareRate = service.findById(code);
             if (shareRate == null || !shareRate.isPresent())
                 return null;
-            service.delete(shareRate.get(), CommonUtil.setIdentityHeader());
+            service.delete(shareRate.get(), CommonUtils.setIdentityHeader());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE_RATE + "/{code}";

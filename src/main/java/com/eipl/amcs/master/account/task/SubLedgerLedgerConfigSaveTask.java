@@ -3,7 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.SubLedgerLedgerConfig;
 import com.eipl.amcs.master.account.service.SubLedgerLedgerConfigService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -25,7 +25,7 @@ public class SubLedgerLedgerConfigSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             SubLedgerLedgerConfigService service = EmcsAppContext.getContext().getBean(SubLedgerLedgerConfigService.class);
-            service.save(dto, code, CommonUtil.setIdentityHeader());
+            service.save(dto, code, CommonUtils.setIdentityHeader());
             return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

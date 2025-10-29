@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.StackPane?>
 
 <StackPane fx:id="root" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.SplashController">
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.SplashController">
     <children>
         <StackPane maxHeight="450.0" maxWidth="800.0" prefHeight="150.0" prefWidth="200.0" styleClass="pane-white-drop">
             <children>

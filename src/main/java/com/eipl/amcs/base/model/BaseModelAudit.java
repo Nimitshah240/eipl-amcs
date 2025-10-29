@@ -1,99 +1,51 @@
 package com.eipl.amcs.base.model;
 
+import com.eipl.amcs.base.JsonAndTableBuilder;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class BaseModelAudit implements Serializable {
+@SuppressWarnings("serial")
+@MappedSuperclass
+@Getter
+@Setter
+public class BaseModelAudit implements Serializable, JsonAndTableBuilder {
+
     private LocalDateTime createdAt;
+    @Size(max = 15)
     private String createdBy;
     private LocalDateTime updatedAt;
+    @Size(max = 15)
     private String updatedBy;
+    @Column(name = "is_active")
+    private boolean active;
 
+    @Column(name = "x_col1", length = 255)
     private String xCol1;
+    @Column(name = "x_col2", length = 255)
     private String xCol2;
+    @Column(name = "x_col3", length = 255)
     private String xCol3;
 
     private LocalDateTime auditCreatedAt;
+    @Size(max = 15)
     private String auditCreatedBy;
+    @Size(max = 15)
     private String operationType;
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public BaseModelAudit() {
+        auditCreatedAt = LocalDateTime.now();
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setInitData() {
+        auditCreatedAt = LocalDateTime.now();
+        if (auditCreatedBy == null || auditCreatedBy.isEmpty())
+            auditCreatedBy = "System";
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public String getxCol1() {
-        return xCol1;
-    }
-
-    public void setxCol1(String xCol1) {
-        this.xCol1 = xCol1;
-    }
-
-    public String getxCol2() {
-        return xCol2;
-    }
-
-    public void setxCol2(String xCol2) {
-        this.xCol2 = xCol2;
-    }
-
-    public String getxCol3() {
-        return xCol3;
-    }
-
-    public void setxCol3(String xCol3) {
-        this.xCol3 = xCol3;
-    }
-
-    public LocalDateTime getAuditCreatedAt() {
-        return auditCreatedAt;
-    }
-
-    public void setAuditCreatedAt(LocalDateTime auditCreatedAt) {
-        this.auditCreatedAt = auditCreatedAt;
-    }
-
-    public String getAuditCreatedBy() {
-        return auditCreatedBy;
-    }
-
-    public void setAuditCreatedBy(String auditCreatedBy) {
-        this.auditCreatedBy = auditCreatedBy;
-    }
-
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
-    }
 }

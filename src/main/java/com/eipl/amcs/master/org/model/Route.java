@@ -1,10 +1,10 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.BmcDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
-import com.eipl.amcs.serialize.BmcSerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.BmcDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.BmcSerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

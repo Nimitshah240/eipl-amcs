@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.share.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.share.service.ShareService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 public class ShareTransferDeleteTask extends Task<Boolean> {
@@ -16,7 +16,7 @@ public class ShareTransferDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             ShareService service = EmcsAppContext.getContext().getBean(ShareService.class);
-            service.cancel(code, CommonUtil.setIdentityHeader());
+            service.cancel(code, CommonUtils.setIdentityHeader());
 
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

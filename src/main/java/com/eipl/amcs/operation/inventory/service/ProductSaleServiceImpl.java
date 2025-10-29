@@ -29,7 +29,7 @@ import com.eipl.amcs.operation.inventory.dto.SaleTxnTaxDto;
 import com.eipl.amcs.operation.inventory.model.*;
 import com.eipl.amcs.operation.inventory.repository.*;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
@@ -115,7 +115,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         if (productSaleDto.getProductSale().getDeductionStartDate() != null) {
             SocietyPaymentCycle paymentCycle = paymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5), productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5));
             if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtil.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
+                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
         }
 
 
@@ -332,7 +332,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             if (op.equals("CREATE")) {
                 oldObj.setBalance(oldObj.getBalance().subtract(obj.getNetAmount()).setScale(2, RoundingMode.HALF_UP));
                 if (oldObj.getBalance().compareTo(BigDecimal.ZERO) < 0) {
-                    FieldError creditlimiterror = CommonUtil.getFieldError("productsale", "creditlimt", obj.getAmount(), "creditlimiterror");
+                    FieldError creditlimiterror = CommonUtils.getFieldError("productsale", "creditlimt", obj.getAmount(), "creditlimiterror");
                     throw new BusinessValidationFailException(getClass(), creditlimiterror);
                 }
             } else if (op.equals("DELETE")) {
@@ -531,7 +531,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         List<ProductSaleInstallment> listIns = installmentRepository.findByInvoiceNo(productSale.getInvoiceNo());
         for (ProductSaleInstallment txn : listIns) {
             if (txn.getSocietyPaymentCycle().getLockBillingProcess()) {
-                FieldError nameNotValid = CommonUtil.getFieldError("productsale", "date", txn.getTableName(), "can.not.delete");
+                FieldError nameNotValid = CommonUtils.getFieldError("productsale", "date", txn.getTableName(), "can.not.delete");
                 throw new BusinessValidationFailException(getClass(), nameNotValid);
             }
             installmentRepository.customDelete(txn, identityInfo);

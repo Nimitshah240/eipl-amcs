@@ -2,7 +2,7 @@ package com.eipl.amcs.operation.administartion.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.service.StaffMemberService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 public class StaffMembersDeleteTask extends Task<Boolean> {
@@ -16,7 +16,7 @@ public class StaffMembersDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             StaffMemberService service = EmcsAppContext.getContext().getBean(StaffMemberService.class);
-            service.delete(code, CommonUtil.setIdentityHeader());
+            service.delete(code, CommonUtils.setIdentityHeader());
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.STAFF_MEMBERS + "/{code}";

@@ -1,6 +1,6 @@
 package com.eipl.amcs.utils;
 
-import com.eipl.amcs.base.SplashController;
+import com.eipl.amcs.base.controller.SplashController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

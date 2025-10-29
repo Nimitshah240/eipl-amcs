@@ -3,7 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.VoucherTypeLedgerConfig;
 import com.eipl.amcs.master.account.service.VoucherTypeLedgerConfigService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -23,7 +23,7 @@ public class VoucherTypeLedgerConfigSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             VoucherTypeLedgerConfigService service = EmcsAppContext.getContext().getBean(VoucherTypeLedgerConfigService.class);
-            service.save(dto, CommonUtil.setIdentityHeader());
+            service.save(dto, CommonUtils.setIdentityHeader());
             return true;
 
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

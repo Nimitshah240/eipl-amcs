@@ -4,7 +4,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.dto.MilkReceiptDto;
 import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -26,9 +26,9 @@ public class MilkReceiptSaveTask extends Task<Object> {
             MilkReceipt dtoResult;
 
             if (this.update == 0) {
-                dtoResult = service.save(dto, CommonUtil.setIdentityHeader());
+                dtoResult = service.save(dto, CommonUtils.setIdentityHeader());
             } else {
-                dtoResult = service.update(dto, CommonUtil.setIdentityHeader());
+                dtoResult = service.update(dto, CommonUtils.setIdentityHeader());
             }
             return dtoResult;
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);

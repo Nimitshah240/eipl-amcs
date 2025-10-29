@@ -2,7 +2,7 @@ package com.eipl.amcs.master.operation.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.service.BillHeadService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 /**
@@ -28,7 +28,7 @@ public class BillHeadDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             BillHeadService service = EmcsAppContext.getContext().getBean(BillHeadService.class);
-            service.delete(code, CommonUtil.setIdentityHeader());
+            service.delete(code, CommonUtils.setIdentityHeader());
             return true;
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BILLHEAD + "/{code}";

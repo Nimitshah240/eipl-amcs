@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelAudit;
+import com.eipl.amcs.base.model.BaseModelAudit;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -26,7 +26,7 @@ import com.eipl.amcs.operation.procurement.dto.MemberSocietyInfoDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.report.dto.MemberRegister;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -91,7 +91,7 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> memberData = repository.findById(memberDto.getMember().getCode());
         if (memberData.isPresent()) {
             throw new BusinessValidationFailException(Member.class,
-                    CommonUtil.getFieldError("Member", "code", memberDto.getMember().getCode(), "code.not.valid"));
+                    CommonUtils.getFieldError("Member", "code", memberDto.getMember().getCode(), "code.not.valid"));
         }
 
         MemberDto memberDtoNew = new MemberDto();
@@ -240,7 +240,7 @@ public class MemberServiceImpl implements MemberService {
         MemberCreditLimit memberCreditLimit = new MemberCreditLimit();
         memberCreditLimit.setBalance(member.getCreditLimit());
         memberCreditLimit.setConsumerCode(member.getCode());
-        memberCreditLimit.setConsumerType(CommonUtil.getMemberNonMemberTypeValue(member.getMemberType().getName()));
+        memberCreditLimit.setConsumerType(CommonUtils.getMemberNonMemberTypeValue(member.getMemberType().getName()));
         memberCreditLimit.setSociety(member.getSociety());
         memberCreditLimit.setUnionCode(memberDetail.getUnionCode());
         memberCreditLimit.setInitData();
@@ -256,7 +256,7 @@ public class MemberServiceImpl implements MemberService {
         memberCreditLimitTransaction.setOldValue(BigDecimal.valueOf(0));
         memberCreditLimitTransaction.setConsumerCode(memberCreditLimit.getConsumerCode());
         memberCreditLimitTransaction
-                .setConsumerType(CommonUtil.getMemberNonMemberTypeValue(member.getMemberType().getName()));
+                .setConsumerType(CommonUtils.getMemberNonMemberTypeValue(member.getMemberType().getName()));
         memberCreditLimitTransaction.setReferenceCode(member.getCode());
         memberCreditLimitTransaction.setSociety(memberCreditLimit.getSociety());
         memberCreditLimitTransaction.setTransactionType("Initial credit limit");
@@ -329,7 +329,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberSocietyInfoDto findMemberInformation(String code, LocalDateTime date, Integer count, String paymentCycle) {
         Member member = repository.findById(code).orElseThrow(() -> new BusinessValidationFailException(Member.class,
-                CommonUtil.getFieldError("member", "code", code, "member.notfound")));
+                CommonUtils.getFieldError("member", "code", code, "member.notfound")));
         MemberSocietyInfoDto dto = new MemberSocietyInfoDto();
 
         List<MilkCollection> collections = collectionRepository

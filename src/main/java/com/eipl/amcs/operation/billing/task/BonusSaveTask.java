@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.dto.BonusDto;
 import com.eipl.amcs.operation.billing.service.BonusService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -24,9 +24,9 @@ public class BonusSaveTask extends Task<Object> {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
 
             if (this.update == 0) {
-                service.saveDto(CommonUtil.setIdentityHeader(), dto, (short) 0);
+                service.saveDto(CommonUtils.setIdentityHeader(), dto, (short) 0);
             } else {
-                service.updateDto(CommonUtil.setIdentityHeader(), dto);
+                service.updateDto(CommonUtils.setIdentityHeader(), dto);
             }
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS;

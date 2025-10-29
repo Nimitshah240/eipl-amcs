@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.share.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.service.ShareService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -22,7 +22,7 @@ public class ShareTransferSaveTask extends Task<Object> {
         try {
             ShareService service = EmcsAppContext.getContext().getBean(ShareService.class);
             if (this.update == 0) {
-                service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtils.setIdentityHeader());
             }
 //            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 //            String url;

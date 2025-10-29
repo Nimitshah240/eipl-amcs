@@ -3,7 +3,7 @@ package com.eipl.amcs.master.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -27,7 +27,7 @@ public class SocietyPaymentCycleSaveTask extends Task<Object> {
             if (paymentCycleList == null || paymentCycleList.isEmpty())
                 return null;
             if (this.update == 0) {
-                return service.save(paymentCycleList, CommonUtil.setIdentityHeader());
+                return service.save(paymentCycleList, CommonUtils.setIdentityHeader());
             }
 
 

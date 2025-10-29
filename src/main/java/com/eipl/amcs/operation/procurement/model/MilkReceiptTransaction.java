@@ -1,15 +1,14 @@
 package com.eipl.amcs.operation.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.MilkDispatchDeserializer;
-import com.eipl.amcs.deserialize.MilkQualityTypeDeserializer;
-import com.eipl.amcs.deserialize.MilkReceiptDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MilkDispatchDeserializer;
+import com.eipl.amcs.json.deserialize.MilkQualityTypeDeserializer;
+import com.eipl.amcs.json.deserialize.MilkReceiptDeserializer;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.operation.procurement.service.MilkReceiptService;
-import com.eipl.amcs.serialize.MilkDispatchSerialize;
-import com.eipl.amcs.serialize.MilkQualityTypeSerialize;
-import com.eipl.amcs.serialize.MilkReceiptSerialize;
+import com.eipl.amcs.json.serialize.MilkDispatchSerialize;
+import com.eipl.amcs.json.serialize.MilkQualityTypeSerialize;
+import com.eipl.amcs.json.serialize.MilkReceiptSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

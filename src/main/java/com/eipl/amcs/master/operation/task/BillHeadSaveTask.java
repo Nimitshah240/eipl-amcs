@@ -3,7 +3,7 @@ package com.eipl.amcs.master.operation.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.service.BillHeadService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -39,9 +39,9 @@ public class BillHeadSaveTask extends Task<Object> {
             if (billHead == null)
                 return null;
             if (this.update == 0) {
-                service.saveBillHead(billHead, CommonUtil.setIdentityHeader());
+                service.saveBillHead(billHead, CommonUtils.setIdentityHeader());
             } else {
-                service.updateBillHead(billHead, CommonUtil.setIdentityHeader());
+                service.updateBillHead(billHead, CommonUtils.setIdentityHeader());
             }
             return true;
 

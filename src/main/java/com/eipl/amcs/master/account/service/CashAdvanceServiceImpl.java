@@ -11,7 +11,7 @@ import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -103,7 +103,7 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
         List<ProductSaleInstallment> installmentList = installmentRepository.findByInvoiceNo(cashAdvanceNo);
         for (ProductSaleInstallment productSaleInstallment : installmentList) {
             if (productSaleInstallment.getSocietyPaymentCycle().getLockBillingProcess()) {
-                FieldError nameNotValid = CommonUtil.getFieldError("cashadvance", "date", cashAdvanceNo, "can.not.delete");
+                FieldError nameNotValid = CommonUtils.getFieldError("cashadvance", "date", cashAdvanceNo, "can.not.delete");
                 throw new BusinessValidationFailException(getClass(), nameNotValid);
             }
             installmentRepository.delete(productSaleInstallment);
@@ -135,7 +135,7 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
         List<ProductSaleInstallment> installmentList = installmentRepository.findByInvoiceNo(cashAdvance.getCashAdvance().getCode());
         for (ProductSaleInstallment productSaleInstallment : installmentList) {
             if (productSaleInstallment.getSocietyPaymentCycle().getLockBillingProcess()) {
-                FieldError nameNotValid = CommonUtil.getFieldError("cashadvance", "date", cashAdvance.getTableName(), "can.not.delete");
+                FieldError nameNotValid = CommonUtils.getFieldError("cashadvance", "date", cashAdvance.getTableName(), "can.not.delete");
                 throw new BusinessValidationFailException(getClass(), nameNotValid);
             }
             installmentRepository.delete(productSaleInstallment);

@@ -1,10 +1,8 @@
 package com.eipl.amcs.master.global.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.StateDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
-import com.eipl.amcs.serialize.StateSerialize;
-import com.eipl.amcs.serialize.UnitSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.UnitSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

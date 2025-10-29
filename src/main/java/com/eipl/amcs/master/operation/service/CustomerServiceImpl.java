@@ -19,7 +19,7 @@ import com.eipl.amcs.master.operation.repository.CustomerDetailsRepository;
 import com.eipl.amcs.master.operation.repository.CustomerRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -70,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDto save(CustomerDto customerDto, String identityInfo) {
         Optional<Customer> customerData = repository.findById(customerDto.getCustomer().getCode());
         if (customerData.isPresent()) {
-            throw new BusinessValidationFailException(Customer.class, CommonUtil.getFieldError("Customer", "code",
+            throw new BusinessValidationFailException(Customer.class, CommonUtils.getFieldError("Customer", "code",
                     customerDto.getCustomer().getCode(), "code.not.valid"));
         }
         CustomerDto customerDtoNew = new CustomerDto();

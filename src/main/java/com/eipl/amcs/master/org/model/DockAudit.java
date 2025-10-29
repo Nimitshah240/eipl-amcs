@@ -1,8 +1,8 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModelAudit;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.base.model.BaseModelAudit;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

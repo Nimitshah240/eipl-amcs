@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.time.LocalDateTime;
@@ -39,7 +39,7 @@ public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
 
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             if (sync == 1) {
-                service.findAllCollectionByDate(fromDate, toDate, CommonUtil.setIdentityHeader());
+                service.findAllCollectionByDate(fromDate, toDate, CommonUtils.setIdentityHeader());
                 return null;
             }
 

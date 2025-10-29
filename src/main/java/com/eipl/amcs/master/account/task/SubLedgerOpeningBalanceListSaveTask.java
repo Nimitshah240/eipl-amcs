@@ -3,7 +3,7 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
 import com.eipl.amcs.master.account.service.SubLedgerOpeningBalanceService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
@@ -34,7 +34,7 @@ public class SubLedgerOpeningBalanceListSaveTask extends Task<List<SubLedgerOpen
             int current = 1;
             for (List<SubLedgerOpeningBalance> memberDtos : listTemp) {
                 try {
-                    listRes.addAll(service.importSubLedgerBalance(memberDtos, CommonUtil.setIdentityHeader()));
+                    listRes.addAll(service.importSubLedgerBalance(memberDtos, CommonUtils.setIdentityHeader()));
                     updateMessage("Migration in progress " + current + " of " + listTemp.size());
                     current++;
                 } catch (Exception e) {
@@ -44,7 +44,7 @@ public class SubLedgerOpeningBalanceListSaveTask extends Task<List<SubLedgerOpen
             return listRes;
         } else {
             try {
-                return service.importSubLedgerBalance(dtoList, CommonUtil.setIdentityHeader());
+                return service.importSubLedgerBalance(dtoList, CommonUtils.setIdentityHeader());
             } catch (Exception e) {
                 e.printStackTrace();
             }
