@@ -63,11 +63,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     private final ObjectProperty<MilkDispatchSummaryDto> propDto;
     private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
     private final ObservableList<MilkDispatchTransaction> listDeleteTxn;
-    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
-        }
-    };
+
     List<MilkDispatchSummaryDto> milkDispatchSummaryDtoList = new ArrayList<>();
     List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
     @FXML
@@ -131,6 +127,11 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         if (!newVal.isEmpty()) {
             fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             calculateClr(txtFat.getText(), txtSnf.getText());
+        }
+    };
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
         }
     };
 

@@ -150,7 +150,6 @@ public class RateTask extends Task<Void> {
                     rate.setUnionCode(MainApp.identityDto.getUnion().getCode());
                     rate.setWefDate(CommonUtils.getLocalDateTimeFromDateAndShift(LocalDate.parse(purchaseRate.get("wefDate").toString().split(" ")[0]), rate.getShift()));
                     rate.setSociety(MainApp.identityDto.getSociety());
-//                    rate.setRateType(purchaseRate.get("rateType") == null ? mapRateType.get(1) : mapRateType.get((int) purchaseRate.get("rateType")));
                     rate.setxCol1("0-0");
 
 
@@ -172,7 +171,6 @@ public class RateTask extends Task<Void> {
                         based.setStep((int) map.get("step"));
                         based.setFormula(map.get("formulaCode") == null ? null : mapFormula.get(map.get("formulaCode").toString()));
                         based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
-//                        based.setMilkType(mapMilkType.get((int) map.get("milkQualityTypeCode")));
                         based.setMilkQualityType(mapMilkQuality.get(1));
                         listMemberRateBased.add(based);
                     }

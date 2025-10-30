@@ -52,7 +52,6 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
         } catch (Exception e) {
             LOGGER.error("Updater Information Failed", e);
         }
-//        startUpdateProcess(new File("resources/appupdate/20221018/update.zip"));
         return null;
     }
 
@@ -103,8 +102,6 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                                 try {
                                     if (f.getName().startsWith("eipl-amcs")) { // app jars
                                         try {
-//                                        eipl-amcs-1.0
-//                                        eipl-amcs-boot-1.0
                                             if (!f.getName().startsWith("eipl-amcs-boot"))
                                                 version = f.getName().substring(10, 13);
                                             Files.copy(f.toPath(), new File(appDirPath, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);

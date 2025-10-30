@@ -436,7 +436,6 @@ public class BroadcastedService {
                         product.setCode(String.valueOf(jsonText.get("productCode")));
                         product.setName(String.valueOf(jsonText.get("productName")));
                         product.setNameLocal(String.valueOf(jsonText.get("localName")));
-//                    product.setxCol1(String.valueOf(jsonText.get("productDesc")));
                         product.setReferenceCode(String.valueOf(jsonText.get("refCode")));
                         product.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
                         ProductGroup group = productGroupRepository.findByCode(Integer.valueOf(String.valueOf(jsonText.get("productGroupCode"))));
@@ -574,9 +573,7 @@ public class BroadcastedService {
                                 insuranceDetailSummary.setMccPlantCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
                                 insuranceDetailSummary.setDcsCode(jsonText.get("dcsCode") != null ? String.valueOf(jsonText.get("dcsCode")) : null);
                                 insuranceDetailSummary.setDcsName(jsonText.get("dcsName") != null ? String.valueOf(jsonText.get("dcsName")) : null);
-//                                insuranceDetailSummary.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate"))) : null);
                                 insuranceDetailSummary.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate")), CommonUtils.Formatter5) : null);
-//                                insuranceDetailSummary.setToDate(jsonText.get("toDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("toDate"))) : null);
                                 insuranceDetailSummary.setToDate(jsonText.get("toDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("toDate")), CommonUtils.Formatter5) : null);
                                 insuranceDetailSummary.setStatus(jsonText.get("status") != null ? String.valueOf(jsonText.get("status")) : null);
                                 insuranceDetailSummary.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse(String.valueOf(jsonText.get("createdAt")), AppConstant.DATE_TIME_FMT_SSSSSS) : null);
@@ -623,11 +620,6 @@ public class BroadcastedService {
                                 insuranceDetail.setDcsName(jsonText.get("dcsName") != null ? String.valueOf(jsonText.get("dcsName")) : null);
                                 insuranceDetail.setMemberId(jsonText.get("memberId") != null ? String.valueOf(jsonText.get("memberId")) : null);
                                 insuranceDetail.setMemberCode(jsonText.get("memberCode") != null ? String.valueOf(jsonText.get("memberCode")) : null);
-//                                insuranceDetail.setMemberCode(
-//                                        jsonText.get("memberCode") != null
-//                                                ? String.valueOf(jsonText.get("memberCode")).replaceAll("^.*(?=\\d{4})", "")
-//                                                : null
-//                                );
                                 insuranceDetail.setMemberName(jsonText.get("memberName") != null ? String.valueOf(jsonText.get("memberName")) : null);
                                 insuranceDetail.setAdharNo(jsonText.get("adharNo") != null ? String.valueOf(jsonText.get("adharNo")) : null);
                                 insuranceDetail.setDob(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null);

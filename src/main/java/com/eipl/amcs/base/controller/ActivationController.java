@@ -246,12 +246,6 @@ public class ActivationController implements MyInitialization {
 
     private void confirmAndClose() {
         callApi();
-//        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-//                resourceBundle.getString("activation.success"));
-//        Optional<ButtonType> resp = alert.createConfirmationAlert();
-//        if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//            Platform.exit();
-//        }
     }
 
     private void makeFile() {
@@ -354,8 +348,6 @@ public class ActivationController implements MyInitialization {
     private String appKeyGenerator() {
         try {
             String appGetKey = "1814";
-//            Security security = securityService.fetchDefaultRecord();
-//            if (security != null && security.getColB() != null && !security.getColB().isEmpty()) {
             appGetKey = (ActivationUtil.decrypt(appGetKey,
                     "76599" + union + "88121659"));
             String keyStr = "";
@@ -396,7 +388,6 @@ public class ActivationController implements MyInitialization {
             resultForKeyGen = resultForKeyGen.replaceAll("[^a-zA-Z0-9]", "");
             System.out.println(resultForKeyGen);
             return resultForKeyGen.toUpperCase();
-//            }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
