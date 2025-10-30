@@ -151,7 +151,6 @@ public class ProductSaleTransactionAddController implements MyInitialization {
     @Override
     public void setupComboBox() {
         cboxProduct.setConverter(new ProductConvertor(cboxProduct));
-//        cboxUnit.setConverter(new UnitConvertor(cboxUnit));
         cboxTaxCode.setConverter(new TaxConvertor(cboxTaxCode));
     }
 

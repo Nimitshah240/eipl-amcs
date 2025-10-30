@@ -62,8 +62,6 @@ public class SalaryHeadAddEditController implements MyInitialization {
             getNextCode();
             loadData();
         }
-        // loadDesignation();
-
     }
 
     private void getNextCode() {
@@ -87,14 +85,10 @@ public class SalaryHeadAddEditController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupComboBox();
-//        loadControls();
-
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         cboxType.getItems().addAll(resourceBundle.getString("addition"), resourceBundle.getString("deduction"));
         cboxType.getSelectionModel().select(0);
-
-
     }
 
     public void loadControls() {
@@ -103,7 +97,6 @@ public class SalaryHeadAddEditController implements MyInitialization {
         txtCode.setText(dto.getCode().toString());
     }
 
-    //
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {
@@ -206,6 +199,4 @@ public class SalaryHeadAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-
 }

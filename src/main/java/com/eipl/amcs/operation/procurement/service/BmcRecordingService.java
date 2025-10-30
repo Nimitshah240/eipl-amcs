@@ -15,8 +15,6 @@ public interface BmcRecordingService {
 
     BmcRecording update(BmcRecording recording);
 
-//    BmcRecording createBmcRecording(BmcRecording recording);
-
     BmcRecording updateBmcRecording(Long code, BmcRecording recording);
 
     void deleteBmcRecording(Long code);

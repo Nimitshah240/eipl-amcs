@@ -37,8 +37,6 @@ public class RptSubLedgerBookController implements MyInitialization {
     private ComboBox<CustomerTypeKeyValDto> cboxType;
     @FXML
     private ComboBox<String> cboxReportType;
-
-
     @FXML
     private ComboBox<SubLedger> cboxSubLedgerName;
 
@@ -50,9 +48,6 @@ public class RptSubLedgerBookController implements MyInitialization {
 
     @FXML
     private AnchorPane root;
-
-
-    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -71,9 +66,6 @@ public class RptSubLedgerBookController implements MyInitialization {
         cboxType.getItems().addAll(CommonUtils.getAllCustomerTypes());
         cboxType.getSelectionModel().select(0);
         loadData((short) 1);
-
-//        cboxChallanNo.selectionModelProperty().addListener((observable, oldValue, newValue) -> loadMilkDispatchSummary(newValue.getSelectedItem().getChallanNo()));
-
 
         cboxType.setOnAction(e -> {
             loadData((short) ((short) cboxType.getSelectionModel().getSelectedIndex() + 1));
@@ -141,7 +133,5 @@ public class RptSubLedgerBookController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
-
     }
 }

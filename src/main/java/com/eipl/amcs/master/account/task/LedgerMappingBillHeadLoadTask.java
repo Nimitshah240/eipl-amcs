@@ -26,36 +26,17 @@ public class LedgerMappingBillHeadLoadTask extends Task<BillHeadMappingDto> {
             List<BillHead> billHeadList = service.findAll();
             if (billHeadList == null || billHeadList.isEmpty())
                 return null;
-//            return billHeadList;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BILLHEAD;
-//            ResponseEntity<BillHead[]> response = restTemplate.getForEntity(url, BillHead[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            List<BillHead> billHeadList = new ArrayList<>(Arrays.asList(response.getBody()));
-
             LedgerService service1 = EmcsAppContext.getContext().getBean(LedgerService.class);
             List<Ledger> ledgerList = service1.findAllByIsActive();
             if (ledgerList == null || ledgerList.isEmpty())
                 return null;
 
-            // ledger
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER;
-//            ResponseEntity<Ledger[]> respLedger = restTemplate.getForEntity(url, Ledger[].class);
-//            if (respLedger == null || respLedger.getStatusCode() != HttpStatus.OK)
-//                return null;
 
             LedgerMappingBillHeadService service2 = EmcsAppContext.getContext().getBean(LedgerMappingBillHeadService.class);
             List<LedgerMappingBillHead> ledgerMappingBillHeadList = service2.findAll();
             if (ledgerMappingBillHeadList == null || ledgerMappingBillHeadList.isEmpty())
                 return null;
 
-
-//            url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_BILL_HEAD;
-//            ResponseEntity<LedgerMappingBillHead[]> respPgLedMap = restTemplate.getForEntity(url, LedgerMappingBillHead[].class);
-//            if (respPgLedMap == null || respPgLedMap.getStatusCode() != HttpStatus.OK)
-//                return null;
             List<LedgerMappingBillHead> listMapping = new ArrayList<>(ledgerMappingBillHeadList);
             for (LedgerMappingBillHead mp : listMapping) {
                 billHeadList.removeIf(p -> p.getCode().equalsIgnoreCase(mp.getBillHead().getCode()));

@@ -46,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class MemberBillController extends SocietyPaymentCycleEditController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<MemberBill> propMemberBill;
     @FXML
     private StackPane root;
     @FXML
@@ -61,12 +62,9 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     @FXML
     private TableColumn<MemberBill, Number> colMilkQty, colMilkAmount, colProductSale, colLocalSale, colLoan, colOtherAdd,
             colOtherDed, colNetAmount;
-
     private MemberBillSummary billSummary;
     private List<MemberBill> memberBillList;
     private ResourceBundle resourceBundle;
-
-    private final ObjectProperty<MemberBill> propMemberBill;
 
     public MemberBillController() {
         propMemberBill = new SimpleObjectProperty<>();
@@ -98,12 +96,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         setupComboBox();
 
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/billing/MemberBillSummary.fxml"))));
-
         btnGenerate.setDisable(!(this.billSummary == null || billSummary.getStatus() < (short) 2));
         btnGenerate.setOnAction(e -> {
-//            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_GENERATE"))
-//                throw new UnAuthorizedAccessException();
-
             LocalDateTime currentDate = LocalDateTime.of(LocalDate.now(), LocalTime.NOON);
             if (currentDate.isAfter(cboxPaymentCycle.getValue().getFromDate()) && currentDate.isBefore(cboxPaymentCycle.getValue().getToDate())) {
                 MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("member.bill"),
@@ -111,7 +105,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 alert.createAlert();
                 return;
             }
-
 
             var task = new CheckMemberBillLoadTask(cboxPaymentCycle.getValue());
             task.setOnSucceeded(exs -> {
@@ -139,8 +132,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
 
         });
         btnEdit.setOnAction(e -> {
-//            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_EDIT"))
-//                throw new UnAuthorizedAccessException();
             MemberBill dto = propMemberBill.get();
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberBillTransaction", dto, this);
@@ -160,10 +151,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             Optional<ButtonType> resp = alert.createConfirmationAlert();
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
                 finalizeMemberBill();
-
                 btnGenerate.setDisable(true);
                 btnEdit.setDisable(true);
-
             }
         });
 
@@ -197,7 +186,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                         "Avg. CLR", "Qty", "Milk Amount", "LS Amount", "PS Amount",
                         "Net payable");
                 List<String> strColumnTodisplay = null;
-                List<String> items = null;
                 strColumnTodisplay = new ArrayList<>(strColumns);
                 List<String> finalResultToDisplay = strColumnTodisplay.stream().collect(Collectors.toList());
                 // Create header column
@@ -222,7 +210,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                             case "M. Name":
                                 cell = row.createCell(cellValueHeading++);
                                 cell.setCellValue(item.getMember().toMemberName());
-//                                cell.setCellValue(NameConcatUtil.nameConcate(item.getMember()));
                                 break;
                             case "Avg. FAT":
                                 cell = row.createCell(cellValueHeading++);
@@ -390,7 +377,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                     resourceBundle.getString("finalize.first"));
             alert.createAlert();
         }
-
     }
 
     @Override
@@ -406,8 +392,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                             paymentCycleList.add(societyPaymentCycle);
                     }
 
-
-//                    cboxPaymentCycle.setItems(FXCollections.observableList(paymentCycleList.stream().filter(e1 -> e1.getFromDate().getYear() == LocalDate.now().getYear()).collect(Collectors.toList())));
                     cboxPaymentCycle.setItems(FXCollections.observableList(paymentCycleList));
                     new AutoCompleteComboBoxListener<>(cboxPaymentCycle);
                     if (this.billSummary != null) {
@@ -452,12 +436,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             colOtherDed.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getOtherDedAmount()));
             colNetAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colPaymentMode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymnetMode() == (short) 0 ? "CASH" : "BANK"));
-//        colPaymentMode.setCellFactory(cell -> new TableCell<>() {
-//            @Override
-//            protected void updateItem(String item, boolean empty) {
-//                super.updateItem(item, empty);
-//            }
-//        });
             propMemberBill.bind(tableBill.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("MemberBill setuptable Exception");

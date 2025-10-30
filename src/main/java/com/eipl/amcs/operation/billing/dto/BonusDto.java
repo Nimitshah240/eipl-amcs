@@ -16,20 +16,4 @@ import java.util.List;
 public class BonusDto {
     private BonusSummary bonusSummary;
     private List<Bonus> bonusList;
-
-//    public BonusSummary getBonusSummary() {
-//        return bonusSummary;
-//    }
-//
-//    public void setBonusSummary(BonusSummary bonusSummary) {
-//        this.bonusSummary = bonusSummary;
-//    }
-//
-//    public List<Bonus> getBonusList() {
-//        return bonusList;
-//    }
-//
-//    public void setBonusList(List<Bonus> bonusList) {
-//        this.bonusList = bonusList;
-//    }
 }

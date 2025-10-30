@@ -2,9 +2,7 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Plant;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.task.PlantLoadTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -25,19 +23,7 @@ public class PlantController implements MyInitialization {
     @FXML
     TableView<Plant> tablePlant;
     @FXML
-    TableColumn<Plant, String> colCode, colName, colLocalName, colCodeEx, colAddress, colCity, colPhoneNo, colContactPerson, colContactPersonMobileNo;
-    @FXML
-    TableColumn<Plant, Union> colUnion;
-    @FXML
-    TableColumn<Plant, State> colState;
-    @FXML
-    TableColumn<Plant, District> colDistrict;
-    @FXML
-    TableColumn<Plant, SubDistrict> colSubDistrict;
-    @FXML
-    TableColumn<Plant, Village> colVillage;
-    @FXML
-    TableColumn<Plant, Hamlet> colHamlet;
+    TableColumn<Plant, String> colCode, colName, colLocalName, colCodeEx, colCity, colPhoneNo, colContactPerson, colContactPersonMobileNo;
     @FXML
     Button btnClose;
     @FXML

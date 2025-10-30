@@ -10,12 +10,6 @@ import org.slf4j.LoggerFactory;
 public class LocalMilkSaleGetInvoiceNoTask extends Task<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalMilkSaleGetInvoiceNoTask.class);
 
-//	private final String code;
-
-//	public ProductReceiptGetNextCodeTask(String code) {
-//		this.code = code;
-//	}
-
     public LocalMilkSaleGetInvoiceNoTask() {
     }
 

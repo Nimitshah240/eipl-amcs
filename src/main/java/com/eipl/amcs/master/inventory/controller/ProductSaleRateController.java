@@ -3,11 +3,11 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateDeleteTask;
@@ -43,15 +43,11 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
     @FXML
     TableColumn<ProductSaleRate, Number> colRate, colSecretaryCommissionRate;
     @FXML
-    TableColumn<ProductSaleRate, String> colCode, colPurchaseCode;
+    TableColumn<ProductSaleRate, String> colCode;
     @FXML
     TableColumn<ProductSaleRate, LocalDate> colWefDate;
     @FXML
-    TableColumn<ProductSaleRate, Society> colSociety;
-    @FXML
     TableColumn<ProductSaleRate, Product> colProduct;
-    @FXML
-    TableColumn<ProductSaleRate, Union> colUnion;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
     private ResourceBundle resourceBundle;

@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.administartion.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.CommitteeMembers;
 import com.eipl.amcs.master.account.service.CommitteeMembersService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -18,7 +18,6 @@ public class CommitteeMembersSaveTask extends Task<Object> {
         this.update = update;
     }
 
-
     @Override
     protected Object call() throws Exception {
         try {
@@ -29,17 +28,6 @@ public class CommitteeMembersSaveTask extends Task<Object> {
             } else {
                 service.update(dto, CommonUtils.setIdentityHeader());
             }
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.COMMITTEE_MEMBERS;
-//
-//            ResponseEntity<CommitteeMembers> response = this.update == 0 ?
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), CommitteeMembers.class) :
-//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), CommitteeMembers.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
             return true;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());

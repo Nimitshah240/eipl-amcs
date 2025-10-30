@@ -50,7 +50,6 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
     protected final RoundingMode ROUND = RoundingMode.HALF_UP;
     protected Map<String, BigDecimal> mapRateDetails;
     protected MemberMilkPurchaseRate memberMilkPurchaseRate;
-    protected MilkCollectionPreReqDto collectionPreReqDto;
     protected List<MemberMilkPurchaseRateBased> memberRateBasedList;
     @FXML
     StackPane root;
@@ -132,7 +131,6 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
     }
 
     protected String fetchRate(String fat, String snf, MilkType milkType, MilkQualityType milkQualityType) {
-//        if (!fat.isEmpty() && !snf.isEmpty() && milkType != null && milkQualityType != null) {
         BigDecimal snfVal = null;
         if (memberMilkPurchaseRate.getRateType().getCode().intValue() == 1) {
             snfVal = new BigDecimal(0).setScale(SCALE, ROUND);

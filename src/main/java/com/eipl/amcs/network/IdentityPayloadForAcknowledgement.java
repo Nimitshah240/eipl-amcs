@@ -9,9 +9,6 @@ public class IdentityPayloadForAcknowledgement implements Serializable {
         this.uuid = uuid;
     }
 
-    public IdentityPayloadForAcknowledgement() {
-    }
-
     public String getUuid() {
         return uuid;
     }

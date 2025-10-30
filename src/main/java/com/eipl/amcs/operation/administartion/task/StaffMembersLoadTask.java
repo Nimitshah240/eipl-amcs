@@ -20,17 +20,6 @@ public class StaffMembersLoadTask extends Task<List<StaffMember>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.STAFF_MEMBERS;
-////            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-////                    .queryParam("society", MainApp.identityDto.getSociety().getCode());
-//
-//            ResponseEntity<StaffMember[]> response = restTemplate.getForEntity(url, StaffMember[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("CommitteeMembers fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("CommitteeMembers fetch", e);
         }

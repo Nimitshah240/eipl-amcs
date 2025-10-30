@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -146,13 +146,6 @@ public class Member extends BaseModel {
                 lastNameLocal = "";
             return firstNameLocal + " " + middleNameLocal + " " + lastNameLocal;
         }
-//        if (locale.equalsIgnoreCase("mr")) {
-//            if (middleNameLocal == null)
-//                middleNameLocal = "";
-//            if (lastNameLocal == null)
-//                lastNameLocal = "";
-//            return firstNameLocal + " " + middleNameLocal + " " + lastNameLocal;
-//        }
         return "";
     }
 }

@@ -68,8 +68,6 @@ public class CommitteeMembersAddEditController implements MyInitialization {
             this.dto = dto;
             btnSaveUpdate.setText(resourceBundle.getString("update"));
             loadControls();
-        } else {
-            // getNextMemberCode();
         }
         loadDesignation();
 
@@ -89,7 +87,6 @@ public class CommitteeMembersAddEditController implements MyInitialization {
     }
 
     public void loadControls() {
-//         cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
         cboxDesignation.getSelectionModel().select(dto.getDesignation());
         txtName.setText(dto.getMemberName());
         txtCode.setText(CommonUtils.getMemberShortCode(dto.getMemberCode()));
@@ -98,7 +95,6 @@ public class CommitteeMembersAddEditController implements MyInitialization {
         dpTenureToDate.setValue(dto.getTenureToDate());
     }
 
-    //
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {
@@ -229,6 +225,4 @@ public class CommitteeMembersAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-
 }

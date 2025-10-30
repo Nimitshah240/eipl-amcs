@@ -24,15 +24,6 @@ public class SocietyRateBasedLoadTask extends Task<List<SocietyMilkPurchaseRateB
             if (list == null || list.isEmpty()) return null;
             return list;
 
-//
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY_MILK_PURCHASE_RATE + "/based";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code", code);
-//
-//            ResponseEntity<SocietyMilkPurchaseRateBased[]> response = restTemplate.getForEntity(builder.toUriString(), SocietyMilkPurchaseRateBased[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

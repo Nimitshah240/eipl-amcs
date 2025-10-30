@@ -34,21 +34,6 @@ public class HamletLoadTask extends Task<List<Hamlet>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.HAMLET;
-//            ResponseEntity<Hamlet[]> response;
-//            if (village != null) {
-//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                        .queryParam("villageCode", village.getCode());
-//                response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, Hamlet[].class);
-//            } else {
-//                response = restTemplate.getForEntity(url, Hamlet[].class);
-//            }
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Hamlets fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Hamlets fetch", e);
         }

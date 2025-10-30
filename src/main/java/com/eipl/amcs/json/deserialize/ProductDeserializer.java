@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class ProductDeserializer extends JsonDeserializer<Product> {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductDeserializer() {
         productRepository = EmcsAppContext.getContext().getBean(ProductRepository.class);
@@ -19,7 +19,7 @@ public class ProductDeserializer extends JsonDeserializer<Product> {
 
     @Override
     public Product deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return productRepository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

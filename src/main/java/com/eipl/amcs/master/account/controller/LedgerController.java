@@ -43,7 +43,7 @@ public class LedgerController implements MyInitialization {
     @FXML
     TableView<Ledger> tableLedger;
     @FXML
-    TableColumn<Ledger, String> colCode, colName, colLocalName;
+    TableColumn<Ledger, String> colName, colLocalName;
     @FXML
     TableColumn<Ledger, LedgerGroup> colLedgerGroup;
     @FXML
@@ -83,8 +83,6 @@ public class LedgerController implements MyInitialization {
             LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
             controller.setLedger(null);
             MainApp.getContentPane().setCenter(controller.getRoot());
-            //  MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml")));
-
         });
         btnExport.setOnAction(e -> {
             loadExcel();
@@ -227,21 +225,6 @@ public class LedgerController implements MyInitialization {
         colLedgerGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerGroup()));
 
         propLedger.bind(tableLedger.getSelectionModel().selectedItemProperty());
-//        colSubLedger.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isHasSubLedger() ? "Yes" : "No"));
-//        colSubLedger.setCellFactory(new Callback<TableColumn<Ledger, String>, TableCell<Ledger, String>>() {
-//            @Override
-//            public TableCell<Ledger, String> call(TableColumn<Ledger, String> ledgerStringTableColumn) {
-//                return new TableCell<>(){
-//                    @Override
-//                    protected void updateItem(String s, boolean b) {
-//                        super.updateItem(s, b);
-//                    }
-//                };
-//            }
-//        });
-
-//        colEntryType.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getEntryType()));
-
     }
 
     @Override

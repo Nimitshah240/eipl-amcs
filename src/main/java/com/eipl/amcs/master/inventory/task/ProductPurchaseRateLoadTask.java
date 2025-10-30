@@ -20,14 +20,6 @@ public class ProductPurchaseRateLoadTask extends Task<List<ProductPurchaseRate>>
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_PURCHASE_RATE;
-//            ResponseEntity<ProductPurchaseRate[]> response = restTemplate.getForEntity(url, ProductPurchaseRate[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("ProductPurchaseRate fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("ProductPurchaseRate fetch", e);
         }

@@ -4,8 +4,8 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchDto;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import com.eipl.amcs.operation.procurement.service.MilkDispatchService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -34,16 +34,6 @@ public class MilkDispatchSaveTask extends Task<Object> {
 
             return dtoResult;
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH;
-//
-//            ResponseEntity<MilkDispatchDto> response = this.update == 0 ?
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MilkDispatchDto.class) :
-//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MilkDispatchDto.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

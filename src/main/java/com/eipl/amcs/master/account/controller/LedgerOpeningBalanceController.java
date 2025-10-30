@@ -21,7 +21,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -56,7 +55,6 @@ public class LedgerOpeningBalanceController implements MyInitialization {
     private ComboBox<Ledger> cboxLedger;
     @FXML
     private ComboBox<FinancialYear> cboxFinancialYear;
-    private Stage stage;
     private List<Ledger> ledgerList;
     private List<FinancialYear> financialYearList;
     private ResourceBundle resourceBundle;
@@ -183,10 +181,8 @@ public class LedgerOpeningBalanceController implements MyInitialization {
                     return;
                 }
                 String builder = "Import success: " +
-//                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
                         "\n" +
                         "Import fail: " +
-//               builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
                         "\n";
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("ledgeropeningbalance"),
@@ -294,11 +290,6 @@ public class LedgerOpeningBalanceController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
 
     @Override
     public void deleteData() {

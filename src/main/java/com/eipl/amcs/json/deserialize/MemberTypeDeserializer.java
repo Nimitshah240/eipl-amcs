@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class MemberTypeDeserializer extends JsonDeserializer<MemberType> {
-    private MemberTypeRepository repository;
+    private final MemberTypeRepository repository;
 
     public MemberTypeDeserializer() {
         repository = EmcsAppContext.getContext().getBean(MemberTypeRepository.class);
@@ -19,7 +19,7 @@ public class MemberTypeDeserializer extends JsonDeserializer<MemberType> {
 
     @Override
     public MemberType deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(parser.getValueAsInt()).get();
     }
 

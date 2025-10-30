@@ -6,13 +6,12 @@ import com.eipl.amcs.master.account.dto.CashAdvanceDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +32,6 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
     private CashAdvanceRepository cashAdvanceRepository;
     @Autowired
     private NextCodeService nextCodeService;
-    @Autowired
-    private MemberRepository memberRepository;
     @Autowired
     private ProductSaleInstallmentRepository installmentRepository;
     @Autowired

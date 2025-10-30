@@ -17,7 +17,6 @@ import java.util.Map;
 
 public class ReportGenerate {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ReportGenerate.class);
-    private static JasperPrint jasperPrint;
 
     public static JasperPrint getReportDataSourceViewer(String path, Map<String, Object> params,
                                                         JRBeanCollectionDataSource jrBeanCollectionDataSource) {
@@ -62,13 +61,6 @@ public class ReportGenerate {
         return null;
     }
 
-    /**
-     * @param path
-     * @return String
-     * @updatedBy Nimit Shah
-     * @updatedOn - 28-07-2025
-     * @update - add 3 reports path for scheme rate.
-     */
     private static String getPath(String path) {
         switch (path) {
 

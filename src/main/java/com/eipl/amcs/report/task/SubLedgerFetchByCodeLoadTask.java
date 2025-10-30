@@ -8,14 +8,10 @@ import javafx.concurrent.Task;
 import java.util.Optional;
 
 public class SubLedgerFetchByCodeLoadTask extends Task<SubLedger> {
-    private String ledgerCode;
+    private final String ledgerCode;
 
     public SubLedgerFetchByCodeLoadTask(String ledgerCode) {
         this.ledgerCode = ledgerCode;
-
-    }
-
-    public SubLedgerFetchByCodeLoadTask() {
 
     }
 

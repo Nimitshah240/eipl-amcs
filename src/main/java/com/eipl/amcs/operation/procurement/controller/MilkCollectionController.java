@@ -3,13 +3,13 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -89,11 +89,6 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
         return root;
     }
 
-    /**
-     * @updatedBy Nimit Shah
-     * @updatedOn - 07-07-2025
-     * @update - added condition on btnExport action to show no data on empty list.
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         FocusUtils.requestFocus(btnStartCollection);
@@ -117,13 +112,6 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                 alert.createAlert();
                 return;
             }
-//
-//            if (!file.getName().contains(MainApp.identityDto.getSociety().getCode())) {
-//                MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"),
-//                        resourceBundle.getString("invalid.file"));
-//                alert.createAlert();
-//                return;
-//            }
 
             MainApp.paneDrop.setVisible(true);
             MainApp.lblMessage.setText("Preparing Milk Collection...");

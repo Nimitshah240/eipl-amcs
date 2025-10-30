@@ -35,14 +35,11 @@ public class ShareRateAddEditController implements MyInitialization {
     private DatePicker dpWefDate;
     @FXML
     private E_NumericField txtRate;
-
     private Stage stage;
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
-    private final ShareRate dto = null;
     private ShareRate shareRate = null;
-    private BigDecimal rate;
 
     public void setStage(Stage stage) {
         this.stage = stage;

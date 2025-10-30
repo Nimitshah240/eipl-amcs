@@ -16,39 +16,4 @@ public class MilkCollectionPreReqDto {
     private String memberRate;
     private String societyRate;
     private List<HardwareDeviceConfig> hardwareConfigList;
-
-//    public MilkCollectionPreReqDto() {
-//    }
-//
-//    public SocietyPaymentCycle getPaymentCycle() {
-//        return paymentCycle;
-//    }
-//
-//    public void setPaymentCycle(SocietyPaymentCycle paymentCycle) {
-//        this.paymentCycle = paymentCycle;
-//    }
-//
-//    public String getMemberRate() {
-//        return memberRate;
-//    }
-//
-//    public void setMemberRate(String memberRate) {
-//        this.memberRate = memberRate;
-//    }
-//
-//    public String getSocietyRate() {
-//        return societyRate;
-//    }
-//
-//    public void setSocietyRate(String societyRate) {
-//        this.societyRate = societyRate;
-//    }
-//
-//    public List<HardwareDeviceConfig> getHardwareConfigList() {
-//        return hardwareConfigList;
-//    }
-//
-//    public void setHardwareConfigList(List<HardwareDeviceConfig> hardwareConfigList) {
-//        this.hardwareConfigList = hardwareConfigList;
-//    }
 }

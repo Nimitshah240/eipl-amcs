@@ -17,15 +17,6 @@ public class StaffSalaryHeadDeleteTask extends Task<Boolean> {
         try {
             StaffSalaryHeadService service = EmcsAppContext.getContext().getBean(StaffSalaryHeadService.class);
             service.delete(code.toString(), CommonUtils.setIdentityHeader());
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.STAFF_SALARY_HEAD + "/{code}";
-//            Map<String, Object> uriVariables = new HashMap<>();
-//            uriVariables.put("code", code);
-//
-//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();

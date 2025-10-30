@@ -4,11 +4,11 @@ import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.MilkDispatchDeserializer;
 import com.eipl.amcs.json.deserialize.MilkQualityTypeDeserializer;
 import com.eipl.amcs.json.deserialize.MilkReceiptDeserializer;
-import com.eipl.amcs.master.global.model.MilkQualityType;
-import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.json.serialize.MilkDispatchSerialize;
 import com.eipl.amcs.json.serialize.MilkQualityTypeSerialize;
 import com.eipl.amcs.json.serialize.MilkReceiptSerialize;
+import com.eipl.amcs.master.global.model.MilkQualityType;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -73,43 +73,4 @@ public class MilkReceiptTransaction extends BaseModelTxn {
     public Object getId() {
         return this.getTxnCode();
     }
-
-//	@Override
-//	public JsonAndTableBuilder getAuditModel(String operation, String user) {
-//		MilkDispatchTransactionAudit audit = new MilkDispatchTransactionAudit();
-//		audit.setOperationType(operation);
-//		audit.setAuditCreatedBy(user);
-//
-//		audit.setTxnCode(this.getTxnCode());
-//		audit.setChamberNo(this.getChamberNo());
-//		audit.setAcidity(this.getAcidity());
-//		audit.setAmount(this.getAmount());
-//		audit.setAvgClr(this.getAvgClr());
-//		audit.setAvgFat(this.getAvgFat());
-//		audit.setAvgSnf(this.getAvgSnf());
-//		audit.setDensity(this.getDensity());
-//		audit.setFreezingPoint(this.getFreezingPoint());
-//		audit.setLactose(this.getLactose());
-//		audit.setProtein(this.getProtein());
-//		audit.setRate(this.getRate());
-//		audit.setTemp(this.getRate());
-//		audit.setWater(this.getWater());
-//		audit.setConvertedQuantity(this.getConvertedQuantity());
-//		audit.setQty(this.getQty());
-//		audit.setNosOfCan(this.getNosOfCan());
-//		audit.setConvertedQuantityMode(this.getConvertedQuantityMode());
-//		audit.setMilkDispatch(this.getMilkDispatch());
-//		audit.setMilkQualityType(this.getMilkQualityType());
-//		audit.setMilkType(this.getMilkType());
-//
-//		audit.setCreatedAt(this.getCreatedAt());
-//		audit.setCreatedBy(this.getCreatedBy());
-//		audit.setUpdatedAt(this.getUpdatedAt());
-//		audit.setUpdatedBy(this.getUpdatedBy());
-//		audit.setXCol1(this.getXCol1());
-//		audit.setXCol2(this.getXCol2());
-//		audit.setXCol3(this.getXCol3());
-//
-//		return audit;
-//	}
 }

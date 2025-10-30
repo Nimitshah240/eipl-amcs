@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class LedgerGroupDeserializer extends JsonDeserializer<LedgerGroup> {
-    private LedgerGroupRepository Repository;
+    private final LedgerGroupRepository Repository;
 
     public LedgerGroupDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(LedgerGroupRepository.class);
@@ -19,7 +19,7 @@ public class LedgerGroupDeserializer extends JsonDeserializer<LedgerGroup> {
 
     @Override
     public LedgerGroup deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(parser.getValueAsInt()).get();
     }
 

@@ -35,7 +35,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleRateAddEditController implements MyInitialization {
-    private final LocalMilkSaleRate dto = null;
     @FXML
     private StackPane root;
     @FXML
@@ -57,10 +56,6 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    public void setLocalMilkSaleRate(LocalMilkSaleRate localMilkSaleRate) {
-        this.localMilkSaleRate = localMilkSaleRate;
     }
 
     @Override

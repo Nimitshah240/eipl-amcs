@@ -102,17 +102,12 @@ public class LedgerGroupAddEditController implements MyInitialization {
 
 
     public void loadControls() {
-//         cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
         cboxLedgertype.getSelectionModel().select(dto.getLedgerType());
         txtName.setText(dto.getName());
         txtLocalName.setText(dto.getNameLocal());
         txtCode.setText(dto.getCode().toString());
-        //   txtCode.setText(CommonUtils.getMemberShortCode(dto.getMember().getCode()));
-
-
     }
 
-    //
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {

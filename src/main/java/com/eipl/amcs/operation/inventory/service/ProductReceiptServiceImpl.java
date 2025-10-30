@@ -169,8 +169,6 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                     LedgerMappingProductGroup lmpg = listLmpg.stream()
                             .filter(p -> p.getProductGroup().getCode().intValue() == group.getCode().intValue())
                             .findFirst().orElse(null);
-                    //      if (lmpg == null)
-                    //          continue;
 
                     ProductSaleAcUtil obj = list.stream()
                             .filter(p -> p.getLedger().getCode().equalsIgnoreCase(lmpg.getLedgerPurchaseCode().getCode()))

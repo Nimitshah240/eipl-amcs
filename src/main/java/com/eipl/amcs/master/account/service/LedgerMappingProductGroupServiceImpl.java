@@ -52,7 +52,6 @@ public class LedgerMappingProductGroupServiceImpl implements LedgerMappingProduc
                     } else {
                         ooo.setLedgerSaleCode(null);
                     }
-//                    ooo.setLedgerSaleCode(mappingProductGroup.getLedgerSaleCode());
                     ooo.setSociety(mappingProductGroup.getSociety());
                     ooo.setUnionCode(mappingProductGroup.getUnionCode());
                     ledgerMappingProductGroupRepository.customUpdate(ooo, identityInfo);

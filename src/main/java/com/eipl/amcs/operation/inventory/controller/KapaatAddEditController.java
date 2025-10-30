@@ -44,6 +44,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class KapaatAddEditController implements MyInitialization {
+    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
+    private final List<ProductSaleTransaction> transactionList = new ArrayList<>();
+    private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
     StringBuilder sb = new StringBuilder();
     @FXML
     private StackPane root;
@@ -61,7 +64,6 @@ public class KapaatAddEditController implements MyInitialization {
     @FXML
     private Label lblTotal;
     private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
     private PopupCallback callback;
     private List<Product> productList;
     private List<SocietyPaymentCycle> paymentCycleList;
@@ -71,9 +73,6 @@ public class KapaatAddEditController implements MyInitialization {
     private Member member;
     private String memberCode;
     private ProductSaleDto productSaleDto;
-    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
-    private final List<ProductSaleTransaction> transactionList = new ArrayList<>();
-    private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
     private String invoiceNo;
 
     public void setCallback(PopupCallback callback) {
@@ -87,10 +86,6 @@ public class KapaatAddEditController implements MyInitialization {
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public void setProductSale(ProductSale productSale) {
-
     }
 
     @Override
@@ -392,12 +387,7 @@ public class KapaatAddEditController implements MyInitialization {
     }
 
     public void clearControls() {
-//        dpFromDate.setValue(null);
-//        dpToDate.setValue(null);
-//        cboxFromShift.valueProperty().set(null);
-//        cboxToShift.valueProperty().set(null);
     }
-
 
 }
 

@@ -20,14 +20,6 @@ public class StateLoadTask extends Task<List<State>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.STATE;
-//            ResponseEntity<com.eipl.amcs.master.geo.model.State[]> response = restTemplate.getForEntity(url, com.eipl.amcs.master.geo.model.State[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("States fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("States fetch", e);
         }

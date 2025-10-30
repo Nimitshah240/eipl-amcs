@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class TaxDetailDeserializer extends JsonDeserializer<TaxDetail> {
-    private TaxDetailRepository repository;
+    private final TaxDetailRepository repository;
 
     public TaxDetailDeserializer() {
         repository = EmcsAppContext.getContext().getBean(TaxDetailRepository.class);
@@ -19,7 +19,7 @@ public class TaxDetailDeserializer extends JsonDeserializer<TaxDetail> {
 
     @Override
     public TaxDetail deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

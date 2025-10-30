@@ -23,15 +23,12 @@ import com.eipl.amcs.operation.billing.model.BonusSummary;
 import com.eipl.amcs.operation.billing.task.MemberWiseBonusListLoadTask;
 import com.eipl.amcs.operation.billing.task.MemberWiseBonusLoadTask;
 import com.eipl.amcs.operation.procurement.dto.PrinterHelper;
-import com.eipl.amcs.report.dto.PaymentForBank;
 import com.eipl.amcs.report.task.BonusRegisterAllExcelTask;
 import com.eipl.amcs.report.task.BonusRegisterReportExcelTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import com.eipl.amcs.setting.task.HardwareDeviceConfigLoadTask;
 import com.eipl.amcs.utils.AppConstant;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -56,7 +53,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.sql.*;
@@ -68,6 +64,7 @@ import java.util.concurrent.ExecutionException;
 
 public class GeneralBonusReportController implements MyInitialization {
 
+    private final ArrayList<String> masterLines = new ArrayList<>();
     public PopupCallback callback;
     public Integer index = 0;
     public BigDecimal sum = BigDecimal.ZERO;
@@ -78,18 +75,14 @@ public class GeneralBonusReportController implements MyInitialization {
     public BigDecimal totalamount = BigDecimal.ZERO;
     public Bonus bonus;
     public Map<String, Object> map;
-    public Map<String, Object> map1;
-    List<PaymentForBank> list;
     List<Map<String, Object>> maplist = new ArrayList<>();
     List<Map<String, Object>> mapList = new ArrayList<>();
     List<String> colList = new ArrayList<>();
-    List<Bonus> bonusList = new ArrayList<>();
     List<Member> list2 = new ArrayList<>();
     String printer = "";
     String slipLanguage = "";
     List<HardwareDeviceConfig> hardwareDeviceConfigs = new ArrayList<>();
     List<String> columns = new ArrayList<>();
-    DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yy");
     @FXML
     private StackPane root;
     @FXML
@@ -101,24 +94,15 @@ public class GeneralBonusReportController implements MyInitialization {
     private ComboBox<Member> cboxMember;
     @FXML
     private DatePicker dpFromDate, dpToDate;
-    private String memberCode;
     @FXML
     private ComboBox<String> cboxReportType, cboxType;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
-    private final ObjectProperty<Bonus> propBonus;
-    private final ObjectProperty<Bonus> propBonusSummary;
-    private final ArrayList<String> masterLines = new ArrayList<>();
     private PrinterHelper printerHelper;
     private ResourceBundle resourceBundle;
     private BonusSummary dto = null;
     private List<MilkType> listMilkType;
     private File slipFile = null;
-
-    public GeneralBonusReportController() {
-        propBonus = new SimpleObjectProperty<>();
-        propBonusSummary = new SimpleObjectProperty<>();
-    }
 
     @Override
     public Node getRoot() {
@@ -144,18 +128,11 @@ public class GeneralBonusReportController implements MyInitialization {
         loadBank();
         loadMember();
         readFile();
-//        cboxBank.setDisable(true);
         cboxReportType.getItems().addAll(resourceBundle.getString("all"), resourceBundle.getString("cash"), resourceBundle.getString("bank"), resourceBundle.getString("excel"), resourceBundle.getString("excel1"), resourceBundle.getString("excel2"), resourceBundle.getString("bonusslip"), resourceBundle.getString("summary"), resourceBundle.getString("bonus"));
         cboxType.getItems().addAll(resourceBundle.getString("union"), resourceBundle.getString("society"));
         setupComboBox();
         cboxReportType.getSelectionModel().select(0);
         cboxType.getSelectionModel().select(0);
-//        cboxReportType.setOnAction(e -> {
-//            cboxBank.setDisable(true);
-//            if (cboxReportType.getSelectionModel().getSelectedIndex() == 2 || cboxReportType.getSelectionModel().getSelectedIndex()==5) {
-//                cboxBank.setDisable(false);
-//            }
-//        });
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnClose.setOnAction(e -> stage.close());
         dpFromDate.setValue(LocalDate.now());
@@ -202,7 +179,6 @@ public class GeneralBonusReportController implements MyInitialization {
         cboxBank.getSelectionModel().select(0);
         cboxMember.setConverter(new MemberReportConvertor(cboxMember));
         cboxMember.setCellFactory(new MemberCellFactory());
-
     }
 
     private void validateAndGenerateReport() {
@@ -239,7 +215,6 @@ public class GeneralBonusReportController implements MyInitialization {
                 JasperViewer.viewReport(print, false);
                 break;
             case 3:
-//                loadExcel1();
                 excelDev(dpFromDate.getValue(), dpToDate.getValue());
                 break;
             case 4:
@@ -257,9 +232,7 @@ public class GeneralBonusReportController implements MyInitialization {
                     loadBonusSummaryData();
                 }
                 break;
-
             case 7:
-//                params.put("p_payment_type", 1);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.BONUS_SUMMARY, params);
                 JasperViewer.viewReport(print, false);
                 break;
@@ -267,10 +240,7 @@ public class GeneralBonusReportController implements MyInitialization {
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.BONUS, params);
                 JasperViewer.viewReport(print, false);
                 break;
-
         }
-
-
     }
 
     private void excelDev(LocalDate fromDate, LocalDate toDate) {
@@ -313,12 +283,9 @@ public class GeneralBonusReportController implements MyInitialization {
 
                 // Populate data rows
                 int rowNumber = 1;
-                String prevMemberCode = null;
                 String prevMemberName = null;
                 while (resultSet.next()) {
-//                    String currentMemberCode = resultSet.getString("code");
                     String currentMemberName = resultSet.getString("name");
-
                     if (!Objects.equals(currentMemberName, prevMemberName)) {
                         Row dataRow = sheet.createRow(rowNumber++);
                         for (int i = 1; i <= columnCount; i++) {
@@ -328,14 +295,11 @@ public class GeneralBonusReportController implements MyInitialization {
                         prevMemberName = currentMemberName;
                     } else {
                         Row dataRow = sheet.createRow(rowNumber++);
-
                         for (int i = 2; i <= columnCount; i++) {
                             Cell cell = dataRow.createCell(i - 1);
                             cell.setCellValue(resultSet.getString(i));
                         }
                     }
-
-
                 }
                 for (int i = 0; i < columnCount; i++) {
                     sheet.autoSizeColumn(i);
@@ -560,7 +524,6 @@ public class GeneralBonusReportController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
     }
 
     private void exportExcel(List<Map<String, Object>> list) {
@@ -573,7 +536,6 @@ public class GeneralBonusReportController implements MyInitialization {
             if (file != null) {
                 HSSFWorkbook wb = new HSSFWorkbook();
                 HSSFSheet sheet = wb.createSheet("Sheet-1");
-                List<String> items = null;
                 List<String> finalResultToDisplay = new ArrayList<>();
                 CellStyle style;
                 DataFormat format = wb.createDataFormat();
@@ -599,7 +561,6 @@ public class GeneralBonusReportController implements MyInitialization {
                 cell = row.createCell(1);
                 cell.setCellValue(dpFromDate.getValue().toString() + " - " + dpToDate.getValue().toString());
                 sheet.autoSizeColumn(1);
-
 
                 List<String> cols = new ArrayList<>();
                 cols.addAll(colList);
@@ -637,13 +598,10 @@ public class GeneralBonusReportController implements MyInitialization {
                         if (columnTitle.equalsIgnoreCase("bonus_amount")) {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
-//                            cell.setCellValue(item.get(columnTitle).toString());
                             cell.setCellValue((Double.parseDouble(item.get(columnTitle).toString())));
                             sheet.autoSizeColumn(cellValueHeading);
                             cell.setCellStyle(style);
                             sum = sum.add(new BigDecimal(item.get(columnTitle).toString()));
-
-
                         } else if (columnTitle.equalsIgnoreCase("kapat")) {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
@@ -651,7 +609,6 @@ public class GeneralBonusReportController implements MyInitialization {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell.setCellStyle(style);
                             sum1 = sum1.add(new BigDecimal(item.get(columnTitle).toString()));
-
                         } else if (columnTitle.equalsIgnoreCase("total_amount")) {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
@@ -659,8 +616,6 @@ public class GeneralBonusReportController implements MyInitialization {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell.setCellStyle(style);
                             sum2 = sum2.add(new BigDecimal(item.get(columnTitle).toString()));
-
-//                            System.out.println("sum2");
                         } else {
                             sheet.autoSizeColumn(cellValueHeading);
                             cell = row.createCell(cellValueHeading++);
@@ -669,7 +624,6 @@ public class GeneralBonusReportController implements MyInitialization {
                         }
                     }
                     rowCnt++;
-
                 }
                 row = sheet.createRow(rowCnt);
                 cell = row.createCell(index - 1);
@@ -690,7 +644,6 @@ public class GeneralBonusReportController implements MyInitialization {
                 cell.setCellValue(sum2.doubleValue());
                 sheet.autoSizeColumn(index + 2);
                 sum2 = BigDecimal.ZERO;
-
 
                 try {
                     wb.close();
@@ -729,7 +682,6 @@ public class GeneralBonusReportController implements MyInitialization {
             if (file != null) {
                 HSSFWorkbook wb = new HSSFWorkbook();
                 HSSFSheet sheet = wb.createSheet("Sheet-1");
-                List<String> items = null;
                 List<String> finalResultToDisplay = new ArrayList<>();
                 CellStyle style;
                 DataFormat format = wb.createDataFormat();
@@ -748,7 +700,6 @@ public class GeneralBonusReportController implements MyInitialization {
                 cell = row.createCell(1);
                 cell.setCellValue(MainApp.identityDto.getSociety().getName());
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 row = sheet.createRow(4);
                 cell = row.createCell(0);
                 cell.setCellValue("Date: ");
@@ -885,7 +836,6 @@ public class GeneralBonusReportController implements MyInitialization {
             if (file != null) {
                 HSSFWorkbook wb = new HSSFWorkbook();
                 HSSFSheet sheet = wb.createSheet("Sheet-1");
-                List<String> items = null;
                 List<String> finalResultToDisplay = new ArrayList<>();
                 CellStyle style;
                 DataFormat format = wb.createDataFormat();
@@ -904,7 +854,6 @@ public class GeneralBonusReportController implements MyInitialization {
                 cell = row.createCell(1);
                 cell.setCellValue(MainApp.identityDto.getSociety().getName());
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 row = sheet.createRow(4);
                 cell = row.createCell(0);
                 cell.setCellValue("Date: ");
@@ -955,7 +904,6 @@ public class GeneralBonusReportController implements MyInitialization {
                             if (columnTitle.equalsIgnoreCase("bonus_amount")) {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
-//                                cell.setCellValue(item.get(columnTitle).toString());
                                 cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
@@ -964,17 +912,13 @@ public class GeneralBonusReportController implements MyInitialization {
                             } else if (columnTitle.equalsIgnoreCase("kapat")) {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
-//                                cell.setCellValue(item.get(columnTitle).toString());
-//                                if(item.get(columnTitle)!=null){
                                 cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
                                 kapat = kapat.add(new BigDecimal(item.get(columnTitle).toString()));
-//                                }
                             } else if (columnTitle.equalsIgnoreCase("total_amount")) {
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell = row.createCell(cellValueHeading++);
-//                                cell.setCellValue(item.get(columnTitle).toString());
                                 cell.setCellValue(Double.parseDouble(item.get(columnTitle).toString()));
                                 sheet.autoSizeColumn(cellValueHeading);
                                 cell.setCellStyle(style);
@@ -997,7 +941,6 @@ public class GeneralBonusReportController implements MyInitialization {
                 cell = row.createCell(3);
                 cell.setCellValue(total.doubleValue());
                 cell.setCellStyle(style);
-//                cell.setCellValue(total.toString());
                 sheet.addMergedRegion(new CellRangeAddress(rowCnt, rowCnt, 0, 3));
                 cell = row.createCell(4);
                 cell.setCellValue(finalAmount.doubleValue());
@@ -1230,6 +1173,5 @@ public class GeneralBonusReportController implements MyInitialization {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

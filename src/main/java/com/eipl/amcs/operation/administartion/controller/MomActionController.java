@@ -97,8 +97,6 @@ public class MomActionController implements MyInitialization, PopupCallback {
                 FocusUtils.requestFocus(txtActionTaken);
                 btnAdd.setText(resourceBundle.getString("save"));
             } else {
-                // setValuesInObject();
-                //saveData();
                 validateAndSave();
                 btnAdd.setText(resourceBundle.getString("add"));
                 gridMaster.setDisable(true);
@@ -205,12 +203,9 @@ public class MomActionController implements MyInitialization, PopupCallback {
     }
 
     private boolean validate() {
-
         if (txtActionTaken.getText().trim() == null || txtActionTaken.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("actiontakennullerror") + "\n");
-
         return errorMsg.length() == 0;
-
     }
 
     @Override

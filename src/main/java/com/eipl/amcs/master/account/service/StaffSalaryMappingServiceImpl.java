@@ -50,7 +50,6 @@ public class StaffSalaryMappingServiceImpl implements StaffSalaryMappingService 
 
     @Override
     public List<StaffSalaryMapping> update(List<StaffSalaryMapping> staffSalaryMapping, String identityInfo) {
-//		staffSalaryMappingRepository.save(staffSalaryMapping);
         return null;
     }
 

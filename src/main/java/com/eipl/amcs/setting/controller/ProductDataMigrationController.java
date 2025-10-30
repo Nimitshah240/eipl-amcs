@@ -31,7 +31,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ public class ProductDataMigrationController implements MyInitialization {
     TextField txtFilePath;
     @FXML
     Button btnSave, btnClose, btnGenerate, btnBrowse;
-    String milkTypeStr = null;
     List<ProductAndSaleRateDto> list = new ArrayList<>();
     List<Product> productList = new ArrayList<>();
     private List<ProductGroup> groupList;
@@ -68,8 +66,6 @@ public class ProductDataMigrationController implements MyInitialization {
     public Node getRoot() {
         return root;
     }
-
-//    List<ProductSaleRate> listSaleRate = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -164,12 +160,6 @@ public class ProductDataMigrationController implements MyInitialization {
     public void setData(String type, String path) {
         int i = 1;
         if (type.equalsIgnoreCase("Prompt")) {
-//            String urlDb = "jdbc:ucanaccess://" + path;
-//            String pwd = "PNM^$)&(%*";
-//            try (Connection connection = DriverManager.getConnection(urlDb, "", pwd)) {
-//                Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery("select * from tblILedger");
-//                while (resultSet.next()) {
         } else if (type.equalsIgnoreCase("SkyWay")) {
             try {
                 List<String> lines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);

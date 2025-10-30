@@ -57,38 +57,4 @@ public class AppConfig {
     public ApiJsonUtil apiJsonUtil() {
         return new ApiJsonUtil();
     }
-
-    @Bean
-    public DataSource dataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3366/eipl_amcs_db");
-        dataSource.setUsername("root");
-        dataSource.setPassword("EAmcs2021");
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        return dataSource;
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        Properties properties = new Properties();
-        properties.put("hibernate.hbm2ddl.auto", "none");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        properties.setProperty(
-                "hibernate.physical_naming_strategy",
-                "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"
-        );
-        properties.put("hibernate.show_sql", "true");
-
-        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-        entityManager.setDataSource(dataSource());
-        entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-//        entityManager.setPackagesToScan("com.eipl.amcs");
-        entityManager.setJpaProperties(properties);
-        return entityManager;
-    }
-
-    @Bean(name = "transactionManager")
-    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
 }

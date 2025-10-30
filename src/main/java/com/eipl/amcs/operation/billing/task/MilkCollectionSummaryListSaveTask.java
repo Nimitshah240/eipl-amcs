@@ -19,13 +19,9 @@ public class MilkCollectionSummaryListSaveTask extends Task<List<CollectionImpor
     @Override
     protected List<CollectionImportDto> call() throws Exception {
         try {
-
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             List<CollectionImportDto> list = service.importCollectionSummaryData(dtoList, CommonUtils.setIdentityHeader());
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_SUMMARY_DATA_ENTRY + "/import";
-//            ResponseEntity<CollectionImportDto[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), CollectionImportDto[].class);
             if (list == null || list.isEmpty())
                 return null;
             return list;

@@ -21,7 +21,6 @@ public class ShareServiceImpl implements ShareService {
     @Autowired
     ShareRepository shareRepository;
 
-
     @Override
     public List<Share> findAll() {
         return shareRepository.findAll().stream().filter(e -> !e.getCancelled()).collect(Collectors.toList());
@@ -60,9 +59,7 @@ public class ShareServiceImpl implements ShareService {
         if (!share.getCheckMember()) {
             Member m = new Member();
             m.setCode(share.getMember().getCode());
-
         }
-
 
         if (share.getTransferredFrom() != null) {
             List<Share> oldShareList = findByMember(share.getTransferredFrom());
@@ -136,6 +133,4 @@ public class ShareServiceImpl implements ShareService {
         shareRepository.customUpdate(oldShare.get(), identityHeader);
         shareRepository.delete(newShare.get());
     }
-
-
 }

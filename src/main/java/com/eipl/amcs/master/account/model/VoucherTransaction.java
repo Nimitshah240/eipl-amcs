@@ -1,7 +1,7 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.LedgerDeserializer;
 import com.eipl.amcs.json.deserialize.VoucherDeserializer;
 import com.eipl.amcs.json.serialize.LedgerSerialize;

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class GenderDeserializer extends JsonDeserializer<Gender> {
-    private GenderRepository Repository;
+    private final GenderRepository Repository;
 
     public GenderDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(GenderRepository.class);
@@ -19,7 +19,7 @@ public class GenderDeserializer extends JsonDeserializer<Gender> {
 
     @Override
     public Gender deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(parser.getValueAsInt()).get();
     }
 

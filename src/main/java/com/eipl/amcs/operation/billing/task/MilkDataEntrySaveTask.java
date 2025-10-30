@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -34,5 +34,4 @@ public class MilkDataEntrySaveTask extends Task<Object> {
         }
         return null;
     }
-
 }

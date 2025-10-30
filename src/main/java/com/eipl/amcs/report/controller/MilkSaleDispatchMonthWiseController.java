@@ -69,12 +69,6 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
     }
 
-    @Override
-    public void setupComboBox() {
-
-    }
-
-
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
@@ -84,10 +78,6 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_MONTH_WISE, params);
         JasperViewer.viewReport(print, false);
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     @Override
@@ -123,7 +113,5 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
             }
         });
         new Thread(task2).start();
-
-
     }
 }

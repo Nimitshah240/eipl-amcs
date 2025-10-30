@@ -5,11 +5,8 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.inventory.service.ProductRequisitionService;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ProductRequisitionDeleteTask extends Task<Boolean> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.eipl.amcs.master.inventory.task.ProductSaleRateByProductLoadTask.class);
 
     private final String grnNo;
 

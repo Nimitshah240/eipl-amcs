@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class SubDistrictDeserializer extends JsonDeserializer<SubDistrict> {
-    private SubDistrictRepository repository;
+    private final SubDistrictRepository repository;
 
     public SubDistrictDeserializer() {
         repository = EmcsAppContext.getContext().getBean(SubDistrictRepository.class);
@@ -19,7 +19,7 @@ public class SubDistrictDeserializer extends JsonDeserializer<SubDistrict> {
 
     @Override
     public SubDistrict deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

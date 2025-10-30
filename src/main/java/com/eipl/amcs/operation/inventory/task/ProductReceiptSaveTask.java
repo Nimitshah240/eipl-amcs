@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.inventory.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
 import com.eipl.amcs.operation.inventory.service.ProductReceiptService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 

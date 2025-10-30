@@ -4,7 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Route;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.task.RouteLoadTask;
 import com.eipl.amcs.master.org.task.RouteSaveTask;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,8 +29,6 @@ public class RouteController implements MyInitialization {
     TableView<Route> tableRoute;
     @FXML
     TableColumn<Route, String> colCode, colName, colLocalName, colCodeEx;
-    @FXML
-    TableColumn<Route, Union> colUnion;
     @FXML
     TableColumn<Route, Bmc> colBmc;
     @FXML
@@ -155,7 +152,6 @@ public class RouteController implements MyInitialization {
     public void saveData() {
         RouteSaveTask task = new RouteSaveTask(tableRoute.getItems().get(0));
         task.setOnSucceeded(e -> {
-            //           loadData();
         });
         new Thread(task).start();
     }

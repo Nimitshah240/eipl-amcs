@@ -2,10 +2,9 @@ package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.task.NotificationAcknowledgementTask;
-import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.base.task.PendingSyncTask;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -16,7 +15,6 @@ import com.eipl.amcs.operation.procurement.dto.CollectionSummary;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.DpuIncentiveRequestLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
-import com.eipl.amcs.sync.repository.BroadcastedRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
@@ -24,7 +22,6 @@ import com.eipl.amcs.utils.task.BroadcastedTask;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -87,7 +84,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
     private ComboBox<String> cboxNotification;
     @FXML
     private Button btnLoad, btnMilkCollection, btnLocalMilkSale, btnMilkDispatch, btnProductSale, btnBilling, btnKapaat, btnMilkReceipt, btnSync, btnPendingSync;
-    private PopupCallback callback;
     private Stage stage;
 
     public void setStage(Stage stage) {
@@ -309,14 +305,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
-    private void openSocietyInfo() {
-        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/org/Society.fxml")));
-    }
-
-    private void openNotification() {
-        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/administration/Notification.fxml")));
-    }
-
     private void openBilling() {
         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/billing/MemberBillSummary.fxml")));
     }
@@ -392,7 +380,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
             hBox = new HBox(5, lblDate);
         } else {
             Hyperlink button = new Hyperlink("Attachment");
-//            button.getStyleClass().add("button-primary");
             button.setOnMouseClicked(e -> {
                 try {
                     Desktop.getDesktop().browse(new URI(item.getFilePath()));
@@ -410,20 +397,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         VBox vb = new VBox(5, lblTitle, lblMessage, hBox, new Separator());
         return vb;
     }
-
-    private void sendAcknowledgerment() {
-        StringBuffer code = new StringBuffer();
-        for (Notification notification : MainApp.notificationList) {
-            code.append(notification.getBulkNotificationId());
-            code.append(",");
-        }
-        var task = new NotificationAcknowledgementTask(code.substring(0, code.length() - 1));
-        task.setOnSucceeded(e -> {
-            System.out.println("Done");
-        });
-        new Thread(task).start();
-    }
-
 
     @Override
     public void loadData() {
@@ -542,22 +515,5 @@ public class DashboardController implements MyInitialization, PopupCallback {
             }
         });
         new Thread(task).start();
-    }
-
-    public void setCallback(PopupCallback callback) {
-        this.callback = callback;
-    }
-
-    class PendingSyncTask extends Task<Long> {
-
-        @Override
-        protected Long call() throws Exception {
-            try {
-                BroadcastedRepository repository = EmcsAppContext.getContext().getBean(BroadcastedRepository.class);
-                return repository.count();
-            } catch (Exception e) {
-                return 0L;
-            }
-        }
     }
 }

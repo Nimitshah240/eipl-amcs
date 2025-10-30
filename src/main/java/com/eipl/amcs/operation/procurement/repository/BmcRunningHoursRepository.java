@@ -6,7 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BmcRunningHoursRepository extends BaseRepository<BmcRunningHours, Long> {
-
-//    List<BmcRunningHours> findAll(Integer code);
-
 }

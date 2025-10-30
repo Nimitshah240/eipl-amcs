@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.inventory.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
 import com.eipl.amcs.operation.inventory.service.ProductSaleService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -16,7 +16,6 @@ public class ProductSaleSaveTask extends Task<Object> {
         this.dto = dto;
         this.update = update;
     }
-
 
     @Override
     protected Object call() throws Exception {

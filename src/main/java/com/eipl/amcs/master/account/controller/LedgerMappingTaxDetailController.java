@@ -106,14 +106,6 @@ public class LedgerMappingTaxDetailController implements MyInitialization {
             LedgerMappingTaxDetail obj = event.getRowValue();
             obj.setLedger(event.getNewValue());
         });
-//        colType.setCellValueFactory(cell -> new SimpleObjectProperty(cell.getValue().getType()!=null?cell.getValue().getType().toString():""));
-//        colType.setCellFactory(ComboBoxTableCell.forTableColumn(converterString, FXCollections.observableList(typeList)));
-//        colType.setOnEditCommit(event -> {
-//            LedgerMappingBillHead obj = event.getRowValue();
-//            obj.setType(event.getNewValue().equalsIgnoreCase("Debit")?1:0);
-//        });
-
-
     }
 
     @Override

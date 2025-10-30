@@ -17,14 +17,6 @@ public class CashAdvanceLoadTask extends Task<List<CashAdvance>> {
         try {
             CashAdvanceService service = EmcsAppContext.getContext().getBean(CashAdvanceService.class);
             List<CashAdvance> list = service.findAll();
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.CASHADVANCE;
-//            ResponseEntity<CashAdvance[]> response = restTemplate.getForEntity(url, CashAdvance[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("CashAdvance fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
             if (list == null || list.isEmpty()) return null;
             return list;
         } catch (Exception e) {

@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 public class ShareTransferAddEditController implements MyInitialization {
 
+    private final Share newShare = new Share();
     public ResourceBundle resourceBundle;
     Integer oldShareNo = 0;
     BigDecimal oldShareAmount = BigDecimal.ZERO;
@@ -60,9 +61,7 @@ public class ShareTransferAddEditController implements MyInitialization {
     private Share oldShare = new Share();
     private MemberDetail memberDetail;
     private Member member;
-
     private List<Share> oldShareList = new ArrayList<>();
-    private final Share newShare = new Share();
     private StringBuilder errorMsg = null;
     private Member oldMember;
 
@@ -95,7 +94,6 @@ public class ShareTransferAddEditController implements MyInitialization {
             FocusUtils.requestFocus(btnSave);
         });
         txtOldMemberCode.textProperty().addListener((observable, oldValue, newValue) -> {
-//            String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtOldMemberCode.getText()));
             String code = String.format("%04d", CommonUtils.strToInteger(txtOldMemberCode.getText()));
 
             loadShareByMember(code);
@@ -187,8 +185,6 @@ public class ShareTransferAddEditController implements MyInitialization {
                 newShare.setMember(member);
                 newShare.setxCol1(oldShare.getCode());
                 newShare.setSociety(MainApp.identityDto.getSociety());
-
-//                saveData();
             } else {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "share"),
                         CommonUtils.getResourceString(resourceBundle, "share.transfer"));
@@ -277,8 +273,6 @@ public class ShareTransferAddEditController implements MyInitialization {
         memberDetail.setEmail("");
         memberDetail.setPanNo("");
         memberDetail.setAadharNo("");
-        //ahiyalakho
-
 
         MemberDetail memberDetail = new MemberDetail();
         memberDetail.setNumberOfCow(null);
@@ -290,10 +284,7 @@ public class ShareTransferAddEditController implements MyInitialization {
         memberDetail.setIfsc("");
         memberDetail.setMember(member);
         memberDetail.setCode(member.getCode());
-
-
         memberDetail.setMember(member);
-
         memberDetail.setAccountNo("");
 
         List<MemberDto> dtoList = new ArrayList<>();

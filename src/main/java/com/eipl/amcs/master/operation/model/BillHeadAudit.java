@@ -3,10 +3,10 @@ package com.eipl.amcs.master.operation.model;
 import com.eipl.amcs.base.model.BaseModelAudit;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,12 +17,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-/**
- * This class acts as a model for managing BillHead Audit.
- *
- * @author Nimit Shah
- * @createdOn 30-06-2025
- */
 @SuppressWarnings("serial")
 @Entity
 @Getter

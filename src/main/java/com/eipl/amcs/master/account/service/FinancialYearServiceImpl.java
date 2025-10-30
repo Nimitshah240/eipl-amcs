@@ -134,6 +134,4 @@ public class FinancialYearServiceImpl implements FinancialYearService {
         obj.setFinancialYear(Hibernate.unproxy(obj.getFinancialYear(), FinancialYear.class));
         return obj;
     }
-
-
 }

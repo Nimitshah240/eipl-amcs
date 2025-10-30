@@ -52,8 +52,8 @@ import com.eipl.amcs.sync.model.Subscribed;
 import com.eipl.amcs.sync.repository.BroadcastedLogRepository;
 import com.eipl.amcs.sync.repository.BroadcastedRepository;
 import com.eipl.amcs.sync.repository.SubscribedRepository;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.EncryptionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,7 +81,8 @@ import java.util.stream.Collectors;
 public class BroadcastedService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastedService.class);
-
+    ObjectMapper mapper = new ObjectMapper();
+    Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
     @Autowired
     private BroadcastedProducer producer;
     @Autowired
@@ -148,25 +149,16 @@ public class BroadcastedService {
     private NextCodeService nextCodeService;
     @Autowired
     private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
-
     @Autowired
     private InsuranceDetailRepository insuranceDetailRepository;
-
     @Autowired
     private InsuranceMasterRepository insuranceMasterRepository;
-
     @Autowired
     private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
-
     @Autowired
     private SchemeRateRepository schemeRateRepository;
-
     @Autowired
     private SchemeRateApplicabilityRepository schemeRateApplicabilityRepository;
-
-
-    ObjectMapper mapper = new ObjectMapper();
-    Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -175,9 +167,6 @@ public class BroadcastedService {
             list = repository.findAllByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
             for (List<Broadcasted> part : ListUtils.partition(list, 10)) {
                 producer.produce(part);
-//                part.forEach(item -> {
-//                    producer.produce(item);
-//                });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,16 +225,7 @@ public class BroadcastedService {
         }
     }
 
-    /**
-     * @param list
-     * @param society
-     * @param shiftList
-     * @param milkTypeList
-     * @param milkQualityTypeList
-     * @updatedBy Nimit Shah
-     * @updatedOn - 23-07-2025
-     * @update - update to get sysUpdatedBy column of insuranceDetail data and schemeRate & SchemeRateApplicability data from portal.
-     */
+
     private void process(List<Subscribed> list, Society society, List<Shift> shiftList, List<MilkType> milkTypeList, List<MilkQualityType> milkQualityTypeList) throws JsonProcessingException {
         for (Subscribed subscribed : list) {
             Map jsonText = mapper.readValue(subscribed.getDataText(), Map.class);
@@ -284,17 +264,12 @@ public class BroadcastedService {
                         Optional<ProductRequisitionTransaction> productRequisitionTransaction = productRequisitionTransactionRepository.findById(String.valueOf(jsonText.get("requisitionTransactionCode")));
                         if (productRequisitionTransaction.isPresent()) {
                             ProductRequisitionTransaction requisitionTransaction = productRequisitionTransaction.get();
-//                        requisitionTransaction.setCode((String) jsonText.get("requisitionTransactionCode"));
                             requisitionTransaction.setApprovedBy((String) jsonText.get("approvedBy"));
                             if (jsonText.get("approvedDate") != null)
                                 requisitionTransaction.setApprovedDate(LocalDate.parse((String) jsonText.get("approvedDate"), CommonUtils.Formatter5));
                             if (jsonText.get("approvedQuantity") != null)
                                 requisitionTransaction.setApprovedQuantity(new BigDecimal(String.valueOf(jsonText.get("approvedQuantity"))));
                             if (jsonText.get("cancelledAt") != null)
-//                        requisitionTransaction.setCancelledAt(LocalDateTime.parse((String) jsonText.get("cancelledAt"), CommonUtils.Formatter4));
-//                    if (jsonText.get("createdAt") != null)
-//                        requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4));
-//                    if (jsonText.get("createdBy") != null)
                                 requisitionTransaction.setCreatedBy((String) jsonText.get("createdBy"));
                             if (jsonText.get("updatedAt") != null)
                                 requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4));
@@ -310,23 +285,13 @@ public class BroadcastedService {
                                 requisitionTransaction.setAmount(new BigDecimal(String.valueOf(jsonText.get("provisionalAmount"))));
                             if (jsonText.get("provisionalRate") != null)
                                 requisitionTransaction.setRate(new BigDecimal(String.valueOf(jsonText.get("provisionalRate"))));
-//                        if (jsonText.get("quantity") != null)
-//                            requisitionTransaction.setQuantity(new BigDecimal(String.valueOf(jsonText.get("quantity"))));
-//                    if (jsonText.get("requisitionDate") != null)
-//                        requisitionTransaction.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), CommonUtils.Formatter4));
-//                    if (jsonText.get("expectedDeliveryDate") != null)
-//                        requisitionTransaction.setExpectedDeliveryDate(LocalDate.parse((String) jsonText.get("expectedDeliveryDate"), CommonUtils.Formatter4));
                             requisitionTransaction.setSchemeAddType((String) jsonText.get("schemeAddType"));
                             requisitionTransaction.setStatus((String) jsonText.get("status"));
-//                            requisitionTransaction.setProduct((String) jsonText.get("product"));
-//                            requisitionTransaction.setProductRequisition((String) jsonText.get("productRequisition"));
                             requisitionTransaction.setProductSchemeCode((String) jsonText.get("productSchemeCode"));
                             if (jsonText.get("approvedQuantity") != null)
                                 requisitionTransaction.setApprovedQuantity(new BigDecimal(String.valueOf(jsonText.get("approvedQuantity"))));
                             if (jsonText.get("passonToMember") != null)
                                 requisitionTransaction.setPassonToMember(Integer.parseInt((String) jsonText.get("passonToMember")));
-//                    requisitionTransaction.setUnionCode((String) jsonText.get("unionCode"));
-//                    requisitionTransaction.setSocietyCode(society.getCode());
                             productRequisitionTransactionService.save(requisitionTransaction);
                             break;
                         }
@@ -357,15 +322,12 @@ public class BroadcastedService {
                             productDispatch.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4));
                         if (jsonText.get("createdBy") != null)
                             productDispatch.setCreatedBy((String) jsonText.get("createdBy"));
-//                            productDispatch.setSociety((String) jsonText.get("society"));
                         productDispatch.setActive(true);
                         productDispatch.setSociety(society);
                         productDispatchService.save(productDispatch, "");
 
                         ProductReceipt receipt = new ProductReceipt();
                         receipt.setChallanNo(productDispatch.getChallanNo());
-//                    receipt.setCustomer();
-
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -500,16 +462,8 @@ public class BroadcastedService {
                         allowDcsManualCollectionRange.setUnionCode(String.valueOf(jsonText.get("unionCode")));
                         allowDcsManualCollectionRange.setFromShift(shiftList.stream().filter(e -> e.getCode() == Integer.parseInt(String.valueOf(jsonText.get("fromShift")))).findFirst().get());
                         allowDcsManualCollectionRange.setToShift(shiftList.stream().filter(e -> e.getCode() == Integer.parseInt(String.valueOf(jsonText.get("toShift")))).findFirst().get());
-                        if (jsonText.get("isQualityManual").toString().equalsIgnoreCase("1")) {
-                            allowDcsManualCollectionRange.setQualityManual(true);
-                        } else {
-                            allowDcsManualCollectionRange.setQualityManual(false);
-                        }
-                        if (jsonText.get("isWeightManual").toString().equalsIgnoreCase("1")) {
-                            allowDcsManualCollectionRange.setWeightManual(true);
-                        } else {
-                            allowDcsManualCollectionRange.setWeightManual(false);
-                        }
+                        allowDcsManualCollectionRange.setQualityManual(jsonText.get("isQualityManual").toString().equalsIgnoreCase("1"));
+                        allowDcsManualCollectionRange.setWeightManual(jsonText.get("isWeightManual").toString().equalsIgnoreCase("1"));
                         allowDcsManualCollectionRange.setUpdatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
                         allowDcsManualCollectionRange.setUpdatedBy(String.valueOf(jsonText.get("updatedBy")));
                         allowDcsManualCollectionRange.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtils.Formatter4) : null);
@@ -678,7 +632,7 @@ public class BroadcastedService {
                                 insuranceDetail.setAdharNo(jsonText.get("adharNo") != null ? String.valueOf(jsonText.get("adharNo")) : null);
                                 insuranceDetail.setDob(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null);
                                 try {
-                                    int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null)), insuranceStartDateMap.get(jsonText.get("insuranceMasterCode") != null ? (Integer) jsonText.get("insuranceMasterCode") : null)).getYears();
+                                    int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null)), insuranceStartDateMap.get(jsonText.get("insuranceMasterCode") != null ? jsonText.get("insuranceMasterCode") : null)).getYears();
                                     insuranceDetail.setAge(age != 0 ? age : null);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -708,7 +662,7 @@ public class BroadcastedService {
                                 insuranceDetailRepository.save(insuranceDetail);
                                 break;
                             case "DELETE":
-                                insuranceDetailRepository.deleteById(String.valueOf((String) jsonText.get("insuranceDetailCode")));
+                                insuranceDetailRepository.deleteById(String.valueOf(jsonText.get("insuranceDetailCode")));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -892,11 +846,11 @@ public class BroadcastedService {
                                 LocalDateTime fromDate = jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtils.Formatter4) : null;
                                 Shift shift = shiftRepository.findById(schemeRateApplicability.getFromShift()).orElseThrow(() -> null);
                                 fromDate = fromDate.with(CommonUtils.getTimeFromShift(shift));
-                                schemeRateApplicability.setFromDate(fromDate != null ? fromDate : null);
+                                schemeRateApplicability.setFromDate(fromDate);
                                 LocalDateTime toDate = jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtils.Formatter4) : null;
                                 shift = shiftRepository.findById(schemeRateApplicability.getToShift()).orElseThrow(() -> null);
                                 toDate = toDate.with(CommonUtils.getTimeFromShift(shift));
-                                schemeRateApplicability.setToDate(toDate != null ? toDate : null);
+                                schemeRateApplicability.setToDate(toDate);
                                 schemeRateApplicability.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
                                 schemeRateApplicability.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
                                 schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? (String) jsonText.get("applicableFor") : null);
@@ -1035,7 +989,6 @@ public class BroadcastedService {
                             transaction.setAmount(BigDecimal.ZERO);
                             return;
                         }
-//                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
                             formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString());
                         } else {
@@ -1045,8 +998,6 @@ public class BroadcastedService {
                         formula = formula.replace("KGEQFAT", kgEqFat.toString());
                         formula = formula.replace("KGFAT", kgFat.toString());
                         BigDecimal val = CommonUtils.evaluate(formula).setScale(2, RoundingMode.HALF_UP);
-//                    setAmount(val.toString());
-//                    setRate(CommonUtils.calculateAvgRate(val, qty).toString());
 
                         transaction.setRate(new BigDecimal(CommonUtils.calculateAvgRate(val, qty).toString()));
                         transaction.setAmount(val);

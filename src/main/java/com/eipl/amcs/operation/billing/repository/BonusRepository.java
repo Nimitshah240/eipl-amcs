@@ -29,7 +29,6 @@ public interface BonusRepository extends BaseRepository<Bonus, String> {
     @EntityGraph(attributePaths = {"member", "society", "union"})
     List<Bonus> findByBonusSummary(BonusSummary bonusSummary);
 
-//	@Query(value = "SELECT wefDate FROM LocalMilkSaleRate lsr WHERE lsr.society = ?1 AND lsr.milkType = ?2 AND lsr.milkClass = ?3 ORDER BY lsr.wefDate desc")
 
     @Query(value = "SELECT sum(qty) as qty,sum(amount)as amt,member_code FROM milk_collection where collection_date between :fromDate" + " and :toDate and milk_type_code=:milk_type_code group by member_code ", nativeQuery = true)
     List<Map<String, Object>> loadData(@Param("fromDate") LocalDateTime d1, @Param("toDate") LocalDateTime d2, @Param("milk_type_code") Integer milkType);
@@ -63,11 +62,3 @@ public interface BonusRepository extends BaseRepository<Bonus, String> {
                                            @Param("p_payment_mode") Integer paymentMode,
                                            @Param("p_bonus_type") Integer bonusType);
 }
-
-
-//	@Query(value = "CALL rpt_bonus_register(:p_society_code,:p_bonus_summary_code);", nativeQuery = true)
-//	List<Map<String,Object>> findBonus(@Param("p_society_code") String societyCode,
-//								  @Param("p_bonus_summary_code") String bonusSummaryCode
-//	);}
-
-//List<Car> retrieveCars(@Param("vinNo") Long vinNo,@Param("serialNo") Long serialNo); 

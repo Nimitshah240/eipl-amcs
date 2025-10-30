@@ -2,8 +2,8 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

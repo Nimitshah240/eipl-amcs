@@ -37,8 +37,6 @@ public class GeneralReportController implements MyInitialization {
 
     private ResourceBundle resourceBundle;
     private MemberBillSummary dto = null;
-    private MemberBillSummary propSummary;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -85,12 +83,6 @@ public class GeneralReportController implements MyInitialization {
         JasperPrint print = null;
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_ALL, params);
         JasperViewer.viewReport(print, false);
-
-
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     private void loadMilkType() {
@@ -108,13 +100,10 @@ public class GeneralReportController implements MyInitialization {
                     cboxMilkType.setItems(FXCollections.observableList(list2));
                     cboxMilkType.getSelectionModel().select(0);
                 }
-
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
         });
         new Thread(task).start();
     }
-
-
 }

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class SubLedgerDeserializer extends JsonDeserializer<SubLedger> {
-    private SubLedgerRepository repository;
+    private final SubLedgerRepository repository;
 
     public SubLedgerDeserializer() {
         repository = EmcsAppContext.getContext().getBean(SubLedgerRepository.class);
@@ -19,7 +19,7 @@ public class SubLedgerDeserializer extends JsonDeserializer<SubLedger> {
 
     @Override
     public SubLedger deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

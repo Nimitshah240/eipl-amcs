@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class LedgerDeserializer extends JsonDeserializer<Ledger> {
-    private LedgerRepository Repository;
+    private final LedgerRepository Repository;
 
     public LedgerDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
@@ -19,7 +19,7 @@ public class LedgerDeserializer extends JsonDeserializer<Ledger> {
 
     @Override
     public Ledger deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

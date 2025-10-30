@@ -49,29 +49,6 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
                 SocietyPaymentCycle prevPaymentCycle = paymentCycleService.fetchCurrentPaymentCycle(paymentCycle1.getFromDate().minusDays(3), null);
                 memberListResult = service.findMemberBill(society.getCode(), paymentCycle1, prevPaymentCycle);
             }
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            if (generate == 0) {
-//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/fetchBill";
-//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                        .queryParam("paymentCycleCode", paymentCycle.getCode());
-//                ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
-//                if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                    return null;
-//                return Arrays.asList(response.getBody());
-//            } else {
-//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/bill";
-//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                        .queryParam("paymentCycleCode", paymentCycle.getCode())
-//                        .queryParam("societyCode", society.getCode())
-//                        .queryParam("fromDate", fromDate.toString())
-//                        .queryParam("toDate", toDate.toString())
-//                        .queryParam("generate", generate);
-//                ResponseEntity<MemberBill[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBill[].class);
-//                if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                    return null;
-//                return Arrays.asList(response.getBody());
-//            }
             if (memberListResult == null || memberListResult.isEmpty()) return null;
             return memberListResult;
         } catch (Exception e) {

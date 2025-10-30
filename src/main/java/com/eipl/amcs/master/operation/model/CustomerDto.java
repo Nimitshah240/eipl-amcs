@@ -34,5 +34,4 @@ public class CustomerDto implements Serializable {
         this.customerDetail = customerDetail;
     }
 
-
 }

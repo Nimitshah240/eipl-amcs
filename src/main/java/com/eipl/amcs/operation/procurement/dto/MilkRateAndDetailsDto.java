@@ -14,23 +14,4 @@ import java.util.Map;
 public class MilkRateAndDetailsDto {
     private MemberMilkPurchaseRate memberPurchaseRate;
     private Map<String, BigDecimal> details;
-
-//    public MilkRateAndDetailsDto() {
-//    }
-//
-//    public MemberMilkPurchaseRate getMemberPurchaseRate() {
-//        return memberPurchaseRate;
-//    }
-//
-//    public void setMemberPurchaseRate(MemberMilkPurchaseRate memberPurchaseRate) {
-//        this.memberPurchaseRate = memberPurchaseRate;
-//    }
-//
-//    public Map<String, BigDecimal> getDetails() {
-//        return details;
-//    }
-//
-//    public void setDetails(Map<String, BigDecimal> details) {
-//        this.details = details;
-//    }
 }

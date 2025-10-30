@@ -14,7 +14,6 @@ public class ProductSaleInstallmentByOnlyInvoiceNoLoadTask extends Task<List<Pro
 
     private final String code;
 
-
     public ProductSaleInstallmentByOnlyInvoiceNoLoadTask(String code) {
         this.code = code;
 

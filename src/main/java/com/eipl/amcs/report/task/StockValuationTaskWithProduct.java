@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockValuationTaskWithProduct extends Task<List<ProductStockValuation>> {
-    private String societyCode;
-    private LocalDate asOnDate;
-    private String locale;
-    private String productCode;
+    private final String societyCode;
+    private final LocalDate asOnDate;
+    private final String locale;
+    private final String productCode;
     private LedgerRepository ledgerRepository;
 
 
@@ -23,10 +23,6 @@ public class StockValuationTaskWithProduct extends Task<List<ProductStockValuati
         this.asOnDate = asOnDate;
         this.locale = locale;
         this.productCode = productCode;
-
-    }
-
-    public StockValuationTaskWithProduct() {
 
     }
 
@@ -72,5 +68,4 @@ public class StockValuationTaskWithProduct extends Task<List<ProductStockValuati
         });
         return list;
     }
-
 }

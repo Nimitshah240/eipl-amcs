@@ -155,12 +155,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             }
         });
 
-//        cboxMilkType.setOnAction(e -> {
-//            if(txtQuantity.getText().trim()!=null && !cboxClass.getSelectionModel().isEmpty()){
-//                calculate();
-//            }
-//        });
-//
         cboxClass.setOnAction(e -> {
             if (!cboxMilkType.getSelectionModel().isEmpty()) {
                 getRate(dpSellDate.getValue(), cboxMilkType.getValue(), cboxClass.getValue());
@@ -220,31 +214,12 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         }
     }
 
-//    private LocalMilkSale setValuesInObjectUpdate() {
-//        LocalMilkSale ls = new LocalMilkSale();
-//        ls.setConsumerCode(txtConsumerCode.getText().trim());
-//        ls.setPaymentMode((short) (cboxPaymentType.getSelectionModel().getSelectedIndex() == 1 ? 1 :
-//                (cboxPaymentType.getSelectionModel().getSelectedIndex() == 2 ? 2 : 3)));
-//        ls.setMilkType(cboxMilkType.getValue());
-//        ls.setMilkClass(cboxClass.getValue());
-//        ls.setSaleDate(dpSellDate.getValue());
-
-    /// /        ls.setQuantity(new BigDecimal(txtQuantity.getText().trim()));
-    /// /        ls.setRate(new BigDecimal(txtRate.getText().trim()));
-    /// /        ls.setAmount(new BigDecimal(txtAmount.getText().trim()));
-    /// /        ls.setCash(new BigDecimal(txtCash.getText().trim()));
-    /// /        ls.setCredit(new BigDecimal(txtCredit.getText().trim()));
-    /// /        ls.setCoupon(new BigDecimal(txtCoupon.getText().trim()));
-//        return ls;
-//    }
     private void setValuesInObject() {
         dto.setConsumerCode(generateCode(txtConsumerCode.getText().trim()));
         dto.setInvoiceNo(invoice);
         dto.setConsumerType(cboxConsumertype.getValue().getKey());
         dto.setPaymentMode((short) (cboxPaymentType.getSelectionModel().getSelectedIndex() == 0 ? 0 :
                 (cboxPaymentType.getSelectionModel().getSelectedIndex() == 1 ? 1 : 0)));
-//        dto.setPaymentMode(CommonUtils.getStringFromPaymentType(resourceBundle.getString(cboxPaymentType.getValue())));
-//        dto.setPaymentMode(cboxPaymentType.getSelectionModel().getSelectedIndex()==0?(short)0:(short)1);
         dto.setMilkType(cboxMilkType.getValue());
         dto.setMilkClass(cboxClass.getValue());
         dto.setQuantity(new BigDecimal(txtQuantity.getText().trim()));
@@ -603,7 +578,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     private void calculateAmount() {
         try {
             if (txtRate.getText().trim() != null || txtRate.getText() != "0") {
-//                    txtRate.setText(String.valueOf(rate));
                 if (txtRate.getText() != null && txtRate.getText().length() > 0
                         && Double.parseDouble(txtRate.getText()) > 0 && Double.parseDouble(txtQuantity.getText()) > 0) {
                     if (Double.parseDouble(txtQuantity.getText()) <= 0) {

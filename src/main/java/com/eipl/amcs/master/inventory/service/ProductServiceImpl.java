@@ -65,7 +65,6 @@ public class ProductServiceImpl implements ProductService {
             FieldError nameNotValid = CommonUtils.getFieldError("product", "name", product.getName(), "name.not.valid");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
-//		Product newData = productRepository.customSave(product, identityInfo);
         product.setInitData();
         Product newData = productRepository.customSave(product, identityInfo);
         newData.setConversionUnit(product.getConversionUnit());
@@ -85,7 +84,6 @@ public class ProductServiceImpl implements ProductService {
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
         Product newData = productRepository.save(product);
-//		Product newData = productRepository.customUpdate(product, identityInfo);
         newData.setConversionUnit(product.getConversionUnit());
         newData.setPrimaryUom(product.getPrimaryUom());
         newData.setProductGroup(product.getProductGroup());
@@ -108,7 +106,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-//	@CacheEvict(value = { "productCache" }, allEntries = true)
     public void delete(Product product, String identityInfo) {
         productRepository.customDelete(product.getCode(), identityInfo);
     }

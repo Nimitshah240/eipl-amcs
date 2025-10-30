@@ -6,7 +6,6 @@ import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.report.dto.MemberCollection;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -39,10 +38,7 @@ public class DairySaleRegisterReportController implements MyInitialization {
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
 
-
     private ResourceBundle resourceBundle;
-    private MemberCollection memberCollection;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -91,41 +87,6 @@ public class DairySaleRegisterReportController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.DAIRY_SALE_REGISTER, params);
         JasperViewer.viewReport(print, false);
     }
-//        errorMsg = new StringBuilder();
-//        if (!validate()) {
-//            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "dairysaleregister"),
-//                    errorMsg.toString());
-//            alert.createAlert();
-//            return;
-//        }
-//        DairySaleRegisterTask task = new DairySaleRegisterTask(MainApp.identityDto.getSociety().getCode(),
-//                dpFromDate.getValue().atTime(06, 00, 00), dpToDate.getValue().atTime(18, 00, 00), cboxmilkType.getSelectionModel().getSelectedIndex());
-//
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<DairySaleRegister> list = task.get();
-//                if (list != null) {
-//                    Map<String, Object> params = new HashMap<>();
-//                    params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//                    params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//                    params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//                    params.put("p_milk_type", cboxmilkType.getSelectionModel().getSelectedIndex());
-//                    JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.DAIRY_SALE_REGISTER, params,
-//                            new JRBeanCollectionDataSource(list));
-//                    JasperViewer.viewReport(print, false);
-//                }
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            } catch (ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
-
-//    private boolean validate() {
-//        return true;
-//    }
 
     @Override
     public void loadData() {
@@ -146,20 +107,6 @@ public class DairySaleRegisterReportController implements MyInitialization {
             }
         });
         new Thread(task1).start();
-
-//        DairySaleRegisterTask task = new DairySaleRegisterTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<DairySaleRegister> list = task.get();
-//                if (list != null) {
-//                    cboxmilkType.setItems(FXCollections.observableList(list));
-//                    cboxmilkType.getSelectionModel().select(0);
-//                }
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
     }
 
 }

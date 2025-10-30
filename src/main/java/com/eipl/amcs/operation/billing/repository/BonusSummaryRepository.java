@@ -11,11 +11,8 @@ import java.util.Optional;
 @Repository
 public interface BonusSummaryRepository extends BaseRepository<BonusSummary, String> {
 
-//	public List<BonusSummary> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDate dt1,LocalDate dt2);
-
     @EntityGraph(attributePaths = {"society", "union"})
     List<BonusSummary> findAll();
-
 
     @Override
     @EntityGraph(attributePaths = {"society", "union"})

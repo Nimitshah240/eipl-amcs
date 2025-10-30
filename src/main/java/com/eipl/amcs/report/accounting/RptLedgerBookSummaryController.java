@@ -30,8 +30,6 @@ public class RptLedgerBookSummaryController implements MyInitialization {
 
     @FXML
     private Button btnGenerate, btnClose;
-
-
     @FXML
     private ComboBox<Ledger> cboxLedgerName;
 
@@ -44,8 +42,6 @@ public class RptLedgerBookSummaryController implements MyInitialization {
     @FXML
     private AnchorPane root;
 
-
-    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -111,7 +107,5 @@ public class RptLedgerBookSummaryController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
-
     }
 }

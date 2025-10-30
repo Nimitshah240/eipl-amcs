@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BmcRecordingRepository extends BaseRepository<BmcRecording, Long> {
-
-//    List<BmcRecording> findAll(Integer code);
 }

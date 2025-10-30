@@ -55,11 +55,8 @@ public class RptSocietyFinancialDetailsController implements MyInitialization {
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK, params);
-
-
         JasperViewer.viewReport(print, false);
     }
 }

@@ -115,8 +115,6 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
         colCode.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
-//        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
-//                resourceBundle.getString("active") : resourceBundle.getString("inactive")));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
         colLedgerType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerType()));
         propLedgerGroup.bind(tableLedgerGroup.getSelectionModel().selectedItemProperty());
@@ -166,12 +164,9 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
         }
     }
 
-
     @Override
     public void reloadData(boolean flag) {
         if (flag)
             loadData();
     }
-
-
 }

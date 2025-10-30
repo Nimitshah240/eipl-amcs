@@ -33,33 +33,12 @@ public class RateViewTask extends Task<List<String>> {
                 if (listStr == null || listStr.isEmpty()) {
                     return null;
                 }
-//                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_MILK_PURCHASE_RATE + "/view/{code}/{milkTypeCode}/{milkQualityTypeCode}";
-//                Map<String, Object> uriVariables = new HashMap<>();
-//                uriVariables.put("code", code);
-//                uriVariables.put("milkTypeCode", milkType);
-//                uriVariables.put("milkQualityTypeCode", milkQualityType);
-//                ResponseEntity<String[]> response = restTemplate.getForEntity(url, String[].class, uriVariables);
-//                if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                    return null;
-//
-//                listStr = Arrays.asList(response.getBody());
             } else {
                 SocietyMilkPurchaseRateService service = EmcsAppContext.getContext().getBean(SocietyMilkPurchaseRateService.class);
                 listStr = service.fetchRateDetails(code, milkType, milkQualityType);
                 if (listStr == null || listStr.isEmpty()) {
                     return null;
                 }
-//                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY_MILK_PURCHASE_RATE + "/view/{code}/{milkTypeCode}/{milkQualityTypeCode}";
-//                Map<String, Object> uriVariables = new HashMap<>();
-//                uriVariables.put("code", code);
-//                uriVariables.put("milkTypeCode", milkType);
-//                uriVariables.put("milkQualityTypeCode", milkQualityType);
-//                ResponseEntity<String[]> response = restTemplate.getForEntity(url, String[].class, uriVariables);
-//                if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                    return null;
-//                listStr = Arrays.asList(response.getBody());
             }
             return listStr;
         } catch (Exception e) {

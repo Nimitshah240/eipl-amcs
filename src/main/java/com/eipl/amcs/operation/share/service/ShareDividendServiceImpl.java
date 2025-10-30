@@ -109,6 +109,4 @@ public class ShareDividendServiceImpl implements ShareDividendService {
         }
         return null;
     }
-
-
 }

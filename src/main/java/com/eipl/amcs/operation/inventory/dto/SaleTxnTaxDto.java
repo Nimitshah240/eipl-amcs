@@ -16,28 +16,4 @@ import java.util.List;
 public class SaleTxnTaxDto {
     private ProductSaleTransaction transaction;
     private List<ProductSaleTax> saleTaxList;
-//
-//    public SaleTxnTaxDto() {
-//    }
-//
-//    public SaleTxnTaxDto(ProductSaleTransaction transaction, List<ProductSaleTax> saleTaxList) {
-//        this.transaction = transaction;
-//        this.saleTaxList = saleTaxList;
-//    }
-//
-//    public ProductSaleTransaction getTransaction() {
-//        return transaction;
-//    }
-//
-//    public void setTransaction(ProductSaleTransaction transaction) {
-//        this.transaction = transaction;
-//    }
-//
-//    public List<ProductSaleTax> getSaleTaxList() {
-//        return saleTaxList;
-//    }
-//
-//    public void setSaleTaxList(List<ProductSaleTax> saleTaxList) {
-//        this.saleTaxList = saleTaxList;
-//    }
 }

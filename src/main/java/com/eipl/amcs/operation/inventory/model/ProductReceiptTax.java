@@ -1,14 +1,14 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.ProductReceiptDeserializer;
 import com.eipl.amcs.json.deserialize.ProductRequisitionTransactionDeserializer;
 import com.eipl.amcs.json.deserialize.TaxDetailDeserializer;
-import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.json.serialize.ProductReceiptSerialize;
 import com.eipl.amcs.json.serialize.ProductRequisitionTransactionSerialize;
 import com.eipl.amcs.json.serialize.TaxDetailSerialize;
+import com.eipl.amcs.master.account.model.TaxDetail;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

@@ -27,8 +27,6 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
     @Autowired
     private ProductPurchaseRateRepository productPurchaseRateRepository;
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private NextCodeRepository nextCodeRepository;
 
     @Override
@@ -82,7 +80,6 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
 
     @Override
     @Transactional
-//    @CacheEvict(value = { "productPurchaseRatesCache" }, allEntries = true)
     public void delete(ProductPurchaseRate productPurchaseRate, String identityInfo) {
         productPurchaseRateRepository.customDelete(productPurchaseRate.getCode(), identityInfo);
     }

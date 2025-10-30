@@ -33,23 +33,6 @@ public class SubDistrictLoadTask extends Task<List<SubDistrict>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUBDISTRICT;
-//            ResponseEntity<SubDistrict[]> response = null;
-//            if (district != null) {
-//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                        .queryParam("districtCode", district.getCode());
-//                response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, SubDistrict[].class);
-//            } else {
-//                response = restTemplate.getForEntity(url, SubDistrict[].class);
-//            }
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("SubDistricts fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("SubDistricts fetch", e);
         }

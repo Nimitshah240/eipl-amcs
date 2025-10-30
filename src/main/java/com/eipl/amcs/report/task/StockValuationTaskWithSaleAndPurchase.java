@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 public class StockValuationTaskWithSaleAndPurchase extends Task<List<ProductStockValuationWithSaleAndPurchase>> {
-    private String societyCode;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private String locale;
-    private String productCode;
+    private final String societyCode;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
+    private final String locale;
+    private final String productCode;
     private LedgerRepository ledgerRepository;
 
 
@@ -29,10 +29,6 @@ public class StockValuationTaskWithSaleAndPurchase extends Task<List<ProductStoc
         this.toDate = toDate;
         this.locale = locale;
         this.productCode = productCode;
-
-    }
-
-    public StockValuationTaskWithSaleAndPurchase() {
 
     }
 
@@ -127,6 +123,4 @@ public class StockValuationTaskWithSaleAndPurchase extends Task<List<ProductStoc
         }
         return finalList;
     }
-
-
 }

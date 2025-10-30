@@ -39,8 +39,6 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private Button btnClose, btnSaveUpdate;
     @FXML
     private ComboBox<Product> cboxProduct;
-    //    @FXML
-//    private ComboBox<Union> cboxUnion;
     @FXML
     private TextField txtPurchaseRate;
     @FXML
@@ -73,18 +71,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
             btnSaveUpdate.setText(resourceBundle.getString("update"));
             loadControls();
         }
-
         loadProduct();
-//        loadUnion();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-
         setupComboBox();
         loadProduct();
-//        loadUnion();
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
     }
@@ -103,7 +97,6 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
-//        cboxUnion.setConverter(new UnionConvertor(cboxUnion));
     }
 
     private void validateAndSave() {
@@ -135,7 +128,6 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
 
     private ProductPurchaseRate setValuesInObjectUpdate() {
         dto.setProduct(cboxProduct.getValue());
-//        dto.setUnion(cboxUnion.getValue());
         dto.setWefDate(dpWefDate.getValue());
         dto.setRate(new BigDecimal(txtPurchaseRate.getText()));
         return dto;
@@ -144,7 +136,6 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     @Override
     public void loadControls() {
         cboxProduct.getSelectionModel().select(dto.getProduct());
-//        cboxUnion.getSelectionModel().select(dto.getUnion());
         txtPurchaseRate.setText(String.valueOf(dto.getRate()));
         dpWefDate.setValue(dto.getWefDate());
 
@@ -153,8 +144,6 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private boolean validate() {
         if (cboxProduct.getValue() == null)
             errorMsg.append("Product can not be null or empty\n");
-//        if (cboxUnion.getValue() == null)
-//            errorMsg.append("Union can not be null or empty\n");
         if (txtPurchaseRate.getText() == null)
             errorMsg.append("Union can not be null or empty\n");
         if (dpWefDate.getValue() == null)
@@ -261,20 +250,5 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-//    private void loadUnion() {
-//        var task = new UnionLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Union> list = task.get();
-//                if (list != null)
-//                    cboxUnion.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
-
 }
 	

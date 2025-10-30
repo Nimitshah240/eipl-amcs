@@ -61,13 +61,9 @@ public class MilkCollectionImportTask extends Task<List<MilkCollection>> {
                 if (sampleNo == null) {
                     continue;
                 }
-                // Date
-                Cell cellDate = row.getCell(1);
-
 
                 DataFormatter formatter = new DataFormatter();
                 String val = formatter.formatCellValue(dataSheet.getRow(i).getCell(1));
-//                LocalDate collectionDate = CommonUtils.excelDate(val);
                 DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                 LocalDate collectionDate = LocalDate.parse(val, formatters);
                 if (collectionDate == null) {
@@ -87,12 +83,9 @@ public class MilkCollectionImportTask extends Task<List<MilkCollection>> {
                         shift = shiftList.get(0);
                 }
 
-
                 // MemberCode
 
-
                 String valCode = formatter.formatCellValue(dataSheet.getRow(i).getCell(3));
-                Cell cellCode = row.getCell(3);
                 String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(valCode);
                 if (code.equalsIgnoreCase(MainApp.identityDto.getSociety().getCode() + "0000")) {
                     continue;
@@ -148,7 +141,6 @@ public class MilkCollectionImportTask extends Task<List<MilkCollection>> {
 
                 MilkCollection milkCollection = new MilkCollection();
                 milkCollection.setSampleNo(sampleNo);
-//                milkCollection.setCode("1023");
                 milkCollection.setCollectionDate(CommonUtils.getLocalDateTimeFromDateAndShift(collectionDate, shift));
                 milkCollection.setShift(shift);
                 milkCollection.setMember(member);

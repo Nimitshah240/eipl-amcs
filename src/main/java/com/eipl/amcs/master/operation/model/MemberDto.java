@@ -33,6 +33,4 @@ public class MemberDto implements Serializable {
     public void setMemberDetail(MemberDetail memberDetail) {
         this.memberDetail = memberDetail;
     }
-
-
 }

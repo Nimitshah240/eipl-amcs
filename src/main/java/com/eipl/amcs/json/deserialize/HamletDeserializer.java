@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class HamletDeserializer extends JsonDeserializer<Hamlet> {
-    private HamletRepository Repository;
+    private final HamletRepository Repository;
 
     public HamletDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(HamletRepository.class);
@@ -19,7 +19,7 @@ public class HamletDeserializer extends JsonDeserializer<Hamlet> {
 
     @Override
     public Hamlet deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

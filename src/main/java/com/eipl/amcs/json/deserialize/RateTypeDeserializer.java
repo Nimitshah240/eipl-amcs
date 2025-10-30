@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class RateTypeDeserializer extends JsonDeserializer<RateType> {
-    private RateTypeRepository repository;
+    private final RateTypeRepository repository;
 
     public RateTypeDeserializer() {
         repository = EmcsAppContext.getContext().getBean(RateTypeRepository.class);
@@ -19,7 +19,7 @@ public class RateTypeDeserializer extends JsonDeserializer<RateType> {
 
     @Override
     public RateType deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(parser.getValueAsInt()).get();
     }
 

@@ -2,7 +2,6 @@ package com.eipl.amcs.operation.inventory.service;
 
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
 import org.hibernate.Hibernate;
@@ -21,8 +20,6 @@ public class ProductSaleInstallmentServiceImpl implements ProductSaleInstallment
     private static final Logger log = LoggerFactory.getLogger(ProductSaleInstallmentServiceImpl.class);
     @Autowired
     private ProductSaleInstallmentRepository installmentRepository;
-    @Autowired
-    private SocietyPaymentCycleRepository paymentCycleRepository;
 
     @Override
     public List<ProductSaleInstallment> findAll() {

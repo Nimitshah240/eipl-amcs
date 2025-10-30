@@ -24,5 +24,4 @@ public interface MemberBillTransactionRepository extends BaseRepository<MemberBi
                                                   @Param("p_from_date") LocalDateTime fromDate, @Param("p_to_date") LocalDateTime toDate,
                                                   @Param("p_processed") Integer processed, @Param("p_society_code") String societyCode,
                                                   @Param("p_user_code") String userCode);
-
 }

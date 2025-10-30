@@ -27,12 +27,7 @@ public interface ProductSaleInstallmentRepository extends BaseRepository<Product
     List<ProductSaleInstallment> fetchInstallmentIsBilled(String str, boolean b);
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
-    List<ProductSaleInstallment> findByMemberAndBillingFalse(Member member);
-
-    @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
     List<ProductSaleInstallment> findByMemberAndBillingFalseAndType(Member member, Integer type);
-
-    void deleteByInvoiceNo(String invoiceNo);
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member"})
     List<ProductSaleInstallment> findByInvoiceNo(String invoiceNo);

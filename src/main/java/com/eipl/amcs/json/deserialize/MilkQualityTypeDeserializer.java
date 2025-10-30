@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class MilkQualityTypeDeserializer extends JsonDeserializer<MilkQualityType> {
-    private MilkQualityTypeRepository repository;
+    private final MilkQualityTypeRepository repository;
 
     public MilkQualityTypeDeserializer() {
         repository = EmcsAppContext.getContext().getBean(MilkQualityTypeRepository.class);
@@ -19,7 +19,7 @@ public class MilkQualityTypeDeserializer extends JsonDeserializer<MilkQualityTyp
 
     @Override
     public MilkQualityType deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(parser.getValueAsInt()).get();
     }
 

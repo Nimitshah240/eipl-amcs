@@ -10,12 +10,6 @@ public class PurchaseRateGenerate {
     public PurchaseRateGenerate() {
     }
 
-    public PurchaseRateGenerate(BigDecimal fat, Map<BigDecimal, BigDecimal> map) {
-        super();
-        this.fat = fat;
-        this.map = map;
-    }
-
     public BigDecimal getFat() {
         return fat;
     }

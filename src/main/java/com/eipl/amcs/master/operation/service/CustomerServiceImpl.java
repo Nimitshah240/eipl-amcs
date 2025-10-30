@@ -7,7 +7,6 @@ import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerSubLedgerMapping;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.model.SubLedgerLedgerConfig;
-import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.master.account.repository.LedgerSubLedgerMappingRepository;
 import com.eipl.amcs.master.account.repository.SubLedgerLedgerConfigRepository;
 import com.eipl.amcs.master.account.repository.SubLedgerRepository;
@@ -45,8 +44,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private NextCodeService nextCodeService;
     @Autowired
-    private LedgerRepository ledgerRepository;
-    @Autowired
     private LedgerSubLedgerMappingRepository mappingRepository;
     @Autowired
     private SubLedgerRepository subLedgerRepository;
@@ -82,7 +79,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerDetail.setInitData();
         customerDtoNew.setCustomerDetail(customerDetailrepository.customSave(customerDetail, identityInfo));
 
-
         SubLedger subLedger = new SubLedger();
         String code = nextCodeService.getNextCode("SubLedger", "code", customer.getSociety().getCode(), 0);
         subLedger.setCode(code);
@@ -94,7 +90,6 @@ public class CustomerServiceImpl implements CustomerService {
         subLedger.setUnionCode(customer.getSociety().getUnion() != null ? customer.getSociety().getUnion().getCode() : null);
         subLedger.setInitData();
         subLedgerRepository.customSave(subLedger, identityInfo);
-//        subLedgerRepository.save(subLedger);
 
         List<SubLedgerLedgerConfig> listConfig = subLedgerLedgerConfigRepository.findBySubLedgerType(1);
         if (listConfig != null && !listConfig.isEmpty()) {
@@ -106,11 +101,8 @@ public class CustomerServiceImpl implements CustomerService {
                 mapping.setSociety(customer.getSociety());
                 mapping.setUnionCode(customer.getSociety().getUnion() != null ? customer.getSociety().getUnion().getCode() : null);
                 mappingRepository.customSave(mapping, identityInfo);
-//                mappingRepository.save(mapping);
             }
         }
-
-
         return customerDtoNew;
     }
 
@@ -213,10 +205,4 @@ public class CustomerServiceImpl implements CustomerService {
 
         return dtl;
     }
-
-//	@Override
-//	public Customer findNameByCustomerCode(String code) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 }

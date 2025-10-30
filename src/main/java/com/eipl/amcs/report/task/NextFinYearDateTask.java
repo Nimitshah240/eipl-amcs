@@ -9,13 +9,10 @@ import java.util.List;
 
 public class NextFinYearDateTask extends Task<List<LocalDate>> {
 
-    private LocalDate currentDate;
+    private final LocalDate currentDate;
 
     public NextFinYearDateTask(LocalDate currentDate) {
         this.currentDate = currentDate;
-    }
-
-    public NextFinYearDateTask() {
     }
 
     @Override

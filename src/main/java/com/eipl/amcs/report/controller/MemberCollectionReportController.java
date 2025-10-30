@@ -11,12 +11,10 @@ import com.eipl.amcs.master.operation.convertor.MemberConvertor;
 import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
-import com.eipl.amcs.report.dto.MemberCollection;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -40,8 +38,6 @@ public class MemberCollectionReportController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
     @FXML
-    private SwingNode reportNode;
-    @FXML
     private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private TextField txtsocietyCode;
@@ -52,10 +48,7 @@ public class MemberCollectionReportController implements MyInitialization {
     @FXML
     private ComboBox cboxqty, cboxqty1;
 
-
     private ResourceBundle resourceBundle;
-    private MemberCollection memberCollection;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -104,7 +97,6 @@ public class MemberCollectionReportController implements MyInitialization {
         params.put("p_from_collection_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxfromshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_collection_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxtoshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_ltr_kg", cboxqty.getSelectionModel().getSelectedIndex());
-        //    params.put("p_milk_type", c.getSelectionModel().getSelectedIndex());
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_COLLECTION_SUMMARY, params);
         JasperViewer.viewReport(print, false);
@@ -117,7 +109,6 @@ public class MemberCollectionReportController implements MyInitialization {
         params.put("p_to_collection_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxtoshift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_ltr_kg", cboxqty1.getSelectionModel().getSelectedIndex());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
-        //    params.put("p_milk_type", c.getSelectionModel().getSelectedIndex());
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_COLLECTION_SUMMARY1, params);
         JasperViewer.viewReport(print, false);
@@ -175,5 +166,4 @@ public class MemberCollectionReportController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
 }

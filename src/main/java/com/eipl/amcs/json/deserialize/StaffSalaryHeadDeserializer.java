@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class StaffSalaryHeadDeserializer extends JsonDeserializer<StaffMember> {
-    private StaffMemberRepository repository;
+    private final StaffMemberRepository repository;
 
     public StaffSalaryHeadDeserializer() {
         repository = EmcsAppContext.getContext().getBean(StaffMemberRepository.class);
@@ -19,7 +19,7 @@ public class StaffSalaryHeadDeserializer extends JsonDeserializer<StaffMember> {
 
     @Override
     public StaffMember deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

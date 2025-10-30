@@ -74,7 +74,6 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
         if (receiptTxnDto != null) {
             cboxProduct.setItems(FXCollections.observableList(receiptTxnDto.getProductList()));
             cboxUnit.setItems(FXCollections.observableList(receiptTxnDto.getUnitList()));
-//            cboxUnit.getSelectionModel().select(1);
             cboxTax.setItems(FXCollections.observableList(CommonUtils.getTaxFromDto(receiptTxnDto.getTaxDtoList())));
             new AutoCompleteComboBoxListener<>(cboxProduct);
             new AutoCompleteComboBoxListener<>(cboxUnit);
@@ -121,14 +120,6 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
         txtQuantity.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             calculateAmount();
         });
-
-//        Salentity.focusedProperty().addListener((ob, oldVal, newVal) -> {
-//            if (!newVal) {
-//                calculateAmount();
-//                calculateTaxAmount();
-//            }
-//        });
-
         txtDiscount.focusedProperty().addListener((ob, oldVal, newVal) -> {
             if (!newVal) {
                 calculateTaxAmount();

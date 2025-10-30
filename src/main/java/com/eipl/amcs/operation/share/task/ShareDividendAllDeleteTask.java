@@ -21,18 +21,6 @@ public class ShareDividendAllDeleteTask extends Task<Boolean> {
         try {
             ShareDividendService service = EmcsAppContext.getContext().getBean(ShareDividendService.class);
             service.deleteAll(fromDt, toDt);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE_DIVIDEND + "/all";
-//
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate",fromDt.toString()).queryParam("toDate",toDt.toString());
-//
-//            ResponseEntity<ShareDividend[]> response = restTemplate.getForEntity(builder.toUriString(), ShareDividend[].class);
-//
-////            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();

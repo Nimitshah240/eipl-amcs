@@ -37,7 +37,6 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
     @FXML
     private ComboBox<CustomerTypeKeyValDto> cboxType;
 
-
     @FXML
     private ComboBox<SubLedger> cboxSubLedgerName;
 
@@ -49,9 +48,6 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
 
     @FXML
     private AnchorPane root;
-
-
-    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -65,9 +61,6 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
         loadData();
         setupComboBox();
         loadDataType();
-
-//        cboxType.getItems().addAll(CommonUtils.getAllCustomerTypes());
-//        cboxType.getSelectionModel().select(0);
         loadData((short) 1);
 
         cboxType.setOnAction(e -> {
@@ -116,7 +109,7 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
             params.put("p_sub_ledger_name", MainApp.locale.equalsIgnoreCase("en") ? "ALL" : "બધા");
         else
             params.put("p_sub_ledger_name", cboxSubLedgerName.getValue().getName());
-        JasperPrint print = print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_SUB_LEDGER_BOOK_SUMMARY, params);
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_SUB_LEDGER_BOOK_SUMMARY, params);
 
         JasperViewer.viewReport(print, false);
     }
@@ -149,8 +142,6 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
-
     }
 }
 

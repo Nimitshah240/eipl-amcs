@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class BonusSummaryDeserializer extends JsonDeserializer<BonusSummary> {
-    private BonusSummaryRepository repository;
+    private final BonusSummaryRepository repository;
 
     public BonusSummaryDeserializer() {
         repository = EmcsAppContext.getContext().getBean(BonusSummaryRepository.class);
@@ -19,7 +19,7 @@ public class BonusSummaryDeserializer extends JsonDeserializer<BonusSummary> {
 
     @Override
     public BonusSummary deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

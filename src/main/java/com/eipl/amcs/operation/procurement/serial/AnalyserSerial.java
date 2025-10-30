@@ -18,15 +18,15 @@ import java.util.Map;
 public class AnalyserSerial implements SerialPortDataListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnalyserSerial.class);
-    int countToPick = 3;
     private final HardwareDevice hardwareDevice;
+    private final String tag;
+    int countToPick = 3;
     private SerialPort serialPort;
     private InputStream inputStream;
     private OutputStream outputStream;
     private String response = "";
     private String tempResp = "";
     private boolean isDeviceReady = false;
-    private final String tag;
     private DeviceCallback callback;
     private char endChar;
     private boolean isParsing = false;
@@ -92,7 +92,6 @@ public class AnalyserSerial implements SerialPortDataListener {
             if (inputStream.available() != -1 && serialPort.bytesAvailable() > 0) {
                 byte[] newData = new byte[serialPort.bytesAvailable()];
                 int c = inputStream.read(newData);
-//                LOGGER.info("STR {}", new String(newData));
                 for (int i = 0; i < c; i++) {
                     tempResp += String.valueOf((char) newData[i]);
                     LOGGER.info("Analyser Resp {}-{}", this.tag, tempResp);

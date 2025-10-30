@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class SubLedgerOpeningTask extends Task<List<Object[]>> {
-    private String societyCode;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private String locale;
+    private final String societyCode;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
+    private final String locale;
 
 
     public SubLedgerOpeningTask(String societyCode, LocalDate fromDate, LocalDate toDate, String locale) {
@@ -19,10 +19,6 @@ public class SubLedgerOpeningTask extends Task<List<Object[]>> {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.locale = locale;
-    }
-
-    public SubLedgerOpeningTask() {
-
     }
 
     @Override

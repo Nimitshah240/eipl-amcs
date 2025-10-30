@@ -2,11 +2,11 @@ package com.eipl.amcs.master.org.model;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.model.SubDistrict;
 import com.eipl.amcs.master.geo.model.Village;
-import com.eipl.amcs.json.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

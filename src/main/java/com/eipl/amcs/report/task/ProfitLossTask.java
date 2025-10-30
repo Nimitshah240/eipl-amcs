@@ -14,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfitLossTask extends Task<List<LedgerBalance>> {
-    private String societyCode;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private String locale;
+    private final String societyCode;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
+    private final String locale;
     private LedgerRepository ledgerRepository;
 
 
@@ -26,10 +26,6 @@ public class ProfitLossTask extends Task<List<LedgerBalance>> {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.locale = locale;
-    }
-
-    public ProfitLossTask() {
-
     }
 
     @Override

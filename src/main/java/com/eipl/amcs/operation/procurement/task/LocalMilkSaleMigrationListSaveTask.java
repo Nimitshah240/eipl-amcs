@@ -22,10 +22,6 @@ public class LocalMilkSaleMigrationListSaveTask extends Task<Integer> {
         try {
             LocalMilkSaleService service = EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
             service.migrateCollections(dtoList, CommonUtils.setIdentityHeader());
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/migrate";
-//            ResponseEntity<LocalMilkSale[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), LocalMilkSale[].class);
             return null;
         } catch (Exception e) {
             e.printStackTrace();

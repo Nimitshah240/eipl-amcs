@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class FormulaDeserializer extends JsonDeserializer<Formula> {
-    private FormulaRepository Repository;
+    private final FormulaRepository Repository;
 
     public FormulaDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(FormulaRepository.class);
@@ -19,7 +19,7 @@ public class FormulaDeserializer extends JsonDeserializer<Formula> {
 
     @Override
     public Formula deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

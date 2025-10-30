@@ -20,12 +20,12 @@ public class WsSerial implements SerialPortDataListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(WsSerial.class);
     private static String response = "";
     private final HardwareDevice hardwareDevice;
+    private final StringBuffer readBuffer = new StringBuffer();
+    private final char endChar;
     private SerialPort serialPort;
     private InputStream inputStream;
     private OutputStream outputStream;
-    private final StringBuffer readBuffer = new StringBuffer();
     private boolean isDeviceReady = false;
-    private final char endChar;
     private DeviceCallback callback;
 
     public WsSerial(HardwareDevice hardwareDevice, String commPort, DeviceCallback callback) {
@@ -176,9 +176,5 @@ public class WsSerial implements SerialPortDataListener {
     public void disconnect() {
         serialPort.removeDataListener();
         serialPort.closePort();
-    }
-
-    public boolean isDeviceReady() {
-        return isDeviceReady;
     }
 }

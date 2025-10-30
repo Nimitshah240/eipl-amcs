@@ -30,10 +30,8 @@ public class BmcRecordingServiceImpl implements BmcRecordingService {
 
     @Override
     public BmcRecording save(BmcRecording recording, String identityInfo) {
-//       BmcRecording rec = recording.getCode();
         String code = nextCodeService.getNextCode("BmcRecording", "code", recording.getSocietyCode(), 4);
         recording.setCode(Long.valueOf(code));
-//        recording.setInitData();
         return bmcRecordingRepository.save(recording);
     }
 

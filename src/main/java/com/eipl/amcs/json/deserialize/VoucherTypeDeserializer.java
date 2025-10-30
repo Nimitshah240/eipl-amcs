@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class VoucherTypeDeserializer extends JsonDeserializer<VoucherType> {
-    private VoucherTypeRepository repository;
+    private final VoucherTypeRepository repository;
 
     public VoucherTypeDeserializer() {
         repository = EmcsAppContext.getContext().getBean(VoucherTypeRepository.class);
@@ -19,7 +19,7 @@ public class VoucherTypeDeserializer extends JsonDeserializer<VoucherType> {
 
     @Override
     public VoucherType deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(parser.getValueAsInt()).get();
     }
 

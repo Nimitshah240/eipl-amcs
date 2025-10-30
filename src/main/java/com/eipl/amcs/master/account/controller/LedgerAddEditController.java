@@ -134,7 +134,6 @@ public class LedgerAddEditController implements MyInitialization {
             if (cboxLedgerType.getValue() != null)
                 loadLedgerGroupByType();
         });
-//        loadLedgerGroup();
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
         });

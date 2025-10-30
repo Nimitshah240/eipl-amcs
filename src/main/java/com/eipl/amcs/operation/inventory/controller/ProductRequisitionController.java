@@ -2,11 +2,11 @@ package com.eipl.amcs.operation.inventory.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionLoadTask;
@@ -36,7 +36,7 @@ public class ProductRequisitionController implements MyInitialization {
     @FXML
     TableColumn<ProductRequisition, String> colChallanNo, colStatus;
     @FXML
-    TableColumn<ProductRequisition, String> colRequisitionDate, colChallanDate;
+    TableColumn<ProductRequisition, String> colRequisitionDate;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
     @FXML
@@ -75,8 +75,6 @@ public class ProductRequisitionController implements MyInitialization {
         setupTable();
         btnSearch.setOnAction(e -> loadData());
         btnAdd.setOnAction(e -> {
-//            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_RECEIPT_ADD"))
-//                throw new UnAuthorizedAccessException();
             var controller = (ProductRequisitionAddEditController) MainApp.getFxmlLoaderUtil()
                     .loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductRequisitionAddEdit.fxml"));
             controller.setProductRequisition(null);
@@ -85,7 +83,6 @@ public class ProductRequisitionController implements MyInitialization {
         propProductRequisitionDto.addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {
-//                btnEdit.setDisable(true);
                 btnDelete.setDisable(true);
                 if (!newValue.getStatus().equalsIgnoreCase("Sent")) {
                     btnEdit.setText(resourceBundle.getString("view"));
@@ -99,17 +96,10 @@ public class ProductRequisitionController implements MyInitialization {
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_RECEIPT_EDIT"))
                 throw new UnAuthorizedAccessException();
-//            if (propProductRequisitionDto.get().getStatus().equalsIgnoreCase("SENT")) {
             var controller = (ProductRequisitionAddEditController) MainApp.getFxmlLoaderUtil()
                     .loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductRequisitionAddEdit.fxml"));
             controller.setProductRequisition(propProductRequisitionDto.get());
             MainApp.contentPane.setCenter(controller.getRoot());
-//            } else {
-//                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product.requisition"),
-//                        resourceBundle.getString("error.occurred"));
-//                alert1.createAlert();
-//                return;
-//            }
         });
         btnDelete.setOnAction(actionEvent -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_RECEIPT_DELETE"))
@@ -145,7 +135,6 @@ public class ProductRequisitionController implements MyInitialization {
             colChallanNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().replace(MainApp.identityDto.getSociety().getCode() + "/", "")));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
             colRequisitionDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRequisitionDate().format(AppConstant.Formatter6)));
-//            colChallanDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRequisitionDate().format(AppConstant.Formatter6)));
             propProductRequisitionDto.bind(tableProductRequisition.getSelectionModel().selectedItemProperty());
 
         } catch (Exception e) {

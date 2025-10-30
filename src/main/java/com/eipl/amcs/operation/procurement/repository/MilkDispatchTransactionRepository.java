@@ -15,9 +15,6 @@ public interface MilkDispatchTransactionRepository extends BaseRepository<MilkDi
     @EntityGraph(attributePaths = {"milkDispatch", "milkQualityType", "milkType"})
     List<MilkDispatchTransaction> findByMilkDispatch(MilkDispatch milkDispatch);
 
-    @EntityGraph(attributePaths = {"milkDispatch", "milkQualityType", "milkType"})
-    void deleteByMilkDispatch(MilkDispatch challanNo);
-
     @Override
     @EntityGraph(attributePaths = {"milkDispatch", "milkQualityType", "milkType"})
     Optional<MilkDispatchTransaction> findById(String id);

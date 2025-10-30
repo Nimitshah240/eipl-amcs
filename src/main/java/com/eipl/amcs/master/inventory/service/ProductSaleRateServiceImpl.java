@@ -35,17 +35,6 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
 
     @Override
     public ProductSaleRate save(ProductSaleRate productSaleRate, String identityInfo) {
-//		LocalDate chk = checkWefDate(productSaleRate.getProduct().getCode(), new ProductSaleRate().getCode());
-//		if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
-//
-//		} else {
-//			FieldError wefDateNotValid = CommonUtils.getFieldError("productsalerate", "wefDate",
-//					productSaleRate.getCode(), "wefdate.not.valid");
-//			throw new BusinessValidationFailException(getClass(), wefDateNotValid);
-//		}
-////		return productSaleRateRepository.save(productSaleRate);
-//		String code = nextCodeRepository.getNextCode("ProductSaleRate", "code", productSaleRate.getSociety().getCode(),
-//				0);
         String code = nextCodeRepository.getNextCode("ProductSaleRate", "code", productSaleRate.getSociety().getCode(),
                 0);
         productSaleRate.setCode(code);
@@ -76,7 +65,6 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
                     "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
-//		return productSaleRateRepository.save(productSaleRate);
 
         ProductSaleRate newData = productSaleRateRepository.customUpdate(productSaleRate, identityInfo);
         newData.setProduct(productSaleRate.getProduct());
@@ -98,7 +86,6 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
 
     @Override
     @Transactional
-//	@CacheEvict(value = { "productSaleRatesCache" }, allEntries = true)
     public void delete(ProductSaleRate productSaleRate, String identityInfo) {
         productSaleRateRepository.customDelete(productSaleRate, identityInfo);
     }
@@ -112,5 +99,4 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
     public ProductSaleRate findByProduct(Product product, LocalDate date) {
         return productSaleRateRepository.findTop1ByProductAndWefDateLessThanEqualOrderByWefDateDesc(product, date);
     }
-
 }

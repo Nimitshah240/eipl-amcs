@@ -374,8 +374,6 @@ public class StaffMemberAddEditController implements MyInitialization {
             txtEmailId.setText(dto.getEmailId());
             txtPanNo.setText(dto.getPanNo());
             cboxGender.setValue(dto.getGender());
-//            txtAcNo.setText(dto.getBankAccountNo());
-//            txtIfsc.setText(dto.getIfsc());
             txtPincode.setText(dto.getPinCode());
             cboxDesignation.setValue(dto.getDesignation());
             dptenureToDate.setValue(dto.getTenureToDate());
@@ -397,10 +395,7 @@ public class StaffMemberAddEditController implements MyInitialization {
             if (dto.getPaymentMode() != null)
                 rbtnBank.setSelected(dto.getPaymentMode() == (short) 1);
         }
-
     }
-
-
 }
 
 

@@ -16,20 +16,10 @@ public class MilkDispatchChallan {
 
     private String society_code;
     private String society_name;
-    //    private String destination;
-//    private BigInteger destination_type;
     private String challan_no;
-    //    private Timestamp challan_date;
     private String challan_date;
-    //    private String milk_quality_type_name;
-//    private String milk_type_name;
-//    private Integer dispatch_type;
     private String from_date;
-    //    private Timestamp from_date;
-//    private String from_shift;
     private String to_date;
-    //    private Timestamp to_date;
-//    private String to_shift;
     private String vehicle_no;
     private String route_no;
     private String route_name;

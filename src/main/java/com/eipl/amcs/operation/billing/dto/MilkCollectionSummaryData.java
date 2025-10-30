@@ -17,7 +17,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class MilkCollectionSummaryData {
-
     private LocalDate date;
     private SocietyPaymentCycle paymentCycle;
     private Member member;
@@ -28,5 +27,4 @@ public class MilkCollectionSummaryData {
     private Society society;
     private MilkQualityType milkQualityType;
     private String union;
-
 }

@@ -21,7 +21,6 @@ public interface SocietyMilkPurchaseRateApplicabilityRepository
     @EntityGraph(attributePaths = {"shift", "societyMilkPurchaseRate", "society"})
     List<SocietyMilkPurchaseRateApplicability> findAll(Sort sort);
 
-    //	@EntityGraph(attributePaths = { "shift", "societyMilkPurchaseRate","society"})
     @Query("SELECT app FROM SocietyMilkPurchaseRateApplicability app LEFT JOIN FETCH app.shift LEFT JOIN FETCH app.societyMilkPurchaseRate rate "
             + "LEFT JOIN FETCH app.society LEFT JOIN FETCH rate.rateType WHERE app.wefDate <= ?1 AND (rate.shift = ?2 OR rate.shiftApplicable = ?3) AND app.society = ?4 "
             + "ORDER BY app.wefDate DESC")

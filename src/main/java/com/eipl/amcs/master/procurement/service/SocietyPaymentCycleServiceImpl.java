@@ -47,13 +47,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
     @Override
     @Transactional
     public String save(List<SocietyPaymentCycle> societyPaymentCycle, String identityInfo) throws BusinessValidationFailException {
-//        if (checkDateRangeConflict(societyPaymentCycle.getSociety().getCode(), societyPaymentCycle.getCode(),
-//                societyPaymentCycle.getFromDate(), societyPaymentCycle.getToDate())) {
-//        } else {
-//            FieldError rangeNotValid = CommonUtils.getFieldError("societypaymentcycle", "paymentcyclerange",
-//                    societyPaymentCycle.getCode(), "paymentcyclerange.not.valid");
-//            throw new BusinessValidationFailException(getClass(), rangeNotValid);
-//        }
+
         String nextCode = nextCodeRepository.getNextCode("SocietyPaymentCycle", "code",
                 societyPaymentCycle.get(0).getSociety().getCode(), 0);
         for (SocietyPaymentCycle payment : societyPaymentCycle) {

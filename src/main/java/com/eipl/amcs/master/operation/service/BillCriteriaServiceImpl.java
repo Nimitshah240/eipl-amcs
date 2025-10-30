@@ -49,15 +49,6 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
 
     }
 
-    /**
-     * Method acts as service method to save the bill criteria.
-     *
-     * @param billCriteria
-     * @param identityInfo
-     * @return BillCriteria
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public BillCriteria saveBillCriteria(BillCriteria billCriteria, String identityInfo) {
         try {
@@ -68,15 +59,6 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
         }
     }
 
-    /**
-     * Method acts as service method to update the bill criteria.
-     *
-     * @param billCriteria
-     * @param identityInfo
-     * @return BillCriteria
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public BillCriteria updateBillCriteria(BillCriteria billCriteria, String identityInfo) {
         try {
@@ -87,14 +69,6 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
         }
     }
 
-    /**
-     * Method acts as service method to delete the bill criteria.
-     *
-     * @param billCriteriaCode
-     * @param identityInfo
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void delete(String billCriteriaCode, String identityInfo) {
         try {
@@ -105,6 +79,4 @@ public class BillCriteriaServiceImpl implements BillCriteriaService {
             throw new RuntimeException(e);
         }
     }
-
-
 }

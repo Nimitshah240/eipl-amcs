@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class MccDeserializer extends JsonDeserializer<Mcc> {
-    private MccRepository Repository;
+    private final MccRepository Repository;
 
     public MccDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(MccRepository.class);
@@ -19,7 +19,7 @@ public class MccDeserializer extends JsonDeserializer<Mcc> {
 
     @Override
     public Mcc deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

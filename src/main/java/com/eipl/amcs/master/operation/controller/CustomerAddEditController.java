@@ -32,8 +32,6 @@ import com.eipl.amcs.master.org.convertor.BankConvertor;
 import com.eipl.amcs.master.org.convertor.BranchConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
@@ -45,7 +43,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
@@ -67,10 +64,6 @@ public class CustomerAddEditController implements MyInitialization {
     private RadioButton rbtnCash, rbtnBank;
     @FXML
     private ToggleGroup paymentType;
-    @FXML
-    private ComboBox<Union> cboxUnion;
-    @FXML
-    private ComboBox<Society> cboxSociety;
     @FXML
     private ComboBox<State> cboxState;
     @FXML
@@ -94,7 +87,6 @@ public class CustomerAddEditController implements MyInitialization {
     @FXML
     private GridPane gridBankDetail;
 
-    private Stage stage;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private CustomerDto dto = null;
@@ -122,8 +114,6 @@ public class CustomerAddEditController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         gridBankDetail.setDisable(true);
-//        cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForCustomerCreate()));
-
         setupComboBox();
         loadState();
         loadCustomerType();
@@ -322,8 +312,6 @@ public class CustomerAddEditController implements MyInitialization {
         customerDetail.setCode(txtCode.getText());
         customer.setSociety(MainApp.identityDto.getSociety());
         customer.setUnion(MainApp.identityDto.getUnion());
-//        customer.setType((cboxType.getSelectionModel().getSelectedIndex() == 0 ? 3 :
-//                (cboxType.getSelectionModel().getSelectedIndex() == 1 ? 4 : 5)));
         customer.setType((int) cboxType.getValue().getKey());
         customer.setRegistrationDate(dpRegistrationDate.getValue());
         customer.setMobileNo(txtMobileNo.getText());
@@ -356,50 +344,8 @@ public class CustomerAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("customertypenullerror") + "\n");
         if (txtCode.getText() == null || txtCode.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("codenullerror") + "\n");
-//        if (dpRegistrationDate.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("regdatenullerror") + "\n");
-//        if (txtRegistrationNo.getText() == null || txtRegistrationNo.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("regnonullerror") + "\n");
-//        if (txtCst.getText() == null || txtCst.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("cstnullerror") + "\n");
-//        if (txtAddress.getText() == null || txtAddress.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("addressnullerror") + "\n");
         if (txtName.getText() == null || txtName.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
-//        if (cboxState.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("statenullerror") + "\n");
-//        if (cboxDistrict.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("districtnullerror") + "\n");
-//        if (cboxSubDistrict.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("subdistrictnullerror") + "\n");
-//        if (cboxVillage.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("villagenullerror") + "\n");
-//        if (txtPanNo.getText() == null || txtPanNo.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("pannonullerror") + "\n");
-//        if (txtEmail.getText() == null || txtEmail.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("emailnullerror") + "\n");
-//
-//        if (txtMobileNo.getText() == null || txtMobileNo.getText().isEmpty() || Long.parseLong(txtMobileNo.getText()) >= 10000000000L || Long.parseLong(txtMobileNo.getText()) <= 999999999L)
-//            errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
-//
-//        if (txtAadharCardNo.getText() == null || txtAadharCardNo.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("aadharcardnonullerror") + "\n");
-//        if (txtPincode.getText() == null || txtAadharCardNo.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("pincodenullerror") + "\n");
-//        if (rbtnBank.isSelected()) {
-//            if (cboxBankName.getValue() == null) {
-//                errorMsg.append(resourceBundle.getString("banknullerror") + "\n");
-//            }
-//            if (cboxBranchName.getValue() == null) {
-//                errorMsg.append(resourceBundle.getString("branchnullerror") + "\n");
-//            }
-//            if (txtAcNo.getText() == null || txtAcNo.getText().trim().isEmpty()) {
-//                errorMsg.append(resourceBundle.getString("acnonullerror") + "\n");
-//            }
-//            if (txtIfsc.getText() == null || txtIfsc.getText().trim().isEmpty()) {
-//                errorMsg.append(resourceBundle.getString("ifscnonullerror") + "\n");
-//            }
-//        }
         return errorMsg.length() == 0;
     }
 

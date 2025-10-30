@@ -192,6 +192,4 @@ public class CDARptController implements MyInitialization {
         });
         new Thread(task1).start();
     }
-
-
 }

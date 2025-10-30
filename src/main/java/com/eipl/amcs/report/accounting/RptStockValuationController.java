@@ -178,7 +178,6 @@ public class RptStockValuationController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
     }
 }
 

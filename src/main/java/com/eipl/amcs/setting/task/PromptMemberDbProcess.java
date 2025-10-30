@@ -59,23 +59,9 @@ public class PromptMemberDbProcess extends Task<List<MemberDto>> {
                     int codeEx = CommonUtils.strToInteger(resultSet.getString("SabhasadId"));
                     m.setCodeEx(String.format("%04d", codeEx));
                     m.setCode(MainApp.identityDto.getSociety().getCode() + m.getCodeEx());
-//                    String[] nameArr = resultSet.getString("SName") != null ?
-//                            resultSet.getString("SName").split("\\s+") : null;
-//                    if(nameArr != null) {
-//                        m.setLastName(nameArr[0]);
-//                        m.setFirstName(nameArr.length > 1 ? nameArr[1] : "Member");
-//                        m.setMiddleName(nameArr.length > 2 ? nameArr[2] : "");
-//                    }
                     String nameArr = resultSet.getString("SName");
                     m.setFirstName(nameArr);
                     m.setLastName(".");
-//                    String[] nameLocalArr = resultSet.getString("SNameG") != null ?
-//                            resultSet.getString("SNameG").split("\\s+") : null;
-//                    if(nameLocalArr != null) {
-//                        m.setLastNameLocal(nameLocalArr[0]);
-//                        m.setFirstNameLocal(nameLocalArr.length > 1 ? nameLocalArr[1] : "");
-//                        m.setMiddleNameLocal(nameLocalArr.length > 2 ? nameLocalArr[2] : "");
-//                    }
                     String nameArrLocal = resultSet.getString("SNameG");
                     m.setFirstNameLocal(nameArrLocal);
                     m.setLastNameLocal(".");

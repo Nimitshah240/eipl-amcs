@@ -24,15 +24,6 @@ public class VoucherDeleteTask extends Task<Boolean> {
             Optional<Voucher> voucher = repository.findById(code);
             service.delete(voucher.get(), CommonUtils.setIdentityHeader());
             return true;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code);
-//            restTemplate.delete(builder.toUriString(), Void.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

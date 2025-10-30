@@ -17,9 +17,6 @@ public interface SocietyMilkPurchaseRateRepository extends JpaRepository<Society
     @EntityGraph(attributePaths = {"shift", "shiftApplicable", "rateType"})
     List<SocietyMilkPurchaseRate> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "rateType"})
-    Optional<SocietyMilkPurchaseRate> findByWefDateGreaterThanEqual(LocalDateTime wefDate);
-
     @Override
     @EntityGraph(attributePaths = {"shift", "shiftApplicable", "rateType"})
     Optional<SocietyMilkPurchaseRate> findById(String id);

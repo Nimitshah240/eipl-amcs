@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class NotificationController implements MyInitialization {
+    private final ObjectProperty<Notification> propData;
     @FXML
     StackPane root;
     @FXML
@@ -36,7 +37,6 @@ public class NotificationController implements MyInitialization {
     TableColumn<Notification, String> colMessage, colPeriod;
     @FXML
     Button btnClose;
-    private final ObjectProperty<Notification> propData;
 
     public NotificationController() {
         propData = new SimpleObjectProperty<>();
@@ -53,25 +53,6 @@ public class NotificationController implements MyInitialization {
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
-//        propData.addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                try {
-//                    System.out.println("Opening Link");
-//                    Desktop.getDesktop().browse(new URI(newValue.getFilePath()));
-//                } catch (IOException | URISyntaxException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                System.out.println("Nothing Here Dude");
-//            }
-//        });
-
-        //<option value="1">Alert</option>
-        //<option value="2">Priptra</option>
-        //<option value="3">Special Message</option>
-        //<option value="4">Milk Bill</option>
-        //<option value="5">Bacteria Test</option>
-        //<option value="6">Eipl Bill</option>
         cbox.getItems().addAll("All", "Alert", "Paripatra", "Special Message", "Milk Bill", "Bacteria Test", "EVEREST Bill");
         cbox.getSelectionModel().select(0);
         cbox.setOnAction(e -> {

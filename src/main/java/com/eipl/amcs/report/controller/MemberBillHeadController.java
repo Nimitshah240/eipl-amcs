@@ -45,7 +45,6 @@ public class MemberBillHeadController implements MyInitialization {
     private ComboBox<String> cboxReportType;
 
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -112,10 +111,6 @@ public class MemberBillHeadController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
-    private boolean validate() {
-        return true;
-    }
-
     @Override
     public void loadData() {
         MemberLoadTask task = new MemberLoadTask();
@@ -161,5 +156,4 @@ public class MemberBillHeadController implements MyInitialization {
         });
         new Thread(task1).start();
     }
-
 }

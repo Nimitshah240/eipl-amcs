@@ -2,8 +2,8 @@ package com.eipl.amcs.master.inventory.model;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.UnitDeserializer;
-import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.json.serialize.UnitSerialize;
+import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -23,7 +23,6 @@ import javax.validation.constraints.Size;
 public class ProductGroup extends BaseModel {
 
     @Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer code;
     @Size(max = 100)
     private String name;

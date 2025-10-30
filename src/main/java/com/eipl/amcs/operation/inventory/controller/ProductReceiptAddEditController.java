@@ -50,6 +50,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class ProductReceiptAddEditController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<ProductReceiptTransaction> propReceiptTxn;
+    private final List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
+    private final ObservableList<ProductReceiptTransaction> listProductReceiptTransaction;
     @FXML
     private StackPane root;
     @FXML
@@ -63,19 +66,13 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private TableView<ProductReceiptTransaction> tableProductReceiptTransaction;
     @FXML
-    private TableColumn<ProductReceiptTransaction, String> colProductCode, colTaxCode;
+    private TableColumn<ProductReceiptTransaction, String> colProductCode;
     @FXML
     private TableColumn<ProductReceiptTransaction, Product> colProductName;
     @FXML
-    private TableColumn<ProductReceiptTransaction, Number> colTotalAmount, colTaxAmount, colDiscount,
+    private TableColumn<ProductReceiptTransaction, Number> colTotalAmount,
             colQuantity, colAmount, colRate;
     @FXML
-    private TableColumn<ProductReceiptTransaction, Unit> colUnit;
-
-    private final ObjectProperty<ProductReceiptTransaction> propReceiptTxn;
-
-    private final List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
-    private final ObservableList<ProductReceiptTransaction> listProductReceiptTransaction;
     private List<ProductReceiptTransaction> listTransactions;
     private ProductReceipt productReceipt;
     private ResourceBundle resourceBundle;
@@ -217,16 +214,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             colProductName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             colQuantity
                     .setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getQuantity()));
-//            colUnit.setCellValueFactory(
-//                    data -> new SimpleObjectProperty<>(data.getValue().getUnit()));
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colTotalAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
-//            colTaxCode.setCellValueFactory(data -> new SimpleStringProperty(
-//                    data.getValue().getTax() == null ? "" : data.getValue().getTax().getName()));
-//            colDiscount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDiscount()));
-//            colTaxAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));
-
             propReceiptTxn
                     .bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
@@ -340,9 +330,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
     private boolean validate() {
         errorMsg = new StringBuilder();
-//        if (dpGrnDate.getValue() == null) {
-//            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "product.receipt.validation.date.empty") + "\n");
-//        }
         if (dpChallanDate.getValue() == null) {
             errorMsg.append(CommonUtils.getResourceString(resourceBundle, "product.receipt.validation.challan.date.empty") + "\n");
         }

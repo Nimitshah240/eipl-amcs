@@ -3,8 +3,8 @@ package com.eipl.amcs.master.operation.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.CustomerDto;
 import com.eipl.amcs.master.operation.service.CustomerService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 

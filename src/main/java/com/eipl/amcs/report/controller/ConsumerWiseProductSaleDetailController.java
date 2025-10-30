@@ -37,7 +37,6 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
     private ComboBox<Member> cboxMemberCode;
 
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -114,7 +113,5 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
             }
         });
         new Thread(task).start();
-
-
     }
 }

@@ -5,12 +5,12 @@ import com.eipl.amcs.json.deserialize.BillHeadDeserializer;
 import com.eipl.amcs.json.deserialize.FormulaDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.json.serialize.BillHeadSerialize;
 import com.eipl.amcs.json.serialize.FormulaSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,12 +22,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-/**
- * This class acts as a model for managing BillCriteria Audit.
- *
- * @author Nimit Shah
- * @createdOn 30-06-2025
- */
 @SuppressWarnings("serial")
 @Entity
 @Getter

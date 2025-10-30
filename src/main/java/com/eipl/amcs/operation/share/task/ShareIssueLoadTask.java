@@ -34,18 +34,6 @@ public class ShareIssueLoadTask extends Task<List<Share>> {
                 return service.findAll();
             }
             return service.findAllData(fromDt, toDt);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
-//            if (fromDate != null && toDate != null) {
-//                builder.queryParam("fromDate", fromDate.toString());
-//                builder.queryParam("toDate", toDate.toString());
-//            }
-//            ResponseEntity<Share[]> response = restTemplate.getForEntity(builder.toUriString(), Share[].class);
-//            if (response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(Objects.requireNonNull(response.getBody()));
         } catch (Exception e) {
             LOGGER.error("ProductReceipt fetch", e);
         }

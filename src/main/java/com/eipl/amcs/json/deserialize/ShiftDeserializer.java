@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class ShiftDeserializer extends JsonDeserializer<Shift> {
-    private ShiftRepository repository;
+    private final ShiftRepository repository;
 
     public ShiftDeserializer() {
         repository = EmcsAppContext.getContext().getBean(ShiftRepository.class);
@@ -19,7 +19,7 @@ public class ShiftDeserializer extends JsonDeserializer<Shift> {
 
     @Override
     public Shift deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(parser.getValueAsInt()).get();
     }
 

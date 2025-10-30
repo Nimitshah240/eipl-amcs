@@ -19,8 +19,8 @@ import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.service.SocietyService;
 import com.eipl.amcs.master.org.service.UnionService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
 
@@ -29,13 +29,12 @@ import java.util.List;
 
 public class MemberCreateTask extends Task<Boolean> {
     private final String societyCode;
-    private String url;
     private final int cowMin;
     private final int cowMax;
     private final int buffMin;
     private final int buffMax;
     private final int sampleNo;
-
+    private final String url;
     private List<MemberDto> listDto = null;
 
     public MemberCreateTask(String societyCode, String url, int cowMin, int cowMax, int buffMin, int buffMax, int sampleNo) {

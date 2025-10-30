@@ -3,8 +3,8 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
 import com.eipl.amcs.master.account.service.SubLedgerOpeningBalanceService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
 
@@ -18,11 +18,6 @@ public class SubLedgerOpeningBalanceListSaveTask extends Task<List<SubLedgerOpen
     public SubLedgerOpeningBalanceListSaveTask(List<SubLedgerOpeningBalance> dtoList) {
         this.dtoList = dtoList;
     }
-//
-//    public SubLedgerOpeningBalanceListSaveTask(List<SubLedgerOpeningBalance> dtoList, boolean fromMigration) {
-//        this.dtoList = dtoList;
-//        this.fromMigration = fromMigration;
-//    }
 
     @Override
     protected List<SubLedgerOpeningBalance> call() throws Exception {

@@ -24,7 +24,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -38,12 +37,10 @@ public class MilkCollectionDataMigrationSkyWayController implements MyInitializa
     Button btnClose, btnBrowse, btnGenerate;
     @FXML
     private Label lblStatus;
-
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<Member> memberList;
     private List<MilkType> milkTypeList;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     private Stage stage;
 
     @Override

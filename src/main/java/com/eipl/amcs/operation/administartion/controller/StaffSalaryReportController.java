@@ -36,11 +36,8 @@ public class StaffSalaryReportController implements MyInitialization {
     @FXML
     private ComboBox<String> cboxMonth, cboxYear;
 
-
     private ResourceBundle resourceBundle;
     private MemberBillSummary dto = null;
-    private MemberBillSummary propSummary;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -79,9 +76,6 @@ public class StaffSalaryReportController implements MyInitialization {
     }
 
     private void validateAndGenerateReport() {
-
-//        (IN p_member_code varchar(500),IN p_society_code VARCHAR(50),IN p_month VARCHAR(50),IN p_locale varchar(20))
-
         Map<String, Object> params = new HashMap<>();
         params.put("p_member_code", cboxStaff.getValue().getCode());
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
@@ -90,10 +84,6 @@ public class StaffSalaryReportController implements MyInitialization {
         JasperPrint print = null;
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.STAFF_SALARY, params);
         JasperViewer.viewReport(print, false);
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     private void loadStaff() {
@@ -118,13 +108,10 @@ public class StaffSalaryReportController implements MyInitialization {
         new Thread(task).start();
     }
 
-
     private void loadMonth() {
         String[] month = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
         String[] year = {"2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
         cboxMonth.setItems(FXCollections.observableList(Arrays.asList(month)));
         cboxYear.setItems(FXCollections.observableList(Arrays.asList(year)));
     }
-
-
 }

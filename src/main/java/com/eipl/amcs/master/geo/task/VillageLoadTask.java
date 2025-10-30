@@ -34,21 +34,6 @@ public class VillageLoadTask extends Task<List<Village>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VILLAGE;
-//            ResponseEntity<Village[]> response;
-//            if (subDistrict != null) {
-//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                        .queryParam("subDistrictCode", subDistrict.getCode());
-//                response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, Village[].class);
-//            } else {
-//                response = restTemplate.getForEntity(url, Village[].class);
-//            }
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Villages fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Villages fetch", e);
         }

@@ -21,7 +21,6 @@ import java.time.LocalDate;
 public class BmcRunningHours extends BaseModelTxn {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long code;
     @Column(name = "is_active")
     private Boolean isActive;

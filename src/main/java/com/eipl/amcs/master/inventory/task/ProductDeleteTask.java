@@ -18,15 +18,6 @@ public class ProductDeleteTask extends Task<Boolean> {
             ProductService service = EmcsAppContext.getContext().getBean(ProductService.class);
             service.delete(code, CommonUtils.setIdentityHeader());
             return true;
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT + "/{code}";
-//            Map<String, Object> uriVariables = new HashMap<>();
-//            uriVariables.put("code", code);
-//
-//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-
         } catch (Exception e) {
             e.printStackTrace();
         }

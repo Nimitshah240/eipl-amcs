@@ -35,7 +35,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -96,7 +95,6 @@ public class BonusReportController implements MyInitialization {
     public void setupComboBox() {
         cboxBank.setConverter(new BankConvertor(cboxBank));
         cboxBank.getSelectionModel().select(0);
-
     }
 
     private void validateAndGenerateReport() {
@@ -115,7 +113,6 @@ public class BonusReportController implements MyInitialization {
             case 0:
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.BONUS_REGISTER, params);
                 JasperViewer.viewReport(print, false);
-//                params.put("p_payment_type",0);
                 break;
             case 1:
                 params.put("p_payment_type", 0);
@@ -128,7 +125,6 @@ public class BonusReportController implements MyInitialization {
                 JasperViewer.viewReport(print, false);
                 break;
         }
-
     }
 
     private void loadBank() {
@@ -182,7 +178,6 @@ public class BonusReportController implements MyInitialization {
                 HSSFSheet sheet = wb.createSheet("Sheet-1");
                 List<String> strColumns = Arrays.asList("Sr. No.", "Member Code", "Member Name", "Bank A/C", "Payment");
                 List<String> strColumnTodisplay = null;
-                List<String> items = null;
                 strColumnTodisplay = new ArrayList<>(strColumns);
                 List<String> finalResultToDisplay = strColumnTodisplay.stream().collect(Collectors.toList());
                 // Create header column
@@ -198,7 +193,6 @@ public class BonusReportController implements MyInitialization {
                 cell = row.createCell(1);
                 cell.setCellValue(MainApp.identityDto.getSociety().getName());
 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
                 row = sheet.createRow(4);
                 cell = row.createCell(0);
                 cell.setCellValue("Date: ");

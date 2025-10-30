@@ -22,13 +22,6 @@ public class MilkCollectionListSaveTask extends Task<List<CollectionImportDto>> 
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             List<CollectionImportDto> collectionResultList = service.importCollections(dtoList, CommonUtils.setIdentityHeader());
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/import";
-//            ResponseEntity<CollectionImportDto[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), CollectionImportDto[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
-
             if (collectionResultList == null || collectionResultList.isEmpty()) {
                 return null;
             }

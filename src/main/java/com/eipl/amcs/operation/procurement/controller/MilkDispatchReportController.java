@@ -24,7 +24,6 @@ import java.util.ResourceBundle;
 
 public class MilkDispatchReportController implements MyInitialization {
 
-    List<PaymentForBank> list;
     @FXML
     private StackPane root;
     @FXML
@@ -35,7 +34,6 @@ public class MilkDispatchReportController implements MyInitialization {
     private ComboBox<String> cboxFormat;
     private ResourceBundle resourceBundle;
     private MilkDispatch dto = null;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -102,6 +100,4 @@ public class MilkDispatchReportController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_TWO, params);
         JasperViewer.viewReport(print, false);
     }
-
-
 }

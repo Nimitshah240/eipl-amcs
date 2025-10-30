@@ -115,7 +115,6 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
             dto = setValuesInObject();
             updateData();
-            //saveData();
         }
     }
 

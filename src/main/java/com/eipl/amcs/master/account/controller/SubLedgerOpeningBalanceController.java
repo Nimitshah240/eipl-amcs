@@ -5,7 +5,6 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.master.account.converter.SubLedgerConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
-import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
 import com.eipl.amcs.master.account.task.*;
@@ -23,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -49,7 +47,6 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     GridPane gridMaster;
     @FXML
     VBox vbox;
-    //    private List<LedgerSubLedgerDto> listLedgerSubLedgerDto;
     @FXML
     Button btnClose, btnSave, btnDelete, btnImport;
     @FXML
@@ -64,8 +61,6 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     private ComboBox<FinancialYear> cboxFinancialYear;
     private List<SubLedger> subledgerList;
     private List<FinancialYear> financialYearList;
-    private List<LedgerType> ledgerTypeList;
-    private Stage stage;
     private ResourceBundle resourceBundle;
     private SubLedgerOpeningBalance subLedgerOpeningBalance;
     private List<SubLedgerOpeningBalance> listSubLedgerOpeningBalance;
@@ -222,10 +217,8 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
                     return;
                 }
                 String builder = "Import success: " +
-//                builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("success")).count());
                         "\n" +
                         "Import fail: " +
-//               builder.append(list.stream().filter(p -> p.getStatus().equalsIgnoreCase("error")).count());
                         "\n";
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("subledgeropeningbalance"),
@@ -306,12 +299,6 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
 
     @Override
     public void deleteData() {

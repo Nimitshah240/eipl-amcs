@@ -1,17 +1,17 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.BillHeadDeserializer;
 import com.eipl.amcs.json.deserialize.FormulaDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.json.serialize.BillHeadSerialize;
 import com.eipl.amcs.json.serialize.FormulaSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -75,27 +75,12 @@ public class BillCriteria extends BaseModel {
         return "bill_criteria";
     }
 
-    /**
-     * Method gives the code of the bill head upon calling this method (specially - customUpdate)
-     *
-     * @return Object
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
+
     @Override
     public Object getId() {
         return this.getCode();
     }
 
-    /**
-     * Method creates the bill_head_audit upon deleting or updating bill head.
-     *
-     * @param operation
-     * @param user
-     * @return JsonAndTableBuilder
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public JsonAndTableBuilder getAuditModel(String operation, String user) {
         try {

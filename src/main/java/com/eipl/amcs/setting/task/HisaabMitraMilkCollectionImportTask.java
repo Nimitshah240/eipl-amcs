@@ -73,7 +73,6 @@ public class HisaabMitraMilkCollectionImportTask extends Task<List<MilkCollectio
 
                 DataFormatter formatter = new DataFormatter();
                 String val = formatter.formatCellValue(dataSheet.getRow(i).getCell(0));
-//                LocalDate collectionDate = CommonUtils.excelDate(val);
                 DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd-MMM-yy", Locale.ENGLISH);
                 LocalDate collectionDate = LocalDate.parse(val, formatters);
                 if (collectionDate == null) {
@@ -137,7 +136,6 @@ public class HisaabMitraMilkCollectionImportTask extends Task<List<MilkCollectio
                 Cell cellQty = row.getCell(4);
                 BigDecimal qty = new BigDecimal(4);
                 map.put("qty", qty);
-//                BigDecimal qty = BigDecimal.valueOf(cellQty.getNumericCellValue());
                 if (qty == null) {
                     continue;
                 }

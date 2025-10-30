@@ -18,7 +18,6 @@ public class ProductPurchaseRateByProductTask extends Task<ProductPurchaseRate> 
     private final String code;
     private final LocalDate date;
 
-
     public ProductPurchaseRateByProductTask(String code, LocalDate date) {
         this.code = code;
         this.date = date;

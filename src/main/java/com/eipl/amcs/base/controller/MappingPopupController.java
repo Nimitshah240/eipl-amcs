@@ -64,14 +64,11 @@ public class MappingPopupController implements MyInitialization {
 
     private Stage stage;
     private Object object;
-    private String forResource;
     private PopupCallback callback;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
-
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
@@ -89,19 +86,8 @@ public class MappingPopupController implements MyInitialization {
         this.object = object;
     }
 
-    public String getForResource() {
-        return forResource;
-    }
-
-    /**
-     * @param forResource
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - added cases "BillHeadAddEdit" & "BillCriteriaAddEdit" to open billHead and BillCriteria popup.
-     */
     public void setForResource(String forResource) throws ExecutionException, InterruptedException {
         try {
-            this.forResource = forResource;
             switch (forResource) {
                 case "DockAddEdit":
                     var controller = (DockAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/org/DockAddEdit.fxml"));
@@ -152,7 +138,6 @@ public class MappingPopupController implements MyInitialization {
                     break;
                 case "InstallmentsAddEdit":
                     var controller8 = (ProductSaleInstallmentController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductInstallmentsDetails.fxml"));
-//                controller8.setInstallments(list != null ? (ProductSaleInstallment) list : null);
                     controller8.setInstallments(object != null ? (List<ProductSaleInstallment>) object : null);
                     controller8.setStage(stage);
                     controller8.setCallback(callback);
@@ -300,15 +285,6 @@ public class MappingPopupController implements MyInitialization {
                     controller33.setCommitteeMembers(object != null ? (CommitteeMembers) object : null);
                     root.setCenter(controller33.getRoot());
                     break;
-//            case "MeetingAddEdit":
-//                var controller34 = (MeetingAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/MeetingAddEdit.fxml"));
-//                controller34.setStage(stage);
-//                controller34.setCallback(callback);
-//                controller34.setMeeting(object != null ? (Meeting) object : null);
-//                root.setCenter(controller34.getRoot());
-//                break;
-
-
                 case "MeetingAddEdit":
                     var controller34 = (MeetingAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/MeetingAddEdit.fxml"));
                     controller34.setStage(stage);
@@ -401,7 +377,6 @@ public class MappingPopupController implements MyInitialization {
                     break;
                 case "KapaatAddEdit":
                     var KapaatAddEdit = (KapaatAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/KapaatAddEdit.fxml"));
-//                KapaatAddEdit.setProductSale(object != null ? (ProductSale) object : null);
                     KapaatAddEdit.setStage(stage);
                     KapaatAddEdit.setCallback(callback);
                     root.setCenter(KapaatAddEdit.getRoot());

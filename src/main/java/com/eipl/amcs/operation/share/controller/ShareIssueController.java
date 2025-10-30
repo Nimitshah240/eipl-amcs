@@ -43,7 +43,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
     @FXML
     private TableView<Share> tableShareIssue;
     @FXML
-    private TableColumn<Share, String> colVoucherNo, colConsumerName, colNoOfShare, colMemberCode, colMemberName;
+    private TableColumn<Share, String> colVoucherNo, colNoOfShare, colMemberCode, colMemberName;
     @FXML
     private TableColumn<Share, LocalDate> colDate;
     @FXML
@@ -52,7 +52,6 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
     private Button btnAdd, btnCancel, btnClose, btnDelete, btnReport;
     private ResourceBundle resourceBundle;
 
-    private String name;
     private List<Member> listMembers;
     private List<Customer> listCustomers;
 
@@ -70,8 +69,6 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupTable();
-//        loadMember();
-//        loadCustomer();
         loadData();
         propShareIssue.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

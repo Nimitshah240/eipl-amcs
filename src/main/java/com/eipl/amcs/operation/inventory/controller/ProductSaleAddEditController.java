@@ -64,6 +64,11 @@ import java.util.stream.Collectors;
 
 public class ProductSaleAddEditController implements MyInitialization, PopupCallback {
 
+    private final BigDecimal discount = BigDecimal.valueOf(0);
+    private final ObjectProperty<ProductSaleTransaction> propSaleTxn;
+    private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
+    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
+    private final ObservableList<ProductSaleTransaction> listProductSaleTransaction;
     @FXML
     private StackPane root;
     @FXML
@@ -89,24 +94,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     private TableColumn<ProductSaleTransaction, Number> colQuantity, colRate, colAmount, colActualAmount, colTaxAmount;
     @FXML
     private TableColumn<ProductSaleTransaction, Product> colProduct;
-
     private Map<TaxDetail, BigDecimal> taxBifurcation = null;
-
     private ProductSale productSale;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private SaleTxnTaxDto saleTxnTaxDto;
-
-    private final BigDecimal amount = BigDecimal.valueOf(0);
-    private final BigDecimal taxAmount = BigDecimal.valueOf(0);
-    private final BigDecimal discount = BigDecimal.valueOf(0);
-    private final BigDecimal netAmount = BigDecimal.valueOf(0);
-
     private List<SocietyPaymentCycle> paymentCycleList;
-    private final ObjectProperty<ProductSaleTransaction> propSaleTxn;
-    private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
-    private final List<ProductSaleInstallment> installmentList = new ArrayList<>();
-    private final ObservableList<ProductSaleTransaction> listProductSaleTransaction;
     private List<TaxDto> taxDtoList;
 
     public ProductSaleAddEditController() {
@@ -367,7 +360,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtCreditLimit.setText("0");
                         txtCreditLimit.setDisable(true);
                         rbtnCredit.setDisable(true);
-//                        calculateCredit(list.getCode(), (short) 0);
                     } else {
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("error.occurred"));
@@ -387,7 +379,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     if (list != null && list.getMemberType().getCode() == 2) {
                         txtConsumerName.setText(list.getFirstName());
                         rbtnCredit.setDisable(true);
-//                        calculateCredit(list.getCode(), (short) 0);
                     } else {
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("error.occurred"));
@@ -829,8 +820,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtTotalAmountTax.setText(CommonUtils.scale2RoundUp(totalTaxAmt).toString());
         txtNetPayable.setText(CommonUtils.scale2RoundUp(netAmt).toString());
     }
-
-
 }
 
 

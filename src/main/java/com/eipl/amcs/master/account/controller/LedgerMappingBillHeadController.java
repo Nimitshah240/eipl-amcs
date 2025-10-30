@@ -20,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,37 +47,8 @@ public class LedgerMappingBillHeadController implements MyInitialization {
 
     private ResourceBundle resourceBundle;
     private ObservableList<Ledger> ledgerList;
-    private final StringConverter<Ledger> converter = new StringConverter<>() {
-        @Override
-        public String toString(Ledger object) {
-            if (object == null)
-                return null;
-            return object.toString();
-        }
 
-        @Override
-        public Ledger fromString(String string) {
-            if (string == null || string.isEmpty())
-                return null;
-            return ledgerList.stream().filter(p -> p.toString().equalsIgnoreCase(string))
-                    .findFirst().orElse(null);
-        }
-    };
     private List<String> typeList;
-    private final StringConverter<String> converterString = new StringConverter<>() {
-        @Override
-        public String toString(String object) {
-            return object;
-        }
-
-        @Override
-        public String fromString(String string) {
-            if (string == null || string.isEmpty())
-                return null;
-            return typeList.stream().filter(p -> p.equalsIgnoreCase(string))
-                    .findFirst().orElse(null);
-        }
-    };
 
     @Override
     public Node getRoot() {
@@ -156,7 +126,6 @@ public class LedgerMappingBillHeadController implements MyInitialization {
                         }
                     };
                 });
-//                ComboBoxTableCell.forTableColumn(converter, ledgerList);
 
         colLedgerMaster.setOnEditCommit(event -> {
             LedgerMappingBillHead obj = event.getRowValue();
@@ -167,11 +136,6 @@ public class LedgerMappingBillHeadController implements MyInitialization {
         colType.setCellValueFactory(cell -> new SimpleObjectProperty(!cell.getValue().getBillHead().getCode().equalsIgnoreCase("105") ?
                 cell.getValue().getBillHead().getHeadType() == 1 ?
                         resourceBundle.getString("credit") : resourceBundle.getString("debit") : ""));
-//        colType.setCellFactory(ComboBoxTableCell.forTableColumn(converterString, FXCollections.observableList(typeList)));
-//        colType.setOnEditCommit(event -> {
-//            LedgerMappingBillHead obj = event.getRowValue();
-//            obj.setCreditDebit(event.getRowValue().getBillHead().getHeadType()==1?true:false);
-//        });
 
         colSubLedger.setCellValueFactory(cell -> new SimpleBooleanProperty(cell.getValue().getHasSubLedger() != null ? cell.getValue().getHasSubLedger() : false));
         colSubLedger.setCellFactory(cell -> {

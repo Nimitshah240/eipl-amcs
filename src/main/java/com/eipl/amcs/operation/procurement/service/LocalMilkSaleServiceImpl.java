@@ -13,8 +13,8 @@ import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.repository.LocalMilkSaleRepository;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -62,7 +62,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
     }
 
     @Override
-//    @Transactional
     public LocalMilkSale save(LocalMilkSale localMilkSale, String identityInfo) throws BusinessValidationFailException {
         // validation
         SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(localMilkSale.getSaleDate(), localMilkSale.getSaleDate());
@@ -72,12 +71,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         String code = nextCodeService.getNextCode("LocalMilkSale", "code", localMilkSale.getSociety().getCode(), 2);
         localMilkSale.setCode(code);
         localMilkSale.setInitData();
-
-        // check credit sale 0-Cash, 1-Credit, 2-Coupon
-//        if (localMilkSale.getPaymentMode() == (short) 1) {
-//            updateCreditLimit(newData, "CREATE", "Local milk sale", identityInfo);
-//        }
-
         createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
 
         LocalMilkSale newData = localMilkSaleRepository.customSave(localMilkSale, identityInfo);
@@ -399,7 +392,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
     }
 
     @Override
-//    @Transactional
     public LocalMilkSale update(LocalMilkSale localMilkSale, String identityInfo) {
 
         SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(localMilkSale.getSaleDate(), localMilkSale.getSaleDate());
@@ -418,11 +410,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         newData.setSociety(localMilkSale.getSociety());
         newData.setShift(localMilkSale.getShift());
         newData.setDock(localMilkSale.getDock());
-
-        // check credit sale 0-Cash, 1-Credit, 2-Coupon
-//        if (localMilkSale.getPaymentMode() == (short) 1) {
-//            updateCreditLimit(newData, "CREATE", "Local milk sale", identityInfo);
-//        }
 
         createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
         return newData;
@@ -491,7 +478,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         }
 
     }
-
 
     @Override
     public List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header) {

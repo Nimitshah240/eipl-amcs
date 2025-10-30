@@ -1,8 +1,9 @@
 package com.eipl.amcs.operation.procurement.model;
 
-import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -10,7 +11,6 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.json.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -189,20 +189,12 @@ public class MilkCollection extends BaseModelTxn {
         this.xCol4 = xCol4;
     }
 
-    public String getxcol4() {
-        return xCol4;
-    }
-
     public String getxCol5() {
         return xCol5;
     }
 
     public void setxCol5(String xCol5) {
         this.xCol5 = xCol5;
-    }
-
-    public String getxcol5() {
-        return xCol5;
     }
 
 }

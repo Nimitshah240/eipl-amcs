@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class MeetingAgendaDeserializer extends JsonDeserializer<MeetingAgenda> {
-    private MeetingAgendaRepository repository;
+    private final MeetingAgendaRepository repository;
 
     public MeetingAgendaDeserializer() {
         repository = EmcsAppContext.getContext().getBean(MeetingAgendaRepository.class);
@@ -19,7 +19,7 @@ public class MeetingAgendaDeserializer extends JsonDeserializer<MeetingAgenda> {
 
     @Override
     public MeetingAgenda deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

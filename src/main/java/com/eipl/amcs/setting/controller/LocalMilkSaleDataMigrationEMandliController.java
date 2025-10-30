@@ -54,10 +54,8 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
     TextField txtDatabase;
     @FXML
     Button btnSave, btnClose, btnGenerate;
-    String milkTypeStr = null;
     List<LocalMilkSale> list = new ArrayList<>();
     private ResourceBundle resourceBundle;
-    private final String selectedFilePath = null;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<MilkClass> classList;
@@ -82,17 +80,6 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
         btnGenerate.setOnAction(e -> {
             loadImportPreReq(txtDatabase.getText());
         });
-//        btnBrowse.setOnAction(e -> {
-//            File file = CommonUtils.openFileDialog("Data");
-//            if (file == null) {
-//                MyAlert alert = new WarningAlert(MainApp.getStage(), "Data",
-//                        resourceBundle.getString("select.file"));
-//                alert.createAlert();
-//                return;
-//            }
-//            selectedFilePath = file.getAbsolutePath();
-//            txtFilePath.setText(selectedFilePath);
-//        });
     }
 
 
@@ -193,14 +180,11 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
             }
         });
         new Thread(task1).start();
-
-
     }
 
 
     public void setData(String dbName) {
         {
-            List<LocalMilkSale> list = new ArrayList<>();
             try {
                 String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
                 Map<String, Integer> mapShift = new HashMap<>();
@@ -220,7 +204,6 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
                 try (Connection connection = DriverManager.getConnection(connectionUrl);
                      Statement stmt = connection.createStatement()) {
 
-//            try (Connection connection = DriverManager.getConnection(connectionUrl, "", AppConstant.PROMPT_DB_PASS)) {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery("select format(NDate, 'MMM yyyy') as month, count(*) as count from LocalMilkSale group by format(NDate, 'MMM yyyy')");
                     List<String> listMonth = new ArrayList<>();

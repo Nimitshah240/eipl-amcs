@@ -3,8 +3,8 @@ package com.eipl.amcs.setting.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import com.eipl.amcs.setting.service.HardwareDeviceConfigService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 

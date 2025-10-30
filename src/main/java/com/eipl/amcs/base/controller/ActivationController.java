@@ -1,8 +1,8 @@
 package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.task.IdentityCheckTask;
 import com.eipl.amcs.base.task.IdentitySaveTask;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -26,7 +26,6 @@ import javafx.scene.layout.StackPane;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -34,26 +33,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
 import static com.eipl.amcs.utils.AppConstant.client;
 
 public class ActivationController implements MyInitialization {
 
+    public static final Properties properties1 = new Properties();
     @FXML
     private StackPane root;
-
     @FXML
     private TextField txtServerDetail, txtUnion, txtSociety, txtDock, txtCowRange, txtBuffRange, txtSampleMilkNo;
-
     @FXML
     private Button btnActivate;
-
     @FXML
     private Label lblSampleNo;
-    public static final Properties properties1 = new Properties();
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg;
     private String union, society, dock, activationKey, sampleNo;
-    private boolean flag = false;
     private boolean societyCheckFlag = false;
     private boolean dockCheckFlag = false;
     private boolean validateCheckFlag = false;
@@ -68,7 +64,6 @@ public class ActivationController implements MyInitialization {
 
         this.resourceBundle = resourceBundle;
         txtServerDetail.setText("http://localhost:8080/eipl-amcs/");
-//        txtSystemId.setText(SystemUtils.getSystemMAC());
 
         btnActivate.setOnAction(e -> {
             setFlag();
@@ -109,7 +104,6 @@ public class ActivationController implements MyInitialization {
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
             setFlag();
             if (dockCheckFlag) {
-//                System.out.println(newValue.substring(8, 9));
                 if (!validateCheckFlag) {
                     lblSampleNo.setText("Server Details");
                     txtCowRange.setDisable(true);
@@ -133,7 +127,6 @@ public class ActivationController implements MyInitialization {
         }
         if (prop != null && !prop.isEmpty()) {
             prop.forEach((k, v) -> properties1.put(k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
-//            prop.forEach((k, v) -> mapProp.put((String) k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
         }
         saveData();
     }
@@ -146,8 +139,6 @@ public class ActivationController implements MyInitialization {
             GeneralConfig generalConfig = new GeneralConfig();
             generalConfig.setKey((String) k);
             generalConfig.setValue((String) v);
-//          generalConfig.setSociety(MainApp.identityDto.getSociety());
-
             list.add(generalConfig);
         });
         var task = new GeneralConfigSaveTask(list);
@@ -164,7 +155,6 @@ public class ActivationController implements MyInitialization {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("generalconfig"),
                             sb.toString());
                     alert.createAlert();
-                    return;
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -203,42 +193,7 @@ public class ActivationController implements MyInitialization {
         createMembers();
 
 
-//        this.activationKey = txtActivation.getText();
-//        if (this.activationKey.equalsIgnoreCase(appKeyGenerator())) {
-//            makeFile();
-//
-//            if (this.flag) {
-//                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-//                        resourceBundle.getString("activation.success"));
-//                Optional<ButtonType> resp = alert.createConfirmationAlert();
-//                if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//                    System.exit(0);
-//                }
-//            }
-//        } else {
-//            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-//                    resourceBundle.getString("activationkeyfail"));
-//            alert.createAlert();
-//            return;
-//        }
-
     }
-
-//    private void checkMembers() {
-//        var task = new MemberCodeLoadTask(txtServerDetail.getText(), this.society);
-//        task.setOnSucceeded(e -> {
-//            try {
-//                String resp = task.get();
-//                if (resp == null || resp.isEmpty() || resp.endsWith("0001"))
-//                    createMembers();
-//                else
-//                    confirmAndClose();
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
 
     private void createMembers() {
         if (txtCowRange.getText() == null || txtCowRange.getText().isEmpty() ||
@@ -254,7 +209,7 @@ public class ActivationController implements MyInitialization {
         MainApp.paneDrop.setVisible(true);
         var task = new MemberCreateTask(this.society, txtServerDetail.getText(), cowMin, cowMax, buffMin, buffMax,
                 CommonUtils.strToInteger(txtSampleMilkNo.getText()));
-        task.setOnSucceeded(e -> confirmAndClose());
+        task.setOnSucceeded(e -> callApi());
         new Thread(task).start();
         MainApp.lblMessage.textProperty().bind(task.messageProperty());
     }
@@ -280,10 +235,6 @@ public class ActivationController implements MyInitialization {
                             resourceBundle.getString("activation.success"));
                     alert.createAlert();
                     Platform.exit();
-//                    Optional<ButtonType> resp = alert.createConfirmationAlert();
-//                    if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//                        Platform.exit();
-//                    }
                 });
                 new Thread(task1).start();
             } catch (Exception exception) {
@@ -307,10 +258,9 @@ public class ActivationController implements MyInitialization {
         try {
             File appProperties = new File("resources/app.properties");
             if (appProperties.createNewFile()) {
-                Files.write(appProperties.toPath(), writeAppProperty(), Charset.forName("UTF-8"));
+                Files.write(appProperties.toPath(), writeAppProperty(), StandardCharsets.UTF_8);
                 System.out.println("Created app.properties");
                 loadProperties();
-                this.flag = true;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -329,14 +279,6 @@ public class ActivationController implements MyInitialization {
         if (txtDock.getText().trim() == null || !CommonUtils.isNumeric(txtDock.getText().trim())) {
             errorMsg.append(resourceBundle.getString("docknullerror") + "\n");
         }
-//        if(txtActivation.getText().trim()==null){
-//            errorMsg.append(resourceBundle.getString("addkey") + "\n");
-//        }
-//        if(txtSampleMilkNo.getText().trim()==null ){
-//            errorMsg.append(resourceBundle.getString("mobilenonullerror"));
-//        }
-
-
         return errorMsg.length() == 0;
 
     }
@@ -344,10 +286,7 @@ public class ActivationController implements MyInitialization {
     private List<String> writeAppProperty() {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(txtServerDetail.getText().getBytes(StandardCharsets.UTF_8))));
-//        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("https://amulamcs.yamatech.app/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
-//        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://jaipurduss.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
-        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://amulamcsuat.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
-//        lines.add("baseurl=" + new String(Base64.getEncoder().encode("http://192.168.3.171:8080/eipl-amcs/".getBytes())));
+        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(LIVE_URL.getBytes(StandardCharsets.UTF_8))));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
         lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
@@ -400,8 +339,6 @@ public class ActivationController implements MyInitialization {
         lines.add("slip.language=" + new String(Base64.getEncoder().encode("English".getBytes())));
         lines.add("application.language=" + new String(Base64.getEncoder().encode("Hindi".getBytes())));
 
-//        lines.add("backuppath=" + new String(Base64.getEncoder().encode(("").getBytes())));
-//        lines.add("backuppath=" + new String(Base64.getEncoder().encode(("D:\\backup").getBytes())));
         File file = new File("D:");
         if (file.exists())
             lines.add("backuppath=" + new String(Base64.getEncoder().encode(("D:\\backup").getBytes())));

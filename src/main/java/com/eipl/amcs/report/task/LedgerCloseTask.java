@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LedgerCloseTask extends Task<List<LedgerClose>> {
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private String locale;
-    private String societyCode;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
+    private final String locale;
+    private final String societyCode;
 
 
     public LedgerCloseTask(String societyCode, LocalDate fromDate, LocalDate toDate, String locale) {
@@ -23,10 +23,6 @@ public class LedgerCloseTask extends Task<List<LedgerClose>> {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.locale = locale;
-    }
-
-    public LedgerCloseTask() {
-
     }
 
     @Override
@@ -39,7 +35,7 @@ public class LedgerCloseTask extends Task<List<LedgerClose>> {
             List<Object[]> list = ledgerRepository.fetchLedgerClosing(societyCode, fromDt, toDt, locale);
             if (list != null && !list.isEmpty()) {
                 for (Object[] arr : list) {
-                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (((BigDecimal) arr[2]).doubleValue() < 0 ? false : true), ((BigDecimal) arr[2]).doubleValue());
+                    LedgerClose bal = new LedgerClose((String) arr[0], (String) arr[1], (!(((BigDecimal) arr[2]).doubleValue() < 0)), ((BigDecimal) arr[2]).doubleValue());
                     listResp.add(bal);
                 }
             }

@@ -3,10 +3,10 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.task.BillHeadDeleteTask;
 import com.eipl.amcs.master.operation.task.BillHeadLoadTask;
@@ -52,14 +52,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         return root;
     }
 
-
-    /**
-     * @param url
-     * @param resourceBundle
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - set actions on add,edit and delete btn.
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -108,11 +100,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         }
     }
 
-    /**
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - added line to bind the selected bill head to the propBillHeadDto
-     */
     @Override
     public void setupTable() {
         try {
@@ -145,13 +132,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
-    /**
-     * Delete bill head data which don't have isDefault = true.
-     * This method calls the billHeadDeleteLoadTask to delete bill head and then reload new data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void deleteData() {
         try {
@@ -184,12 +164,6 @@ public class BillHeadController implements MyInitialization, PopupCallback {
         }
     }
 
-    /**
-     * This method helps to reload data after saving or updating bill head.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void reloadData(boolean flag) {
         if (flag) loadData();

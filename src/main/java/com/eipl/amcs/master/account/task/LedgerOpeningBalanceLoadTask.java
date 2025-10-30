@@ -20,14 +20,6 @@ public class LedgerOpeningBalanceLoadTask extends Task<List<LedgerOpeningBalance
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_OPENING_BALANCE;
-//            ResponseEntity<LedgerOpeningBalance[]> response = restTemplate.getForEntity(url, LedgerOpeningBalance[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("LedgerOpeningBalance fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("LedgerOpeningBalance fetch", e);
         }

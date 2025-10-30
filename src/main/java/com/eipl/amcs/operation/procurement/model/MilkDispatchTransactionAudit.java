@@ -4,11 +4,11 @@ import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.json.deserialize.MilkDispatchDeserializer;
 import com.eipl.amcs.json.deserialize.MilkQualityTypeDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
-import com.eipl.amcs.master.global.model.MilkQualityType;
-import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.json.serialize.MilkDispatchSerialize;
 import com.eipl.amcs.json.serialize.MilkQualityTypeSerialize;
 import com.eipl.amcs.json.serialize.MilkTypeSerialize;
+import com.eipl.amcs.master.global.model.MilkQualityType;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -35,8 +35,6 @@ public class MilkDispatchTransactionAudit extends BaseModelTxnAudit {
     private String txnCode;
     @Size(max = 11)
     private String societyPurchaseRateCode;
-    //	@Size(max = 35)
-//	private String challanNo;
     @Size(max = 255)
     private String chamberNo;
     private BigDecimal acidity;

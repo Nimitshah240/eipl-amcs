@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
+
 public class IdentityCheckTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityCheckTask.class);
 
@@ -32,8 +34,7 @@ public class IdentityCheckTask extends Task<Map<String, Object>> {
     protected Map<String, Object> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "https://amulamcs.yamatech.app/webservice/amcs/v1/") + AppConstant.UrlPath.IDENTITY_CHECK;
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/") + AppConstant.UrlPath.IDENTITY_CHECK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, LIVE_URL) + AppConstant.UrlPath.IDENTITY_CHECK;
             IdentityPayload payload = new IdentityPayload(mobileNo);
             RealTimeRequest<IdentityPayload> requestPayload = new RealTimeRequest<>(societyCode, "", payload);
 

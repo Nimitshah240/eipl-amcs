@@ -8,7 +8,6 @@ import com.eipl.amcs.master.operation.task.MemberTypeLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -35,8 +34,6 @@ public class MemberRegisterController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private SwingNode reportNode;
-    @FXML
     private DatePicker dpfromDate;
     @FXML
     private ComboBox<String> cboxFormat;
@@ -45,7 +42,6 @@ public class MemberRegisterController implements MyInitialization {
     @FXML
     private TextField txtSocietyCode;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -101,40 +97,6 @@ public class MemberRegisterController implements MyInitialization {
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_REGISTER_ONE, params);
         JasperViewer.viewReport(print, false);
-    }
-//        errorMsg = new StringBuilder();
-//        if (!validate()) {
-//            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "memberregister"),
-//                    errorMsg.toString());
-//            alert.createAlert();
-//            return;
-//        }
-//        var task = new MemberRegisterReportLoadTask(MainApp.identityDto.getSociety().getCode(), 1,
-//                dpfromDate.getValue());
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<MemberRegister> list = task.get();
-//                if (list != null && !list.isEmpty()) {
-//                    Map<String, Object> params = new HashMap<>();
-//                    params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//                    params.put("p_from_date", dpfromDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//                    params.put("p_member_type", cboxMember.getSelectionModel().getSelectedIndex() + 1);
-//                    JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_REGISTER, params,
-//                            new JRBeanCollectionDataSource(list));
-//                    JasperViewer.viewReport(print, false);
-//                }
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            } catch (ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
-
-
-    private boolean validate() {
-        return true;
     }
 
     @Override

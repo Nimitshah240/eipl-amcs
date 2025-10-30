@@ -17,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
+
 public class SyncCheckAcknowledgementTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncCheckAcknowledgementTask.class);
 
@@ -30,7 +32,7 @@ public class SyncCheckAcknowledgementTask extends Task<Map<String, Object>> {
     protected Map<String, Object> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SYNC_CHECK_ACK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, LIVE_URL) + AppConstant.UrlPath.SYNC_CHECK_ACK;
 
             SyncPayloadForAcknowledgement payload = new SyncPayloadForAcknowledgement(forceSyncRequestCode);
             RealTimeRequest<SyncPayloadForAcknowledgement> requestPayload = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payload);

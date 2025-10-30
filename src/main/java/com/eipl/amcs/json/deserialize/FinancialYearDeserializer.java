@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class FinancialYearDeserializer extends JsonDeserializer<FinancialYear> {
-    private FinancialYearRepository Repository;
+    private final FinancialYearRepository Repository;
 
     public FinancialYearDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(FinancialYearRepository.class);
@@ -19,7 +19,7 @@ public class FinancialYearDeserializer extends JsonDeserializer<FinancialYear> {
 
     @Override
     public FinancialYear deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

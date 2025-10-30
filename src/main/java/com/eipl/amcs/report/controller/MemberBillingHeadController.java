@@ -37,7 +37,6 @@ public class MemberBillingHeadController implements MyInitialization {
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
 
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {

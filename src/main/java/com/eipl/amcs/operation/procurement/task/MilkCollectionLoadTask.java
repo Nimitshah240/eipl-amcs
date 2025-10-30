@@ -12,7 +12,6 @@ import java.util.List;
 public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
     private final LocalDateTime fromDate;
     private LocalDateTime toDate;
-    private String code;
     private String dockNo;
     private int sync;
 

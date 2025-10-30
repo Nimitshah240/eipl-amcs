@@ -84,7 +84,6 @@ public class ProductAddEditController implements MyInitialization {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        btnSaveUpdate.setDisable(true);
         this.resourceBundle = resourceBundle;
         loadUnit();
         setupComboBox();

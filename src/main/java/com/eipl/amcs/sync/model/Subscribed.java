@@ -59,7 +59,5 @@ public class Subscribed {
         log.setVersion(subscribed.getVersion());
         return log;
     }
-
-
 }
 

@@ -1,14 +1,14 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.ProductSaleDeserializer;
 import com.eipl.amcs.json.deserialize.ProductSaleTransactionDeserializer;
 import com.eipl.amcs.json.deserialize.TaxDetailDeserializer;
-import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.json.serialize.ProductSaleSerialize;
 import com.eipl.amcs.json.serialize.ProductSaleTransactionSerialize;
 import com.eipl.amcs.json.serialize.TaxDetailSerialize;
+import com.eipl.amcs.master.account.model.TaxDetail;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -93,22 +93,5 @@ public class ProductSaleTax extends BaseModelTxn {
         audit.setXCol3(this.getXCol3());
 
         return audit;
-    }
-
-
-    public ProductSaleTransaction getProductSaleToMemberTransaction() {
-        return productSaleTransaction;
-    }
-
-    public void setProductSaleToMemberTransaction(ProductSaleTransaction productSaleToMemberTransaction) {
-        this.productSaleTransaction = productSaleToMemberTransaction;
-    }
-
-    public ProductSale getProductSaleToMember() {
-        return productSale;
-    }
-
-    public void setProductSaleToMember(ProductSale productSaleToMember) {
-        this.productSale = productSaleToMember;
     }
 }

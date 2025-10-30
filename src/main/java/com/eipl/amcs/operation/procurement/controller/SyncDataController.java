@@ -48,7 +48,6 @@ public class SyncDataController implements MyInitialization {
     @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {

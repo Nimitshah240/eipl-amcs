@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class RouteDeserializer extends JsonDeserializer<Route> {
-    private RouteRepository repository;
+    private final RouteRepository repository;
 
     public RouteDeserializer() {
         repository = EmcsAppContext.getContext().getBean(RouteRepository.class);
@@ -19,7 +19,7 @@ public class RouteDeserializer extends JsonDeserializer<Route> {
 
     @Override
     public Route deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

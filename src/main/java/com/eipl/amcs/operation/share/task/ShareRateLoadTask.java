@@ -20,14 +20,6 @@ public class ShareRateLoadTask extends Task<List<ShareRate>> {
 
             if (list == null || list.isEmpty()) return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE_RATE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
-//            ResponseEntity<ShareRate[]> response = restTemplate.getForEntity(builder.toUriString(), ShareRate[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("ProductReceipt fetch", e);
         }

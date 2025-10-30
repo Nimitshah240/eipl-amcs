@@ -2,10 +2,7 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Bmc;
-import com.eipl.amcs.master.org.model.Mcc;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.task.BmcLoadTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,22 +23,8 @@ public class BmcController implements MyInitialization {
     @FXML
     TableView<Bmc> tableBmc;
     @FXML
-    TableColumn<Bmc, String> colCode, colName, colLocalName, colCodeEx, colAddress, colCity, colPhoneNo,
+    TableColumn<Bmc, String> colCode, colName, colLocalName, colCodeEx, colCity, colPhoneNo,
             colContactPerson, colContactPersonMobileNo;
-    @FXML
-    TableColumn<Bmc, Union> colUnion;
-    @FXML
-    TableColumn<Bmc, Mcc> colMcc;
-    @FXML
-    TableColumn<Bmc, State> colState;
-    @FXML
-    TableColumn<Bmc, District> colDistrict;
-    @FXML
-    TableColumn<Bmc, SubDistrict> colSubDistrict;
-    @FXML
-    TableColumn<Bmc, Village> colVillage;
-    @FXML
-    TableColumn<Bmc, Hamlet> colHamlet;
     @FXML
     Button btnClose;
     @FXML

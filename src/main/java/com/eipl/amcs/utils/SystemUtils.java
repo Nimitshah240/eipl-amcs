@@ -19,8 +19,6 @@ public class SystemUtils {
                     byte[] mac = network.getHardwareAddress();
                     if (mac != null && (network.getDisplayName().toLowerCase().contains("eth")
                             || network.getName().toLowerCase().contains("eth"))) {
-                        // sb = new StringBuilder();
-                        // if (mac != null) {
                         for (int i = 0; i < mac.length; i++) {
                             sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
                         }
@@ -78,8 +76,6 @@ public class SystemUtils {
                     NetworkInterface network = networkInterfaces.nextElement();
                     byte[] mac = network.getHardwareAddress();
                     if (mac != null) {
-                        // sb = new StringBuilder();
-                        // if (mac != null) {
                         for (int i = 0; i < mac.length; i++) {
                             sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
                         }

@@ -3,8 +3,8 @@ package com.eipl.amcs.master.insurance.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.insurance.model.InsuranceDetail;
 import com.eipl.amcs.master.insurance.service.InsuranceMasterService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -29,17 +29,6 @@ public class InsuranceDetailFinalizeSaveTask extends Task<Object> {
                 service.updateDetailsFinalize(dto, CommonUtils.setIdentityHeader());
             }
             return true;
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.INSURANCE + "/detail-finalize";
-//            ResponseEntity<InsuranceDetail> response = process == 0 ?
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), InsuranceDetail.class) :
-//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), InsuranceDetail.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

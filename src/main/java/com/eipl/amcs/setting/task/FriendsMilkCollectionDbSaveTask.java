@@ -83,8 +83,7 @@ public class FriendsMilkCollectionDbSaveTask extends Task<Boolean> {
                 for (String month : listMonth) {
                     statement = connection.createStatement();
                     resultSet = statement.executeQuery("select * from dockside where format(Dump_Date, 'yyyy-MM-dd') >= '" +
-                            fromDate.toString() + "' AND  format(Dump_Date, 'yyyy-MM-dd') <= '" + toDate.toString() + "'");
-//                    resultSet = statement.executeQuery("select * from dockside where format(Dump_Date, 'mmm yyyy') = '" + month + "'");
+                            fromDate + "' AND  format(Dump_Date, 'yyyy-MM-dd') <= '" + toDate + "'");
                     List<Map<String, Object>> mapCollection = new ArrayList<>();
                     String shift = null;
                     while (resultSet.next()) {

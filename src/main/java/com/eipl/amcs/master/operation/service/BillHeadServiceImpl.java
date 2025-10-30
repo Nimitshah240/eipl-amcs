@@ -43,15 +43,6 @@ public class BillHeadServiceImpl implements BillHeadService {
     public void delete(BillHead BillHead) {
     }
 
-    /**
-     * Method acts as service method to save the bill head.
-     *
-     * @param billHead
-     * @param identityInfo
-     * @return BillHead
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public BillHead saveBillHead(BillHead billHead, String identityInfo) {
         try {
@@ -62,15 +53,6 @@ public class BillHeadServiceImpl implements BillHeadService {
         }
     }
 
-    /**
-     * Method acts as service method to update the bill head.
-     *
-     * @param billHead
-     * @param identityInfo
-     * @return BillHead
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public BillHead updateBillHead(BillHead billHead, String identityInfo) {
         try {
@@ -81,14 +63,6 @@ public class BillHeadServiceImpl implements BillHeadService {
         }
     }
 
-    /**
-     * Method acts as service method to delete the bill head.
-     *
-     * @param billHeadCode
-     * @param identityInfo
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void delete(String billHeadCode, String identityInfo) {
         try {
@@ -97,5 +71,4 @@ public class BillHeadServiceImpl implements BillHeadService {
             throw new RuntimeException(e);
         }
     }
-
 }

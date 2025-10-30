@@ -59,7 +59,6 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
     private MilkTypeRepository milkTypeRepository;
 
     @Override
-    // @Cacheable(value = "MilkDispatchsCache")
     public List<MilkDispatch> findAll() {
         List<MilkDispatch> list = dispatchRepository.findAll(Sort.by("fromDate", "toDate").descending());
         for (MilkDispatch milkDispatch : list) {
@@ -81,7 +80,6 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
         List<MilkDispatchTransaction> listDispatchTransactions = dto.getMilkDispatchTransaction();
         int txnCnt = 1;
         for (MilkDispatchTransaction list : listDispatchTransactions) {
-//			String code = nextCodeRepository.getNextCode("MilkDispatchTransaction", "txnCode", milkDispatch.getChallanNo() + "T", 0);
             list.setMilkDispatch(milkDispatch);
             list.setTxnCode(milkDispatch.getChallanNo() + "T" + txnCnt);
             list.setInitData();
@@ -107,7 +105,6 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
                 list.setInitData();
                 milkDispatchTransactionRepository.customSave(list, identityInfo);
             } else {
-//				txnCnt = Integer.parseInt(list.getTxnCode().substring(list.getTxnCode().length()-1));
                 String[] code = list.getTxnCode().split("T");
                 txnCnt = Integer.parseInt(code[1]);
                 list.setupdateData();
@@ -130,14 +127,11 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
         for (MilkDispatchTransaction milkDispatchTransaction : txn) {
             milkDispatchTransactionRepository.customDelete(milkDispatchTransaction, identityInfo);
         }
-//		milkDispatchTransactionRepository.deleteByMilkDispatch(dispatch.get());
-//		dispatchRepository.deleteById(code);
         dispatchRepository.customDelete(dispatch.get(), identityInfo);
     }
 
     @Override
     @Transactional
-//	@CacheEvict(value = { "MilkDispatchsCache" }, allEntries = true)
     public void delete(MilkDispatch MilkDispatch, String identityInfo) {
         dispatchRepository.customDelete(MilkDispatch, identityInfo);
     }
@@ -204,6 +198,4 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
         }
         return list;
     }
-
-
 }

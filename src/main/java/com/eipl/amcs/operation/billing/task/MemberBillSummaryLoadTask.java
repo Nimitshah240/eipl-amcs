@@ -16,20 +16,9 @@ public class MemberBillSummaryLoadTask extends Task<List<MemberBillSummary>> {
     @Override
     protected List<MemberBillSummary> call() throws Exception {
         try {
-
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             List<MemberBillSummary> summaryList = service.findMemberBillSummaryBetWeen(MainApp.getFinancialYear().getStartDate(),
                     MainApp.getFinancialYear().getEndDate());
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING + "/summary";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", MainApp.getFinancialYear().getStartDate().toString())
-//                    .queryParam("toDate", MainApp.getFinancialYear().getEndDate().toString());
-//            ResponseEntity<MemberBillSummary[]> response = restTemplate.getForEntity(builder.toUriString(), MemberBillSummary[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
             if (summaryList == null || summaryList.isEmpty()) return null;
             return summaryList;
         } catch (Exception e) {

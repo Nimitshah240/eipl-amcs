@@ -28,8 +28,6 @@ public class ProductStockController implements MyInitialization {
     @FXML
     TableColumn<ProductStock, Product> colProduct;
     @FXML
-    TableColumn<ProductStock, String> colUnit;
-    @FXML
     TableColumn<ProductStock, Number> colStock;
     @FXML
     Button btnClose;
@@ -53,7 +51,6 @@ public class ProductStockController implements MyInitialization {
         try {
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             colStock.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getStock().toBigInteger().doubleValue()));
-//        colUnit.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduct().getConversionUnit().getName()));
         } catch (Exception e) {
             e.printStackTrace();
         }

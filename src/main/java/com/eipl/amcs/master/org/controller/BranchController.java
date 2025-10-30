@@ -2,10 +2,6 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.geo.model.District;
-import com.eipl.amcs.master.geo.model.State;
-import com.eipl.amcs.master.geo.model.SubDistrict;
-import com.eipl.amcs.master.geo.model.Village;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
@@ -29,17 +25,9 @@ public class BranchController implements MyInitialization {
     @FXML
     TableView<Branch> tableBranch;
     @FXML
-    TableColumn<Branch, String> colCode, colName, colLocalName, colStatus, colAddress, colPinCode, colIfsc;
+    TableColumn<Branch, String> colCode, colName, colLocalName, colStatus, colIfsc;
     @FXML
     TableColumn<Branch, Bank> colBank;
-    @FXML
-    TableColumn<Branch, State> colState;
-    @FXML
-    TableColumn<Branch, District> colDistrict;
-    @FXML
-    TableColumn<Branch, SubDistrict> colSubDistrict;
-    @FXML
-    TableColumn<Branch, Village> colVillage;
     @FXML
     Button btnClose;
     @FXML

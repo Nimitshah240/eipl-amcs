@@ -18,14 +18,9 @@ public interface MilkReceiptTransactionRepository extends BaseRepository<MilkRec
     @EntityGraph(attributePaths = {"milkReceipt", "milkQualityType", "milkType"})
     List<MilkReceiptTransaction> findByMilkReceipt(MilkReceipt milkReceipt);
 
-    @EntityGraph(attributePaths = {"milkReceipt", "milkQualityType", "milkType"})
-    void deleteByMilkReceipt(MilkReceipt challanNo);
-
     @Override
     @EntityGraph(attributePaths = {"milkReceipt", "milkQualityType", "milkType"})
     Optional<MilkReceiptTransaction> findById(String id);
-
-    Optional<MilkReceiptTransaction> findByMilkReceiptAndMilkTypeAndMilkQualityType(MilkReceipt milkReceipt, MilkType mtype, MilkQualityType mcat);
 
     Optional<MilkReceiptTransaction> findByMilkReceiptAndMilkTypeAndMilkQualityTypeAndQty(MilkReceipt milkReceipt, MilkType mtype, MilkQualityType mcat, BigDecimal weight);
 }

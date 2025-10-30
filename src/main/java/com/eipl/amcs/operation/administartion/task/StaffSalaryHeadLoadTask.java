@@ -19,19 +19,7 @@ public class StaffSalaryHeadLoadTask extends Task<List<StaffSalaryHead>> {
             List<StaffSalaryHead> list = service.findAll();
             if (list == null || list.isEmpty())
                 return null;
-
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.STAFF_SALARY_HEAD;
-////            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-////                    .queryParam("society", MainApp.identityDto.getSociety().getCode());
-//
-//            ResponseEntity<StaffSalaryHead[]> response = restTemplate.getForEntity(url, StaffSalaryHead[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("StaffSalaryHead fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("StaffSalaryHead fetch", e);
         }

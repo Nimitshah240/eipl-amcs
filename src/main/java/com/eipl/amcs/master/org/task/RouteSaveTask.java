@@ -18,15 +18,6 @@ public class RouteSaveTask extends Task<Object> {
         RouteService service = EmcsAppContext.getContext().getBean(RouteService.class);
         if (route == null)
             return null;
-
         return service.save(route);
-
-
-//        RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//        String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ROUTE;
-//        ResponseEntity<Route> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(route), Route.class);
-//        if (response == null || response.getStatusCode() != HttpStatus.OK)
-//            return response.getBody();
-//        return null;
     }
 }

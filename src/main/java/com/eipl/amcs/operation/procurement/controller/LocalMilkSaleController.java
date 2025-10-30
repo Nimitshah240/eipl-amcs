@@ -3,11 +3,11 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -187,14 +187,9 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
     @Override
     public void setupTable() {
         try {
-            //colInvoiceNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInvoiceNo()));
-//        colConsumerType.setCellValueFactory(data -> new SimpleStringProperty((data.getValue().getConsumerType() == 1) ? "Member" : "Institute"));
             colConsumerType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getConsumerType())));
             colConsumerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode().substring(7)));
             colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(getConsumerName(data.getValue().getConsumerCode(), data.getValue().getConsumerType())));
-//        colPaymentType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymentMode() == 0 ? resourceBundle.getString("cash")
-//                : data.getValue().getPaymentMode() == 1 ? resourceBundle.getString("credit")
-//                : resourceBundle.getString("coupon")));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaleDate().toLocalDate()));
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             colClass.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkClass()));

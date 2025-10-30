@@ -37,8 +37,8 @@ import java.util.stream.Collectors;
 
 public class MemberMilkCollectionSlipController implements MyInitialization {
 
+    private final ArrayList<String> masterLines = new ArrayList<>();
     List<Map<String, Object>> data = new ArrayList<>();
-    List<Map<String, Object>> productSaleData = new ArrayList<>();
     String slipLanguage = "";
     @FXML
     private StackPane root;
@@ -53,7 +53,6 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     private List<SocietyPaymentCycle> paymentCycleList = new ArrayList<>();
     private ResourceBundle resourceBundle;
     private File slipFile = null;
-    private final ArrayList<String> masterLines = new ArrayList<>();
     private PrinterHelper printerHelper;
 
     public static String leftPadding(String input, char ch, int L) {
@@ -239,8 +238,6 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                 map.put("member_code", rs.getString("member_code"));
                 map.put("head_name", rs.getString("head_name"));
                 map.put("amount", rs.getString("amount"));
-                //                27,8
-
                 masterLines.add(map.get("head_name").toString() + " - " + map.get("amount").toString());
             }
         } catch (SQLException e) {
@@ -347,32 +344,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     }
 
     private void print(List<String> masterLines) {
-//        File file = new File("temp.txt");
-//        try {
-//            file.createNewFile();
-//            Files.write(Path.of(file.toPath().toString()), masterLines, Charset.forName("utf-8"));
-//            String command = "notepad /p temp.txt";
-//            if (CommandExec.exec(command) == 0) {
-//                System.out.println("true");
-//            } else
-//                System.out.println("false");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
-//        for (Notification notification : MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 3).collect(Collectors.toList())) {
-//            if (notification.getToDate().isAfter(LocalDateTime.now())) {
-//                masterLines.add(notification.getMessage());
-//            }
-//        }
-//        for (int i = 0; i < Integer.parseInt(MainApp.getProperty("no.of.enters.collection.slip", "0")); i++) {
-//            masterLines.add("\n");
-//        }
-//        masterLines.add(".");
-
         printerHelper.print(masterLines);
-//        processMargin(bottomLines);
-//        printerHelper.print(masterLines);
     }
 
 

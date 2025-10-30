@@ -2,8 +2,8 @@ package com.eipl.amcs.master.operation.model;
 
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
-import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.master.org.model.Society;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

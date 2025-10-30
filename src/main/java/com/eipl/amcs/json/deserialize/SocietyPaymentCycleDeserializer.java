@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class SocietyPaymentCycleDeserializer extends JsonDeserializer<SocietyPaymentCycle> {
-    private SocietyPaymentCycleRepository repository;
+    private final SocietyPaymentCycleRepository repository;
 
     public SocietyPaymentCycleDeserializer() {
         repository = EmcsAppContext.getContext().getBean(SocietyPaymentCycleRepository.class);
@@ -19,7 +19,7 @@ public class SocietyPaymentCycleDeserializer extends JsonDeserializer<SocietyPay
 
     @Override
     public SocietyPaymentCycle deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

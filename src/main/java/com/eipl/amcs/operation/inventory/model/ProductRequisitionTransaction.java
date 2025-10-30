@@ -1,12 +1,12 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.ProductDeserializer;
 import com.eipl.amcs.json.deserialize.ProductRequisitionDeserializer;
-import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.json.serialize.ProductRequisitionSerialize;
 import com.eipl.amcs.json.serialize.ProductSerialize;
+import com.eipl.amcs.master.inventory.model.Product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

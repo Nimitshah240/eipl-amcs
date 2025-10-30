@@ -29,7 +29,7 @@ import java.util.*;
 
 public abstract class MilkCollectionBaseController implements DeviceCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(MilkCollectionBaseController.class);
-    protected static BigDecimal weightHold = BigDecimal.ZERO, weightLock = BigDecimal.ZERO;
+    protected static BigDecimal weightLock = BigDecimal.ZERO;
     protected final int SCALE = 2;
     protected final RoundingMode ROUND = RoundingMode.HALF_UP;
     protected MilkCollectionPreReqDto collectionPreReqDto;
@@ -42,7 +42,7 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
     protected boolean qualityAuto = false;
     protected boolean weightAuto = false;
     protected boolean autoTare = false;
-    protected int maSetting = 1; //CommonUtils.strToInteger(MainApp.getProperty("masetting", "1"));
+    protected int maSetting = 1;
     // String prop for fat snf values
     protected StringProperty fatStringProp = new SimpleStringProperty();
     protected StringProperty snfStringProp = new SimpleStringProperty();
@@ -349,19 +349,6 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
         prevSnf2 = BigDecimal.ZERO;
         prevSnf3 = BigDecimal.ZERO;
         prevSnf4 = BigDecimal.ZERO;
-//        tempWater = BigDecimal.ZERO;
-//        tempWater2 = BigDecimal.ZERO;
-//        tempWater3 = BigDecimal.ZERO;
-//        tempWater4 = BigDecimal.ZERO;
-//        prt = 0.0;
-//        den = 0.0;
-//        lac = 0.0;
-//        frgPoint = 0.0;
-//        phV = 0.0;
-//        cnd = 0.0;
-//        salt = 0.0;
-//        temp = 0.0;
-//        otherReadings.clear();
     }
 
     @Override
@@ -424,20 +411,15 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
 
                 if (new BigDecimal(getFat()).compareTo(tempFat) != 0 && tempFat.doubleValue() > 2 && tempFat.doubleValue() < 15
                         && (prevFat1.compareTo(tempFat) != 0 || prevSnf1.compareTo(tempSnf) != 0)) {
-//                    setFat1(tempFat.toString());
                     unbindFatForAuto();
                     setFat(tempFat.toString());
                 }
 
                 if (("1".equals(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF, "0"))) || ((new BigDecimal(getSnf()).compareTo(tempSnf) != 0
                         && (prevFat1.compareTo(tempFat) != 0 || prevSnf1.compareTo(tempSnf) != 0)))) { // if yes then go or no then must be greater than 1;
-//                    setSnf1(tempSnf.toString());
                     unbindSnfForAuto();
                     setSnf(tempSnf.toString());
                 }
-//                if (new BigDecimal(getSnf()).compareTo(tempSnf) != 0
-//                        && (prevFat1.compareTo(tempFat) != 0 || prevSnf1.compareTo(tempSnf) != 0))
-//                    setSnf1(tempSnf.toString());
 
                 if (new BigDecimal(getWater()).compareTo(tempWater) != 0)
                     setWater(tempWater.toString());
@@ -465,11 +447,6 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
                 String serialRespFat = resp.get("FAT");
                 String serialRespSnf = resp.get("SNF");
                 String serialRespWtr = resp.get("AWM");
-//                String serialRespPrt = resp.get("PRT");
-//                String serialRespTemp = resp.get("TEM");
-//                String serialRespAdp = resp.get("ADP");
-//                String serialRespAdt = resp.get("ADT");
-//                if (maSetting == 1) {
                 if (tag.equalsIgnoreCase(AppConstant.DEVICE_TAG.ANALYSER_TAG)) {
                     System.out.println("MASETTING 1");
                     System.out.println("SERIAL RESPONSE FAT" + serialRespFat);
@@ -506,8 +483,6 @@ public abstract class MilkCollectionBaseController implements DeviceCallback {
                             && (prevFat1.compareTo(tempFat) != 0 || prevSnf1.compareTo(tempSnf) != 0)) {
                         setSnf1(tempSnf.toString());
                     }
-//                    if (new BigDecimal(getWater()).compareTo(tempWater) != 0)
-//                        setWater(tempWater.toString());
                 } else if (tag.equalsIgnoreCase(AppConstant.DEVICE_TAG.ANALYSER2_TAG)) {
                     System.out.println("MASETTING 2");
                     if (serialRespFat != null)

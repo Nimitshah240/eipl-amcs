@@ -24,12 +24,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-/**
- * This class acts as a controller for BillHead Add-Edit Popup.
- *
- * @author Nimit Shah
- * @createdOn 30-06-2025
- */
 public class BillHeadAddEditController implements MyInitialization {
 
     private Stage stage;
@@ -55,13 +49,6 @@ public class BillHeadAddEditController implements MyInitialization {
 
     private StringBuilder errorMsg = null;
 
-
-    /**
-     * Method set action on btn close,saveUpdate.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -87,13 +74,6 @@ public class BillHeadAddEditController implements MyInitialization {
         this.callback = callback;
     }
 
-
-    /**
-     * Method set comboBox of disbursement with default no.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void setupComboBox() {
         try {
@@ -104,13 +84,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method set bill head value if updating and
-     * setting new code on creating new bill head.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     public void setBillHead(BillHead billHead) {
         try {
             if (billHead != null) {
@@ -125,12 +98,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method set bill head value in respective field to show in the frontend.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     public void loadBillHead() {
         try {
             txtCode.setText(billHead.getCode());
@@ -143,12 +110,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method gets the new code from the backend for creating new bill head.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private void getNextBillHeadCode() {
         try {
             var task = new BillHeadNumberLoadTask(MainApp.identityDto.getSociety().getCode());
@@ -168,13 +129,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method set values in the bill head object from the front end.
-     *
-     * @return BillHead
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private BillHead setValuesInObject() {
         try {
             billHead.setCode(txtCode.getText());
@@ -192,13 +146,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method first validate fields, then create or update bill head
-     * depending on the this.billHead is null or not respectively.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     public void saveUpdateBillHead() {
         try {
             errorMsg = new StringBuilder();
@@ -224,13 +171,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method checks name is not null.
-     *
-     * @return boolean
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private boolean validate() {
         try {
             if (txtName.getText() == null || txtName.getText().trim().isEmpty())
@@ -241,13 +181,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method calls BillHeadSaveTask with short 0 to create the bill head.
-     * Then close the popup and reload the data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void saveData() {
         try {
@@ -283,13 +216,6 @@ public class BillHeadAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method calls BillHeadSaveTask with short 1 to update the bill head.
-     * Then close the popup and reload the data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void updateData() {
         try {

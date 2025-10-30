@@ -16,15 +16,7 @@ public class LocalMilkSaleDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             LocalMilkSaleService service = EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE + "/{code}";
-//            Map<String, Object> uriVariables = new HashMap<>();
-//            uriVariables.put("code", code);
-//
-//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
             service.delete(code, CommonUtils.setIdentityHeader());
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();

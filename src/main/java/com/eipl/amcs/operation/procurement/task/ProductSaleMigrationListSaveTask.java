@@ -16,7 +16,6 @@ public class ProductSaleMigrationListSaveTask extends Task<Integer> {
     public ProductSaleMigrationListSaveTask(List<ProductSaleMigrateDto> dtoList, int max) {
         this.dtoList = dtoList;
         this.max = max;
-
     }
 
     @Override
@@ -24,10 +23,6 @@ public class ProductSaleMigrationListSaveTask extends Task<Integer> {
         try {
             ProductSaleService service = EmcsAppContext.getContext().getBean(ProductSaleService.class);
             service.migrateCollections(dtoList, CommonUtils.setIdentityHeader());
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_SALE + "/migrate";
-//            ResponseEntity<ProductSaleMigrateDto[]> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dtoList), ProductSaleMigrateDto[].class);
             return null;
         } catch (Exception e) {
             e.printStackTrace();

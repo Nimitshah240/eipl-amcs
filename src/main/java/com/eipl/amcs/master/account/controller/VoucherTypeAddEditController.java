@@ -189,6 +189,4 @@ public class VoucherTypeAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-
 }

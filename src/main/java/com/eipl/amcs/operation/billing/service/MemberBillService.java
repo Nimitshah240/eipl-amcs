@@ -12,7 +12,6 @@ public interface MemberBillService {
 
     List<MemberBillSummary> findMemberBillSummaryBetWeen(LocalDate fromDate, LocalDate toDate);
 
-
     List<MemberBillSummary> findMemberBillSummaryBetWeenFromDateAndToDate(LocalDate fromDate, LocalDate toDate);
 
     MemberBillSummary findMemberBillSummary(SocietyPaymentCycle paymentCycle);
@@ -20,8 +19,6 @@ public interface MemberBillService {
     List<MemberBill> findMemberBill(String societyCode, SocietyPaymentCycle paymentCycle, SocietyPaymentCycle prevPaymentCycle);
 
     List<MemberBillTransaction> findMemberBillTransaction(MemberBill memberBill);
-
-//	List<MemberBill> callSp(String societyCode,SocietyPaymentCycle paymentCycle);
 
     MemberBill save(MemberBill memberBill);
 
@@ -32,7 +29,6 @@ public interface MemberBillService {
     MemberBillSummary checkTableData(SocietyPaymentCycle paymentCycle);
 
     List<MemberBill> fetchTableData(SocietyPaymentCycle paymentCycle);
-
 
     Boolean finalize(SocietyPaymentCycle paymentCycle, List<String> memberList);
 

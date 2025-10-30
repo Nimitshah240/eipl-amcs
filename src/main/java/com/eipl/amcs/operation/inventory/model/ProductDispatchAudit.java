@@ -3,10 +3,10 @@ package com.eipl.amcs.operation.inventory.model;
 import com.eipl.amcs.base.model.BaseModelAudit;
 import com.eipl.amcs.json.deserialize.RouteDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
-import com.eipl.amcs.master.org.model.Route;
-import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.json.serialize.RouteSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.master.org.model.Route;
+import com.eipl.amcs.master.org.model.Society;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -38,13 +38,10 @@ public class ProductDispatchAudit extends BaseModelAudit {
     @JsonSerialize(using = SocietySerialize.class)
     @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private Society society;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = RouteSerialize.class)
     @JsonDeserialize(using = RouteDeserializer.class)
     @JoinColumn(name = "route_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private Route route;
-
 }

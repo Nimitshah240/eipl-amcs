@@ -3,10 +3,10 @@ package com.eipl.amcs.master.account.model;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
-import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -27,7 +27,6 @@ import java.time.LocalDate;
 public class MeetingAgenda extends BaseModelTxn {
 
     @Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Size(max = 10)
     private String code;
     @Size(max = 3000)

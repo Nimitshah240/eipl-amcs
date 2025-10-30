@@ -21,8 +21,6 @@ public interface ProductReceiptTransactionRepository extends BaseRepository<Prod
     @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit"})
     List<ProductReceiptTransaction> findAll(Sort sort);
 
-    void deleteByProductReceipt(ProductReceipt productReceipt);
-
     @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit"})
     List<ProductReceiptTransaction> findByProductReceipt(ProductReceipt productreceipt);
 }

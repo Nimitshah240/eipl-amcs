@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class SocietyMilkPurchaseRateDeserializer extends JsonDeserializer<SocietyMilkPurchaseRate> {
-    private SocietyMilkPurchaseRateRepository repository;
+    private final SocietyMilkPurchaseRateRepository repository;
 
     public SocietyMilkPurchaseRateDeserializer() {
         repository = EmcsAppContext.getContext().getBean(SocietyMilkPurchaseRateRepository.class);
@@ -19,7 +19,7 @@ public class SocietyMilkPurchaseRateDeserializer extends JsonDeserializer<Societ
 
     @Override
     public SocietyMilkPurchaseRate deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

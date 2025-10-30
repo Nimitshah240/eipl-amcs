@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class SentBoxCountTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxCountTask.class);
-    List<String> sentBoxUuidList;
-    List<Subscribed> subscribedList;
     private final String societyCode;
     private final String mobileNo;
+    List<String> sentBoxUuidList;
+    List<Subscribed> subscribedList;
 
     public SentBoxCountTask(String societyCode, String mobileNo) {
         this.societyCode = societyCode;
@@ -40,9 +41,7 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
         try {
             SubscribedRepository subscribedRepository = EmcsAppContext.getContext().getBean(SubscribedRepository.class);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_COUNT;
-//            String url = "http://192.168.1.74/AMULUAT/webservice/amcs/v1/realtime-services/sentbox-count";
-            String url = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/realtime-services/sentbox-count";
+            String url = AppConstant.UrlPath.LIVE_URL + AppConstant.UrlPath.SYNC_CHECK;
 
             IdentityPayload payload = new IdentityPayload();
             RealTimeRequest<IdentityPayload> requestPayload = new RealTimeRequest<>(societyCode, MainApp.identityDto.getIdentity().getToken(), payload);
@@ -59,7 +58,6 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
             if (!"success".equalsIgnoreCase(respBody.getStatus()))
                 return null;
 
-//            response.getBody().getData();
 
             int count = Integer.parseInt(String.valueOf(response.getBody().getData().get("count")));
             if (count != 0) {
@@ -69,9 +67,7 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
 
 //        checkSentBoxDataAndDownload
                 do {
-//                    url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_CHECK;
-//                    url = "http://192.168.1.74/AMULUAT/webservice/amcs/v1/realtime-services/sentbox";
-                    url = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/realtime-services/sentbox";
+                    url = AppConstant.UrlPath.LIVE_URL + AppConstant.UrlPath.SENT_BOX_CHECK;
                     payload = new IdentityPayload();
                     requestPayload = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payload);
                     requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
@@ -95,9 +91,7 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
                         code.append(",");
                         System.out.println(uuid);
                     }
-//                    url = "http://192.168.1.74/AMULUAT/webservice/amcs/v1/realtime-services/acknowledgement";
-                    url = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/realtime-services/acknowledgement";
-//                    url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_ACK;
+                    url = AppConstant.UrlPath.LIVE_URL + AppConstant.UrlPath.SENT_BOX_ACK;
                     payloadForAcknowledgement = new IdentityPayloadForAcknowledgement(code.toString());
                     requestPayloadForAcknowledgement = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payloadForAcknowledgement);
                     requestPayloadForAcknowledgement.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());

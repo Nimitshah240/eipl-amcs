@@ -13,11 +13,8 @@ import java.util.List;
 public class ShareCancelledLoadTask extends Task<List<Share>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareCancelledLoadTask.class);
 
-    private LocalDate fromDate, toDate;
-
-    public ShareCancelledLoadTask() {
-
-    }
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public ShareCancelledLoadTask(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;
@@ -35,16 +32,6 @@ public class ShareCancelledLoadTask extends Task<List<Share>> {
                 return service.findAll();
             }
             return service.findAllData(fromDt, toDt);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<Share[]> response = restTemplate.getForEntity(builder.toUriString(), Share[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Cancelled Share fetch", e);
         }

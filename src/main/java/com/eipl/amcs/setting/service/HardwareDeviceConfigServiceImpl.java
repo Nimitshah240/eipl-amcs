@@ -40,7 +40,6 @@ public class HardwareDeviceConfigServiceImpl implements HardwareDeviceConfigServ
         }
 
         listPrev.forEach(item -> {
-//			hardwareRepository.customDelete(item,identityInfo);
             hardwareRepository.delete(item);
         });
         return "Hardware config saved successfully";
@@ -70,5 +69,4 @@ public class HardwareDeviceConfigServiceImpl implements HardwareDeviceConfigServ
     public void delete(HardwareDeviceConfig hardwareDeviceConfig, String identityInfo) {
         hardwareRepository.customDelete(hardwareDeviceConfig.getCode(), identityInfo);
     }
-
 }

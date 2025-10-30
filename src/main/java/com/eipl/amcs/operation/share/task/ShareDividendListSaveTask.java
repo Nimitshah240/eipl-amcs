@@ -32,25 +32,6 @@ public class ShareDividendListSaveTask extends Task<String> {
             }
 
             return sharedividend.toString();
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE_DIVIDEND;
-//
-//            ResponseEntity<String> response = null;
-//            if (this.update == 0) {
-//                response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(shareList), String.class);
-//                if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                    return null;
-//                return response.getBody().toString();
-//            } else {
-//                url = url + "/{code}";
-//                Map<String, String> uriVariables = new HashMap<>();
-//                uriVariables.put("code", shareList.get(0).getCode());
-//                response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(shareList.get(0)), String.class);
-//                if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                    return null;
-//                return response.getBody();
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

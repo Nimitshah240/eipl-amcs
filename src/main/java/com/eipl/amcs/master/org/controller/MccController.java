@@ -2,10 +2,7 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Mcc;
-import com.eipl.amcs.master.org.model.Plant;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.task.MccLoadTask;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -26,21 +23,7 @@ public class MccController implements MyInitialization {
     @FXML
     TableView<Mcc> tableMcc;
     @FXML
-    TableColumn<Mcc, String> colCode, colName, colLocalName, colCodeEx, colAddress, colCity, colPhoneNo, colContactPerson, colContactPersonMobileNo;
-    @FXML
-    TableColumn<Mcc, Union> colUnion;
-    @FXML
-    TableColumn<Mcc, Plant> colPlant;
-    @FXML
-    TableColumn<Mcc, State> colState;
-    @FXML
-    TableColumn<Mcc, District> colDistrict;
-    @FXML
-    TableColumn<Mcc, SubDistrict> colSubDistrict;
-    @FXML
-    TableColumn<Mcc, Village> colVillage;
-    @FXML
-    TableColumn<Mcc, Hamlet> colHamlet;
+    TableColumn<Mcc, String> colCode, colName, colLocalName, colCodeEx, colCity, colPhoneNo, colContactPerson, colContactPersonMobileNo;
     @FXML
     Button btnClose;
     @FXML

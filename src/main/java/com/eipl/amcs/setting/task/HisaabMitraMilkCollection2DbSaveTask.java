@@ -54,7 +54,6 @@ public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
 
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-//            DateTimeFormatter dateTimeFormatter1 = DateTimeFormatter.ofPattern("dd-MMM-yy");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
 
             LocalTime morningTime = LocalTime.of(6, 0);
@@ -73,7 +72,6 @@ public class HisaabMitraMilkCollection2DbSaveTask extends Task<Boolean> {
             final AtomicInteger sampleNo = new AtomicInteger(0);
             List<Map<String, Object>> mapCollection = new ArrayList<>();
             AtomicInteger lineno = new AtomicInteger(0);
-//            final AtomicInteger[] sampleNo = {new AtomicInteger(1)};
             AtomicReference<LocalDateTime> prevDate = new AtomicReference<>();
             LocalDateTime dateTime = null;
 

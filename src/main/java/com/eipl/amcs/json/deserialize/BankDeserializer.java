@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class BankDeserializer extends JsonDeserializer<Bank> {
-    private BankRepository repository;
+    private final BankRepository repository;
 
     public BankDeserializer() {
         repository = EmcsAppContext.getContext().getBean(BankRepository.class);
@@ -19,7 +19,7 @@ public class BankDeserializer extends JsonDeserializer<Bank> {
 
     @Override
     public Bank deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

@@ -6,7 +6,6 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.report.dto.ShiftReportCode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -66,10 +65,6 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
             "dock"})
     List<MilkCollection> findByCollectionDateAndMember(LocalDateTime date, Member member);
 
-    @Query(value = "CALL rpt_shift_code_wise(:p_society_code, :p_collection_date);", nativeQuery = true)
-    List<ShiftReportCode> findShiftReport(@Param("p_society_code") String societyCode,
-                                          @Param("p_collection_date") LocalDateTime collectionDate);
-
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
             "dock"})
     List<MilkCollection> findByCollectionDateBetweenAndXCol1(LocalDateTime fromDt, LocalDateTime toDt, String xcol1,
@@ -106,9 +101,4 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
                                                        @Param("p_to_date") LocalDateTime toDate
 
     );
-
-
-//	@Query(value = "CALL rpt_shift_code_wise(:p_society_code, :p_collection_date);", nativeQuery = true)
-//	List<ShiftReportCode> findShiftReport(@Param("p_society_code") String societyCode,
-//										  @Param("p_collection_date") LocalDateTime collectionDate);
 }

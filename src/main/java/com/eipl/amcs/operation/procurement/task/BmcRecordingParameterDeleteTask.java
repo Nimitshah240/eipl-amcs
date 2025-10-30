@@ -16,15 +16,6 @@ public class BmcRecordingParameterDeleteTask extends Task<Boolean> {
         try {
             BmcRecordingService service = EmcsAppContext.getContext().getBean(BmcRecordingService.class);
             service.deleteBmcRecording(code);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.RECORDING_PARAMETER + "/{code}";
-//            Map<String, Object> uriVariables = new HashMap<>();
-//            uriVariables.put("code", code);
-//
-//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
             return true;
         } catch (Exception e) {
             e.printStackTrace();

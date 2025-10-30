@@ -2,8 +2,8 @@ package com.eipl.amcs.master.org.model;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.*;
-import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.json.serialize.*;
+import com.eipl.amcs.master.geo.model.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

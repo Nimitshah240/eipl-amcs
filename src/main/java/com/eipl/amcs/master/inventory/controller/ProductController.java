@@ -3,10 +3,10 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
@@ -36,12 +36,6 @@ public class ProductController implements MyInitialization, PopupCallback {
     TableView<Product> tableProduct;
     @FXML
     TableColumn<Product, String> colCode, colName, colLocalName, colReferenceCode;
-    //    @FXML
-//    TableColumn<Product, Unit> colPrimaryUnit;
-//    @FXML
-//    TableColumn<Product, ProductGroup> colProductGroup;
-//    @FXML
-//    TableColumn<Product, Tax> colTax;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit;
     private ResourceBundle resourceBundle;
@@ -103,10 +97,6 @@ public class ProductController implements MyInitialization, PopupCallback {
             colReferenceCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getReferenceCode()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
-//            colProductGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProductGroup()));
-//            colPrimaryUnit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPrimaryUom()));
-//            colTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTax()));
-//            colIsActive.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
             propProductDto.bind(tableProduct.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("Product setuptable Exception");

@@ -88,42 +88,4 @@ public class ActivationUtil {
             return 0;
         }
     }
-
-//    public static void main(String[] args) {
-////		 System.out.println("decrypt...." +
-////		 EncryptionUtil.decrypt("vbmlR9ZASvBUkV71SJpru7fSz+8EJo5ZWR3N6GUHh5U=").toString());//190509
-////		 System.out.println("Mo: " +
-////		 EncryptionUtil.decrypt("xXikUDRCOfLe2jpzJiZIvA==", "7659900188121659"));
-//        System.out.println(encrypt("9194"));
-//        // File file = new File("");
-//        // System.out.println(file.getAbsolutePath());
-//        // System.out.println("Host: " + encrypt("182.73.178.90"));
-//        // System.out.println("user: " + encrypt("karan"));
-//        // System.out.println("pass: " + encrypt("karan@123"));
-//        // System.out.println("port: " + encrypt("12601"));
-//        // System.out.println("Path: " + encrypt("/jarupdate/jar_1518030071.zip"));
-//
-//        System.out.println("Host: " + encrypt("182.74.63.142"));
-//        System.out.println("user: " + encrypt("auratechmind"));
-//        System.out.println("pass: " + encrypt("aura$2016$2017"));
-//        System.out.println("port: " + encrypt("22"));
-//        System.out.println("Path: " + encrypt("syncdata/"));
-//
-//        // System.out.println("Path: " + decrypt("xXikUDRCOfLe2jpzJiZIvA=="));
-//
-////		try {
-////			List<String> list = Files.readAllLines(new File("mobile_no").toPath());
-////			List<String> listNew = new ArrayList<>();
-////			list.forEach(item -> {
-////				listNew.add(decrypt(item));
-////			});
-////			Files.write(new File("mobile").toPath(), listNew);
-////			System.out.println("Done...!");
-////		} catch (IOException e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		}
-//
-//        System.out.println(ActivationUtil.decrypt("Qjd8v3sgz9bDBxbZ1fb4Zg==").toString());
-//    }
 }

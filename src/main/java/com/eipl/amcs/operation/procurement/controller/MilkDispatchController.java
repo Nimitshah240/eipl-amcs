@@ -3,10 +3,10 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import com.eipl.amcs.operation.procurement.task.MilkDispatchDeleteTask;
@@ -34,29 +34,22 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkDispatchController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<MilkDispatch> propMilkDispatch;
     @FXML
     private StackPane root;
-
     @FXML
     private TableView<MilkDispatch> tableMilkDispatch;
-
     @FXML
     private TableColumn<MilkDispatch, String> colChallanNo;
-
     @FXML
     private TableColumn<MilkDispatch, LocalDate> colFromDate, colToDate;
-
     @FXML
     private TableColumn<MilkDispatch, Shift> colFromShift, colToShift;
-
     @FXML
     private TableColumn<MilkDispatch, String> colDestinationType;
-
     @FXML
     private Button btnAdd, btnEdit, btnDelete, btnClose, btnDispatchNote;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<MilkDispatch> propMilkDispatch;
 
     public MilkDispatchController() {
         propMilkDispatch = new SimpleObjectProperty<>();
@@ -112,24 +105,6 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
                 }
         );
     }
-
-//    private void validateAndGenerateReport() {
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//        params.put("p_invoice_no", propMilkDispatch.get().getChallanNo());
-//        params.put("p_locale", MainApp.locale);
-//        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN, params);
-//        JasperViewer.viewReport(print, false);
-//    }
-//
-//    private void validateAndGenerateReportTwo() {
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//        params.put("p_challan_no", propMilkDispatch.get().getChallanNo());
-//        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_TWO, params);
-//        JasperViewer.viewReport(print, false);
-//    }
-
 
     @Override
     public void setupTable() {

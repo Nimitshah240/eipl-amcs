@@ -290,8 +290,6 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milksummarydataentry"),
                         resourceBundle.getString("milksummarydataentry.insert.successful"));
                 alert.createAlert();
-//                this.callback.reloadData(true);
-//                this.stage.close();
                 clearControls();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -339,5 +337,4 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
 }

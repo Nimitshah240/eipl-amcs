@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class EventDeserializer extends JsonDeserializer<Events> {
-    private EventRepository Repository;
+    private final EventRepository Repository;
 
     public EventDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(EventRepository.class);
@@ -19,7 +19,7 @@ public class EventDeserializer extends JsonDeserializer<Events> {
 
     @Override
     public Events deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(parser.getValueAsInt()).get();
     }
 

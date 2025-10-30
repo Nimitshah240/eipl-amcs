@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class DistrictDeserializer extends JsonDeserializer<District> {
-    private DistrictRepository repository;
+    private final DistrictRepository repository;
 
     public DistrictDeserializer() {
         repository = EmcsAppContext.getContext().getBean(DistrictRepository.class);
@@ -19,7 +19,7 @@ public class DistrictDeserializer extends JsonDeserializer<District> {
 
     @Override
     public District deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

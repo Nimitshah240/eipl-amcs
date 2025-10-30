@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class DockDeserializer extends JsonDeserializer<Dock> {
-    private DockRepository Repository;
+    private final DockRepository Repository;
 
     public DockDeserializer() {
         Repository = EmcsAppContext.getContext().getBean(DockRepository.class);
@@ -19,7 +19,7 @@ public class DockDeserializer extends JsonDeserializer<Dock> {
 
     @Override
     public Dock deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

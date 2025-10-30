@@ -303,13 +303,11 @@ public class MemberAddEditController implements MyInitialization {
     private void setValuesInObject() {
         member.setActive(true);
         member.setCode(txtCode.getText());
-//        member.setCodeEx(txtCode.getText().substring(7, 11));
         member.setCodeEx(txtCode.getText().substring(txtCode.getText().length() - 4));
         member.setSociety(MainApp.identityDto.getSociety());
         member.setMemberType(cboxMemberType.getValue());
         member.setMilkType(cboxDefaultMilkType.getValue());
         member.setMobileNo(txtMobileNo.getText());
-//        member.setxCol1(MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtGroupCode.getText())));
         member.setFirstName(txtName.getText());
         member.setMiddleName(txtMiddleName.getText() == null ? "" : txtMiddleName.getText());
         member.setLastName(txtLastName.getText() == null ? "" : txtLastName.getText());
@@ -331,7 +329,6 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setEmail(txtEmail.getText());
         memberDetail.setPanNo(txtPanNo.getText());
         memberDetail.setAadharNo(txtAadharCardNo.getText());
-        //ahiyalakho
         memberDetail.setNumberOfCow(txtNoOfCow.getText().isEmpty() ? (short) 0 : Short.valueOf(txtNoOfCow.getText()));
         memberDetail.setNumberOfBuffalo(txtNoOfBuffalo.getText().isEmpty() ? (short) 0 : Short.valueOf(txtNoOfBuffalo.getText()));
         memberDetail.setPaymentMode((short) (rbtnBank.isSelected() ? 1 : 0));
@@ -352,42 +349,15 @@ public class MemberAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("codeexnullerror") + "\n");
         if (txtCode.getText() == null || txtCode.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("codenullerror") + "\n");
-//        if (cboxMemberType.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("membertypenullerror") + "\n");
         if (cboxDefaultMilkType.getValue() == null)
             errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
         if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
-
-
         if (txtAadharCardNo.getText() == null || txtAadharCardNo.getText().trim() == null || txtAadharCardNo.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("aadharcardnonullerror") + "\n");
-
         if (txtMobileNo.getText().trim() == null || txtMobileNo.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
 
-
-//        try {
-//            if (txtMobileNo.getText() == null || txtMobileNo.getText().isEmpty() || Long.parseLong(txtMobileNo.getText()) >= 10000000000L || Long.parseLong(txtMobileNo.getText()) <= 999999999L)
-//                errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
-//
-//            if (Long.parseLong(txtNoOfCow.getText()) < 0 || Long.parseLong(txtNoOfCow.getText()) >= 100000)
-//                errorMsg.append(resourceBundle.getString("noofcowerror") + "\n");
-//            if (Long.parseLong(txtNoOfBuffalo.getText()) < 0 || Long.parseLong(txtNoOfBuffalo.getText()) >= 100000)
-//                errorMsg.append(resourceBundle.getString("noofbuffaloerror") + "\n");
-//        } catch (NumberFormatException e) {
-//            errorMsg.append("Enter Valid Values");
-//        }
-//        if (rbtnBank.isSelected()) {
-//            if (cboxBank.getValue() == null)
-//                errorMsg.append(resourceBundle.getString("banknullerror") + "\n");
-//            if (cboxBranch.getValue() == null)
-//                errorMsg.append(resourceBundle.getString("branchnullerror") + "\n");
-//            if (txtAcNo.getText() == null || txtAcNo.getText().trim().isEmpty())
-//                errorMsg.append(resourceBundle.getString("acnonullerror") + "\n");
-//            if (txtIfsc.getText() == null || txtIfsc.getText().trim().isEmpty())
-//                errorMsg.append(resourceBundle.getString("ifscnonullerror") + "\n");
-//        }
         return errorMsg.length() == 0;
     }
 
@@ -631,7 +601,6 @@ public class MemberAddEditController implements MyInitialization {
             txtPanNo.setText(memberDetail.getPanNo());
             txtNoOfCow.setText(memberDetail.getNumberOfCow() != null ? memberDetail.getNumberOfCow().toString() : "0");
             txtNoOfCow.setText(memberDetail.getNumberOfBuffalo() != null ? memberDetail.getNumberOfBuffalo().toString() : "0");
-//            txtNoOfBuffalo.setText(memberDetail.getNumberOfBuffalo().toString());
             if (memberDetail.getPaymentMode() != null) {
                 if (memberDetail.getPaymentMode() == 1) {
                     rbtnBank.setSelected(true);
@@ -640,8 +609,6 @@ public class MemberAddEditController implements MyInitialization {
                     txtIfsc.setText(memberDetail.getIfsc());
                 }
             }
-//            txtAcNo.setText(memberDetail.getAccountNo());
-//            txtIfsc.setText(memberDetail.getIfsc());
             dpBirthDate.setValue(memberDetail.getBirthDate());
             txtPincode.setText(memberDetail.getPincode());
             txtAddress.setText(memberDetail.getAddress());
@@ -656,7 +623,6 @@ public class MemberAddEditController implements MyInitialization {
         txtMiddleLocalName.setText(member.getMiddleNameLocal());
         txtLocalLastName.setText(member.getLastNameLocal());
         txtMobileNo.setText(member.getMobileNo());
-//        txtGroupCode.setText(member.getxCol1().replace(MainApp.identityDto.getSociety().getCode(),""));
         if (member.getCreditLimit() != null)
             txtCreditLimit.setText(member.getCreditLimit().toString());
     }

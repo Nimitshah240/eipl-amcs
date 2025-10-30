@@ -22,17 +22,6 @@ public class VoucherTypeNumberLoadTask extends Task<String> {
             if (code == null || code.isEmpty())
                 return null;
             return code;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER_TYPE+"/next-code";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("society", society);
-//
-//            ResponseEntity<String> response = restTemplate.exchange(builder.buildAndExpand().toUri(), HttpMethod.GET, null, String.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("product Number fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("product Number fetch", e);
         }

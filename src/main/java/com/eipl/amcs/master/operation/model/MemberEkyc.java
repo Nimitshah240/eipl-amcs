@@ -24,10 +24,6 @@ public class MemberEkyc {
     private String code;
     @Size(max = 15)
     private String status;
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_member_ekyc_member_code"))
-//    @JsonIgnoreProperties(value = {"milkType", "memberType", "society"})
-//    private Member member;
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonSerialize(using = MemberSerialize.class)
     @JsonDeserialize(using = MemberDeserializer.class)

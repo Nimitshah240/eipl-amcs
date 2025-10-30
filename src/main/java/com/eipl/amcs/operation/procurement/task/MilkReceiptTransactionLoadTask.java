@@ -26,15 +26,6 @@ public class MilkReceiptTransactionLoadTask extends Task<List<MilkReceiptTransac
             List<MilkReceiptTransaction> list = (service.findDetailByChallanNo(challanNo));
             if (list == null || list.isEmpty()) return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT + "/transaction";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("challanNo",challanNo);
-//            ResponseEntity<MilkReceiptTransaction[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkReceiptTransaction[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Milk dispatch transaction fetched: {}", response.getBody());
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Milk dispatch transaction fetch", e);
         }

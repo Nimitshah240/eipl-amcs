@@ -1,4 +1,4 @@
-package com.eipl.amcs.auth.dto;
+package com.eipl.amcs.auth;
 
 import com.eipl.amcs.auth.model.Permission;
 

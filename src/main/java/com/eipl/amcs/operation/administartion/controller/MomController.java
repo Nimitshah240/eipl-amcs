@@ -42,8 +42,6 @@ public class MomController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<Mom, String> colCode, colSubjectLine, colMom, colStatus;
     @FXML
-    TableColumn<Mom, Integer> colDate, colMeetingType;
-    @FXML
     Button btnClose, btnAdd, btnEdit, btnDelete, btnActionTaken;
     @FXML
     ComboBox<String> cboxSubjectLine;
@@ -98,8 +96,6 @@ public class MomController implements MyInitialization, PopupCallback {
                 FocusUtils.requestFocus(txtMinuteOfMeeting);
                 btnAdd.setText(resourceBundle.getString("save"));
             } else {
-                //  setValuesInObject();
-                // saveData();
                 validateAndSave();
                 btnAdd.setText(resourceBundle.getString("add"));
                 gridMaster.setDisable(true);
@@ -228,7 +224,6 @@ public class MomController implements MyInitialization, PopupCallback {
 
     public void setValuesInObject() {
         dto = new Mom();
-//        dto.setCode("1");
         dto.setMeetingAgenda(meetingAgenda);
         dto.setStatus(chkOpen.isSelected() ? 1 : 0);
         dto.setMom(txtMinuteOfMeeting.getText());
@@ -340,5 +335,4 @@ public class MomController implements MyInitialization, PopupCallback {
         txtMinuteOfMeeting.setText("");
         chkOpen.setSelected(false);
     }
-
 }

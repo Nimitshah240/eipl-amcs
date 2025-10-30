@@ -52,7 +52,6 @@ public class ShiftReportCodeController implements MyInitialization {
     private ComboBox<Member> cboxMember;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
-    private List<MilkType> listMilkType;
 
     @FXML
     private ComboBox<String> cboxReportType;
@@ -146,10 +145,6 @@ public class ShiftReportCodeController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
-    private boolean validate() {
-        return true;
-    }
-
     @Override
     public void loadData() {
         var task1 = new ShiftLoadTask();
@@ -196,22 +191,6 @@ public class ShiftReportCodeController implements MyInitialization {
         });
         new Thread(task2).start();
 
-//        var task3 = new MilkTypeLoadTask();
-//        task3.setOnSucceeded(e -> {
-//            try {
-//                List<MilkType> list = task3.get();
-//                if (list != null && !list.isEmpty()) {
-//                    listMilkType = new ArrayList<>();
-//                    listMilkType.add(0, new MilkType(0, MainApp.bundle.getString("all")));
-//                    listMilkType.addAll(list);
-//                    cboxMilkType.setItems(FXCollections.observableList(listMilkType));
-//                    cboxMilkType.getSelectionModel().select(0);
-//                }
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task3).start();
         var task3 = new MilkTypeLoadTask();
         task3.setOnSucceeded(e -> {
             try {

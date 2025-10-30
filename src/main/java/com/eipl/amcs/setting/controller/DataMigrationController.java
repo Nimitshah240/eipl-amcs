@@ -27,6 +27,8 @@ public class DataMigrationController implements MyInitialization {
     private final String OP_MILK_DISPATCH = "Milk Dispatch";
     private final String OP_PRODUCT = "Product";
     private final String OP_PRODUCT_SALE = "Product Sale";
+    private final List<String> vendorList;
+    private final List<String> operationTypeList;
     @FXML
     StackPane root;
     @FXML
@@ -36,9 +38,6 @@ public class DataMigrationController implements MyInitialization {
     @FXML
     BorderPane paneContainer;
     private ResourceBundle resourceBundle;
-    private final List<String> vendorList;
-    private final List<String> operationTypeList;
-    private final String path = null;
 
 
     public DataMigrationController() {
@@ -138,34 +137,6 @@ public class DataMigrationController implements MyInitialization {
                 return;
 
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), popupFor, null, null);
-
-//            if (cboxType.getValue().equalsIgnoreCase("Member") && cboxFrom.getValue().equalsIgnoreCase("Prompt")) {
-//                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberDataMigrationPopup", null, null);
-//            } else if (cboxType.getValue().equalsIgnoreCase("Member") && cboxFrom.getValue().equalsIgnoreCase("SkyWay")) {
-//                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberDataMigrationSkyWayPopup", null, null);
-//            } else if (cboxType.getValue().equalsIgnoreCase("Milk Collection") && cboxFrom.getValue().equalsIgnoreCase("Prompt")) {
-//                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkCollectionDataMigrationPopup", null, null);
-//            } else if (cboxType.getValue().equalsIgnoreCase("Milk Collection") && cboxFrom.getValue().equalsIgnoreCase("SkyWay")) {
-//                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkCollectionDataMigrationSkyWayPopup", null, null);
-//            }
-//            if (cboxType.getValue().equalsIgnoreCase("Local Milk Sale")) {
-//                LocalMilkSaleDataMigrationController controller = (LocalMilkSaleDataMigrationController) MainApp.getFxmlLoaderUtil()
-//                        .loadAndSet(MainApp.class.getResource("view/setting/LocalMilkSaleMigration.fxml"));
-//                controller.loadImportPreReq(cboxFrom.getValue(), path);
-//                paneContainer.setCenter((controller).getRoot());
-//            }
-//            if (cboxType.getValue().equalsIgnoreCase("Product")) {
-//                ProductDataMigrationController controller = (ProductDataMigrationController) MainApp.getFxmlLoaderUtil()
-//                        .loadAndSet(MainApp.class.getResource("view/setting/ProductMigration.fxml"));
-//                controller.loadImportPreReq(cboxFrom.getValue(), path);
-//                paneContainer.setCenter((controller).getRoot());
-//            }
-//            if (cboxType.getValue().equalsIgnoreCase("Product Sale")) {
-//                ProductSaleDataMigrationController controller = (ProductSaleDataMigrationController) MainApp.getFxmlLoaderUtil()
-//                        .loadAndSet(MainApp.class.getResource("view/setting/ProductSaleMigration.fxml"));
-//                controller.loadImportPreReq(cboxFrom.getValue(), path);
-//                paneContainer.setCenter((controller).getRoot());
-//            }
         });
     }
 

@@ -149,5 +149,4 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
 
         new Thread(task).start();
     }
-
 }

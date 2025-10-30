@@ -279,20 +279,4 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-//    private void loadSociety() {
-//        var task = new SocietyLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Society> list = task.get();
-//                if (list != null){
-//                    cboxSociety.setItems(FXCollections.observableList(list));
-//                }
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
-
 }

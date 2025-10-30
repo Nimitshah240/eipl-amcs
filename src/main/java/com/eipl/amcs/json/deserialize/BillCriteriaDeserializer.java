@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class BillCriteriaDeserializer extends JsonDeserializer<BillCriteria> {
-    private BillCriteriaRepository repository;
+    private final BillCriteriaRepository repository;
 
     public BillCriteriaDeserializer() {
         repository = EmcsAppContext.getContext().getBean(BillCriteriaRepository.class);
@@ -19,7 +19,7 @@ public class BillCriteriaDeserializer extends JsonDeserializer<BillCriteria> {
 
     @Override
     public BillCriteria deserialize(JsonParser parser, DeserializationContext context)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         return repository.findById(String.valueOf(parser.getValueAsInt())).get();
     }
 

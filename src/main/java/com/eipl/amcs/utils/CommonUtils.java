@@ -31,6 +31,12 @@ public class CommonUtils {
     //    public static final MathContext MY_DECIMAL32 =  MathContext.DECIMAL128; ///new MathContext(10, RoundingMode.HALF_UP);
     public static final MathContext MY_DECIMAL32 = new MathContext(34, RoundingMode.HALF_UP);
     public static final DateTimeFormatter FMT_DATE_EXCEL = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter Formatter1 = DateTimeFormatter.ofPattern("ddMMyyyy");
+    public static final DateTimeFormatter Formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public static final DateTimeFormatter Formatter3 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public static final DateTimeFormatter Formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    public static final DateTimeFormatter Formatter5 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     final static int CHAR_PER_LINE = 40;
     final static String SPACE = " ";
     final static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
@@ -38,8 +44,8 @@ public class CommonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
     private static final int SCALE = 2;
     private static final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
-    public static List<String> meetingTypeList;
     private static final List<CustomerTypeKeyValDto> customerTypeList;
+    public static List<String> meetingTypeList;
 
     static {
         meetingTypeList = new ArrayList<>();
@@ -617,15 +623,6 @@ public class CommonUtils {
         return Date.valueOf(localDate);
     }
 
-
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    public static final DateTimeFormatter Formatter1 = DateTimeFormatter.ofPattern("ddMMyyyy");
-    public static final DateTimeFormatter Formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    public static final DateTimeFormatter Formatter3 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    public static final DateTimeFormatter Formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-    public static final DateTimeFormatter Formatter5 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-
     public static FieldError getFieldError(String objName, String field, Object rejectedVal, String defMessage) {
         return new FieldError(objName, field, rejectedVal, false, null, null, defMessage);
     }
@@ -655,17 +652,16 @@ public class CommonUtils {
     }
 
     public static String setIdentityHeader() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SOCIETY");
-        sb.append("#");
-        sb.append(MainApp.identityDto.getSociety().getCode());
-        sb.append("#");
-        sb.append(MainApp.systemId);
-        sb.append("#");
-        sb.append(MainApp.getProperty(AppConstant.Props.VERSION, "1.0"));
-        sb.append("#");
-        sb.append(MainApp.locale);
-        return new String(Base64.getEncoder().encode(sb.toString().getBytes()));
+        String sb = "SOCIETY" +
+                "#" +
+                MainApp.identityDto.getSociety().getCode() +
+                "#" +
+                MainApp.systemId +
+                "#" +
+                MainApp.getProperty(AppConstant.Props.VERSION, "1.0") +
+                "#" +
+                MainApp.locale;
+        return new String(Base64.getEncoder().encode(sb.getBytes()));
     }
 
 

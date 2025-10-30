@@ -1,7 +1,7 @@
 package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
-import com.eipl.amcs.auth.dto.PermissionComparator;
+import com.eipl.amcs.auth.PermissionComparator;
 import com.eipl.amcs.auth.model.Permission;
 import com.eipl.amcs.auth.model.RolePermission;
 import com.eipl.amcs.auth.model.User;
@@ -45,9 +45,8 @@ import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkDispatchTransactionRepository;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
 import com.eipl.amcs.sync.model.Subscribed;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.AppConstant;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
@@ -77,7 +76,6 @@ public class NavbarController implements MyInitialization {
     AnchorPane root;
     @FXML
     Button btnDashboard;
-    ObjectMapper mapper = new ObjectMapper();
     @FXML
     private VBox menuVbox;
     @FXML
@@ -102,10 +100,6 @@ public class NavbarController implements MyInitialization {
         });
         loadNotification();
         callApi();
-//        callApiFromGoogle();
-//        checkNotification();
-//        ReSync();
-//        checkSentBoxCount();
         ftpBackup();
     }
 
@@ -142,177 +136,6 @@ public class NavbarController implements MyInitialization {
         new Thread(task).start();
     }
 
-
-//                    Map jsonText = mapper.readValue(sentBox.getDataText(), Map.class);
-//                    switch (sentBox.getTableName()) {
-//                        case "tbl_product_requisition":
-//                            ProductRequisition requisition = new ProductRequisition();
-//                            requisition.setCode((String) jsonText.get("productRequisitionCode"));
-//                            if (jsonText.get("cancelledAt") != null)
-//                                requisition.setCancelledAt(LocalDateTime.parse((String) jsonText.get("cancelledAt"), AppConstant.Formatter4));
-//                            requisition.setCancelledBy((String) jsonText.get("cancelledBy"));
-//                            if (jsonText.get("requisitionDate") != null)
-//                                requisition.setRequisitionDate(LocalDate.parse((String) jsonText.get("requisitionDate"), AppConstant.Formatter4));
-//                            requisition.setDescription((String) jsonText.get("description"));
-//                            if (jsonText.get("entryType") != null)
-//                                requisition.setEntryType(Integer.parseInt((String) jsonText.get("entryType")));
-//                            if (jsonText.get("isCancel") != null)
-//                                requisition.setCancel(Boolean.valueOf((String) jsonText.get("isCancel")));
-//                            if (jsonText.get("isDelete") != null)
-//                                requisition.setDelete(Boolean.valueOf((String) jsonText.get("isDelete")));
-//                            requisition.setStatus((String) jsonText.get("status"));
-//                            requisition.setSyncStatus((String) jsonText.get("syncStatus"));
-//                            if (jsonText.get("syncTimestamp") != null)
-//                                requisition.setSyncTimestamp(LocalDateTime.parse((String) jsonText.get("syncTimestamp"), AppConstant.Formatter4));
-//                            if (jsonText.get("createdAt") != null)
-//                                requisition.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("createdBy") != null)
-//                                requisition.setCreatedBy((String) jsonText.get("createdBy"));
-//                            if (jsonText.get("updatedAt") != null)
-//                                requisition.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("updatedBy") != null)
-//                                requisition.setCreatedBy((String) jsonText.get("updatedBy"));
-//                            requisition.setSociety(MainApp.identityDto.getSociety());
-//                            requisition.setUnionCode((String) jsonText.get("unionCode"));
-//                            saveProductRequisition(requisition);
-//                            break;
-//                        case "tbl_product_requisition_transaction":
-//                            ProductRequisitionTransaction requisitionTransaction = new ProductRequisitionTransaction();
-//                            requisitionTransaction.setCode((String) jsonText.get("requisitionTransactionCode"));
-//                            requisitionTransaction.setApprovedBy((String) jsonText.get("approvedBy"));
-//                            if (jsonText.get("approvedDate") != null)
-//                                requisitionTransaction.setApprovedDate(LocalDate.parse((String) jsonText.get("approvedDate"), AppConstant.Formatter5));
-//                            if (jsonText.get("approvedQuantity") != null)
-//                                requisitionTransaction.setApprovedQuantity(new BigDecimal(String.valueOf(jsonText.get("approvedQuantity"))));
-//                            if (jsonText.get("cancelledAt") != null)
-//                                requisitionTransaction.setCancelledAt(LocalDateTime.parse((String) jsonText.get("cancelledAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("createdAt") != null)
-//                                requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("createdBy") != null)
-//                                requisitionTransaction.setCreatedBy((String) jsonText.get("createdBy"));
-//                            if (jsonText.get("updatedAt") != null)
-//                                requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("updatedBy") != null)
-//                                requisitionTransaction.setCreatedBy((String) jsonText.get("updatedBy"));
-//                            requisitionTransaction.setCancelledBy((String) jsonText.get("cancelledBy"));
-//                            if (jsonText.get("discountAmount") != null)
-//                                requisitionTransaction.setDiscountAmount(new BigDecimal(String.valueOf(jsonText.get("discountAmount"))));
-//                            if (jsonText.get("isApproved") != null)
-//                                requisitionTransaction.setIsApproved((int) jsonText.get("isApproved"));
-//                            requisitionTransaction.setCancel(Boolean.valueOf((String) jsonText.get("isCancel")));
-//                            if (jsonText.get("provisionalAmount") != null)
-//                                requisitionTransaction.setAmount(new BigDecimal(String.valueOf(jsonText.get("provisionalAmount"))));
-//                            if (jsonText.get("provisionalRate") != null)
-//                                requisitionTransaction.setRate(new BigDecimal((String) jsonText.get("provisionalRate")));
-//                            if (jsonText.get("quantity") != null)
-//                                requisitionTransaction.setQuantity(new BigDecimal((String) jsonText.get("quantity")));
-//                            if (jsonText.get("requisitionDate") != null)
-//                                requisitionTransaction.setRequisitionDate(LocalDate.parse((String) jsonText.get("requisitionDate"), AppConstant.Formatter4));
-//                            if (jsonText.get("expectedDeliveryDate") != null)
-//                                requisitionTransaction.setExpectedDeliveryDate(LocalDate.parse((String) jsonText.get("expectedDeliveryDate"), AppConstant.Formatter4));
-//                            requisitionTransaction.setSchemeAddType((String) jsonText.get("schemeAddType"));
-//                            requisitionTransaction.setStatus((String) jsonText.get("status"));
-////                            requisitionTransaction.setProduct((String) jsonText.get("product"));
-////                            requisitionTransaction.setProductRequisition((String) jsonText.get("productRequisition"));
-//                            requisitionTransaction.setProductSchemeCode((String) jsonText.get("productSchemeCode"));
-//                            if (jsonText.get("passonToMember") != null)
-//                                requisitionTransaction.setPassonToMember(Integer.parseInt((String) jsonText.get("passonToMember")));
-//                            requisitionTransaction.setUnionCode((String) jsonText.get("unionCode"));
-//                            requisitionTransaction.setSocietyCode((String) jsonText.get("societyCode"));
-//                            saveProductRequisitionTransaction(requisitionTransaction);
-//                            break;
-//                        case "tbl_product_dispatch":
-//                            ProductDispatch productDispatch = new ProductDispatch();
-//                            productDispatch.setChallanNo((String) jsonText.get("challanNo"));
-//                            if (jsonText.get("challanVerified") != null)
-//                                productDispatch.setChallanVerified(Boolean.valueOf((String) jsonText.get("challanVerified")));
-//                            if (jsonText.get("requisitionDate") != null)
-//                                productDispatch.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), AppConstant.Formatter4));
-//                            if (jsonText.get("dispatchDate") != null)
-//                                productDispatch.setDispatchDate(LocalDate.parse((String) jsonText.get("dispatchDate"), AppConstant.Formatter5));
-//                            if (jsonText.get("isDelete") != null)
-//                                productDispatch.setDelete(Boolean.valueOf((String) jsonText.get("isDelete")));
-//                            productDispatch.setReferenceNo((String) jsonText.get("referenceNo"));
-//                            productDispatch.setSyncStatus((String) jsonText.get("syncStatus"));
-//                            if (jsonText.get("syncTimestamp") != null)
-//                                productDispatch.setSyncTimestamp(LocalDateTime.parse((String) jsonText.get("syncTimestamp"), AppConstant.Formatter4));
-//                            productDispatch.setVehicleNo((String) jsonText.get("vehicleNo"));
-//                            if (jsonText.get("updatedAt") != null)
-//                                productDispatch.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("updatedBy") != null)
-//                                productDispatch.setCreatedBy((String) jsonText.get("updatedBy"));
-//                            productDispatch.setUnionCode((String) jsonText.get("unionCode"));
-////                            productDispatch.setSociety((String) jsonText.get("society"));
-//                            productDispatch.setRouteCode((String) jsonText.get("routeCode"));
-//                            productDispatch.setDelete(false);
-//                            productDispatch.setActive(true);
-//                            productDispatch.setSociety(MainApp.identityDto.getSociety());
-//                            saveProductDispatch(productDispatch);
-//                            break;
-//
-//                        case "tbl_product_dispatch_transaction":
-//                            ProductDispatchTransaction productDispatchTransaction = new ProductDispatchTransaction();
-//                            productDispatchTransaction.setCode((String) jsonText.get("dispatchTransactionCode"));
-//                            if (jsonText.get("amount") != null)
-//                                productDispatchTransaction.setAmount(new BigDecimal(String.valueOf(jsonText.get("amount"))));
-//                            if (jsonText.get("dispatchDate") != null)
-//                                productDispatchTransaction.setDispatchDate(LocalDate.parse((String) jsonText.get("dispatchDate"), AppConstant.Formatter5));
-//                            if (jsonText.get("discount") != null)
-//                                productDispatchTransaction.setDiscountAmount(new BigDecimal(String.valueOf(jsonText.get("discount"))));
-//                            if (jsonText.get("quantity") != null)
-//                                productDispatchTransaction.setDispatchQty(new BigDecimal(String.valueOf(jsonText.get("dispatchQty"))));
-//                            if (jsonText.get("rate") != null)
-//                                productDispatchTransaction.setRate(new BigDecimal(String.valueOf(jsonText.get("rate"))));
-//                            if (jsonText.get("updatedAt") != null)
-//                                productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), AppConstant.Formatter4));
-//                            if (jsonText.get("updatedBy") != null)
-//                                productDispatchTransaction.setCreatedBy((String) jsonText.get("updatedBy"));
-//                            productDispatchTransaction.setUnionCode((String) jsonText.get("unionCode"));
-//                            productDispatchTransaction.setSociety(MainApp.identityDto.getSociety());
-
-    /// /                            productDispatchTransaction.setProductReceipt((String) jsonText.get("productReceipt"));
-    /// /                            productDispatchTransaction.setProduct((String) jsonText.get("product"));
-    /// /                            productDispatchTransaction.setTax((String) jsonText.get("tax"));
-    /// /                            productDispatchTransaction.setUnit((String) jsonText.get("unit"));
-//                            saveProductDispatchTransaction(productDispatchTransaction);
-//                            break;
-//                        case "tbl_bulk_notification":
-//                            Notification notification = new Notification();
-//                            notification.setBulkNotificationId((Integer) jsonText.get("bulkNotificationId"));
-//                            notification.setUnionCode((String) jsonText.get("unionCode"));
-//                            notification.setPlantCode((String) jsonText.get("plantCode"));
-//                            notification.setMccPlantCode((String) jsonText.get("mccPlantCode"));
-//                            notification.setBmcCode((String) jsonText.get("bmcCode"));
-//                            notification.setSocietyCode(MainApp.identityDto.getSociety().getCode());
-//                            notification.setMemberCode((String) jsonText.get("memberCode"));
-//                            notification.setAppType((String) jsonText.get("appType"));
-//                            notification.setLoginType((String) jsonText.get("loginType"));
-//                            notification.setWefDate(jsonText.get("wefDate") != null ? LocalDateTime.parse((String) jsonText.get("wefDate"), AppConstant.Formatter4) : null);
-//                            notification.setTitle((String) jsonText.get("title"));
-//                            notification.setMessage((String) jsonText.get("message"));
-//                            notification.setCampaignName((String) jsonText.get("campaignName"));
-//                            notification.setReceiverType((Integer) jsonText.get("bulkNotificationId"));
-//                            notification.setStatus((Integer) jsonText.get("status"));
-//                            notification.setOriginatingOrgCode((String) jsonText.get("originatingOrgCode"));
-//                            notification.setOriginatingOrgType((String) jsonText.get("originatingOrgType"));
-//                            notification.setOriginatingType((Integer) jsonText.get("originatingType"));
-//                            notification.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), AppConstant.Formatter4) : null);
-//                            notification.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), AppConstant.Formatter4) : null);
-//                            notification.setFromShift((Integer) jsonText.get("fromShiftCode"));
-//                            notification.setToShift((Integer) jsonText.get("toShiftCode"));
-//                            notification.setNotificationType((Integer) jsonText.get("notificationType"));
-//                            notification.setFileName((String) jsonText.get("filename"));
-//                            notification.setFilePath((String) jsonText.get("filePath"));
-//                            notification.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), AppConstant.Formatter4) : null);
-//                            notification.setCreatedBy((String) jsonText.get("createdBy"));
-//                            System.out.println(notification);
-//                            MainApp.notificationList.add(notification);
-//                            saveNotification();
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    sentBoxUuidList.add((String) map.get("uuid"));
     private void saveProductRequisition(ProductRequisition requisition) {
         ProductRequisitionManualSaveTask task = new ProductRequisitionManualSaveTask(requisition, (short) 0);
         task.setOnSucceeded(e -> {
@@ -345,7 +168,6 @@ public class NavbarController implements MyInitialization {
     private void saveNotification() {
         NotificationSaveTask task = new NotificationSaveTask(MainApp.notificationList);
         task.setOnSucceeded(e -> {
-//            loadNotificationAfterSave();
         });
         new Thread(task).start();
     }
@@ -458,17 +280,6 @@ public class NavbarController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
-
-//        Map<String, Object> res = new HashMap<>();
-//        res.put("fromDate", "2021-01-01 06:00:00");
-//        res.put("toDate", "2022-01-01 18:00:00");
-//        res.put("tableName", "milk_dispatch");
-//        var task1 = new ReSyncTask((String) res.get("fromDate"), (String) res.get("toDate"), (String) res.get("tableName"));
-//        task1.setOnSucceeded(ee -> {
-//            System.out.println("Resync data successful");
-//        });
-//        new Thread(task1).start();
     }
 
 
@@ -490,11 +301,7 @@ public class NavbarController implements MyInitialization {
             notification.setMessage((String) map.get("message"));
             notification.setCampaignName((String) map.get("campaignName"));
             notification.setReceiverType((Integer) map.get("bulkNotificationId"));
-//            notification.setContentId((String) map.get("contentId"));
             notification.setStatus((Integer) map.get("status"));
-//            notification.setEntry(LocalDateTime.parse((String) map.get("entryDatetime"),formatter));
-//            notification.setPickup(LocalDateTime.parse((String) map.get("pickupDatetime"),formatter));
-//            notification.setResponse(LocalDateTime.parse((String) map.get("responseDatetime"),formatter));
             notification.setOriginatingOrgCode((String) map.get("originatingOrgCode"));
             notification.setOriginatingOrgType((String) map.get("originatingOrgType"));
             notification.setOriginatingType((Integer) map.get("originatingType"));
@@ -654,12 +461,6 @@ public class NavbarController implements MyInitialization {
         @Override
         protected Short call() throws Exception {
             try {
-//                RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//                String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.AUTH + "/permission/{username}";
-//                Map<String, Object> uriVariables = new HashMap<>();
-//                uriVariables.put("username", MainApp.getUser().getUsername());
-//                ResponseEntity<Permission[]> response = restTemplate.getForEntity(url, Permission[].class, uriVariables);
-
                 UserService service = EmcsAppContext.getContext().getBean(UserService.class);
                 UserRoleService userRoleService = EmcsAppContext.getContext().getBean(UserRoleService.class);
                 RolePermissionService rolePermissionService = EmcsAppContext.getContext().getBean(RolePermissionService.class);

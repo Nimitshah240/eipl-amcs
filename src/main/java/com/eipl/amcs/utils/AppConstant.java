@@ -39,6 +39,14 @@ public class AppConstant {
             AppConstant.Formatter5,
             AppConstant.Formatter6
     );
+    public static final String HEADER_IDENTITY = "identity";
+    public static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    public static final DateTimeFormatter DATE_TIME_FMT_SSSSSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    public static final DateTimeFormatter SYNC_DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final DateTimeFormatter RFC_CALL_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
+    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    // SPRING BOOTS CONSTANTS
+    public static List<String> prioritizedTableNameList = Arrays.asList("tbl_bulk_notification", "rfc_call");
 
     public static LocalDate parseDateWithMultipleFormats(String dateStr) {
         for (DateTimeFormatter formatter : DATE_FORMATTERS) {
@@ -223,9 +231,14 @@ public class AppConstant {
         String RATE_DETAIL_DOWNLOAD = "realtime-services/purchase-rate-detail";
         String RATE_DOWNLOAD_ACK = "realtime-services/rate-download-acknowledgement";
 
+        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
+//        String LIVE_URL = "http://jaipurduss.emilkpro.in/webservice/amcs/v1/";
+//        String LIVE_URL = "https://amulamcs.yamatech.app/webservice/amcs/v1/";
+
 
         // String COMMITTEE_MEMBERS = "committee-members";
-        String SUB_LEDGER_TYPE = "sub-ledger-type";
+        String
+                SUB_LEDGER_TYPE = "sub-ledger-type";
         String LEDGER_CLOSE = "report/ledger_closing";
         String NEXT_FY_DATE = "financial-years/next_fy_date";
         String FY_SUB_LEDGER_OPENING_BALANCE = "report/fy_sub_ledger_opening_balance";
@@ -415,16 +428,6 @@ public class AppConstant {
         String PAYMENT_REGISTER_WITH_DEDUCTION = "PaymentRegisterWithDeduction";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
-
-    public static final String HEADER_IDENTITY = "identity";
-    public static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-    public static final DateTimeFormatter DATE_TIME_FMT_SSSSSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-    public static final DateTimeFormatter SYNC_DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-    public static final DateTimeFormatter RFC_CALL_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
-    public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    // SPRING BOOTS CONSTANTS
-    public static List<String> prioritizedTableNameList = Arrays.asList("tbl_bulk_notification", "rfc_call");
 
     public interface EventCode {
         int LOCAL_MILK_SALE = 103;

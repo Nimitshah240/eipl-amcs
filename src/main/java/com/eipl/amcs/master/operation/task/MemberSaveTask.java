@@ -3,8 +3,8 @@ package com.eipl.amcs.master.operation.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -42,17 +42,6 @@ public class MemberSaveTask extends Task<Object> {
                 dtoNew.getMemberDetail().setMember(dto.getMemberDetail().getMember());
             }
             return true;
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url= MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER;
-//            ResponseEntity<MemberDto> response = this.update == 0 ?
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), MemberDto.class) :
-//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberDto.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

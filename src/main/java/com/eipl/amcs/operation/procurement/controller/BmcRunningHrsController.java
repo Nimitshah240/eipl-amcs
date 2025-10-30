@@ -39,6 +39,7 @@ import java.util.concurrent.ExecutionException;
 
 public class BmcRunningHrsController implements MyInitialization {
     private final ObjectProperty<BmcRunningHours> bmcRunningHrsObjectProperty;
+    private final StringBuilder errorMsg = null;
     public String invoice = "";
     @FXML
     TableView<BmcRunningHours> tableBMCRunningHrs;
@@ -64,10 +65,8 @@ public class BmcRunningHrsController implements MyInitialization {
     private TableColumn<BmcRunningHours, BigDecimal> colAmount;
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
     private BmcRunningHours dto = null;
     private PopupCallback callback;
-    private BigDecimal rate;
     private BmcRunningHours bmcRunningHrs;
 
     public BmcRunningHrsController() {
@@ -87,17 +86,6 @@ public class BmcRunningHrsController implements MyInitialization {
         return root;
     }
 
-    public void setBmcRunningHrsDto(BmcRunningHours dto) {
-        try {
-            if (dto != null) {
-                this.dto = dto;
-                btnSave.setText(resourceBundle.getString("update"));
-                loadControls();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -181,31 +169,9 @@ public class BmcRunningHrsController implements MyInitialization {
         bmcRunningHrs.setUnionCode(MainApp.identityDto.getUnion().getCode());
         bmcRunningHrs.setAmount(BigDecimal.ZERO);
         bmcRunningHrs.setRunningHoursPower(Integer.valueOf(0));
-
         bmcRunningHrs.setRunningHoursDg(Integer.parseInt(txtDgRunningHrs.getText()));
         bmcRunningHrs.setTotalRunningHours(Integer.parseInt(txtBmcRunningHrs.getText()));
-
-//        try {
-//            int runningHours = Integer.parseInt(txtDgRunningHrs.getText());
-//            bmcRunningHrs.setRunningHoursDg(runningHours);
-//        } catch (NumberFormatException e) {
-//
-//        }
-//        try {
-//            int runningHours1 = Integer.parseInt(txtBmcRunningHrs.getText());
-//            bmcRunningHrs.setTotalRunningHours(runningHours1);
-//        } catch (NumberFormatException e) {
-//
-//        }
         bmcRunningHrs.setIsActive(true);
-
-    }
-
-    private boolean validate() {
-        if (dpDate.getValue() == null)
-            errorMsg.append(resourceBundle.getString("datenullerror") + "\n");
-
-        return errorMsg.length() == 0;
     }
 
     public void updateData() {
@@ -297,6 +263,5 @@ public class BmcRunningHrsController implements MyInitialization {
         txtPowerGrid.setText("");
         txtDgRunningHrs.setText("");
         txtBmcRunningHrs.setText("");
-
     }
 }
