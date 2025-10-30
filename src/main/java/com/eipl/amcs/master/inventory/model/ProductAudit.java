@@ -16,7 +16,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -31,13 +30,9 @@ public class ProductAudit extends BaseModelAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 25)
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
-    @Size(max = 25)
     private String referenceCode;
     @Digits(integer = 7, fraction = 3)
     private BigDecimal baseConversionFactor;

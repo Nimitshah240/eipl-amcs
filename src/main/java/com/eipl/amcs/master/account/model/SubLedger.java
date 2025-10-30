@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -26,11 +25,8 @@ public class SubLedger extends BaseModel {
 
     @Id
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
-    @Size(max = 25)
     private String referenceCode;
     private Short type;
 

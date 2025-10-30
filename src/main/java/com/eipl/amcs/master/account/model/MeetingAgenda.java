@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -27,13 +26,9 @@ import java.time.LocalDate;
 public class MeetingAgenda extends BaseModelTxn {
 
     @Id
-    @Size(max = 10)
     private String code;
-    @Size(max = 3000)
     private String detailedAgenda;
-    @Size(max = 15)
     private String meetingTime;
-    @Size(max = 500)
     private String subjectLine;
     private LocalDate date;
     private LocalDate meetingDate;

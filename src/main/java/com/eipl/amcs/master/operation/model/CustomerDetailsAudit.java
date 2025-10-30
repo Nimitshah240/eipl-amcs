@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -27,25 +26,15 @@ public class CustomerDetailsAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 15)
     private String code;
-    @Size(max = 255)
     private String aadharCardNo;
-    @Size(max = 255)
     private String accountNo;
-    @Size(max = 500)
     private String address;
-    @Size(max = 255)
     private String cstNo;
-    @Size(max = 255)
     private String email;
-    @Size(max = 6)
     private String pincode;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 255)
     private String tinNo;
-    @Size(max = 255)
     private String panNo;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = CustomerSerialize.class)

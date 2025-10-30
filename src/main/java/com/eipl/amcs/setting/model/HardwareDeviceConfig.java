@@ -1,7 +1,7 @@
 package com.eipl.amcs.setting.model;
 
-import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.HardwareDevice;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,13 +22,10 @@ public class HardwareDeviceConfig extends BaseModelTxn {
 
     @Id
     private String code;
-    @Size(max = 10)
     private String commPort;
     private Short connType;
-    @Size(max = 50)
     private String deviceType;
     private Short sequenceNo;
-    @Size(max = 3)
     private String unionCode;
     private Integer analyserModeType; // 0 - Seq, 1 - Milk Type Wise
     private Integer analyserMilkType; // 1 - Cow, 2 - Buff

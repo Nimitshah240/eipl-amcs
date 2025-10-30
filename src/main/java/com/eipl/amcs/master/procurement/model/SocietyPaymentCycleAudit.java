@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
@@ -28,7 +27,6 @@ public class SocietyPaymentCycleAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 15)
     private String code;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
@@ -37,7 +35,6 @@ public class SocietyPaymentCycleAudit extends BaseModelTxnAudit {
     private Boolean billing;
     @Column(name = "lock_billing_process")
     private Boolean lockBillingProcess;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -21,7 +20,6 @@ import javax.validation.constraints.Size;
 public class TaxDepend extends BaseModel {
 
     @Id
-    @Size(max = 10)
     private String code;
     private Short steps;
 

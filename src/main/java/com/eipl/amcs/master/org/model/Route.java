@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
 @SuppressWarnings("serial")
@@ -24,13 +23,9 @@ import java.time.LocalTime;
 @Table(name = "routes")
 public class Route extends BaseModel {
     @Id
-    @Size(max = 10)
     private String code;
-    @Size(max = 10)
     private String codeEx;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     private Integer capacity;

@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -28,11 +27,8 @@ public class BillHeadAudit extends BaseModelAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 12)
     private String code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
     @Column(name = "is_default_head")
     private Boolean defaultHead;

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -24,7 +23,6 @@ import javax.validation.constraints.Size;
 public class TaxDetail extends BaseModelTxn {
 
     @Id
-    @Size(max = 10)
     private String code;
     private Short type; // 1-Addition, 2-Deduction
     private Double percentage;

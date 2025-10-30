@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -32,11 +31,8 @@ import java.time.LocalDate;
 public class BillCriteria extends BaseModel {
 
     @Id
-    @Size(max = 12)
     private String code;
-    @Size(max = 100)
     private String criteria;
-    @Size(max = 255)
     private String formula;
     private LocalDate startDate;
     private LocalDate endDate;

@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
@@ -27,10 +26,8 @@ public class StaffSalaryProcess extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Size(max = 20)
     private String code;
     @Column(name = "account_no")
-    @Size(max = 255)
     private String accountNo;
 
     private double actualValue;
@@ -43,7 +40,6 @@ public class StaffSalaryProcess extends BaseModel {
 
     private int typeOfHead;
     private double value;
-    @Size(max = 255)
     @Column(name = "voucher_no")
     private String voucherNo;
 

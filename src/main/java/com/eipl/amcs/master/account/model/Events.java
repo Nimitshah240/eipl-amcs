@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,7 +24,6 @@ public class Events extends BaseModel {
 
     @Id
     private Integer code;
-    @Size(max = 200)
     private String eventName;
     private Integer eventCode;
     private String description;

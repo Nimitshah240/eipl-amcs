@@ -17,7 +17,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -27,12 +26,9 @@ import javax.validation.constraints.Size;
 public class Ledger extends BaseModel {
 
     @Id
-    @Size(max = 15)
     private String code;
 
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
     private Boolean hasSubLedger;
 

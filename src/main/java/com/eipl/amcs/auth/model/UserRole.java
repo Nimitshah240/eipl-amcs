@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Getter
@@ -24,7 +23,6 @@ import javax.validation.constraints.Size;
 public class UserRole extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private Integer code;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,7 +33,6 @@ public class UserRole extends BaseModelTxn {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_code", foreignKey = @ForeignKey(name = "fk_user_roles_role_code"))
     private Role role;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

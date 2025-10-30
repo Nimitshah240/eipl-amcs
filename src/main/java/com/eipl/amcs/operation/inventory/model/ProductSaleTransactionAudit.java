@@ -15,7 +15,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -29,7 +28,6 @@ public class ProductSaleTransactionAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 40)
     private String invoiceTxnNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -46,11 +44,8 @@ public class ProductSaleTransactionAudit extends BaseModelTxnAudit {
     @Column(name = "is_loose_sale")
     private Boolean looseSale;
 
-    @Size(max = 10)
     private String taxCode;
-    @Size(max = 10)
     private String unionCode;
-    @Size(max = 10)
     private String societyCode;
     private Integer unitCode;
 

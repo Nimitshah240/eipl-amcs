@@ -14,7 +14,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -27,7 +26,6 @@ import java.time.LocalDate;
 public class MemberCreditLimitTransaction extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
     @Digits(integer = 10, fraction = 2)
     private BigDecimal balance;
@@ -35,13 +33,10 @@ public class MemberCreditLimitTransaction extends BaseModelTxn {
     private BigDecimal newValue;
     @Digits(integer = 10, fraction = 2)
     private BigDecimal oldValue;
-    @Size(max = 25)
     private String consumerCode;
     // 1-Member, 2-Non member, 3-Institute, 4-Vendor, 5-Consumner
     private int consumerType;
-    @Size(max = 45)
     private String referenceCode;
-    @Size(max = 50)
     private String transactionType;
     private LocalDate transactionDate;
 

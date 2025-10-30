@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -28,29 +27,20 @@ import java.time.LocalDate;
 public class MemberDetail extends BaseModelTxn {
 
     @Id
-    @Size(max = 20)
     private String code;
 
     private Short paymentMode;
-    @Size(max = 255)
     private String address;
-    @Size(max = 6)
     private String pincode;
-    @Size(max = 255)
     private String accountNo;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 255)
     private String aadharNo;
-    @Size(max = 255)
     private String panNo;
-    @Size(max = 255)
     private String email;
     private LocalDate birthDate;
     private LocalDate registrationDate;
     private Short numberOfCow;
     private Short numberOfBuffalo;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

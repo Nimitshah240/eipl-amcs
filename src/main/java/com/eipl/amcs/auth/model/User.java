@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,17 +23,11 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseModel {
     @Id
-    @Size(max = 15)
     private String code;
-    @Size(max = 100)
     private String username;
-    @Size(max = 100)
     private String password;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String mobileNo;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

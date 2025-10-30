@@ -18,7 +18,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -32,11 +31,9 @@ public class LocalMilkSaleRateAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 25)
     private String code;
     @Digits(integer = 4, fraction = 2)
     private BigDecimal rate;
-    @Size(max = 3)
     private String unionCode;
     private LocalDate wefDate;
 

@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,7 +24,6 @@ public class StaffSalaryHead extends BaseModelTxn {
     @Id
     private Integer code;
     private Integer type;
-    @Size(max = 50)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

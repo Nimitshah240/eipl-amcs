@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -23,44 +22,26 @@ import java.time.LocalDate;
 @Table(name = "unions")
 public class Union extends BaseModel {
     @Id
-    @Size(max = 3)
     private String code;
-    @Size(max = 10)
     private String codeEx;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     private LocalDate registrationDate;
-    @Size(max = 20)
     private String registrationNo;
-    @Size(max = 255)
     private String bankAccountNo;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 255)
     private String upiNo;
 
-    @Size(max = 500)
     private String address;
-    @Size(max = 50)
     private String city;
-    @Size(max = 255)
     private String phoneNo;
-    @Size(max = 6)
     private String pincode;
-    @Size(max = 100)
     private String contactPerson;
-    @Size(max = 255)
     private String contactPersonEmail;
-    @Size(max = 255)
     private String contactPersonMobileNo;
-    @Size(max = 255)
     private String contactPersonPanNo;
-    @Size(max = 255)
     private String contactPersonPhoneNo;
-    @Size(max = 255)
     private String faxNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

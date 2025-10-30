@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -26,7 +25,6 @@ import java.time.LocalDate;
 public class SocietyYearClosing extends BaseModelTxn {
 
     @Id
-    @Size(max = 50)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)

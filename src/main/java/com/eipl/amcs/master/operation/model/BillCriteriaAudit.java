@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -34,11 +33,8 @@ public class BillCriteriaAudit extends BaseModelAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 12)
     private String code;
-    @Size(max = 100)
     private String criteria;
-    @Size(max = 255)
     private String formula;
     @Column
     private LocalDate startDate;

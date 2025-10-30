@@ -20,7 +20,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -32,7 +31,6 @@ import java.time.LocalDate;
 @Table(name = "product_sale")
 public class ProductSale extends BaseModelTxn {
     @Id
-    @Size(max = 35)
     private String invoiceNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -50,7 +48,6 @@ public class ProductSale extends BaseModelTxn {
     private Short paymentMode; //0-cash, 1-credit
     private Short consumerType;
     private Short transactionType;
-    @Size(max = 15)
     private String consumerCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

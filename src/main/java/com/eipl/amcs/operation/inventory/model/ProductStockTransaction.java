@@ -16,7 +16,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -29,7 +28,6 @@ import java.time.LocalDate;
 public class ProductStockTransaction extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
 
     @Digits(integer = 7, fraction = 3)
@@ -38,10 +36,8 @@ public class ProductStockTransaction extends BaseModelTxn {
     private BigDecimal newValue;
     @Digits(integer = 7, fraction = 3)
     private BigDecimal oldValue;
-    @Size(max = 35)
     private String referenceCode;
     private LocalDate transactionDate;
-    @Size(max = 20)
     private String transactionType;
     private String unionCode;
 

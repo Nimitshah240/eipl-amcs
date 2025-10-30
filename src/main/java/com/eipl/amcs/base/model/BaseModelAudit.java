@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,25 +16,21 @@ import java.time.LocalDateTime;
 public class BaseModelAudit implements Serializable, JsonAndTableBuilder {
 
     private LocalDateTime createdAt;
-    @Size(max = 15)
     private String createdBy;
     private LocalDateTime updatedAt;
-    @Size(max = 15)
     private String updatedBy;
     @Column(name = "is_active")
     private boolean active;
 
-    @Column(name = "x_col1", length = 255)
+    @Column(name = "x_col1")
     private String xCol1;
-    @Column(name = "x_col2", length = 255)
+    @Column(name = "x_col2")
     private String xCol2;
-    @Column(name = "x_col3", length = 255)
+    @Column(name = "x_col3")
     private String xCol3;
 
     private LocalDateTime auditCreatedAt;
-    @Size(max = 15)
     private String auditCreatedBy;
-    @Size(max = 15)
     private String operationType;
 
     public BaseModelAudit() {

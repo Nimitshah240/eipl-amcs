@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -31,11 +30,8 @@ public class MilkDispatchTransactionAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 40)
     private String txnCode;
-    @Size(max = 11)
     private String societyPurchaseRateCode;
-    @Size(max = 255)
     private String chamberNo;
     private BigDecimal acidity;
     private BigDecimal amount;

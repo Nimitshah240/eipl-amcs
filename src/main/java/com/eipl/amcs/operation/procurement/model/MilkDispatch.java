@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,7 +32,6 @@ import java.time.LocalTime;
 public class MilkDispatch extends BaseModelTxn {
 
     @Id
-    @Size(max = 35)
     private String challanNo;
     private String destinationCode;
     private BigDecimal dipStickReadingClosing;

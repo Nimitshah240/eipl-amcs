@@ -19,7 +19,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -33,7 +32,6 @@ public class ProductSaleAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 35)
     private String invoiceNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -51,7 +49,6 @@ public class ProductSaleAudit extends BaseModelTxnAudit {
     private Short paymentMode;
     private Short consumerType;
     private Short transactionType;
-    @Size(max = 15)
     private String consumerCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

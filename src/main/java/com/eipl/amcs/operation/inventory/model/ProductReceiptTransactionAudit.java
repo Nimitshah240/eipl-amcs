@@ -21,7 +21,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -34,7 +33,6 @@ public class ProductReceiptTransactionAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 40)
     private String grnTxnNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -48,11 +46,8 @@ public class ProductReceiptTransactionAudit extends BaseModelTxnAudit {
     @Digits(integer = 8, fraction = 2)
     private BigDecimal netAmount;
 
-    @Size(max = 100)
     private String remark;
-    @Size(max = 3)
     private String unionCode;
-    @Size(max = 7)
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

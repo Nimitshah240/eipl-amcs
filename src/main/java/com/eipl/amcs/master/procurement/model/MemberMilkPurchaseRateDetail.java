@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -29,7 +28,6 @@ import java.math.BigDecimal;
 public class MemberMilkPurchaseRateDetail extends BaseModelTxn {
 
     @Id
-    @Size(max = 25)
     private String code;
     @Digits(integer = 2, fraction = 2)
     private BigDecimal fat;

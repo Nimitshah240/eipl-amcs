@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -33,7 +32,6 @@ import java.time.LocalDateTime;
 public class MilkCollection extends BaseModelTxn {
 
     @Id
-    @Size(max = 40)
     private String code;
     private int sampleNo;
     private LocalDateTime collectionDate;

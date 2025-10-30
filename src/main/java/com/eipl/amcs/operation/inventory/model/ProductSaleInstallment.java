@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -29,7 +28,6 @@ import java.time.LocalDate;
 @Table(name = "product_sale_installment")
 public class ProductSaleInstallment extends BaseModelTxn {
     @Id
-    @Size(max = 40)
     private String code;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal actualInstallment;
@@ -39,12 +37,9 @@ public class ProductSaleInstallment extends BaseModelTxn {
     private BigDecimal previousPendingAmount;
     @Column(name = "is_billing")
     private Boolean billing;
-    @Size(max = 35)
     private String invoiceNo;
     private LocalDate deductionDate;
-    @Size(max = 10)
     private String unionCode;
-    @Size(max = 10)
     private String societyCode;
     private Integer type; // 1-product, 2-service, 3- cash adv, 4-farmer bill head
 

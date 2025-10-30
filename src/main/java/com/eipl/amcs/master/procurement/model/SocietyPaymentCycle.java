@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
@@ -30,7 +29,6 @@ import java.time.LocalDateTime;
 public class SocietyPaymentCycle extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
@@ -39,7 +37,6 @@ public class SocietyPaymentCycle extends BaseModelTxn {
     private Boolean billing;
     @Column(name = "lock_billing_process")
     private Boolean lockBillingProcess;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

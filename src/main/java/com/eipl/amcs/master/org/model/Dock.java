@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -22,9 +21,7 @@ import javax.validation.constraints.Size;
 @Table(name = "dock")
 public class Dock extends BaseModel {
     @Id
-    @Size(max = 15)
     private String dockNo;
-    @Size(max = 3)
     private String unionCode;
     private Short isDefault;
 

@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -32,15 +31,11 @@ public class ProductReceiptAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 35)
     private String grnNo;
     private LocalDate grnDate;
     private LocalDate challanDate;
-    @Size(max = 35)
     private String challanNo;
-    @Size(max = 500)
     private String description;
-    @Size(max = 35)
     private String voucherNo;
     private BigDecimal amount;
     private BigDecimal discount;

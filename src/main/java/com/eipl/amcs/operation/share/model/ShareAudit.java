@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -31,7 +30,6 @@ public class ShareAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 25)
     private String code;
     private LocalDate issueDate;
     private LocalDate cancelDate;
@@ -82,9 +80,9 @@ public class ShareAudit extends BaseModelTxnAudit {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "route", "bmc", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
-    @Column(name = "x_col4", length = 255)
+    @Column(name = "x_col4")
     private String xCol4;
-    @Column(name = "x_col5", length = 255)
+    @Column(name = "x_col5")
     private String xCol5;
 
     @Override

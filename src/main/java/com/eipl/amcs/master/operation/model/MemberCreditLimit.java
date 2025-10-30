@@ -14,7 +14,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -26,14 +25,11 @@ import java.math.BigDecimal;
 public class MemberCreditLimit extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
     @Digits(integer = 10, fraction = 2)
     private BigDecimal balance;
     private Short consumerType; //0-Member, 1-Nonmember ...
-    @Size(max = 25)
     private String consumerCode;
-    @Size(max = 3)
     private String unionCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)

@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
@@ -28,10 +27,8 @@ import java.time.LocalDateTime;
 public class MemberMilkPurchaseRateApplicability extends BaseModelTxn {
 
     @Id
-    @Size(max = 25)
     private String code;
     private LocalDateTime wefDate;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

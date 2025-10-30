@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,15 +22,11 @@ public class HardwareDeviceConfigAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 25)
     private String code;
-    @Size(max = 10)
     private String commPort;
     private Short connType;
-    @Size(max = 50)
     private String deviceType;
     private Short sequenceNo;
-    @Size(max = 3)
     private String unionCode;
     private Integer analyserModeType; // 0 - Seq, 1 - Milk Type Wise
     private Integer analyserMilkType; // 1 - Cow, 2 - Buff

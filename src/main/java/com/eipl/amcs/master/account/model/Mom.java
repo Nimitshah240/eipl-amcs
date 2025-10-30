@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -30,7 +29,6 @@ public class Mom extends BaseModelTxn {
     @Id
     private String code;
     private Integer status;
-    @Size(max = 500)
     private String mom;
     private short meetingType;
     @ManyToOne(fetch = FetchType.LAZY)

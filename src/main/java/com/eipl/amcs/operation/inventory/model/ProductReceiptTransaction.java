@@ -22,7 +22,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -33,7 +32,6 @@ import java.math.BigDecimal;
 @Table(name = "product_receipt_transaction")
 public class ProductReceiptTransaction extends BaseModelTxn {
     @Id
-    @Size(max = 40)
     private String grnTxnNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -47,11 +45,8 @@ public class ProductReceiptTransaction extends BaseModelTxn {
     @Digits(integer = 8, fraction = 2)
     private BigDecimal netAmount;
 
-    @Size(max = 100)
     private String remark;
-    @Size(max = 3)
     private String unionCode;
-    @Size(max = 7)
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

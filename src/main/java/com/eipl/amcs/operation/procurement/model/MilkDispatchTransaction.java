@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -31,9 +30,7 @@ public class MilkDispatchTransaction extends BaseModelTxn {
 
     @Id
     private String txnCode;
-    @Size(max = 11)
     private String societyPurchaseRateCode;
-    @Size(max = 255)
     private String chamberNo;
     private BigDecimal acidity;
     private BigDecimal amount;

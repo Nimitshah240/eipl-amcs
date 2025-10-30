@@ -26,9 +26,9 @@ public class InsuranceDetailSummaryAudit extends BaseModelTxnAudit {
     @Column(name = "insurance_master_code")
     private Integer insuranceMasterCode;
 
-    @Column(name = "dcs_code", length = 12)
+    @Column(name = "dcs_code")
     private String dcsCode;
-    @Column(name = "dcs_name", length = 255)
+    @Column(name = "dcs_name")
     private String dcsName;
 
     @Column(name = "from_date")
@@ -37,21 +37,21 @@ public class InsuranceDetailSummaryAudit extends BaseModelTxnAudit {
     @Column(name = "to_date")
     private LocalDate toDate;
 
-    @Column(name = "status", length = 50)
+    @Column(name = "status")
     private String status;
 
-    @Column(name = "originating_org_code", length = 15)
+    @Column(name = "originating_org_code")
     private String originatingOrgCode;
 
-    @Column(name = "originating_org_type", length = 15)
+    @Column(name = "originating_org_type")
     private String originatingOrgType;
 
     @Column(name = "originating_type")
     private Integer originatingType;
-    @Column(name = "x_col4", length = 255)
+    @Column(name = "x_col4")
     private String xCol4;
 
-    @Column(name = "x_col5", length = 255)
+    @Column(name = "x_col5")
     private String xCol5;
 
     @Override

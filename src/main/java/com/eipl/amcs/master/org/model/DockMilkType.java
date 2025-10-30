@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,7 +24,6 @@ import javax.validation.constraints.Size;
 @Table(name = "dock_milk_types")
 public class DockMilkType extends BaseModelTxn {
     @Id
-    @Size(max = 15)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)

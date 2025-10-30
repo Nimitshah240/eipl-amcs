@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -28,23 +27,14 @@ import java.math.BigDecimal;
 @Table(name = "members")
 public class Member extends BaseModel {
     @Id
-    @Size(max = 20)
     private String code;
-    @Size(max = 4)
     private String codeEx;
-    @Size(max = 100)
     private String firstName;
-    @Size(max = 100)
     private String middleName;
-    @Size(max = 100)
     private String lastName;
-    @Size(max = 255)
     private String firstNameLocal;
-    @Size(max = 255)
     private String middleNameLocal;
-    @Size(max = 255)
     private String lastNameLocal;
-    @Size(max = 255)
     private String mobileNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal creditLimit;

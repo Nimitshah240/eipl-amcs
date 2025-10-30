@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -31,15 +30,11 @@ import java.time.LocalDate;
 @Table(name = "product_receipt")
 public class ProductReceipt extends BaseModelTxn {
     @Id
-    @Size(max = 35)
     private String grnNo;
     private LocalDate grnDate;
     private LocalDate challanDate;
-    @Size(max = 35)
     private String challanNo;
-    @Size(max = 500)
     private String description;
-    @Size(max = 35)
     private String voucherNo;
     private BigDecimal amount;
     private BigDecimal discount;

@@ -64,9 +64,9 @@ public class ShareDividend extends BaseModel {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "route", "bmc", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
-    @Column(name = "x_col4", length = 255)
+    @Column(name = "x_col4")
     private String xCol4;
-    @Column(name = "x_col5", length = 255)
+    @Column(name = "x_col5")
     private String xCol5;
 
     @Override

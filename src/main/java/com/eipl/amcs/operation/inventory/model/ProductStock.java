@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -29,11 +28,9 @@ import java.math.BigDecimal;
 public class ProductStock extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
     @Digits(integer = 7, fraction = 3)
     private BigDecimal stock;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

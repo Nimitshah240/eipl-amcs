@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -27,21 +26,13 @@ import java.time.LocalDate;
 public class StaffMember extends BaseModelTxn {
 
     @Id
-    @Size(max = 50)
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String bankAccountNo;
-    @Size(max = 255)
     private String emailId;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 255)
     private String mobileNo;
-    @Size(max = 255)
     private String panNo;
-    @Size(max = 8)
     private String pinCode;
     private Integer paymentMode;
     private LocalDate tenureFromDate;
