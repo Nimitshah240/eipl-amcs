@@ -16,7 +16,6 @@ import com.eipl.amcs.utils.ActivationUtil;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.task.MemberCreateTask;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -234,11 +233,12 @@ public class ActivationController implements MyInitialization {
                     MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                             resourceBundle.getString("activation.success"));
                     alert.createAlert();
-                    Platform.exit();
                 });
                 new Thread(task1).start();
             } catch (Exception exception) {
                 exception.printStackTrace();
+            } finally {
+                System.exit(0);
             }
         });
         new Thread(task).start();

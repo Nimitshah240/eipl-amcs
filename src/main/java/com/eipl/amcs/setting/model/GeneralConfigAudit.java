@@ -22,7 +22,6 @@ public class GeneralConfigAudit extends BaseModelTxnAudit {
     @Column(name = "json_key")
     private String key;
     private String value;
-
     private String societyCode;
 
     @Override
