@@ -4,6 +4,7 @@ import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -28,11 +29,12 @@ public class Society extends BaseModel {
     private String shortName;
     private String nameLocal;
     private String shortNameLocal;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate registrationDate;
     private String registrationCode;
     private String destinationCode;
     private Short destinationType;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate effectiveDate;
     private Short isBmc;
     private String email;

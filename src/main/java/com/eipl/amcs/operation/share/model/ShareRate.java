@@ -5,6 +5,7 @@ import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -26,6 +27,7 @@ public class ShareRate extends BaseModelTxn {
     @Id
     private String code;
     private String unionCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate wefDate;
     private BigDecimal shareAmount;
 

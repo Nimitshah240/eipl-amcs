@@ -7,6 +7,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class CustomerAudit extends BaseModelAudit {
     private BigDecimal creditLimit;
     private String mobileNo;
     private Integer paymentMode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate registrationDate;
     private String registrationNo;
     private Integer type;

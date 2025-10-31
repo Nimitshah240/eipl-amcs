@@ -11,6 +11,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 public class ShareDividend extends BaseModel {
     @Id
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate disbursementDate;
     private BigDecimal dividendAmount;
     private BigDecimal dividendValue;

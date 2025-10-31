@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.insurance.model;
 
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,6 +44,7 @@ public class InsuranceDetailAudit extends BaseModelTxnAudit {
     private Integer originatingType;
     private String xCol4;
     private String xCol5;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfJoiningScheme;
     private String sysUpdatedBy;
 

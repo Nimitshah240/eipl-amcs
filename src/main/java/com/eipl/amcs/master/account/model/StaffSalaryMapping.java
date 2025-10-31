@@ -8,6 +8,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.StaffMemberSerialize;
 import com.eipl.amcs.json.serialize.StaffSalaryHeadSerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -32,6 +33,7 @@ public class StaffSalaryMapping extends BaseModelTxn {
     private Integer code;
     private BigDecimal amount;
     private String unionCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate wefDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)

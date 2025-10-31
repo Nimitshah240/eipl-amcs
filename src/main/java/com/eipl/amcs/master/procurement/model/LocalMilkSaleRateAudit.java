@@ -10,6 +10,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class LocalMilkSaleRateAudit extends BaseModelTxnAudit {
     @Digits(integer = 4, fraction = 2)
     private BigDecimal rate;
     private String unionCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate wefDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

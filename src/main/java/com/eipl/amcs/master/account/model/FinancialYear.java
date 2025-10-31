@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.model.BaseModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,9 @@ public class FinancialYear extends BaseModel {
 
     @Id
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     @Override

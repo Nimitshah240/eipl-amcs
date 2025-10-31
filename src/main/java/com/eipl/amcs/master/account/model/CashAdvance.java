@@ -10,6 +10,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -34,7 +35,9 @@ public class CashAdvance extends BaseModelTxn {
     private String code;
     private BigDecimal amount;
     private Integer noOfInstallment;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate installmentDate;
     private String unionCode;
     private String voucherNo;

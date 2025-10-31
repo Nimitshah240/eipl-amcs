@@ -13,6 +13,7 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -58,6 +59,7 @@ public class MemberBillAudit extends BaseModelTxnAudit {
 
     @Column(name = "is_disbursed")
     private boolean disbursed;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate disbursedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

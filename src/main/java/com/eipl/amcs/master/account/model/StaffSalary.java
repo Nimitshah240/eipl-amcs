@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.StaffMemberDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.StaffMemberSerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -27,12 +28,14 @@ public class StaffSalary extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String code;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "wef_date")
     private LocalDate wefDate;
 
     @Column(name = "effective_working_days")
     private int effectiveWorkingDays;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate month;
 
     @Column(name = "type_of_head")
