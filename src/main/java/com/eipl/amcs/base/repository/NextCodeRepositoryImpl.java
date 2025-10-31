@@ -12,16 +12,6 @@ public class NextCodeRepositoryImpl implements NextCodeRepository {
     @PersistenceContext
     EntityManager em;
 
-    /**
-     * @param className
-     * @param pkColumnName
-     * @param prefix
-     * @param numberOfDigit
-     * @return String
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - added condition to get first bill head code with ending 201.
-     */
     public String getNextCode(String className, String pkColumnName, String prefix, int numberOfDigit) {
         String nextCode = "";
         try {
