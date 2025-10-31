@@ -75,11 +75,9 @@ public class HisaabMitraMilkCollectionDbSaveTask extends Task<Boolean> {
             final AtomicInteger sampleNo = new AtomicInteger(0);
             List<Map<String, Object>> mapCollection = new ArrayList<>();
             AtomicInteger lineno = new AtomicInteger(0);
-//            final AtomicInteger[] sampleNo = {new AtomicInteger(1)};
             AtomicReference<LocalDateTime> prevDate = new AtomicReference<>();
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), "Cp1252"));
 
-            LocalDateTime dateTime = null;
             try (Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
                 reader.lines().forEach(line -> {
                     if (lineno.get() == 0) {

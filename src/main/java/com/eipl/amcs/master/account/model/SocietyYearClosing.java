@@ -1,11 +1,11 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.FinancialYearDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.FinancialYearDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.FinancialYearSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.FinancialYearSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -26,7 +25,6 @@ import java.time.LocalDate;
 public class SocietyYearClosing extends BaseModelTxn {
 
     @Id
-    @Size(max = 50)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 
 public class MilkCollectionPreRequisiteTask extends Task<MilkCollectionPreReqDto> {
+    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
     private final LocalDateTime date;
     private final Shift shift;
     private final Society society;
@@ -21,8 +22,6 @@ public class MilkCollectionPreRequisiteTask extends Task<MilkCollectionPreReqDto
         this.shift = shift;
         this.society = society;
     }
-
-    private static final DateTimeFormatter DATE_TIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     @Override
     protected MilkCollectionPreReqDto call() throws Exception {

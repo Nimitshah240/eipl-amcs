@@ -5,7 +5,6 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
-import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.model.MemberEkyc;
 import com.eipl.amcs.master.operation.task.AllMemberDetailsLoadTask;
 import com.eipl.amcs.master.operation.task.MemberEkycLoadTask;
@@ -43,34 +42,13 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
     private Label lblStatus;
     @FXML
     private Button btnClose;
-    private List<MemberEkyc> listMember = new ArrayList<>();
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private String memberCode;
-    private StringBuilder errorMsg;
-    private List<MemberDto> listMemberDto;
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-//    private void loadDetails() {
-//        var task = new AllMemberDetailsLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<MemberDetail> list = task.get();
-//                for (MemberDetail memberDetail : list) {
-//                    mapDetails.put(memberDetail.getCode(), memberDetail);
-//                }
-//                setupTable();
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            } catch (ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
 
     @Override
     public Node getRoot() {
@@ -82,7 +60,6 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         setupTable();
         loadDetails();
-//        loadData();
         btnClose.setOnAction(e ->
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
     }
@@ -203,7 +180,6 @@ public class MemberEkycController implements MyInitialization, PopupCallback {
             try {
                 List<MemberEkyc> memberList = task.get();
                 if (memberList != null && !memberList.isEmpty()) {
-                    listMember = memberList;
                     tableMemberEkyc.setItems(FXCollections.observableArrayList(memberList));
                     lblStatus.setText("Loaded " + memberList.size() + " records.");
                 } else {

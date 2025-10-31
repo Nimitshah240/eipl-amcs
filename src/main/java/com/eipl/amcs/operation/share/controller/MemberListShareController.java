@@ -37,8 +37,9 @@ public class MemberListShareController implements MyInitialization, PopupCallbac
 
     private static Integer NOOFSHARE = 0;
     private static BigDecimal SHAREAMOUNT = BigDecimal.ZERO;
+    private final ObjectProperty<Member> propMember;
+    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
     public List<Member> memberList = new ArrayList<>();
-    public List<Member> memberList1 = new ArrayList<>();
     public List<Share> shareList = new ArrayList<>();
     @FXML
     AnchorPane root;
@@ -51,10 +52,6 @@ public class MemberListShareController implements MyInitialization, PopupCallbac
     @FXML
     private TableColumn<Member, String> colCode, colFirstName, colNoOfShare, colShareAmount;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<Member> propMember;
-    //    private Map<String, String> mapDetails;
-    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
-    private String memberCode;
     private Map<Object, List<Share>> shareMap = new HashMap<>();
 
     public MemberListShareController() {
@@ -120,8 +117,6 @@ public class MemberListShareController implements MyInitialization, PopupCallbac
                 ex.printStackTrace();
             }
         });
-
-
         new Thread(task).start();
 
     }

@@ -34,20 +34,6 @@ public class MemberAvgTotalPrevCollectionLoadTask extends Task<Object> {
             MemberWiseCollectionDto dtoResult = service.findAllInOne(code, Integer.parseInt(no), milktype, date, shiftCode, paymentCycleCode);
 
             return dtoResult;
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/allinone";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code)
-//                    .queryParam("no", no)
-//                    .queryParam("milktype", milktype)
-//                    .queryParam("paymentCycleCode", paymentCycleCode)
-//                    .queryParam("shiftCode", shiftCode)
-//                    .queryParam("date", date.toString());
-//            ResponseEntity<MemberWiseCollectionDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-//                    null, MemberWiseCollectionDto.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

@@ -55,15 +55,10 @@ public class SkyWayVersionTwoMemberFileProcess extends Task<List<MemberDto>> {
                     int codeEx = CommonUtils.strToInteger(arr[0]);
                     m.setCodeEx(String.format("%04d", Integer.parseInt(arr[0])));
                     m.setCode(MainApp.identityDto.getSociety().getCode() + m.getCodeEx());
-//                    String[] nameArr = arr[17].trim().replace("'", "").split("\\s+");
                     m.setLastName(m.getCodeEx());
                     m.setFirstName("Member");
                     m.setMiddleName("");
                     m.setActive(true);
-//                    String[] nameLocalArr = arr[1].trim().replace("'", "").split("\\s+");
-//                    m.setLastNameLocal(nameLocalArr[0].isEmpty() ? "" : nameLocalArr[0] );
-//                    m.setFirstNameLocal(nameLocalArr.length > 1 ? nameLocalArr[1] : "");
-//                    m.setMiddleNameLocal(nameLocalArr.length > 2 ? nameLocalArr[2] : "");
                     m.setFirstNameLocal(arr[1]);
                     m.setMemberType(memberType);
                     m.setSociety(MainApp.identityDto.getSociety());

@@ -30,29 +30,20 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkReceiptController implements MyInitialization {
 
+    private final ObjectProperty<MilkReceipt> propMilkReceipt;
     @FXML
     private StackPane root;
-
     @FXML
     private TableView<MilkReceipt> tableMilkReceipt;
-
     @FXML
     private TableColumn<MilkReceipt, String> colChallanNo;
-
     @FXML
     private TableColumn<MilkReceipt, LocalDate> colFromDate, colToDate;
-
     @FXML
     private TableColumn<MilkReceipt, Shift> colFromShift, colToShift;
-
-    @FXML
-    private TableColumn<MilkReceipt, String> colDestinationType;
-
     @FXML
     private Button btnAdd, btnEdit, btnDelete, btnClose;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<MilkReceipt> propMilkReceipt;
 
     public MilkReceiptController() {
         propMilkReceipt = new SimpleObjectProperty<>();
@@ -87,9 +78,6 @@ public class MilkReceiptController implements MyInitialization {
         });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnAdd.setOnAction(e -> {
-//                    if (!MainApp.user.getPermissions().contains("ACTION_MILK_RECEIPT_ADD"))
-//                        throw new UnAuthorizedAccessException();
-
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceiptAddEdit.fxml")));
         });
         btnEdit.setOnAction(e -> {
@@ -104,17 +92,12 @@ public class MilkReceiptController implements MyInitialization {
                 alert.createAlert();
             }
         });
-
-//        btnDispatchNote.setOnAction(e -> validateAndGenerateReport());
     }
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        // params.put("p_invoice_no", propMilkReceipt.get().getChallanNo());
         params.put("p_locale", MainApp.locale);
-        // JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_RECEIPT_CHALLAN, params);
-        //  JasperViewer.viewReport(print, false);
     }
 
 

@@ -14,31 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MilkDispatchDto {
-
     private MilkDispatch milkDispatch;
     private List<MilkDispatchTransaction> milkDispatchTransaction;
-
-//    public MilkDispatchDto(MilkDispatch milkDispatch, List<MilkDispatchTransaction> milkDispatchTransaction) {
-//        this.milkDispatch = milkDispatch;
-//        this.milkDispatchTransaction = milkDispatchTransaction;
-//    }
-//
-//    public MilkDispatchDto() {
-//    }
-//
-//    public MilkDispatch getMilkDispatch() {
-//        return milkDispatch;
-//    }
-//
-//    public void setMilkDispatch(MilkDispatch milkDispatch) {
-//        this.milkDispatch = milkDispatch;
-//    }
-//
-//    public List<MilkDispatchTransaction> getMilkDispatchTransaction() {
-//        return milkDispatchTransaction;
-//    }
-//
-//    public void setMilkDispatchTransaction(List<MilkDispatchTransaction> milkDispatchTransaction) {
-//        this.milkDispatchTransaction = milkDispatchTransaction;
-//    }
 }

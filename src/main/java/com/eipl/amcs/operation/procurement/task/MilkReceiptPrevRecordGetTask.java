@@ -18,19 +18,8 @@ public class MilkReceiptPrevRecordGetTask extends Task<MilkReceipt> {
     @Override
     protected MilkReceipt call() throws Exception {
         try {
-
             MilkReceiptRepository repository = EmcsAppContext.getContext().getBean(MilkReceiptRepository.class);
             return repository.findPreviousRecordOfGoodMilkType(fromDate).get();
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_RECEIPT + "/prev-record";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString());
-//            ResponseEntity<MilkReceipt> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkReceipt.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

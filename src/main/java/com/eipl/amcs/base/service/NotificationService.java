@@ -1,6 +1,6 @@
 package com.eipl.amcs.base.service;
 
-import com.eipl.amcs.base.Notification;
+import com.eipl.amcs.base.model.Notification;
 
 import java.util.List;
 import java.util.Optional;

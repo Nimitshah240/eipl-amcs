@@ -10,12 +10,6 @@ import org.slf4j.LoggerFactory;
 public class ProductReceiptGetNextCodeTask extends Task<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductReceiptGetNextCodeTask.class);
 
-//	private final String code;
-
-//	public ProductReceiptGetNextCodeTask(String code) {
-//		this.code = code;
-//	}
-
     public ProductReceiptGetNextCodeTask() {
     }
 

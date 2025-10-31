@@ -21,7 +21,7 @@ import com.eipl.amcs.operation.procurement.repository.LocalMilkSaleRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkReceiptRepository;
 import com.eipl.amcs.operation.procurement.repository.MilkReceiptTransactionRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,6 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
     private MilkTypeRepository milkTypeRepository;
 
     @Override
-    // @Cacheable(value = "MilkDispatchsCache")
     public List<MilkReceipt> findAll() {
 
         List<MilkReceipt> list = milkReceiptRepository.findAll(Sort.by("fromDate").descending());
@@ -88,12 +87,10 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         List<MilkReceipt> milkReceiptList = milkReceiptRepository.findAll();
         Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> p.getMilkDispatch() != null && p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
         if (!milkReceipt1.isEmpty()) {
-            FieldError wefdateNotValid = CommonUtil.getFieldError("milkreceipt", "MilkDispatch",
+            FieldError wefdateNotValid = CommonUtils.getFieldError("milkreceipt", "MilkDispatch",
                     milkReceipt.getMilkDispatch().getChallanNo(), "challanno.not.valid");
             throw new BusinessValidationFailException(getClass(), wefdateNotValid);
         }
-//        if(milkReceipt.getMilkDispatch())
-
 
         milkReceipt.setInitData();
         String milkReceiptCode = nextCodeRepository.getNextCode("MilkReceipt", "code", milkReceipt.getSociety().getCode(), 0);
@@ -102,7 +99,6 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         List<MilkReceiptTransaction> listReceiptTransactions = dto.getMilkReceiptTransaction();
         int txnCnt = 1;
         for (MilkReceiptTransaction list : listReceiptTransactions) {
-            String code = nextCodeRepository.getNextCode("MilkReceiptTransaction", "txnCode", milkReceipt.getCode() + "T", 0);
             list.setMilkReceipt(milkReceipt);
             list.setTxnCode(milkReceipt.getCode() + "T" + txnCnt);
             list.setInitData();
@@ -118,7 +114,7 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         List<MilkReceipt> milkReceiptList = milkReceiptRepository.findAll();
         Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> !p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
         if (!milkReceipt1.isEmpty()) {
-            FieldError wefdateNotValid = CommonUtil.getFieldError("milkreceipt", "MilkDispatch",
+            FieldError wefdateNotValid = CommonUtils.getFieldError("milkreceipt", "MilkDispatch",
                     milkReceipt.getMilkDispatch().getChallanNo(), "challanno.not.valid");
             throw new BusinessValidationFailException(getClass(), wefdateNotValid);
         }
@@ -134,7 +130,6 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
                 list.setInitData();
                 milkReceiptTransactionRepository.customSave(list, identityInfo);
             } else {
-//				txnCnt = Integer.parseInt(list.getTxnCode().substring(list.getTxnCode().length()-1));
                 String[] code = list.getTxnCode().split("T");
                 txnCnt = Integer.parseInt(code[1]);
                 list.setupdateData();
@@ -157,14 +152,11 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         for (MilkReceiptTransaction milkReceiptTransaction : txn) {
             milkReceiptTransactionRepository.delete(milkReceiptTransaction);
         }
-//		milkReceiptTransactionRepository.deleteByMilkDispatch(receipt.get());
-//		milkReceiptRepository.deleteById(code);
         milkReceiptRepository.delete(receipt.get());
     }
 
     @Override
     @Transactional
-//	@CacheEvict(value = { "MilkDispatchsCache" }, allEntries = true)
     public void delete(MilkReceipt MilkReceipt, String identityInfo) {
         milkReceiptRepository.customDelete(MilkReceipt, identityInfo);
     }
@@ -230,6 +222,4 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
         }
         return list;
     }
-
-
 }

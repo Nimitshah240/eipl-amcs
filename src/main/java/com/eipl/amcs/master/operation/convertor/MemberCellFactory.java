@@ -17,7 +17,6 @@ public class MemberCellFactory implements Callback<ListView<Member>, ListCell<Me
                     setText(null);
                 } else {
                     setText(item.toMemberNameWithExCode());
-//                    setText(item.getCodeEx());
                 }
             }
         };

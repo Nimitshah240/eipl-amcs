@@ -150,7 +150,6 @@ public class RateTask extends Task<Void> {
                     rate.setUnionCode(MainApp.identityDto.getUnion().getCode());
                     rate.setWefDate(CommonUtils.getLocalDateTimeFromDateAndShift(LocalDate.parse(purchaseRate.get("wefDate").toString().split(" ")[0]), rate.getShift()));
                     rate.setSociety(MainApp.identityDto.getSociety());
-//                    rate.setRateType(purchaseRate.get("rateType") == null ? mapRateType.get(1) : mapRateType.get((int) purchaseRate.get("rateType")));
                     rate.setxCol1("0-0");
 
 
@@ -172,7 +171,6 @@ public class RateTask extends Task<Void> {
                         based.setStep((int) map.get("step"));
                         based.setFormula(map.get("formulaCode") == null ? null : mapFormula.get(map.get("formulaCode").toString()));
                         based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
-//                        based.setMilkType(mapMilkType.get((int) map.get("milkQualityTypeCode")));
                         based.setMilkQualityType(mapMilkQuality.get(1));
                         listMemberRateBased.add(based);
                     }
@@ -208,12 +206,11 @@ public class RateTask extends Task<Void> {
                         Map<String, String> contentRateDetail = new HashMap<>();
                         contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
                         contentRateDetail.put("milkQualityTypeCode", "1");
-//                        contentRateDetail.put("milkQualityTypeCode", milkQ);
                         contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
                         contentRateDetail.put("rateType", "MEMBER");
                         contentRateDetail.put("rateClass", "0");
 
-                        updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType.toString() + ")");
+                        updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
 
                         requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                 MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
@@ -230,17 +227,16 @@ public class RateTask extends Task<Void> {
                         if (listStr != null && !listStr.isEmpty()) {
                             for (String s : listStr) {
                                 String[] arr = s.split("#");
-                                StringBuilder sb = new StringBuilder();
-                                sb.append(arr[0]);
-                                sb.append("#");
-                                sb.append(arr[1]);
-                                sb.append("#");
-                                sb.append(arr[2]);
-                                sb.append("#");
-                                sb.append(milkType.getCode());
-                                sb.append("#");
-                                sb.append("1");
-                                listRateDetails.add(sb.toString());
+                                String sb = arr[0] +
+                                        "#" +
+                                        arr[1] +
+                                        "#" +
+                                        arr[2] +
+                                        "#" +
+                                        milkType.getCode() +
+                                        "#" +
+                                        "1";
+                                listRateDetails.add(sb);
                             }
                         }
                     }
@@ -249,12 +245,6 @@ public class RateTask extends Task<Void> {
                     // Save member Rate
 
                     try {
-//                        url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_MILK_PURCHASE_RATE;
-//
-//                        ResponseEntity<String> respMemberRateSave =
-//                                restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(memberRateDto), String.class);
-//                        if (respMemberRateSave == null || respMemberRateSave.getStatusCode() != HttpStatus.CREATED)
-//                            return null;
                         String responseRateSave = memberMilkPurchaseRateService.savePurchaseRate(memberRateDto);
                         if (responseRateSave == null)
                             return null;
@@ -318,7 +308,6 @@ public class RateTask extends Task<Void> {
             SocietyMilkPurchaseRateDto socRateDto = new SocietyMilkPurchaseRateDto();
             // Rate
             Map<String, Object> sRate = (Map) data.get("purchaseRate");
-//            temp = sRate;
             int b = 1;
             while (b == 1 || sRate != null) {
                 payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
@@ -365,7 +354,6 @@ public class RateTask extends Task<Void> {
                         based.setFormula(map.get("formulaCode") == null ? null : mapFormula.get(map.get("formulaCode").toString()));
                         based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
                         based.setMilkQualityType(mapMilkQuality.get((int) map.get("milkQualityTypeCode")));
-//                        based.setMilkQualityType(mapMilkQuality.get(1));
                         listMemberRateBased1.add(based);
                     }
                     socRateDto.setListRateBased(listMemberRateBased1);

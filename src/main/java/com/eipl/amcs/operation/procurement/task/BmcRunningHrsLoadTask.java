@@ -11,13 +11,6 @@ import java.util.List;
 
 public class BmcRunningHrsLoadTask extends Task<List<BmcRunningHours>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BmcRunningHrsLoadTask.class);
-//
-//    private final Integer code;
-//
-//    public BmcRunningHrsLoadTask(LocalDate date,LocalDate date) {
-//        this.date = date;
-//    }
-
 
     @Override
     protected List<BmcRunningHours> call() throws Exception {

@@ -11,6 +11,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.FieldError;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -30,6 +31,12 @@ public class CommonUtils {
     //    public static final MathContext MY_DECIMAL32 =  MathContext.DECIMAL128; ///new MathContext(10, RoundingMode.HALF_UP);
     public static final MathContext MY_DECIMAL32 = new MathContext(34, RoundingMode.HALF_UP);
     public static final DateTimeFormatter FMT_DATE_EXCEL = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter Formatter1 = DateTimeFormatter.ofPattern("ddMMyyyy");
+    public static final DateTimeFormatter Formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public static final DateTimeFormatter Formatter3 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public static final DateTimeFormatter Formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+    public static final DateTimeFormatter Formatter5 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     final static int CHAR_PER_LINE = 40;
     final static String SPACE = " ";
     final static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
@@ -37,8 +44,8 @@ public class CommonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
     private static final int SCALE = 2;
     private static final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
-    public static List<String> meetingTypeList;
     private static final List<CustomerTypeKeyValDto> customerTypeList;
+    public static List<String> meetingTypeList;
 
     static {
         meetingTypeList = new ArrayList<>();
@@ -614,5 +621,69 @@ public class CommonUtils {
             return null;
         }
         return Date.valueOf(localDate);
+    }
+
+    public static FieldError getFieldError(String objName, String field, Object rejectedVal, String defMessage) {
+        return new FieldError(objName, field, rejectedVal, false, null, null, defMessage);
+    }
+
+
+    // 1-Member, 2-Non member, 3-Institute, 4-Vendor, 5-Consumer
+    public static short getMemberNonMemberTypeValue(String str) {
+        switch (str.toLowerCase()) {
+            case "member":
+                return (short) 1;
+            case "non Member":
+                return (short) 2;
+            case "institute":
+                return (short) 3;
+            case "vendor":
+                return (short) 4;
+            case "consumer":
+                return (short) 5;
+        }
+        return 0;
+    }
+
+    public static String getIdentityHeader(Map<String, String> headers) {
+        if (headers == null)
+            return null;
+        return headers.get(AppConstant.HEADER_IDENTITY);
+    }
+
+    public static String setIdentityHeader() {
+        String sb = "SOCIETY" +
+                "#" +
+                MainApp.identityDto.getSociety().getCode() +
+                "#" +
+                MainApp.systemId +
+                "#" +
+                MainApp.getProperty(AppConstant.Props.VERSION, "1.0") +
+                "#" +
+                MainApp.locale;
+        return new String(Base64.getEncoder().encode(sb.getBytes()));
+    }
+
+
+    public static int strToInt(String str) {
+        if (str == null || str.isEmpty())
+            return 0;
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    public static BigDecimal calculateClr(BigDecimal fat, BigDecimal snf) {
+        // Expr: CLR = (SNF - (FAT X LR1) - LR2) X 4
+        try {
+            String expr = "(" + snf + "-(" + fat + "*" + "0.21" + ")-" +
+                    "0.66" + ")*4";
+            Expression expression = new Expression(expr);
+            return expression.eval();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

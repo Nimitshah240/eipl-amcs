@@ -13,7 +13,5 @@ public interface InsuranceDetailRepository extends BaseRepository<InsuranceDetai
     @Override
     List<InsuranceDetail> findAll(Sort sort);
 
-    List<InsuranceDetail> findByInsuranceMasterCode(Integer insuranceMasterCode);
-
     List<InsuranceDetail> findByInsuranceMasterCodeAndIsDelete(Integer insuranceMasterCode, boolean b, Sort sort);
 }

@@ -1,12 +1,12 @@
 package com.eipl.amcs.operation.share.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.MemberDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.MemberDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.MemberSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.MemberSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -31,7 +30,6 @@ public class ShareAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 25)
     private String code;
     private LocalDate issueDate;
     private LocalDate cancelDate;
@@ -82,9 +80,9 @@ public class ShareAudit extends BaseModelTxnAudit {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "route", "bmc", "mcc", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
 
-    @Column(name = "x_col4", length = 255)
+    @Column(name = "x_col4")
     private String xCol4;
-    @Column(name = "x_col5", length = 255)
+    @Column(name = "x_col5")
     private String xCol5;
 
     @Override

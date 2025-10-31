@@ -1,10 +1,10 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,7 +24,6 @@ public class Events extends BaseModel {
 
     @Id
     private Integer code;
-    @Size(max = 200)
     private String eventName;
     private Integer eventCode;
     private String description;

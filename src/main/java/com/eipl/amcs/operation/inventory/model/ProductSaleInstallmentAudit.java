@@ -1,12 +1,12 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.MemberDeserializer;
-import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.MemberDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.json.serialize.MemberSerialize;
+import com.eipl.amcs.json.serialize.SocietyPaymentCycleSerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.serialize.MemberSerialize;
-import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -15,7 +15,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -29,7 +28,6 @@ public class ProductSaleInstallmentAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 40)
     private String code;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal actualInstallment;
@@ -39,12 +37,9 @@ public class ProductSaleInstallmentAudit extends BaseModelTxnAudit {
     private BigDecimal previousPendingAmount;
     @Column(name = "is_billing")
     private Boolean billing;
-    @Size(max = 35)
     private String invoiceNo;
     private LocalDate deductionDate;
-    @Size(max = 10)
     private String unionCode;
-    @Size(max = 10)
     private String societyCode;
     private Integer type; // 1-product, 2-service, 3- cash adv, 4-farmer bill head
 

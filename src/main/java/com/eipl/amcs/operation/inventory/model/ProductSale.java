@@ -1,16 +1,16 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.DockDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.DockDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.DockSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.DockSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,7 +20,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -32,7 +31,6 @@ import java.time.LocalDate;
 @Table(name = "product_sale")
 public class ProductSale extends BaseModelTxn {
     @Id
-    @Size(max = 35)
     private String invoiceNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -50,7 +48,6 @@ public class ProductSale extends BaseModelTxn {
     private Short paymentMode; //0-cash, 1-credit
     private Short consumerType;
     private Short transactionType;
-    @Size(max = 15)
     private String consumerCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

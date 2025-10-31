@@ -3,8 +3,8 @@ package com.eipl.amcs;
 import com.eipl.amcs.auth.dto.IdentityDto;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.FxmlLoaderUtil;
-import com.eipl.amcs.base.Notification;
-import com.eipl.amcs.base.model.SentBoxCountTask;
+import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.base.task.SentBoxCountTask;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.DecimalFormat;
@@ -40,11 +39,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class MainApp extends Application {
 
+    public static final Properties properties = new Properties();
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DecimalFormat DECIMAL_FORMAT_1_DIGIT = new DecimalFormat("0.0");
+    public static final DecimalFormat DECIMAL_FORMAT_2_DIGIT = new DecimalFormat("0.00");
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
     public static Stage stage;
     public static BorderPane contentPane;
@@ -54,19 +55,10 @@ public class MainApp extends Application {
     public static FxmlLoaderUtil fxmlLoaderUtil;
     public static ResourceBundle bundle;
     public static Long syncCount;
-    private static URL urlLoadPath;
-    private static URL urlLoadAndSetPath;
-    public static final Properties properties = new Properties();
     public static Map<String, List<TableColItem>> tableConfiguration = new HashMap<>();
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-
-    public static Map<String, String> mapProp = new HashMap<>();
     public static IdentityDto identityDto;
-    private static FinancialYear financialYear;
     public static User user;
     public static String systemId = "";
-
     public static WsSerial wsSerial;
     public static AnalyserSerial analyserSerial;
     public static AnalyserSerial analyserSerial2;
@@ -74,22 +66,19 @@ public class MainApp extends Application {
     public static AnalyserSerial analyserSerial4;
     public static DisplaySerial displaySerial;
     public static SplitterSerial splitterSerial;
-
     public static List<Notification> notificationList = new ArrayList<>();
     public static List<DpuIncentiveRequest> timingList = new ArrayList<>();
     public static List<AllowDcsManualCollectionRange> manualCollectionRangeList = new ArrayList<>();
     public static boolean isIncentive = false;
     public static double incentiveValue = 1.0;
-
+    private static FinancialYear financialYear;
 
     public static String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 
-
     public static void main(String[] args) {
         try {
-//            context = SpringApplication.run(AppConfig.class, args);
             launch(args);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -120,22 +109,6 @@ public class MainApp extends Application {
         MainApp.bundle = bundle;
     }
 
-    public static URL getUrlLoadPath() {
-        return urlLoadPath;
-    }
-
-    public static void setUrlLoadPath(URL urlLoadPath) {
-        MainApp.urlLoadPath = urlLoadPath;
-    }
-
-    public static URL getUrlLoadAndSetPath() {
-        return urlLoadAndSetPath;
-    }
-
-    public static void setUrlLoadAndSetPath(URL urlLoadAndSetPath) {
-        MainApp.urlLoadAndSetPath = urlLoadAndSetPath;
-    }
-
     public static BorderPane getContentPane() {
         return contentPane;
     }
@@ -156,27 +129,31 @@ public class MainApp extends Application {
         MainApp.financialYear = financialYear;
     }
 
-    public static void setUser(User user) {
-        MainApp.user = user;
-    }
-
     public static User getUser() {
         return user;
     }
 
-    public static final DecimalFormat DECIMAL_FORMAT_1_DIGIT = new DecimalFormat("0.0");
-    public static final DecimalFormat DECIMAL_FORMAT_2_DIGIT = new DecimalFormat("0.00");
-    public static final DecimalFormat DECIMAL_FORMAT_3_DIGIT = new DecimalFormat("#.###");
-    private static final long FETCH_INTERVAL_MINUTES = 15;
+    public static void setUser(User user) {
+        MainApp.user = user;
+    }
 
-    public static final Socket socket = new Socket();
+    public static void loadProperties() {
+        Properties prop = new Properties();
+        try (InputStream inputStream = new FileInputStream("resources/app.properties")) {
+            prop.load(inputStream);
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (prop != null && !prop.isEmpty()) {
+            prop.forEach((k, v) -> properties.put(k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
+        }
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
 
         MainApp.stage = stage;
-        LOGGER.info("MainApp init start");
-        // Application screen load
         Parent root = FXMLLoader.load(getClass().getResource("view/EmcsApp.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("view/styles.css").toExternalForm());
@@ -186,11 +163,9 @@ public class MainApp extends Application {
         stage.getIcons().add(new Image(getClass().getResource("view/images/logo-small.png").toExternalForm()));
         stage.show();
 
-        //----------------------------------------------------------------------------------------------------------
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
             try {
                 EmcsAppContext.initializeEmcsAppContext();
-//                context = EmcsAppContext.getContext();
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
             }
@@ -228,8 +203,6 @@ public class MainApp extends Application {
                 closeDeviceIfAny();
             }
         });
-
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         // Create a Timer instance
         Timer timer = new Timer();
@@ -287,20 +260,6 @@ public class MainApp extends Application {
         }
     }
 
-    public static void loadProperties() {
-        Properties prop = new Properties();
-        try (InputStream inputStream = new FileInputStream("resources/app.properties")) {
-            prop.load(inputStream);
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (prop != null && !prop.isEmpty()) {
-            prop.forEach((k, v) -> properties.put(k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
-//            prop.forEach((k, v) -> mapProp.put((String) k, new String(Base64.getDecoder().decode(v.toString().getBytes()))));
-        }
-    }
-
     private void createAndSetLocale() {
         try {
             try (BufferedReader reader = new BufferedReader(new FileReader(new File("resources/locale.txt")))) {
@@ -350,10 +309,6 @@ public class MainApp extends Application {
             MainApp.splitterSerial = null;
         }
 
-//        if (syncCount != null && syncCount != 0) {
-//            MyAlert alert = new InformationAlert(MainApp.getStage(), bundle.getString("pendingsync"),
-//                    bundle.getString("syncdatapending"));
-//            alert.createAlert();
         String backupPath = MainApp.getProperty("backuppath", null);
         if (backupPath != null) {
             backupPath = backupPath.replace(" ", "");
@@ -373,7 +328,6 @@ public class MainApp extends Application {
         });
         new Thread(task).start();
     }
-//    }
 }
 
 

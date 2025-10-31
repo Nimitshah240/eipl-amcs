@@ -21,7 +21,6 @@ public class BmcRunningHrsSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             if (dto == null) {
-                // Handle the case when dto is null
                 return false;
             }
 
@@ -32,32 +31,6 @@ public class BmcRunningHrsSaveTask extends Task<Object> {
             } else {
                 service.update(dto);
             }
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url;
-//            ResponseEntity<BmcRunningHrs> response;
-//
-//            if (this.update == 0) {
-//                url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BMC_RUNNING_HRS;
-//                // POST request for creating a new record
-//                response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), BmcRunningHrs.class);
-//            } else {
-//                url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BMC_RUNNING_HRS;
-//                // PUT request for updating an existing record
-//                Map<String, Object> uriVariables = new HashMap<>();
-//                Long code = dto.getCode();
-//                if (code == null) {
-//                    // Handle the case when code is null
-//                    return false;
-//                }
-//                uriVariables.put("code", code);
-//                response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), BmcRunningHrs.class, uriVariables);
-//            }
-//
-//            if (response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null) {
-//                // Return true if the API call was successful
-//                return true;
-//            }
             return true;
         } catch (HttpStatusCodeException e) {
             // Handle exceptions from the API call and parse the error response
@@ -66,8 +39,6 @@ public class BmcRunningHrsSaveTask extends Task<Object> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // Return false if there was an issue with the API call
         return false;
     }
 }

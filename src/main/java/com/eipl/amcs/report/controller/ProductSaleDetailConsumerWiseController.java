@@ -9,8 +9,6 @@ import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.convertor.ProductLocalCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
-import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
-import com.eipl.amcs.operation.inventory.dto.SaleTxnDto;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -45,9 +43,6 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
 
     private ResourceBundle resourceBundle;
     private List<Product> listProduct;
-    private ReceiptTxnDto receiptTxnDto;
-    private SaleTxnDto saleTxnDto;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -134,8 +129,6 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-//        params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
-//        params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.CODE_WISE_PRODUCT_SALE_DETAIL, params);
         JasperViewer.viewReport(print, false);

@@ -1,15 +1,15 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.MemberDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MemberDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.json.serialize.MemberSerialize;
+import com.eipl.amcs.json.serialize.SocietyPaymentCycleSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.serialize.MemberSerialize;
-import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

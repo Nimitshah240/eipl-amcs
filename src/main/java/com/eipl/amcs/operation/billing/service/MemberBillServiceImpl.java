@@ -90,10 +90,8 @@ public class MemberBillServiceImpl implements MemberBillService {
     public List<MemberBillSummary> findMemberBillSummaryBetWeen(LocalDate fromDate, LocalDate toDate) {
         List<SocietyPaymentCycle> list = paymentCycleRepository.findByFromDateBetween(
                 LocalDateTime.of(fromDate, LocalTime.MIN), LocalDateTime.of(toDate, LocalTime.MAX));
-//		return summaryRepository.findByPaymentCycleIn(list);
 
         List<MemberBillSummary> memberBillSummaryList = summaryRepository.findAllByOrderByPaymentCycleDesc();
-//        List<MemberBillSummary> memberBillSummaryList = summaryRepository.findAllByOrderByPaymentCycleDesc();
         for (MemberBillSummary memberBillSummary : memberBillSummaryList) {
             memberBillSummary.setPaymentCycle(Hibernate.unproxy(memberBillSummary.getPaymentCycle(), SocietyPaymentCycle.class));
         }
@@ -104,10 +102,8 @@ public class MemberBillServiceImpl implements MemberBillService {
     public List<MemberBillSummary> findMemberBillSummaryBetWeenFromDateAndToDate(LocalDate fromDate, LocalDate toDate) {
         List<SocietyPaymentCycle> list = paymentCycleRepository.findByFromDateBetween(
                 LocalDateTime.of(fromDate, LocalTime.MIN), LocalDateTime.of(toDate, LocalTime.MAX));
-//		return summaryRepository.findByPaymentCycleIn(list);
 
         List<MemberBillSummary> memberBillSummaryList = summaryRepository.findByPaymentCycleIn(list);
-//        List<MemberBillSummary> memberBillSummaryList = summaryRepository.findAllByOrderByPaymentCycleDesc();
         for (MemberBillSummary memberBillSummary : memberBillSummaryList) {
             memberBillSummary.setPaymentCycle(Hibernate.unproxy(memberBillSummary.getPaymentCycle(), SocietyPaymentCycle.class));
         }
@@ -120,11 +116,6 @@ public class MemberBillServiceImpl implements MemberBillService {
         return summaryRepository.findByPaymentCycle(paymentCycle)
                 .orElseThrow(() -> new EntityNotFoundException(MemberBillSummary.class, "invalid.paymentcycle"));
     }
-
-//	@Override
-//	public List<MemberBill> findMemberBill(SocietyPaymentCycle paymentCycle,String societyCode) {
-//		return callSp(societyCode, paymentCycle);
-//	}
 
     @Override
     public MemberBillSummary checkTableData(SocietyPaymentCycle paymentCycle) {
@@ -176,7 +167,6 @@ public class MemberBillServiceImpl implements MemberBillService {
             if (duplicate.contains(member.getCode()))
                 continue;
             MemberBill mb = new MemberBill();
-            Member member1 = null;
             if (member.getxCol1() != null && !member.getxCol1().equalsIgnoreCase("")) {
                 String second = member.getxCol1();
                 duplicate.add(second);
@@ -198,8 +188,6 @@ public class MemberBillServiceImpl implements MemberBillService {
             member.setMemberType(Hibernate.unproxy(member.getMemberType(), MemberType.class));
             member.setSociety(Hibernate.unproxy(member.getSociety(), Society.class));
             member.setMilkType(Hibernate.unproxy(member.getMilkType(), MilkType.class));
-
-//            MemberBill mb = new MemberBill();
             mb.setCode(billCode);
             mb.setMember(member);
             mb.setPaymentMode(memberDetail.getPaymentMode() != null ? memberDetail.getPaymentMode() : 0);
@@ -497,8 +485,6 @@ public class MemberBillServiceImpl implements MemberBillService {
                         for (int i = 0; i < currentInstallments.size(); i++) {
                             ProductSaleInstallment inst = currentInstallments.get(i);
                             BigDecimal bg = inst.getInstallmentAmount().add(inst.getPreviousPendingAmount());
-//                            BigDecimal ps_amount = bg.subtract(txnPs.getAdjustment())
-//                                    .setScale(2, RoundingMode.HALF_UP);;
                             BigDecimal ps_amount = txnPs.getAdjustment().multiply(bg).divide(totalAmt, RoundingMode.HALF_UP)
                                     .setScale(2, RoundingMode.HALF_UP);
                             if (i > 0 && i == currentInstallments.size() - 1)
@@ -572,8 +558,6 @@ public class MemberBillServiceImpl implements MemberBillService {
                         for (int i = 0; i < currentInstallments.size(); i++) {
                             ProductSaleInstallment inst = currentInstallments.get(i);
                             BigDecimal bg = inst.getInstallmentAmount().add(inst.getPreviousPendingAmount());
-//                            BigDecimal cs_amount = bg.subtract(txnPs.getAdjustment())
-//                                    .setScale(2, RoundingMode.HALF_UP);
                             BigDecimal cs_amount = txnPs.getAdjustment().multiply(bg).divide(totalAmt, RoundingMode.HALF_UP)
                                     .setScale(2, RoundingMode.HALF_UP);
                             if (i > 0 && i == currentInstallments.size() - 1)
@@ -637,13 +621,6 @@ public class MemberBillServiceImpl implements MemberBillService {
             productSaleInstallment.setBilling(true);
             installmentRepository.customUpdate(productSaleInstallment, "");
         }
-
-//		for (String string : memberList) {
-//			Member member = memberRepository.getById(string);
-//			MemberBill mb = billRepository.findByMember(member);
-//			mb.setStatus((short) 2);
-//			billRepository.save(mb);
-//		}
         return true;
     }
 
@@ -676,21 +653,8 @@ public class MemberBillServiceImpl implements MemberBillService {
             memberBill.setVoucherNo(voucherNo);
             createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo);
 
-
-//            int vn = CommonUtil.strToInt(voucherNo.substring(7)) + 1;
-//            voucherNo = memberBill.getSociety().getCode() + vn;
-
-
-//            billRepository.customUpdate(memberBill, identityHeader);
             billRepository.save(memberBill);
         }
-        //for (String string : memberList) {
-        //Member member = memberRepository.getById(string);
-        //MemberBill mb = billRepository.findByMember(member);
-        //mb.setStatus((short) 6);
-        //mb.setDisbursedDate(LocalDate.now());
-        //save(mb);
-        //}
         return true;
     }
 
@@ -698,9 +662,7 @@ public class MemberBillServiceImpl implements MemberBillService {
         try {
             if (ledgerMappingBillHeads == null || ledgerMappingBillHeads.isEmpty())
                 return null;
-
             if (ledgerMappingBillHeads.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
-
 
             List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(AppConstant.EventCode.MEMBER_BILL);
             if (eventsList == null || eventsList.isEmpty())
@@ -708,7 +670,6 @@ public class MemberBillServiceImpl implements MemberBillService {
 
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(memberBill.getDisbursedDate());
 
-//            voucherNo = nextCodeRepository.getNextCode("Voucher", "code", memberBill.getSociety().getCode(), 1);
             if (voucherNo == null)
                 return null;
 
@@ -793,6 +754,4 @@ public class MemberBillServiceImpl implements MemberBillService {
             return null;
         }
     }
-
-
 }

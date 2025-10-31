@@ -1,10 +1,10 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,7 +14,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -26,14 +25,11 @@ import java.math.BigDecimal;
 public class MemberCreditLimit extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
     @Digits(integer = 10, fraction = 2)
     private BigDecimal balance;
     private Short consumerType; //0-Member, 1-Nonmember ...
-    @Size(max = 25)
     private String consumerCode;
-    @Size(max = 3)
     private String unionCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)

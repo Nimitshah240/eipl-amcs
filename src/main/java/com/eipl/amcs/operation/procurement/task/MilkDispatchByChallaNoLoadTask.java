@@ -25,15 +25,6 @@ public class MilkDispatchByChallaNoLoadTask extends Task<MilkDispatch> {
             if (milkDispatch == null || milkDispatch.isEmpty())
                 return null;
             return milkDispatch.get();
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/milk-dispatch-by-challan-no";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("challanNo",challanNo);
-//            ResponseEntity<MilkDispatch> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkDispatch.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Milk dispatch transaction fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

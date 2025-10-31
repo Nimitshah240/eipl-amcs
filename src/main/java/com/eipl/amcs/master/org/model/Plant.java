@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.*;
-import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -22,26 +21,15 @@ import javax.validation.constraints.Size;
 @Table(name = "plants")
 public class Plant extends BaseModel {
     @Id
-    @Size(max = 4)
     private String code;
-    @Size(max = 10)
     private String codeEx;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
-
-    @Size(max = 500)
     private String address;
-    @Size(max = 50)
     private String city;
-    @Size(max = 255)
     private String phoneNo;
-    @Size(max = 100)
     private String contactPerson;
-    @Size(max = 255)
     private String contactPersonEmail;
-    @Size(max = 255)
     private String contactPersonMobileNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

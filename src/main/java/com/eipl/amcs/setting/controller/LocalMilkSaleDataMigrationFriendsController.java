@@ -42,6 +42,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleDataMigrationFriendsController implements MyInitialization {
+    private final String selectedFilePath = null;
     @FXML
     StackPane root;
     @FXML
@@ -54,10 +55,8 @@ public class LocalMilkSaleDataMigrationFriendsController implements MyInitializa
     TextField txtFilePath;
     @FXML
     Button btnSave, btnClose, btnBrowse, btnGenerate;
-    String milkTypeStr = null;
     List<LocalMilkSale> list = new ArrayList<>();
     private ResourceBundle resourceBundle;
-    private final String selectedFilePath = null;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
     private List<MilkClass> classList;
@@ -82,17 +81,6 @@ public class LocalMilkSaleDataMigrationFriendsController implements MyInitializa
         btnGenerate.setOnAction(e -> {
             loadImportPreReq("SkyWay", txtFilePath.getText());
         });
-//        btnBrowse.setOnAction(e -> {
-//            File file = CommonUtils.openFileDialog("Data");
-//            if (file == null) {
-//                MyAlert alert = new WarningAlert(MainApp.getStage(), "Data",
-//                        resourceBundle.getString("select.file"));
-//                alert.createAlert();
-//                return;
-//            }
-//            selectedFilePath = file.getAbsolutePath();
-//            txtFilePath.setText(selectedFilePath);
-//        });
     }
 
 
@@ -201,84 +189,26 @@ public class LocalMilkSaleDataMigrationFriendsController implements MyInitializa
 
 
     public void setData(String type, String path) {
-        {
-            List<LocalMilkSale> list = new ArrayList<>();
-            try {
-                String urlDb = "jdbc:ucanaccess://" + path;
-//                String[] cowRangeArr = cowRange.split("-");
-//                int cowMin = CommonUtils.strToInteger(cowRangeArr[0]);
-//                int cowMax = CommonUtils.strToInteger(cowRangeArr[1]);
-//                String[] buffRangeArr = buffRange.split("-");
-//                int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
-//                int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
+        try {
+            String urlDb = "jdbc:ucanaccess://" + path;
 
-                try (Connection connection = DriverManager.getConnection(urlDb, "", "")) {
-                    Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("select * from localsale");
+            try (Connection connection = DriverManager.getConnection(urlDb, "", "")) {
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("select * from localsale");
 
-                    while (resultSet.next()) {
-                        // Member
-                        LocalMilkSale m = new LocalMilkSale();
-                        int codeEx = CommonUtils.strToInteger(resultSet.getString("memCode"));
-                        m.setInvoiceNo(String.format("%04d", codeEx));
-//                        m.setCode(MainApp.identityDto.getSociety().getCode() + m.getCodeEx());
-                        String[] nameArr = resultSet.getString("memName") != null ?
-                                resultSet.getString("memName").split("\\s+") : null;
-//                        if(nameArr != null) {
-//                            m.setLastName(nameArr[0]);
-//                            m.setFirstName(nameArr.length > 1 ? nameArr[1] : "Member");
-//                            m.setMiddleName(nameArr.length > 2 ? nameArr[2] : "");
-//                        }
-//                        else{
-//                            m.setFirstName("Member");
-//                            m.setLastName(m.getCodeEx());
-//                        }
-//                    String[] nameLocalArr = resultSet.getString("SNameG") != null ?
-//                            resultSet.getString("SNameG").split("\\s+") : null;
-//                    if(nameLocalArr != null) {
-//                        m.setLastNameLocal(nameLocalArr[0]);
-//                        m.setFirstNameLocal(nameLocalArr.length > 1 ? nameLocalArr[1] : "");
-//                        m.setMiddleNameLocal(nameLocalArr.length > 2 ? nameLocalArr[2] : "");
-////                    }
-//                        m.setMemberType(memberType);
-//                        m.setFirstNameLocal("");
-//                        m.setMiddleNameLocal("");
-//                        m.setLastNameLocal("");
-//                        m.setSociety(MainApp.identityDto.getSociety());
-////                    m.setMobileNo(resultSet.getString("Phone") == null || resultSet.getString("Phone").isEmpty() || resultSet.getString("Phone").equalsIgnoreCase("0") ?
-////                            "0000000000" : resultSet.getString("Phone"));
-//                        m.setMobileNo("0000000000");
-//                        if (codeEx >= cowMin && codeEx <= cowMax)
-//                            m.setMilkType(milkTypeMap.get("c"));
-//                        else if (codeEx >= buffMin && codeEx <= buffMax)
-//                            m.setMilkType(milkTypeMap.get("b"));
-//                        else
-//                            m.setMilkType(milkTypeMap.get("c"));
-//
-////                    String genderStr = resultSet.getString("Sex");
-//
-//
-//                        // Member details
-//                        MemberDetail md = new MemberDetail();
-//                        md.setGender(genderMap.get("m"));
-//                        md.setUnionCode(MainApp.identityDto.getUnion().getCode());
-////                    md.setNumberOfCow(resultSet.getShort("NoOfCow"));
-////                    md.setNumberOfBuffalo(resultSet.getShort("NoOfBuff"));
-//                        md.setMember(m);
-//                        md.setAccountNo(resultSet.getString("bankcode"));
-//                        list.add(new MemberDto(m, md));
-//                    }
-//                    resultSet.close();
-                    }
-
-//                return list;
-                } catch (Exception e) {
-                    e.printStackTrace();
-//                return null;
+                while (resultSet.next()) {
+                    // Member
+                    LocalMilkSale m = new LocalMilkSale();
+                    int codeEx = CommonUtils.strToInteger(resultSet.getString("memCode"));
+                    m.setInvoiceNo(String.format("%04d", codeEx));
+                    String[] nameArr = resultSet.getString("memName") != null ?
+                            resultSet.getString("memName").split("\\s+") : null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

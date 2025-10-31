@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.share.model.Share;
@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 public class ShareDividendController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<Share> propShareIssue;
+    private final List<ShareDividend> shareDividendList = new ArrayList<>();
     ShareDividend shareDividend;
     @FXML
     private StackPane root;
@@ -47,7 +48,7 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
     @FXML
     private TableView<Share> tableShareDividend;
     @FXML
-    private TableColumn<Share, String> colVoucherNo, colConsumerName, colNoOfShare, colMemberCode, colMemberName, colDividend;
+    private TableColumn<Share, String> colVoucherNo, colNoOfShare, colMemberCode, colMemberName, colDividend;
     @FXML
     private TableColumn<Share, LocalDate> colDate;
     @FXML
@@ -61,10 +62,8 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
     private Stage stage;
-    private String name;
     private List<Member> listMembers;
     private List<Share> shareList = new ArrayList<>();
-    private final List<ShareDividend> shareDividendList = new ArrayList<>();
 
     public ShareDividendController() {
         propShareIssue = new SimpleObjectProperty<>();
@@ -204,14 +203,10 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
             colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getIssueDate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareAmount()));
-//        colMemberName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberName()));
             colMemberCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().getCode()));
             colNoOfShare.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfShare().toString()));
             colDividend.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getXcol4()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
-
-
-//        propShareIssue.bind(tableShareDividend.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("ShareDividend setuptable Exception");
             e.printStackTrace();

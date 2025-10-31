@@ -37,9 +37,7 @@ public class LedgerMappingTaxDetailLoadTask extends Task<TaxDetailMappingDto> {
 
 
             List<LedgerMappingTaxDetail> listMapping = new ArrayList<>(mapping);
-//            for (LedgerMappingTaxDetail mp : listMapping) {
-//                taxDetailList.removeIf(p->p.getTax().getCode().equalsIgnoreCase(mp.getTaxDetail().getCode()));
-//            }
+
             for (TaxDto taxDto : taxDetailList) {
                 for (TaxDetail taxDetail : taxDto.getTaxDetails()) {
                     LedgerMappingTaxDetail obj = listMapping.stream().filter(p -> p.getTaxDetail().getCode().equalsIgnoreCase(taxDetail.getCode()))

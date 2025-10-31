@@ -1,12 +1,18 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.ProductDeserializer;
+import com.eipl.amcs.json.deserialize.ProductReceiptDeserializer;
+import com.eipl.amcs.json.deserialize.TaxDeserializer;
+import com.eipl.amcs.json.deserialize.UnitDeserializer;
+import com.eipl.amcs.json.serialize.ProductReceiptSerialize;
+import com.eipl.amcs.json.serialize.ProductSerialize;
+import com.eipl.amcs.json.serialize.TaxSerialize;
+import com.eipl.amcs.json.serialize.UnitSerialize;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,7 +22,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -27,7 +32,6 @@ import java.math.BigDecimal;
 @Table(name = "product_receipt_transaction")
 public class ProductReceiptTransaction extends BaseModelTxn {
     @Id
-    @Size(max = 40)
     private String grnTxnNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal amount;
@@ -41,11 +45,8 @@ public class ProductReceiptTransaction extends BaseModelTxn {
     @Digits(integer = 8, fraction = 2)
     private BigDecimal netAmount;
 
-    @Size(max = 100)
     private String remark;
-    @Size(max = 3)
     private String unionCode;
-    @Size(max = 7)
     private String societyCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -22,21 +22,6 @@ public class WarningAlert extends MyAlert {
         super(stage, title, message);
     }
 
-//    @Override
-//    public void createAlert() {
-//        Alert alert = new Alert(AlertType.WARNING);
-//        alert.getDialogPane().getStylesheets().add(MainApp.class.getResource("view/dialog.css").toExternalForm());
-//        alert.initStyle(StageStyle.TRANSPARENT);
-//        alert.setHeaderText(getTitle());
-//        alert.setContentText(getMessage());
-//        alert.setTitle(getTitle());
-//        alert.initOwner(getStage());
-//        alert.setResizable(true);
-//        alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label)
-//                .forEach(node -> ((Label) node).setMinHeight(Region.USE_PREF_SIZE));
-//        alert.showAndWait();
-//    }
-
     @Override
     public void createAlert() {
         Alert alert = new Alert(AlertType.WARNING);

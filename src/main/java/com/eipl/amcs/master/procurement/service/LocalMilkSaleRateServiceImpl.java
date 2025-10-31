@@ -8,7 +8,7 @@ import com.eipl.amcs.master.global.repository.MilkClassRepository;
 import com.eipl.amcs.master.global.repository.MilkTypeRepository;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
 import com.eipl.amcs.master.procurement.repository.LocalMilkSaleRateRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class LocalMilkSaleRateServiceImpl implements LocalMilkSaleRateService {
                 localMilkSaleRate.getSociety(), localMilkSaleRate.getMilkType(), localMilkSaleRate.getMilkClass(),
                 localMilkSaleRate.getWefDate());
         if (rate.isPresent()) {
-            FieldError nameNotValid = CommonUtil.getFieldError("LocalMilkSaleRate", "wefDate",
+            FieldError nameNotValid = CommonUtils.getFieldError("LocalMilkSaleRate", "wefDate",
                     localMilkSaleRate.getWefDate(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
@@ -71,7 +71,7 @@ public class LocalMilkSaleRateServiceImpl implements LocalMilkSaleRateService {
                 || date.isBefore(localMilkSaleRate.getWefDate())) {
 
         } else {
-            FieldError nameNotValid = CommonUtil.getFieldError("localmilksalerate", "name", localMilkSaleRate.getCode(),
+            FieldError nameNotValid = CommonUtils.getFieldError("localmilksalerate", "name", localMilkSaleRate.getCode(),
                     "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }

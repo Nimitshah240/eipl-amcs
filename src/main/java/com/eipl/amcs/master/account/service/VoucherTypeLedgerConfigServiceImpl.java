@@ -47,9 +47,6 @@ public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConf
                     ooo.setupdateData();
                     if (!mappingVoucherType.getLedger().getCode().equalsIgnoreCase("0"))
                         voucherTypeLedgerConfigRepository.customUpdate(mappingVoucherType, identityInfo);
-                    else {
-                    }
-//					voucherTypeLedgerConfigRepository.save(ooo);
                 } else {
                     if (mappingVoucherType.getLedger() != null) {
                         mappingVoucherType.setInitData();
@@ -58,7 +55,6 @@ public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConf
                         mappingVoucherType.setCode(societyCode + "-" + mappingVoucherType.getVoucherType().getCode());
                         voucherTypeLedgerConfigRepository.customSave(mappingVoucherType, identityInfo);
                     }
-//					voucherTypeLedgerConfigRepository.save(mappingVoucherType);
                 }
             }
         }

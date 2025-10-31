@@ -1,12 +1,12 @@
 package com.eipl.amcs.operation.billing.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -25,7 +25,6 @@ import java.time.LocalDate;
 @Table(name = "bonus_summary_audit")
 public class BonusSummaryAudit extends BaseModelTxnAudit {
 
-    //	BaseModelTxnAudit
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
@@ -279,20 +279,4 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-//    private void loadSociety() {
-//        var task = new SocietyLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Society> list = task.get();
-//                if (list != null){
-//                    cboxSociety.setItems(FXCollections.observableList(list));
-//                }
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
-
 }

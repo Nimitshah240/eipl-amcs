@@ -25,16 +25,6 @@ public class MilkDispatchSocietyPurchaseRateLoadTask extends Task<SocietyMilkPur
         try {
             MilkDispatchService service = EmcsAppContext.getContext().getBean(MilkDispatchService.class);
             return service.fetchPurchaseRateCode(date, shift.getCode(), society.getCode());
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/rate-code";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("date", date.toString())
-//                    .queryParam("shiftCode", shift.getCode())
-//                    .queryParam("societyCode", society.getCode());
-//            ResponseEntity<SocietyMilkPurchaseRate> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, SocietyMilkPurchaseRate.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

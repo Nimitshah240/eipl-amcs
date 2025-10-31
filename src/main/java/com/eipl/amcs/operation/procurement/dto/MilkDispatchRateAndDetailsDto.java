@@ -17,23 +17,4 @@ public class MilkDispatchRateAndDetailsDto {
     @JsonIgnoreProperties(value = {"shift", "shiftApplicable", "rateType"})
     private SocietyMilkPurchaseRate societyMilkPurchaseRate;
     private Map<String, BigDecimal> details;
-
-//    public MilkDispatchRateAndDetailsDto() {
-//    }
-//
-//    public SocietyMilkPurchaseRate getSocietyMilkPurchaseRate() {
-//        return societyMilkPurchaseRate;
-//    }
-//
-//    public void setSocietyMilkPurchaseRate(SocietyMilkPurchaseRate societyMilkPurchaseRate) {
-//        this.societyMilkPurchaseRate = societyMilkPurchaseRate;
-//    }
-//
-//    public Map<String, BigDecimal> getDetails() {
-//        return details;
-//    }
-//
-//    public void setDetails(Map<String, BigDecimal> details) {
-//        this.details = details;
-//    }
 }

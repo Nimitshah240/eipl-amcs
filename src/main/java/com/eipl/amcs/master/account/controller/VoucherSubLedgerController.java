@@ -31,7 +31,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class VoucherSubLedgerController implements MyInitialization {
-    private final StringBuilder errorMsg = null;
     private final ObjectProperty<VoucherSubLedger> propSubLedger;
     public VoucherTransaction voucherTransaction = new VoucherTransaction();
     @FXML
@@ -221,7 +220,6 @@ public class VoucherSubLedgerController implements MyInitialization {
         voucherSubLedger.setNarration(txtRemark.getText());
         voucherSubLedger.setSubLedger(cboxSubLedger.getValue());
         voucherSubLedger.setAmount(new BigDecimal(txtAmount1.getText()));
-//        voucherSubLedger.setCreditDebit();
 
         total = total.add(voucherSubLedger.getAmount());
         if (total.compareTo(new BigDecimal(txtAmount.getText())) > 0) {

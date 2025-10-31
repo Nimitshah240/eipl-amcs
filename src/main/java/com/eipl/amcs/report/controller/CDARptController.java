@@ -10,7 +10,6 @@ import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -39,8 +38,6 @@ public class CDARptController implements MyInitialization {
     private ComboBox<MilkType> cboxMilkType;
     private List<MilkType> listMilkType;
     @FXML
-    private SwingNode reportNode;
-    @FXML
     private ComboBox cboxQuantityMode;
     @FXML
     private ComboBox<String> cboxType1, cboxMode, cboxType2;
@@ -63,7 +60,6 @@ public class CDARptController implements MyInitialization {
         btnGenerate.setOnAction(e -> {
             validateAndGenerateReport();
         });
-
 
         List<String> list = new ArrayList<>();
         list.add("Litre");
@@ -200,6 +196,4 @@ public class CDARptController implements MyInitialization {
         });
         new Thread(task1).start();
     }
-
-
 }

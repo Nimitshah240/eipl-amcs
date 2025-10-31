@@ -1,13 +1,8 @@
 package com.eipl.amcs.master.operation.service;
 
 import com.eipl.amcs.base.repository.NextCodeRepository;
-import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
-import com.eipl.amcs.master.account.repository.LedgerRepository;
-import com.eipl.amcs.master.account.repository.LedgerSubLedgerMappingRepository;
-import com.eipl.amcs.master.account.repository.SubLedgerLedgerConfigRepository;
-import com.eipl.amcs.master.account.repository.SubLedgerRepository;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
@@ -26,7 +21,7 @@ import com.eipl.amcs.operation.procurement.dto.MemberSocietyInfoDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.report.dto.MemberRegister;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -61,17 +56,6 @@ public class MemberServiceImpl implements MemberService {
     private SocietyRepository socRepository;
     @Autowired
     private SocietyPaymentCycleRepository paymentCycleRepository;
-    @Autowired
-    private NextCodeService nextCodeService;
-    @Autowired
-    private LedgerRepository ledgerRepository;
-    @Autowired
-    private LedgerSubLedgerMappingRepository mappingRepository;
-    @Autowired
-    private SubLedgerRepository subLedgerRepository;
-    @Autowired
-    private SubLedgerLedgerConfigRepository subLedgerLedgerConfigRepository;
-
 
     @Override
     public List<Member> findAll() {
@@ -91,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> memberData = repository.findById(memberDto.getMember().getCode());
         if (memberData.isPresent()) {
             throw new BusinessValidationFailException(Member.class,
-                    CommonUtil.getFieldError("Member", "code", memberDto.getMember().getCode(), "code.not.valid"));
+                    CommonUtils.getFieldError("Member", "code", memberDto.getMember().getCode(), "code.not.valid"));
         }
 
         MemberDto memberDtoNew = new MemberDto();
@@ -111,36 +95,6 @@ public class MemberServiceImpl implements MemberService {
         // Credit limit
         if (memberDtoNew.getMember().getMemberType().getCode() == 1)
             setMemberCreditLimit(memberDtoNew.getMember(), memberDtoNew.getMemberDetail());
-
-
-//        SubLedger subLedger = new SubLedger();
-//        String code = nextCodeService.getNextCode("SubLedger", "code", member.getSociety().getCode(), 0);
-//        subLedger.setCode(code);
-//        subLedger.setReferenceCode(member.getCode());
-//        subLedger.setType(member.getMemberType().getCode() == 1 ? (short) 1 : (short) 2);
-//        subLedger.setName(member.getFirstName() + " " + member.getMiddleName() + " " + member.getLastName());
-//        subLedger.setNameLocal(member.getFirstNameLocal() + " " + member.getMiddleNameLocal() + " " + member.getLastNameLocal());
-//        subLedger.setSociety(member.getSociety());
-//        subLedger.setUnionCode(member.getSociety().getUnion() != null ? member.getSociety().getUnion().getCode() : null);
-//        subLedger.setInitData();
-//        subLedgerRepository.customSave(subLedger, identityInfo);
-//        subLedgerRepository.save(subLedger);
-
-//        List<SubLedgerLedgerConfig> listConfig = subLedgerLedgerConfigRepository.findBySubLedgerType(1);
-//        if (listConfig != null && !listConfig.isEmpty()) {
-//            for (Ledger ledger : listConfig.stream().map(m -> m.getLedger()).collect(Collectors.toList())) {
-//                LedgerSubLedgerMapping mapping = new LedgerSubLedgerMapping();
-//                mapping.setCode(subLedger.getCode() + "-" + ledger.getCode());
-//                mapping.setSubLedger(subLedger);
-//                mapping.setLedger(ledger);
-//                mapping.setSociety(member.getSociety());
-//                mapping.setUnionCode(member.getSociety().getUnion() != null ? member.getSociety().getUnion().getCode() : null);
-//                mappingRepository.customSave(mapping, identityInfo);
-////                mappingRepository.save(mapping);
-//            }
-//        }
-
-
         return memberDtoNew;
     }
 
@@ -158,12 +112,6 @@ public class MemberServiceImpl implements MemberService {
                     memberOld.setFirstNameLocal(item.getMember().getFirstNameLocal());
                     memberOld.setMiddleNameLocal(item.getMember().getMiddleNameLocal());
                     memberOld.setLastNameLocal(item.getMember().getLastNameLocal());
-//                    memberOld.setFirstName(!item.getMember().getFirstName().equalsIgnoreCase("") ? item.getMember().getFirstName() : memberOld.getFirstName());
-//                    memberOld.setMiddleName(!item.getMember().getMiddleName().equalsIgnoreCase("") ? item.getMember().getMiddleName() : memberOld.getMiddleName());
-//                    memberOld.setLastName(!item.getMember().getLastName().equalsIgnoreCase("") ? item.getMember().getLastName() : memberOld.getLastName());
-//                    memberOld.setFirstNameLocal(!item.getMember().getFirstNameLocal().equalsIgnoreCase("") ? item.getMember().getFirstNameLocal() : memberOld.getFirstNameLocal());
-//                    memberOld.setMiddleNameLocal(!item.getMember().getMiddleNameLocal().equalsIgnoreCase("") ? item.getMember().getMiddleNameLocal() : memberOld.getMiddleNameLocal());
-//                    memberOld.setLastNameLocal(!item.getMember().getLastNameLocal().equalsIgnoreCase("") ? item.getMember().getLastNameLocal() : memberOld.getLastNameLocal());
                     memberOld.setMemberType(item.getMember().getMemberType());
                     memberOld.setMilkType(item.getMember().getMilkType());
                     memberOld.setMobileNo(!item.getMember().getMobileNo().equalsIgnoreCase("") ? item.getMember().getMobileNo() : memberOld.getMobileNo());
@@ -187,45 +135,12 @@ public class MemberServiceImpl implements MemberService {
                     Member member = item.getMember();
                     member.setInitData();
 
-
-//                    SubLedger subLedger = new SubLedger();
-//                    String code = nextCodeService.getNextCode("SubLedger", "code", member.getSociety().getCode(), 0);
-//                    subLedger.setCode(code);
-//                    subLedger.setReferenceCode(member.getCode());
-//                    subLedger.setType(member.getMemberType().getCode() == 1 ? (short) 1 : (short) 2);
-//                    subLedger.setName(member.getFirstName() + " " + member.getMiddleName() + " " + member.getLastName());
-//                    subLedger.setNameLocal(member.getFirstNameLocal() + " " + member.getMiddleNameLocal() + " " + member.getLastNameLocal());
-//                    subLedger.setSociety(member.getSociety());
-//                    subLedger.setUnionCode(member.getSociety().getUnion() != null ? member.getSociety().getUnion().getCode() : null);
-//                    subLedger.setInitData();
-//                    subLedgerRepository.customSave(subLedger, header);
-//        subLedgerRepository.save(subLedger);
-
-//                    List<SubLedgerLedgerConfig> listConfig = subLedgerLedgerConfigRepository.findBySubLedgerType(1);
-//                    if (listConfig != null && !listConfig.isEmpty()) {
-//                        for (Ledger ledger : listConfig.stream().map(m -> m.getLedger()).collect(Collectors.toList())) {
-//                            LedgerSubLedgerMapping mapping = new LedgerSubLedgerMapping();
-//                            mapping.setCode(subLedger.getCode() + "-" + ledger.getCode());
-//                            mapping.setSubLedger(subLedger);
-//                            mapping.setLedger(ledger);
-//                            mapping.setSociety(member.getSociety());
-//                            mapping.setUnionCode(member.getSociety().getUnion() != null ? member.getSociety().getUnion().getCode() : null);
-//                            mappingRepository.customSave(mapping, header);
-////                mappingRepository.save(mapping);
-//                        }
-//                    }
-
                     Member memberNew = repository.customSave(member, header);
 
                     MemberDetail memberDetail = item.getMemberDetail();
                     memberDetail.setCode(member.getCode());
                     memberDetail.setInitData();
-                    MemberDetail dtlNew = memberDetailrepository.customSave(memberDetail, header);
-
-                    // Credit limit
-//                    if (memberNew.getMemberType().getCode() == 1)
-//                        setMemberCreditLimit(memberNew, dtlNew);
-//                    setMemberCreditLimit(memberNew, dtlNew);
+                    memberDetailrepository.customSave(memberDetail, header);
                     list.add(new MemberImportDto(item.getMember().getCode(), "insert", "success"));
                 }
             } catch (Exception e) {
@@ -240,7 +155,7 @@ public class MemberServiceImpl implements MemberService {
         MemberCreditLimit memberCreditLimit = new MemberCreditLimit();
         memberCreditLimit.setBalance(member.getCreditLimit());
         memberCreditLimit.setConsumerCode(member.getCode());
-        memberCreditLimit.setConsumerType(CommonUtil.getMemberNonMemberTypeValue(member.getMemberType().getName()));
+        memberCreditLimit.setConsumerType(CommonUtils.getMemberNonMemberTypeValue(member.getMemberType().getName()));
         memberCreditLimit.setSociety(member.getSociety());
         memberCreditLimit.setUnionCode(memberDetail.getUnionCode());
         memberCreditLimit.setInitData();
@@ -256,7 +171,7 @@ public class MemberServiceImpl implements MemberService {
         memberCreditLimitTransaction.setOldValue(BigDecimal.valueOf(0));
         memberCreditLimitTransaction.setConsumerCode(memberCreditLimit.getConsumerCode());
         memberCreditLimitTransaction
-                .setConsumerType(CommonUtil.getMemberNonMemberTypeValue(member.getMemberType().getName()));
+                .setConsumerType(CommonUtils.getMemberNonMemberTypeValue(member.getMemberType().getName()));
         memberCreditLimitTransaction.setReferenceCode(member.getCode());
         memberCreditLimitTransaction.setSociety(memberCreditLimit.getSociety());
         memberCreditLimitTransaction.setTransactionType("Initial credit limit");
@@ -279,18 +194,6 @@ public class MemberServiceImpl implements MemberService {
         MemberDetail memberDetail = memberDto.getMemberDetail();
         memberDetail.setupdateData();
         dtoNew.setMemberDetail(memberDetailrepository.customUpdate(memberDetail, identityInfo));
-
-
-//        Optional<SubLedger> sl  = subLedgerRepository.findByReferenceCodeAndType(member.getCode(),old.get().getMemberType().getCode().shortValue());
-//        if(sl.isPresent()) {
-//            sl.get().setName(member.getFirstName() + " " + member.getMiddleName() + " " + member.getLastName());
-//            sl.get().setType(member.getMemberType().getCode() == 1 ? (short) 1 : (short) 2);
-//            sl.get().setNameLocal(member.getFirstNameLocal() + " " + member.getMiddleNameLocal() + " " + member.getLastNameLocal());
-//            sl.get().setupdateData();
-//            subLedgerRepository.customUpdate(sl.get(), identityInfo);
-//        }
-
-
         return dtoNew;
     }
 
@@ -329,7 +232,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberSocietyInfoDto findMemberInformation(String code, LocalDateTime date, Integer count, String paymentCycle) {
         Member member = repository.findById(code).orElseThrow(() -> new BusinessValidationFailException(Member.class,
-                CommonUtil.getFieldError("member", "code", code, "member.notfound")));
+                CommonUtils.getFieldError("member", "code", code, "member.notfound")));
         MemberSocietyInfoDto dto = new MemberSocietyInfoDto();
 
         List<MilkCollection> collections = collectionRepository

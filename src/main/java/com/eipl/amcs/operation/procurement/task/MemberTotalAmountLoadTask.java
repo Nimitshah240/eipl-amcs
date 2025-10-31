@@ -21,17 +21,6 @@ public class MemberTotalAmountLoadTask extends Task<BigDecimal> {
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             BigDecimal response = service.findTotalAmount(societyPaymentCycleCode, memberCode);
             return response;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/total_amount";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("societyPaymentCycleCode", societyPaymentCycleCode)
-//                    .queryParam("memberCode", memberCode);
-//            ResponseEntity<BigDecimal> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-//                    null, BigDecimal.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (Exception e) {
             e.printStackTrace();
         }

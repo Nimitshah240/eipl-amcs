@@ -2,7 +2,6 @@ package com.eipl.amcs.operation.procurement.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
@@ -11,8 +10,9 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -60,6 +60,10 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkDispatchAddEditController extends MilkDispatchBaseController implements MyInitialization {
 
+    private final ObjectProperty<MilkDispatchSummaryDto> propDto;
+    private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
+    private final ObservableList<MilkDispatchTransaction> listDeleteTxn;
+
     List<MilkDispatchSummaryDto> milkDispatchSummaryDtoList = new ArrayList<>();
     List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
     @FXML
@@ -106,34 +110,28 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     @FXML
     private TableColumn<MilkDispatchTransaction, MilkType> colMilkType;
     @FXML
-    private TableColumn<MilkDispatchTransaction, MilkQualityType> colMilkQualityType;
-    @FXML
-    private TableColumn<MilkDispatchTransaction, String> colDispatchType;
-    @FXML
     private TableColumn<MilkDispatchTransaction, BigDecimal> colQuantity, colFat, colSnf, colClr, colRate, colAmount, colCans, colWater;
     @FXML
     private HBox btnMainPanel;
-    private final ObjectProperty<MilkDispatchSummaryDto> propDto;
     @FXML
     private E_Button btnSaveUpdate, btnClose;
     private ResourceBundle resourceBundle;
     private MilkDispatch dto;
     private MilkDispatchTransaction dtoTxn;
     private MilkDispatchDto dispatchDto;
-    private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
     private StringBuilder errorMsg = null;
     private ObservableList<MilkDispatchTransaction> listMilkDispatch;
-    private final ObservableList<MilkDispatchTransaction> listDeleteTxn;
     private String challanNo;
-    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
-        }
-    };
+
     private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
             fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             calculateClr(txtFat.getText(), txtSnf.getText());
+        }
+    };
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
         }
     };
 
@@ -163,11 +161,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         gridTransaction.setDisable(true);
         dpChallanDate.setValue(LocalDate.now());
         dpChallanDate.setDisable(true);
-
-//        btnEdit.setVisible(false);
-//        txtChallanNo.setText("01110011");
-//        fetchPurchaseRateCode();
-//        fetchRateDetails("1011");
         loadData();
         setupComboBox();
         setupTable();
@@ -252,7 +245,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         });
         btnAdd.setOnAction(event -> {
             if (btnAdd.getText().equals(resourceBundle.getString("add"))) {
-//                fetchPurchaseRateCode();
                 if (validateTxn()) {
                     if (cboxDispatchType.getSelectionModel().getSelectedItem() != null) {
                         cboxDispatchType.setDisable(true);
@@ -261,9 +253,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                         btnDelete.setText(resourceBundle.getString("cancel"));
                         gridTransaction.setDisable(false);
                         gridMaster.setDisable(true);
-//                        gridRoute.setDisable(true);
                         btnEdit.setDisable(true);
-                        // btnDelete.setDisable(true);
                     }
                 } else {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
@@ -285,7 +275,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 clearInnerControls();
             } else {
                 if (propMilkDispatchTransaction.get() != null) {
-//                    deleteTransaction(propMilkDispatchTransaction.get());
                     MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                             resourceBundle.getString("alert.delete"));
                     Optional<ButtonType> resp = alert.createConfirmationAlert();
@@ -302,35 +291,19 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 btnAdd.setDisable(false);
                 btnEdit.setDisable(true);
                 btnDelete.setText(resourceBundle.getString("cancel"));
-                // btnDelete.setDisable(true);
             } else {
                 btnAdd.setText(resourceBundle.getString("add"));
-//                btnAdd.setDisable(true);
-//                btnEdit.setDisable(false);
                 btnDelete.setText(resourceBundle.getString("delete"));
                 btnDelete.setDisable(false);
-//                gridMaster.setDisable(true);
             }
         });
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_EDIT"))
                 throw new UnAuthorizedAccessException();
-//            if(propMilkDispatchTransaction.get()!=null){
-//                if(btnEdit.getText().equals(resourceBundle.getString("update"))){
-//                    this.dtoTxn = propMilkDispatchTransaction.get();
-//                    listMilkDispatch.remove(propMilkDispatchTransaction.get());
-//                    addEntry();
-//                    btnEdit.setText(resourceBundle.getString("edit"));
-//                }
-//                setValuesInInnerControls(propMilkDispatchTransaction.get());
-//                btnEdit.setText(resourceBundle.getString("update"));
-//            }
         });
         btnCopy.setOnAction(e -> {
             copyData();
-
         });
-
     }
 
     private void copyData() {
@@ -349,13 +322,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dtoTxn.setQuantityMode(qtyMode);
             dtoTxn.setConvertedQuantity(qtyMode == 0 ? CommonUtils.convertQty(AppConstant.CollectionType.DISPATCH, qty.toString()) : qty);
             dtoTxn.setConvertedQuantityMode(dtoTxn.getQuantityMode() == 0 ? 1 : 0);
-
-//            dtoTxn.setQty(CommonUtils.convertQty(AppConstant.CollectionType.DISPATCH,qty.toString()));
-//            dtoTxn.setConvertedQuantityMode();
-//            dtoTxn.setConvertedQuantity();
-//            dtoTxn.setQuantityMode();
             dtoTxn.setAvgSnf(BigDecimal.valueOf(0));
-
 
             fetchRateForDispatchTable(String.valueOf(dtoTxn.getAvgFat()), String.valueOf(dtoTxn.getAvgSnf()), dtoTxn.getMilkType(), dtoTxn.getMilkQualityType(), dpFromDate.getValue().atStartOfDay(), dtoTxn);
 
@@ -419,7 +386,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                             listBmc.add(bmc.getName());
                         }
                         cboxDestination.setItems(FXCollections.observableList(listBmc));
-//                        cboxToShift.setItems(FXCollections.observableList(list));
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -438,7 +404,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                             listMcc.add(mcc.getName());
                         }
                         cboxDestination.setItems(FXCollections.observableList(listMcc));
-//                        cboxToShift.setItems(FXCollections.observableList(list));
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -456,7 +421,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                             listMcc.add(mcc.getName());
                         }
                         cboxDestination.setItems(FXCollections.observableList(listMcc));
-//                        cboxToShift.setItems(FXCollections.observableList(list));
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -474,7 +438,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                             listMcc.add(mcc.getName());
                         }
                         cboxDestination.setItems(FXCollections.observableList(listMcc));
-//                        cboxToShift.setItems(FXCollections.observableList(list));
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -572,11 +535,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     public void setupTable() {
         try {
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
-//        colMilkQualityType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkQualityType()));
             colQuantity.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getQty()));
             colFat.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAvgFat()));
             colSnf.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAvgSnf()));
-//        colClr.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAvgClr()));
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colCans.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getNosOfCan()));
@@ -624,9 +585,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 dto.setChallanNo(this.challanNo);
             dto.setDestinationCode(cboxDestination.getValue());
             dto.setDestinationCode("1");
-//            dto.setDispatchType(new BigDecimal(cboxDispatchType.getSelectionModel().getSelectedIndex()));
             dto.setDispatchType(0);
-//            dto.setDestinationType(cboxDestinationType.getSelectionModel().getSelectedIndex());
             dto.setDestinationType(0);
             dto.setRouteNo(cboxRouteNo.getValue().getCode());
             dto.setFromDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
@@ -644,20 +603,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             }
             dto.setSociety(MainApp.identityDto.getSociety());
             dto.setUnion(MainApp.identityDto.getUnion());
-//            listMilkDispatch.forEach(list -> {
-//                list.setMilkTypes(cboxMilkType.getValue());
-//                list.setMilkQualityTypes(cboxMilkQuality.getValue());
-//                list.setDispatchQty(new BigDecimal(txtQuanity.getText()));
-//                list.setAvgFat(new BigDecimal(txtFat.getText()));
-//                list.setAvgSnf(new BigDecimal(txtSnf.getText()));
-//                list.setAvgClr(new BigDecimal(txtClr.getText()));
-//                list.setWater(new BigDecimal(txtWater.getText()));
-//                list.setNosOfCan(Integer.parseInt(txtCans.getText()));
-//                list.setChamberNo(txtChamberNo.getText());
-//                list.setRate(new BigDecimal(txtRtpl.getText()));
-//                list.setSocietyPurchaseRateCode(societyMilkPurchaseRate.getCode());
-//                list.setAmount(new BigDecimal(txtAmount.getText()));
-//            });
             dispatchDto = new MilkDispatchDto(dto, listMilkDispatch);
         }
     }
@@ -727,8 +672,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     alert.createAlert();
                     return;
                 }
-//                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
-//                        resourceBundle.getString("record.save.successful"));
                 MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                         resourceBundle.getString("record.update.successful") + "\n"
                                 + resourceBundle.getString("alert.dispatchnote"));
@@ -745,7 +688,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
                 }
 
-//                alert.createAlert();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -785,36 +727,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         if (txtChallanNo.getText().trim().isEmpty()) {
             errorMsg.append(resourceBundle.getString("challannullerror") + "\n");
         }
-//        if (cboxDestinationType.getSelectionModel().getSelectedItem() == null) {
-//            errorMsg.append(resourceBundle.getString("destinationtypeerror") + "\n");
-//        }
-//        if (cboxDestination.getSelectionModel().getSelectedItem() == null) {
-//            errorMsg.append(resourceBundle.getString("destinationerror") + "\n");
-//        }
         if (cboxRouteNo.getSelectionModel().getSelectedItem() == null) {
             errorMsg.append(resourceBundle.getString("routeerror") + "\n");
         }
-//        if (txtQuanity.getText() == null || txtQuanity.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("qty.cannot.be.null") + "\n");
-//        if (txtFat.getText() == null || txtFat.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("fat.cannot.be.null") + "\n");
-//        if (txtSnf.getText() == null || txtSnf.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("snf.cannot.be.null") + "\n");
-//        if (txtRtpl.getText() == null || txtRtpl.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
-//        if (txtAmount.getText() == null || txtAmount.getText().isEmpty())
-//            errorMsg.append(resourceBundle.getString("amount.cannot.be.null") + "\n");
-//        if (!CommonUtils.isNumeric(txtFat.getText()))
-//            errorMsg.append(resourceBundle.getString("invalid.fat") + "\n");
-//        if (!CommonUtils.isNumeric(txtSnf.getText()))
-//            errorMsg.append(resourceBundle.getString("invalid.snf") + "\n");
-//        if (!CommonUtils.isNumeric(txtQuanity.getText()))
-//            errorMsg.append(resourceBundle.getString("invalid.qty") + "\n");
-//        if (!CommonUtils.isNumeric(txtRtpl.getText()))
-//            errorMsg.append(resourceBundle.getString("invalid.rate") + "\n");
-//        if (!CommonUtils.isNumeric(txtAmount.getText()))
-//            errorMsg.append(resourceBundle.getString("invalid.amount") + "\n");
-
         return errorMsg.length() == 0;
     }
 
@@ -851,8 +766,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             errorMsg.append(resourceBundle.getString("challannullerror") + "\n");
         }
         if (!txtVehicleInTime.getText().isEmpty()) {
-//            errorMsg.append(resourceBundle.getString("entervehicalintime") + "\n");
-//        } else {
             try {
                 LocalTime.parse(txtVehicleInTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
             } catch (Exception e) {
@@ -860,29 +773,15 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             }
         }
         if (!txtVehicleOutTime.getText().isEmpty()) {
-//            errorMsg.append(resourceBundle.getString("entervehicalouttime") + "\n");
-//        } else {
             try {
                 LocalTime.parse(txtVehicleOutTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
             } catch (Exception e) {
                 errorMsg.append(resourceBundle.getString("validouttime") + "\n");
             }
         }
-//        if (cboxDestinationType.getSelectionModel().getSelectedItem() == null) {
-//            errorMsg.append(resourceBundle.getString("destinationtypeerror") + "\n");
-//        }
-//        if (cboxDestination.getSelectionModel().getSelectedItem() == null) {
-//            errorMsg.append(resourceBundle.getString("destinationerror") + "\n");
-//        }
         if (cboxRouteNo.getSelectionModel().getSelectedItem() == null) {
             errorMsg.append(resourceBundle.getString("routeerror") + "\n");
         }
-//        if(cboxDestinationType.getValue()==null || cboxDestinationType.getValue().isEmpty()){
-//            errorMsg.append(resourceBundle.getString("destinationtypenullerror") + "\n");
-//        }
-//        if(cboxDestination.getValue()==null){
-//            errorMsg.append(resourceBundle.getString("destinationnullerror") + "\n");
-//        }
 
         return errorMsg.length() == 0;
     }
@@ -895,8 +794,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             }
             dtoTxn.setMilkQualityType(cboxMilkQuality.getSelectionModel().getSelectedItem());
             dtoTxn.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
-//            int dispatchType = cboxDispatchType.getSelectionModel().getSelectedItem()
-//                    .equals(resourceBundle.getString("cans")) ? 0 : 1;
             if (!txtClr.getText().trim().isEmpty())
                 dtoTxn.setAvgClr(new BigDecimal(txtClr.getText()));
             if (!txtFat.getText().trim().isEmpty())
@@ -910,13 +807,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 dtoTxn.setQuantityMode(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.DISPATCH_QTY_MODE, "1")));
                 dtoTxn.setConvertedQuantity(CommonUtils.convertQty(AppConstant.CollectionType.DISPATCH, txtQuanity.getText()));
                 dtoTxn.setConvertedQuantityMode(dtoTxn.getQuantityMode() == 0 ? 1 : 0);
-
-
-//                double convertedQty = ConfigurationUtil.ltrKGViceVersaCoversion(milkDispatch.getDispatchQty(),
-//                        Main.dcsGeneralConfig.getMilkDispatchQuantityMode());
-//                dtoTxn.setQuantityMode(MainApp.dcsGeneralConfig.getMilkDispatchQuantityMode());
-//                dtoTxn.setConvertedQuantity(convertedQty);
-//                dtoTxn.setConvertedQuantityMode(1 - MainApp.dcsGeneralConfig.getMilkDispatchQuantityMode());
             }
             dtoTxn.setQuantityMode(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.DISPATCH_QTY_MODE, "0")));
             dtoTxn.setConvertedQuantity(CommonUtils.convertQty(AppConstant.CollectionType.DISPATCH, txtQuanity.getText()));
@@ -1131,11 +1021,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     }
 
     private void setValuesInControls() {
-//        this.challanNo = dto.getChallanNo().substring(8);
         txtChallanNo.setText(dto.getChallanNo().substring(8));
-//        dpChallanDate.setValue(dto.getc);
         int dispatch = dto.getDispatchType().intValue();
-//        cboxDispatchType.setValue(dto.getDispatchType()==new BigDecimal(0)?resourceBundle.getString("cans"):resourceBundle.getString("tanker"));
         cboxDispatchType.setValue(cboxDispatchType.getItems().get(dispatch));
         dpFromDate.setValue(dto.getFromDate().toLocalDate());
         cboxFromShift.setValue(dto.getFromShift());
@@ -1145,7 +1032,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 resourceBundle.getString("mcc") : (dto.getDestinationType() == 2 ? resourceBundle.getString("plant") :
                 resourceBundle.getString("union")));
         cboxDestination.setValue(dto.getDestinationCode());
-//        cboxR nbouteNo.setValue(dto.getRouteNo());
         if (dto.getVehicleNo() != null)
             txtVehicleNo.setText(dto.getVehicleNo());
         if (dto.getVehicleInTime() != null)
@@ -1158,22 +1044,14 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     }
 
     private void deleteTransaction(MilkDispatchTransaction transaction) {
-
         var task = new MilkDispatchTransactionDeleteTask(transaction.getTxnCode());
         task.setOnSucceeded(e -> {
             try {
                 boolean isDelete = task.get();
-                if (isDelete) {
-//                        this.listMilkDispatch.remove(propMilkDispatchTransaction.get());
-//                    loadData();
-//                    setValuesInControls();
-                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
         });
         new Thread(task).start();
     }
-
-
 }

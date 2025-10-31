@@ -10,7 +10,6 @@ public class NumberUtil {
         if (places < 0)
             throw new IllegalArgumentException();
         if (!Double.isNaN(value)) {
-            // BigDecimal bd = new BigDecimal(value);
             BigDecimal bd = BigDecimal.valueOf(value);
             bd = bd.setScale(places, RoundingMode.HALF_UP);
             return bd.doubleValue();
@@ -23,7 +22,6 @@ public class NumberUtil {
         if (places < 0)
             throw new IllegalArgumentException();
 
-        // BigDecimal bd = new BigDecimal(value.doubleValue());
         BigDecimal bd = BigDecimal.valueOf(value.doubleValue());
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd;
@@ -32,7 +30,6 @@ public class NumberUtil {
     public static double truncate(double value, int places) {
         if (places < 0)
             throw new IllegalArgumentException();
-        // BigDecimal bd = new BigDecimal(value);
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.DOWN);
         return bd.doubleValue();

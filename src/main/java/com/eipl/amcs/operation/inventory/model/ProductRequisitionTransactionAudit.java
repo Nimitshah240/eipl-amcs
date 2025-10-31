@@ -1,11 +1,11 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.ProductDeserializer;
-import com.eipl.amcs.deserialize.ProductRequisitionDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.ProductDeserializer;
+import com.eipl.amcs.json.deserialize.ProductRequisitionDeserializer;
+import com.eipl.amcs.json.serialize.ProductRequisitionSerialize;
+import com.eipl.amcs.json.serialize.ProductSerialize;
 import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.serialize.ProductRequisitionSerialize;
-import com.eipl.amcs.serialize.ProductSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -60,5 +60,4 @@ public class ProductRequisitionTransactionAudit extends BaseModelTxnAudit {
     private int passonToMember;
     private String unionCode;
     private String societyCode;
-
 }

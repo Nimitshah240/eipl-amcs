@@ -20,7 +20,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
     Button btnClose, btnSave;
     @FXML
     ComboBox<CustomerTypeKeyValDto> cboxType;
-    private Stage stage;
     private List<Ledger> listLedger;
     private List<SubLedgerLedgerConfig> list;
     @FXML
@@ -127,10 +125,6 @@ public class SubLedgerLedgerConfigController implements MyInitialization, PopupC
     public void reloadData(boolean flag) {
         if (flag)
             loadData();
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     @Override

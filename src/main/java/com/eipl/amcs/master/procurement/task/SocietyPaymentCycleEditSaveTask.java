@@ -3,8 +3,8 @@ package com.eipl.amcs.master.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.service.SocietyPaymentCycleService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -19,25 +19,14 @@ public class SocietyPaymentCycleEditSaveTask extends Task<Object> {
         this.dto = dto;
     }
 
-
     @Override
     protected Object call() throws Exception {
         try {
             SocietyPaymentCycleService service = EmcsAppContext.getContext().getBean(SocietyPaymentCycleService.class);
             if (dto == null)
                 return null;
-            service.update(code, dto, CommonUtil.setIdentityHeader());
+            service.update(code, dto, CommonUtils.setIdentityHeader());
             return true;
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY_PAYMENT_CYCLE;
-//            UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code);
-//            ResponseEntity<SocietyPaymentCycle> response = restTemplate.exchange(uriComponentsBuilder.toUriString(), HttpMethod.PUT, new HttpEntity<>(dto), SocietyPaymentCycle.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

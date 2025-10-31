@@ -15,28 +15,4 @@ import java.util.List;
 public class FinalizeDto {
     private SocietyPaymentCycle paymentCycle;
     private List<String> memberCodeList;
-
-//    public FinalizeDto(SocietyPaymentCycle paymentCycle, List<String> memberCodeList) {
-//        this.paymentCycle = paymentCycle;
-//        this.memberCodeList = memberCodeList;
-//    }
-//
-//    public FinalizeDto() {
-//    }
-//
-//    public SocietyPaymentCycle getPaymentCycle() {
-//        return paymentCycle;
-//    }
-//
-//    public void setPaymentCycle(SocietyPaymentCycle paymentCycle) {
-//        this.paymentCycle = paymentCycle;
-//    }
-//
-//    public List<String> getMemberCodeList() {
-//        return memberCodeList;
-//    }
-//
-//    public void setMemberCodeList(List<String> memberCodeList) {
-//        this.memberCodeList = memberCodeList;
-//    }
 }

@@ -30,7 +30,6 @@ public abstract class MilkDispatchBaseController {
     protected SocietyMilkPurchaseRate societyMilkPurchaseRate;
     protected Map<String, BigDecimal> mapRateDetails;
     protected List<SocietyMilkPurchaseRateBased> listBased;
-    protected MilkDispatchRateAndDetailsDto milkDispatchRateAndDetailsDto;
     String mapKey = null;
 
     protected void calculateClr(String fat, String snf) {
@@ -82,7 +81,6 @@ public abstract class MilkDispatchBaseController {
                             return;
                         }
 
-//                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
                             formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.FLOOR).toString());
                         } else {
@@ -140,7 +138,6 @@ public abstract class MilkDispatchBaseController {
                             return;
                         }
 
-//                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
                             formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.FLOOR).toString());
                         } else {
@@ -228,7 +225,6 @@ public abstract class MilkDispatchBaseController {
                             return;
                         }
 
-//                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
                             formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.FLOOR).toString());
                         } else {
@@ -315,7 +311,6 @@ public abstract class MilkDispatchBaseController {
                             return;
                         }
 
-//                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
                             formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString());
                         } else {

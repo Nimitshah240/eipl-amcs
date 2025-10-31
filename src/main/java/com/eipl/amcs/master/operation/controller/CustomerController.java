@@ -2,10 +2,10 @@ package com.eipl.amcs.master.operation.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.task.CustomerDeleteTask;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
@@ -98,7 +98,6 @@ public class CustomerController implements MyInitialization {
             colType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getType().shortValue())));
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-//        colType.setCellValueFactory(data->new SimpleStringProperty(data.getValue().getType()==3?"Customer":data.getValue().getType()==4?"Institute":"Consumer"));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
             colMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMobileNo()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));

@@ -1,12 +1,10 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.LedgerDeserializer;
-import com.eipl.amcs.deserialize.VoucherDeserializer;
-import com.eipl.amcs.deserialize.VoucherTransactionDeserializer;
-import com.eipl.amcs.serialize.LedgerSerialize;
-import com.eipl.amcs.serialize.VoucherSerialize;
-import com.eipl.amcs.serialize.VoucherTransactionSerialize;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.LedgerDeserializer;
+import com.eipl.amcs.json.deserialize.VoucherDeserializer;
+import com.eipl.amcs.json.serialize.LedgerSerialize;
+import com.eipl.amcs.json.serialize.VoucherSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

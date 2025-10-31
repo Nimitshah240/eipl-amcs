@@ -21,8 +21,6 @@ public class ProductRequisitionTransactionServiceImpl implements ProductRequisit
     private ProductRequisitionRepository productRequisitionRepository;
     @Autowired
     private ProductRequisitionTransactionRepository productRequisitionTransactionRepository;
-    @Autowired
-    private ProductRequisitionTransactionService productRequisitionTransactionService;
 
     @Override
     public List<ProductRequisitionTransaction> findAll() {

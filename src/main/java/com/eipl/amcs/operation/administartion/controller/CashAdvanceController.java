@@ -70,6 +70,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
     private List<SocietyPaymentCycle> paymentCycleList;
     private List<ProductSaleInstallment> installmentList = new ArrayList<>();
     private CashAdvanceDto dto;
+
     public CashAdvanceController() {
         propCashAdvanceDto = new SimpleObjectProperty<>();
     }

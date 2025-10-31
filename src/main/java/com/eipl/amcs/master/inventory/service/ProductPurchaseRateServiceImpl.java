@@ -7,7 +7,7 @@ import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.repository.ProductPurchaseRateRepository;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +27,6 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
     @Autowired
     private ProductPurchaseRateRepository productPurchaseRateRepository;
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
     private NextCodeRepository nextCodeRepository;
 
     @Override
@@ -45,7 +43,7 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
         if (chk == null || chk.isBefore(productPurchaseRate.getWefDate())) {
 
         } else {
-            FieldError wefdateNotValid = CommonUtil.getFieldError("productpurchaserate", "wefdate",
+            FieldError wefdateNotValid = CommonUtils.getFieldError("productpurchaserate", "wefdate",
                     productPurchaseRate.getCode(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefdateNotValid);
         }
@@ -82,7 +80,6 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
 
     @Override
     @Transactional
-//    @CacheEvict(value = { "productPurchaseRatesCache" }, allEntries = true)
     public void delete(ProductPurchaseRate productPurchaseRate, String identityInfo) {
         productPurchaseRateRepository.customDelete(productPurchaseRate.getCode(), identityInfo);
     }

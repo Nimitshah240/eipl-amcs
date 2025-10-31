@@ -24,17 +24,8 @@ public class MilkDispatchTransactionLoadTask extends Task<List<MilkDispatchTrans
         try {
             MilkDispatchService service = EmcsAppContext.getContext().getBean(MilkDispatchService.class);
             List<MilkDispatchTransaction> milkDispatchTransactions = service.findDetailByChallanNo(challanNo);
-
             if (milkDispatchTransactions == null || milkDispatchTransactions.isEmpty()) return null;
             return milkDispatchTransactions;
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/transaction";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("challanNo",challanNo);
-//            ResponseEntity<MilkDispatchTransaction[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkDispatchTransaction[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Milk dispatch transaction fetched: {}", response.getBody());
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Milk dispatch transaction fetch", e);
         }

@@ -42,11 +42,7 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         try {
-            //String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=false;user=dev;password=dev@123";
             String connectionUrl = "jdbc:sqlserver://IT40\\EIPL;databaseName=" + dbName + ";integratedSecurity=false;encrypt=true;trustServerCertificate=true;user=sa;password=eipl";
-
-//            String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=true";
-//            String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=root;integretedSecurity=false";
             Map<String, Integer> mapShift = new HashMap<>();
             for (Shift shift : shiftList) {
                 mapShift.put(shift.getName().substring(0, 1).toUpperCase(), shift.getCode());
@@ -63,19 +59,16 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
             String[] buffRangeArr = buffRange.split("-");
             int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
-//            Map<String, Boolean> tempMap = new HashMap<>();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
 
             LocalTime morningTime = LocalTime.of(6, 0);
             LocalTime eveningTime = LocalTime.of(18, 0);
             try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
 
-//            try (Connection connection = DriverManager.getConnection(connectionUrl, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select cast(DATENAME(MM,Date)as varchar(3)) +'-'+ " +
                         "Cast(DATEPART(YYYY,Date) as varchar(4)) as month, count(*) as count from tblILedger" + " " +
                         "where  Date >= '" + fromDate.toString() + "' AND  Date <= '" + toDate.toString() + "' group by cast(DATENAME(MM,Date)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,Date) as varchar(4))");
-//                ResultSet resultSet = statement.executeQuery("select cast(DATENAME(MM,Date)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,Date) as varchar(4)) as month, count(*) as count from tblILedger" + " where  format(Date, 'yyyy-MM-dd') >= '" + fromDate.toString() + "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate.toString() + "' group by cast(DATENAME(MM,Date)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,Date) as varchar(4))");
                 List<String> listMonth = new ArrayList<>();
                 while (resultSet.next()) {
                     listMonth.add(resultSet.getString("month"));
@@ -86,13 +79,8 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
                 // select data
                 for (String month : listMonth) {
                     statement = connection.createStatement();
-//                    resultSet = statement.executeQuery("select * from tblILedger where Cast(DATEPART(YYYY,Date) " +
-//                            "as varchar(4)) as month, count(*) as count from tblILedger" + " " +
-//                            "where  Date >= '" + fromDate.toString() + "' AND  Date <= '" + toDate.toString()+ "'");
                     resultSet = statement.executeQuery("select * from tblILedger where cast(DATENAME(MM,Date)as varchar(3)) " +
-                            "+'-'+ Cast(DATEPART(YYYY,Date) as varchar(4))= '" + month + "' and date>='" + fromDate.toString() + "' and date<='" + toDate.toString() + "'");
-//                    resultSet = statement.executeQuery("select * from tblILedger where format(Date, 'mmm yyyy') = '" + month + "'");
-//                    resultSet = statement.executeQuery("select * from tblILedger");
+                            "+'-'+ Cast(DATEPART(YYYY,Date) as varchar(4))= '" + month + "' and date>='" + fromDate + "' and date<='" + toDate + "'");
                     List<Map<String, Object>> mapCollection = new ArrayList<>();
                     List<Map<String, Object>> mapLocalMilksale = new ArrayList<>();
                     String shift = null;
@@ -113,9 +101,6 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
                         if (resultSet.getString("SabhasadId") == null || resultSet.getString("SabhasadId").isEmpty() || resultSet.getString("SabhasadId").equalsIgnoreCase("0000") || resultSet.getDouble("Qty") == 0)
                             continue;
 
-                        // continue;
-                        // aavu na karay
-                        //km
                         Map<String, Object> map = new HashMap<>();
                         int codeEx = CommonUtils.strToInteger(resultSet.getString("SabhasadId"));
                         map.put("membercode", MainApp.identityDto.getSociety().getCode() + String.format("%04d", codeEx));
@@ -218,7 +203,6 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
 
 
                     listTemp = ListUtils.partition(mapLocalMilksale, AppConstant.MIGRATION_LIST_SIZE);
-//                    String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
                     try (Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
                         String sql = "INSERT INTO local_milk_sale (code, amount, consumer_code,quantity,rate,milk_type_code) VALUES (?,?,?,?,?,?)";
                         int current = 1;
@@ -233,14 +217,11 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
                             pstmt.setInt(6, 1);
                             pstmt.addBatch();
                         }
-//                        pstmt.executeBatch();
                         pstmt.close();
                         updateMessage("Migration in progress " + current + " of " + listTemp.size());
                         current++;
                         connMySql.commit();
                         connMySql.setAutoCommit(true);
-
-                        //
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -253,8 +234,6 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
                 e.printStackTrace();
                 return null;
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -8,11 +8,11 @@ import javafx.concurrent.Task;
 import java.util.List;
 
 public class PaymentRegisterReportExcelTask extends Task<List<PaymentForBank>> {
-    private String societyCode;
-    private String societyPaymentCycleCode;
-    private String locale;
-    private Integer paymentMode;
-    private String bankCode;
+    private final String societyCode;
+    private final String societyPaymentCycleCode;
+    private final String locale;
+    private final Integer paymentMode;
+    private final String bankCode;
 
 
     public PaymentRegisterReportExcelTask(String societyCode, String societyPaymentCycleCode, String locale, Integer paymentMode, String bankCode) {
@@ -21,10 +21,6 @@ public class PaymentRegisterReportExcelTask extends Task<List<PaymentForBank>> {
         this.locale = locale;
         this.paymentMode = paymentMode;
         this.bankCode = bankCode;
-    }
-
-    public PaymentRegisterReportExcelTask() {
-
     }
 
     @Override

@@ -66,13 +66,7 @@ public class EMandaliMilkCollectionDbSaveTask extends Task<Boolean> {
             LocalTime eveningTime = LocalTime.of(18, 0);
             try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
 
-//            try (Connection connection = DriverManager.getConnection(connectionUrl, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery("select cast(DATENAME(MM,dtDate)as varchar(3)) +'-'+ " +
-//                        "Cast(DATEPART(YYYY,dtDate) as varchar(4)) as month, count(*) as count from farmercollection" +
-//                        " where  format(dtDate, 'yyyy-MM-dd') >= '" + fromDate.toString() + "' AND  format(dtDate, 'yyyy-MM-dd') <= '" + toDate.toString() +
-//                        "' group by cast(DATENAME(MM,dtDate)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,dtDate) as varchar(4))");
-
                 ResultSet resultSet = statement.executeQuery("select cast(DATENAME(MM,dtDate)as varchar(3)) +'-'+ " +
                         "Cast(DATEPART(YYYY,dtDate) as varchar(4)) as month, count(*) as count from farmercollection" +
                         " where CONVERT(VARCHAR,dtDate,23) >= '" + fromDate.toString() + "' AND CONVERT(VARCHAR,dtDate,23) <= '" + toDate.toString() +
@@ -88,7 +82,7 @@ public class EMandaliMilkCollectionDbSaveTask extends Task<Boolean> {
                 for (String month : listMonth) {
                     statement = connection.createStatement();
                     resultSet = statement.executeQuery("select * from farmercollection where CONVERT(VARCHAR,dtDate,23) >= '" +
-                            fromDate.toString() + "' AND CONVERT(VARCHAR,dtDate,23) <= '" + toDate.toString() + "'");
+                            fromDate + "' AND CONVERT(VARCHAR,dtDate,23) <= '" + toDate + "'");
                     List<Map<String, Object>> mapCollection = new ArrayList<>();
                     String shift = null;
                     while (resultSet.next()) {

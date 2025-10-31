@@ -73,7 +73,6 @@ public class PriceDifferenceController implements MyInitialization {
         loadShift();
         setupComboBox();
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
-//        btnGenerate.setOnAction(e -> validateAndGenerateReport());
     }
 
     @Override
@@ -85,18 +84,6 @@ public class PriceDifferenceController implements MyInitialization {
         cboxMemberCode.setCellFactory(new MemberCellFactory());
 
     }
-
-
-//    private void validateAndGenerateReport() {
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("p_from_date", CommonUtils.getLocalDateTimeFromDateAndShift(dpFirstDate.getValue(),cboxFirstShift.getValue()));
-//        params.put("p_to_date", CommonUtils.getLocalDateTimeFromDateAndShift(dpSecondDate.getValue(),cboxSecondShift.getValue()));
-//        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//        params.put("p_locale", MainApp.locale);
-//        JasperPrint print = null;
-//        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_COLLECTION_AUDIT, params);
-//        JasperViewer.viewReport(print, false);
-//    }
 
     private boolean validate() {
         return true;

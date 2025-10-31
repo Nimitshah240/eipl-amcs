@@ -6,8 +6,8 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerSubLedgerMapping;
@@ -107,7 +107,6 @@ public class SubLedgerAddEditController implements MyInitialization {
 
     private void setupLedgerTable() {
 
-//        tableLedgerData.setEditable(true);
         colSelect.setEditable(true);
         colSelect.setCellValueFactory(data -> data.getValue().selectedProperty());
         colSelect.setCellFactory(CheckBoxTableCell.forTableColumn(colSelect));
@@ -204,9 +203,6 @@ public class SubLedgerAddEditController implements MyInitialization {
     }
 
     private boolean validate() {
-//        if (cboxType.getValue() == null)
-//            errorMsg.append(resourceBundle.getString("typenullerror") + "\n");
-
         return errorMsg.length() == 0;
     }
 
@@ -231,8 +227,6 @@ public class SubLedgerAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("subledger"), resourceBundle.getString("subledger.insert.successful"));
                 alert.createAlert();
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SubLedger.fxml")));
-
-//                this.stage.close();
 
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

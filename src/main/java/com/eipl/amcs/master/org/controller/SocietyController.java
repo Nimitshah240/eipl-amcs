@@ -264,7 +264,6 @@ public class SocietyController implements MyInitialization {
     public void saveData() {
         SocietySaveTask task = new SocietySaveTask(tableSociety.getItems().get(0));
         task.setOnSucceeded(e -> {
-//            loadData();
         });
         new Thread(task).start();
     }

@@ -20,7 +20,6 @@ public interface CustomerService {
 
     CustomerDetails findDetailByCustomerCode(String code);
 
-//	Customer findNameByCustomerCode(String code);
 
     boolean checkCode(String str);
 

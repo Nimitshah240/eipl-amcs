@@ -50,7 +50,7 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
     @FXML
     VBox vbox;
     @FXML
-    Button btnAdd, btnEdit, btnSave, btnDelete, btnCancel;
+    Button btnEdit, btnSave, btnDelete, btnCancel;
     @FXML
     private TextField txtTime, txtWeight, txtTemperature, txtSocietyCode;
     @FXML
@@ -91,7 +91,6 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
         btnSave.setOnAction(e -> {
             if (btnSave.getText().equalsIgnoreCase(resourceBundle.getString("add"))) {
                 vbox.getChildren().add(1, gridMaster);
-//                FocusUtils.requestFocus(txtMemberCode);
                 btnSave.setText(resourceBundle.getString("save"));
             } else {
                 saveData();
@@ -104,13 +103,6 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
         btnCancel.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
-
-//        txtMemberCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
-//            if (!newValue && txtMemberCode.getText().length() > 0) {
-//                String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtMemberCode.getText()));
-//                setMemberName(code);
-//            }
-//        });
         btnDelete.setOnAction(e -> {
             deleteData();
         });
@@ -135,11 +127,6 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
         txtWeight.setText(String.valueOf(recordingParameter.getWeight()));
     }
 
-//    private void checkAndSave() {
-//        checkAndSaveData();
-//    }
-
-
     @Override
     public void saveData() {
         recordingParameter = new BmcRecording();
@@ -161,7 +148,6 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
             clearControls();
         });
         new Thread(task).start();
-
     }
 
 
@@ -253,6 +239,5 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
         txtTime.setText("");
         txtTemperature.setText("");
         txtWeight.setText("");
-
     }
 }

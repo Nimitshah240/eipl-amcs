@@ -26,18 +26,7 @@ public class BonusLoadTask extends Task<List<Bonus>> {
     protected List<Bonus> call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-
             List<Bonus> listBonus = service.loadData(fromDate, toDate, milkType);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loaddata";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("milkType", milkType)
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<Bonus[]> response = restTemplate.getForEntity(builder.toUriString(), Bonus[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
             if (listBonus == null || listBonus.isEmpty()) return null;
             return listBonus;
         } catch (Exception e) {

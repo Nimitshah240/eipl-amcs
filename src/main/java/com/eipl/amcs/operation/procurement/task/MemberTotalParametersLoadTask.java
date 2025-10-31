@@ -30,17 +30,6 @@ public class MemberTotalParametersLoadTask extends Task<Object> {
                 return null;
             return fetchTotals;
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/total";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code)
-//                    .queryParam("no", no)
-//                    .queryParam("milktype", milkType);
-//            ResponseEntity<Object> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-//                    null, Object.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

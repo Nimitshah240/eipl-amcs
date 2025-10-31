@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 public class InsuranceMasterController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<InsuranceMaster> propInsuranceMasterDto;
-    private final StringBuilder errorMsg = null;
     private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
     @FXML
     private StackPane root;
@@ -57,11 +56,10 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
     @FXML
     private TableColumn<InsuranceMaster, LocalDate> colInsuranceEndDate, colInsuranceStartDate, colDcsEditEndDate;
     @FXML
-    private TableColumn<InsuranceMaster, Integer> colInsuranceMasterCode, colMinAge, colMaxAge;
+    private TableColumn<InsuranceMaster, Integer> colMinAge, colMaxAge;
     @FXML
     private E_Button btnView, btnFinalize, btnExport;
     private ResourceBundle resourceBundle;
-    private String name;
     private List<InsuranceMaster> insuranceMasterList;
     private List<InsuranceDetail> insuranceDetailList;
     private InsuranceDetailSummary insuranceDetailSummary;
@@ -81,11 +79,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         return root;
     }
 
-    /**
-     * @updatedBy Nimit Shah
-     * @updatedOn - 09-09-2025
-     * @update - added try catch and btnExport to export excel of insurance detail.
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -236,12 +229,7 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
 
             if (aadhaarList.contains(memberAadhaarNumber)) {
                 invalidNameMembers.append("• ").append(detail.getMemberCode()).append(" - ").append(resourceBundle.getString("member.duplicate.aadhaar")).append("\n");
-            }
-//            else if (aadhaarList.contains(nomineeAadhaarNumber)) {
-//                invalidNameMembers.append("• ").append(detail.getMemberCode()).append(" - ").append(resourceBundle.getString("nominee.duplicate.aadhaar")).append("\n");
-//            }
-            else {
-//                aadhaarList.add(nomineeAadhaarNumber);
+            } else {
                 aadhaarList.add(memberAadhaarNumber);
             }
 
@@ -354,10 +342,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         System.out.println("Finalization complete.");
     }
 
-    public void setInsuranceMaster(InsuranceMaster insuranceMaster) {
-        this.propInsuranceMasterDto.set(insuranceMaster);
-    }
-
     @Override
     public void setupTable() {
         try {
@@ -366,7 +350,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             colInsuranceStartDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInsuranceStartDate()));
             colInsuranceStartDate.setCellFactory(new LocalDateCellFactory<>());
             colInsuranceDescription.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInsuranceDescription()));
-//            colStatus.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStatus()));
             colMinAge.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberMinAge()));
             colMaxAge.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberMaxAge()));
             propInsuranceMasterDto.bind(tableInsuranceMaster.getSelectionModel().selectedItemProperty());
@@ -394,11 +377,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         new Thread(task2).start();
     }
 
-    /**
-     * @updatedBy Nimit Shah
-     * @updatedOn - 09-09-2025
-     * @update - added condition to check list is null or not
-     */
     private void loadDetails(InsuranceMaster master) {
         if (master == null) return;
 
@@ -487,13 +465,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
             loadData();
     }
 
-    /**
-     * This method help to get deleted insurance details.
-     *
-     * @param callback
-     * @author Nimit Shah
-     * @createdOn 09-09-2025
-     */
     private void loadDeletedDetails(Consumer<List<InsuranceDetail>> callback) {
         var task = new InsuranceDetailFetchDeletedTask(insuranceMaster.getInsuranceMasterCode());
         task.setOnSucceeded(e -> {
@@ -510,14 +481,6 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
         new Thread(task).start();
     }
 
-
-    /**
-     * This method help to create excel sheet of insurance details
-     *
-     * @param list
-     * @author Nimit Shah
-     * @createdOn 09-09-2025
-     */
     private void exportExcel(List<InsuranceDetail> list) {
         boolean exported = true;
         try {

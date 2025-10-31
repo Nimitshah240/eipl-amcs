@@ -17,7 +17,6 @@ import com.eipl.amcs.master.operation.repository.MemberCreditLimitTransactionRep
 import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.master.org.repository.DockRepository;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.org.repository.UnionRepository;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
@@ -29,8 +28,8 @@ import com.eipl.amcs.operation.inventory.dto.SaleTxnTaxDto;
 import com.eipl.amcs.operation.inventory.model.*;
 import com.eipl.amcs.operation.inventory.repository.*;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +77,6 @@ public class ProductSaleServiceImpl implements ProductSaleService {
     private UnionRepository unionRepository;
     @Autowired
     private SocietyPaymentCycleRepository paymentCycleRepository;
-    @Autowired
-    private DockRepository dockRepository;
 
     @Autowired
     private VoucherRepository voucherRepository;
@@ -115,7 +112,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         if (productSaleDto.getProductSale().getDeductionStartDate() != null) {
             SocietyPaymentCycle paymentCycle = paymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5), productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5));
             if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtil.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
+                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
         }
 
 
@@ -181,14 +178,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             Member member = memberRepository.findByCode(productSaleDto.getProductSale().getConsumerCode());
             dto.setCode(productSaleDto.getProductSale().getInvoiceNo() + "-" + txnInstallment);
             dto.setMember(member);
-//            member.setSociety(Hibernate.unproxy(member.getSociety(), Society.class));
-            //            stockData.get().setProduct(Hibernate.unproxy(stockData.get().getProduct(), Product.class));
             dto.setSocietyPaymentCycle(dto.getSocietyPaymentCycle());
             dto.setInvoiceNo(saleNew.getInvoiceNo());
             dto.setSocietyCode(dto.getSocietyCode());
             dto.setUnionCode("101");
-
-//            stockData.get().setProduct(Hibernate.unproxy(stockData.get().getProduct(), Product.class));
 
             dto.setPreviousPendingAmount(BigDecimal.ZERO);
             dto.setInitData();
@@ -212,10 +205,6 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(productSaleDto.getProductSale().getInvoiceDate());
             String societyCode = productSaleDto.getProductSale().getSociety().getCode();
-//            String societyCode = "1010295";
-//            productSaleDto.getProductSale().setSociety(societyRepository.findById(societyCode).get());
-//            productSaleDto.getProductSale().setUnion(unionRepository.findById("101").get());
-//            productSaleDto.getProductSale().setDock(dockRepository.findById(societyCode + "01").get());
             if (voucherCode == null) {
                 voucherCode = nextCodeService.getNextCode("Voucher", "code", societyCode + "/" + financialYear.get().getCode() + "/", 6);
                 if (voucherCode == null) return null;
@@ -332,7 +321,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             if (op.equals("CREATE")) {
                 oldObj.setBalance(oldObj.getBalance().subtract(obj.getNetAmount()).setScale(2, RoundingMode.HALF_UP));
                 if (oldObj.getBalance().compareTo(BigDecimal.ZERO) < 0) {
-                    FieldError creditlimiterror = CommonUtil.getFieldError("productsale", "creditlimt", obj.getAmount(), "creditlimiterror");
+                    FieldError creditlimiterror = CommonUtils.getFieldError("productsale", "creditlimt", obj.getAmount(), "creditlimiterror");
                     throw new BusinessValidationFailException(getClass(), creditlimiterror);
                 }
             } else if (op.equals("DELETE")) {
@@ -437,10 +426,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         createAutoPosting(productSaleDto, productSaleDto.getProductSale().getVoucherNo(), identityInfo);
         String voucherNo = createAutoPosting(productSaleDto, null, identityInfo);
 
-        // check credit sale 0-Cash, 1-Bank/Credit
-//        if (productSaleDto.getProductSale().getPaymentMode() == (short) 1) {
-//            updateCreditLimit(dtoNew.getProductSale(), "DELETE", "Product Sale", identityInfo);
-//        }
+
         productSaleDto.getProductSale().setInitData();
         productSaleDto.getProductSale().setVoucherNo(voucherNo);
         ProductSale saleNew = productSaleRepository.customSave(productSaleDto.getProductSale(), identityInfo);
@@ -448,9 +434,6 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         saleNew.setSociety(productSaleDto.getProductSale().getSociety());
         saleNew.setDock(productSaleDto.getProductSale().getDock());
         // check credit sale 0-Bank, 1-Cash
-//        if (productSaleDto.getProductSale().getPaymentMode() == (short) 0) {
-//            updateCreditLimit(saleNew, "CREATE", "Product Sale", identityInfo);
-//        }
         List<SaleTxnTaxDto> listNew = new ArrayList<>();
         dtoNew.setProductSale(saleNew);
         dtoNew.setSaleTxnTaxDtoList(listNew);
@@ -507,10 +490,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             dto.setSocietyPaymentCycle(dto.getSocietyPaymentCycle());
             txnInstallment++;
         }
-
         // Delete old transaction and tax details
-
-
         return dtoNew;
     }
 
@@ -524,14 +504,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
     public void delete(String code, String identityInfo) {
         ProductSale productSale = productSaleRepository.findById(code).orElseThrow(() -> new EntityNotFoundException(ProductReceipt.class, "Invalid"));
 
-//		saleTaxRepository.deleteByProductSale(productSale);
-//		installmentRepository.deleteByInvoiceNo(productSale.getInvoiceNo());
-
-
         List<ProductSaleInstallment> listIns = installmentRepository.findByInvoiceNo(productSale.getInvoiceNo());
         for (ProductSaleInstallment txn : listIns) {
             if (txn.getSocietyPaymentCycle().getLockBillingProcess()) {
-                FieldError nameNotValid = CommonUtil.getFieldError("productsale", "date", txn.getTableName(), "can.not.delete");
+                FieldError nameNotValid = CommonUtils.getFieldError("productsale", "date", txn.getTableName(), "can.not.delete");
                 throw new BusinessValidationFailException(getClass(), nameNotValid);
             }
             installmentRepository.customDelete(txn, identityInfo);
@@ -548,10 +524,6 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             txn.setProduct(null);
             saleTransRepository.customDelete(txn, identityInfo);
         }
-        // check credit sale 0-Cash, 1-Bank/Credit
-//        if (productSale.getPaymentMode() == (short) 1) {
-//            updateCreditLimit(productSale, "DELETE", "Product Sale Rev", identityInfo);
-//        }
 
         if (productSale.getVoucherNo() != null) {
             Optional<Voucher> voucher = voucherRepository.findById(productSale.getVoucherNo());

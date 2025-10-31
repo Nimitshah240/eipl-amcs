@@ -6,8 +6,8 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
@@ -38,7 +38,6 @@ import java.util.concurrent.ExecutionException;
 public class AllowDcsManualCollectionRangeController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<AllowDcsManualCollectionRange> propManualRequestDto;
-    public List<AllowDcsManualCollectionRange> requestList = new ArrayList<>();
     @FXML
     TableView<AllowDcsManualCollectionRange> tableManualRequest;
     @FXML
@@ -69,15 +68,12 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
     private TableColumn<AllowDcsManualCollectionRange, String> colIsQuality, colIsWeight;
     @FXML
     private Button btnCancel, btnSave, btnClose, btnRefresh, btnGoMilkCollection;
-    private Stage stage;
     private AllowDcsManualCollectionRange manualRequest;
-    private AllowDcsManualCollectionRange dto;
     private ResourceBundle resourceBundle;
 
     public AllowDcsManualCollectionRangeController() {
         propManualRequestDto = new SimpleObjectProperty<>();
     }
-
 
     @Override
     public Node getRoot() {
@@ -105,7 +101,6 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
                 }
             }
             setValuesInObject();
-//            setupTable();
             saveData();
         });
         cboxType.setOnAction(event -> {
@@ -120,7 +115,6 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
                 chkIsQualityManual.setDisable(false);
                 chkIsWeightManual.setDisable(false);
                 dpToDate.setDisable(false);
-//                clearControls();
             }
         });
         cboxFromShift.setOnAction(event ->
@@ -159,7 +153,7 @@ public class AllowDcsManualCollectionRangeController implements MyInitialization
     }
 
     @Override
-    public void setupComboBox() {  //resourceBundle.getString("ShiftLock"), resourceBundle.getString("ManualCollection")
+    public void setupComboBox() {
         cboxType.getItems().addAll(resourceBundle.getString("shiftlock"), resourceBundle.getString("manualcollection"));
         cboxType.getSelectionModel().select(0);
         cboxToShift.setConverter(new ShiftConvertor(cboxToShift));

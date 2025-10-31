@@ -3,13 +3,12 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.BmcRecording;
 import com.eipl.amcs.operation.procurement.service.BmcRecordingService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
 public class BmcRecordingParameterSaveTask extends Task<Object> {
-    //    private final RecordingParameter dto;
     private final short update;
     private final BmcRecording dto;
 
@@ -18,27 +17,15 @@ public class BmcRecordingParameterSaveTask extends Task<Object> {
         this.update = update;
     }
 
-
     @Override
     protected Object call() throws Exception {
         try {
             BmcRecordingService service = EmcsAppContext.getContext().getBean(BmcRecordingService.class);
             if (this.update == 0) {
-                service.save(dto, CommonUtil.setIdentityHeader());
+                service.save(dto, CommonUtils.setIdentityHeader());
             } else {
                 service.update(dto);
             }
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.RECORDING_PARAMETER;
-//
-//            ResponseEntity<RecordingParameter> response = this.update == 0 ?
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), RecordingParameter.class) :
-//                    restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), RecordingParameter.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
             return true;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());

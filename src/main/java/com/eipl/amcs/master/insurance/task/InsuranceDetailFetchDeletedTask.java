@@ -26,17 +26,6 @@ public class InsuranceDetailFetchDeletedTask extends Task<List<InsuranceDetail>>
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.INSURANCE + "/fetchDeletedInsuranceDetails";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("insuranceMasterCode", insuranceMasterCode);
-//
-//            ResponseEntity<InsuranceDetail[]> response = restTemplate.getForEntity(builder.toUriString(), InsuranceDetail[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("InsuranceDetail fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("InsuranceDetail fetch", e);
         }

@@ -15,7 +15,7 @@ import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateBasedRe
 import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateDetailRepository;
 import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateRepository;
 import com.eipl.amcs.operation.procurement.dto.MilkRateAndDetailsDto;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRate
                 dto.getPurchaseRate().getSociety(), dto.getPurchaseRate().getWefDate());
         if (rate.isPresent()) {
             logger.warn("Member milk purchase rate already available from: {}", rate.get().getWefDate().toString());
-            FieldError wefDateNotValid = CommonUtil.getFieldError("MemberMilkPurchaseRateDto", "wefDate",
+            FieldError wefDateNotValid = CommonUtils.getFieldError("MemberMilkPurchaseRateDto", "wefDate",
                     dto.getPurchaseRate().getWefDate(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
@@ -130,20 +130,20 @@ public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRate
     public List<String> fetchRateDetails(String code, Integer milkTypeCode, Integer milkQualityTypeCode) {
         Optional<MemberMilkPurchaseRate> rate = memberMilkPurchaseRateRepository.findById(code);
         if (!rate.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("MemberMilkPurchaseRate", "code", code, "ratecode.not.valid");
+            FieldError error = CommonUtils.getFieldError("MemberMilkPurchaseRate", "code", code, "ratecode.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
 
         Optional<MilkType> milkType = milkTypeRepository.findById(milkTypeCode);
         if (!milkType.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("MemberMilkPurchaseRate", "milkTypeCode", code,
+            FieldError error = CommonUtils.getFieldError("MemberMilkPurchaseRate", "milkTypeCode", code,
                     "milktype.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
 
         Optional<MilkQualityType> milkQualityType = milkQualityRepository.findById(milkQualityTypeCode);
         if (!milkQualityType.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("MemberMilkPurchaseRate", "milkQualityTypeCode", code,
+            FieldError error = CommonUtils.getFieldError("MemberMilkPurchaseRate", "milkQualityTypeCode", code,
                     "milkqualitytype.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
@@ -152,7 +152,7 @@ public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRate
                 .findByMemberMilkPurchaseRateAndMilkTypeAndMilkQualityType(rate.get(), milkType.get(),
                         milkQualityType.get(), Sort.by("fat", "snf"));
         if (listDetails == null || listDetails.isEmpty()) {
-            FieldError error = CommonUtil.getFieldError("MemberMilkPurchaseRateDetails", null, null,
+            FieldError error = CommonUtils.getFieldError("MemberMilkPurchaseRateDetails", null, null,
                     "ratedetails.not.found");
             throw new BusinessValidationFailException(getClass(), error);
         }
@@ -174,7 +174,7 @@ public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRate
     public List<MemberMilkPurchaseRateBased> fetchRateBased(String code) {
         Optional<MemberMilkPurchaseRate> rate = memberMilkPurchaseRateRepository.findById(code);
         if (!rate.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("MemberMilkPurchaseRate", "code", code, "ratecode.not.valid");
+            FieldError error = CommonUtils.getFieldError("MemberMilkPurchaseRate", "code", code, "ratecode.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
         return basedRepository.findByMemberMilkPurchaseRate(rate.get());
@@ -184,7 +184,7 @@ public class MemberMilkPurchaseRateServiceImpl implements MemberMilkPurchaseRate
     public MilkRateAndDetailsDto fetchRateAndDetails(String code) {
         Optional<MemberMilkPurchaseRate> rate = memberMilkPurchaseRateRepository.findById(code);
         if (!rate.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("MemberMilkPurchaseRate", "code", code, "ratecode.not.valid");
+            FieldError error = CommonUtils.getFieldError("MemberMilkPurchaseRate", "code", code, "ratecode.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
 

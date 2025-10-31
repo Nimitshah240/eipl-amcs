@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.procurement.task.MemberBillLoadByDateTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.billing.task.MemberBillSummaryLoadTask;
@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MemberBillSummaryController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<MemberBillSummary> propSummary;
     @FXML
     private StackPane root;
     @FXML
@@ -49,17 +50,11 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     private TableColumn<MemberBillSummary, String> colStatus;
     @FXML
     private Button btnAdd, btnEdit, btnClose, btnPaymentRegister, btnGeneral, btnSearch;
-
     @FXML
     private RadioButton rbtnCash, rbtnBank;
-
     @FXML
     private ToggleGroup paymentMode;
-
-    private final ObjectProperty<MemberBillSummary> propSummary;
-
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     public MemberBillSummaryController() {
         propSummary = new SimpleObjectProperty<>();
@@ -82,7 +77,6 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-//        dpToDate.setValue(LocalDate.now());
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -112,7 +106,6 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
                 btnEdit.setDisable(false);
                 btnGeneral.setDisable(false);
                 btnPaymentRegister.setDisable(false);
-
             } else {
                 btnEdit.setDisable(true);
                 btnGeneral.setDisable(true);
@@ -124,9 +117,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
         btnGeneral.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "GeneralReportPopup", propSummary.get(), this);
         });
-
     }
-
 
     private void validateAndGenerateReport() {
 
@@ -141,34 +132,8 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
         } else if (rbtnBank.isSelected()) {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BankReportPopup", propSummary.get(), this);
         }
-
-//        else {
-////            if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_ADD"))
-////                throw new UnAuthorizedAccessException();
-//            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BankReportPopup", null, this);
-//        }
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//            params.put("p_society_payment_cycle_code", propSummary.get().getPaymentCycle().getCode());
-//            params.put("p_payment_mode", 1);
-//            params.put("p_locale", MainApp.locale);
-//            JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_BANK, params);
-//            JasperViewer.viewReport(print, false);
     }
 
-//        else {
-
-    ///            if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_ADD"))
-    ///                throw new UnAuthorizedAccessException();
-//            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BankReportPopup", null, this);
-//        }
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//            params.put("p_society_payment_cycle_code", propSummary.get().getPaymentCycle().getCode());
-//            params.put("p_payment_mode", 1);
-//            params.put("p_locale", MainApp.locale);
-//            JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_BANK, params);
-//            JasperViewer.viewReport(print, false);
     @Override
     public void setupTable() {
         try {
@@ -221,34 +186,5 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
             });
             new Thread(task).start();
         }
-
     }
-
-//    @Override
-//    public void deleteData() {
-//        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("memberbill"),
-//                resourceBundle.getString("alert.delete"));
-//        Optional<ButtonType> resp = alert.createConfirmationAlert();
-//        if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//            MemberBillSummary dto = propSummary.get();
-//            if (dto != null) {
-//                var task = new MemberDeleteTask(dto.getCode());
-//                task.setOnSucceeded(e -> {
-//                    try {
-//                        Boolean respDelete = task.get();
-//                        if (respDelete == null || respDelete.booleanValue() == false) {
-//                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("memberbill"),
-//                                    resourceBundle.getString("error.occurred"));
-//                            alert1.createAlert();
-//                            return;
-//                        }
-//                        loadData();
-//                    } catch (InterruptedException | ExecutionException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                });
-//                new Thread(task).start();
-//            }
-//        }
-//    }
 }

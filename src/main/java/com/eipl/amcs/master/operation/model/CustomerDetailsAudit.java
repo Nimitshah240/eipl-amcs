@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -27,25 +26,15 @@ public class CustomerDetailsAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 15)
     private String code;
-    @Size(max = 255)
     private String aadharCardNo;
-    @Size(max = 255)
     private String accountNo;
-    @Size(max = 500)
     private String address;
-    @Size(max = 255)
     private String cstNo;
-    @Size(max = 255)
     private String email;
-    @Size(max = 6)
     private String pincode;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 255)
     private String tinNo;
-    @Size(max = 255)
     private String panNo;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = CustomerSerialize.class)

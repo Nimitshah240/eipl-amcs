@@ -9,7 +9,6 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -55,8 +54,6 @@ public class PaymentRegisterController implements MyInitialization {
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;

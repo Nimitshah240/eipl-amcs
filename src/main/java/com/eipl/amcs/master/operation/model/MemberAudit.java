@@ -1,15 +1,15 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModelAudit;
-import com.eipl.amcs.deserialize.MemberTypeDeserializer;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelAudit;
+import com.eipl.amcs.json.deserialize.MemberTypeDeserializer;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.MemberTypeSerialize;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.MemberTypeSerialize;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -30,23 +29,14 @@ public class MemberAudit extends BaseModelAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 20)
     private String code;
-    @Size(max = 4)
     private String codeEx;
-    @Size(max = 100)
     private String firstName;
-    @Size(max = 100)
     private String middleName;
-    @Size(max = 100)
     private String lastName;
-    @Size(max = 255)
     private String firstNameLocal;
-    @Size(max = 255)
     private String middleNameLocal;
-    @Size(max = 255)
     private String lastNameLocal;
-    @Size(max = 255)
     private String mobileNo;
     private BigDecimal creditLimit;
 

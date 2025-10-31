@@ -2,12 +2,12 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -41,6 +41,7 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
     public static final String DISPLAY = "DISPLAY";
     public static final String SPLITTER = "SPLITTER";
     public static final String PRINTER = "PRINTER";
+    private final List<String> commPorts = new ArrayList<>();
     @FXML
     StackPane root;
     @FXML
@@ -54,7 +55,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
     private ComboBox<MilkType> cboxMilkType, cboxMilkType2, cboxMilkType3, cboxMilkType4;
     private List<HardwareDeviceConfig> deviceConfigList;
     private StringBuilder errorMsg = null;
-    private final List<String> commPorts = new ArrayList<>();
     private ResourceBundle resourceBundle;
 
     @Override
@@ -209,7 +209,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
             cboxAnalyser.setValue(configAnalyser.getHardwareDevice());
             cboxAnalyserPort.setValue(configAnalyser.getCommPort());
             cboxQualityMachine.setValue(cboxQualityMachine.getItems().get((configAnalyser.getAnalyserModeType() < 0 ? 0 : configAnalyser.getAnalyserModeType())));
-//            cboxQualityMachine.setValue(cboxQualityMachine.getItems().get(configAnalyser.getAnalyserModeType()));
             cboxMilkType.setValue(cboxMilkType.getItems().stream().filter(milkType -> milkType.getCode().equals(configAnalyser.getAnalyserMilkType())).findAny().orElse(null));
         }
 
@@ -218,7 +217,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
             cboxAnalyser2.setValue(configAnalyser2.getHardwareDevice());
             cboxAnalyserPort2.setValue(configAnalyser2.getCommPort());
             cboxQualityMachine2.setValue(cboxQualityMachine2.getItems().get((configAnalyser2.getAnalyserModeType() < 0 ? 0 : configAnalyser2.getAnalyserModeType())));
-//            cboxQualityMachine2.setValue(cboxQualityMachine2.getItems().get(configAnalyser2.getAnalyserModeType()));
             cboxMilkType2.setValue(cboxMilkType2.getItems().stream().filter(milkType -> milkType.getCode().equals(configAnalyser2.getAnalyserMilkType())).findAny().orElse(null));
         }
         HardwareDeviceConfig configAnalyser3 = list.stream().filter(p -> p.getDeviceType().equals(ANALYSER3)).findFirst().orElse(null);
@@ -226,7 +224,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
             cboxAnalyser3.setValue(configAnalyser3.getHardwareDevice());
             cboxAnalyserPort3.setValue(configAnalyser3.getCommPort());
             cboxQualityMachine3.setValue(cboxQualityMachine3.getItems().get((configAnalyser3.getAnalyserModeType() < 0 ? 0 : configAnalyser3.getAnalyserModeType())));
-//            cboxQualityMachine3.setValue(cboxQualityMachine3.getItems().get(configAnalyser3.getAnalyserModeType()));
             cboxMilkType3.setValue(cboxMilkType3.getItems().stream().filter(milkType -> milkType.getCode().equals(configAnalyser3.getAnalyserMilkType())).findAny().orElse(null));
 
         }
@@ -235,7 +232,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
             cboxAnalyser4.setValue(configAnalyser4.getHardwareDevice());
             cboxAnalyserPort4.setValue(configAnalyser4.getCommPort());
             cboxQualityMachine4.setValue(cboxQualityMachine4.getItems().get((configAnalyser4.getAnalyserModeType() < 0 ? 0 : configAnalyser4.getAnalyserModeType())));
-//            cboxQualityMachine4.setValue(cboxQualityMachine4.getItems().get(configAnalyser4.getAnalyserModeType()));
             cboxMilkType4.setValue(cboxMilkType4.getItems().stream().filter(milkType -> milkType.getCode().equals(configAnalyser4.getAnalyserMilkType())).findAny().orElse(null));
         }
 
@@ -255,26 +251,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
         if (configPrinter != null) {
             cboxPrinter.setValue(configPrinter.getxCol1());
         }
-//        try {
-//            cboxQualityMachine.getSelectionModel().select(arrQuality[Integer.parseInt(MainApp.getProperty("masetting", "")) - 1]);
-//        } catch (Exception e) {
-//            cboxQualityMachine.getSelectionModel().select(0);
-//        }
-//        try {
-//            cboxQualityMachine2.getSelectionModel().select(arrQuality[Integer.parseInt(MainApp.getProperty("masetting", "")) - 1]);
-//        } catch (Exception e) {
-//            cboxQualityMachine2.getSelectionModel().select(0);
-//        }
-//        try {
-//            cboxQualityMachine3.getSelectionModel().select(arrQuality[Integer.parseInt(MainApp.getProperty("masetting", "")) - 1]);
-//        } catch (Exception e) {
-//            cboxQualityMachine3.getSelectionModel().select(0);
-//        }
-//        try {
-//            cboxQualityMachine4.getSelectionModel().select(arrQuality[Integer.parseInt(MainApp.getProperty("masetting", "")) - 1]);
-//        } catch (Exception e) {
-//            cboxQualityMachine4.getSelectionModel().select(0);
-//        }
     }
 
     public void setComboBox() {
@@ -285,7 +261,6 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
         cboxAnalyser4.setConverter(new HardwareDeviceConvertor(cboxAnalyser4));
         cboxDisplay.setConverter(new HardwareDeviceConvertor(cboxDisplay));
         cboxSplitter.setConverter(new HardwareDeviceConvertor(cboxSplitter));
-//        cboxSplitter.setConverter(new HardwareDeviceConvertor(cboxSplitter));
         cboxQualityMachine.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));
         cboxQualityMachine2.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));
         cboxQualityMachine3.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));

@@ -45,14 +45,6 @@ public class SchemeRateController implements MyInitialization, PopupCallback {
         return null;
     }
 
-    /**
-     * Method use to setup data for scheme rate screen.
-     *
-     * @param url
-     * @param resourceBundle
-     * @author Nimit Shah
-     * @createdOn 23-07-2025
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
@@ -63,12 +55,6 @@ public class SchemeRateController implements MyInitialization, PopupCallback {
         setupTable();
     }
 
-    /**
-     * Method use to set table with the data of SchemeRateApplicability.
-     *
-     * @author Nimit Shah
-     * @createdOn 23-07-2025
-     */
     @Override
     public void setupTable() {
         try {
@@ -85,12 +71,6 @@ public class SchemeRateController implements MyInitialization, PopupCallback {
         }
     }
 
-    /**
-     * Method use to call load task to get data of SchemeRateApplicability.
-     *
-     * @author Nimit Shah
-     * @createdOn 23-07-2025
-     */
     @Override
     public void loadData() {
         tableSchemeRateApplicability.setItems(null);

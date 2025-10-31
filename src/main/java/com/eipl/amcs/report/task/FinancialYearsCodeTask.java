@@ -6,13 +6,10 @@ import javafx.concurrent.Task;
 
 public class FinancialYearsCodeTask extends Task<Boolean> {
 
-    private String code;
+    private final String code;
 
     public FinancialYearsCodeTask(String code) {
         this.code = code;
-    }
-
-    public FinancialYearsCodeTask() {
     }
 
     @Override

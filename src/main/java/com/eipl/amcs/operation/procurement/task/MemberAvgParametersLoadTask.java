@@ -29,19 +29,7 @@ public class MemberAvgParametersLoadTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
-
-//            LocalDate d = LocalDate.parse(date);
             Map<String, BigDecimal> list = service.findAvgFatAndSnf(code, Integer.parseInt(no), milktype, date, shiftCode);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION + "/avg";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code)
-//                    .queryParam("no", no)
-//                    .queryParam("milktype", milktype)
-//                    .queryParam("shiftCode", shiftCode)
-//                    .queryParam("date", date.toString());
-//            ResponseEntity<Object> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-//                    null, Object.class);
             if (list == null || list.isEmpty())
                 return null;
             return list;

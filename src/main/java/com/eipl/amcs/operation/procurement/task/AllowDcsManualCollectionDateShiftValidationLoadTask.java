@@ -39,16 +39,6 @@ public class AllowDcsManualCollectionDateShiftValidationLoadTask extends Task<Bo
                         (fromDate, toDate, String.valueOf(selectedIndex), qualityManual, weightManual, 2);
             }
             return existingData.isEmpty();
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ALLOWDCSMANUALCOLLECTIONRANGE + "/findByDateShiftValidation";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString())
-//                    .queryParam("weightManual", weightManual)
-//                    .queryParam("qualityManual", qualityManual)
-//                    .queryParam("type", selectedIndex);
-//            ResponseEntity<Boolean> response = restTemplate.getForEntity(builder.toUriString(), Boolean.class);
-
         } catch (Exception e) {
             LOGGER.error("ProductReceipt fetch", e);
         }

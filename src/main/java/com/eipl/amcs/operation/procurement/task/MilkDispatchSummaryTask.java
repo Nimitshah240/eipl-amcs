@@ -26,16 +26,6 @@ public class MilkDispatchSummaryTask extends Task<List<MilkDispatchSummaryDto>> 
                 return null;
             return milkDispatchSummaryDtos;
 
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH + "/milk-dispatch-summary";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<MilkDispatchSummaryDto[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, MilkDispatchSummaryDto[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

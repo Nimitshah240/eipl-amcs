@@ -20,14 +20,6 @@ public class DesignationLoadTask extends Task<List<Designation>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.DESIGNATION;
-//            ResponseEntity<Designation[]> response = restTemplate.getForEntity(url, Designation[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Designation fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Designation fetch", e);
         }

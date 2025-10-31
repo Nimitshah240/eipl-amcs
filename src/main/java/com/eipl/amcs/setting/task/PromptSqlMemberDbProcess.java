@@ -41,10 +41,6 @@ public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
         List<MemberDto> list = new ArrayList<>();
         try {
             String connectionUrl = "jdbc:sqlserver://IT40\\EIPL;databaseName=" + dbName + ";integratedSecurity=false;encrypt=true;trustServerCertificate=true;user=sa;password=eipl";
-
-            //  String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=false;user=dev;password=dev@123";
-//            String connectionUrl = "jdbc:sqlserver://KHODAL-PC\\AMCSSERVER:1433;databaseName=" + dbName + ";integretedSecurity=true;";
-//            String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
             String[] cowRangeArr = cowRange.split("-");
             int cowMin = CommonUtils.strToInteger(cowRangeArr[0]);
             int cowMax = CommonUtils.strToInteger(cowRangeArr[1]);
@@ -52,7 +48,6 @@ public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
             int buffMin = CommonUtils.strToInteger(buffRangeArr[0]);
             int buffMax = CommonUtils.strToInteger(buffRangeArr[1]);
             try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
-//            try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery("select * from tblSabhasad");
 
@@ -62,23 +57,9 @@ public class PromptSqlMemberDbProcess extends Task<List<MemberDto>> {
                     int codeEx = CommonUtils.strToInteger(resultSet.getString("SabhasadId"));
                     m.setCodeEx(String.format("%04d", codeEx));
                     m.setCode(MainApp.identityDto.getSociety().getCode() + m.getCodeEx());
-//                    String[] nameArr = resultSet.getString("SName") != null ?
-//                            resultSet.getString("SName").split("\\s+") : null;
-//                    if (nameArr != null) {
-//                        m.setLastName(nameArr[0]);
-//                        m.setFirstName(nameArr.length > 1 ? nameArr[1] : "Member");
-//                        m.setMiddleName(nameArr.length > 2 ? nameArr[2] : "");
-//                    }
                     String nameArr = resultSet.getString("SName");
                     m.setFirstName(nameArr);
                     m.setLastName(".");
-//                    String[] nameLocalArr = resultSet.getString("SNameG") != null ?
-//                            resultSet.getString("SNameG").split("\\s+") : null;
-//                    if (nameLocalArr != null) {
-//                        m.setLastNameLocal(nameLocalArr[0]);
-//                        m.setFirstNameLocal(nameLocalArr.length > 1 ? nameLocalArr[1] : "");
-//                        m.setMiddleNameLocal(nameLocalArr.length > 2 ? nameLocalArr[2] : "");
-//                    }
                     String nameArrLocal = resultSet.getString("SNameG");
                     m.setFirstNameLocal(nameArrLocal);
                     m.setMemberType(memberType);

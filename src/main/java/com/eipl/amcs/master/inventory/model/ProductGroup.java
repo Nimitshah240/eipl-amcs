@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.inventory.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.UnitDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.UnitDeserializer;
+import com.eipl.amcs.json.serialize.UnitSerialize;
 import com.eipl.amcs.master.global.model.Unit;
-import com.eipl.amcs.serialize.UnitSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,11 +22,8 @@ import javax.validation.constraints.Size;
 public class ProductGroup extends BaseModel {
 
     @Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)

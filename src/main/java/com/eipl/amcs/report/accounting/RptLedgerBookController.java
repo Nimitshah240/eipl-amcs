@@ -27,27 +27,16 @@ import java.util.concurrent.ExecutionException;
 
 public class RptLedgerBookController implements MyInitialization {
 
-
     @FXML
     private Button btnGenerate, btnClose;
-
-//    @FXML
-//    private ComboBox<String> cboxHasSubLedger;
-
     @FXML
     private ComboBox<Ledger> cboxLedgerName;
-
     @FXML
     private DatePicker dpFromDate, dpToDate;
-
     @FXML
     private SwingNode reportNode;
-
     @FXML
     private AnchorPane root;
-
-
-    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -60,9 +49,6 @@ public class RptLedgerBookController implements MyInitialization {
         dpToDate.setValue(LocalDate.now());
         loadData();
         setupComboBox();
-
-//        cboxHasSubLedger.getItems().addAll(resources.getString("yes"), resources.getString("no"));
-//        cboxHasSubLedger.getSelectionModel().select(0);
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
 
         btnClose.setOnAction(e -> {
@@ -83,11 +69,6 @@ public class RptLedgerBookController implements MyInitialization {
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
         params.put("p_locale", MainApp.locale);
         JasperPrint print = null;
-//        if (cboxHasSubLedger.getSelectionModel().getSelectedIndex() == 0) {
-//            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK, params);
-//        } else {
-//            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER, params);
-//        }
 
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER, params);
         JasperViewer.viewReport(print, false);
@@ -122,7 +103,5 @@ public class RptLedgerBookController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
-
     }
 }

@@ -41,7 +41,6 @@ public class MemberWiseLocalMilkSaleController implements MyInitialization {
     private ComboBox<Shift> cboxFromShift, cboxToShift;
 
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -96,10 +95,6 @@ public class MemberWiseLocalMilkSaleController implements MyInitialization {
         }
         JasperViewer.viewReport(print, false);
 
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     @Override

@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 public class BonusRegisterAllExcelTask extends Task<List<Map<String, Object>>> {
-    private String societyCode;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private String memberCode;
-    private String locale;
-    private Integer paymentMode;
-    private Integer bonusType;
-    private String bankCode;
+    private final String societyCode;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
+    private final String memberCode;
+    private final String locale;
+    private final Integer paymentMode;
+    private final Integer bonusType;
+    private final String bankCode;
 
 
     public BonusRegisterAllExcelTask(String societyCode, String memberCode, String locale, Integer paymentMode, String bankCode,
@@ -29,10 +29,6 @@ public class BonusRegisterAllExcelTask extends Task<List<Map<String, Object>>> {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.bonusType = bonusType;
-    }
-
-    public BonusRegisterAllExcelTask() {
-
     }
 
     @Override

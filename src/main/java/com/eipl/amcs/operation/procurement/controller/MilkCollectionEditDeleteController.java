@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -32,7 +32,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -53,6 +52,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class MilkCollectionEditDeleteController extends MilkCollectionBaseController implements MyInitialization {
+    private final ObjectProperty<MilkCollection> propCollection = new SimpleObjectProperty<>();
     public String text = "";
     BigDecimal oldQty = BigDecimal.ZERO;
     BigDecimal oldAmount = BigDecimal.ZERO;
@@ -86,8 +86,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private MemberSocietyInfoDto memberSocietyInfoDto;
-    private final ObjectProperty<MilkCollection> propCollection = new SimpleObjectProperty<>();
-    private final ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
     private MilkCollection milkCollection;
     private StringBuilder errorMsg = null;
     private String operation = "UPDATE";
@@ -97,13 +95,11 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             calculateClr(txtFat.getText(), txtSnf.getText());
         }
     };
-
     private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
             calculateAmount(txtRtpl.getText(), txtQuantity.getText());
         }
     };
-
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -155,7 +151,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         setupComboBox();
         setupTable();
         loadData();
-//        fetchRateDetails();
         cboxType.setOnAction(e -> {
             fetchRate(txtFat.getText(), txtSnf.getText(), cboxType.getValue(), cboxQualityType.getValue());
             calculateClr(txtFat.getText(), txtSnf.getText());
@@ -166,8 +161,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         txtRtpl.textProperty().addListener(qtyRateChangeListener);
         txtCode.setOnAction(e -> fetchMemberSocietyDetails());
         txtFat.setOnKeyPressed(e -> {
-//            FocusUtils.requestFocus(btnEdit);
-//            FocusUtils.requestFocus(btnDelete);
             if (e.getCode() == KeyCode.ENTER) {
                 FocusUtils.requestFocus(btnEdit);
                 FocusUtils.requestFocus(btnDelete);
@@ -193,22 +186,11 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
                     btnEdit.setText(resourceBundle.getString("update"));
                 }
             }
-//            if (gridCollection.isDisable()) {
-//                gridCollection.setDisable(false);
-//                if (propCollection.get() != null) {
-//                    milkCollection = propCollection.get();
-//                    setValuesInControls(milkCollection);
-//                    btnEdit.setText(resourceBundle.getString("update"));
-//                }
-//            } else {
-//                validateAndUpdate();
-//            }
         });
         btnDelete.setOnAction(e -> {
             deleteData();
         });
         btnClose.setOnAction(e -> this.stage.close());
-
 
         root.setOnKeyReleased(event -> {
             switch (event.getCode()) {
@@ -226,13 +208,8 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             try {
                 collectionPreReqDto = task.get();
                 if (collectionPreReqDto != null) {
-//                    collectionDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
-//                    txtSnf.setDisable("1".equals(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF, "0")));
-//                    if ("1".equals(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF, "0")))
-//                        txtSnf.setText(MainApp.getProperty(AppConstant.Props.DEFAULT_SNF_VALUE, "0"));
                     cboxQualityType.setDisable(true);
                     cboxType.setDisable("0".equals(MainApp.getProperty(AppConstant.Props.ACCEPT_MILK_OTHERTHAN_DEFAULT_MILKTYPE, "1")));
-
                     fetchRateDetails();
                     FocusUtils.requestFocus(txtCode);
                 }
@@ -261,19 +238,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
 
     @Override
     public void loadData() {
-//        var task = new ShiftLoadTask();
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<Shift> list = task.get();
-//                if (list != null) {
-//                    List<Shift> list1 = CommonUtils.removeAllShift(list);
-//                    cboxShift.setItems(FXCollections.observableList(list1));
-//                }
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
         tableCollection.setItems(null);
         var task1 = new MilkTypeLoadTask();
         task1.setOnSucceeded(e -> {
@@ -315,7 +279,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRtpl()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
 
-
             propCollection.bind(tableCollection.getSelectionModel().selectedItemProperty());
 
         } catch (Exception e) {
@@ -348,10 +311,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             txtRtpl.setText(milkCollection.getRtpl().toString());
             txtAmount.setText(milkCollection.getAmount().toString());
             oldAmount = milkCollection.getAmount();
-
-
         }
-
     }
 
     private void validateAndUpdate() {
@@ -363,7 +323,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         }
 
         if (btnEdit.getText().equals(resourceBundle.getString("update"))) {
-
 
             setValuesInObject();
             if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
@@ -511,7 +470,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
 
     private void writeDeleteCollection() {
         try {
-
             MilkCollection collection = tableCollection.getItems().size() == 1 ? tableCollection.getItems().get(0) : propCollection.get();
             text = collection.getSampleNo() + "#" + collection.getCollectionDate() + "#" + collection.getFat() + "#" + collection.getSnf() + "#" + collection.getClr() + "#" + collection.getWater() + "#" + collection.getDensity() + "#" + collection.getLectose() + "#" + collection.getProtein() + "#" + collection.getRtpl() + "#" + collection.getQty() + "#" + collection.getAmount() + "#" + collection.isWeightAuto() + "#" + collection.isQualityAuto() + "#" + collection.isAvgParam() + "#" + collection.getQualityAt() + "#" + collection.getWeightAt() + "#" + collection.getRateCode() + "#" + collection.getUnionCode() + "#" + collection.getQtyMode() + "#" + collection.getConvertedQty() + "#" + collection.getConvertedQtyMode() + "#" + collection.getSocietyPaymentCycle().getCode() + "#" + collection.getMember().getCode() + "#" + collection.getShift().getCode() + "#" + collection.getMilkType().getCode() + "#" + collection.getMilkQualityType().getCode() + "#" + collection.getSociety().getCode() + "#" + collection.getDock().getDockNo() + "#" + collection.getxCol1() + "#" + collection.getxCol2() + "#" + collection.getxCol3();
             File directory = new File((MainApp.getProperty("backuppath", "") + "1").replace(" ", ""));
@@ -532,14 +490,12 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             FileWriter writer = new FileWriter(file, true);
             BufferedWriter bw = new BufferedWriter(writer);
             for (String s : lines) {
-//                String[] ss = (new String(Base64.getDecoder().decode(s.getBytes()))).split("#");
                 String[] ss = s.split("#");
                 if (!ss[0].equalsIgnoreCase(text.split("#")[0])) {
                     lines1.add(s);
                 }
             }
             for (String s : lines1) {
-//                bw.write(new String(Base64.getEncoder().encode(s.getBytes())));
                 bw.write(s);
                 bw.newLine();
             }
@@ -572,18 +528,15 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             FileWriter writer = new FileWriter(file, true);
             BufferedWriter bw = new BufferedWriter(writer);
             for (String s : lines) {
-//                String[] ss = (new String(Base64.getDecoder().decode(s.getBytes()))).split("#");
                 String[] ss = s.split("#");
                 if (!ss[0].equalsIgnoreCase(text.split("#")[0])) {
                     lines1.add(s);
                 }
             }
             for (String s : lines1) {
-//                bw.write(new String(Base64.getEncoder().encode(s.getBytes())));
                 bw.write(s);
                 bw.newLine();
             }
-//            bw.write(new String(Base64.getEncoder().encode(text.getBytes())));
             bw.write(text);
             bw.newLine();
             bw.close();
@@ -596,7 +549,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     private void fetchMemberSocietyDetails() {
         if (txtCode.getText().isEmpty()) return;
         String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
-//        LOGGER.info("Fetch member info for {}", code);
         var task = new MemberSocietyInfoLoadTask(code, collectionDate);
         task.setOnSucceeded(e -> {
             try {
@@ -696,7 +648,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
 
     @Override
     protected String getWater() {
-//        return txtWater.getText() == null || txtWater.getText().isEmpty() ? "0" : txtWater.getText();
         return null;
     }
 
@@ -897,7 +848,6 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             this.operation = object.getOperation();
             if (this.operation.equalsIgnoreCase("UPDATE")) {
                 hbox.getChildren().remove(btnDelete);
-//                lblTitle.setText();
             } else {
                 hbox.getChildren().remove(btnEdit);
             }

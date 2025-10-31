@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkClassConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkClass;
@@ -35,7 +35,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class LocalMilkSaleRateAddEditController implements MyInitialization {
-    private final LocalMilkSaleRate dto = null;
     @FXML
     private StackPane root;
     @FXML
@@ -57,10 +56,6 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    public void setLocalMilkSaleRate(LocalMilkSaleRate localMilkSaleRate) {
-        this.localMilkSaleRate = localMilkSaleRate;
     }
 
     @Override

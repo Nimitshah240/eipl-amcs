@@ -13,16 +13,12 @@ import java.util.List;
 public class ShareDividendLoadTask extends Task<List<ShareDividend>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShareDividendLoadTask.class);
 
-    private LocalDate fromDate, toDate;
-
-    public ShareDividendLoadTask() {
-
-    }
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public ShareDividendLoadTask(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
-
     }
 
     @Override
@@ -33,16 +29,6 @@ public class ShareDividendLoadTask extends Task<List<ShareDividend>> {
             List<ShareDividend> list = service.findAllData(fromDate, toDate);
             if (list == null || list.isEmpty()) return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE_DIVIDEND+"/byDate";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<ShareDividend[]> response = restTemplate.getForEntity(builder.toUriString(), ShareDividend[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Cancelled Share fetch", e);
         }

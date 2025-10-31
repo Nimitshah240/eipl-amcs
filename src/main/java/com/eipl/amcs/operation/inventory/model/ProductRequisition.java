@@ -1,12 +1,10 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.TaxDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.TaxSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

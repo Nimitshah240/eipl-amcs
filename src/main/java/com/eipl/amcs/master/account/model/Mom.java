@@ -1,14 +1,14 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.MeetingAgendaDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MeetingAgendaDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.MeetingAgendaSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.MeetingAgendaSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -30,7 +29,6 @@ public class Mom extends BaseModelTxn {
     @Id
     private String code;
     private Integer status;
-    @Size(max = 500)
     private String mom;
     private short meetingType;
     @ManyToOne(fetch = FetchType.LAZY)

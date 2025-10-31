@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.task.VoucherTypeNumberLoadTask;
 import com.eipl.amcs.master.account.task.VoucherTypeSaveTask;
@@ -189,6 +189,4 @@ public class VoucherTypeAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-
 }

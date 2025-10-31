@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.model.Mom;
 import com.eipl.amcs.master.account.model.MomAction;
 import com.eipl.amcs.operation.administartion.task.MomActionDeleteTask;
@@ -97,8 +97,6 @@ public class MomActionController implements MyInitialization, PopupCallback {
                 FocusUtils.requestFocus(txtActionTaken);
                 btnAdd.setText(resourceBundle.getString("save"));
             } else {
-                // setValuesInObject();
-                //saveData();
                 validateAndSave();
                 btnAdd.setText(resourceBundle.getString("add"));
                 gridMaster.setDisable(true);
@@ -205,12 +203,9 @@ public class MomActionController implements MyInitialization, PopupCallback {
     }
 
     private boolean validate() {
-
         if (txtActionTaken.getText().trim() == null || txtActionTaken.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("actiontakennullerror") + "\n");
-
         return errorMsg.length() == 0;
-
     }
 
     @Override

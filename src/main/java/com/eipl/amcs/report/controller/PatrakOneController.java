@@ -90,10 +90,6 @@ public class PatrakOneController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
-    private boolean validate() {
-        return true;
-    }
-
     @Override
     public void loadData() {
         var task1 = new ShiftLoadTask();
@@ -116,8 +112,7 @@ public class PatrakOneController implements MyInitialization {
 
     public void loadMilkType() {
         var task2 = new MilkTypeLoadTask();
-        task2.setOnSucceeded(e ->
-        {
+        task2.setOnSucceeded(e -> {
             try {
                 List<MilkType> list = task2.get();
                 if (list != null) {

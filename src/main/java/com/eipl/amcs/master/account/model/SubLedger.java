@@ -1,10 +1,10 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -26,11 +25,8 @@ public class SubLedger extends BaseModel {
 
     @Id
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
-    @Size(max = 25)
     private String referenceCode;
     private Short type;
 

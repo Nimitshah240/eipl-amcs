@@ -55,8 +55,6 @@ public class VoucherController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         propVoucherDto.addListener((observable, oldValue, newValue) -> {
-            //                btnEdit.setDisable(false);
-            //                btnEdit.setDisable(true);
             btnDelete.setDisable(newValue == null);
         });
         setupTable();
@@ -94,15 +92,6 @@ public class VoucherController implements MyInitialization, PopupCallback {
                 MainApp.getContentPane().setCenter((controller).getRoot());
             }
         });
-//        btnEdit.setOnAction(e -> {
-//            Voucher dto = propVoucherDto.get().getVoucher();
-//            if (dto != null) {
-//                VoucherAddEditController controller = (VoucherAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherAddEdit.fxml"));
-//                controller.setVoucher(dto);
-//                MainApp.getContentPane().setCenter(controller.getRoot());
-//            }
-//        });
-
     }
 
 
@@ -159,5 +148,4 @@ public class VoucherController implements MyInitialization, PopupCallback {
             }
         }
     }
-
 }

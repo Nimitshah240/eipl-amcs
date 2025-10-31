@@ -37,7 +37,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -206,15 +205,8 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
     public void setData(String type, String path) {
         int i = 1;
         if (type.equalsIgnoreCase("Prompt")) {
-//            String urlDb = "jdbc:ucanaccess://" + path;
-//            String pwd = "PNM^$)&(%*";
-//            try (Connection connection = DriverManager.getConnection(urlDb, "", pwd)) {
-//                Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery("select * from tblILedger");
-//                while (resultSet.next()) {
         } else if (type.equalsIgnoreCase("SkyWay")) {
             try {
-//                List<LocalMilkSale> list = new ArrayList<>();
                 List<String> lines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     String[] arr = line.split(",");
@@ -252,7 +244,6 @@ public class LocalMilkSaleDataMigrationController implements MyInitialization {
                     MilkClass milkClass = classList.get(0);
                     m.setMilkClass(milkClass);
                     m.setConsumerType((short) 6);
-//                    m.setConsumerCode(MainApp.identityDto.getSociety().getCode() + "0001");
                     m.setConsumerCode(customerList.get(0).getCode());
                     m.setEntryType((short) 0);
                     m.setPaymentMode((short) 0);

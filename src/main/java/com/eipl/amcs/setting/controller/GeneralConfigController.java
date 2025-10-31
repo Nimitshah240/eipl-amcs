@@ -2,13 +2,13 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.setting.model.GeneralConfig;
 import com.eipl.amcs.setting.task.GeneralConfigSaveTask;
 import com.eipl.amcs.utils.AppConstant;
@@ -25,15 +25,18 @@ import javafx.scene.layout.AnchorPane;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
+
 public class GeneralConfigController implements MyInitialization {
 
+    File appProperty, old;
+    String[] arrQuality = {"Single MA", "Dual MA By Milk", "Dual MA By Sequence"};
     @FXML
     private AnchorPane root;
     @FXML
@@ -54,11 +57,7 @@ public class GeneralConfigController implements MyInitialization {
     private Button btnSave, btnClose, btnSave1, btnClose1, btnSave2, btnClose2, btnBrowse, btnBackup;
     @FXML
     private ComboBox<String> cboxSlipLanguage, cboxApplicationLanguage;
-
-
     private ResourceBundle resourceBundle;
-    File appProperty, old;
-    String[] arrQuality = {"Single MA", "Dual MA By Milk", "Dual MA By Sequence"};
 
     @Override
     public Node getRoot() {
@@ -105,16 +104,9 @@ public class GeneralConfigController implements MyInitialization {
         });
 
         txtLtrToKg.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null && newValue.length() > 0) {
-//                if (!newValue.matches("^[0-9]{1}(\\.{0,1}|((\\.)[0-9]{0,3}))$"))
-//                    txtLtrToKg.setText(oldValue);
-//            }
+
         });
         txtSampleSize.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null && newValue.length() > 0) {
-////                if (!newValue.matches(MainApp.QUALITY_PARAM_REGEX))
-//                txtSampleSize.setText(oldValue);
-//            }
         });
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
@@ -123,24 +115,12 @@ public class GeneralConfigController implements MyInitialization {
             }
         });
 
-        if (chkAvgParam.isSelected()) {
-            txtAvgPIfMachineOff.setDisable(false);
-        } else {
-            txtAvgPIfMachineOff.setDisable(true);
-        }
+        txtAvgPIfMachineOff.setDisable(!chkAvgParam.isSelected());
         chkAvgParam.setOnAction(e -> {
-            if (chkAvgParam.isSelected()) {
-                txtAvgPIfMachineOff.setDisable(false);
-            } else {
-                txtAvgPIfMachineOff.setDisable(true);
-            }
+            txtAvgPIfMachineOff.setDisable(!chkAvgParam.isSelected());
         });
         chkAvgParam.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(true)) {
-                txtAvgPIfMachineOff.setDisable(false);
-            } else {
-                txtAvgPIfMachineOff.setDisable(true);
-            }
+            txtAvgPIfMachineOff.setDisable(!newValue.equals(true));
         });
 
 
@@ -167,24 +147,24 @@ public class GeneralConfigController implements MyInitialization {
         cboxWeightSetting.setValue(setWeightSetting(MainApp.getProperty("qty.reading.rounding", "0")));
         cboxQualitySetting.setValue(MainApp.getProperty("quality.reading.rounding", "0").equalsIgnoreCase("0") ? "Round" : "Truncate");
         txtSampleSize.setText(MainApp.getProperty("sample.milk.size", "0"));
-        chkAcceptOtherMilk.setSelected(MainApp.getProperty("accept.milktype.otherthen.default", "1").equalsIgnoreCase("1") ? true : false);
-        chkAllowMultiEntry.setSelected(MainApp.getProperty("allow.multipleentry.samemilktype", "1").equalsIgnoreCase("1") ? true : false);
-        chkAllowMultiEntryDiffType.setSelected(MainApp.getProperty("allow.multipleentry.diffmilktype", "1").equalsIgnoreCase("1") ? true : false);
+        chkAcceptOtherMilk.setSelected(MainApp.getProperty("accept.milktype.otherthen.default", "1").equalsIgnoreCase("1"));
+        chkAllowMultiEntry.setSelected(MainApp.getProperty("allow.multipleentry.samemilktype", "1").equalsIgnoreCase("1"));
+        chkAllowMultiEntryDiffType.setSelected(MainApp.getProperty("allow.multipleentry.diffmilktype", "1").equalsIgnoreCase("1"));
         cboxMemberCollectionQtyMode.setValue(MainApp.getProperty("member.collection.qty.mode", "0").equalsIgnoreCase("0") ? resourceBundle.getString("liter") : resourceBundle.getString("kg"));
         cboxBmcCollectionQtyMode.setValue(MainApp.getProperty("society.collection.qty.mode", "0").equalsIgnoreCase("0") ? resourceBundle.getString("liter") : resourceBundle.getString("kg"));
         cboxLocalMilkSaleQtyMode.setValue(MainApp.getProperty("milksale.qty.mode", "0").equalsIgnoreCase("0") ? resourceBundle.getString("liter") : resourceBundle.getString("kg"));
         cboxDispatchMilkQtyMode.setValue(MainApp.getProperty("dispatch.qty.mode", "1").equalsIgnoreCase("1") ? resourceBundle.getString("kg") : resourceBundle.getString("litre"));
         cboxReceiptMilkQtyMode.setValue(MainApp.getProperty("receipt.qty.mode", "1").equalsIgnoreCase("1") ? resourceBundle.getString("kg") : resourceBundle.getString("litre"));
-        chkPurchaseRate.setSelected(MainApp.getProperty("product.purchaserate", "0").equalsIgnoreCase("0") ? false : true);
-        chkSaleRate.setSelected(MainApp.getProperty("product.salerate", "0").equalsIgnoreCase("0") ? false : true);
-        chkAllowZeroDispatch.setSelected(MainApp.getProperty("zero.amount.dispatch", "0").equalsIgnoreCase("0") ? false : true);
-        chkPaymentMode.setSelected(MainApp.getProperty("allow.cashpayment", "1").equalsIgnoreCase("1") ? true : false);
+        chkPurchaseRate.setSelected(!MainApp.getProperty("product.purchaserate", "0").equalsIgnoreCase("0"));
+        chkSaleRate.setSelected(!MainApp.getProperty("product.salerate", "0").equalsIgnoreCase("0"));
+        chkAllowZeroDispatch.setSelected(!MainApp.getProperty("zero.amount.dispatch", "0").equalsIgnoreCase("0"));
+        chkPaymentMode.setSelected(MainApp.getProperty("allow.cashpayment", "1").equalsIgnoreCase("1"));
         cboxPaymentMode.setValue(MainApp.getProperty("payment.mode", "2").equalsIgnoreCase("2") ? "Local disburse" : MainApp.getProperty("payment.mode", "2").equalsIgnoreCase("0") ? "Society Bank" : "Union Bank");
         cboxPaymentOption.setValue(MainApp.getProperty("payment.option", "0").equalsIgnoreCase("0") ? "Actual amount" : "Decimal truncate");
 
         txtAvgPBasedOnPrevShift.setText(MainApp.getProperty("avg.param.prev.shiftcount", "5"));
         txtAvgPIfMachineOff.setText(MainApp.getProperty("avg.param.capture.value", "5"));
-        chkAvgParam.setSelected(MainApp.getProperty("avg.param.capture", "1").equalsIgnoreCase("1") ? true : false);
+        chkAvgParam.setSelected(MainApp.getProperty("avg.param.capture", "1").equalsIgnoreCase("1"));
         txtDecimalValue.setText(MainApp.getProperty("decimalvalue", "2"));
         txtHrs.setText(MainApp.getProperty("hrs", "72"));
         txtSampleMilk.setText(MainApp.getProperty("samplemilk", ""));
@@ -203,12 +183,9 @@ public class GeneralConfigController implements MyInitialization {
     private List<String> writeAppProperty() {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(MainApp.getProperty("baseurl", "http://localhost:8080/eipl-amcs/").getBytes())));
-//        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("https://amulamcs.yamatech.app/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
-//        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://jaipurduss.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
-        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode("http://amulamcsuat.emilkpro.in/webservice/amcs/v1/".getBytes(StandardCharsets.UTF_8))));
+        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(LIVE_URL.getBytes(StandardCharsets.UTF_8))));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
-//        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati".getBytes(StandardCharsets.UTF_8))));
         lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
         lines.add("#Identity details");
         lines.add("identity.union=" + new String(Base64.getEncoder().encode(MainApp.identityDto.getUnion().getCode().getBytes())));
@@ -269,11 +246,10 @@ public class GeneralConfigController implements MyInitialization {
 
     private void updateProperty() {
         try {
-
             appProperty = new File("resources/app.properties");
             old = new File("resources/old_app.properties");
             if (appProperty.renameTo(old)) {
-                Files.write(appProperty.toPath(), writeAppProperty(), Charset.forName("UTF-8"));
+                Files.write(appProperty.toPath(), writeAppProperty(), StandardCharsets.UTF_8);
                 saveData();
                 MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("generalconfiguration"),
                         resourceBundle.getString("alert.propertychange"));
@@ -335,7 +311,6 @@ public class GeneralConfigController implements MyInitialization {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("generalconfig"),
                             sb.toString());
                     alert.createAlert();
-                    return;
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -374,9 +349,6 @@ public class GeneralConfigController implements MyInitialization {
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "English").split(",");
         cboxSlipLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
         cboxApplicationLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
-
-
-//        cboxQualityMachine.getItems().addAll("Single MA", "Dual MA By Milk", "Dual MA By Sequence");
         cboxQualityMachine.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));
     }
 
@@ -389,26 +361,9 @@ public class GeneralConfigController implements MyInitialization {
             } else {
                 txtDefaultSnfValue.setDisable(false);
             }
-//            txtDefaultSnfValue.setDisable(true);
         });
         cboxPaymentMode.setOnAction(event -> {
-            if (cboxPaymentMode.getSelectionModel().getSelectedIndex() == 2) {
-                chkPaymentMode.setSelected(true);
-            } else {
-                chkPaymentMode.setSelected(false);
-            }
+            chkPaymentMode.setSelected(cboxPaymentMode.getSelectionModel().getSelectedIndex() == 2);
         });
-//        cboxPaymentOption.setOnAction(data -> {
-//            if (cboxPaymentOption.getSelectionModel().getSelectedIndex() == 0) {
-////                cboxIfRound.setDisable(true);
-////                cboxIfRound.valueProperty().set(null);
-////                cboxLedgerName.setDisable(true);
-////                cboxLedgerName.getSelectionModel().select(0);
-//            } else if (cboxPaymentOption.getSelectionModel().getSelectedIndex() == 1) {
-////                cboxIfRound.setDisable(false);
-////                cboxIfRound.getSelectionModel().select(0);
-//            }
-//        });
-
     }
 }

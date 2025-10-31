@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.LedgerTypeDeserializer;
-import com.eipl.amcs.serialize.LedgerTypeSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.LedgerTypeDeserializer;
+import com.eipl.amcs.json.serialize.LedgerTypeSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -24,9 +23,7 @@ public class LedgerGroup extends BaseModel {
 
     @Id
     private Integer code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.model.MeetingAgenda;
 import com.eipl.amcs.master.account.model.Mom;
 import com.eipl.amcs.operation.administartion.task.MomDeleteTask;
@@ -41,8 +41,6 @@ public class MomController implements MyInitialization, PopupCallback {
     TableView<Mom> tableMom;
     @FXML
     TableColumn<Mom, String> colCode, colSubjectLine, colMom, colStatus;
-    @FXML
-    TableColumn<Mom, Integer> colDate, colMeetingType;
     @FXML
     Button btnClose, btnAdd, btnEdit, btnDelete, btnActionTaken;
     @FXML
@@ -98,8 +96,6 @@ public class MomController implements MyInitialization, PopupCallback {
                 FocusUtils.requestFocus(txtMinuteOfMeeting);
                 btnAdd.setText(resourceBundle.getString("save"));
             } else {
-                //  setValuesInObject();
-                // saveData();
                 validateAndSave();
                 btnAdd.setText(resourceBundle.getString("add"));
                 gridMaster.setDisable(true);
@@ -228,7 +224,6 @@ public class MomController implements MyInitialization, PopupCallback {
 
     public void setValuesInObject() {
         dto = new Mom();
-//        dto.setCode("1");
         dto.setMeetingAgenda(meetingAgenda);
         dto.setStatus(chkOpen.isSelected() ? 1 : 0);
         dto.setMom(txtMinuteOfMeeting.getText());
@@ -340,5 +335,4 @@ public class MomController implements MyInitialization, PopupCallback {
         txtMinuteOfMeeting.setText("");
         chkOpen.setSelected(false);
     }
-
 }

@@ -1,14 +1,14 @@
 package com.eipl.amcs.master.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.MemberMilkPurchaseRateDeserializer;
-import com.eipl.amcs.deserialize.ShiftDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MemberMilkPurchaseRateDeserializer;
+import com.eipl.amcs.json.deserialize.ShiftDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.MemberMilkPurchaseRateSerialize;
+import com.eipl.amcs.json.serialize.ShiftSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.MemberMilkPurchaseRateSerialize;
-import com.eipl.amcs.serialize.ShiftSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
@@ -28,10 +27,8 @@ import java.time.LocalDateTime;
 public class MemberMilkPurchaseRateApplicability extends BaseModelTxn {
 
     @Id
-    @Size(max = 25)
     private String code;
     private LocalDateTime wefDate;
-    @Size(max = 3)
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

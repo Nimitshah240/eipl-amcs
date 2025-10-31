@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -22,7 +21,6 @@ import javax.validation.constraints.Size;
 @Table(name = "formula")
 public class Formula extends BaseModel {
     @Id
-    @Size(max = 20)
     private String code;
     private String formula;
     private String name;

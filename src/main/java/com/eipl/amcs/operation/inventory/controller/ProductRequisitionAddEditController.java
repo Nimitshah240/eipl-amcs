@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.model.Unit;
@@ -21,7 +21,6 @@ import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductRequisitionDto;
-import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
 import com.eipl.amcs.operation.inventory.model.ProductRequisition;
 import com.eipl.amcs.operation.inventory.model.ProductRequisitionTransaction;
 import com.eipl.amcs.operation.inventory.task.ProductRequisitionGetNextCodeTask;
@@ -47,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class ProductRequisitionAddEditController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<ProductRequisitionTransaction> propReceiptTxn;
     @FXML
     private StackPane root;
     @FXML
@@ -68,12 +68,7 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
     @FXML
     private TableColumn<ProductRequisitionTransaction, Product> colProductName;
     @FXML
-    private TableColumn<ProductRequisitionTransaction, Number> colTotalAmount, colTaxAmount, colDiscount, colQuantity, colAmount, colAQ;
-    //    @FXML
-//    private TableColumn<ProductRequisitionTransaction, Unit> colUnit;
-    private final ObjectProperty<ProductRequisitionTransaction> propReceiptTxn;
-
-    private final List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
+    private TableColumn<ProductRequisitionTransaction, Number> colQuantity, colAQ;
     private List<ProductRequisitionTransaction> listTransactions;
     private ProductRequisition productRequisition;
     private ResourceBundle resourceBundle;
@@ -115,54 +110,8 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
         });
         cboxProductGroup.setOnAction(e -> {
             loadProducts();
-//            calculateRateAndAmount();
         });
-//        cboxProduct.setOnAction(e -> {
-//            if (cboxProduct.getValue() != null && cboxProduct.getValue().getPrimaryUom() != null) {
-//                cboxUnit.getSelectionModel().select(cboxProduct.getValue().getPrimaryUom());
-//            }
-////            calculateRateAndAmount();
-//        });
-//        txtQuantity.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (txtQuantity.getText() != null && !txtQuantity.getText().equalsIgnoreCase("")) {
-//                try {
-//                    txtAmount.setText(String.valueOf(Double.parseDouble(txtRate.getText()) * Double.parseDouble(txtQuantity.getText())));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        txtRate.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if (txtQuantity.getText() != null && !txtQuantity.getText().equalsIgnoreCase("")) {
-//                try {
-//                    txtAmount.setText(String.valueOf(Double.parseDouble(txtRate.getText()) * Double.parseDouble(txtQuantity.getText())));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
     }
-
-
-//    private void calculateRateAndAmount() {
-//        if (cboxProduct.getValue() != null) {
-//            ProductPurchaseRateByProductTask task = new ProductPurchaseRateByProductTask(cboxProduct.getValue().getCode(), LocalDate.now());
-//            task.setOnSucceeded(e -> {
-//                try {
-//                    ProductPurchaseRate purchaseRate = task.get();
-//                    if (purchaseRate != null) {
-//                        txtRate.setText(String.valueOf(purchaseRate.getRate()));
-//                        if (txtQuantity.getText() != null && !txtQuantity.getText().trim().equalsIgnoreCase("") && Double.parseDouble(txtQuantity.getText()) > 0) {
-//                            txtAmount.setText(String.valueOf(Double.parseDouble(txtRate.getText()) * Double.parseDouble(txtQuantity.getText())));
-//                        }
-//                    }
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//            new Thread(task).start();
-//        }
-//    }
 
     private void addTransaction() {
         if (listTransactions == null) {
@@ -170,12 +119,9 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
         }
         if (cboxProduct.getValue() != null) {
             ProductRequisitionTransaction transaction = new ProductRequisitionTransaction();
-//        transaction.setAmount(new BigDecimal(txtAmount.getText()));
             transaction.setProduct(cboxProduct.getValue());
             transaction.setExpectedDeliveryDate(dpExpectedDeliveryDate.getValue());
             transaction.setQuantity(new BigDecimal(txtQuantity.getText()));
-//        transaction.setRate(new BigDecimal(txtRate.getText()));
-//        transaction.setAmount(new BigDecimal(txtAmount.getText()));
             transaction.setRequisitionDate(LocalDateTime.now());
             transaction.setDiscountAmount(BigDecimal.ZERO);
             transaction.setCancel(false);
@@ -190,13 +136,8 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
 
     @Override
     public void clearControls() {
-//        cboxProductGroup.getSelectionModel().clearSelection();
         cboxProduct.getSelectionModel().clearSelection();
-//        if (cboxUnit.getValue() != null)
-//            cboxUnit.getSelectionModel().clearSelection();
         txtQuantity.setText("");
-//        txtRate.setText("");
-//        txtAmount.setText("");
     }
 
     public void setProductRequisition(ProductRequisition productRequisition) {
@@ -316,10 +257,6 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
             colAQ.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getApprovedQuantity()));
             colRemarks.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol2()));
             colStatus.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStatus() != null ? data.getValue().getStatus() : ""));
-//            colUnit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct().getPrimaryUom()));
-            //colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
-            //colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
-
             propReceiptTxn.bind(tableProductRequisitionTransaction.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             e.printStackTrace();
@@ -404,24 +341,10 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
     public void deleteData() {
         listTransactions.remove(propReceiptTxn.get());
         tableProductRequisitionTransaction.setItems(FXCollections.observableArrayList(listTransactions));
-        calculateSummary();
     }
 
     private boolean validate() {
         errorMsg = new StringBuilder();
-//        if (dpExpectedDeliveryDate.getValue() == null) {
-//            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productrequisition.validation.date.empty") + "\n");
-//        }
-//        if (dpRequisitionDate.getValue() == null) {
-//            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productrequisition.validation.challan.date.empty") + "\n");
-//        }
-//        if (cboxProduct.getSelectionModel().getSelectedItem() == null) {
-//            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productrequisition.validation.member.empty") + "\n");
-//        }
-//        if (txtDescription.getText().trim().equals("")) {
-//            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productrequisition.validation.challan.no.empty") + "\n");
-//        }
-
         return errorMsg.length() == 0;
     }
 
@@ -485,20 +408,5 @@ public class ProductRequisitionAddEditController implements MyInitialization, Po
             }
         });
         new Thread(task1).start();
-    }
-
-
-    private void calculateSummary() {
-        BigDecimal totalAmt = BigDecimal.ZERO;
-        BigDecimal totalDis = BigDecimal.ZERO;
-        BigDecimal totalTaxAmt = BigDecimal.ZERO;
-        BigDecimal netAmt = BigDecimal.ZERO;
-
-        for (ProductRequisitionTransaction transaction : listTransactions) {
-//            totalAmt = totalAmt.add(transaction.getAmount());
-//            totalDis = totalDis.add(transaction.getDiscount());
-//            totalTaxAmt = totalTaxAmt.add(transaction.getTaxAmount());
-//            netAmt = netAmt.add(transaction.getNetAmount());
-        }
     }
 }

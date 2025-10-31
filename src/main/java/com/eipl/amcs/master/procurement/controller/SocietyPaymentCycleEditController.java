@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
@@ -115,7 +115,6 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
             dto = setValuesInObject();
             updateData();
-            //saveData();
         }
     }
 

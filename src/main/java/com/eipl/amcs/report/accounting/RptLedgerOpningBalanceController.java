@@ -31,8 +31,6 @@ public class RptLedgerOpningBalanceController implements MyInitialization {
     @FXML
     private ComboBox<FinancialYear> cboxFinancialYear;
 
-    private List<FinancialYear> financialYearList;
-
     @Override
     public Node getRoot() {
         return null;
@@ -83,6 +81,4 @@ public class RptLedgerOpningBalanceController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
-
 }

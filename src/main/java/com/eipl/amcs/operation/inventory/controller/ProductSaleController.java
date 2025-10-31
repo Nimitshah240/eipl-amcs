@@ -3,12 +3,12 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.task.ProductSaleDeleteTask;
@@ -39,9 +39,9 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
     @FXML
     TableView<ProductSale> tableProductSaleToMember;
     @FXML
-    TableColumn<ProductSale, Number> colAmount, colDiscount, colTax, colNetPayable, colNoOfInstallment;
+    TableColumn<ProductSale, Number> colAmount, colNetPayable, colNoOfInstallment;
     @FXML
-    TableColumn<ProductSale, String> colInvoiceNo, colConsumerCode, colConsumerName, colConsumerType;
+    TableColumn<ProductSale, String> colInvoiceNo, colConsumerName, colConsumerType;
     @FXML
     TableColumn<ProductSale, LocalDate> colDate, colDeductionStartDate;
     @FXML
@@ -49,7 +49,6 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
     @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
-    private ProductSaleInstallment dto = null;
     private List<ProductSaleInstallment> installmentList;
 
     public ProductSaleController() {
@@ -59,12 +58,6 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
     @Override
     public Node getRoot() {
         return root;
-    }
-
-    public void setProductSaleInstallment(ProductSaleInstallment dto) {
-        if (dto != null) {
-            this.dto = dto;
-        }
     }
 
     @Override
@@ -84,13 +77,10 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
 
         this.resourceBundle = resourceBundle;
 
-
         dpFromDate.setValue(LocalDate.now().minusDays(LocalDate.now().getDayOfMonth() - 1));
         dpToDate.setValue(LocalDate.now());
         loadData();
         setupTable();
-//        dpFromDate.setConverter(new LocalDateConvertor());
-//        dpToDate.setConverter(new LocalDateConvertor());
         btnSearch.setOnAction(e -> loadData());
         btnInstallments.setOnAction(e -> {
             loadInstallments();
@@ -204,7 +194,6 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
 
 
     private void loadInstallments() {
-//        var task = new ProductSaleInstallmentByInvoiceNoLoadTask(propProductSaleDto.get().getInvoiceNo(),false);
         var task = new ProductSaleInstallmentByOnlyInvoiceNoLoadTask(propProductSaleDto.get().getInvoiceNo());
         task.setOnSucceeded(e -> {
             try {
@@ -215,7 +204,6 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
                 ex.printStackTrace();
             }
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this);
-
         });
         new Thread(task).start();
     }

@@ -20,14 +20,6 @@ public class MilkDispatchLoadTask extends Task<List<MilkDispatch>> {
 
             if (list == null || list.isEmpty()) return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_DISPATCH;
-//            ResponseEntity<MilkDispatch[]> response = restTemplate.getForEntity(url,MilkDispatch[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("MilkDispatches fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("MilkDispatches fetch", e);
         }

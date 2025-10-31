@@ -1,12 +1,12 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.ProductDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.ProductDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.ProductSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.ProductSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,7 +16,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -29,7 +28,6 @@ import java.time.LocalDate;
 public class ProductStockTransaction extends BaseModelTxn {
 
     @Id
-    @Size(max = 15)
     private String code;
 
     @Digits(integer = 7, fraction = 3)
@@ -38,10 +36,8 @@ public class ProductStockTransaction extends BaseModelTxn {
     private BigDecimal newValue;
     @Digits(integer = 7, fraction = 3)
     private BigDecimal oldValue;
-    @Size(max = 35)
     private String referenceCode;
     private LocalDate transactionDate;
-    @Size(max = 20)
     private String transactionType;
     private String unionCode;
 

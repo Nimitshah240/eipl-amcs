@@ -12,51 +12,8 @@ import java.sql.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-//@SqlResultSetMapping(name = "ShiftReportCode", entities = { 
-//		@EntityResult(entityClass = ShiftReportCode.class, fields = {
-//				@FieldResult(name = "sr", column = "sr"),
-//				@FieldResult(name = "societyCode", column = "society_code"),
-//				@FieldResult(name = "memberCode", column = "member_code"),
-//				@FieldResult(name = "collectionDate", column = "collection_date"),
-//				@FieldResult(name = "shiftName", column = "shift_name"),
-//				@FieldResult(name = "milkTypeName", column = "milk_type_name"),
-//				@FieldResult(name = "sampleNo", column = "sample_no"),
-//				@FieldResult(name = "qty", column = "qty"),
-//				@FieldResult(name = "fat", column = "fat"),
-//				@FieldResult(name = "snf", column = "snf"),
-//				@FieldResult(name = "amount", column = "amount")
-//		}) })
 @ReportDto
 public class ShiftReportCode {
-//	private int sr;
-//	private String societyCode;
-//	private String societyName;
-//	private String memberCode;
-//	private LocalDate collectionDate;
-//	private String shiftName;
-//	private String milkTypeName;
-//	private int sampleNo;
-//	private BigDecimal qty;
-//	private BigDecimal fat;
-//	private BigDecimal snf;
-//	private BigDecimal amount;
-//	private int cowMemberCount;
-//	private int buffaloMemberCount;
-//	private int mixMemberCount;
-//	private BigDecimal cowQty;
-//	private BigDecimal buffaloQty;
-//	private BigDecimal mixQty;
-//	private BigDecimal cowAmount;
-//	private BigDecimal buffaloAmount;
-//	private BigDecimal mixAmount;
-//
-//	private BigDecimal localCowQty;
-//	private BigDecimal localBuffaloQty;
-//	private BigDecimal localMixQty;
-//	private BigDecimal localCowAmount;
-//	private BigDecimal localBuffaloAmount;
-//	private BigDecimal localMixAmount;
-
 
     private BigInteger sr;
     private String society_code;

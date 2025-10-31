@@ -9,10 +9,6 @@ public class TableColItem implements Serializable {
     private String colName;
     private boolean visible;
 
-    public TableColItem() {
-        // TODO Auto-generated constructor stub
-    }
-
     public TableColItem(String colName, boolean visible) {
         super();
         this.colName = colName;

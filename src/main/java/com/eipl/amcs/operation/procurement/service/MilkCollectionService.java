@@ -28,7 +28,6 @@ public interface MilkCollectionService {
     MilkCollectionPreReqDto fetchPreRequsite(LocalDateTime date, Integer shiftCode, String societyCode);
 
     Number fetchNextSampleNo(LocalDateTime dt, String dockCode);
-//	Number fetchNextSampleNo(LocalDateTime dt, String dockCode ,  int milkTypeCode);
 
     List<CollectionImportDto> importCollections(List<MilkCollection> dtoList, String header);
 

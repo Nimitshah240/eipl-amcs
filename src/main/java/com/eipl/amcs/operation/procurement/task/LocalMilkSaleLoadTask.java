@@ -15,27 +15,18 @@ import java.util.List;
 public class LocalMilkSaleLoadTask extends Task<List<LocalMilkSale>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalMilkSaleLoadTask.class);
 
-    private LocalDate fromDate, toDate;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
 
     public LocalMilkSaleLoadTask(LocalDate fromDate, LocalDate toDate) {
         this.fromDate = fromDate;
         this.toDate = toDate;
     }
 
-    public LocalMilkSaleLoadTask() {
-
-    }
-
     @Override
     protected List<LocalMilkSale> call() throws Exception {
         try {
             LocalMilkSaleService service = EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LOCAL_MILK_SALE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<LocalMilkSale[]> response = restTemplate.getForEntity(builder.toUriString(), LocalMilkSale[].class);
             LocalDateTime fromDt = LocalDateTime.of((fromDate), LocalTime.MIN);
             LocalDateTime toDt = LocalDateTime.of((toDate), LocalTime.MAX);
             List<LocalMilkSale> list = service.findAll(fromDt, toDt);

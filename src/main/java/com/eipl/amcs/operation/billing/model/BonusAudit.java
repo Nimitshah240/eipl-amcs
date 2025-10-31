@@ -1,17 +1,17 @@
 package com.eipl.amcs.operation.billing.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.BonusSummaryDeserializer;
-import com.eipl.amcs.deserialize.MemberDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.BonusSummaryDeserializer;
+import com.eipl.amcs.json.deserialize.MemberDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.BonusSummarySerialize;
+import com.eipl.amcs.json.serialize.MemberSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.BonusSummarySerialize;
-import com.eipl.amcs.serialize.MemberSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;

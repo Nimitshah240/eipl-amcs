@@ -19,7 +19,6 @@ import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -42,19 +41,16 @@ public class SocietyPurchaseReportController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
     @FXML
-    private SwingNode reportNode;
-    @FXML
     private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
     @FXML
     private ComboBox<MilkType> cboxMilkType, cboxMilkType1;
     @FXML
-    private ComboBox<Member> cboxMember, cboxMember1;
-
+    private ComboBox<Member> cboxMember;
 
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
+
 
     @Override
     public Node getRoot() {
@@ -129,7 +125,6 @@ public class SocietyPurchaseReportController implements MyInitialization {
         params.put("p_to_collection_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_locale", MainApp.locale);
         params.put("p_milk_type_code", cboxMilkType1.getValue().getCode());
-//        params.put("p_member_code", cboxMember1.getValue().getCode());
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE, params);
         JasperViewer.viewReport(print, false);
     }
@@ -145,42 +140,6 @@ public class SocietyPurchaseReportController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE_MEMBER_WISE, params);
         JasperViewer.viewReport(print, false);
     }
-
-//        errorMsg = new StringBuilder();
-//        if (!validate()) {
-//            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "societypurchase"),
-//                    errorMsg.toString());
-//            alert.createAlert();
-//            return;
-//        }
-//        SocietyPurchaseTask task = new SocietyPurchaseTask(MainApp.identityDto.getSociety().getCode(),
-//                dpFromDate.getValue().atTime(06,00,00),dpToDate.getValue().atTime(18,00,00));
-//
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<SocietyPurchase> list = task.get();
-//                if (list != null && !list.isEmpty()) {
-//                    Map<String, Object> params = new HashMap<>();
-//                    params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-//                    params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//                    params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//
-//                    JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SOCIETY_PURCHASE, params,
-//                            new JRBeanCollectionDataSource(list));
-//                    JasperViewer.viewReport(print, false);
-//                }
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            } catch (ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
-//
-//    private boolean validate() {
-//        return true;
-//    }
 
     @Override
     public void loadData() {

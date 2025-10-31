@@ -20,12 +20,12 @@ public class SplitterSerial implements SerialPortDataListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(SplitterSerial.class);
     private static String response = "";
     private final HardwareDevice hardwareDevice;
+    private final StringBuffer readBuffer = new StringBuffer();
+    private final char endChar;
     private SerialPort serialPort;
     private InputStream inputStream;
     private OutputStream outputStream;
-    private final StringBuffer readBuffer = new StringBuffer();
     private boolean isDeviceReady = false;
-    private final char endChar;
     private DeviceCallback callback;
 
     public SplitterSerial(HardwareDevice hardwareDevice, String commPort, DeviceCallback callback) {
@@ -99,7 +99,6 @@ public class SplitterSerial implements SerialPortDataListener {
     }
 
     public void getResponse(char c) {
-//        if (endChar == c && readBuffer.toString().length() >= hardwareDevice.getLength()) {
         if (endChar == c && (hardwareDevice.getStartChar() == null || hardwareDevice.getStartChar().isEmpty() || readBuffer.toString().contains(hardwareDevice.getStartChar())) && readBuffer.toString().length() >= hardwareDevice.getLength() - 1) {
 
             response = readBuffer.toString().trim();
@@ -168,9 +167,5 @@ public class SplitterSerial implements SerialPortDataListener {
     public void disconnect() {
         serialPort.removeDataListener();
         serialPort.closePort();
-    }
-
-    public boolean isDeviceReady() {
-        return isDeviceReady;
     }
 }

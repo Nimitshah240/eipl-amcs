@@ -21,16 +21,6 @@ public class MemberMilkPurchaseRateSaveTask extends Task<Object> {
             if (dto == null)
                 return null;
             return service.savePurchaseRate(dto);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_MILK_PURCHASE_RATE;
-//
-//            ResponseEntity<String> response =
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), String.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

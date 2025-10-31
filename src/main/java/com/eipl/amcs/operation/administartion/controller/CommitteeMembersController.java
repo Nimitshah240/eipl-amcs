@@ -68,21 +68,15 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
         setupTable();
         loadData();
         btnAdd.setOnAction(e -> {
-//            if (!MainApp.user.getPermissions().contains("ACTION_COMMITTEE_MEMBERS_ADD"))
-            //       throw new UnAuthorizedAccessException();
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeMembersAddEdit", null, this);
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnDelete.setOnAction(e -> {
-            // if (!MainApp.user.getPermissions().contains("ACTION_COMMITTEE_MEMBERS_DELETE"))
-            //  throw new UnAuthorizedAccessException();
             deleteData();
         });
         btnEdit.setOnAction(e -> {
-            // if (!MainApp.user.getPermissions().contains("ACTION_COMMITTEE_MEMBERS_EDIT"))
-            //      throw new UnAuthorizedAccessException();
             CommitteeMembers dto = propCommitteMembertDto.get();
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeMembersAddEdit", dto, this);

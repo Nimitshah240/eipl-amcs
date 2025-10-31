@@ -20,13 +20,5 @@ public class SocietySaveTask extends Task<Object> {
             return null;
 
         return service.save(society);
-
-
-//        RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//        String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY;
-//        ResponseEntity<Society> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(society), Society.class);
-//        if (response == null || response.getStatusCode() != HttpStatus.OK)
-//            return response.getBody();
-//        return null;
     }
 }

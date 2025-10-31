@@ -20,14 +20,6 @@ public class SubLedgerOpeningBalanceLoadTask extends Task<List<SubLedgerOpeningB
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SUB_LEDGER_OPENING_BALANCE;
-//            ResponseEntity<SubLedgerOpeningBalance[]> response = restTemplate.getForEntity(url, SubLedgerOpeningBalance[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("SubLedgerOpeningBalance fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("SubLedgerOpeningBalance fetch", e);
         }

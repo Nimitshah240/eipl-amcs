@@ -15,7 +15,7 @@ import com.eipl.amcs.master.procurement.repository.SocietyMilkPurchaseRateBasedR
 import com.eipl.amcs.master.procurement.repository.SocietyMilkPurchaseRateDetailRepository;
 import com.eipl.amcs.master.procurement.repository.SocietyMilkPurchaseRateRepository;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class SocietyMilkPurchaseRateServiceImpl implements SocietyMilkPurchaseRa
     public String savePurchaseRate(SocietyMilkPurchaseRateDto dto) throws BusinessValidationFailException {
         Optional<SocietyMilkPurchaseRate> rate = societyMilkPurchaseRateRepository.findTop1ByWefDateGreaterThanEqual(dto.getPurchaseRate().getWefDate());
         if (rate.isPresent()) {
-            FieldError wefDateNotValid = CommonUtil.getFieldError("SocietyMilkPurchaseRateDto", "wefDate",
+            FieldError wefDateNotValid = CommonUtils.getFieldError("SocietyMilkPurchaseRateDto", "wefDate",
                     dto.getPurchaseRate().getWefDate(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
@@ -124,20 +124,20 @@ public class SocietyMilkPurchaseRateServiceImpl implements SocietyMilkPurchaseRa
     public List<String> fetchRateDetails(String code, Integer milkTypeCode, Integer milkQualityTypeCode) {
         Optional<SocietyMilkPurchaseRate> rate = societyMilkPurchaseRateRepository.findById(code);
         if (!rate.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("SocietyMilkPurchaseRate", "code", code, "ratecode.not.valid");
+            FieldError error = CommonUtils.getFieldError("SocietyMilkPurchaseRate", "code", code, "ratecode.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
 
         Optional<MilkType> milkType = milkTypeRepository.findById(milkTypeCode);
         if (!milkType.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("SocietyMilkPurchaseRate", "milkTypeCode", code,
+            FieldError error = CommonUtils.getFieldError("SocietyMilkPurchaseRate", "milkTypeCode", code,
                     "milktype.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
 
         Optional<MilkQualityType> milkQualityType = milkQualityRepository.findById(milkQualityTypeCode);
         if (!milkQualityType.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("SocietyMilkPurchaseRate", "milkQualityTypeCode", code,
+            FieldError error = CommonUtils.getFieldError("SocietyMilkPurchaseRate", "milkQualityTypeCode", code,
                     "milkqualitytype.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
@@ -145,7 +145,7 @@ public class SocietyMilkPurchaseRateServiceImpl implements SocietyMilkPurchaseRa
         List<SocietyMilkPurchaseRateDetail> listDetails = societyMilkPurchaseRateDetailRepository.findBySocietyMilkPurchaseRateAndMilkTypeAndMilkQualityType(rate.get(), milkType.get(),
                 milkQualityType.get(), Sort.by("fat", "snf"));
         if (listDetails == null || listDetails.isEmpty()) {
-            FieldError error = CommonUtil.getFieldError("SocietyMilkPurchaseRateDetails", null, null,
+            FieldError error = CommonUtils.getFieldError("SocietyMilkPurchaseRateDetails", null, null,
                     "ratedetails.not.found");
             throw new BusinessValidationFailException(getClass(), error);
         }
@@ -159,7 +159,7 @@ public class SocietyMilkPurchaseRateServiceImpl implements SocietyMilkPurchaseRa
     public List<SocietyMilkPurchaseRateBased> fetchRateBased(String code) {
         Optional<SocietyMilkPurchaseRate> rate = societyMilkPurchaseRateRepository.findById(code);
         if (!rate.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("SocietyMilkPurchaseRate", "code", code, "ratecode.not.valid");
+            FieldError error = CommonUtils.getFieldError("SocietyMilkPurchaseRate", "code", code, "ratecode.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
         List<SocietyMilkPurchaseRateBased> list = societyMilkPurchaseRateBasedRepository.findBySocietyMilkPurchaseRate(rate.get());
@@ -182,7 +182,7 @@ public class SocietyMilkPurchaseRateServiceImpl implements SocietyMilkPurchaseRa
     public MilkDispatchRateAndDetailsDto fetchRateAndDetails(String code) {
         Optional<SocietyMilkPurchaseRate> rate = societyMilkPurchaseRateRepository.findById(code);
         if (!rate.isPresent()) {
-            FieldError error = CommonUtil.getFieldError("SocietyMilkPurchaseRate", "code", code, "ratecode.not.valid");
+            FieldError error = CommonUtils.getFieldError("SocietyMilkPurchaseRate", "code", code, "ratecode.not.valid");
             throw new BusinessValidationFailException(getClass(), error);
         }
 

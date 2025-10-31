@@ -70,7 +70,6 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
             LocalTime eveningTime = LocalTime.of(18, 0);
             Map<String, Boolean> tempMap = new HashMap<>();
 
-//            Map<String, Boolean> tempMap = new HashMap<>();
 
             try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
                 Statement statement = connection.createStatement();
@@ -87,9 +86,8 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
                 // select data
                 for (String month : listMonth) {
                     statement = connection.createStatement();
-                    resultSet = statement.executeQuery("select * from tblILedger where format(Date, 'yyyy-MM-dd') >= '" + fromDate.toString() +
-                            "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate.toString() + "'");
-//                    resultSet = statement.executeQuery("select * from tblILedger where format(Date, 'mmm yyyy') = '" + month + "'");
+                    resultSet = statement.executeQuery("select * from tblILedger where format(Date, 'yyyy-MM-dd') >= '" + fromDate +
+                            "' AND  format(Date, 'yyyy-MM-dd') <= '" + toDate + "'");
                     List<Map<String, Object>> mapCollection = new ArrayList<>();
                     String shift = null;
                     int i = 1;
@@ -99,28 +97,7 @@ public class PromptMilkCollectionDbSaveTask extends Task<Boolean> {
                                 resultSet.getString("SabhasadId").equalsIgnoreCase("0000") ||
                                 resultSet.getDouble("Qty") == 0)
                             continue;
-//                        {
-//                            LocalMilkSale l = new LocalMilkSale();
-//                            int codeEx = CommonUtils.strToInteger(resultSet.getString("SabhasadId"));
-//                            l.setCode(MainApp.identityDto.getSociety().getCode()+i+resultSet.getDate("Date"));
-//                            i++;
-//                            l.setAmount(new BigDecimal(resultSet.getString("Amount")));
-//                            l.setConsumerCode(MainApp.identityDto.getSociety().getCode()+"0001");
-//                            l.setRate(new BigDecimal(resultSet.getString("Rate")));
-//                            l.setRate(new BigDecimal(resultSet.getString("Qty")));
-//                            l.setUnionCode(MainApp.identityDto.getUnion().getCode());
-//                            LocalDate date = resultSet.getDate("Date").toLocalDate();
-//                            l.setShift(shiftList.get(0));
-//                            if (codeEx >= cowMin && codeEx <= cowMax)
-//                                l.setMilkType(milkTypeList.stream().filter(y->y.getName().substring(0,1).equalsIgnoreCase("C")).findFirst().get());
-//                            else if (codeEx >= buffMin && codeEx <= buffMax)
-//                                l.setMilkType(milkTypeList.stream().filter(y->y.getName().substring(0,1).equalsIgnoreCase("B")).findFirst().get());
-//                            else
-//                                l.setMilkType(milkTypeList.stream().filter(y->y.getName().substring(0,1).equalsIgnoreCase("C")).findFirst().get());
-//
-//                        }
 
-//                        else {
                         Map<String, Object> map = new HashMap<>();
                         int codeEx = CommonUtils.strToInteger(resultSet.getString("SabhasadId"));
                         map.put("membercode", MainApp.identityDto.getSociety().getCode() + String.format("%04d", codeEx));

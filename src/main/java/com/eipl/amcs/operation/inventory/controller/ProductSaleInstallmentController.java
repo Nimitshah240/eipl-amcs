@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProductSaleInstallmentController implements MyInitialization {
-    private final StringBuilder errorMsg = null;
     @FXML
     StackPane root;
     @FXML
@@ -72,7 +71,6 @@ public class ProductSaleInstallmentController implements MyInitialization {
             colTrDate.setText(resourceBundle.getString("period"));
             colTrDate.setCellValueFactory(data -> new SimpleStringProperty(dtf.format(data.getValue().getSocietyPaymentCycle().getFromDate().toLocalDate()) + " To " + dtf.format(data.getValue().getSocietyPaymentCycle().getToDate().toLocalDate())));
             colSrNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().replace(data.getValue().getInvoiceNo() + "-", "")));
-//        colPaymentCycle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSocietyPaymentCycle().getCode()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? "Done" : "Pending"));
             tableProductInstallment.setItems(FXCollections.observableList(list));
         } catch (Exception e) {

@@ -23,23 +23,11 @@ public class MemberBillTransactionLoadTask extends Task<List<MemberBillTransacti
     @Override
     protected List<MemberBillTransaction> call() throws Exception {
         try {
-
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             MemberBillRepository repository = EmcsAppContext.getContext().getBean(MemberBillRepository.class);
             MemberBill mb = repository.findById(code).get();
             List<MemberBillTransaction> memberListResult = service.findMemberBillTransaction(mb);
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) +
-//                    AppConstant.UrlPath.MEMBER_BILLING + "/transaction";
-//            UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code);
-//            ResponseEntity<MemberBillTransaction[]> response = restTemplate.exchange(uriComponentsBuilder.toUriString(),
-//                    HttpMethod.GET, null, MemberBillTransaction[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Transaction fetched: {}", response.getBody());
-//            return Arrays.asList(response.getBody());
             if (memberListResult == null || memberListResult.isEmpty()) return null;
             return memberListResult;
         } catch (Exception e) {

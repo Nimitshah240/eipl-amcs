@@ -1,6 +1,6 @@
 package com.eipl.amcs.sync.producer;
 
-import com.eipl.amcs.base.Notification;
+import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.geo.model.*;
@@ -52,8 +52,8 @@ import com.eipl.amcs.sync.model.Subscribed;
 import com.eipl.amcs.sync.repository.BroadcastedLogRepository;
 import com.eipl.amcs.sync.repository.BroadcastedRepository;
 import com.eipl.amcs.sync.repository.SubscribedRepository;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.EncryptionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,7 +81,8 @@ import java.util.stream.Collectors;
 public class BroadcastedService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastedService.class);
-
+    ObjectMapper mapper = new ObjectMapper();
+    Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
     @Autowired
     private BroadcastedProducer producer;
     @Autowired
@@ -148,25 +149,16 @@ public class BroadcastedService {
     private NextCodeService nextCodeService;
     @Autowired
     private SocietyMilkPurchaseRateService societyMilkPurchaseRateService;
-
     @Autowired
     private InsuranceDetailRepository insuranceDetailRepository;
-
     @Autowired
     private InsuranceMasterRepository insuranceMasterRepository;
-
     @Autowired
     private InsuranceDetailSummaryRepository insuranceDetailSummaryRepository;
-
     @Autowired
     private SchemeRateRepository schemeRateRepository;
-
     @Autowired
     private SchemeRateApplicabilityRepository schemeRateApplicabilityRepository;
-
-
-    ObjectMapper mapper = new ObjectMapper();
-    Map<Integer, LocalDate> insuranceStartDateMap = new HashMap<>(); // Added on 22/5 by Nimit; Usage - to calculate correct age on the basis of birthdate of member and startdate of insurance;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -175,9 +167,6 @@ public class BroadcastedService {
             list = repository.findAllByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
             for (List<Broadcasted> part : ListUtils.partition(list, 10)) {
                 producer.produce(part);
-//                part.forEach(item -> {
-//                    producer.produce(item);
-//                });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,16 +225,7 @@ public class BroadcastedService {
         }
     }
 
-    /**
-     * @param list
-     * @param society
-     * @param shiftList
-     * @param milkTypeList
-     * @param milkQualityTypeList
-     * @updatedBy Nimit Shah
-     * @updatedOn - 23-07-2025
-     * @update - update to get sysUpdatedBy column of insuranceDetail data and schemeRate & SchemeRateApplicability data from portal.
-     */
+
     private void process(List<Subscribed> list, Society society, List<Shift> shiftList, List<MilkType> milkTypeList, List<MilkQualityType> milkQualityTypeList) throws JsonProcessingException {
         for (Subscribed subscribed : list) {
             Map jsonText = mapper.readValue(subscribed.getDataText(), Map.class);
@@ -255,10 +235,10 @@ public class BroadcastedService {
                         ProductRequisition requisition = new ProductRequisition();
                         requisition.setCode((String) jsonText.get("productRequisitionCode"));
                         if (jsonText.get("cancelledAt") != null)
-                            requisition.setCancelledAt(LocalDateTime.parse((String) jsonText.get("cancelledAt"), CommonUtil.Formatter4));
+                            requisition.setCancelledAt(LocalDateTime.parse((String) jsonText.get("cancelledAt"), CommonUtils.Formatter4));
                         requisition.setCancelledBy((String) jsonText.get("cancelledBy"));
                         if (jsonText.get("requisitionDate") != null)
-                            requisition.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), CommonUtil.Formatter4));
+                            requisition.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), CommonUtils.Formatter4));
                         requisition.setDescription((String) jsonText.get("description"));
                         if (jsonText.get("entryType") != null)
                             requisition.setEntryType(Integer.parseInt((String) jsonText.get("entryType")));
@@ -266,11 +246,11 @@ public class BroadcastedService {
                             requisition.setCancel(Boolean.valueOf((String) jsonText.get("isCancel")));
                         requisition.setStatus((String) jsonText.get("status"));
                         if (jsonText.get("createdAt") != null)
-                            requisition.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4));
+                            requisition.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4));
                         if (jsonText.get("createdBy") != null)
                             requisition.setCreatedBy((String) jsonText.get("createdBy"));
                         if (jsonText.get("updatedAt") != null)
-                            requisition.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4));
+                            requisition.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4));
                         if (jsonText.get("updatedBy") != null)
                             requisition.setCreatedBy((String) jsonText.get("updatedBy"));
                         requisition.setUnionCode((String) jsonText.get("unionCode"));
@@ -284,20 +264,15 @@ public class BroadcastedService {
                         Optional<ProductRequisitionTransaction> productRequisitionTransaction = productRequisitionTransactionRepository.findById(String.valueOf(jsonText.get("requisitionTransactionCode")));
                         if (productRequisitionTransaction.isPresent()) {
                             ProductRequisitionTransaction requisitionTransaction = productRequisitionTransaction.get();
-//                        requisitionTransaction.setCode((String) jsonText.get("requisitionTransactionCode"));
                             requisitionTransaction.setApprovedBy((String) jsonText.get("approvedBy"));
                             if (jsonText.get("approvedDate") != null)
-                                requisitionTransaction.setApprovedDate(LocalDate.parse((String) jsonText.get("approvedDate"), CommonUtil.Formatter5));
+                                requisitionTransaction.setApprovedDate(LocalDate.parse((String) jsonText.get("approvedDate"), CommonUtils.Formatter5));
                             if (jsonText.get("approvedQuantity") != null)
                                 requisitionTransaction.setApprovedQuantity(new BigDecimal(String.valueOf(jsonText.get("approvedQuantity"))));
                             if (jsonText.get("cancelledAt") != null)
-//                        requisitionTransaction.setCancelledAt(LocalDateTime.parse((String) jsonText.get("cancelledAt"), CommonUtil.Formatter4));
-//                    if (jsonText.get("createdAt") != null)
-//                        requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4));
-//                    if (jsonText.get("createdBy") != null)
                                 requisitionTransaction.setCreatedBy((String) jsonText.get("createdBy"));
                             if (jsonText.get("updatedAt") != null)
-                                requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4));
+                                requisitionTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4));
                             if (jsonText.get("updatedBy") != null)
                                 requisitionTransaction.setCreatedBy((String) jsonText.get("updatedBy"));
                             requisitionTransaction.setCancelledBy((String) jsonText.get("cancelledBy"));
@@ -310,23 +285,13 @@ public class BroadcastedService {
                                 requisitionTransaction.setAmount(new BigDecimal(String.valueOf(jsonText.get("provisionalAmount"))));
                             if (jsonText.get("provisionalRate") != null)
                                 requisitionTransaction.setRate(new BigDecimal(String.valueOf(jsonText.get("provisionalRate"))));
-//                        if (jsonText.get("quantity") != null)
-//                            requisitionTransaction.setQuantity(new BigDecimal(String.valueOf(jsonText.get("quantity"))));
-//                    if (jsonText.get("requisitionDate") != null)
-//                        requisitionTransaction.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), CommonUtil.Formatter4));
-//                    if (jsonText.get("expectedDeliveryDate") != null)
-//                        requisitionTransaction.setExpectedDeliveryDate(LocalDate.parse((String) jsonText.get("expectedDeliveryDate"), CommonUtil.Formatter4));
                             requisitionTransaction.setSchemeAddType((String) jsonText.get("schemeAddType"));
                             requisitionTransaction.setStatus((String) jsonText.get("status"));
-//                            requisitionTransaction.setProduct((String) jsonText.get("product"));
-//                            requisitionTransaction.setProductRequisition((String) jsonText.get("productRequisition"));
                             requisitionTransaction.setProductSchemeCode((String) jsonText.get("productSchemeCode"));
                             if (jsonText.get("approvedQuantity") != null)
                                 requisitionTransaction.setApprovedQuantity(new BigDecimal(String.valueOf(jsonText.get("approvedQuantity"))));
                             if (jsonText.get("passonToMember") != null)
                                 requisitionTransaction.setPassonToMember(Integer.parseInt((String) jsonText.get("passonToMember")));
-//                    requisitionTransaction.setUnionCode((String) jsonText.get("unionCode"));
-//                    requisitionTransaction.setSocietyCode(society.getCode());
                             productRequisitionTransactionService.save(requisitionTransaction);
                             break;
                         }
@@ -341,31 +306,28 @@ public class BroadcastedService {
                         if (jsonText.get("challanVerified") != null)
                             productDispatch.setChallanVerified(Boolean.valueOf((String) jsonText.get("challanVerified")));
                         if (jsonText.get("requisitionDate") != null)
-                            productDispatch.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), CommonUtil.Formatter4));
+                            productDispatch.setRequisitionDate(LocalDateTime.parse((String) jsonText.get("requisitionDate"), CommonUtils.Formatter4));
                         if (jsonText.get("dispatchDate") != null)
-                            productDispatch.setDispatchDate(LocalDate.parse((String) jsonText.get("dispatchDate"), CommonUtil.Formatter5));
+                            productDispatch.setDispatchDate(LocalDate.parse((String) jsonText.get("dispatchDate"), CommonUtils.Formatter5));
 
                         productDispatch.setReferenceNo((String) jsonText.get("referenceNo"));
                         productDispatch.setVehicleNo((String) jsonText.get("vehicleNo"));
                         if (jsonText.get("updatedAt") != null)
-                            productDispatch.setUpdatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4));
+                            productDispatch.setUpdatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4));
                         if (jsonText.get("updatedBy") != null)
                             productDispatch.setUpdatedBy((String) jsonText.get("updatedBy"));
                         productDispatch.setUnionCode((String) jsonText.get("unionCode"));
 
                         if (jsonText.get("createdAt") != null)
-                            productDispatch.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4));
+                            productDispatch.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4));
                         if (jsonText.get("createdBy") != null)
                             productDispatch.setCreatedBy((String) jsonText.get("createdBy"));
-//                            productDispatch.setSociety((String) jsonText.get("society"));
                         productDispatch.setActive(true);
                         productDispatch.setSociety(society);
                         productDispatchService.save(productDispatch, "");
 
                         ProductReceipt receipt = new ProductReceipt();
                         receipt.setChallanNo(productDispatch.getChallanNo());
-//                    receipt.setCustomer();
-
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -382,7 +344,7 @@ public class BroadcastedService {
                         if (jsonText.get("amount") != null)
                             productDispatchTransaction.setAmount(new BigDecimal(String.valueOf(jsonText.get("amount"))));
                         if (jsonText.get("dispatchDate") != null)
-                            productDispatchTransaction.setDispatchDate(LocalDate.parse((String) jsonText.get("dispatchDate"), CommonUtil.Formatter5));
+                            productDispatchTransaction.setDispatchDate(LocalDate.parse((String) jsonText.get("dispatchDate"), CommonUtils.Formatter5));
                         if (jsonText.get("discount") != null)
                             productDispatchTransaction.setDiscountAmount(new BigDecimal(String.valueOf(jsonText.get("discount"))));
                         if (jsonText.get("dispatchQty") != null)
@@ -390,11 +352,11 @@ public class BroadcastedService {
                         if (jsonText.get("rate") != null)
                             productDispatchTransaction.setRate(new BigDecimal(String.valueOf(jsonText.get("rate"))));
                         if (jsonText.get("updatedAt") != null)
-                            productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4));
+                            productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4));
                         if (jsonText.get("updatedBy") != null)
                             productDispatchTransaction.setCreatedBy((String) jsonText.get("updatedBy"));
                         if (jsonText.get("createdAt") != null)
-                            productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4));
+                            productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4));
                         if (jsonText.get("createdBy") != null)
                             productDispatchTransaction.setCreatedBy((String) jsonText.get("createdBy"));
                         productDispatchTransaction.setUnionCode((String) jsonText.get("unionCode"));
@@ -410,7 +372,7 @@ public class BroadcastedService {
                         productDispatchTransaction.setSociety(society);
 
                         if (jsonText.get("createdAt") != null)
-                            productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4));
+                            productDispatchTransaction.setCreatedAt(LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4));
                         if (jsonText.get("createdBy") != null)
                             productDispatchTransaction.setCreatedBy((String) jsonText.get("createdBy"));
                         productDispatchTransactionService.save(productDispatchTransaction);
@@ -430,7 +392,7 @@ public class BroadcastedService {
                         notification.setMemberCode((String) jsonText.get("memberCode"));
                         notification.setAppType((String) jsonText.get("appType"));
                         notification.setLoginType((String) jsonText.get("loginType"));
-                        notification.setWefDate(jsonText.get("wefDate") != null ? LocalDateTime.parse((String) jsonText.get("wefDate"), CommonUtil.Formatter4) : null);
+                        notification.setWefDate(jsonText.get("wefDate") != null ? LocalDateTime.parse((String) jsonText.get("wefDate"), CommonUtils.Formatter4) : null);
                         notification.setTitle((String) jsonText.get("title"));
                         notification.setMessage((String) jsonText.get("message"));
                         notification.setCampaignName((String) jsonText.get("campaignName"));
@@ -439,14 +401,14 @@ public class BroadcastedService {
                         notification.setOriginatingOrgCode((String) jsonText.get("originatingOrgCode"));
                         notification.setOriginatingOrgType((String) jsonText.get("originatingOrgType"));
                         notification.setOriginatingType((Integer) jsonText.get("originatingType"));
-                        notification.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null);
-                        notification.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtil.Formatter4) : null);
+                        notification.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtils.Formatter4) : null);
+                        notification.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtils.Formatter4) : null);
                         notification.setFromShift((Integer) jsonText.get("fromShiftCode"));
                         notification.setToShift((Integer) jsonText.get("toShiftCode"));
                         notification.setNotificationType((Integer) jsonText.get("notificationType"));
                         notification.setFileName((String) jsonText.get("filename"));
                         notification.setFilePath((String) jsonText.get("filePath"));
-                        notification.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                        notification.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         notification.setCreatedBy((String) jsonText.get("createdBy"));
                         notificationRepository.save(notification);
                         break;
@@ -474,7 +436,6 @@ public class BroadcastedService {
                         product.setCode(String.valueOf(jsonText.get("productCode")));
                         product.setName(String.valueOf(jsonText.get("productName")));
                         product.setNameLocal(String.valueOf(jsonText.get("localName")));
-//                    product.setxCol1(String.valueOf(jsonText.get("productDesc")));
                         product.setReferenceCode(String.valueOf(jsonText.get("refCode")));
                         product.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
                         ProductGroup group = productGroupRepository.findByCode(Integer.valueOf(String.valueOf(jsonText.get("productGroupCode"))));
@@ -490,7 +451,7 @@ public class BroadcastedService {
                     try {
                         AllowDcsManualCollectionRange allowDcsManualCollectionRange = new AllowDcsManualCollectionRange();
                         allowDcsManualCollectionRange.setBmcCode(String.valueOf(jsonText.get("bmcCode")));
-                        allowDcsManualCollectionRange.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                        allowDcsManualCollectionRange.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         allowDcsManualCollectionRange.setCreatedBy(String.valueOf(jsonText.get("createdBy")));
                         allowDcsManualCollectionRange.setCode(Long.valueOf(String.valueOf(jsonText.get("manualCollectionCode"))));
                         allowDcsManualCollectionRange.setRemarks(String.valueOf(jsonText.get("remark")));
@@ -500,20 +461,12 @@ public class BroadcastedService {
                         allowDcsManualCollectionRange.setUnionCode(String.valueOf(jsonText.get("unionCode")));
                         allowDcsManualCollectionRange.setFromShift(shiftList.stream().filter(e -> e.getCode() == Integer.parseInt(String.valueOf(jsonText.get("fromShift")))).findFirst().get());
                         allowDcsManualCollectionRange.setToShift(shiftList.stream().filter(e -> e.getCode() == Integer.parseInt(String.valueOf(jsonText.get("toShift")))).findFirst().get());
-                        if (jsonText.get("isQualityManual").toString().equalsIgnoreCase("1")) {
-                            allowDcsManualCollectionRange.setQualityManual(true);
-                        } else {
-                            allowDcsManualCollectionRange.setQualityManual(false);
-                        }
-                        if (jsonText.get("isWeightManual").toString().equalsIgnoreCase("1")) {
-                            allowDcsManualCollectionRange.setWeightManual(true);
-                        } else {
-                            allowDcsManualCollectionRange.setWeightManual(false);
-                        }
-                        allowDcsManualCollectionRange.setUpdatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4) : null);
+                        allowDcsManualCollectionRange.setQualityManual(jsonText.get("isQualityManual").toString().equalsIgnoreCase("1"));
+                        allowDcsManualCollectionRange.setWeightManual(jsonText.get("isWeightManual").toString().equalsIgnoreCase("1"));
+                        allowDcsManualCollectionRange.setUpdatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
                         allowDcsManualCollectionRange.setUpdatedBy(String.valueOf(jsonText.get("updatedBy")));
-                        allowDcsManualCollectionRange.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null);
-                        allowDcsManualCollectionRange.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtil.Formatter4) : null);
+                        allowDcsManualCollectionRange.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtils.Formatter4) : null);
+                        allowDcsManualCollectionRange.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtils.Formatter4) : null);
                         allowDcsManualCollectionRange.setxCol1(String.valueOf(jsonText.get("xCol1")));
                         allowDcsManualCollectionRange.setxCol2(String.valueOf(jsonText.get("xCol2")));
                         allowDcsManualCollectionRange.setxCol3(String.valueOf(jsonText.get("xCol3")));
@@ -529,14 +482,14 @@ public class BroadcastedService {
                         dpuIncentiveRequestRepository.deleteAll();
                         DpuIncentiveRequest dpuIncentiveRequest = new DpuIncentiveRequest();
                         dpuIncentiveRequest.setIncentiveMasterCode(jsonText.get("incentiveMasterCode") != null ? Long.valueOf(String.valueOf(jsonText.get("incentiveMasterCode"))) : null);
-                        dpuIncentiveRequest.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                        dpuIncentiveRequest.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         dpuIncentiveRequest.setCreatedBy(String.valueOf(jsonText.get("createdBy")));
                         dpuIncentiveRequest.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt")) : null);
                         dpuIncentiveRequest.setUpdatedBy(jsonText.get("updatedBy") != null ? String.valueOf(LocalDateTime.parse((String) jsonText.get("updatedBy"))) : null);
                         dpuIncentiveRequest.setSociety(society);
                         dpuIncentiveRequest.setUnionCode(String.valueOf(jsonText.get("unionCode")));
-                        dpuIncentiveRequest.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate")), CommonUtil.Formatter5) : null);
-                        dpuIncentiveRequest.setToDate(jsonText.get("toDate") != null ? LocalDate.parse((String.valueOf(jsonText.get("toDate"))), CommonUtil.Formatter5) : null);
+                        dpuIncentiveRequest.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate")), CommonUtils.Formatter5) : null);
+                        dpuIncentiveRequest.setToDate(jsonText.get("toDate") != null ? LocalDate.parse((String.valueOf(jsonText.get("toDate"))), CommonUtils.Formatter5) : null);
                         dpuIncentiveRequest.setMctime(jsonText.get("mCutoffTime") != null ? LocalTime.parse((String) jsonText.get("mCutoffTime")) : null);
                         dpuIncentiveRequest.setEctime(jsonText.get("eCutoffTime") != null ? LocalTime.parse((String) jsonText.get("eCutoffTime")) : null);
                         dpuIncentiveRequest.setMltime(jsonText.get("mLockTime") != null ? LocalTime.parse((String) jsonText.get("mLockTime")) : null);
@@ -554,7 +507,7 @@ public class BroadcastedService {
                         dpuIncentiveRequest.setOriginatingOrgCode((String.valueOf(jsonText.get("originatingOrgCode"))));
                         dpuIncentiveRequest.setOriginatingType(Integer.valueOf((String.valueOf(jsonText.get("originatingType")))));
                         dpuIncentiveRequest.setOriginatingOrgType((String.valueOf(jsonText.get("originatingOrgType"))));
-                        dpuIncentiveRequest.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                        dpuIncentiveRequest.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         dpuIncentiveRequest.setCreatedBy((String.valueOf(jsonText.get("createdBy"))));
                         dpuIncentiveRequest.setCreatedBy("PORTAL");
                         dpuIncentiveRequest.setxCol1(String.valueOf(jsonText.get("xCol1")));
@@ -620,10 +573,8 @@ public class BroadcastedService {
                                 insuranceDetailSummary.setMccPlantCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
                                 insuranceDetailSummary.setDcsCode(jsonText.get("dcsCode") != null ? String.valueOf(jsonText.get("dcsCode")) : null);
                                 insuranceDetailSummary.setDcsName(jsonText.get("dcsName") != null ? String.valueOf(jsonText.get("dcsName")) : null);
-//                                insuranceDetailSummary.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate"))) : null);
-                                insuranceDetailSummary.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate")), CommonUtil.Formatter5) : null);
-//                                insuranceDetailSummary.setToDate(jsonText.get("toDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("toDate"))) : null);
-                                insuranceDetailSummary.setToDate(jsonText.get("toDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("toDate")), CommonUtil.Formatter5) : null);
+                                insuranceDetailSummary.setFromDate(jsonText.get("fromDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("fromDate")), CommonUtils.Formatter5) : null);
+                                insuranceDetailSummary.setToDate(jsonText.get("toDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("toDate")), CommonUtils.Formatter5) : null);
                                 insuranceDetailSummary.setStatus(jsonText.get("status") != null ? String.valueOf(jsonText.get("status")) : null);
                                 insuranceDetailSummary.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse(String.valueOf(jsonText.get("createdAt")), AppConstant.DATE_TIME_FMT_SSSSSS) : null);
                                 insuranceDetailSummary.setCreatedBy(jsonText.get("createdBy") != null ? String.valueOf(jsonText.get("createdBy")) : null);
@@ -669,16 +620,11 @@ public class BroadcastedService {
                                 insuranceDetail.setDcsName(jsonText.get("dcsName") != null ? String.valueOf(jsonText.get("dcsName")) : null);
                                 insuranceDetail.setMemberId(jsonText.get("memberId") != null ? String.valueOf(jsonText.get("memberId")) : null);
                                 insuranceDetail.setMemberCode(jsonText.get("memberCode") != null ? String.valueOf(jsonText.get("memberCode")) : null);
-//                                insuranceDetail.setMemberCode(
-//                                        jsonText.get("memberCode") != null
-//                                                ? String.valueOf(jsonText.get("memberCode")).replaceAll("^.*(?=\\d{4})", "")
-//                                                : null
-//                                );
                                 insuranceDetail.setMemberName(jsonText.get("memberName") != null ? String.valueOf(jsonText.get("memberName")) : null);
                                 insuranceDetail.setAdharNo(jsonText.get("adharNo") != null ? String.valueOf(jsonText.get("adharNo")) : null);
                                 insuranceDetail.setDob(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null);
                                 try {
-                                    int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null)), insuranceStartDateMap.get(jsonText.get("insuranceMasterCode") != null ? (Integer) jsonText.get("insuranceMasterCode") : null)).getYears();
+                                    int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(jsonText.get("dob") != null ? String.valueOf(jsonText.get("dob")) : null)), insuranceStartDateMap.get(jsonText.get("insuranceMasterCode") != null ? jsonText.get("insuranceMasterCode") : null)).getYears();
                                     insuranceDetail.setAge(age != 0 ? age : null);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -708,7 +654,7 @@ public class BroadcastedService {
                                 insuranceDetailRepository.save(insuranceDetail);
                                 break;
                             case "DELETE":
-                                insuranceDetailRepository.deleteById(String.valueOf((String) jsonText.get("insuranceDetailCode")));
+                                insuranceDetailRepository.deleteById(String.valueOf(jsonText.get("insuranceDetailCode")));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -718,7 +664,7 @@ public class BroadcastedService {
                 case "rfc_call":
                     try {
 //                    LocalDate fromDate = LocalDate.parse(String.valueOf(jsonText.get("prodate")), AppConstant.RFC_CALL_FORMAT);
-                        LocalDateTime fromDate = CommonUtil.getLocalDateTimeFromDateAndShift(LocalDate.parse(String.valueOf(jsonText.get("prodate")), AppConstant.RFC_CALL_FORMAT), shiftList.stream().filter(e -> e.getName().charAt(0) == String.valueOf(jsonText.get("shift")).charAt(0)).findFirst().get());
+                        LocalDateTime fromDate = CommonUtils.getLocalDateTimeFromDateAndShift(LocalDate.parse(String.valueOf(jsonText.get("prodate")), AppConstant.RFC_CALL_FORMAT), shiftList.stream().filter(e -> e.getName().charAt(0) == String.valueOf(jsonText.get("shift")).charAt(0)).findFirst().get());
                         Optional<MilkReceipt> receiptOptional = milkReceiptRepository.findBySocietyAndFromDateAndFromShift(society,
                                 fromDate,
                                 shiftList.stream().filter(e -> e.getName().charAt(0) == String.valueOf(jsonText.get("shift")).charAt(0)).findFirst().get());
@@ -755,7 +701,7 @@ public class BroadcastedService {
                             if (transaction.getConvertedQuantity().compareTo(BigDecimal.ZERO) == 0) {
                                 transaction.setConvertedQuantity(new BigDecimal(String.valueOf(jsonText.get("quan"))).multiply(BigDecimal.valueOf(1.03)));
                             }
-                            transaction.setAvgClr(CommonUtil.calculateClr(transaction.getAvgFat(), transaction.getAvgSnf()));
+                            transaction.setAvgClr(CommonUtils.calculateClr(transaction.getAvgFat(), transaction.getAvgSnf()));
                             transaction.setConvertedQuantityMode(BigDecimal.ZERO);
 
                             if (transaction.getQty().compareTo(BigDecimal.ZERO) > 0) {
@@ -771,7 +717,7 @@ public class BroadcastedService {
                             transaction.setProtein(BigDecimal.ZERO);
                             transaction.setWater(BigDecimal.ZERO);
                             transaction.setQuantityMode(1);
-                            transaction.setConvertedQuantityMode(CommonUtil.convertQty(AppConstant.CollectionType.RECEIPT, transaction.getQty().toString()));
+                            transaction.setConvertedQuantityMode(CommonUtils.convertQty(AppConstant.CollectionType.RECEIPT, transaction.getQty().toString()));
                             transaction.setInitData();
                             milkReceiptTransactionRepository.customSave(transaction, "");
                         } else {
@@ -813,7 +759,7 @@ public class BroadcastedService {
                                 if (transaction.getConvertedQuantity().compareTo(BigDecimal.ZERO) == 0) {
                                     transaction.setQty(new BigDecimal(String.valueOf(jsonText.get("quan"))).multiply(BigDecimal.valueOf(1.03)));
                                 }
-                                transaction.setAvgClr(CommonUtil.calculateClr(transaction.getAvgFat(), transaction.getAvgSnf()));
+                                transaction.setAvgClr(CommonUtils.calculateClr(transaction.getAvgFat(), transaction.getAvgSnf()));
                                 transaction.setConvertedQuantityMode(BigDecimal.ZERO);
 
                                 if (transaction.getQty().compareTo(BigDecimal.ZERO) > 0) {
@@ -829,7 +775,7 @@ public class BroadcastedService {
                                 transaction.setProtein(BigDecimal.ZERO);
                                 transaction.setWater(BigDecimal.ZERO);
                                 transaction.setQuantityMode(1);
-                                transaction.setConvertedQuantityMode(CommonUtil.convertQty(AppConstant.CollectionType.RECEIPT, transaction.getQty().toString()));
+                                transaction.setConvertedQuantityMode(CommonUtils.convertQty(AppConstant.CollectionType.RECEIPT, transaction.getQty().toString()));
                                 transaction.setInitData();
                                 milkReceiptTransactionRepository.customSave(transaction, "");
                             }
@@ -846,8 +792,8 @@ public class BroadcastedService {
                             case "UPDATE":
                                 SchemeRate schemeRate = new SchemeRate();
                                 schemeRate.setSchemeRateCode(jsonText.get("schemeRateCode") != null ? (String) jsonText.get("schemeRateCode") : null);
-                                schemeRate.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null);
-                                schemeRate.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtil.Formatter4) : null);
+                                schemeRate.setFromDate(jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtils.Formatter4) : null);
+                                schemeRate.setToDate(jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtils.Formatter4) : null);
                                 schemeRate.setFromShift(jsonText.get("fromShift") != null ? (Integer) jsonText.get("fromShift") : null);
                                 schemeRate.setToShift(jsonText.get("toShift") != null ? (Integer) jsonText.get("toShift") : null);
                                 schemeRate.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
@@ -857,9 +803,9 @@ public class BroadcastedService {
                                 schemeRate.setIsActive(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
                                 schemeRate.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
                                 schemeRate.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
-                                schemeRate.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                                schemeRate.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                                 schemeRate.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
-                                schemeRate.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4) : null);
+                                schemeRate.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
                                 schemeRate.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
                                 schemeRate.setOriginatingOrgCode(jsonText.get("originatingOrgCode") != null ? (String) jsonText.get("originatingOrgCode") : null);
                                 schemeRate.setOriginatingOrgType(jsonText.get("originatingOrgType") != null ? (String) jsonText.get("originatingOrgType") : null);
@@ -889,14 +835,14 @@ public class BroadcastedService {
                                 schemeRateApplicability.setSchemeRateCode(jsonText.get("schemeRateCode") != null ? (String) jsonText.get("schemeRateCode") : null);
                                 schemeRateApplicability.setFromShift(jsonText.get("fromShift") != null ? (Integer) jsonText.get("fromShift") : null);
                                 schemeRateApplicability.setToShift(jsonText.get("toShift") != null ? (Integer) jsonText.get("toShift") : null);
-                                LocalDateTime fromDate = jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtil.Formatter4) : null;
+                                LocalDateTime fromDate = jsonText.get("fromDate") != null ? LocalDateTime.parse((String) jsonText.get("fromDate"), CommonUtils.Formatter4) : null;
                                 Shift shift = shiftRepository.findById(schemeRateApplicability.getFromShift()).orElseThrow(() -> null);
-                                fromDate = fromDate.with(CommonUtil.getTimeFromShift(shift));
-                                schemeRateApplicability.setFromDate(fromDate != null ? fromDate : null);
-                                LocalDateTime toDate = jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtil.Formatter4) : null;
+                                fromDate = fromDate.with(CommonUtils.getTimeFromShift(shift));
+                                schemeRateApplicability.setFromDate(fromDate);
+                                LocalDateTime toDate = jsonText.get("toDate") != null ? LocalDateTime.parse((String) jsonText.get("toDate"), CommonUtils.Formatter4) : null;
                                 shift = shiftRepository.findById(schemeRateApplicability.getToShift()).orElseThrow(() -> null);
-                                toDate = toDate.with(CommonUtil.getTimeFromShift(shift));
-                                schemeRateApplicability.setToDate(toDate != null ? toDate : null);
+                                toDate = toDate.with(CommonUtils.getTimeFromShift(shift));
+                                schemeRateApplicability.setToDate(toDate);
                                 schemeRateApplicability.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
                                 schemeRateApplicability.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
                                 schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? (String) jsonText.get("applicableFor") : null);
@@ -904,12 +850,12 @@ public class BroadcastedService {
                                 schemeRateApplicability.setIsMemberRate(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
                                 schemeRateApplicability.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
                                 schemeRateApplicability.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
-                                schemeRateApplicability.setApprovedAt(jsonText.get("approvedAt") != null ? LocalDateTime.parse((String) jsonText.get("approvedAt"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setApprovedAt(jsonText.get("approvedAt") != null ? LocalDateTime.parse((String) jsonText.get("approvedAt"), CommonUtils.Formatter4) : null);
                                 schemeRateApplicability.setApprovedBy(jsonText.get("approvedBy") != null ? (String) jsonText.get("approvedBy") : null);
-                                schemeRateApplicability.setTabDownloadDatetime(jsonText.get("tabDownloadDatetime") != null ? LocalDateTime.parse((String) jsonText.get("tabDownloadDatetime"), CommonUtil.Formatter4) : null);
-                                schemeRateApplicability.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setTabDownloadDatetime(jsonText.get("tabDownloadDatetime") != null ? LocalDateTime.parse((String) jsonText.get("tabDownloadDatetime"), CommonUtils.Formatter4) : null);
+                                schemeRateApplicability.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                                 schemeRateApplicability.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
-                                schemeRateApplicability.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtil.Formatter4) : null);
+                                schemeRateApplicability.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
                                 schemeRateApplicability.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
                                 schemeRateApplicability.setOriginatingOrgCode(jsonText.get("originatingOrgCode") != null ? (String) jsonText.get("originatingOrgCode") : null);
                                 schemeRateApplicability.setOriginatingOrgType(jsonText.get("originatingOrgType") != null ? (String) jsonText.get("originatingOrgType") : null);
@@ -934,7 +880,7 @@ public class BroadcastedService {
                     switch ((String) jsonText.get("tableName")) {
                         case "tbl_milk_collection":
                             try {
-                                milkCollectionRepository.findAllCollectionByDate(LocalDateTime.parse((String) jsonText.get("fromDatetime"), CommonUtil.Formatter4), LocalDateTime.parse((String) jsonText.get("toDatetime"), CommonUtil.Formatter4), "");
+                                milkCollectionRepository.findAllCollectionByDate(LocalDateTime.parse((String) jsonText.get("fromDatetime"), CommonUtils.Formatter4), LocalDateTime.parse((String) jsonText.get("toDatetime"), CommonUtils.Formatter4), "");
                                 break;
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1024,10 +970,10 @@ public class BroadcastedService {
                                             && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getStartVal()) >= 0 && snfVal.setScale(1, RoundingMode.DOWN).compareTo(p.getEndVal()) <= 0)
                                     .findFirst();
                     if (basedFat.isPresent() && basedSnf.isPresent()) {
-                        BigDecimal kgRate = CommonUtil.fetchEffectiveRate(basedFat.get().getKgRate(), basedSnf.get());
-                        BigDecimal eqFat = CommonUtil.calculateEqFat(fatVal, snfVal);
-                        BigDecimal kgEqFat = CommonUtil.calculateEqKgFat(eqFat, qty);
-                        BigDecimal kgFat = CommonUtil.calculateKgFat(fatVal, qty);
+                        BigDecimal kgRate = CommonUtils.fetchEffectiveRate(basedFat.get().getKgRate(), basedSnf.get());
+                        BigDecimal eqFat = CommonUtils.calculateEqFat(fatVal, snfVal);
+                        BigDecimal kgEqFat = CommonUtils.calculateEqKgFat(eqFat, qty);
+                        BigDecimal kgFat = CommonUtils.calculateKgFat(fatVal, qty);
                         String formula = basedFat.get().getFormula() != null ?
                                 basedFat.get().getFormula().getFormula() : null;
                         if (formula == null || formula.isEmpty()) {
@@ -1035,7 +981,6 @@ public class BroadcastedService {
                             transaction.setAmount(BigDecimal.ZERO);
                             return;
                         }
-//                    formula = formula.replace("RATE", kgRate.toString());
                         if (basedSnf.get().getVal().compareTo(BigDecimal.ZERO) > 0) {
                             formula = formula.replace("RATE", kgRate.multiply(basedSnf.get().getVal()).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP).toString());
                         } else {
@@ -1044,11 +989,9 @@ public class BroadcastedService {
                         formula = formula.replace("RATE", kgRate.toString());
                         formula = formula.replace("KGEQFAT", kgEqFat.toString());
                         formula = formula.replace("KGFAT", kgFat.toString());
-                        BigDecimal val = CommonUtil.evaluate(formula).setScale(2, RoundingMode.HALF_UP);
-//                    setAmount(val.toString());
-//                    setRate(CommonUtil.calculateAvgRate(val, qty).toString());
+                        BigDecimal val = CommonUtils.evaluate(formula).setScale(2, RoundingMode.HALF_UP);
 
-                        transaction.setRate(new BigDecimal(CommonUtil.calculateAvgRate(val, qty).toString()));
+                        transaction.setRate(new BigDecimal(CommonUtils.calculateAvgRate(val, qty).toString()));
                         transaction.setAmount(val);
                     } else {
                         transaction.setRate(BigDecimal.ZERO);

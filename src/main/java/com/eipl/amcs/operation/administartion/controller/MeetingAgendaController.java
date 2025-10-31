@@ -187,5 +187,4 @@ public class MeetingAgendaController implements MyInitialization, PopupCallback 
             }
         }
     }
-
 }

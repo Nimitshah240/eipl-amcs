@@ -1,19 +1,19 @@
 package com.eipl.amcs.operation.billing.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.MemberDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.SocietyPaymentCycleDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MemberDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.MemberSerialize;
+import com.eipl.amcs.json.serialize.SocietyPaymentCycleSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
-import com.eipl.amcs.serialize.MemberSerialize;
-import com.eipl.amcs.serialize.SocietyPaymentCycleSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -54,7 +54,6 @@ public class MemberBill extends BaseModelTxn {
     private String ifsc;
     private String paymentRef;
 
-    //	private BooleanProperty selected;
     private short status; //1-PENDING, 2-SENT, 3-SENT_DBT, 4-REJECT, 5-PROCESSING, 6-DISBURSED, 7-FAIL
 
     @Column(name = "is_disbursed")
@@ -144,9 +143,5 @@ public class MemberBill extends BaseModelTxn {
 
     public short getPaymnetMode() {
         return paymentMode;
-    }
-
-    public void setPaymnetMode(short paymnetMode) {
-        this.paymentMode = paymnetMode;
     }
 }

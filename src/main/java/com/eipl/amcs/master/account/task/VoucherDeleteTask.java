@@ -4,7 +4,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.repository.VoucherRepository;
 import com.eipl.amcs.master.account.service.VoucherService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 import java.util.Optional;
@@ -22,17 +22,8 @@ public class VoucherDeleteTask extends Task<Boolean> {
             VoucherService service = EmcsAppContext.getContext().getBean(VoucherService.class);
             VoucherRepository repository = EmcsAppContext.getContext().getBean(VoucherRepository.class);
             Optional<Voucher> voucher = repository.findById(code);
-            service.delete(voucher.get(), CommonUtil.setIdentityHeader());
+            service.delete(voucher.get(), CommonUtils.setIdentityHeader());
             return true;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code);
-//            restTemplate.delete(builder.toUriString(), Void.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }

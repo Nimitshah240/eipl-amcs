@@ -117,7 +117,6 @@ public class DockServiceImpl implements DockService {
     @Override
     @Transactional
     public void delete(Dock dock, String identityInfo) {
-//		dockMilkTypeRepository.deleteByDock(dock);
         List<DockMilkType> list = dockMilkTypeRepository.findAllByDock(dock);
         if (list != null) {
             list.forEach(item -> {

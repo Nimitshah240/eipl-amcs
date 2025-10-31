@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 public class VoucherLedgerController implements MyInitialization, PopupCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(VoucherLedgerController.class);
-    private final StringBuilder errorMsg = null;
     private final ObjectProperty<VoucherTransaction> propTransaction1;
     private final ObjectProperty<VoucherTransaction> propTransaction2;
     @FXML
@@ -38,9 +37,9 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
     @FXML
     private TableView<VoucherTransaction> table1, table2;
     @FXML
-    private TableColumn<VoucherTransaction, String> colCode, colName, colAmount, colType;
+    private TableColumn<VoucherTransaction, String> colName, colAmount, colType;
     @FXML
-    private TableColumn<VoucherTransaction, String> colCode1, colName1, colAmount1, colType1;
+    private TableColumn<VoucherTransaction, String> colName1, colAmount1, colType1;
     private Stage stage;
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
@@ -119,8 +118,6 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
         colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
         colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colType.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("debit")));
-//        colVoucherType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getVoucher().getVoucherType().getName()));
-//        colCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getCode()));
         propTransaction1.bind(table1.getSelectionModel().selectedItemProperty());
     }
 
@@ -128,8 +125,6 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
         colName1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
         colAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colType1.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("credit")));
-//        colVoucherType1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getVoucher().getVoucherType().getName()));
-//        colCode1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getCode()));
         propTransaction2.bind(table2.getSelectionModel().selectedItemProperty());
     }
 

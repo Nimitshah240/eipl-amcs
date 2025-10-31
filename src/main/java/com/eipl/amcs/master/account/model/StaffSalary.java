@@ -1,11 +1,11 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.StaffMemberDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.StaffMemberDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.StaffMemberSerialize;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.StaffMemberSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -42,7 +41,6 @@ public class StaffSalary extends BaseModel {
     @Column(name = "value")
     private double value;
 
-    @Size(max = 255)
     @Column(name = "voucher_no")
     private String voucherNo;
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_staff_salary_society_code"))
@@ -50,7 +48,6 @@ public class StaffSalary extends BaseModel {
     @JsonDeserialize(using = SocietyDeserializer.class)
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society societyCode;
-    @Size(max = 20)
     @JsonSerialize(using = StaffMemberSerialize.class)
     @JsonDeserialize(using = StaffMemberDeserializer.class)
     @JoinColumn(name = "staff_member_code", foreignKey = @ForeignKey(name = "fk_staff_salary_staff_member_code"))

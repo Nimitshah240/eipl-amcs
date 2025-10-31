@@ -19,9 +19,6 @@ public interface MemberMilkPurchaseRateRepository extends JpaRepository<MemberMi
     List<MemberMilkPurchaseRate> findAll(Sort sort);
 
     @EntityGraph(attributePaths = {"shift", "shiftApplicable", "society", "rateType"})
-    Optional<MemberMilkPurchaseRate> findTop1BySocietyAndWefDateGreaterThanOrderByWefDateDesc(Society society, LocalDateTime wefDate);
-
-    @EntityGraph(attributePaths = {"shift", "shiftApplicable", "society", "rateType"})
     Optional<MemberMilkPurchaseRate> findTop1BySocietyAndWefDateGreaterThanEqualOrderByWefDateDesc(Society society, LocalDateTime wefDate);
 
     @Override

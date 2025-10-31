@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.operation.share.model.ShareRate;
 import com.eipl.amcs.operation.share.task.ShareRateSaveTask;
 import javafx.fxml.FXML;
@@ -35,14 +35,11 @@ public class ShareRateAddEditController implements MyInitialization {
     private DatePicker dpWefDate;
     @FXML
     private E_NumericField txtRate;
-
     private Stage stage;
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
-    private final ShareRate dto = null;
     private ShareRate shareRate = null;
-    private BigDecimal rate;
 
     public void setStage(Stage stage) {
         this.stage = stage;

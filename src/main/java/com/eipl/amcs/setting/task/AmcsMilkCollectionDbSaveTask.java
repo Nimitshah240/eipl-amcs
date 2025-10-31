@@ -16,7 +16,6 @@ import javafx.concurrent.Task;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
@@ -28,13 +27,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 public class AmcsMilkCollectionDbSaveTask extends Task<Boolean> {
-    List<MilkCollection> collectionList = new ArrayList<>();
     private final List<MilkType> milkTypeList;
     private final List<Shift> shiftList;
     private final List<Member> memberList;
     private final String filePath;
     private final String cowRange;
     private final String buffRange;
+    List<MilkCollection> collectionList = new ArrayList<>();
 
     public AmcsMilkCollectionDbSaveTask(List<MilkType> milkTypeList, List<Shift> shiftList, String filePath, String cowRange, String buffRange, List<Member> memberList) {
         this.milkTypeList = milkTypeList;
@@ -60,7 +59,6 @@ public class AmcsMilkCollectionDbSaveTask extends Task<Boolean> {
             try (Stream<String> lines = Files.lines(new File(filePath).toPath(), StandardCharsets.UTF_8)) {
                 lines.forEach(line -> {
                     MilkCollection mc = new MilkCollection();
-//                    String line1 = new String(Base64.getDecoder().decode(line.getBytes()));
                     String line1 = line;
                     String[] arr = line1.split("#");
 

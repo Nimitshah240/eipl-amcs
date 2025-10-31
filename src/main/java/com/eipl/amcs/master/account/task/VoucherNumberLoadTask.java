@@ -22,15 +22,6 @@ public class VoucherNumberLoadTask extends Task<String> {
             if (codeI == null || codeI.isBlank())
                 return null;
             return codeI;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER_NEXT_CODE;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam("code",code);
-//            ResponseEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, String.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("ProductSale No fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("ProductSale No fetch", e);
         }

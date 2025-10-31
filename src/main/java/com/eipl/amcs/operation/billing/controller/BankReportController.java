@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
 
 public class BankReportController implements MyInitialization {
 
+    public BigDecimal textFileTotal = BigDecimal.ZERO;
+    List<PaymentForBank> list;
     @FXML
     private StackPane root;
     @FXML
@@ -47,21 +49,20 @@ public class BankReportController implements MyInitialization {
     private PopupCallback callback;
     @FXML
     private ComboBox<Bank> cboxBank;
-
-    List<PaymentForBank> list;
-
     @FXML
     private ComboBox<String> cboxReportType;
-
-
     private ResourceBundle resourceBundle;
+    private MemberBillSummary dto = null;
+
+    public static String rightPadding(String input, char ch, int L) {
+        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
+        return result;
+    }
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -70,11 +71,6 @@ public class BankReportController implements MyInitialization {
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
-
-    private MemberBillSummary propSummary;
-
-    public BigDecimal textFileTotal = BigDecimal.ZERO;
-
 
     public void setSummay(MemberBillSummary dto) {
         if (dto != null) {
@@ -101,8 +97,6 @@ public class BankReportController implements MyInitialization {
         cboxBank.getSelectionModel().select(0);
         cboxReportType.getSelectionModel().select(0);
     }
-
-    private StringBuilder errorMsg;
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
@@ -132,13 +126,7 @@ public class BankReportController implements MyInitialization {
                 break;
             case 6:
                 loadExcelData(3);
-
         }
-
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     private void loadBank() {
@@ -206,8 +194,6 @@ public class BankReportController implements MyInitialization {
             fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
             File file = fileDialog.showSaveDialog(MainApp.stage);
             if (file != null) {
-                FileWriter writer = new FileWriter(file, true);
-//                BufferedWriter bw = new BufferedWriter(writer);
                 BufferedWriter bw = new BufferedWriter
                         (new OutputStreamWriter(new FileOutputStream(file.getAbsolutePath()), StandardCharsets.UTF_8));
                 StringBuilder sb = new StringBuilder();
@@ -291,8 +277,6 @@ public class BankReportController implements MyInitialization {
             fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
             File file = fileDialog.showSaveDialog(MainApp.stage);
             if (file != null) {
-                FileWriter writer = new FileWriter(file, true);
-//                BufferedWriter bw = new BufferedWriter(writer);
                 BufferedWriter bw = new BufferedWriter
                         (new OutputStreamWriter(new FileOutputStream(file.getAbsolutePath()), StandardCharsets.UTF_8));
                 StringBuilder sb = new StringBuilder();
@@ -357,12 +341,6 @@ public class BankReportController implements MyInitialization {
         }
     }
 
-    public static String rightPadding(String input, char ch, int L) {
-        String result = String.format("%" + (-L) + "s", input).replace(' ', ch);
-        return result;
-    }
-
-
     private void exportExcel(List<PaymentForBank> list) {
         boolean exported = true;
         try {
@@ -376,7 +354,6 @@ public class BankReportController implements MyInitialization {
                 List<String> strColumns = Arrays.asList("Sr. No.", "Member Code", "Member Name", "Bank A/C", "IFSC CODE", "Payment For Member");
                 List<String> strColumnTodisplay = null;
                 CellStyle style;
-                List<String> items = null;
                 strColumnTodisplay = new ArrayList<>(strColumns);
                 DataFormat format = wb.createDataFormat();
                 style = wb.createCellStyle();
@@ -526,7 +503,6 @@ public class BankReportController implements MyInitialization {
                 List<String> strColumns = Arrays.asList("Soc Code", "Soc Name", "Payment Period", "Cust Code", "Cust Name", "Bank A/C", "IFSC CODE", "Bank Name", "Branch Name", "Pay Value");
                 List<String> strColumnTodisplay = null;
                 CellStyle style;
-                List<String> items = null;
                 strColumnTodisplay = new ArrayList<>(strColumns);
                 DataFormat format = wb.createDataFormat();
                 style = wb.createCellStyle();

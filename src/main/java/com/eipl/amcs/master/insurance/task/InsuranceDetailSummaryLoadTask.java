@@ -21,17 +21,6 @@ public class InsuranceDetailSummaryLoadTask extends Task<InsuranceDetailSummary>
         try {
             InsuranceMasterService service = EmcsAppContext.getContext().getBean(InsuranceMasterService.class);
             return service.findInsuranceDetailSummaryByInsuranceMaster(insuranceMasterCode);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.INSURANCE + "/detailSummary";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("insuranceMasterCode", insuranceMasterCode);
-//
-//            ResponseEntity<InsuranceDetailSummary> response = restTemplate.getForEntity(builder.toUriString(), InsuranceDetailSummary.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("InsuranceDetailSummary fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("InsuranceDetailSummary fetch", e);
         }

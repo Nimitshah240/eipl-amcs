@@ -1,10 +1,10 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.BmcDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
-import com.eipl.amcs.serialize.BmcSerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.BmcDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.BmcSerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
 @SuppressWarnings("serial")
@@ -24,13 +23,9 @@ import java.time.LocalTime;
 @Table(name = "routes")
 public class Route extends BaseModel {
     @Id
-    @Size(max = 10)
     private String code;
-    @Size(max = 10)
     private String codeEx;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     private Integer capacity;

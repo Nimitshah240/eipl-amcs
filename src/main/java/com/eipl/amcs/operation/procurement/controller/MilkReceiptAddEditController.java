@@ -10,8 +10,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -58,7 +58,9 @@ import java.util.concurrent.ExecutionException;
 
 public class MilkReceiptAddEditController extends MilkDispatchBaseController implements MyInitialization {
 
-    List<MilkReceiptSummaryDto> milkReceiptSummaryDtoList = new ArrayList<>();
+    private final ObjectProperty<MilkReceiptTransaction> propMilkReceiptTransaction;
+    private final ObservableList<MilkReceiptTransaction> listDeleteTxn;
+    private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
     List<MilkQualityType> milkQualityTypeList = new ArrayList<>();
     List<MilkDispatchTransaction> milkDispatchSummaryDtoList = new ArrayList<>();
     @FXML
@@ -68,16 +70,15 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     @FXML
     private E_TextField txtQuanity, txtFat, txtSnf, txtClr,
             txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans;
+    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
+        }
+    };
     @FXML
     private E_DatePicker dpFromDate, dpToDate, dpReceiptDate;
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
-    @FXML
-    private TableView<MilkReceiptSummaryDto> tableMilkReceiptSummary;
-    @FXML
-    private TableColumn<MilkReceiptSummaryDto, MilkType> colCollecMilkType;
-    @FXML
-    private TableColumn<MilkReceiptSummaryDto, BigDecimal> colPurchaseMilk, colLocalMilkSale, colDifference;
     @FXML
     private GridPane gridTransaction;
     @FXML
@@ -86,6 +87,12 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     private ComboBox<MilkDispatch> cboxChallanNo;
     @FXML
     private ComboBox<MilkQualityType> cboxMilkQuality;
+    private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
+        if (!newVal.isEmpty()) {
+            fetchRateForReceipt(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
+            calculateClr(txtFat.getText(), txtSnf.getText());
+        }
+    };
     @FXML
     private Label lblQuantity;
     @FXML
@@ -108,8 +115,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     private TableColumn<MilkDispatchTransaction, BigDecimal> colQuantity1, colFat1, colSnf1, colRate1, colAmount1, colWater1;
     @FXML
     private HBox btnMainPanel;
-    private ObjectProperty<MilkDispatchSummaryDto> propDto;
-    //private ObjectProperty<MilkReceiptSummaryDto> propDto;
     @FXML
     private E_Button btnSaveUpdate, btnClose;
     private Stage stage;
@@ -117,23 +122,8 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     private MilkReceipt dto;
     private MilkReceiptTransaction dtoTxn;
     private MilkReceiptDto receiptDto;
-    private final ObjectProperty<MilkReceiptTransaction> propMilkReceiptTransaction;
     private StringBuilder errorMsg = null;
     private ObservableList<MilkReceiptTransaction> listMilkReceipt;
-    private final ObservableList<MilkReceiptTransaction> listDeleteTxn;
-    private String challanNo;
-    private final ObjectProperty<MilkDispatchTransaction> propMilkDispatchTransaction;
-    private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            calculateAmount(txtRtpl.getText(), txtQuanity.getText());
-        }
-    };
-    private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
-        if (!newVal.isEmpty()) {
-            fetchRateForReceipt(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
-            calculateClr(txtFat.getText(), txtSnf.getText());
-        }
-    };
 
     public MilkReceiptAddEditController() {
         propMilkReceiptTransaction = new SimpleObjectProperty<>();
@@ -197,10 +187,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
             fetchRateForReceipt(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             calculateClr(txtFat.getText(), txtSnf.getText());
         });
-//        cboxChallanNo.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
-//            loadMilkDispatchValue();
-//            loadMilkDispatchSummary(newValue.getSelectedItem().getChallanNo());
-//        });
         txtChamberNo.setOnAction(e -> {
             FocusUtils.requestFocus(btnAdd);
         });
@@ -210,7 +196,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
         btnAdd.setOnAction(event -> {
             FocusUtils.requestFocus(cboxMilkType);
             if (btnAdd.getText().equals(resourceBundle.getString("add"))) {
-//                fetchPurchaseRateCode();
                 gridTransaction.setDisable(false);
                 btnAdd.setText(resourceBundle.getString("save"));
                 btnDelete.setDisable(false);
@@ -232,7 +217,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
                 clearInnerControls();
             } else {
                 if (propMilkReceiptTransaction.get() != null) {
-//                    deleteTransaction(propMilkReceiptTransaction.get());
                     MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkreceipt"),
                             resourceBundle.getString("alert.delete"));
                     Optional<ButtonType> resp = alert.createConfirmationAlert();
@@ -248,21 +232,16 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
             if (newValue == null) {
                 btnAdd.setDisable(false);
                 btnDelete.setText(resourceBundle.getString("cancel"));
-                // btnDelete.setDisable(true);
             } else {
                 btnAdd.setText(resourceBundle.getString("add"));
-//                btnAdd.setDisable(true);
                 btnDelete.setText(resourceBundle.getString("delete"));
                 btnDelete.setDisable(false);
-//                gridMaster.setDisable(true);
             }
         });
         txtWater.setText("0");
         txtCans.setText("1");
         txtChamberNo.setText("0");
-
     }
-
 
     private void loadMilkDispatch() {
         var task = new MilkDispatchLoadTask();
@@ -277,7 +256,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
             }
         });
         new Thread(task).start();
-
     }
 
     private void loadMilkDispatch2() {
@@ -385,8 +363,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
             }
         });
         new Thread(task2).start();
-
-
     }
 
     @Override
@@ -443,13 +419,8 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
         colSnf1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAvgSnf()));
         colRate1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
         colAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
-
         colWater1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWater()));
-//        colLocalMilkSale.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkSale()));
-//        colDifference.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkBalance()));
-
         propMilkDispatchTransaction.bind(tableMilkDispatch.getSelectionModel().selectedItemProperty());
-
     }
 
     private void validateAndSave() {
@@ -510,12 +481,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
                 alert.createAlert();
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceipt.fxml")));
 
-//                Optional<ButtonType> resp = alert.createConfirmationAlert();
-//                if (resp.isPresent() && resp.get() == ButtonType.OK){
-//                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceipt.fxml")));
-//                }else if (resp.isPresent() && resp.get() == ButtonType.CANCEL) {
-//                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceipt.fxml")));
-//               }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -550,13 +515,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
                         resourceBundle.getString("record.update.successful"));
                 alert.createAlert();
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceipt.fxml")));
-//                if (resp.isPresent() && resp.get() == ButtonType.OK){
-//                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceipt.fxml")));
-//                }else if (resp.isPresent() && resp.get() == ButtonType.CANCEL) {
-//                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceipt.fxml")));
-//                }
-
-
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -631,8 +589,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
             }
             dtoTxn.setMilkQualityType(cboxMilkQuality.getSelectionModel().getSelectedItem());
             dtoTxn.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
-//            int ReceiptType = cboxReceiptType.getSelectionModel().getSelectedItem()
-//                    .equals(resourceBundle.getString("cans")) ? 0 : 1;
             if (!txtClr.getText().trim().isEmpty())
                 dtoTxn.setAvgClr(new BigDecimal(txtClr.getText()));
             if (!txtFat.getText().trim().isEmpty())
@@ -729,23 +685,7 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
                 errorMsg.append(resourceBundle.getString("clr.cannot.be.null") + "\n");
             }
         }
-        if (!txtCans.isDisable()) {
-//            if (Double.parseDouble(
-//                    txtCans.getText() != null && !txtCans.getText().isEmpty() ? txtCans.getText() : "0") == 0) {
-//                errorMsg.append(resourceBundle.getString("noofcans.cannot.be.null") + "\n");
 
-        }
-//        if (!txtWater.isDisable()) {
-//            if (txtWater.getText() == null && txtWater.getText().isEmpty()) {
-//                errorMsg.append(resourceBundle.getString("water.cannot.be.null") + "\n");
-//            }
-//        }
-//        if (!txtChamberNo.isDisable()) {
-//            if (Double.parseDouble(
-//                    txtChamberNo.getText() != null && !txtChamberNo.getText().isEmpty() ? txtChamberNo.getText() : "0") == 0) {
-//                errorMsg.append(resourceBundle.getString("chambernonull") + "\n");
-//            }
-//        }
         if (errorMsg.length() == 0) {
             if (listMilkReceipt != null & listMilkReceipt.size() != 0 && cboxMilkQuality.getValue() != null) {
                 for (MilkReceiptTransaction milkReceipt : listMilkReceipt) {
@@ -857,7 +797,6 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     }
 
     private void setValuesInControls() {
-
         dpFromDate.setValue(dto.getFromDate().toLocalDate());
         cboxFromShift.setValue(dto.getFromShift());
         dpToDate.setValue(dto.getToDate().toLocalDate());
@@ -865,14 +804,11 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
 
         if (listMilkReceipt != null)
             tableMilkReceipt.setItems(listMilkReceipt);
-
-
         cboxChallanNo.setValue(dto.getMilkDispatch() != null ? dto.getMilkDispatch() : null);
 
     }
 
     private void deleteTransaction(MilkReceiptTransaction transaction) {
-
         var task = new MilkReceiptTransactionDeleteTask(transaction.getTxnCode());
         task.setOnSucceeded(e -> {
             try {
@@ -885,6 +821,4 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
         });
         new Thread(task).start();
     }
-
-
 }

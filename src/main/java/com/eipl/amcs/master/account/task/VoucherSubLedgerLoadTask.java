@@ -30,16 +30,6 @@ public class VoucherSubLedgerLoadTask extends Task<List<VoucherSubLedger>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER + "/voucher-sub-ledger";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code);
-//            ResponseEntity<VoucherSubLedger[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, VoucherSubLedger[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("List<VoucherSubLedger> fetched: {}", response.getBody());
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("List<VoucherSubLedger> fetch", e);
         }

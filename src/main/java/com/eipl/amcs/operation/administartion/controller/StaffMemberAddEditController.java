@@ -12,8 +12,8 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.model.Designation;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
@@ -374,8 +374,6 @@ public class StaffMemberAddEditController implements MyInitialization {
             txtEmailId.setText(dto.getEmailId());
             txtPanNo.setText(dto.getPanNo());
             cboxGender.setValue(dto.getGender());
-//            txtAcNo.setText(dto.getBankAccountNo());
-//            txtIfsc.setText(dto.getIfsc());
             txtPincode.setText(dto.getPinCode());
             cboxDesignation.setValue(dto.getDesignation());
             dptenureToDate.setValue(dto.getTenureToDate());
@@ -397,10 +395,7 @@ public class StaffMemberAddEditController implements MyInitialization {
             if (dto.getPaymentMode() != null)
                 rbtnBank.setSelected(dto.getPaymentMode() == (short) 1);
         }
-
     }
-
-
 }
 
 

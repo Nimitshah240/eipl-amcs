@@ -3,8 +3,8 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
 import com.eipl.amcs.master.account.service.LedgerOpeningBalanceService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
 
@@ -30,7 +30,7 @@ public class LedgerOpeningBalanceListSaveTask extends Task<List<LedgerOpeningBal
             int current = 1;
             for (List<LedgerOpeningBalance> memberDtos : listTemp) {
                 try {
-                    List<LedgerOpeningBalance> list = service.importLedgerBalance(memberDtos, CommonUtil.setIdentityHeader());
+                    List<LedgerOpeningBalance> list = service.importLedgerBalance(memberDtos, CommonUtils.setIdentityHeader());
                     listRes.addAll(list);
                     updateMessage("Migration in progress " + current + " of " + listTemp.size());
                     current++;
@@ -41,7 +41,7 @@ public class LedgerOpeningBalanceListSaveTask extends Task<List<LedgerOpeningBal
             return listRes;
         } else {
             try {
-                List<LedgerOpeningBalance> list = service.importLedgerBalance(dtoList, CommonUtil.setIdentityHeader());
+                List<LedgerOpeningBalance> list = service.importLedgerBalance(dtoList, CommonUtils.setIdentityHeader());
                 if (list == null || list.isEmpty())
                     return null;
                 return list;

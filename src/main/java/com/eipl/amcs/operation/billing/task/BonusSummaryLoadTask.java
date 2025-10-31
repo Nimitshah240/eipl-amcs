@@ -17,14 +17,6 @@ public class BonusSummaryLoadTask extends Task<List<BonusSummary>> {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
             List<BonusSummary> summaryList = service.findBonusSummaryBetWeen();
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/summary";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
-//            ResponseEntity<BonusSummary[]> response = restTemplate.getForEntity(builder.toUriString(), BonusSummary[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
             if (summaryList == null || summaryList.isEmpty()) return null;
             return summaryList;
         } catch (Exception e) {

@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.operation.billing.model.MemberBill;
 import com.eipl.amcs.operation.billing.model.MemberBillTransaction;
 import com.eipl.amcs.operation.billing.task.MemberBillTransactionLoadTask;
@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MemberBillTransactionController implements MyInitialization {
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberBillTransactionController.class);
+    private final ObjectProperty<MemberBillTransaction> propMemberBillTransaction;
     @FXML
     private StackPane root;
     @FXML
@@ -51,16 +52,10 @@ public class MemberBillTransactionController implements MyInitialization {
     private TextField txtDue, txtNetPayable;
     private Stage stage;
     private ResourceBundle resourceBundle;
-    private final StringBuilder errorMsg = null;
     private List<MemberBillTransaction> listTransaction;
     private PopupCallback callback;
-    private final ObjectProperty<MemberBillTransaction> propMemberBillTransaction;
-    private final BigDecimal actualPayable = BigDecimal.ZERO;
     private BigDecimal netPayable = BigDecimal.ZERO;
-    private final BigDecimal adjustment = BigDecimal.ZERO;
     private BigDecimal due = BigDecimal.ZERO;
-    private final List<MemberBillTransaction> txn = null;
-    private final List<MemberBillTransaction> billOtherTxn = null;
     private MemberBillTransaction txnNetPay;
     private MemberBill memberBill = null;
 
@@ -115,7 +110,6 @@ public class MemberBillTransactionController implements MyInitialization {
                             setControls();
                         }
                     } catch (Exception e) {
-//                    throw new E("Invalid Value!");
                     }
                 }
             });
@@ -189,8 +183,6 @@ public class MemberBillTransactionController implements MyInitialization {
 
     @Override
     public void updateData() {
-//        txnNetPay.setAmount(new BigDecimal(txtNetPayable.getText()));
-
         if (memberBill.getPaymentCycle().getLockBillingProcess()) {
             MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("member.bill"),
                     resourceBundle.getString("error.occurred"));
@@ -228,6 +220,5 @@ public class MemberBillTransactionController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
 }
 

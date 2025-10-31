@@ -103,7 +103,5 @@ public class RptTradingReportController implements MyInitialization {
             }
         });
         new Thread(task).start();
-
-
     }
 }

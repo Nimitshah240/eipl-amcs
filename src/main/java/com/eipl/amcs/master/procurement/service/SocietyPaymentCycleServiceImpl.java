@@ -7,7 +7,7 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -47,13 +47,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
     @Override
     @Transactional
     public String save(List<SocietyPaymentCycle> societyPaymentCycle, String identityInfo) throws BusinessValidationFailException {
-//        if (checkDateRangeConflict(societyPaymentCycle.getSociety().getCode(), societyPaymentCycle.getCode(),
-//                societyPaymentCycle.getFromDate(), societyPaymentCycle.getToDate())) {
-//        } else {
-//            FieldError rangeNotValid = CommonUtil.getFieldError("societypaymentcycle", "paymentcyclerange",
-//                    societyPaymentCycle.getCode(), "paymentcyclerange.not.valid");
-//            throw new BusinessValidationFailException(getClass(), rangeNotValid);
-//        }
+
         String nextCode = nextCodeRepository.getNextCode("SocietyPaymentCycle", "code",
                 societyPaymentCycle.get(0).getSociety().getCode(), 0);
         for (SocietyPaymentCycle payment : societyPaymentCycle) {
@@ -61,7 +55,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
             if (checkDateRangeConflict(payment.getSociety().getCode(), payment.getCode(),
                     payment.getFromDate(), payment.getToDate())) {
             } else {
-                FieldError rangeNotValid = CommonUtil.getFieldError("societypaymentcycle", "paymentcyclerange",
+                FieldError rangeNotValid = CommonUtils.getFieldError("societypaymentcycle", "paymentcyclerange",
                         payment.getCode(), "paymentcyclerange.not.valid");
                 throw new BusinessValidationFailException(getClass(), rangeNotValid);
             }
@@ -79,7 +73,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
         if (checkDateRangeConflict(societyPaymentCycle.getSociety().getCode(), societyPaymentCycle.getCode(),
                 societyPaymentCycle.getFromDate(), societyPaymentCycle.getToDate())) {
         } else {
-            FieldError rangeNotValid = CommonUtil.getFieldError("societypaymentcycle", "paymentcyclerange",
+            FieldError rangeNotValid = CommonUtils.getFieldError("societypaymentcycle", "paymentcyclerange",
                     societyPaymentCycle.getCode(), "paymentcyclerange.not.valid");
             throw new BusinessValidationFailException(getClass(), rangeNotValid);
         }

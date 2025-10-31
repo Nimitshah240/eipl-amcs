@@ -45,7 +45,6 @@ public class MemberBillingController implements MyInitialization {
     @FXML
     private ComboBox<String> cboxType;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {

@@ -19,9 +19,7 @@ import java.util.List;
 public class BroadcastedProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BroadcastedService.class);
-    //
-//    @Autowired
-//    private KafkaTemplate<String, Broadcasted> kafkaTemplate;
+
     @Autowired
     private BroadcastedRepository broadcastedRepository;
     @Autowired
@@ -31,30 +29,6 @@ public class BroadcastedProducer {
 
     @Value(value = "${sync.url}")
     private String syncUrl;
-    @Value(value = "${inbox.url}")
-    private String inboxUrl;
-
-//    public void produce(Broadcasted broadcated) {
-//		ListenableFuture<SendResult<String, Broadcasted>> future = kafkaTemplate.send(topic, broadcated);
-//		future.addCallback(new ListenableFutureCallback<SendResult<String, Broadcasted>>() {
-//			@Override
-//			public void onSuccess(SendResult<String, Broadcasted> result) {
-//				LOGGER.info("Sent message [{}] with offset {}", result, result.getRecordMetadata().offset());
-//				BroadcastedLog log = broadcated.toBroadcatedLog();
-//				try {
-//					logRepository.save(log);
-//					broadcastedRepository.delete(broadcated);
-//				} catch (Exception e) {
-//					LOGGER.error("Broadcasted produce", e);
-//				}
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable ex) {
-//				LOGGER.error("Error in sent {}", ex.getMessage());
-//			}
-//		});
-//    }
 
     public void produce(List<Broadcasted> broadcastedList) {
         try {
@@ -92,10 +66,7 @@ public class BroadcastedProducer {
                 realTimeRequest.setRequestTime(null);
                 realTimeRequest.setToken(EiplAmcsAppRunner.identityDto.getIdentity().getToken());
                 realTimeRequest.setContent(inboxList);
-//                RealTimeResponse response = restTemplate.postForObject(inboxUrl, new HttpEntity<>(realTimeRequest), RealTimeResponse.class);
                 RealTimeResponse response = restTemplate.postForObject("http://amulamcsuat.emilkpro.in/androiddpu/v1/master-data/inbox", new HttpEntity<>(realTimeRequest), RealTimeResponse.class);
-//                RealTimeResponse response = restTemplate.postForObject("http://192.168.1.74/AMULUAT/androiddpu/v1/master-data/inbox", new HttpEntity<>(realTimeRequest), RealTimeResponse.class);
-//                RealTimeResponse response = restTemplate.postForObject("https://amulamcs.yamatech.app/androiddpu/v1/master-data/inbox", new HttpEntity<>(realTimeRequest), RealTimeResponse.class);
 
                 for (String successId : String.valueOf(response.getData().get("successId")).split(",")) {
                     broadcastedList.stream().filter(p -> p.getUuid().equals(successId))

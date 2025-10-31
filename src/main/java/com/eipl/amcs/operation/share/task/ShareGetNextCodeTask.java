@@ -20,17 +20,6 @@ public class ShareGetNextCodeTask extends Task<String> {
             String codes = nextCodeService.getNextCode("Share", "code", MainApp.identityDto.getSociety().getCode(), 5);
             if (codes == null || codes.isEmpty()) return null;
             return codes;
-
-//            String code = MainApp.identityDto.getSociety().getCode();
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SHARE+"/next-code";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url).queryParam(MainApp.identityDto.getSociety().getCode())
-//                    .queryParam("code",code);
-//            ResponseEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, String.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Share No fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("Share No fetch", e);
         }

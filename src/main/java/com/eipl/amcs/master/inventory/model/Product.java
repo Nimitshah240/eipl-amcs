@@ -1,13 +1,13 @@
 package com.eipl.amcs.master.inventory.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.*;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -18,7 +18,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -30,13 +29,9 @@ import java.math.BigDecimal;
 public class Product extends BaseModel {
 
     @Id
-    @Size(max = 25)
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
-    @Size(max = 25)
     private String referenceCode;
     @Digits(integer = 7, fraction = 3)
     private BigDecimal baseConversionFactor;

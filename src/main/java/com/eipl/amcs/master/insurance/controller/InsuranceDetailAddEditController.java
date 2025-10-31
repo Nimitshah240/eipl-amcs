@@ -11,8 +11,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
@@ -68,7 +68,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
     private ComboBox<Gender> cboxGender;
     private List<Gender> genderList;
     private String memberCode;
-    private Member member;
     @FXML
     private TextField txtAge;
     private Stage stage;
@@ -99,8 +98,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
                 cboxGender.setDisable(true);
                 txtAdharNo.setDisable(true);
                 dpBirthDate.setDisable(true);
-//                if (insuranceDetail.getOriginatingOrgType().equalsIgnoreCase("PORTAL"))
-//                    txtMemberName.setDisable(true);
             } else {
                 txtMemberName.setDisable(false);
                 cboxGender.setDisable(false);
@@ -136,14 +133,12 @@ public class InsuranceDetailAddEditController implements MyInitialization {
             }
         });
         dpBirthDate.setOnAction(e -> {
-//            txtAge.setText(String.valueOf(Period.between(dpBirthDate.getValue(), LocalDate.now()).getYears()));
             if (dpBirthDate.getValue() != null && insuranceMaster.getInsuranceStartDate() != null) {
                 int age = Period.between(dpBirthDate.getValue(), insuranceMaster.getInsuranceStartDate()).getYears();
                 txtAge.setText(String.valueOf(age));
             }
         });
         txtMemberCode.setOnAction(e -> {
-//            fetchMemberDetails();
         });
         setupTextFormatters();
 
@@ -189,14 +184,9 @@ public class InsuranceDetailAddEditController implements MyInitialization {
             insuranceDetail.setDelete(false);
             insuranceDetail.setSrNo(insuranceDetailSrNo);
             insuranceDetail.setOriginatingOrgCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-//            insuranceDetail.setOriginatingOrgType("VLC");
             insuranceDetail.setOriginatingType(0);
-//            int year = LocalDate.now().getYear();
-//            insuranceDetail.setMemberId((year % 100) + MainApp.identityDto.getSociety().getCodeEx() + insuranceDetailSrNo);
-//            memberId from portal side
             insuranceDetail.setMemberId(yearOfDetailFromPortal + MainApp.identityDto.getSociety().getCodeEx() + insuranceDetailSrNo);
             insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + CommonUtils.getMemberShortCode(txtMemberCode.getText()));
-//            insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + txtMemberCode.getText());
             setValuesInObject();
             saveData();
         }
@@ -248,15 +238,11 @@ public class InsuranceDetailAddEditController implements MyInitialization {
         var task = new MemberByIdLoadTask(memberCode);
         task.setOnSucceeded(e -> {
             try {
-//                member = task.get();
                 if (task.get() != null) {
                     Member member = task.get();
                     txtMemberName.setText((member.getFirstName() != null ? member.getFirstName() : " ") + ' ' + (member.getMiddleName() != null ? member.getMiddleName() : " ") + ' ' + (member.getLastName() != null ? member.getLastName() : " "));
-//                    txtMemberName.setText(member.toMemberName());
                 } else {
                     txtMemberName.clear();
-//                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
-//                            resourceBundle.getString("membernotfound"));
                     MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("insurance"),
                             resourceBundle.getString("alert.cancel"));
                     alert.createAlert();
@@ -271,7 +257,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
                     txtMemberCode.setText("");
                     FocusUtils.requestFocus(txtMemberCode);
                 }
-//                txtMemberName.setText((member.getFirstName() != null ? member.getFirstName() : " ") + ' ' + (member.getMiddleName() != null ? member.getMiddleName() : " ") + ' ' + (member.getLastName() != null ? member.getLastName() : " "));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -314,15 +299,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
         insuranceDetail.setNomineeMemberName(txtNomineeMemberName.getText());
         insuranceDetail.setNomineeAdharNo(EncryptionUtil.encrypt(txtNomineeAdharNo.getText()));
         insuranceDetail.setMemberName(txtMemberName.getText());
-//        insuranceDetail.setMemberCode(MainApp.identityDto.getIdentity().getSocietyRefCode()+txtMemberCode.getText());
-//        String societyRefCode = MainApp.identityDto.getIdentity().getSocietyRefCode();
-//        String memberCodeText = txtMemberCode.getText();
-//        while (memberCodeText.length() < 4) {
-//            memberCodeText = "0" + memberCodeText;
-//        }
-//        insuranceDetail.setMemberCode(societyRefCode + memberCodeText);
-
-//        insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + CommonUtils.getMemberShortCode(txtMemberCode.getText()));
         insuranceDetail.setMemberCode(insuranceDetailSummary.getDcsCode() + CommonUtils.getMemberShortCode(txtMemberCode.getText()));
         insuranceDetail.setAdharNo(EncryptionUtil.encrypt(txtAdharNo.getText()));
         insuranceDetail.setDob(EncryptionUtil.encrypt(dpBirthDate.getValue().format(AppConstant.Formatter5)));
@@ -336,7 +312,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
 
     @Override
     public void saveData() {
-//        trimMemberCode();
         var task = new InsuranceDetailSaveTask(insuranceDetail, 0);
         task.setOnSucceeded(e -> {
             try {
@@ -367,7 +342,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
 
     @Override
     public void updateData() {
-//        trimMemberCode();
         var task = new InsuranceDetailSaveTask(insuranceDetail, 1);
         task.setOnSucceeded(e -> {
             try {
@@ -412,7 +386,6 @@ public class InsuranceDetailAddEditController implements MyInitialization {
 
         if (this.insuranceDetail != null) {
             if (!insuranceDetail.getMemberCode().contains("0000")) {
-//                txtMemberCode.setDisable(true);
                 txtMemberCode.setDisable(false);
             }
             dpBirthDate.setValue(AppConstant.parseDateWithMultipleFormats(EncryptionUtil.decrypt(insuranceDetail.getDob())));

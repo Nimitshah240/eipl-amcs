@@ -52,5 +52,4 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
     public void delete(VoucherType voucherType, String identityInfo) {
         voucherTypeRepository.customDelete(voucherType, identityInfo);
     }
-
 }

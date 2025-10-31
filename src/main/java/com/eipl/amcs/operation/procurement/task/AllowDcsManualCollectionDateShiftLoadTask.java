@@ -32,14 +32,6 @@ public class AllowDcsManualCollectionDateShiftLoadTask extends Task<List<AllowDc
     protected List<AllowDcsManualCollectionRange> call() throws Exception {
         try {
             AllowDcsManualCollectionRangeRepository repository = EmcsAppContext.getContext().getBean(AllowDcsManualCollectionRangeRepository.class);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.ALLOWDCSMANUALCOLLECTIONRANGE + "/findByDateShift";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString())
-//                    .queryParam("type", selectedIndex);
-//            ResponseEntity<AllowDcsManualCollectionRange[]> response = restTemplate.getForEntity(builder.toUriString(), AllowDcsManualCollectionRange[].class);
-
 
             List<AllowDcsManualCollectionRange> list = new ArrayList<>();
             if (selectedIndex == null || selectedIndex.toString().equalsIgnoreCase("")) {

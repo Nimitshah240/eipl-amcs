@@ -30,18 +30,12 @@ public class NishaProductSaleDbProcess extends Task<List<ProductSale>> {
 
             try (Connection connection = DriverManager.getConnection(urlDb, "", "Oracle8.0")) {
                 Statement statement = connection.createStatement();
-//
                 ResultSet resultSet = statement.executeQuery("select * from Kapat");
                 while (resultSet.next()) {
                     ProductSale migration = new ProductSale();
 
                     migration.setAmount(resultSet.getBigDecimal("Kapat1"));
                     migration.setAmount(resultSet.getBigDecimal("Payment"));
-
-
-                    // migration.setSaleDate(resultSet.getDate("date"));
-
-
                     list.add(migration);
                 }
                 resultSet.close();

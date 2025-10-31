@@ -1,6 +1,6 @@
 package com.eipl.amcs.base.service;
 
-import com.eipl.amcs.base.Identity;
+import com.eipl.amcs.base.model.Identity;
 
 import java.util.List;
 import java.util.Optional;

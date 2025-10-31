@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
@@ -84,7 +84,6 @@ public class ProductAddEditController implements MyInitialization {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        btnSaveUpdate.setDisable(true);
         this.resourceBundle = resourceBundle;
         loadUnit();
         setupComboBox();

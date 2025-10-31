@@ -21,23 +21,12 @@ public class MemberWiseBonusLoadTask extends Task<Map<String, Object>> {
         this.memberCode = memberCode;
     }
 
-
     @Override
     protected Map<String, Object> call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
             Map<String, Object> loadDataBonusResult = service.loadDataBonus(fromDate, toDate, memberCode);
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/loadbonus";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString())
-//                    .queryParam("memberCode", memberCode);
-//            ResponseEntity<Map> response = restTemplate.getForEntity(builder.toUriString(), Map.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
             if (loadDataBonusResult == null || loadDataBonusResult.isEmpty()) return null;
             return loadDataBonusResult;
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
+import com.eipl.amcs.base.model.BaseModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -18,11 +17,8 @@ import javax.validation.constraints.Size;
 @Table(name = "banks")
 public class Bank extends BaseModel {
     @Id
-    @Size(max = 4)
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
     private Short acNoLength;
     private Boolean checkedAcNoLength;

@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.share.model.Share;
@@ -41,6 +41,8 @@ import java.util.concurrent.ExecutionException;
 public class ShareDividendListController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<ShareDividend> propShareIssue;
+    private final List<Share> shareList = new ArrayList<>();
+    private final List<ShareDividend> shareDividendList = new ArrayList<>();
     ShareDividend shareDividend;
     @FXML
     private StackPane root;
@@ -49,7 +51,7 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
     @FXML
     private TableView<ShareDividend> tableShareDividend;
     @FXML
-    private TableColumn<ShareDividend, String> colVoucherNo, colConsumerName, colNoOfShare, colMemberCode, colMemberName, colDividend;
+    private TableColumn<ShareDividend, String> colVoucherNo, colNoOfShare, colMemberCode, colMemberName, colDividend;
     @FXML
     private TableColumn<ShareDividend, LocalDate> colDate;
     @FXML
@@ -59,10 +61,7 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
     private Stage stage;
-    private String name;
     private List<Member> listMembers;
-    private final List<Share> shareList = new ArrayList<>();
-    private final List<ShareDividend> shareDividendList = new ArrayList<>();
 
     public ShareDividendListController() {
         propShareIssue = new SimpleObjectProperty<>();
@@ -228,20 +227,6 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
 
     }
 
-    private void calculateDividend() {
-//        for (Share share : shareList) {
-//            if (cboxType.getSelectionModel().getSelectedIndex() == 0) {
-//                share.setXcol4(share.getShareAmount().multiply(new BigDecimal(txtValue.getText()).divide(new BigDecimal(100))).setScale(2, RoundingMode.HALF_EVEN).toString());
-//            } else {
-//                share.setXcol4(String.valueOf(share.getNoOfShare() * Double.parseDouble(txtValue.getText())));
-//
-//            }
-//        }
-//        tableShareDividend.setItems(FXCollections.observableList(shareList));
-//        setupTable();
-//        tableShareDividend.refresh();
-    }
-
     private void loadMember() {
         var task = new MemberLoadTask();
         task.setOnSucceeded(e -> {
@@ -261,13 +246,10 @@ public class ShareDividendListController implements MyInitialization, PopupCallb
             colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDisbursementDate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareAmount()));
-//        colMemberName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberName()));
             colMemberCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().getCode()));
             colNoOfShare.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfShare().toString()));
             colDividend.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDividendAmount().toString()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
-
-
             propShareIssue.bind(tableShareDividend.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("ShareDividend setuptable Exception");

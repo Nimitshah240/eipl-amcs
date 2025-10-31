@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -53,9 +52,6 @@ public class MilkCollectionDataMigrationHisaabMitraController implements MyIniti
     private List<Shift> shiftList;
     private List<Member> memberList;
     private List<MilkType> milkTypeList;
-
-
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
     private Stage stage;
     private List<MilkCollection> listMilkCollection;
 

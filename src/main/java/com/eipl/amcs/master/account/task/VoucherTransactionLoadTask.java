@@ -33,15 +33,6 @@ public class VoucherTransactionLoadTask extends Task<List<VoucherTransaction>> {
                     return null;
                 return list;
             }
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.VOUCHER + "/trans";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code);
-//            ResponseEntity<VoucherTransaction[]> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, VoucherTransaction[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("List<VoucherTransaction> fetched: {}", response.getBody());
-//            return response.getBody() != null ? Arrays.asList(response.getBody()) : null;
         } catch (Exception e) {
             LOGGER.error("List<VoucherTransaction> fetch", e);
         }

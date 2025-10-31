@@ -1,12 +1,10 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.BasicTaxDeserializer;
-import com.eipl.amcs.deserialize.TaxDeserializer;
-import com.eipl.amcs.deserialize.TaxDetailDeserializer;
-import com.eipl.amcs.serialize.BasicTaxSerialize;
-import com.eipl.amcs.serialize.TaxDetailSerialize;
-import com.eipl.amcs.serialize.TaxSerialize;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.BasicTaxDeserializer;
+import com.eipl.amcs.json.deserialize.TaxDeserializer;
+import com.eipl.amcs.json.serialize.BasicTaxSerialize;
+import com.eipl.amcs.json.serialize.TaxSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -26,7 +23,6 @@ import javax.validation.constraints.Size;
 public class TaxDetail extends BaseModelTxn {
 
     @Id
-    @Size(max = 10)
     private String code;
     private Short type; // 1-Addition, 2-Deduction
     private Double percentage;

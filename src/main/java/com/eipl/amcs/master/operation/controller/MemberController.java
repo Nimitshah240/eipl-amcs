@@ -3,8 +3,8 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.*;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -46,8 +46,14 @@ import static com.eipl.amcs.utils.CommonUtils.getMemberShortCode;
 
 public class MemberController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<Member> propMember;
+    private final Map<String, MemberDetail> mapDetails = new HashMap<>();
+    public List<Member> memberList = new ArrayList<>();
+    public PopupCallback callback;
     @FXML
     AnchorPane root;
+    @FXML
+    Button btnClose, btnAdd, btnDelete, btnEdit, btnImport, btnExport, btnClear;
     @FXML
     private TableView<Member> tableMember;
     @FXML
@@ -60,26 +66,18 @@ public class MemberController implements MyInitialization, PopupCallback {
     private TableColumn<Member, MilkType> colMilkType;
     @FXML
     private TableColumn<Member, MemberType> colMemberType;
-    @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnImport, btnExport, btnSearch, btnClear, btnOk, btnClose1;
-    @FXML
-    private DatePicker dpFromDate;
-
     private ResourceBundle resourceBundle;
-    private ObjectProperty<Member> propMember;
-
     private List<Gender> genderList;
     private List<MilkType> milkTypeList;
     private List<MemberType> memberTypeList;
     private List<Bank> bankList;
     private List<Member> listMember;
-    //    private Map<String, String> mapDetails;
-    private Map<String, MemberDetail> mapDetails = new HashMap<>();
-
-    public List<Member> memberList = new ArrayList<>();
-    private String memberCode;
     private Stage stage;
-    public PopupCallback callback;
+    private List<MemberDto> listMemberDto;
+
+    public MemberController() {
+        propMember = new SimpleObjectProperty<>();
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -90,10 +88,6 @@ public class MemberController implements MyInitialization, PopupCallback {
         return root;
     }
 
-    public MemberController() {
-        propMember = new SimpleObjectProperty<>();
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
@@ -102,13 +96,9 @@ public class MemberController implements MyInitialization, PopupCallback {
         loadData();
         btnClose.setOnAction(e ->
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
-//        btnSearch.setOnAction(e -> {
-//            memberCode = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtCode.getText()));
-//            tableMember.setItems(FXCollections.observableList(memberList.stream().filter(e1 -> e1.getCode().equalsIgnoreCase(memberCode)).collect(Collectors.toList())));
-//        });
 
         txtCode.textProperty().addListener((observable, oldValue, newValue) -> {
-            search((String) oldValue, (String) newValue);
+            search(oldValue, newValue);
         });
 
         btnClear.setOnAction(e -> {
@@ -120,24 +110,13 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_ADD"))
                 throw new UnAuthorizedAccessException();
-//            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-//            controller.setMember(null);
-//            MainApp.getContentPane().setCenter(controller.getRoot());
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", null, this);
         });
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_EDIT"))
                 throw new UnAuthorizedAccessException();
 
-//            if (propMember.get() != null) {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", propMember.get(), this);
-//            }else {
-//            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil()
-//                    .loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-//            controller.setMember(propMember.get());
-//            MainApp.getContentPane().setCenter((controller).getRoot());
-
-//            }
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_DELETE"))
@@ -319,7 +298,6 @@ public class MemberController implements MyInitialization, PopupCallback {
         alert.createAlert();
     }
 
-
     private void loadDetails() {
         var task = new AllMemberDetailsLoadTask();
         task.setOnSucceeded(e -> {
@@ -340,10 +318,6 @@ public class MemberController implements MyInitialization, PopupCallback {
         new Thread(task).start();
 
     }
-
-
-    private StringBuilder errorMsg;
-
 
     private void loadImportPreReq() {
         var task = new GenderLoadTask();
@@ -371,19 +345,8 @@ public class MemberController implements MyInitialization, PopupCallback {
                                             alert.createAlert();
                                             return;
                                         }
-
-//                                        if (!file.getName().contains(MainApp.identityDto.getSociety().getCode())) {
-//                                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("member"),
-//                                                    resourceBundle.getString("invalid.file"));
-//                                            alert.createAlert();
-//                                            return;
-//                                        }
-
                                         MainApp.paneDrop.setVisible(true);
-//                                        MainApp.lblMessage.setText("Preparing Members...");
                                         startImport(file);
-
-
                                     } catch (InterruptedException | ExecutionException ex) {
                                         ex.printStackTrace();
                                     }
@@ -407,8 +370,6 @@ public class MemberController implements MyInitialization, PopupCallback {
 
 
     }
-
-    private List<MemberDto> listMemberDto;
 
     private void startImport(File file) {
         var task = new MemberImportTask(file, milkTypeList, genderList, memberTypeList, bankList);
@@ -480,12 +441,10 @@ public class MemberController implements MyInitialization, PopupCallback {
             colFirstName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() + " " +
                     data.getValue().getMiddleName() + " " + data.getValue().getLastName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstNameLocal() != null ?
-                    data.getValue().getFirstNameLocal() : "" + " " +
-                    data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : "" + " " + data.getValue().getLastNameLocal()
+                    data.getValue().getFirstNameLocal() : " " +
+                    data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : " " + data.getValue().getLastNameLocal()
                     != null ? data.getValue().getLastNameLocal() : ""
             ));
-//        colMiddleName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMiddleName()));
-//        colLastName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLastName()));
             colAccountNo.setCellValueFactory(data -> new SimpleStringProperty(
                     mapDetails.get(data.getValue().getCode()) != null ?
                             mapDetails.get(data.getValue().getCode()).getAccountNo() != null ? mapDetails.get(data.getValue().getCode()).getAccountNo() : "" : ""));
@@ -530,7 +489,7 @@ public class MemberController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
-                        if (respDelete == null || respDelete.booleanValue() == false) {
+                        if (respDelete == null || !respDelete.booleanValue()) {
                             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
@@ -544,27 +503,5 @@ public class MemberController implements MyInitialization, PopupCallback {
                 new Thread(task).start();
             }
         }
-
     }
-
-    private void fetchMemberDetails() {
-    }
-
-
-//    void loadMemberDetail(){
-//        for (Member m : listMember) {
-//            var task=new MemberDetailLoadTask(m.getCode());
-//            task.setOnSucceeded(e->{
-//                try {
-//                    MemberDetail list =  task.get();
-//                    mapDetails.put(m.getCode(),list.getGender().getName());
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                } catch (ExecutionException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//            new Thread(task).start();
-//        }
-//    }
 }

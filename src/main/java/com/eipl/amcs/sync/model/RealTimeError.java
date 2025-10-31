@@ -1,27 +1,17 @@
 package com.eipl.amcs.sync.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class RealTimeError {
     private int code;
     private List<String> message;
-
-    public RealTimeError() {
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public List<String> getMessage() {
-        return message;
-    }
-
-    public void setMessage(List<String> message) {
-        this.message = message;
-    }
 }

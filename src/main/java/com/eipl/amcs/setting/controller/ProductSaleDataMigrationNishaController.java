@@ -34,23 +34,18 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class ProductSaleDataMigrationNishaController implements MyInitialization {
     @FXML
     StackPane root;
-//    @FXML
-//    TableView<ProductSale> tableData;
     @FXML
     TextField txtFilePath;
     @FXML
     Button btnClose, btnGenerate, btnBrowse;
-    String milkTypeStr = null;
     Random r = new Random();
     int result;
-    List<ProductSale> list = new ArrayList<>();
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
@@ -72,7 +67,6 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupTable();
-        //   btnSave.setOnAction(e -> startImportProcess());
         btnClose.setOnAction(e -> this.stage.close());
         btnGenerate.setOnAction(e -> {
             loadImportPreReq(txtFilePath.getText());
@@ -91,36 +85,6 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
             selectedFilePath = file.getAbsolutePath();
         });
     }
-
-
-//    @Override
-//    public void setupTable() {
-//      //  colSaleDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaleDate().toLocalDate()));
-//       // colSaleDate.setCellFactory(new LocalDateCellFactory<>());
-//        colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>((data.getValue().getAmount())));
-//        colRate.setCellValueFactory(data -> new SimpleObjectProperty<>((data.getValue().getRate())));
-//        colQty.setCellValueFactory(data -> new SimpleObjectProperty<>((data.getValue().getQuantity())));
-//    }
-
-
-//    private void startImportProcess() {
-//        var task = new ProductSaleMigrationListSaveTask(
-//                list, list.size());
-//        task.setOnSucceeded(e -> {
-//            try {
-//                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
-//                        resourceBundle.getString("successful"));
-//                alert.createAlert();
-//                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/DataMigration.fxml")));
-//                System.out.println("DONE");
-//                this.stage.close();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        task.valueProperty().addListener((ChangeListener<? super Integer>) (observable, oldValue, newValue) -> System.out.println("NEW Val: " + newValue));
-//        new Thread(task).start();
-//    }
 
 
     public void loadImportPreReq(String path) {
@@ -215,27 +179,10 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
                     mapMilkType.put(milkType.getName().toUpperCase().substring(0, 1), milkType.getCode());
                 }
 
-
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddMMyy");
-
                 LocalTime morningTime = LocalTime.of(6, 0);
                 LocalTime eveningTime = LocalTime.of(18, 0);
-                //try (Connection connection = DriverManager.getConnection(connectionUrl);
-                //  Statement stmt = connection.createStatement();) {
 
                 try (Connection connection = DriverManager.getConnection(urlDb, "", "Oracle8.0")) {
-//                    Statement statement = connection.createStatement();
-//                    ResultSet resultSet = statement.executeQuery("select * from LocalSales");
-//                    List<String> listMonth = new ArrayList<>();
-////                    while (resultSet.next()) {
-////                        listMonth.add(resultSet.getString("date"));
-////                    }
-////                    resultSet.close();
-//                    statement.close();
-//
-//                    // select data
-//                    while (resultSet.next()) {
-//                        System.out.println("Starting data for: " + month);
                     Statement statement = connection.createStatement();
 
                     ResultSet resultSet = statement.executeQuery("select * from Kapat");
@@ -266,8 +213,6 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
                         int result2 = r.nextInt(10 - 1) + 1;
                         int result3 = r.nextInt(10 - 1) + 1;
                         map.put("code", resultSet.getString("Date").substring(0, 10) + "-" + ((BigDecimal) map.get("qty")).intValue() + "-" + result2 + "-" + result3 + "-" + result);
-                        //  System.out.println(map.get("Memcode"));
-                        //   map.put("code",((BigDecimal) map.get("qty")).intValue()+result2+"-"+result3+"-"+date+"-"+i+result);
                         System.out.println(map.get("code"));
                         mapCollection.add(map);
                     }
@@ -293,23 +238,9 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
                                 pstmt.setObject(3, map.get(""));
                                 pstmt.setString(4, String.valueOf(1));
                                 pstmt.setInt(5, 2);
-//                                    pstmt.setShort(7, (short) 1);
-//                                    pstmt.setShort(8, (short) 1);
 
                                 pstmt.setBigDecimal(6, ((BigDecimal) map.get("rate")).setScale(2, RoundingMode.HALF_UP));
                                 pstmt.setBigDecimal(7, (BigDecimal) map.get("amount"));
-
-//                                    pstmt.setBigDecimal(12, BigDecimal.valueOf(11));
-//                                    pstmt.setInt(13,2);
-//                                    pstmt.setInt(14, 1);
-//                                    pstmt.setString(15, map.get("unioncode").toString());
-//                                    pstmt.setInt(16, (int) 1);
-//                                    pstmt.setBigDecimal(17, BigDecimal.ONE);
-//                                    pstmt.setInt(18, (int) 1);
-//                                    pstmt.setString(19, MainApp.identityDto.getSociety().getCode());
-//                                    pstmt.setString(20, MainApp.identityDto.getDock().getDockNo());
-//                                    pstmt.setObject(21, LocalDateTime.now());
-//                                    pstmt.setString(22, "MIGR");
                                 pstmt.addBatch();
                             }
                             pstmt.executeBatch();
@@ -327,9 +258,6 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
         }
     }
 }

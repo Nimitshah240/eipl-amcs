@@ -50,7 +50,6 @@ import java.util.stream.Collectors;
 public class InsuranceDetailController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<InsuranceDetail> propInsuranceDetailDto;
-    //    private List<InsuranceDetail> insuranceDetailList;
     private final Map<String, InsuranceDetail> mapDetails = new HashMap<>();
     public List<InsuranceDetail> insuranceDetailList = new ArrayList<>();
     public List<Gender> genderList = new ArrayList<>();
@@ -74,7 +73,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
     @FXML
     private Label lblInsurance;
     private ResourceBundle resourceBundle;
-    private String name;
     private InsuranceMaster insuranceMaster = null;
 
     public InsuranceDetailController() {
@@ -89,7 +87,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-
 
         txtMemberCode.textProperty().addListener((observable, oldValue, newValue) -> {
             search(oldValue, newValue);
@@ -122,9 +119,7 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/insurance/Insurance.fxml")));
         });
-//        btnReport.setOnAction(e -> {
-//            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InsuranceReport", null, this);
-//        });
+
         btnAdd.setOnAction(e -> {
             if (insuranceDetailSummary != null && LocalDate.now().isAfter(insuranceDetailSummary.getFromDate().minusDays(1)) && LocalDate.now().isBefore(insuranceDetailSummary.getToDate().plusDays(1))) {
                 Map<String, Object> map = new HashMap<>();
@@ -168,7 +163,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
             }
         });
         FocusUtils.requestFocus(btnAdd);
-//        loadData();
     }
 
     public void search(String oldVal, String newVal) {
@@ -203,13 +197,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
                 var task = new InsuranceDetailDeleteTask(dto);
                 task.setOnSucceeded(e -> {
                     try {
-//                        Boolean respDelete = task.get();
-//                        if (respDelete == null || respDelete.booleanValue() == false) {
-//                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("InsuranceDetail"),
-//                                    resourceBundle.getString("error.occurred"));
-//                            alert1.createAlert();
-//                            return;
-//                        }
                         loadData();
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -298,10 +285,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
                         InsuranceDetail dtl = mapDetails.get(item.getInsuranceDetailCode());
 
                         switch (columnTitle) {
-//                            case "Insurance Description":
-//                                cell = row.createCell(cellValueHeading++);
-//                                cell.setCellValue(insuranceMaster.getInsuranceDescription());
-//                                break;
                             case "Member Code":
                                 cell = row.createCell(cellValueHeading++);
                                 cell.setCellValue(item.getMemberCode());
@@ -448,7 +431,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
 
             colMemberName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberName()));
             colMemberId.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberId()));
-//            colSrNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSrNo()));
             colSrNo.setCellFactory(column -> new TableCell<InsuranceDetail, String>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
@@ -467,36 +449,7 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
             });
 
             colNomineemembername.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNomineeMemberName()));
-//            colDateOfJoiningScheme.setCellValueFactory(data ->
-//                    new SimpleObjectProperty<>(data.getValue().getDateOfJoiningScheme().format(AppConstant.DATE_FORMATTER))
-//            );
             colDateOfJoiningScheme.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDateOfJoiningScheme().format(AppConstant.DATE_FORMATTER)));
-
-// Update Age Base On InsuranceMaster StartDate
-
-//            colAge.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAge()));
-//            colAge.setCellFactory(column -> new TableCell<InsuranceDetail, Integer>() {
-//                @Override
-//                protected void updateItem(Integer age, boolean empty) {
-//                    super.updateItem(age, empty);
-//                    if (empty || age == null) {
-//                        setText(null);
-//                        setStyle("");
-//                    } else {
-//                        setText(age.toString());
-//
-//                        int minAge = insuranceMaster.getMemberMinAge();
-//                        int maxAge = insuranceMaster.getMemberMaxAge();
-//
-//                        if (age < minAge || age > maxAge) {
-//                            setStyle("-fx-text-fill: red;");
-//                        } else {
-//                            setStyle("-fx-text-fill: black;");
-//                        }
-//                    }
-//                }
-//            });
-
 
             colAge.setCellValueFactory(data -> {
                 String decryptedDob = EncryptionUtil.decrypt(data.getValue().getDob());
@@ -539,17 +492,9 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
                     if (empty || item == null) {
                         setStyle("");
                     } else {
-//                        int age = item.getAge();
                         int age = Period.between(LocalDate.parse(EncryptionUtil.decrypt(item.getDob())), insuranceMaster.getInsuranceStartDate()).getYears();
                         int minAge = insuranceMaster.getMemberMinAge();
                         int maxAge = insuranceMaster.getMemberMaxAge();
-
-//                        if (age < minAge || age > maxAge) {
-////                            setStyle("-fx-background-color: #ffcccc;");
-//                            setStyle("-fx-background-color: #ffcccc; -fx-text-fill: black;");
-//                        } else {
-//                            setStyle("");
-//                        }
 
                         // above and equal age min and max age calculation
                         if (age <= minAge || age >= maxAge) {
@@ -570,7 +515,6 @@ public class InsuranceDetailController implements MyInitialization, PopupCallbac
                         } else {
                             setStyle("");
                         }
-
                     }
                 }
             });

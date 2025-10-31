@@ -1,6 +1,6 @@
 package com.eipl.amcs.auth.dto;
 
-import com.eipl.amcs.base.Identity;
+import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;

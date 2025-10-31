@@ -22,19 +22,10 @@ public class MemberBillFinalizeLoadTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
-
             SocietyPaymentCycle paymentCycle = dto.getPaymentCycle();
             List<String> memberList = dto.getMemberCodeList();
 
             return service.finalize(paymentCycle, memberList);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING +"/finalize";
-//            ResponseEntity<Boolean> response =
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), Boolean.class);
-//            if (response == null)
-//                return null;
-//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

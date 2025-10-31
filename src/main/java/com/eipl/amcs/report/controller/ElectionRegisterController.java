@@ -105,11 +105,6 @@ public class ElectionRegisterController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
-    private boolean validate() {
-        return true;
-    }
-
-
     public void loadData() {
         var task1 = new MilkTypeLoadTask();
         task1.setOnSucceeded(e -> {

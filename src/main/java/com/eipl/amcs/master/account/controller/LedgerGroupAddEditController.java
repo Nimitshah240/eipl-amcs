@@ -9,8 +9,8 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.converter.LedgerTypeConvertor;
 import com.eipl.amcs.master.account.model.LedgerGroup;
 import com.eipl.amcs.master.account.model.LedgerType;
@@ -102,17 +102,12 @@ public class LedgerGroupAddEditController implements MyInitialization {
 
 
     public void loadControls() {
-//         cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
         cboxLedgertype.getSelectionModel().select(dto.getLedgerType());
         txtName.setText(dto.getName());
         txtLocalName.setText(dto.getNameLocal());
         txtCode.setText(dto.getCode().toString());
-        //   txtCode.setText(CommonUtils.getMemberShortCode(dto.getMember().getCode()));
-
-
     }
 
-    //
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {

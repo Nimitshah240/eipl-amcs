@@ -4,7 +4,6 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -24,7 +23,4 @@ public interface ProductReceiptRepository extends BaseRepository<ProductReceipt,
 
     @EntityGraph(attributePaths = {"customer", "union", "society"})
     List<ProductReceipt> findByGrnDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
-
-    @Query(value = "SELECT count(*) FROM ProductReceipt prm WHERE prm.grnNo != ?1 AND  prm.challanNo = ?2")
-    ProductReceipt checkChallanNo(String str1, String str2);
 }

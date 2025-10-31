@@ -22,12 +22,6 @@ public class MemberBillTransactionSaveTask extends Task<List<MemberBillTransacti
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             List<MemberBillTransaction> memberBillTxnList = service.saveTrans(dto);
 
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER_BILLING+"/savetrans";
-//            ResponseEntity<MemberBillTransaction[]> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(dto), MemberBillTransaction[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return Arrays.asList(response.getBody());
             if (memberBillTxnList == null || memberBillTxnList.isEmpty()) return null;
             return memberBillTxnList;
         } catch (Exception e) {

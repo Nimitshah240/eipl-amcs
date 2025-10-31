@@ -3,10 +3,10 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.task.BillCriteriaDeleteTask;
 import com.eipl.amcs.master.operation.task.BillCriteriaLoadTask;
@@ -53,13 +53,6 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
         return root;
     }
 
-    /**
-     * @param url
-     * @param resourceBundle
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - set actions on add,edit and delete btn.
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
@@ -98,11 +91,6 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
         });
     }
 
-    /**
-     * @updatedBy Nimit Shah
-     * @updatedOn - 30-06-2025
-     * @update - added line to bind the selected bill criteria to the propBillCriteriaDto and add 3 more columns.
-     */
     @Override
     public void setupTable() {
         try {
@@ -136,13 +124,6 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
-    /**
-     * Delete bill criteria data
-     * This method calls the billCriteriaDeleteLoadTask to delete bill criteria and then reload new data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void deleteData() {
         try {
@@ -176,12 +157,6 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
         }
     }
 
-    /**
-     * This method helps to reload data after saving or updating bill criteria.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void reloadData(boolean flag) {
         if (flag) loadData();

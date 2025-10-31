@@ -143,13 +143,9 @@ public class StaffController implements MyInitialization, PopupCallback {
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
                     }
-//                    loadData();
-//                    tableStaffMember.refresh();
-//                    setupTable();
                 });
                 new Thread(task).start();
             }
         }
     }
-
 }

@@ -1,11 +1,9 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -15,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -26,11 +23,8 @@ import javax.validation.constraints.Size;
 public class Tax extends BaseModel {
 
     @Id
-    @Size(max = 10)
     private String code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
     private Integer entryType; //1-union
 

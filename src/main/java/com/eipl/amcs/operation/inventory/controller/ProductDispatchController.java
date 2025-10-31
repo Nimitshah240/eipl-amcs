@@ -66,7 +66,6 @@ public class ProductDispatchController implements MyInitialization {
 
         this.resourceBundle = resourceBundle;
 
-
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         loadData();
@@ -82,8 +81,6 @@ public class ProductDispatchController implements MyInitialization {
             colChallanDate.setCellFactory(new LocalDateCellFactory<>());
             colChallanNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProductDispatch().getChallanNo()));
             colQty.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getDispatchQty())));
-//            colRate.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getRate())));
-//            colAmount.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAmount())));
             colProduct.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getProduct())));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getStatus())));
 
@@ -109,10 +106,5 @@ public class ProductDispatchController implements MyInitialization {
             }
         });
         new Thread(task).start();
-    }
-
-    @Override
-    public void deleteData() {
-
     }
 }

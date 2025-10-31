@@ -59,7 +59,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
 
                     DataFormatter formatter = new DataFormatter();
                     String val = formatter.formatCellValue(dataSheet.getRow(i).getCell(0));
-//                Cell cellCode = row.getCell(0);
                     String code = val;
                     if (code == null && code.isEmpty()) {
                         i += 1;
@@ -73,7 +72,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     }
 
                     // First name
-//                Cell cellFirstName = row.getCell(1);
                     String cellFirstName = formatter.formatCellValue(dataSheet.getRow(i).getCell(1));
 
                     String firstName = cellFirstName;
@@ -83,7 +81,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     }
 
                     // Middle name
-//                Cell cellMiddleName = row.getCell(2);
                     String cellMiddleName = formatter.formatCellValue(dataSheet.getRow(i).getCell(2));
 
                     String middleName = null;
@@ -94,7 +91,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     }
 
                     // Last name
-//                Cell cellLastName = row.getCell(3);
                     String cellLastName = formatter.formatCellValue(dataSheet.getRow(i).getCell(3));
 
                     String lastName = null;
@@ -103,12 +99,7 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
-//                if (lastName == null || lastName.isEmpty()) {
-//                    continue;
-//                }
 
-                    // First name local
-//                Cell cellFirstNameLocal = row.getCell(4);
                     String cellFirstNameLocal = formatter.formatCellValue(dataSheet.getRow(i).getCell(4));
                     String firstNameLocal = null;
                     try {
@@ -118,7 +109,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     }
 
                     // Middle name local
-//                Cell cellMiddleNameLocal = row.getCell(5);
                     String cellMiddleNameLocal = formatter.formatCellValue(dataSheet.getRow(i).getCell(5));
                     String middleNameLocal = null;
                     try {
@@ -129,7 +119,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
 
                     // Last name local
 
-//                Cell cellLastNameLocal = row.getCell(6);
                     String cellLastNameLocal = formatter.formatCellValue(dataSheet.getRow(i).getCell(6));
                     String lastNameLocal = null;
                     try {
@@ -173,7 +162,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     }
 
                     // Mobile no
-//                Cell cellMobile = row.getCell(9);
                     String cellMobile = formatter.formatCellValue(dataSheet.getRow(i).getCell(9));
                     String mobile = null;
                     try {
@@ -181,9 +169,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
-//                    if (mobile == null || mobile.isEmpty()) {
-//                        continue;
-//                    }
 
                     // Gender
                     Cell cellGender = row.getCell(10);
@@ -191,7 +176,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     if (cellGender != null)
                         genderStr = cellGender.getStringCellValue() != null ? cellGender.getStringCellValue() : "M";
                     else genderStr = "M";
-//                    String genderStr = cellGender.getStringCellValue() != null ? cellGender.getStringCellValue() : "M";
                     Gender gender = null;
                     if (genderStr == null || genderStr.isEmpty())
                         gender = genderList.get(0);
@@ -210,10 +194,7 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                         if (bankList != null) {
                             if (cellBank != null) {
                                 String bankStr = cellBank.getStringCellValue() != null ? cellBank.getStringCellValue() : null;
-                                if (bankStr == null || bankStr.isEmpty())
-//                                bank = bankList.get(0);
-                                {
-                                } else {
+                                if (bankStr != null || !bankStr.isEmpty()) {
                                     bank = bankList.stream().filter(p -> bankStr.equalsIgnoreCase(p.getName()))
                                             .findAny().orElse(bankList.get(0));
                                     if (bank == null)
@@ -230,7 +211,6 @@ public class MemberImportTask extends Task<List<MemberDto>> {
                     String cellAccNo = formatter.formatCellValue(dataSheet.getRow(i).getCell(11));
 
 
-//                Cell cellAccNo = row.getCell(11);
                     String AccNo = cellAccNo;
 
                     Cell cellIfsc = row.getCell(13);

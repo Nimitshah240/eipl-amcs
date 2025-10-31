@@ -1,10 +1,8 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.TaxDetailDeserializer;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.TaxDetailSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.TaxDetailDeserializer;
+import com.eipl.amcs.json.serialize.TaxDetailSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -12,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,7 +20,6 @@ import javax.validation.constraints.Size;
 public class TaxDepend extends BaseModel {
 
     @Id
-    @Size(max = 10)
     private String code;
     private Short steps;
 

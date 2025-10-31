@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class ShareRateController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<ShareRate> propLocalMilkSaleRate;
     @FXML
     StackPane root;
     @FXML
@@ -39,9 +40,7 @@ public class ShareRateController implements MyInitialization, PopupCallback {
     TableColumn<ShareRate, LocalDate> colWefDate;
     @FXML
     Button btnClose, btnAdd, btnDelete;
-
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<ShareRate> propLocalMilkSaleRate;
 
     public ShareRateController() {
         propLocalMilkSaleRate = new SimpleObjectProperty<>();

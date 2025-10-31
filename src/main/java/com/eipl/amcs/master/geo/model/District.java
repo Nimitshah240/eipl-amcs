@@ -1,10 +1,8 @@
 package com.eipl.amcs.master.geo.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.LedgerDeserializer;
-import com.eipl.amcs.deserialize.StateDeserializer;
-import com.eipl.amcs.serialize.LedgerSerialize;
-import com.eipl.amcs.serialize.StateSerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.StateDeserializer;
+import com.eipl.amcs.json.serialize.StateSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -13,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 
 @SuppressWarnings("serial")
@@ -25,11 +22,8 @@ import javax.validation.constraints.Size;
 public class District extends BaseModel {
 
     @Id
-    @Size(max = 3)
     private String code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)

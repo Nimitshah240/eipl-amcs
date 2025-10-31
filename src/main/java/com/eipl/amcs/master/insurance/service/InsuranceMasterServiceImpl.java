@@ -110,7 +110,6 @@ public class InsuranceMasterServiceImpl implements InsuranceMasterService {
         return insuranceDetailRepository.customUpdate(insuranceDetail, identityInfo);
     }
 
-
     @Override
     public List<InsuranceDetail> findDeletedInsuranceDetailByInsuranceMaster(Integer insuranceMasterCode) {
         return insuranceDetailRepository.findByInsuranceMasterCodeAndIsDelete(insuranceMasterCode, true, Sort.by("memberCode"));

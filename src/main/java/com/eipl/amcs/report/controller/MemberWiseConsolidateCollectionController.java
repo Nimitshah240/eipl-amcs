@@ -50,7 +50,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
     private ComboBox<MilkType> cboxMilkType, cboxMilkType1;
     private List<MilkType> listMilkType;
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -101,7 +100,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
     }
 
     private void validateAndGenerateReport() {
-        //(IN p_society_code varchar(25),IN p_member_code varchar(25),IN p_from_date date,IN p_to_date date,IN p_milk_type_code INT,IN p_locale VARCHAR(20))
         Map<String, Object> params = new HashMap<>();
         JasperPrint print = null;
         switch (cboxType.getSelectionModel().getSelectedIndex() + 1) {
@@ -135,7 +133,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
     }
 
     private void validateAndGenerateReport1() {
-        //(IN p_society_code varchar(25),IN p_member_code varchar(25),IN p_from_date date,IN p_to_date date,IN p_milk_type_code INT,IN p_locale VARCHAR(20))
         Map<String, Object> params = new HashMap<>();
         JasperPrint print = null;
         switch (cboxType1.getSelectionModel().getSelectedIndex() + 1) {
@@ -166,10 +163,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 break;
         }
         JasperViewer.viewReport(print, false);
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     @Override
@@ -238,5 +231,4 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
         });
         new Thread(task2).start();
     }
-
 }

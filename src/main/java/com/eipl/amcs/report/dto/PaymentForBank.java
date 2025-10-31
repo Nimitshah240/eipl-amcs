@@ -28,29 +28,19 @@ public class PaymentForBank {
     public BigDecimal milk_amount;
     public BigDecimal other_ded_amount;
 
-
     public String getSoc_name() {
         return soc_name;
     }
 
-    public void setSoc_name(String soc_name) {
-        this.soc_name = soc_name;
-    }
     public String getSoc_code() {
         return soc_code;
     }
 
-    public void setSoc_code(String soc_code) {
-        this.soc_code = soc_code;
-    }
 
     public String getPayment_period() {
         return payment_period;
     }
 
-    public void setPayment_period(String payment_period) {
-        this.payment_period = payment_period;
-    }
 
     public String getBank_name() {
         return bank_name;

@@ -32,23 +32,6 @@ public class DistrictLoadTask extends Task<List<District>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//        try {
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.DISTRICT;
-//            ResponseEntity<District[]> response = null;
-//
-//            if (state != null) {
-//                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                        .queryParam("stateCode", state.getCode());
-//                response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, null, District[].class);
-//            } else {
-//                response = restTemplate.getForEntity(url, District[].class);
-//            }
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("Districts fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("Districts fetch", e);
         }

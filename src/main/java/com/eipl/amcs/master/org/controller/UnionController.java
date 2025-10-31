@@ -3,8 +3,6 @@ package com.eipl.amcs.master.org.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
-import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.task.UnionLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,11 +26,7 @@ public class UnionController implements MyInitialization {
     @FXML
     TableView<Union> tableUnion;
     @FXML
-    TableColumn<Union, String> colCode, colCity, colName, colLocalName, colCodeEx, colStatus, colRegistrationCode, colPhoneNo, colPinCode, colContactPerson, colEmail, colContactPersonMobileNo, colAcNo, colIfsc;
-    @FXML
-    TableColumn<Union, Branch> colBranch;
-    @FXML
-    TableColumn<Union, Bank> colBank;
+    TableColumn<Union, String> colCode, colCity, colName, colLocalName, colCodeEx, colStatus, colRegistrationCode, colPhoneNo, colContactPerson, colContactPersonMobileNo;
     @FXML
     TableColumn<Union, LocalDate> colRegistrationDate;
     @FXML

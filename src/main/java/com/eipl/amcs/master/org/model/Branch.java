@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.model.SubDistrict;
 import com.eipl.amcs.master.geo.model.Village;
-import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -25,17 +24,11 @@ import javax.validation.constraints.Size;
 @Table(name = "branches")
 public class Branch extends BaseModel {
     @Id
-    @Size(max = 9)
     private String code;
-    @Size(max = 200)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
-    @Size(max = 250)
     private String address;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 6)
     private String pincode;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 
 public class VoucherSubLedgerPopupController implements MyInitialization {
     private static final Logger LOGGER = LoggerFactory.getLogger(VoucherSubLedgerPopupController.class);
-    private final StringBuilder errorMsg = null;
     @FXML
     private StackPane root;
     @FXML
@@ -95,7 +94,5 @@ public class VoucherSubLedgerPopupController implements MyInitialization {
         colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSubLedger().getCode()));
     }
-
-
 }
 

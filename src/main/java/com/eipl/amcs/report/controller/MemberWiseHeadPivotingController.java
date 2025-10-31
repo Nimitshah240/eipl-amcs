@@ -37,7 +37,6 @@ public class MemberWiseHeadPivotingController implements MyInitialization {
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
 
     private ResourceBundle resourceBundle;
-    private StringBuilder errorMsg;
 
     @Override
     public Node getRoot() {
@@ -69,10 +68,6 @@ public class MemberWiseHeadPivotingController implements MyInitialization {
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_HEAD_PIVOTING, params);
         JasperViewer.viewReport(print, false);
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     @Override

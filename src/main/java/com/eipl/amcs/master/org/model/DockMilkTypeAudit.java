@@ -1,11 +1,11 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.DockDeserializer;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.DockDeserializer;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.serialize.DockSerialize;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.serialize.DockSerialize;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -27,7 +26,6 @@ public class DockMilkTypeAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 15)
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)

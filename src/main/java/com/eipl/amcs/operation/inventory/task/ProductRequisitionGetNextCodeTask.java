@@ -12,12 +12,6 @@ import java.time.LocalDate;
 public class ProductRequisitionGetNextCodeTask extends Task<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductRequisitionGetNextCodeTask.class);
 
-//	private final String code;
-
-//	public ProductReceiptGetNextCodeTask(String code) {
-//		this.code = code;
-//	}
-
     public ProductRequisitionGetNextCodeTask() {
     }
 

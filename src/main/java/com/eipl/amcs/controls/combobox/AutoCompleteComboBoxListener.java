@@ -59,16 +59,6 @@ public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
             caretPos = comboBox.getEditor().getCaretPosition();
         }
 
-//        if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.LEFT || event.isControlDown()
-//                || event.getCode() == KeyCode.HOME || event.getCode() == KeyCode.END || event.getCode() == KeyCode.TAB
-//                || event.getCode() == KeyCode.ENTER) {
-//            if (event.getCode() == KeyCode.ENTER) {
-//                ((ComboBoxBaseSkin) this.comboBox.getSkin()).getBehavior().traverseNext();
-//                return;
-//            }
-//            return;
-//        }
-
         ObservableList<T> list = FXCollections.observableArrayList();
         for (int i = 0; i < data.size(); i++) {
             if (this.comboBox.getConverter().toString(data.get(i)).toLowerCase()

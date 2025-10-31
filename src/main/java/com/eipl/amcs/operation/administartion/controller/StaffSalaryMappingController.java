@@ -6,8 +6,8 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.master.account.model.StaffSalaryHead;
 import com.eipl.amcs.master.account.model.StaffSalaryMapping;
@@ -36,6 +36,7 @@ import java.util.concurrent.ExecutionException;
 
 public class StaffSalaryMappingController implements MyInitialization, PopupCallback {
 
+    private final StringBuilder errorMsg = null;
     @FXML
     StackPane root;
     @FXML
@@ -53,12 +54,10 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     @FXML
     ComboBox<StaffMember> cboxStaff;
     private List<StaffMember> listStaffMembers;
-    private StaffSalaryMapping dto;
     private List<StaffSalaryHead> listStaffSalaryHead;
     private List<StaffSalaryMapping> staffSalaryMappingList;
     @FXML
     private GridPane gridMaster;
-    private final StringBuilder errorMsg = null;
     private ResourceBundle resourceBundle;
 
 
@@ -132,7 +131,6 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
         try {
             colSalaryHead.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colHeadType.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getType() == 0 ? "DEDUCTION" : "ADDITION"));
-//        colHeadType.setCellValueFactory(data->new SimpleObjectProperty(data.getValue().getType()));
             colAmount.setCellValueFactory(data -> new SimpleStringProperty(""));
             colAmount.setCellFactory(TextFieldTableCell.forTableColumn());
             colAmount.setOnEditCommit(e -> {
@@ -152,16 +150,6 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
             e.printStackTrace();
         }
     }
-
-    private boolean validate() {
-
-//        if (txtMinuteOfMeeting.getText().trim() == null || txtMinuteOfMeeting.getText().trim().isEmpty())
-//            errorMsg.append(resourceBundle.getString("minutesofmeetingnullerror") + "\n");
-
-        return errorMsg.length() == 0;
-
-    }
-
 
     @Override
     public void saveData() {
@@ -196,6 +184,4 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     public void setupComboBox() {
         cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
     }
-
-
 }

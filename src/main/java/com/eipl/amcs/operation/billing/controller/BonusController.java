@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -48,6 +48,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public class BonusController extends SocietyPaymentCycleEditController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<Bonus> propBonus;
     public List<MilkType> milkTypeList = new ArrayList<>();
     BigDecimal qty = BigDecimal.ZERO;
     BigDecimal amt = BigDecimal.ZERO;
@@ -56,12 +57,11 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnSaveUpdate, btnEdit, btnClose, btnExport;
+    private Button btnGenerate, btnSaveUpdate, btnClose, btnExport;
     @FXML
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private ComboBox<String> cboxType, cboxCriteria;
-    private final StringBuilder errorMsg = null;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
     private Stage stage;
@@ -78,7 +78,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     private BonusSummary bonusSummary;
     private List<Bonus> bonusList;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<Bonus> propBonus;
     private BonusDto dto = null;
     private List<String> criteriaList;
     private List<String> typeList;
@@ -152,8 +151,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
 
         btnGenerate.setDisable(!(this.bonusSummary == null || bonusSummary.getStatus() < (short) 2));
         btnGenerate.setOnAction(e -> {
-//            if (!MainApp.user.getPermissions().contains("ACTION_BONUS_GENERATE"))
-//                throw new UnAuthorizedAccessException();
             if (bonusSummary != null) {
                 MyAlert calert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("bonus"), resourceBundle.getString("prevdatawillbedeleted"));
                 Optional<ButtonType> resp = calert.createConfirmationAlert();
@@ -187,16 +184,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
         btnSaveUpdate.setOnAction(event -> {
             saveData();
         });
-
-//        propBonus.addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                btnEdit.setDisable(false);
-//            } else {
-//                btnEdit.setDisable(true);
-//            }
-//        });
-
-
     }
 
     private void loadData(LocalDateTime value, LocalDateTime value1, String type, String criteria, String bonusValue, MilkType milkType) {
@@ -473,5 +460,4 @@ public class BonusController extends SocietyPaymentCycleEditController implement
         });
         new Thread(task).start();
     }
-
 }

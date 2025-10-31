@@ -130,10 +130,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
         new Thread(task).start();
     }
 
-    private void loadVoucherSubLedger(VoucherTransaction voucherTransaction) {
-
-    }
-
     @Override
     public void loadControls() {
         txtBillRefNo.setText(voucher.getBillNo());
@@ -162,7 +158,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
             lblCredit.setText(String.valueOf(totalCredit));
             lblDebit.setText(String.valueOf(totalDebit));
         });
-//        voucherTransactionList = new ArrayList<>();
         propVoucherTransactionDto.addListener((observable, oldValue, newValue) -> {
             try {
                 propVoucherTransactionDto1 = new SimpleObjectProperty<>();
@@ -170,8 +165,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
             } catch (Exception w) {
 
             }
-            //                btnEdit.setDisable(false);
-            //                btnEdit.setDisable(true);
             btnDelete.setDisable(newValue == null);
         });
         propVoucherTransactionDto1.addListener((observable, oldValue, newValue) -> {
@@ -179,15 +172,10 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
 
                 propVoucherTransactionDto = new SimpleObjectProperty<>();
                 propVoucherTransactionDto.bind(tableData.getSelectionModel().selectedItemProperty());
-//                Platform.runLater(()->{
-//                    tableData.getSelectionModel().clearSelection();
-//                });
 
             } catch (Exception w) {
 
             }
-            //                btnEdit.setDisable(false);
-            //                btnEdit.setDisable(true);
             btnDelete.setDisable(newValue == null);
         });
 
@@ -226,17 +214,6 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
                 alert.createAlert();
             }
         });
-//        btnEdit.setOnAction(e -> {
-//            voucherTransaction = propVoucherTransactionDto.get();
-//            cboxLedger.setValue(voucherTransaction.getLedger());
-//            cboxType.setValue(voucherTransaction.getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit"));
-//            txtAmount.setText(voucherTransaction.getAmount().toString());
-//            txtNarration.setText(voucherTransaction.getNarration());
-//            tableData.setItems(null);
-//            voucherTransactionList.remove(voucherTransaction);
-//            tableData.setItems(FXCollections.observableList(voucherTransactionList));
-//            gridTransaction.setDisable(false);
-//        });
         btnSave.setOnAction(e -> {
             saveData();
         });
@@ -259,10 +236,8 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
         propVoucherTransactionDto.bind(tableData.getSelectionModel().selectedItemProperty());
         btnDelete.setOnAction(e -> {
             deleteData();
-//            Platform.runLater(() -> {
             lblCredit.setText(String.valueOf(totalCredit));
             lblDebit.setText(String.valueOf(totalDebit));
-//            });
             tableData.setItems(FXCollections.observableArrayList(voucherTransactionList.stream().filter(VoucherTransaction::getCreditDebit).collect(Collectors.toList())));
             tableData1.setItems(FXCollections.observableArrayList(voucherTransactionList.stream().filter(e1 -> !e1.getCreditDebit()).collect(Collectors.toList())));
         });
@@ -453,19 +428,12 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
 
     @Override
     public void setupTable() {
-//        colLedgerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getCode()));
         colLedger.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getName()));
-//        colNarration.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarration()));
         colAmount.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAmount().toString()));
         colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit")));
-//        propVoucherTransactionDto1.bind(tableData1.getSelectionModel().selectedItemProperty());
-//        colLedgerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getCode()));
         colLedger1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().getName()));
-//        colNarration.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarration()));
         colAmount1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAmount().toString()));
         colType1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit")));
-
-
     }
 
 
@@ -544,6 +512,4 @@ public class VoucherAddEditController implements MyInitialization, PopupCallback
         txtAmount.setText("0");
         txtNarration.setText("");
     }
-
-
 }

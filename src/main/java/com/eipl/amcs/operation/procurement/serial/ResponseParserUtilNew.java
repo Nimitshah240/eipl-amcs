@@ -29,7 +29,6 @@ public class ResponseParserUtilNew {
 
         // setting up for calculations through regular expression
         try {
-//            FAT(4,2)SNF(4,2)PRT(4,2)AWM(4,2)DEN(4,2)CLK(4,2)CHK(5,0)
             while (regExpression.length() > 1) {
                 try {
                     endIndex += CommonUtils.strToInteger(regExpression.substring(regExpression.indexOf("(") + 1, regExpression.indexOf(",")));

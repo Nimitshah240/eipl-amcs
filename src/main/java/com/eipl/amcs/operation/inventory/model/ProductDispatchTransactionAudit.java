@@ -1,10 +1,10 @@
 package com.eipl.amcs.operation.inventory.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -39,31 +39,26 @@ public class ProductDispatchTransactionAudit extends BaseModelTxnAudit {
     @JsonSerialize(using = ProductDispatchSerialize.class)
     @JsonDeserialize(using = ProductDispatchDeserializer.class)
     @JoinColumn(name = "challan_no", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private ProductDispatch productDispatch;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)
     @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private Society society;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductSerialize.class)
     @JsonDeserialize(using = ProductDeserializer.class)
     @JoinColumn(name = "product_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private Product product;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductRequisitionSerialize.class)
     @JsonDeserialize(using = ProductRequisitionDeserializer.class)
     @JoinColumn(name = "product_requisition_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private ProductRequisition productRequisition;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductRequisitionTransactionSerialize.class)
     @JsonDeserialize(using = ProductRequisitionTransactionDeserializer.class)
     @JoinColumn(name = "product_requisition_transaction_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-//	@JsonIgnoreProperties(value = { "society", "union" })
     private ProductRequisitionTransaction productRequisitionTransaction;
 
 }

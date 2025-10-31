@@ -3,8 +3,8 @@ package com.eipl.amcs.master.account.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.LedgerMappingTaxDetail;
 import com.eipl.amcs.master.account.service.LedgerMappingTaxDetailService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -23,18 +23,8 @@ public class LedgerMappingTaxDetailSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             LedgerMappingTaxDetailService service = EmcsAppContext.getContext().getBean(LedgerMappingTaxDetailService.class);
-            service.save(dto, CommonUtil.setIdentityHeader());
+            service.save(dto, CommonUtils.setIdentityHeader());
             return true;
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.LEDGER_MAPPING_TAX_DETAIL;
-//
-//            ResponseEntity<String> response =
-//                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(dto), String.class);
-//
-//            if (response == null || response.getStatusCode() != HttpStatus.CREATED)
-//                return null;
-//            return response.getStatusCode() == HttpStatus.CREATED && response.getBody() != null;
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

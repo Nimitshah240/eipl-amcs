@@ -1,15 +1,15 @@
 package com.eipl.amcs.master.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxnAudit;
-import com.eipl.amcs.deserialize.MilkClassDeserializer;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.MilkClassDeserializer;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.MilkClassSerialize;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.MilkClassSerialize;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
-import com.eipl.amcs.serialize.SocietySerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -18,7 +18,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -32,11 +31,9 @@ public class LocalMilkSaleRateAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 25)
     private String code;
     @Digits(integer = 4, fraction = 2)
     private BigDecimal rate;
-    @Size(max = 3)
     private String unionCode;
     private LocalDate wefDate;
 

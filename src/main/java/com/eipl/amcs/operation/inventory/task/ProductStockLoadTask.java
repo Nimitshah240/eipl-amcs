@@ -15,7 +15,6 @@ public class ProductStockLoadTask extends Task<List<ProductStock>> {
     @Override
     protected List<ProductStock> call() throws Exception {
         try {
-
             ProductStockService service = EmcsAppContext.getContext().getBean(ProductStockService.class);
             List<ProductStock> list = service.findAll();
             if (list == null || list.isEmpty())

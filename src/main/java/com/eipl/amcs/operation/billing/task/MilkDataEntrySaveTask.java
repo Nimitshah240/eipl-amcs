@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.billing.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.ApiJsonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.springframework.web.client.HttpStatusCodeException;
 
@@ -22,9 +22,9 @@ public class MilkDataEntrySaveTask extends Task<Object> {
         try {
             MilkCollectionService service = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
             if (this.update == 0) {
-                service.saveMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
+                service.saveMilkCollectionSummaryData(dto, CommonUtils.setIdentityHeader());
             } else {
-                service.updateMilkCollectionSummaryData(dto, CommonUtil.setIdentityHeader());
+                service.updateMilkCollectionSummaryData(dto, CommonUtils.setIdentityHeader());
             }
             return true;
         } catch (HttpStatusCodeException e) {
@@ -34,5 +34,4 @@ public class MilkDataEntrySaveTask extends Task<Object> {
         }
         return null;
     }
-
 }

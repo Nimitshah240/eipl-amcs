@@ -6,8 +6,6 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.task.ShareIssueDeleteTask;
 import com.eipl.amcs.operation.share.task.ShareIssueLoadTask;
@@ -49,9 +47,6 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
     @FXML
     private Button btnAdd, btnClose, btnReport, btnRevert;
     private ResourceBundle resourceBundle;
-    private String name;
-    private List<Member> listMembers;
-    private List<Customer> listCustomers;
 
     public ShareTransferController() {
         propShareTransfer = new SimpleObjectProperty<>();
@@ -78,9 +73,6 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareTransferAddEdit", null, this);
         });
 
-//        btnDelete.setOnAction(e -> {
-//            deleteData();
-//        });
         btnRevert.setOnAction(e -> {
             revertData();
         });
@@ -116,32 +108,6 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
             }
         }
     }
-//    public void revertData() {
-//        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
-//                resourceBundle.getString("alert.delete"));
-//        Optional<ButtonType> resp = alert.createConfirmationAlert();
-//        if (resp.isPresent() && resp.get() == ButtonType.OK) {
-//            Share dto = propShareTransfer.get();
-//            if (dto != null) {
-//                ShareTranferRevertTask task = new ShareTranferRevertTask(dto.getCode());
-//                task.setOnSucceeded(e -> {
-//                    try {
-//                        Boolean respDelete = task.get();
-//                        if (respDelete == null || respDelete.booleanValue() == false) {
-//                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("shareissue"),
-//                                    resourceBundle.getString("error.occurred"));
-//                            alert1.createAlert();
-//                            return;
-//                        }
-//                        loadData();
-//                    } catch (InterruptedException | ExecutionException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                });
-//                new Thread(task).start();
-//            }
-//        }
-//    }
 
     private void revertData() {
         MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("sharetransfer"),
@@ -165,7 +131,6 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
                         ex.printStackTrace();
                     }
                 });
-//                deleteData();
                 new Thread(task).start();
             }
         }
@@ -211,6 +176,4 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
         if (flag)
             loadData();
     }
-
-
 }

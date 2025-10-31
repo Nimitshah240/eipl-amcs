@@ -9,7 +9,6 @@ import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
 import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
-import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -45,20 +44,12 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     private ComboBox<String> cboxType;
     @FXML
     private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
-
     private ResourceBundle resourceBundle;
-
-
-    String[] month = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    String[] quarter = {"All", "1", "2", "3", "4"};
-    String[] year = {"All", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030"};
 
     @Override
     public Node getRoot() {
         return root;
     }
-
-    private MemberBillSummary dto = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -94,7 +85,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         });
         loadStaff();
         setupComboBox();
-//        cboxStaff.getSelectionModel().select(0);
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
@@ -109,11 +99,7 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         new AutoCompleteComboBoxListener<>(cboxStaff);
     }
 
-    private StringBuilder errorMsg;
-
     private void validateAndGenerateReport() {
-
-
         Map<String, Object> params = new HashMap<>();
         JasperPrint print = null;
 
@@ -164,14 +150,8 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.Milk_Collection_Year_Wise, params);
                 JasperViewer.viewReport(print, false);
                 break;
-
-
         }
 
-    }
-
-    private boolean validate() {
-        return true;
     }
 
     private void loadStaff() {

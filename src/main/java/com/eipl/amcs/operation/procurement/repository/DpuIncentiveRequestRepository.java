@@ -6,7 +6,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +20,6 @@ public interface DpuIncentiveRequestRepository extends BaseRepository<DpuIncenti
     @Override
     @EntityGraph(attributePaths = {"society"})
     Optional<DpuIncentiveRequest> findById(String id);
-
-    @EntityGraph(attributePaths = {"society"})
-    List<DpuIncentiveRequest> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDate fd, LocalDate td);
 
     @EntityGraph(attributePaths = {"society"})
     Optional<DpuIncentiveRequest> findTop1ByOrderByCreatedAtDesc();

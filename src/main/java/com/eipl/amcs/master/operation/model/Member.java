@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
 import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -28,23 +27,14 @@ import java.math.BigDecimal;
 @Table(name = "members")
 public class Member extends BaseModel {
     @Id
-    @Size(max = 20)
     private String code;
-    @Size(max = 4)
     private String codeEx;
-    @Size(max = 100)
     private String firstName;
-    @Size(max = 100)
     private String middleName;
-    @Size(max = 100)
     private String lastName;
-    @Size(max = 255)
     private String firstNameLocal;
-    @Size(max = 255)
     private String middleNameLocal;
-    @Size(max = 255)
     private String lastNameLocal;
-    @Size(max = 255)
     private String mobileNo;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal creditLimit;
@@ -146,13 +136,6 @@ public class Member extends BaseModel {
                 lastNameLocal = "";
             return firstNameLocal + " " + middleNameLocal + " " + lastNameLocal;
         }
-//        if (locale.equalsIgnoreCase("mr")) {
-//            if (middleNameLocal == null)
-//                middleNameLocal = "";
-//            if (lastNameLocal == null)
-//                lastNameLocal = "";
-//            return firstNameLocal + " " + middleNameLocal + " " + lastNameLocal;
-//        }
         return "";
     }
 }

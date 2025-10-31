@@ -51,7 +51,6 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
     private Button btnClose, btnSearch, btnReport, btnRevert;
     private ResourceBundle resourceBundle;
 
-    private String name;
     private List<Member> listMembers;
     private List<Customer> listCustomers;
 
@@ -196,6 +195,4 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
         if (flag)
             loadData();
     }
-
-
 }

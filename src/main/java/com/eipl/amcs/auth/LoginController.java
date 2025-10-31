@@ -8,7 +8,7 @@ import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
+import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,12 +62,6 @@ public class LoginController implements MyInitialization {
         loadData();
         setupComboBox();
         cboxLang.setValue(MainApp.getProperty("application.language", "English"));
-
-//        txtPassword.setText("1");
-//        txtUsername.setText("1");
-//        FocusUtils.requestFocus(btnLogin);
-
-
         btnLogin.setOnAction(e -> {
             CompletableFuture.runAsync(this::deleteOtherFiles);
             var task = new LoginTask(txtUsername.getText(), txtPassword.getText());
@@ -118,31 +112,19 @@ public class LoginController implements MyInitialization {
         cboxFinancialYear.setConverter(new FinancialYearConvertor(cboxFinancialYear));
     }
 
-    private String locale;
-
     private void createAndSetLocale() {
         try {
             Locale.setDefault(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
-            if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase())) {
-                List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase()) ? "resources/messages/guj" : "resources/messages/hi").toPath());
+            if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2))) {
+                List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2)) ? "resources/messages/guj" : "resources/messages/hi").toPath());
                 List<String> nwLines = new ArrayList<>();
                 lines.forEach(item -> {
                     String[] arr = item.split("=");
                     nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
                 });
-                Files.write(new File(String.format("resources/messages/message_%s.properties", cboxLang.getValue().substring(0, 2).toLowerCase())).toPath(), nwLines, Charset.forName("UTF-8"));
+                Files.write(new File(String.format("resources/messages/message_%s.properties", cboxLang.getValue().substring(0, 2).toLowerCase())).toPath(), nwLines, StandardCharsets.UTF_8);
                 MainApp.locale = cboxLang.getValue().substring(0, 2).toLowerCase();
             }
-//            if ("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2).toLowerCase())) {
-//                List<String> lines = Files.readAllLines(new File("resources/messages/guj").toPath());
-//                List<String> nwLines = new ArrayList<>();
-//                lines.forEach(item -> {
-//                    String[] arr = item.split("=");
-//                    nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
-//                });
-//                Files.write(new File("resources/messages/message_gu.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-//                MainApp.locale = "gu";
-//            }
             File file = new File("resources/messages/");
             URL[] urls = {file.toURI().toURL()};
             ClassLoader classLoader = new URLClassLoader(urls);
@@ -158,53 +140,6 @@ public class LoginController implements MyInitialization {
             e.printStackTrace();
         }
     }
-
-//    private void createAndSetLocale() {
-//        try {
-//            String selectedLang = cboxLang.getValue().substring(0, 2).toLowerCase();
-//
-//            // ✅ Force correct Marathi locale
-//            if ("mr".equalsIgnoreCase(selectedLang) || "ma".equalsIgnoreCase(selectedLang)) {
-//                selectedLang = "mr";  // Ensure it remains "mr"
-//            }
-//
-//            Locale.setDefault(new Locale(selectedLang));
-//            MainApp.locale = selectedLang;
-//
-//            if ("gu".equals(selectedLang)) {
-//                List<String> lines = Files.readAllLines(new File("resources/messages/guj").toPath());
-//                List<String> nwLines = new ArrayList<>();
-//                for (String item : lines) {
-//                    String[] arr = item.split("=");
-//                    nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
-//                }
-//                Files.write(new File("resources/messages/message_gu.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-//            } else if ("mr".equals(selectedLang)) {
-//                List<String> lines = Files.readAllLines(new File("resources/messages/mar").toPath());
-//                List<String> nwLines = new ArrayList<>();
-//                for (String item : lines) {
-//                    String[] arr = item.split("=");
-//                    nwLines.add(arr[0] + "=" + getUniCode(arr[1]));
-//                }
-//                Files.write(new File("resources/messages/message_mr.properties").toPath(), nwLines, Charset.forName("UTF-8"));
-//            }
-//
-//            File file = new File("resources/messages/");
-//            URL[] urls = {file.toURI().toURL()};
-//            ClassLoader classLoader = new URLClassLoader(urls);
-//
-//            try {
-//                System.out.println("Setting Bundle for Locale: " + selectedLang);  // ✅ Debugging output
-//                MainApp.setBundle(ResourceBundle.getBundle("message", new Locale(selectedLang), classLoader));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Locale.setDefault(new Locale("en"));
-//                MainApp.setBundle(ResourceBundle.getBundle("message", Locale.getDefault(), classLoader));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 
     private String getUniCode(String messageVal) {

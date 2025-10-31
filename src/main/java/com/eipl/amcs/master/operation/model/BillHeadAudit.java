@@ -1,12 +1,12 @@
 package com.eipl.amcs.master.operation.model;
 
-import com.eipl.amcs.base.BaseModelAudit;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.deserialize.UnionDeserializer;
+import com.eipl.amcs.base.model.BaseModelAudit;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
-import com.eipl.amcs.serialize.SocietySerialize;
-import com.eipl.amcs.serialize.UnionSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,14 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
-/**
- * This class acts as a model for managing BillHead Audit.
- *
- * @author Nimit Shah
- * @createdOn 30-06-2025
- */
 @SuppressWarnings("serial")
 @Entity
 @Getter
@@ -34,11 +27,8 @@ public class BillHeadAudit extends BaseModelAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(max = 12)
     private String code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
     @Column(name = "is_default_head")
     private Boolean defaultHead;

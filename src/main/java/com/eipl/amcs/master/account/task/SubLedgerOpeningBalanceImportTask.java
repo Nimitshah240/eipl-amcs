@@ -50,13 +50,6 @@ public class SubLedgerOpeningBalanceImportTask extends Task<List<SubLedgerOpenin
                     continue;
                 }
 
-                // Financial Year
-//                Cell cellFinancialYear = row.getCell(0);
-//                String financialYear = cellFinancialYear.getStringCellValue();
-//                if (financialYear == null || financialYear.isEmpty()) {
-//                    continue;
-//                }
-
                 Cell cellFinancialYear = row.getCell(0);
                 String financialYearStr = cellFinancialYear.getStringCellValue();
                 FinancialYear financialYear1 = null;
@@ -86,9 +79,6 @@ public class SubLedgerOpeningBalanceImportTask extends Task<List<SubLedgerOpenin
                 Cell cellCreditDebit = row.getCell(2);
                 String creditDebit = cellCreditDebit.getStringCellValue();
 
-//                Cell cellBalance= row.getCell(2);
-//                String balance = cellBalance.getStringCellValue();
-//                Cell cellCode = row.getCell(3);
                 String balance = formatter.formatCellValue(dataSheet.getRow(i).getCell(3));
 
 

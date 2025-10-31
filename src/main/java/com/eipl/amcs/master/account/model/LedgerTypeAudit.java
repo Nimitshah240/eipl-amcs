@@ -1,6 +1,6 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModelAudit;
+import com.eipl.amcs.base.model.BaseModelAudit;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -21,9 +20,7 @@ public class LedgerTypeAudit extends BaseModelAudit {
 
     @Id
     private Integer code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     @Column(name = "profit_loss")

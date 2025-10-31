@@ -59,7 +59,6 @@ public class BaseRepositoryImpl<T extends JsonAndTableBuilder, ID> extends Simpl
     @Override
     @Transactional
     public <S extends T> S customSaveForSync(S entity, String identityInfo) {
-//		S entityNew = super.save(entity);
         if (EiplAmcsAppRunner.books.containsKey(entity.getTableName())) {
             String json;
             try {

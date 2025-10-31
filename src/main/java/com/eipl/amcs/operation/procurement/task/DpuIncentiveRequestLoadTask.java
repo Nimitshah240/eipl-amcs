@@ -29,15 +29,6 @@ public class DpuIncentiveRequestLoadTask extends Task<DpuIncentiveRequest> {
                 return dpuIncentiveRequestRepository.findTop1ByOrderByCreatedAtDesc().get();
             } else
                 return null;
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MILK_COLLECTION+"/findByDate";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<DpuIncentiveRequest> response = restTemplate.getForEntity(builder.toUriString(), DpuIncentiveRequest.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("ManualRequest fetch", e);
         }

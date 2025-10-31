@@ -1,7 +1,7 @@
 package com.eipl.amcs.master.account.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,9 +22,7 @@ public class LedgerType extends BaseModel {
 
     @Id
     private Integer code;
-    @Size(max = 100)
     private String name;
-    @Size(max = 255)
     private String nameLocal;
 
     @Column(name = "profit_loss")

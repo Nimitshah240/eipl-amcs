@@ -1,6 +1,6 @@
 package com.eipl.amcs.base.repository;
 
-import com.eipl.amcs.base.Notification;
+import com.eipl.amcs.base.model.Notification;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 

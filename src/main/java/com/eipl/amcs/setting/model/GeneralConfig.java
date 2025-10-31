@@ -1,7 +1,7 @@
 package com.eipl.amcs.setting.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.master.org.model.Society;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -20,7 +19,6 @@ import javax.validation.constraints.Size;
 public class GeneralConfig extends BaseModelTxn {
 
     @Id
-    @Size(max = 25)
     private String code;
     @Column(name = "json_key")
     private String key;

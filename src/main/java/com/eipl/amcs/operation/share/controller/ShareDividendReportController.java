@@ -19,14 +19,15 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ShareDividendReportController implements MyInitialization {
 
     public PopupCallback callback;
     public Bonus bonus;
     public Map<String, Object> map;
-    List<Bonus> bonusList = new ArrayList<>();
     @FXML
     private StackPane root;
     @FXML

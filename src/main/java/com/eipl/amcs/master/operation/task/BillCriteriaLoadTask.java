@@ -20,15 +20,6 @@ public class BillCriteriaLoadTask extends Task<List<BillCriteria>> {
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BILLCRITERIA;
-//            ResponseEntity<BillCriteria[]> response = restTemplate.getForEntity(url, BillCriteria[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("BillCriteria fetched: {}", response.getBody().length);
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             LOGGER.error("BillCriteria fetch", e);
         }

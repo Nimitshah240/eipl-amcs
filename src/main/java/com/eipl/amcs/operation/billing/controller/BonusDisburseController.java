@@ -7,10 +7,9 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
-import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.dto.BonusDto;
 import com.eipl.amcs.operation.billing.model.Bonus;
 import com.eipl.amcs.operation.billing.model.BonusSummary;
@@ -43,10 +42,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class BonusDisburseController extends SocietyPaymentCycleEditController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<Bonus> propBonus;
     @FXML
     private StackPane root;
-    @FXML
-    private ComboBox<SocietyPaymentCycle> cboxPaymentCycle;
     @FXML
     private Button btnDisburse, btnClose, btnExport;
     @FXML
@@ -61,11 +59,9 @@ public class BonusDisburseController extends SocietyPaymentCycleEditController i
     private TableColumn<Bonus, String> colMemberCode, colMemberName, colStatus, colType;
     @FXML
     private TableColumn<Bonus, Number> colMilkQty, colMilkAmount, colBonusAmt;
-
     private List<Bonus> bonusList;
     private BonusSummary bonusSummary;
     private ResourceBundle resourceBundle;
-    private final ObjectProperty<Bonus> propBonus;
     private BonusDto dto;
 
 
@@ -92,7 +88,6 @@ public class BonusDisburseController extends SocietyPaymentCycleEditController i
         setupTable();
         dpDisburseDate.setValue(LocalDate.now());
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/billing/BonusSummary.fxml"))));
-
 
         btnDisburse.setOnAction(e -> {
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
@@ -192,7 +187,6 @@ public class BonusDisburseController extends SocietyPaymentCycleEditController i
                 List<String> strColumns = Arrays.asList("M. Code", "M. Name", "Qty", "Milk Amount", "Bonus Amount", "Type",
                         "Status");
                 List<String> strColumnTodisplay = null;
-                List<String> items = null;
                 strColumnTodisplay = new ArrayList<>(strColumns);
                 List<String> finalResultToDisplay = strColumnTodisplay.stream().collect(Collectors.toList());
                 // Create header column
@@ -273,7 +267,6 @@ public class BonusDisburseController extends SocietyPaymentCycleEditController i
         alert.createAlert();
     }
 
-
     public void loadData(String code) {
         var task = new BonusListLoadTask(code);
         task.setOnSucceeded(e -> {
@@ -291,5 +284,4 @@ public class BonusDisburseController extends SocietyPaymentCycleEditController i
         });
         new Thread(task).start();
     }
-
 }

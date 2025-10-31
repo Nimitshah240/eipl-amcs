@@ -7,8 +7,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -290,8 +290,6 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milksummarydataentry"),
                         resourceBundle.getString("milksummarydataentry.insert.successful"));
                 alert.createAlert();
-//                this.callback.reloadData(true);
-//                this.stage.close();
                 clearControls();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -339,5 +337,4 @@ public class MilkSummaryDataEntryAddEditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
 }

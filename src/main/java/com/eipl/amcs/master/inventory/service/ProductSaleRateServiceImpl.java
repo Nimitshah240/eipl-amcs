@@ -5,7 +5,7 @@ import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.repository.ProductSaleRateRepository;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +35,6 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
 
     @Override
     public ProductSaleRate save(ProductSaleRate productSaleRate, String identityInfo) {
-//		LocalDate chk = checkWefDate(productSaleRate.getProduct().getCode(), new ProductSaleRate().getCode());
-//		if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
-//
-//		} else {
-//			FieldError wefDateNotValid = CommonUtil.getFieldError("productsalerate", "wefDate",
-//					productSaleRate.getCode(), "wefdate.not.valid");
-//			throw new BusinessValidationFailException(getClass(), wefDateNotValid);
-//		}
-////		return productSaleRateRepository.save(productSaleRate);
-//		String code = nextCodeRepository.getNextCode("ProductSaleRate", "code", productSaleRate.getSociety().getCode(),
-//				0);
         String code = nextCodeRepository.getNextCode("ProductSaleRate", "code", productSaleRate.getSociety().getCode(),
                 0);
         productSaleRate.setCode(code);
@@ -53,7 +42,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
         if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
 
         } else {
-            FieldError wefDateNotValid = CommonUtil.getFieldError("productsalerate", "wefDate",
+            FieldError wefDateNotValid = CommonUtils.getFieldError("productsalerate", "wefDate",
                     productSaleRate.getCode(), "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
@@ -72,11 +61,10 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
         if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {
 
         } else {
-            FieldError wefDateNotValid = CommonUtil.getFieldError("productsalerate", "name", productSaleRate.getCode(),
+            FieldError wefDateNotValid = CommonUtils.getFieldError("productsalerate", "name", productSaleRate.getCode(),
                     "wefdate.not.valid");
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
-//		return productSaleRateRepository.save(productSaleRate);
 
         ProductSaleRate newData = productSaleRateRepository.customUpdate(productSaleRate, identityInfo);
         newData.setProduct(productSaleRate.getProduct());
@@ -98,7 +86,6 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
 
     @Override
     @Transactional
-//	@CacheEvict(value = { "productSaleRatesCache" }, allEntries = true)
     public void delete(ProductSaleRate productSaleRate, String identityInfo) {
         productSaleRateRepository.customDelete(productSaleRate, identityInfo);
     }
@@ -112,5 +99,4 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
     public ProductSaleRate findByProduct(Product product, LocalDate date) {
         return productSaleRateRepository.findTop1ByProductAndWefDateLessThanEqualOrderByWefDateDesc(product, date);
     }
-
 }

@@ -35,19 +35,6 @@ public class MemberSocietyInfoLoadTask extends Task<Object> {
                 count = 5;
 
             return service.findMemberInformation(code, date, count, paymentCycleCode);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.MEMBER + "/member-information";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("code", code)
-//                    .queryParam("count", count == null ? 5 : count)
-//                    .queryParam("paymentCycle", paymentCycleCode)
-//                    .queryParam("date", date.toString());
-//
-//            ResponseEntity<MemberSocietyInfoDto> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET,
-//                    null, MemberSocietyInfoDto.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return response.getBody();
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

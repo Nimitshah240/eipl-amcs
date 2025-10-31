@@ -46,8 +46,6 @@ public class BonusServiceImpl implements BonusService {
     @Override
     @Transactional
     public List<Bonus> loadData(LocalDateTime fromDate, LocalDateTime toDate, Integer milkType) {
-//		LocalDateTime fd = fromDate.atTime(6,0,0);
-//		LocalDateTime td = fromDate.atTime(18,0,0);
         List<Map<String, Object>> a = new ArrayList<>();
         // TODO Auto-generated method stub
         if (milkType != 0)
@@ -95,7 +93,6 @@ public class BonusServiceImpl implements BonusService {
 
     @Override
     public BonusDto editDto(String identityInfo, BonusDto dto) {
-//		deleteDto(dto.getBonusSummary().getCode());
         saveDto(identityInfo, dto, (short) 1);
         return null;
     }
@@ -131,10 +128,8 @@ public class BonusServiceImpl implements BonusService {
         } else {
             List<Bonus> list = dto.getBonusList();
             BonusSummary bs = dto.getBonusSummary();
-//			String code = nextCodeService.getNextCode("BonusSummary", "code", bs.getSociety().getCode(), 0);
             bs.setType(list.get(0).getType());
             bs.setupdateData();
-//			bs.setCode(code);
             String code = bs.getCode();
             bonusSummaryRepository.customUpdate(bs, identityInfo);
             int a = 1;
@@ -179,5 +174,4 @@ public class BonusServiceImpl implements BonusService {
         bonusSummaryRepository.customDelete(bonusSummary, identityInfo);
         return true;
     }
-
 }

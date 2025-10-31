@@ -62,7 +62,6 @@ public class DbBackupTask extends Task<Boolean> {
                         "--complete-insert=TRUE --default-character-set=utf8 --single-transaction=TRUE  --databases \"" + AppConstant.EIPL_DB_NAME + "\" --result-file=" +
                         path + File.separator + filename;
             }
-//            zip(path + File.separator + filename);
 
             if (command == null)
                 return false;

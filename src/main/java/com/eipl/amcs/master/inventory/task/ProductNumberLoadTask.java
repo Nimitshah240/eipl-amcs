@@ -19,17 +19,6 @@ public class ProductNumberLoadTask extends Task<String> {
         try {
             NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
             return nextCodeService.getNextCode("Product", "code", society, 0);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.PRODUCT_NUMBER;
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("society", society);
-//
-//            ResponseEntity<String> response = restTemplate.exchange(builder.buildAndExpand().toUri(), HttpMethod.GET, null, String.class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            LOGGER.info("product Number fetched: {}", response.getBody());
-//            return response.getBody();
         } catch (Exception e) {
             LOGGER.error("product Number fetch", e);
         }

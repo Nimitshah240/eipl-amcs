@@ -79,12 +79,5 @@ public class CommitteeMembersServiceImpl implements CommitteeMembersService {
         CommitteeMembers cm = committeeMembersRepository.findById(memberCode).get();
         committeeMembersRepository.delete(cm);
     }
-
-//	@Override
-//	public void delete(CommitteeMembers committeeMembers, String identityInfo) {
-//		committeeMembersRepository.customDelete(committeeMembers.getCode(), identityInfo);
-//
-//	}
-
 }
 

@@ -4,8 +4,8 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.MemberDto;
 import com.eipl.amcs.master.operation.service.MemberService;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import org.apache.commons.collections4.ListUtils;
 
@@ -35,7 +35,7 @@ public class MemberListSaveTask extends Task<List<MemberImportDto>> {
             int current = 1;
             for (List<MemberDto> memberDtos : listTemp) {
                 try {
-                    List<MemberImportDto> list = service.importMembers(memberDtos, CommonUtil.setIdentityHeader());
+                    List<MemberImportDto> list = service.importMembers(memberDtos, CommonUtils.setIdentityHeader());
                     if (list == null || list.isEmpty())
                         continue;
                     listRes.addAll(list);
@@ -48,7 +48,7 @@ public class MemberListSaveTask extends Task<List<MemberImportDto>> {
             return listRes;
         } else {
             try {
-                List<MemberImportDto> list = service.importMembers(dtoList, CommonUtil.setIdentityHeader());
+                List<MemberImportDto> list = service.importMembers(dtoList, CommonUtils.setIdentityHeader());
                 if (list == null || list.isEmpty())
                     return null;
                 return list;

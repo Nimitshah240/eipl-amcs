@@ -88,10 +88,6 @@ public class MilkCollectionAuditController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
-    private boolean validate() {
-        return true;
-    }
-
     private void loadShift() {
         var task = new ShiftLoadTask();
         task.setOnSucceeded(e -> {
@@ -109,5 +105,4 @@ public class MilkCollectionAuditController implements MyInitialization {
         });
         new Thread(task).start();
     }
-
 }

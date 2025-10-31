@@ -28,18 +28,6 @@ public class SubLedgerLedgerConfigBySubLedgerTypeLoadTask extends Task<List<SubL
             if (list == null || list.isEmpty())
                 return null;
             return list;
-
-//			RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//			String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null)
-//					+ AppConstant.UrlPath.SUB_LEDGER_LEDGER_CONFIG + "/by-subledger-type";
-//			UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(url).queryParam("code",
-//					code);
-//			ResponseEntity<SubLedgerLedgerConfig[]> response = restTemplate.exchange(uriComponentsBuilder.toUriString(),
-//					HttpMethod.GET, null, SubLedgerLedgerConfig[].class);
-//			if (response == null || response.getStatusCode() != HttpStatus.OK)
-//				return null;
-//			LOGGER.info("Config fetched: {}", response.getBody());
-//			return response.getBody()!=null?Arrays.asList(response.getBody()):null;
         } catch (Exception e) {
             LOGGER.error("Config fetch", e);
         }

@@ -1,0 +1,26 @@
+package com.eipl.amcs.json.deserialize;
+
+import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.org.model.Route;
+import com.eipl.amcs.master.org.repository.RouteRepository;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+
+import java.io.IOException;
+
+public class RouteDeserializer extends JsonDeserializer<Route> {
+    private final RouteRepository repository;
+
+    public RouteDeserializer() {
+        repository = EmcsAppContext.getContext().getBean(RouteRepository.class);
+    }
+
+    @Override
+    public Route deserialize(JsonParser parser, DeserializationContext context)
+            throws IOException {
+        return repository.findById(String.valueOf(parser.getValueAsInt())).get();
+    }
+
+}

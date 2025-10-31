@@ -9,8 +9,8 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.cellfactory.LedgerBalanceCellFactory;
 import com.eipl.amcs.controls.cellfactory.RightAlignCellFactory;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
 import com.eipl.amcs.master.account.dto.YearClosingDto;
 import com.eipl.amcs.master.account.model.*;
@@ -577,7 +577,6 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                 ledgerCloses = ledgerCloseTask.get();
 
                 if (ledgerCloses != null) {
-//                    tableReview.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e->e.getBalance()!=0.00).collect(Collectors.toList())));
                     tableReview.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e -> e.isCreditDebit()).collect(Collectors.toList())));
                     tableReview1.setItems(FXCollections.observableArrayList(ledgerCloses.stream().filter(e -> !e.isCreditDebit()).collect(Collectors.toList())));
                 }
@@ -664,9 +663,6 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         profitLossTask.setOnSucceeded(e -> {
             try {
                 listPLIncome = profitLossTask.get();
-//                listPLExpense = profitLossTask.get();
-
-
                 for (LedgerBalance ledgerBalance : listPLIncome) {
                     ledgerBalance.setLedgerName(ledgerBalance.getLedgerName());
                 }
@@ -902,9 +898,6 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         });
         colReviewLedgerBalance
                 .setCellValueFactory(data -> new SimpleDoubleProperty(Math.abs(data.getValue().getBalance())));
-//        colReviewLedgerBalance.setCellFactory(new RightAlignCellFactory<>());
-
-//        colReviewLedgerCode1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerCode()));
         colReviewLedgerName1.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerName()));
         colReviewLedgerType1.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().isCreditDebit() ? MainApp.getBundle().getString("credit") : MainApp.getBundle().getString("debit")));
@@ -930,7 +923,6 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         });
         colReviewLedgerBalance1
                 .setCellValueFactory(data -> new SimpleDoubleProperty(Math.abs(data.getValue().getBalance())));
-//        colReviewLedgerBalance1.setCellFactory(new RightAlignCellFactory<>());
 
         propObjLedger.bind(tableReview.getSelectionModel().selectedItemProperty());
     }

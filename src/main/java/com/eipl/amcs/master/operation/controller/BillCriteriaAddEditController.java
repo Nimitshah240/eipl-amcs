@@ -8,8 +8,8 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.apierror.ApiError;
-import com.eipl.amcs.exception.apierror.ApiValidationError;
+import com.eipl.amcs.exception.error.ApiError;
+import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.operation.convertor.BillHeadConvertor;
 import com.eipl.amcs.master.operation.convertor.FormulaConvertor;
 import com.eipl.amcs.master.operation.model.BillCriteria;
@@ -35,12 +35,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-/**
- * This class acts as a controller for BillCriteria Add-Edit Popup.
- *
- * @author Nimit Shah
- * @createdOn 30-06-2025
- */
 public class BillCriteriaAddEditController implements MyInitialization {
 
     private Stage stage;
@@ -72,13 +66,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
 
     private BillCriteria billCriteria = null;
 
-
-    /**
-     * Method set action on btn close,saveUpdate.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -104,12 +91,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         this.callback = callback;
     }
 
-    /**
-     * Method set comboBox of formula and bill head.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void setupComboBox() {
         try {
@@ -120,12 +101,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method get Bill head and set in the comboBox of bill head.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private void loadBillHead() {
         var task = new BillHeadLoadTask();
         task.setOnSucceeded(e -> {
@@ -145,12 +120,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
-    /**
-     * Method get Formula and set in the comboBox of formula.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private void loadFormula() {
         try {
             var task = new FormulaLoadTask();
@@ -174,13 +143,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
 
     }
 
-    /**
-     * Method set bill criteria value if updating and
-     * setting new code on creating new bill criteria.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     public void setBillCriteria(BillCriteria billCriteria) {
         try {
             if (billCriteria != null) {
@@ -197,12 +159,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method set bill criteria value in respective field to show.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     public void loadBillCriteria() {
         try {
             txtCode.setText(billCriteria.getCode());
@@ -217,12 +173,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method gets the new code from the backend for creating new bill criteria.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private void getNextBillCriteriaCode() {
         try {
             var task = new BillCriteriaNumberLoadTask(MainApp.identityDto.getSociety().getCode());
@@ -242,13 +192,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method set values in the bill criteria object from the front end.
-     *
-     * @return BillCriteria
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private BillCriteria setValuesInObject() {
         try {
             billCriteria.setCode(txtCode.getText());
@@ -266,13 +209,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method first validate fields, then create or update bill criteria
-     * depending on the this.billCriteria is null or not respectively.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     public void saveUpdateBillCriteria() {
         try {
             errorMsg = new StringBuilder();
@@ -298,13 +234,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method checks name and billhead, startdate and formula is not null.
-     *
-     * @return boolean
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     private boolean validate() {
         try {
             if (txtName.getText() == null || txtName.getText().trim().isEmpty())
@@ -326,13 +255,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method calls BillCriteriaSaveTask with short 0 to create the bill criteria.
-     * Then close the popup and reload the data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void saveData() {
         try {
@@ -368,13 +290,6 @@ public class BillCriteriaAddEditController implements MyInitialization {
         }
     }
 
-    /**
-     * Method calls BillCriteriaSaveTask with short 1 to update the bill criteria.
-     * Then close the popup and reload the data.
-     *
-     * @author Nimit Shah
-     * @createdOn 30-06-2025
-     */
     @Override
     public void updateData() {
         try {

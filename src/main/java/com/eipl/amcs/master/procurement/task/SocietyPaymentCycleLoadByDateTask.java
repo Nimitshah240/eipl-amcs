@@ -28,16 +28,6 @@ public class SocietyPaymentCycleLoadByDateTask extends Task<List<SocietyPaymentC
             LocalDateTime fromDt = LocalDateTime.of(fromDate, LocalTime.MIN);
             LocalDateTime toDt = LocalDateTime.of(toDate, LocalTime.MIN);
             return service.findAll(fromDt, toDt);
-
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.SOCIETY_PAYMENT_CYCLE + "/findByDate";
-//            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-//                    .queryParam("fromDate", fromDate.toString())
-//                    .queryParam("toDate", toDate.toString());
-//            ResponseEntity<SocietyPaymentCycle[]> response = restTemplate.getForEntity(builder.toUriString(), SocietyPaymentCycle[].class);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
-//            return Arrays.asList(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
         }

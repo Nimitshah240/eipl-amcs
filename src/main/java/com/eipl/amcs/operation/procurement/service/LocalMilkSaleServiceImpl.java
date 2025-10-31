@@ -13,8 +13,8 @@ import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.repository.LocalMilkSaleRepository;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -62,22 +62,15 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
     }
 
     @Override
-//    @Transactional
     public LocalMilkSale save(LocalMilkSale localMilkSale, String identityInfo) throws BusinessValidationFailException {
         // validation
         SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(localMilkSale.getSaleDate(), localMilkSale.getSaleDate());
         if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtil.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
+            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
         // pass
         String code = nextCodeService.getNextCode("LocalMilkSale", "code", localMilkSale.getSociety().getCode(), 2);
         localMilkSale.setCode(code);
         localMilkSale.setInitData();
-
-        // check credit sale 0-Cash, 1-Credit, 2-Coupon
-//        if (localMilkSale.getPaymentMode() == (short) 1) {
-//            updateCreditLimit(newData, "CREATE", "Local milk sale", identityInfo);
-//        }
-
         createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
 
         LocalMilkSale newData = localMilkSaleRepository.customSave(localMilkSale, identityInfo);
@@ -371,7 +364,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
             if (op.equals("CREATE")) {
                 oldObj.setBalance(oldObj.getBalance().subtract(obj.getCredit()).setScale(2, RoundingMode.HALF_UP));
                 if (oldObj.getBalance().compareTo(BigDecimal.ZERO) < 0) {
-                    FieldError creditlimiterror = CommonUtil.getFieldError("localmilksale", "creditlimt", obj.getCredit(), "creditlimiterror");
+                    FieldError creditlimiterror = CommonUtils.getFieldError("localmilksale", "creditlimt", obj.getCredit(), "creditlimiterror");
                     throw new BusinessValidationFailException(getClass(), creditlimiterror);
                 }
             } else if (op.equals("DELETE")) {
@@ -399,12 +392,11 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
     }
 
     @Override
-//    @Transactional
     public LocalMilkSale update(LocalMilkSale localMilkSale, String identityInfo) {
 
         SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(localMilkSale.getSaleDate(), localMilkSale.getSaleDate());
         if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtil.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
+            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
 
 
         Optional<LocalMilkSale> oldObj = localMilkSaleRepository.findById(localMilkSale.getCode());
@@ -418,11 +410,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         newData.setSociety(localMilkSale.getSociety());
         newData.setShift(localMilkSale.getShift());
         newData.setDock(localMilkSale.getDock());
-
-        // check credit sale 0-Cash, 1-Credit, 2-Coupon
-//        if (localMilkSale.getPaymentMode() == (short) 1) {
-//            updateCreditLimit(newData, "CREATE", "Local milk sale", identityInfo);
-//        }
 
         createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
         return newData;
@@ -441,7 +428,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
             // validation
             SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(oldObj.get().getSaleDate(), oldObj.get().getSaleDate());
             if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtil.getFieldError("localMilkSale", "SaleDate", oldObj.get().getSaleDate(), "paymentcyclenotfound"));
+                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("localMilkSale", "SaleDate", oldObj.get().getSaleDate(), "paymentcyclenotfound"));
             if (oldObj.get().getPaymentMode() == (short) 1)
                 updateCreditLimit(oldObj.get(), "DELETE", "Local sale delete", identityInfo);
             localMilkSaleRepository.customDelete(oldObj.get(), identityInfo);
@@ -472,7 +459,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         // validation
         SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(localMilkSale.getSaleDate(), localMilkSale.getSaleDate());
         if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtil.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
+            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
         localMilkSaleRepository.customDelete(localMilkSale, identityInfo);
 
         Optional<Voucher> voucher = voucherRepository.findById(localMilkSale.getVoucherNo());
@@ -491,7 +478,6 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         }
 
     }
-
 
     @Override
     public List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header) {

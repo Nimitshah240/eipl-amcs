@@ -3,7 +3,7 @@ package com.eipl.amcs.operation.billing.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.billing.service.BonusService;
-import com.eipl.amcs.util.CommonUtil;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
 
@@ -18,15 +18,7 @@ public class BonusDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             BonusService service = EmcsAppContext.getContext().getBean(BonusService.class);
-            service.deleteDto(CommonUtil.setIdentityHeader(), code);
-//            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-//            String url = MainApp.getProperty(AppConstant.Props.BASE_URL, null) + AppConstant.UrlPath.BONUS + "/{code}";
-//            Map<String, Object> uriVariables = new HashMap<>();
-//            uriVariables.put("code", code);
-//
-//            ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, null, Void.class, uriVariables);
-//            if (response == null || response.getStatusCode() != HttpStatus.OK)
-//                return null;
+            service.deleteDto(CommonUtils.setIdentityHeader(), code);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

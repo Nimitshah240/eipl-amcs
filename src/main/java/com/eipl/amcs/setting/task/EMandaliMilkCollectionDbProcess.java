@@ -29,13 +29,7 @@ public class EMandaliMilkCollectionDbProcess extends Task<List<MilkCollectionMig
         List<MilkCollectionMigration> list = new ArrayList<>();
         try {
             String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";user=sa;password=everest;integretedSecurity=false";
-
-//            String urlDb = "jdbc:ucanaccess://" + filePath;
             try (Connection connection = DriverManager.getConnection(connectionUrl); Statement stmt = connection.createStatement()) {
-
-//            try (Connection connection = DriverManager.getConnection(urlDb, "", AppConstant.PROMPT_DB_PASS)) {
-
-
                 Statement statement = connection.createStatement();
 
                 String a = ("select    CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4)) as [Month]" +
@@ -49,11 +43,6 @@ public class EMandaliMilkCollectionDbProcess extends Task<List<MilkCollectionMig
                         " from farmercollection " +
                         "where cast(dtdate as DATE)>= '" + fromDate + "' and cast(dtdate as DATE) <='" + toDate +
                         "' GROUP BY CAST(LEFT(DATENAME(mm,dtdate),3)as VARCHAR(3)) +'-'+ CAST(DATEPART(YYYY,dtdate) as VARCHAR(4))");
-
-
-//                ResultSet resultSet = statement.executeQuery("select cast(DATENAME(MM,dtDate)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,dtDate) as varchar(4)) as month, count(*) as count from farmercollection" +
-//                        " where  format(dtDate, 'yyyy-MM-dd') >= .'" + fromDate.toString() + "' AND  format(dtDate, 'yyyy-MM-dd') <= '" + toDate.toString() +
-//                        "' group by cast(DATENAME(MM,dtDate)as varchar(3)) +'-'+ Cast(DATEPART(YYYY,dtDate) as varchar(4))");
 
                 while (resultSet.next()) {
                     MilkCollectionMigration migration = new MilkCollectionMigration();

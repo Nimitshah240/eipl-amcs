@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
 import com.eipl.amcs.base.JsonAndTableBuilder;
-import com.eipl.amcs.deserialize.SocietyDeserializer;
-import com.eipl.amcs.serialize.SocietySerialize;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @SuppressWarnings("serial")
 @Entity
@@ -22,9 +21,7 @@ import javax.validation.constraints.Size;
 @Table(name = "dock")
 public class Dock extends BaseModel {
     @Id
-    @Size(max = 15)
     private String dockNo;
-    @Size(max = 3)
     private String unionCode;
     private Short isDefault;
 

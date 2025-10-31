@@ -3,11 +3,11 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.cellfactory.SocietyPaymentCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
@@ -132,7 +132,6 @@ public class MilkSummaryDataEntryController implements MyInitialization, PopupCa
         btnImport.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MILK_SUMMARY_DATA_ENTRY_IMPORT"))
                 throw new UnAuthorizedAccessException();
-            // loadImportPreReq();
             File file = CommonUtils.openExcelFileDialog(resourceBundle.getString("milkcollectionsummarydataentry"));
             if (file == null) {
                 MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("milkcollectionsummarydataentry"),

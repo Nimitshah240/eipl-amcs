@@ -33,35 +33,26 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class MemberDataMigrationSkyWayController implements MyInitialization {
+    private final Map<String, MilkType> mapMilkType = new HashMap<>();
+    private final Map<String, Gender> mapGender = new HashMap<>();
     @FXML
     StackPane root;
     @FXML
     TableView<Member> tableData;
-    @FXML
-    TableColumn<Member, Number> colNoOfCow, colNoOfBuffalo;
     @FXML
     TableColumn<Member, String> colFirstName, colMiddleName, colLastName, colGender, colMobileNo, colCode, colLocalName;
     @FXML
     Button btnSave, btnClose, btnBrowse, btnGenerate;
     @FXML
     TextField txtFilePath, txtCow, txtBuffalo;
+
     @FXML
     ComboBox<String> cboxVersion;
     @FXML
     private Label lblStatus;
-
-
-//    private List<MilkType> milkTypeList;
-//    private List<Gender> genderList;
-//    private List<MemberType> memberTypeList;
-//    String milkTypeStr = null;
-
-
     private Stage stage;
     private ResourceBundle resourceBundle;
     private List<MemberDto> listDto = new ArrayList<>();
-    private final Map<String, MilkType> mapMilkType = new HashMap<>();
-    private final Map<String, Gender> mapGender = new HashMap<>();
     private MemberType memberType;
     private String selectedFilePath = null;
 
@@ -242,52 +233,4 @@ public class MemberDataMigrationSkyWayController implements MyInitialization {
         new Thread(task).start();
         lblStatus.textProperty().bind(task.messageProperty());
     }
-
-//    public void setData() {
-//        try {
-//            List<Member> list = new ArrayList<>();
-//            List<String> lines = Files.readAllLines(new File(path).toPath(), Charset.forName("UTF-8"));
-//            String milkCow[] = txtCow.getText().split("-");
-//            String milkBuf[] = txtBuffalo.getText().split("-");
-//            for (String line : lines) {
-//                String[] arr = line.split(",");
-//                System.out.println(arr[0] + "-" + arr[1] + "-" + arr[2]);
-//
-//                Member m = new Member();
-//                MemberDetail md = new MemberDetail();
-//                m.setCodeEx(String.format("%04d", Integer.parseInt(arr[0])));
-//                m.setCode(MainApp.identityDto.getSociety().getCode() + m.getCodeEx());
-//                m.setFirstName("Member");
-//                m.setMiddleName("");
-//                m.setLastName(arr[0]);
-//                String[] arrNameLocal = arr[1].trim().replace("'", "").split("\\s+");
-//                m.setFirstNameLocal(arrNameLocal.length >  1 ? arrNameLocal[1] : "");
-//                m.setLastNameLocal(arrNameLocal[0]);
-//                m.setMiddleNameLocal(arrNameLocal.length > 2 ? arrNameLocal[2] : "");
-//                if(Integer.parseInt(m.getCodeEx())>=Integer.parseInt(milkCow[0]) &&(Integer.parseInt(m.getCodeEx())<=Integer.parseInt(milkCow[1])))
-//                    milkTypeStr="c";
-//                else if (Integer.parseInt(m.getCodeEx())>=Integer.parseInt(milkBuf[0]) &&(Integer.parseInt(m.getCodeEx())<=Integer.parseInt(milkBuf[1])))
-//                    milkTypeStr="b";
-//                else
-//                    continue;
-//                m.setMilkType(mapMilkType.get(milkTypeStr) != null ? mapMilkType.get(milkTypeStr) : milkTypeList.get(0));
-//                m.setMilkType(mapMilkType.get(milkTypeStr) != null ? mapMilkType.get(milkTypeStr) : milkTypeList.get(0));
-//                md.setGender(genderList.get(0));
-//                MemberType memberType = memberTypeList.get(0);
-//                m.setMemberType(memberType);
-//                m.setSociety(MainApp.identityDto.getSociety());
-//                md.setUnionCode(MainApp.identityDto.getUnion().getCode());
-//                m.setMobileNo("0000000000");
-//                md.setMember(m);
-//                md.setNumberOfBuffalo((short) 0);
-//                md.setNumberOfCow((short) 0);
-//                list.add(m);
-//                listDto.add(new MemberDto(m, md));
-//            }
-//            tableData.setItems(FXCollections.observableList(list));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 }

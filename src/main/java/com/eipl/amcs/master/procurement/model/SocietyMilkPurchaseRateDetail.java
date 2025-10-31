@@ -1,14 +1,14 @@
 package com.eipl.amcs.master.procurement.model;
 
-import com.eipl.amcs.base.BaseModelTxn;
-import com.eipl.amcs.deserialize.MilkQualityTypeDeserializer;
-import com.eipl.amcs.deserialize.MilkTypeDeserializer;
-import com.eipl.amcs.deserialize.SocietyMilkPurchaseRateDeserializer;
+import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.MilkQualityTypeDeserializer;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyMilkPurchaseRateDeserializer;
+import com.eipl.amcs.json.serialize.MilkQualityTypeSerialize;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
+import com.eipl.amcs.json.serialize.SocietyMilkPurchaseRateSerialize;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.serialize.MilkQualityTypeSerialize;
-import com.eipl.amcs.serialize.MilkTypeSerialize;
-import com.eipl.amcs.serialize.SocietyMilkPurchaseRateSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -17,7 +17,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
@@ -29,7 +28,6 @@ import java.math.BigDecimal;
 public class SocietyMilkPurchaseRateDetail extends BaseModelTxn {
 
     @Id
-    @Size(max = 25)
     private String code;
     @Digits(integer = 2, fraction = 2)
     private BigDecimal fat;

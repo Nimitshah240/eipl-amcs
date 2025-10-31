@@ -33,7 +33,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -56,7 +55,6 @@ public class ProductSaleDataMigrationController implements MyInitialization {
     Button btnSave, btnClose, btnBrowse, btnGenerate;
     @FXML
     TextField txtFilePath;
-    String milkTypeStr = null;
     List<ProductSaleMigrateDto> listDto = new ArrayList<>();
     List<ProductSale> list = new ArrayList<>();
     private ResourceBundle resourceBundle;
@@ -170,15 +168,8 @@ public class ProductSaleDataMigrationController implements MyInitialization {
     public void setData(String type, String path) {
         int i = 1;
         if (type.equalsIgnoreCase("Prompt")) {
-//            String urlDb = "jdbc:ucanaccess://" + path;
-//            String pwd = "PNM^$)&(%*";
-//            try (Connection connection = DriverManager.getConnection(urlDb, "", pwd)) {
-//                Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery("select * from tblILedger");
-//                while (resultSet.next()) {
         } else if (type.equalsIgnoreCase("SkyWay")) {
             try {
-//                List<LocalMilkSale> list = new ArrayList<>();
                 List<String> lines = Files.readAllLines(new File(path).toPath(), StandardCharsets.UTF_8);
                 for (String line : lines) {
                     String[] arr = line.split(",");

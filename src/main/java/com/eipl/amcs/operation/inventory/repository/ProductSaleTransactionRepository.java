@@ -21,8 +21,6 @@ public interface ProductSaleTransactionRepository extends BaseRepository<Product
     @EntityGraph(attributePaths = {"productSale", "product"})
     List<ProductSaleTransaction> findAll(Sort sort);
 
-    void deleteByProductSale(ProductSale productSale);
-
     @EntityGraph(attributePaths = {"productSale", "product"})
     List<ProductSaleTransaction> findByProductSale(ProductSale productSale);
 

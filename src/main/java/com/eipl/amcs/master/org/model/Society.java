@@ -1,9 +1,9 @@
 package com.eipl.amcs.master.org.model;
 
-import com.eipl.amcs.base.BaseModel;
-import com.eipl.amcs.deserialize.*;
+import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.*;
+import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.*;
-import com.eipl.amcs.serialize.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -23,53 +22,32 @@ import java.time.LocalDate;
 @Table(name = "society")
 public class Society extends BaseModel {
     @Id
-    @Size(max = 12)
     private String code;
-    @Size(max = 10)
     private String codeEx;
-    @Size(max = 100)
     private String name;
-    @Size(max = 100)
     private String shortName;
-    @Size(max = 255)
     private String nameLocal;
-    @Size(max = 255)
     private String shortNameLocal;
 
     private LocalDate registrationDate;
-    @Size(max = 20)
     private String registrationCode;
-    @Size(max = 10)
     private String destinationCode;
     private Short destinationType;
     private LocalDate effectiveDate;
     private Short isBmc;
-    @Size(max = 255)
     private String email;
-    @Size(max = 255)
     private String panNo;
-    @Size(max = 255)
     private String phoneNo;
-    @Size(max = 100)
     private String contactPerson;
-    @Size(max = 255)
     private String contactPersonMobileNo;
-    @Size(max = 255)
     private String bankAccountNo;
-    @Size(max = 255)
     private String ifsc;
-    @Size(max = 500)
     private String address;
-    @Size(max = 100)
     private String city;
-    @Size(max = 6)
     private String pincode;
     private Boolean allowMultiFamilyMember;
-    @Size(max = 255)
     private String tinNo;
-    @Size(max = 255)
     private String serviceTax;
-    @Size(max = 255)
     private String upiNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

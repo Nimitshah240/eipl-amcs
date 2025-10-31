@@ -3,11 +3,11 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.base.model.UnAuthorizedAccessException;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.operation.billing.model.BonusSummary;
 import com.eipl.amcs.operation.billing.task.BonusDeleteTask;
 import com.eipl.amcs.operation.billing.task.BonusSummaryLoadTask;
@@ -38,6 +38,7 @@ import java.util.concurrent.ExecutionException;
 
 public class BonusSummaryController implements MyInitialization, PopupCallback {
 
+    private final ObjectProperty<BonusSummary> propSummary;
     @FXML
     private StackPane root;
     @FXML
@@ -50,9 +51,6 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
     private TableColumn<BonusSummary, String> colStatus, colMilkType;
     @FXML
     private Button btnAdd, btnEdit, btnClose, btnDelete, btnDisburse, btnReport, btnGeneral;
-
-    private final ObjectProperty<BonusSummary> propSummary;
-
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg;
 
@@ -137,7 +135,6 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
 
 
     private void validateAndGenerateReport() {
-
 
         errorMsg = new StringBuilder();
         if (!validate()) {

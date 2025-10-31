@@ -25,8 +25,6 @@ public class ProductSaleTransactionServiceImpl implements ProductSaleTransaction
     @Autowired
     private ProductSaleRepository productSaleRepository;
     @Autowired
-    private ProductSaleTaxRepository productSaleTaxRepository;
-    @Autowired
     private ProductSaleTaxRepository saleTaxRepository;
 
     @Override

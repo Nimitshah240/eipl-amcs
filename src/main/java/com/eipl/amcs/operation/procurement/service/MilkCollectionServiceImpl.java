@@ -28,8 +28,8 @@ import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkCollectionRepository;
 import com.eipl.amcs.setting.repository.HardwareDeviceConfigRepository;
-import com.eipl.amcs.util.CommonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,34 +263,9 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
 
     @Override
     public MilkCollection update(MilkCollection collection, String identityInfo) {
-
-//		MilkCollection data = milkCollectionRepository.findById(code)
-//				.orElseThrow(() -> new EntityNotFoundException(MilkCollection.class, "invalid.collectiondata"));
-//		data.setFat(collection.getFat());
-//		data.setSnf(collection.getSnf());
-//		data.setClr(collection.getClr());
-//		data.setWater(collection.getWater());
-//		data.setDensity(collection.getDensity());
-//		data.setLectose(collection.getLectose());
-//		data.setProtein(collection.getProtein());
-//		data.setRtpl(collection.getRtpl());
-//		data.setQty(collection.getQty());
-//		data.setAmount(collection.getAmount());
-//		data.setWeightAuto(collection.isWeightAuto());
-//		data.setQualityAuto(collection.isQualityAuto());
-//		data.setAvgParam(collection.isAvgParam());
-//		data.setVoucherNo(collection.getVoucherNo());
-//		data.setRateCode(collection.getRateCode());
-//		data.setWsCode(collection.getWsCode());
-//		data.setAnalyserCode(collection.getAnalyserCode());
-//		data.setQtyMode(collection.getQtyMode());
-//		data.setConvertedQty(collection.getConvertedQty());
-//		data.setConvertedQtyMode(collection.getConvertedQtyMode());
-//		data.setupdateData();
         MilkCollection prevData = milkCollectionRepository.findById(collection.getCode())
                 .orElseThrow(() -> new EntityNotFoundException(MilkCollection.class, "invalid.collectiondata"));
         String voucherNo = createVoucher(collection, prevData.getVoucherNo(), identityInfo, (short) 2, prevData.getAmount());
-
         collection.setupdateData();
         collection.setVoucherNo(voucherNo);
         MilkCollection collNew = milkCollectionRepository.customUpdate(collection, identityInfo);
@@ -354,18 +329,6 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
             return collection.get().getSampleNo() + 1;
         return 1;
     }
-//    @Override
-//    public Number fetchNextSampleNo(LocalDateTime dt, String dockCode, int milkTypeCode) {
-//        Dock dock = dockRepository.findById(dockCode)
-//                .orElseThrow(() -> new EntityNotFoundException(Dock.class, "invalid.dock"));
-//        int initialSampleNo = milkTypeCode >= 1 ? 1001 : 1;
-//        Optional<MilkCollection> collection = milkCollectionRepository.findTop1ByDockAndCollectionDateOrderBySampleNoDesc(dock, dt);
-//        if (collection.isPresent()) {
-//            int lastSampleNo = collection.get().getSampleNo();
-//            return milkTypeCode >= 1 && lastSampleNo < 1000  ? initialSampleNo  : lastSampleNo + 1;
-//        }
-//        return initialSampleNo;
-//    }
 
     @Override
     public List<CollectionImportDto> importCollections(List<MilkCollection> dtoList, String header) {
@@ -466,11 +429,6 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     public List<MilkCollection> findByMemberAndDate(LocalDateTime date, String code) {
         Member member = memberRepository.findById(code).get();
         member.setSociety(Hibernate.unproxy(member.getSociety(), Society.class));
-//		List<MilkCollection> list =milkCollectionRepository.findByCollectionDateAndMember(date, member);
-//		for (MilkCollection milkCollection:list) {
-//			MilkCollection milkCollection = (MilkCollection) iterator.next();
-
-//		}
         return milkCollectionRepository.findByCollectionDateAndMember(date, member);
     }
 
@@ -486,7 +444,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
         Optional<MilkCollection> collectionData = milkCollectionRepository.findByCollectionDateAndMemberAndMilkType(collectionDate,
                 collection.getMember(), collection.getMilkType());
         if (collectionData.isPresent()) {
-            FieldError nameNotValid = CommonUtil.getFieldError("MilkCollection", "date",
+            FieldError nameNotValid = CommonUtils.getFieldError("MilkCollection", "date",
                     collection.getDate().toString(), "collectionrecord.alreadyexists");
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
@@ -559,13 +517,12 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     public Map<String, BigDecimal> findAvgFatAndSnf(String code, int no, String milktype, LocalDate date,
                                                     int shiftCode) {
         List<Timestamp> listDates = milkCollectionRepository.findLastDates(milktype,
-                CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
+                CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
         Map<String, BigDecimal> avg = new HashMap<>();
         Map<String, BigDecimal> total = new HashMap<>();
-//		total = milkCollectionRepository.findTotals(code, no, Integer.parseInt(milktype));
         if (!listDates.isEmpty()) {
             avg = milkCollectionRepository.findAvgFatAndSnf(code, listDates.get(listDates.size() - 1).toLocalDateTime(),
-                    CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
+                    CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
             return avg;
         } else
             return null;
@@ -668,7 +625,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
 
         MemberWiseCollectionDto dto = new MemberWiseCollectionDto();
         List<Timestamp> listDates = milkCollectionRepository.findLastDates(milktype,
-                CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
+                CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), code, no);
         Map<String, BigDecimal> avg;
         Map<String, BigDecimal> total;
         total = milkCollectionRepository.findTotals(code, paymentCycleCode, Integer.parseInt(milktype));
@@ -676,11 +633,11 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
         List<MilkCollection> collectionList = new ArrayList<>();
         if (listDates.size() != 0) {
             collectionList = milkCollectionRepository.findByMemberAndCollectionDateBetweenAndMilkTypeOrderByCollectionDateDesc(member, listDates.get(listDates.size() - 1).toLocalDateTime(),
-                    CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), milkTypeRepository.getById(Integer.parseInt(milktype)));
+                    CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()), milkTypeRepository.getById(Integer.parseInt(milktype)));
         }
         if (!listDates.isEmpty()) {
             avg = milkCollectionRepository.findAvgFatAndSnf(code, listDates.get(listDates.size() - 1).toLocalDateTime(),
-                    CommonUtil.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
+                    CommonUtils.getLocalDateTimeFromDateAndShift(date, shiftRepository.findById(shiftCode).get()));
             dto.setAvg(avg);
         } else {
             dto.setAvg(null);

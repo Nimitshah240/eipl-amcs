@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import com.eipl.amcs.controls.E_Button?>
-<StackPane fx:id="root" prefWidth="400.0" styleClass="pane-white-drop-border" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.SyncDataListController">
+<StackPane fx:id="root" prefWidth="400.0" styleClass="pane-white-drop-border" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.SyncDataListController">
     <children>
       <VBox>
          <children>
