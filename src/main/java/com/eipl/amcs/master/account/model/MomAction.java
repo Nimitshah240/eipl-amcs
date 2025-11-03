@@ -11,6 +11,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -32,6 +33,7 @@ public class MomAction extends BaseModelTxn {
     @Id
     private String code;
     private String action_taken;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private short meetingType;
     @ManyToOne(fetch = FetchType.LAZY)

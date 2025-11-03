@@ -14,6 +14,7 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -58,6 +59,7 @@ public class MemberBill extends BaseModelTxn {
 
     @Column(name = "is_disbursed")
     private boolean disbursed;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate disbursedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

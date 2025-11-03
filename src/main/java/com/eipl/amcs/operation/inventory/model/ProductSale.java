@@ -11,6 +11,7 @@ import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -41,7 +42,9 @@ public class ProductSale extends BaseModelTxn {
     @Digits(integer = 8, fraction = 2)
     private BigDecimal taxAmount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate invoiceDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deductionStartDate;
     private String voucherNo;
     private Short noOfInstallments;

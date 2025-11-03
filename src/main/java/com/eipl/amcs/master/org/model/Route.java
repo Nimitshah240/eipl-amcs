@@ -5,6 +5,7 @@ import com.eipl.amcs.json.deserialize.BmcDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
 import com.eipl.amcs.json.serialize.BmcSerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,7 +31,9 @@ public class Route extends BaseModel {
 
     private Integer capacity;
     private Integer lengthKms;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalTime startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalTime returnTime;
 
     @ManyToOne(fetch = FetchType.LAZY)

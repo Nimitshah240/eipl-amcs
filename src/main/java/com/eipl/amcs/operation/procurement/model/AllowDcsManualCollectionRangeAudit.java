@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.model;
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,16 +41,21 @@ public class AllowDcsManualCollectionRangeAudit extends BaseModelTxnAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_shift", foreignKey = @ForeignKey(name = "fk_milk_collection_shift_code"))
     private Shift toShift;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime toDate;
     @Column(name = "is_weight_manual")
     private Boolean isWeightManual;
     @Column(name = "is_quality_manual")
     private Boolean isQualityManual;
     private String approvedBy;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime approvedDate;
     private String cancelledBy;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime cancelledAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime closedAt;
     private String closedBy;
     private String remarks;

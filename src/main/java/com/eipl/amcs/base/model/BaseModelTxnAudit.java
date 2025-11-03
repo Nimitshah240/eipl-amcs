@@ -1,6 +1,7 @@
 package com.eipl.amcs.base.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +16,10 @@ import java.time.LocalDateTime;
 @Setter
 public class BaseModelTxnAudit implements Serializable, JsonAndTableBuilder {
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime createdAt;
     private String createdBy;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime updatedAt;
     private String updatedBy;
 
@@ -27,6 +30,7 @@ public class BaseModelTxnAudit implements Serializable, JsonAndTableBuilder {
     @Column(name = "x_col3")
     private String xCol3;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime auditCreatedAt;
     private String auditCreatedBy;
     private String operationType;

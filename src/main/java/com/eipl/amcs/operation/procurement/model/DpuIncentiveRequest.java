@@ -4,6 +4,7 @@ import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -25,6 +26,7 @@ public class DpuIncentiveRequest extends BaseModelTxn {
 
     @Id
     private Long incentiveMasterCode;
+
     @Column(name = "m_cutoff_time")
     private LocalTime mctime;
     @Column(name = "e_cutoff_time")
@@ -42,7 +44,9 @@ public class DpuIncentiveRequest extends BaseModelTxn {
     private String originatingOrgCode;
     private String originatingOrgType;
     private Integer originatingType;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate toDate;
     private String xCol4;
     private String xCol5;

@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -27,6 +28,7 @@ public class ProductDispatchTransaction extends BaseModelTxn {
     private String code;
     private BigDecimal amount;
     private BigDecimal discountAmount;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dispatchDate;
     private BigDecimal dispatchQty;
     private BigDecimal rate;

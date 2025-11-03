@@ -2,6 +2,7 @@ package com.eipl.amcs.master.insurance.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,12 +21,17 @@ import java.time.LocalDate;
 public class InsuranceMaster extends BaseModel {
     @Id
     private Integer insuranceMasterCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate insuranceStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate insuranceEndDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dcsEditStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dcsEditEndDate;
     private Integer memberMinAge;
     private Integer memberMaxAge;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate insuranceFinalDate;
     private String insuranceDescription;
     private String status;

@@ -25,11 +25,13 @@ public class Inbox {
     private Integer sequenceNo;
     private String originatingOrgId;
     private String originatingOrgType;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime postingTimestamp;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime syncTimestamp;
     private String sourceDeviceMac;
     private String versionNo;
     private String deviceId;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime errorTimestamp;
 }

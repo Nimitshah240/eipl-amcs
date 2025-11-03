@@ -7,6 +7,7 @@ import com.eipl.amcs.json.serialize.MemberSerialize;
 import com.eipl.amcs.json.serialize.SocietyPaymentCycleSerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -38,6 +39,7 @@ public class ProductSaleInstallmentAudit extends BaseModelTxnAudit {
     @Column(name = "is_billing")
     private Boolean billing;
     private String invoiceNo;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deductionDate;
     private String unionCode;
     private String societyCode;

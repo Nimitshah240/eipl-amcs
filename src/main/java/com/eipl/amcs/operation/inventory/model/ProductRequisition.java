@@ -5,6 +5,7 @@ import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -24,8 +25,10 @@ import java.time.LocalDateTime;
 public class ProductRequisition extends BaseModelTxn {
     @Id
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime cancelledAt;
     private String cancelledBy;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime requisitionDate;
     private String description;
     private int entryType;
@@ -45,6 +48,7 @@ public class ProductRequisition extends BaseModelTxn {
     private Boolean isDelete;
     @Transient
     private String syncStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     @Transient
     private LocalDateTime syncTimestamp;
 
