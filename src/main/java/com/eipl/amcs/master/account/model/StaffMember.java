@@ -7,6 +7,7 @@ import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -35,7 +36,9 @@ public class StaffMember extends BaseModelTxn {
     private String panNo;
     private String pinCode;
     private Integer paymentMode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureFromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureToDate;
     private String unionCode;
 

@@ -20,7 +20,7 @@ public class RealTimeRequest<T> implements Serializable {
     private String imei;
     private String organizationCode;
     private String organizationType;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime requestTime;
     private String token;
     private T content;

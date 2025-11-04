@@ -10,6 +10,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -33,6 +34,7 @@ public class MemberMilkPurchaseRate extends BaseModel {
     private String description;
     private Short rateGenMethodCode; // 1-Excel, (1-Manual,2-Auto,3-Excel)
     private String unionCode;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime wefDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

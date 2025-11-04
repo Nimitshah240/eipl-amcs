@@ -5,6 +5,7 @@ import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class ProductDispatchTransactionAudit extends BaseModelTxnAudit {
     private String code;
     private BigDecimal amount;
     private BigDecimal discountAmount;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dispatchOnDate;
     private BigDecimal dispatchQty;
     private BigDecimal rate;

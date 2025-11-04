@@ -1,5 +1,6 @@
 package com.eipl.amcs.sync.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,10 +26,13 @@ public class SubscribedError {
     private String operation; // INSERT, UPDATE, DELETE
     private String dataText;
     private String errorText;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime receivedAt;
     private short processed; // Default = 0
     private short sequence; // Default = 0
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime processedAt;
     private String language;
     private String sourceSystemId;

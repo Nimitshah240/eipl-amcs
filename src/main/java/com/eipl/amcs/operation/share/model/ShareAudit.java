@@ -7,6 +7,7 @@ import com.eipl.amcs.json.serialize.MemberSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -31,8 +32,11 @@ public class ShareAudit extends BaseModelTxnAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate issueDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate cancelDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate transferDate;
     private BigDecimal shareAmount;
     private String certificateNo;

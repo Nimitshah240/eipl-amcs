@@ -4,6 +4,7 @@ import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -25,8 +26,10 @@ public class ProductRequisitionAudit extends BaseModelTxnAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime cancelledAt;
     private String cancelledBy;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime requisitionDate;
     private String description;
     private int entryType;

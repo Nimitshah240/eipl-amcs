@@ -1,6 +1,7 @@
 package com.eipl.amcs.base.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class Notification extends BaseModelTxn {
     private String memberCode;
     private String appType;
     private String loginType;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime wefDate;
     private String title;
     private String message;
@@ -35,13 +37,18 @@ public class Notification extends BaseModelTxn {
     private Integer receiverType;
     private String contentId;
     private Integer status;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime entry;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime pickup;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime response;
     private String originatingOrgCode;
     private String originatingOrgType;
     private Integer originatingType;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime toDate;
     private Integer fromShift;
     private Integer toShift;

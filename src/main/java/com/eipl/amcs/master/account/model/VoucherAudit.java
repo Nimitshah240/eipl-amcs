@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.VoucherTypeDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.VoucherTypeSerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -33,7 +34,9 @@ public class VoucherAudit extends BaseModelTxnAudit {
     private String code;
     private Boolean autoPosted;
     private Boolean cancelled;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate billDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate voucherDate;
     private String billNo;
     private String remarks;

@@ -152,7 +152,6 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
         MainApp.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("view/EmcsApp.fxml"));
         Scene scene = new Scene(root);
@@ -174,8 +173,14 @@ public class MainApp extends Application {
 
         future.thenAccept(result -> {
             Platform.runLater(() -> {
-                System.out.println("Result: " + result);
-                MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/Splash.fxml")));
+                try {
+                    EiplAmcsAppRunner eiplAmcsAppRunner = new EiplAmcsAppRunner();
+                    eiplAmcsAppRunner.fetchNavigation();
+                    MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/Splash.fxml")));
+                    System.out.println("Result: " + result);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
         });
 

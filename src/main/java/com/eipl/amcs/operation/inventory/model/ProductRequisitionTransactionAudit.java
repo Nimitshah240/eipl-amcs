@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.ProductRequisitionDeserializer;
 import com.eipl.amcs.json.serialize.ProductRequisitionSerialize;
 import com.eipl.amcs.json.serialize.ProductSerialize;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -30,8 +31,10 @@ public class ProductRequisitionTransactionAudit extends BaseModelTxnAudit {
     private Long id;
     private String code;
     private String approvedBy;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate approvedDate;
     private BigDecimal approvedQuantity;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime cancelledAt;
     private String cancelledBy;
     private BigDecimal discountAmount;
@@ -40,7 +43,9 @@ public class ProductRequisitionTransactionAudit extends BaseModelTxnAudit {
     private BigDecimal amount;
     private BigDecimal rate;
     private BigDecimal quantity;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime requisitionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate expectedDeliveryDate;
     private String schemeAddType;
     private String status;

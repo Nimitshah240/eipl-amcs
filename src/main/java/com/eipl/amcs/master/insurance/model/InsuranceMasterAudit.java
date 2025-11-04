@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.insurance.model;
 
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,12 +20,17 @@ public class InsuranceMasterAudit extends BaseModelTxnAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer insuranceMasterCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate insuranceStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate insuranceEndDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dcsEditStartDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dcsEditEndDate;
     private Integer memberMinAge;
     private Integer memberMaxAge;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate insuranceFinalDate;
     private String insuranceDescription;
     private String unionCode;

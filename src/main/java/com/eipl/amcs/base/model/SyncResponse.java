@@ -1,14 +1,20 @@
 package com.eipl.amcs.base.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public class SyncResponse {
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     protected LocalDateTime fromDatetime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     protected LocalDateTime toDatetime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     protected LocalDateTime createdAt;
     protected String createdBy;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     protected LocalDateTime updatedAt;
     protected String updatedBy;
     private String forceSyncRequestCode;

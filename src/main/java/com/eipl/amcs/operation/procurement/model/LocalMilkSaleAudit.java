@@ -8,6 +8,7 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -36,6 +37,7 @@ public class LocalMilkSaleAudit extends BaseModelTxnAudit {
     private String invoiceNo;
     private Short consumerType;
     private String consumerCode;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime saleDate;
     private Short entryType;
     private Short paymentMode;
