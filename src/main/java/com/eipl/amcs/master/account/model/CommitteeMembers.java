@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.serialize.DesignationSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -26,8 +27,11 @@ public class CommitteeMembers extends BaseModelTxn {
 
     @Id
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureFromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate electionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureToDate;
     private String unionCode;
     private String memberCode;

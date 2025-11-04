@@ -1,6 +1,7 @@
 package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.model.BaseModelTxn;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class BmcRunningHours extends BaseModelTxn {
     @Column(name = "is_active")
     private Boolean isActive;
     private BigDecimal amount;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private int runningHoursDg;
     private int runningHoursPower;

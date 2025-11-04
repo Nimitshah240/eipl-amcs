@@ -10,6 +10,7 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -33,6 +34,7 @@ public class MilkCollectionAudit extends BaseModelTxnAudit {
     private Long id;
     private String code;
     private int sampleNo;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime collectionDate;
     private BigDecimal fat;
     private BigDecimal snf;
@@ -50,7 +52,9 @@ public class MilkCollectionAudit extends BaseModelTxnAudit {
     private boolean qualityAuto;
     @Column(name = "is_avg_param")
     private boolean avgParam;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime qualityAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime weightAt;
     private String voucherNo;
     private String rateCode;

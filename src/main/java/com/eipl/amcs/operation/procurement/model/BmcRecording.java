@@ -1,6 +1,7 @@
 package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.model.BaseModelTxn;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class BmcRecording extends BaseModelTxn {
     private Long code;
     @Column(name = "is_active")
     private Boolean isActive;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime recordingDateTime;
     private BigDecimal temperature;
     private BigDecimal weight;

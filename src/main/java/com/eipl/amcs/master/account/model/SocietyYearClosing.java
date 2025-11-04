@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.serialize.FinancialYearSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -33,6 +34,7 @@ public class SocietyYearClosing extends BaseModelTxn {
     @JoinColumn(name = "financial_years_code", foreignKey = @ForeignKey(name = "fk_society_year_closing_financial_years_code"))
     private FinancialYear financialYear;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate closingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

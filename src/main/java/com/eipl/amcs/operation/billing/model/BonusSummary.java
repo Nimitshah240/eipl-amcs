@@ -8,6 +8,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -28,12 +29,15 @@ import java.time.LocalDate;
 public class BonusSummary extends BaseModelTxn {
     @Id
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate toDate;
     private BigDecimal totalMilkQty;
     private BigDecimal totalMilkAmount;
     private BigDecimal bonusCriteriaAmount;
     private BigDecimal bonusCriteriaValue;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate disbursedDate;
     private short status; //0-PENDING ,1-DISBURSED
     private short bonusCriteria; //0-percentage ,1-rs/ltr

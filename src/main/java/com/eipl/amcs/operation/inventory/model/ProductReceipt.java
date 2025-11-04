@@ -11,6 +11,7 @@ import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -31,7 +32,9 @@ import java.time.LocalDate;
 public class ProductReceipt extends BaseModelTxn {
     @Id
     private String grnNo;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate grnDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate challanDate;
     private String challanNo;
     private String description;

@@ -7,6 +7,7 @@ import com.eipl.amcs.json.serialize.RouteSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -29,7 +30,9 @@ public class ProductDispatchAudit extends BaseModelAudit {
     private Long id;
     private String challanNo;
     private Boolean challanVerified;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime requisitionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dispatchDate;
     private String referenceNo;
     private String vehicleNo;

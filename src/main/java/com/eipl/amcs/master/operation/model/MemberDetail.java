@@ -8,6 +8,7 @@ import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -37,7 +38,9 @@ public class MemberDetail extends BaseModelTxn {
     private String aadharNo;
     private String panNo;
     private String email;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate registrationDate;
     private Short numberOfCow;
     private Short numberOfBuffalo;

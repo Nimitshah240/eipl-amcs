@@ -7,6 +7,7 @@ import com.eipl.amcs.json.serialize.ProductSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -37,6 +38,7 @@ public class ProductStockTransaction extends BaseModelTxn {
     @Digits(integer = 7, fraction = 3)
     private BigDecimal oldValue;
     private String referenceCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate transactionDate;
     private String transactionType;
     private String unionCode;

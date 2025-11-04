@@ -7,6 +7,7 @@ import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -36,7 +37,9 @@ public class MemberDetailAudit extends BaseModelTxnAudit {
     private String aadharNo;
     private String panNo;
     private String email;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate registrationDate;
     private Short numberOfCow;
     private Short numberOfBuffalo;
