@@ -5,6 +5,7 @@ import com.eipl.amcs.json.deserialize.BmcDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
 import com.eipl.amcs.json.serialize.BmcSerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -53,4 +54,10 @@ public class Route extends BaseModel {
     public String getTableName() {
         return "routes";
     }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
+
 }

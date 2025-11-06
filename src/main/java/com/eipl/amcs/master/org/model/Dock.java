@@ -48,6 +48,11 @@ public class Dock extends BaseModel {
     }
 
     @Override
+    public String toString() {
+        return dockNo;
+    }
+
+    @Override
     public JsonAndTableBuilder getAuditModel(String operation, String user) {
         DockAudit audit = new DockAudit();
         audit.setOperationType(operation);
