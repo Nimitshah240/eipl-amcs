@@ -4,6 +4,7 @@ import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.*;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -82,6 +83,5 @@ public class Bmc extends BaseModel {
 
     @Override
     public String toString() {
-        return this.code;
-    }
+        return CommonUtils.getLocalString(this.name, this.nameLocal);}
 }

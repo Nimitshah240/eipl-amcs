@@ -4,6 +4,7 @@ import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
 import com.eipl.amcs.master.geo.model.*;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -131,6 +132,7 @@ public class Society extends BaseModel {
 
     @Override
     public String toString() {
-        return this.name;
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
-}
+    }
+
