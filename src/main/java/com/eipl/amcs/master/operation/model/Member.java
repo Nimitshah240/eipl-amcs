@@ -2,8 +2,12 @@ package com.eipl.amcs.master.operation.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.MemberTypeDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
+import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.MemberTypeSerialize;
 import com.eipl.amcs.json.serialize.MilkTypeSerialize;
+import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
@@ -45,9 +49,13 @@ public class Member extends BaseModel {
     @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(name = "fk_members_milk_type_code"))
     private MilkType milkType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MemberTypeSerialize.class)
+    @JsonDeserialize(using = MemberTypeDeserializer.class)
     @JoinColumn(name = "member_type_code", foreignKey = @ForeignKey(name = "fk_members_member_type_code"))
     private MemberType memberType;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = SocietySerialize.class)
+    @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(name = "fk_members_society_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})
