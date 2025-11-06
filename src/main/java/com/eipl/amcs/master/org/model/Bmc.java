@@ -79,4 +79,9 @@ public class Bmc extends BaseModel {
     public String getTableName() {
         return "bmc";
     }
+
+    @Override
+    public String toString() {
+        return this.code;
+    }
 }

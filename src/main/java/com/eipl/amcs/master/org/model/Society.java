@@ -128,4 +128,9 @@ public class Society extends BaseModel {
     public String getTableName() {
         return "society";
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

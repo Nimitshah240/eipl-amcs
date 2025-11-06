@@ -53,4 +53,6 @@ public class Route extends BaseModel {
     public String getTableName() {
         return "routes";
     }
+
+
 }
