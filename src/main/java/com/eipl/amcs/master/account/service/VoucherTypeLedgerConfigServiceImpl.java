@@ -37,7 +37,7 @@ public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConf
                         .findFirst();
                 if (obj.isPresent()) {
                     VoucherTypeLedgerConfig ooo = obj.get();
-                    if (ooo.getLedger() != null) {
+                    if (ooo.getLedger() != null && ooo.getLedger().getName().equalsIgnoreCase("None")) {
                         ooo.setLedger(mappingVoucherType.getLedger().getCode().equalsIgnoreCase("0") ? null : mappingVoucherType.getLedger());
                     } else {
                         ooo.setLedger(null);
@@ -45,8 +45,10 @@ public class VoucherTypeLedgerConfigServiceImpl implements VoucherTypeLedgerConf
                     ooo.setVoucherType(mappingVoucherType.getVoucherType());
                     ooo.setCreditDebit(mappingVoucherType.getCreditDebit());
                     ooo.setupdateData();
-                    if (!mappingVoucherType.getLedger().getCode().equalsIgnoreCase("0"))
+                    if (mappingVoucherType.getLedger() != null && !mappingVoucherType.getLedger().getCode().equalsIgnoreCase("0"))
                         voucherTypeLedgerConfigRepository.customUpdate(mappingVoucherType, identityInfo);
+                    else
+                        voucherTypeLedgerConfigRepository.customDelete(mappingVoucherType, identityInfo);
                 } else {
                     if (mappingVoucherType.getLedger() != null) {
                         mappingVoucherType.setInitData();

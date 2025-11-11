@@ -96,6 +96,8 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
     @Override
     public void saveData() {
         for (VoucherTypeLedgerConfig item : tableData.getItems()) {
+            if (item.getLedger() != null && item.getLedger().getName().equalsIgnoreCase("None"))
+                item.setLedger(null);
             item.setSociety(MainApp.identityDto.getSociety());
             item.setUnionCode(MainApp.identityDto.getUnion().getCode());
         }
@@ -104,6 +106,7 @@ public class VoucherTypeLedgerConfigController implements MyInitialization {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
                     resourceBundle.getString("save.successful"));
             alert.createAlert();
+            loadData();
         });
         new Thread(task).start();
     }
