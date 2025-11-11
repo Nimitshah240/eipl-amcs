@@ -50,6 +50,8 @@ public class LedgerMappingTaxDetailServiceImpl implements LedgerMappingTaxDetail
                     mappingTaxDetail.setLedger(mappingTaxDetail.getLedger().getCode().equalsIgnoreCase("0") ? null : mappingTaxDetail.getLedger());
                     ledgerMappingTaxDetailRepository.customSave(mappingTaxDetail, identityInfo);
                 }
+            } else {
+                ledgerMappingTaxDetailRepository.customDelete(mappingTaxDetail, identityInfo);
             }
         }
 

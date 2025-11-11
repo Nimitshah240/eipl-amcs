@@ -357,46 +357,80 @@ public class HardwareDeviceConfigurationController implements MyInitialization {
         HardwareDeviceConfig ews = new HardwareDeviceConfig();
         ews.setAnalyserModeType(0);
         ews.setAnalyserMilkType(0);
+        ews.setConnType((short) 0);
+        ews.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        ews.setSociety(MainApp.identityDto.getSociety());
+        ews.setDock(MainApp.identityDto.getDock());
+        ews.setSociety(MainApp.getUser().getSociety());
         setDefaultValues(ews, cboxWsPort.getValue().equalsIgnoreCase("NA") ? null : cboxWs.getValue(), WS, cboxWsPort.getValue());
         deviceConfigList.add(ews);
 
         HardwareDeviceConfig analyser = new HardwareDeviceConfig();
+        analyser.setConnType((short) 0);
+        analyser.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        analyser.setSociety(MainApp.identityDto.getSociety());
+        analyser.setDock(MainApp.identityDto.getDock());
         analyser.setAnalyserModeType(cboxQualityMachine.getSelectionModel().getSelectedIndex());
         analyser.setAnalyserMilkType(cboxMilkType.getValue() != null ? cboxMilkType.getValue().getCode() : 0);
         setDefaultValues(analyser, cboxAnalyserPort.getValue().equalsIgnoreCase("NA") ? null : cboxAnalyser.getValue(), ANALYSER, cboxAnalyserPort.getValue());
         deviceConfigList.add(analyser);
 
         HardwareDeviceConfig analyser2 = new HardwareDeviceConfig();
+        analyser2.setConnType((short) 0);
+        analyser2.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        analyser2.setSociety(MainApp.identityDto.getSociety());
+        analyser2.setDock(MainApp.identityDto.getDock());
         analyser2.setAnalyserModeType(cboxQualityMachine2.getSelectionModel().getSelectedIndex());
         analyser2.setAnalyserMilkType(cboxMilkType2.getValue() != null ? cboxMilkType2.getValue().getCode() : 0);
         setDefaultValues(analyser2, cboxAnalyserPort2.getValue().equalsIgnoreCase("NA") ? null : cboxAnalyser2.getValue(), ANALYSER2, cboxAnalyserPort2.getValue());
         deviceConfigList.add(analyser2);
 
         HardwareDeviceConfig analyser3 = new HardwareDeviceConfig();
+        analyser3.setConnType((short) 0);
+        analyser3.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        analyser3.setSociety(MainApp.identityDto.getSociety());
+        analyser3.setDock(MainApp.identityDto.getDock());
         analyser3.setAnalyserModeType(cboxQualityMachine3.getSelectionModel().getSelectedIndex());
         analyser3.setAnalyserMilkType(cboxMilkType3.getValue() != null ? cboxMilkType3.getValue().getCode() : 0);
         setDefaultValues(analyser3, cboxAnalyserPort3.getValue().equalsIgnoreCase("NA") ? null : cboxAnalyser3.getValue(), ANALYSER3, cboxAnalyserPort3.getValue());
         deviceConfigList.add(analyser3);
 
         HardwareDeviceConfig analyser4 = new HardwareDeviceConfig();
+        analyser4.setConnType((short) 0);
+        analyser4.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        analyser4.setSociety(MainApp.identityDto.getSociety());
+        analyser4.setDock(MainApp.identityDto.getDock());
         analyser4.setAnalyserModeType(cboxQualityMachine4.getSelectionModel().getSelectedIndex());
         analyser4.setAnalyserMilkType(cboxMilkType4.getValue() != null ? cboxMilkType4.getValue().getCode() : 0);
         setDefaultValues(analyser4, cboxAnalyserPort4.getValue().equalsIgnoreCase("NA") ? null : cboxAnalyser4.getValue(), ANALYSER4, cboxAnalyserPort4.getValue());
         deviceConfigList.add(analyser4);
 
         HardwareDeviceConfig display = new HardwareDeviceConfig();
+        display.setConnType((short) 0);
+        display.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        display.setSociety(MainApp.identityDto.getSociety());
+        display.setDock(MainApp.identityDto.getDock());
         display.setAnalyserModeType(0);
         display.setAnalyserMilkType(0);
         setDefaultValues(display, cboxDisplayPort.getValue().equalsIgnoreCase("NA") ? null : cboxDisplay.getValue(), DISPLAY, cboxDisplayPort.getValue());
         deviceConfigList.add(display);
 
         HardwareDeviceConfig splitter = new HardwareDeviceConfig();
+        splitter.setConnType((short) 0);
+        splitter.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        splitter.setSociety(MainApp.identityDto.getSociety());
+        splitter.setDock(MainApp.identityDto.getDock());
         splitter.setAnalyserModeType(0);
         splitter.setAnalyserMilkType(0);
         setDefaultValues(splitter, cboxSplitterPort.getValue().equalsIgnoreCase("NA") ? null : cboxSplitter.getValue(), SPLITTER, cboxSplitterPort.getValue());
         deviceConfigList.add(splitter);
 
         HardwareDeviceConfig printer = new HardwareDeviceConfig();
+        printer.setConnType((short) 0);
+        printer.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        printer.setSociety(MainApp.identityDto.getSociety());
+        printer.setDock(MainApp.identityDto.getDock());
+        printer.setConnType((short) 0);
         printer.setAnalyserModeType(0);
         printer.setAnalyserMilkType(0);
         setPrinterValues(printer, cboxPrinter.getValue(), PRINTER);

@@ -80,6 +80,10 @@ public class LedgerMappingProductGroupController implements MyInitialization {
     @Override
     public void saveData() {
         for (LedgerMappingProductGroup item : tableData.getItems()) {
+            if (item.getLedgerSaleCode() != null && item.getLedgerSaleCode().getName().equalsIgnoreCase("None"))
+                item.setLedgerSaleCode(null);
+            if (item.getLedgerPurchaseCode() != null && item.getLedgerPurchaseCode().getName().equalsIgnoreCase("None"))
+                item.setLedgerPurchaseCode(null);
             item.setUnionCode(MainApp.identityDto.getUnion().getCode());
             item.setSociety(MainApp.identityDto.getSociety());
         }
@@ -88,6 +92,7 @@ public class LedgerMappingProductGroupController implements MyInitialization {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
                     resourceBundle.getString("save.successful"));
             alert.createAlert();
+            loadData();
         });
         new Thread(task).start();
     }

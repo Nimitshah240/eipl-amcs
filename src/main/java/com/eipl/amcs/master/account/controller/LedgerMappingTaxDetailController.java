@@ -80,10 +80,8 @@ public class LedgerMappingTaxDetailController implements MyInitialization {
     @Override
     public void saveData() {
         for (LedgerMappingTaxDetail item : tableTaxDetailData.getItems()) {
-            item.setUnionCode(MainApp.identityDto.getUnion().getCode());
-            item.setSociety(MainApp.identityDto.getSociety());
-        }
-        for (LedgerMappingTaxDetail item : tableTaxDetailData.getItems()) {
+            if (item.getLedger() != null && item.getLedger().getName().equalsIgnoreCase("None"))
+                item.setLedger(null);
             item.setUnionCode(MainApp.identityDto.getUnion().getCode());
             item.setSociety(MainApp.identityDto.getSociety());
         }
@@ -92,6 +90,7 @@ public class LedgerMappingTaxDetailController implements MyInitialization {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
                     resourceBundle.getString("save.successful"));
             alert.createAlert();
+            loadData();
         });
         new Thread(task).start();
     }
