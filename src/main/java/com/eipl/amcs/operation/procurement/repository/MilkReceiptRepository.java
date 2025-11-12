@@ -4,6 +4,7 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.operation.procurement.model.MilkReceipt;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,10 @@ public interface MilkReceiptRepository extends BaseRepository<MilkReceipt, Strin
     @Override
     @EntityGraph(attributePaths = {"milkDispatch", "fromShift", "toShift", "society", "union"})
     List<MilkReceipt> findAll();
+
+    @Override
+    @EntityGraph(attributePaths = {"milkDispatch", "fromShift", "toShift", "society", "union"})
+    List<MilkReceipt> findAll(Sort sort);
 
     @Override
     @EntityGraph(attributePaths = {"milkDispatch", "fromShift", "toShift", "society", "union"})

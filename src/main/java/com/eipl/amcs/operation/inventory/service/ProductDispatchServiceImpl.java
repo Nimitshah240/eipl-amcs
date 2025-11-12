@@ -13,6 +13,7 @@ import com.eipl.amcs.operation.inventory.repository.ProductDispatchTransactionRe
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,6 +46,7 @@ public class ProductDispatchServiceImpl implements ProductDispatchService {
     }
 
     @Override
+    @Transactional
     public List<ProductDispatchTransaction> findByDispatchDate(LocalDate fromDt, LocalDate toDt) {
         List<ProductDispatchTransaction> list = productDispatchTransactionRepository.findByDispatchDateBetween(fromDt, toDt);
         for (ProductDispatchTransaction requisition : list) {

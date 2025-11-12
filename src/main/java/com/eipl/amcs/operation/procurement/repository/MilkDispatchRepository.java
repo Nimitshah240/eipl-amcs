@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.procurement.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,10 @@ public interface MilkDispatchRepository extends BaseRepository<MilkDispatch, Str
     @Override
     @EntityGraph(attributePaths = {"fromShift", "toShift", "society", "union"})
     List<MilkDispatch> findAll();
+
+    @Override
+    @EntityGraph(attributePaths = {"fromShift", "toShift", "society", "union"})
+    List<MilkDispatch> findAll(Sort sort);
 
     @EntityGraph(attributePaths = {"fromShift", "toShift", "society", "union"})
     List<MilkDispatch> findByFromDateGreaterThanEqualAndToDateLessThanEqual(LocalDateTime fd, LocalDateTime td);
