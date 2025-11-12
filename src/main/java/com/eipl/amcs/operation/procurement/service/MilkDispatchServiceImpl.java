@@ -59,14 +59,15 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
     private MilkTypeRepository milkTypeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<MilkDispatch> findAll() {
         List<MilkDispatch> list = dispatchRepository.findAll(Sort.by("fromDate", "toDate").descending());
-        for (MilkDispatch milkDispatch : list) {
-            milkDispatch.setFromShift(Hibernate.unproxy(milkDispatch.getFromShift(), Shift.class));
-            milkDispatch.setToShift(Hibernate.unproxy(milkDispatch.getToShift(), Shift.class));
-            milkDispatch.setSociety(Hibernate.unproxy(milkDispatch.getSociety(), Society.class));
-            milkDispatch.setUnion(Hibernate.unproxy(milkDispatch.getUnion(), Union.class));
-        }
+//        for (MilkDispatch milkDispatch : list) {
+//            milkDispatch.setFromShift(Hibernate.unproxy(milkDispatch.getFromShift(), Shift.class));
+//            milkDispatch.setToShift(Hibernate.unproxy(milkDispatch.getToShift(), Shift.class));
+//            milkDispatch.setSociety(Hibernate.unproxy(milkDispatch.getSociety(), Society.class));
+//            milkDispatch.setUnion(Hibernate.unproxy(milkDispatch.getUnion(), Union.class));
+//        }
         log.info("MilkDispatchs findAll {} items fetched", list.size());
         return list;
     }

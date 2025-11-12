@@ -438,7 +438,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     public void setupTable() {
         try {
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
-            colQuantity.setCellValueFactory(data -> new SimpleIntegerProperty(Integer.valueOf(String.valueOf(data.getValue().getQuantity()))));
+            colQuantity.setCellValueFactory(data -> new SimpleObjectProperty<>(Double.parseDouble(String.valueOf(data.getValue().getQuantity()))));
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colTaxAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));

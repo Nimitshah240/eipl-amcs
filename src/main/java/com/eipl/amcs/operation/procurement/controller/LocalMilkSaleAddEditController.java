@@ -562,6 +562,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 if (task.get() != null) {
                     this.rate = task.get().getRate();
                     txtRate.setText(rate.toString());
+                    txtQuantity.setText("0");
                     calculateAmount();
                 } else {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
@@ -577,7 +578,8 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     private void calculateAmount() {
         try {
-            if (txtRate.getText().trim() != null || txtRate.getText() != "0") {
+            String rateText = txtRate.getText().trim();
+            if (rateText != null || txtRate.getText() != "0") {
                 if (txtRate.getText() != null && txtRate.getText().length() > 0
                         && Double.parseDouble(txtRate.getText()) > 0 && Double.parseDouble(txtQuantity.getText()) > 0) {
                     if (Double.parseDouble(txtQuantity.getText()) <= 0) {

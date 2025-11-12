@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
@@ -40,6 +41,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -115,6 +117,12 @@ public class RateRecalculateController implements MyInitialization, PopupCallbac
     }
 
     private void calculateData() {
+        if (listMilkCollection == null) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"),
+                    resourceBundle.getString("no.data"));
+            alert.createAlert();
+            return;
+        }
         for (MilkCollection milkCollection : listMilkCollection) {
             milkCollection.setNewRate(new BigDecimal(fetchRate(milkCollection.getFat().toString(), milkCollection.getSnf().toString(),
                     milkCollection.getMilkType(), milkCollection.getMilkQualityType())));

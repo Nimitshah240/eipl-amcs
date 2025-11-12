@@ -30,7 +30,7 @@ public class ProductSaleRateByProductLoadTask extends Task<ProductSaleRate> {
             ProductRepository repository = EmcsAppContext.getContext().getBean(ProductRepository.class);
 
             ProductSaleRate list = service.findByProduct(repository.findById(code).get(), date);
-            list.setUnion(Hibernate.unproxy(list.getUnion(), Union.class));
+//            list.setUnion(Hibernate.unproxy(list.getUnion(), Union.class));
             return list;
         } catch (Exception e) {
             LOGGER.error("ProductSaleRate fetch", e);

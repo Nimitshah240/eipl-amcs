@@ -63,16 +63,17 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
     private MilkTypeRepository milkTypeRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<MilkReceipt> findAll() {
 
         List<MilkReceipt> list = milkReceiptRepository.findAll(Sort.by("fromDate").descending());
-        for (MilkReceipt milkReceipt : list) {
-            milkReceipt.setMilkDispatch(Hibernate.unproxy(milkReceipt.getMilkDispatch(), MilkDispatch.class));
-            milkReceipt.setFromShift(Hibernate.unproxy(milkReceipt.getFromShift(), Shift.class));
-            milkReceipt.setToShift(Hibernate.unproxy(milkReceipt.getToShift(), Shift.class));
-            milkReceipt.setSociety(Hibernate.unproxy(milkReceipt.getSociety(), Society.class));
-            milkReceipt.setUnion(Hibernate.unproxy(milkReceipt.getUnion(), Union.class));
-        }
+//        for (MilkReceipt milkReceipt : list) {
+//            milkReceipt.setMilkDispatch(Hibernate.unproxy(milkReceipt.getMilkDispatch(), MilkDispatch.class));
+//            milkReceipt.setFromShift(Hibernate.unproxy(milkReceipt.getFromShift(), Shift.class));
+//            milkReceipt.setToShift(Hibernate.unproxy(milkReceipt.getToShift(), Shift.class));
+//            milkReceipt.setSociety(Hibernate.unproxy(milkReceipt.getSociety(), Society.class));
+//            milkReceipt.setUnion(Hibernate.unproxy(milkReceipt.getUnion(), Union.class));
+//        }
 
         log.info("MilkDispatchs findAll {} items fetched", list.size());
         return list;
