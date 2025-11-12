@@ -2,6 +2,7 @@ package com.eipl.amcs.base.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.utils.ProcessUtil;
 import com.eipl.amcs.utils.task.DbBackupTask;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -138,6 +140,30 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                             } else if (f.getName().equalsIgnoreCase("SP.sql") || f.getName().equalsIgnoreCase("Device.sql")) {
                                 try {
                                     Files.copy(f.toPath(), new File(appDirPath, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else if (f.getName().endsWith(".sql") && f.getName().startsWith("update")) {
+                                try {
+                                    Path updateSqlPath = Paths.get(System.getProperty("user.dir"),
+                                            "resources",
+                                            "updateSQL"
+                                    );
+                                    if (!Files.exists(updateSqlPath)) {
+                                        System.out.println("Folder not found: " + updateSqlPath);
+                                        try {
+                                            Files.createDirectories(updateSqlPath);
+                                            System.out.println("Folder created successfully: " + updateSqlPath);
+                                        } catch (IOException e) {
+                                            System.err.println("Failed to create directory: " + updateSqlPath);
+                                        }
+                                    }
+                                    Path destinationFilePath = updateSqlPath.resolve(f.getName());
+
+                                    Files.copy(f.toPath(), destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
+//                                    Files.copy(f.toPath(), new File(destinationFilePath.toUri()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                    ProcessUtil.executeScriptFile(f);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
