@@ -7,6 +7,7 @@ import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.model.SubDistrict;
 import com.eipl.amcs.master.geo.model.Village;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -65,4 +66,8 @@ public class Branch extends BaseModel {
         return "branches";
     }
 
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 }
