@@ -625,7 +625,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             txtAmount.setText(dto.getAmount().toString());
             txtCash.setText(dto.getCash().toString());
             txtCredit.setText(dto.getCredit().toString());
-            txtCoupon.setText(dto.getCoupon().toString());
+            txtCoupon.setText(dto.getCoupon() == null ? "0" : dto.getCoupon().toString());
         }
     }
 }
