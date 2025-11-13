@@ -47,11 +47,11 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 
         staffMember.setInitData();
         StaffMember staffMember1 = staffMemberRepository.save(staffMember);
-        staffMember1.setSociety(Hibernate.unproxy(staffMember1.getSociety(), Society.class));
-        staffMember1.setDesignation(Hibernate.unproxy(staffMember1.getDesignation(), Designation.class));
-        staffMember1.setGender(Hibernate.unproxy(staffMember1.getGender(), Gender.class));
-        staffMember1.setBank(Hibernate.unproxy(staffMember1.getBank(), Bank.class));
-        staffMember1.setBranch(Hibernate.unproxy(staffMember1.getBranch(), Branch.class));
+//        staffMember1.setSociety(Hibernate.unproxy(staffMember1.getSociety(), Society.class));
+//        staffMember1.setDesignation(Hibernate.unproxy(staffMember1.getDesignation(), Designation.class));
+//        staffMember1.setGender(Hibernate.unproxy(staffMember1.getGender(), Gender.class));
+//        staffMember1.setBank(Hibernate.unproxy(staffMember1.getBank(), Bank.class));
+//        staffMember1.setBranch(Hibernate.unproxy(staffMember1.getBranch(), Branch.class));
         return staffMember1;
     }
 
@@ -63,11 +63,11 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 
         staffMember.setupdateData();
         StaffMember staffMember1 = staffMemberRepository.save(staffMember);
-        staffMember1.setSociety(Hibernate.unproxy(staffMember1.getSociety(), Society.class));
-        staffMember1.setDesignation(Hibernate.unproxy(staffMember1.getDesignation(), Designation.class));
-        staffMember1.setGender(Hibernate.unproxy(staffMember1.getGender(), Gender.class));
-        staffMember1.setBank(Hibernate.unproxy(staffMember1.getBank(), Bank.class));
-        staffMember1.setBranch(Hibernate.unproxy(staffMember1.getBranch(), Branch.class));
+//        staffMember1.setSociety(Hibernate.unproxy(staffMember1.getSociety(), Society.class));
+//        staffMember1.setDesignation(Hibernate.unproxy(staffMember1.getDesignation(), Designation.class));
+//        staffMember1.setGender(Hibernate.unproxy(staffMember1.getGender(), Gender.class));
+//        staffMember1.setBank(Hibernate.unproxy(staffMember1.getBank(), Bank.class));
+//        staffMember1.setBranch(Hibernate.unproxy(staffMember1.getBranch(), Branch.class));
         return staffMember1;
     }
 

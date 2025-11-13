@@ -87,26 +87,28 @@ public class MemberBillServiceImpl implements MemberBillService {
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
 
     @Override
+    @Transactional
     public List<MemberBillSummary> findMemberBillSummaryBetWeen(LocalDate fromDate, LocalDate toDate) {
         List<SocietyPaymentCycle> list = paymentCycleRepository.findByFromDateBetween(
                 LocalDateTime.of(fromDate, LocalTime.MIN), LocalDateTime.of(toDate, LocalTime.MAX));
 
         List<MemberBillSummary> memberBillSummaryList = summaryRepository.findAllByOrderByPaymentCycleDesc();
-        for (MemberBillSummary memberBillSummary : memberBillSummaryList) {
-            memberBillSummary.setPaymentCycle(Hibernate.unproxy(memberBillSummary.getPaymentCycle(), SocietyPaymentCycle.class));
-        }
+//        for (MemberBillSummary memberBillSummary : memberBillSummaryList) {
+//            memberBillSummary.setPaymentCycle(Hibernate.unproxy(memberBillSummary.getPaymentCycle(), SocietyPaymentCycle.class));
+//        }
         return memberBillSummaryList;
     }
 
     @Override
+    @Transactional
     public List<MemberBillSummary> findMemberBillSummaryBetWeenFromDateAndToDate(LocalDate fromDate, LocalDate toDate) {
         List<SocietyPaymentCycle> list = paymentCycleRepository.findByFromDateBetween(
                 LocalDateTime.of(fromDate, LocalTime.MIN), LocalDateTime.of(toDate, LocalTime.MAX));
 
         List<MemberBillSummary> memberBillSummaryList = summaryRepository.findByPaymentCycleIn(list);
-        for (MemberBillSummary memberBillSummary : memberBillSummaryList) {
-            memberBillSummary.setPaymentCycle(Hibernate.unproxy(memberBillSummary.getPaymentCycle(), SocietyPaymentCycle.class));
-        }
+//        for (MemberBillSummary memberBillSummary : memberBillSummaryList) {
+//            memberBillSummary.setPaymentCycle(Hibernate.unproxy(memberBillSummary.getPaymentCycle(), SocietyPaymentCycle.class));
+//        }
         return memberBillSummaryList;
     }
 

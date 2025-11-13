@@ -100,9 +100,27 @@ public class ProductSaleRateAddEditController implements MyInitialization {
 
     private void calculateCommission() {
         try {
-            txtSecretaryCommission.setText(String.valueOf(new BigDecimal(txtSaleRate.getText()).subtract(new BigDecimal(txtPurchaseRate.getText()))));
+            BigDecimal saleRate = safeParseBigDecimal(txtSaleRate.getText());
+            BigDecimal purchaseRate = safeParseBigDecimal(txtPurchaseRate.getText());
+
+            BigDecimal commission = saleRate.subtract(purchaseRate);
+
+            txtSecretaryCommission.setText(String.valueOf(commission));
+//            txtSecretaryCommission.setText(String.valueOf(new BigDecimal(txtSaleRate.getText()).subtract(new BigDecimal(txtPurchaseRate.getText()))));
         } catch (Exception w) {
             w.printStackTrace();
+        }
+    }
+
+    private BigDecimal safeParseBigDecimal(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        try {
+            return new BigDecimal(value.trim());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid number format encountered: " + value);
+            return BigDecimal.ZERO;
         }
     }
 

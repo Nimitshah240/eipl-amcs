@@ -49,12 +49,12 @@ public class SocietyPaymentCycle extends BaseModelTxn {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})
     private Society society;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonSerialize(using = ShiftSerialize.class)
     @JsonDeserialize(using = ShiftDeserializer.class)
     @JoinColumn(name = "from_shift_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_from_shift"))
     private Shift fromShift;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonSerialize(using = ShiftSerialize.class)
     @JsonDeserialize(using = ShiftDeserializer.class)
     @JoinColumn(name = "to_shift_code", foreignKey = @ForeignKey(name = "fk_society_payment_cycles_to_shift"))

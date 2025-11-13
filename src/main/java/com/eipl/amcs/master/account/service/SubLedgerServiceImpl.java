@@ -13,8 +13,8 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +35,9 @@ public class SubLedgerServiceImpl implements SubLedgerService {
     @Override
     public List<SubLedger> findAll() {
         List<SubLedger> list = subLedgerRepository.findAll();
-        for (SubLedger subLedger : list) {
-            subLedger.setSociety(Hibernate.unproxy(subLedger.getSociety(), Society.class));
-        }
+//        for (SubLedger subLedger : list) {
+//            subLedger.setSociety(Hibernate.unproxy(subLedger.getSociety(), Society.class));
+//        }
         log.info("SubLedgers findAll {} items fetched", list.size());
         return list;
     }

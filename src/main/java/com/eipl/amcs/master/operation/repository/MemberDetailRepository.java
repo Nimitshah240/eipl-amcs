@@ -3,6 +3,7 @@ package com.eipl.amcs.master.operation.repository;
 import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,9 @@ public interface MemberDetailRepository extends BaseRepository<MemberDetail, Str
     @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
             "hamlet"})
     List<MemberDetail> findAll();
+
+    @Override
+    @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
+            "hamlet"})
+    List<MemberDetail> findAll(Sort sort);
 }

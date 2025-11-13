@@ -27,7 +27,7 @@ public class BranchLoadTask extends Task<List<Branch>> {
         try {
             BranchService service = EmcsAppContext.getContext().getBean(BranchService.class);
             List<Branch> list = null;
-            if (bank.getCode() == null || bank.getCode().isEmpty())
+            if (bank == null || bank.getCode() == null || bank.getCode().isEmpty())
                 list = service.findAll();
             else
                 list = service.findAll(bank.getCode());

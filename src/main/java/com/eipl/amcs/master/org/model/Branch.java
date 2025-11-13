@@ -65,4 +65,8 @@ public class Branch extends BaseModel {
         return "branches";
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

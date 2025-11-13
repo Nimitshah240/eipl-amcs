@@ -34,10 +34,10 @@ public class MeetingAgendaServiceImpl implements MeetingAgendaService {
     @Override
     public List<MeetingAgenda> findAll() {
         List<MeetingAgenda> list = meetingAgendaRepository.findAll();
-        for (MeetingAgenda meeting : list) {
-            meeting.setSociety(Hibernate.unproxy(meeting.getSociety(), Society.class));
-            meeting.setUnion(Hibernate.unproxy(meeting.getUnion(), Union.class));
-        }
+//        for (MeetingAgenda meeting : list) {
+//            meeting.setSociety(Hibernate.unproxy(meeting.getSociety(), Society.class));
+//            meeting.setUnion(Hibernate.unproxy(meeting.getUnion(), Union.class));
+//        }
         log.info("meeting findAll {} items fetched", list.size());
         return list;
     }

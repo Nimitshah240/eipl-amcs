@@ -616,96 +616,128 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
     protected void loadBS() {
         BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
                 MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-        balanceSheetTask.setOnSucceeded(ee -> {
-            try {
-                listBSLiability = balanceSheetTask.get();
-                listBSAsset = balanceSheetTask.get();
-                if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty())
-                    loadPL();
-                double diff = 0;
-                if (listPLExpense != null && listPLIncome != null) {
-                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
-                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
-                } else if (listPLIncome != null) {
-                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum() - 0;
-                } else if (listPLExpense != null) {
-                    diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
-                }
 
-                listBSLiability = listBSLiability.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
-                if (listBSLiability != null) {
-                    if (diff > 0) {
-                        listBSLiability.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 1));
-                    }
-                    listBSLiability.add(new LedgerBalance("", resources.getString("total"), 0, 0,
-                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
-                    tableBSLiability.setItems(FXCollections.observableArrayList(listBSLiability));
-                }
-                listBSAsset = listBSAsset.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
-                if (listBSAsset != null) {
-                    if (diff < 0) {
-                        listBSAsset.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 0));
-                    }
-                    listBSAsset.add(new LedgerBalance("", resources.getString("total"), 0, 0,
-                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
-                    tableBSAsset.setItems(FXCollections.observableArrayList(listBSAsset));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        balanceSheetTask.setOnFailed(e -> {
+            Throwable cause = balanceSheetTask.getException();
+            if (cause != null) {
+                System.err.println("BalanceSheetTask failed:");
+                cause.printStackTrace();
             }
+        });
+
+        balanceSheetTask.setOnSucceeded(e -> {
+            listBSLiability = new ArrayList<>();
+            listBSAsset = new ArrayList<>();
+
+            List<LedgerBalance> fullBalanceSheetList = null;
+
+            try {
+                fullBalanceSheetList = balanceSheetTask.get();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                System.err.println("Error retrieving balance sheet data:");
+                ex.printStackTrace();
+                return;
+            }
+            if (fullBalanceSheetList != null && !fullBalanceSheetList.isEmpty()) {
+                listBSLiability = fullBalanceSheetList.stream()
+                        .filter(java.util.Objects::nonNull)
+                        .filter(p -> p.getIncomeExpense() == 1)
+                        .collect(Collectors.toList());
+                listBSAsset = fullBalanceSheetList.stream()
+                        .filter(java.util.Objects::nonNull)
+                        .filter(p -> p.getIncomeExpense() == 0)
+                        .collect(Collectors.toList());
+            }
+
+            if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty()) {
+                loadPL();
+            }
+
+            double diff = 0;
+            if (listPLExpense != null && listPLIncome != null) {
+                diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
+                        - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+            } else if (listPLIncome != null) {
+                diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum();
+            } else if (listPLExpense != null) {
+                diff = -Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+            }
+
+            if (diff > 0) {
+                listBSLiability.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 1));
+            }
+            listBSLiability.add(new LedgerBalance("", resources.getString("total"), 0, 0,
+                    NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
+            tableBSLiability.setItems(FXCollections.observableArrayList(listBSLiability));
+
+            if (diff < 0) {
+                listBSAsset.add(new LedgerBalance("", resources.getString("pl_ledger"), 0, 0, Math.abs(diff), 0));
+            }
+            listBSAsset.add(new LedgerBalance("", resources.getString("total"), 0, 0,
+                    NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
+            tableBSAsset.setItems(FXCollections.observableArrayList(listBSAsset));
+
         });
         new Thread(balanceSheetTask).start();
     }
 
-
     protected void loadPL() {
-        ProfitLossTask profitLossTask = new ProfitLossTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
-        profitLossTask.setOnSucceeded(e -> {
-            try {
-                listPLIncome = profitLossTask.get();
-                for (LedgerBalance ledgerBalance : listPLIncome) {
-                    ledgerBalance.setLedgerName(ledgerBalance.getLedgerName());
-                }
-                listPLIncome = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
-                listPLExpense = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
-                if (listPLExpense != null)
-                    tablePLExpense.setItems(FXCollections.observableArrayList(listPLExpense));
-                if (listPLIncome != null)
-                    tablePLIncome.setItems(FXCollections.observableArrayList(listPLIncome));
-                if (listPLExpense != null && listPLIncome != null) {
-                    double diff = listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()
-                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
-                    lblPl.setText(diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
-                    if (diff > 0) {
-                        lblPl.setStyle("-fx-text-fill: #006400;");
-                    } else {
-                        lblPl.setStyle("-fx-text-fill: #888c91;");
-                    }
-                    lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
-                } else if (listPLIncome != null) {
-                    double diff = listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() - 0;
-                    lblPl.setText(
-                            diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
-                    if (diff > 0) {
-                        lblPl.setStyle("-fx-text-fill: #006400;");
-                    } else {
-                        lblPl.setStyle("-fx-text-fill: #888c91;");
-                    }
-                    lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
-                } else if (listPLExpense != null) {
-                    double diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
-                    lblPl.setText(
-                            diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
-                    if (diff > 0) {
-                        lblPl.setStyle("-fx-text-fill: #006400;");
-                    } else {
-                        lblPl.setStyle("-fx-text-fill: #888c91;");
-                    }
-                    lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+        ProfitLossTask profitLossTask = new ProfitLossTask(MainApp.identityDto.getSociety().getCode(),
+                MainApp.getFinancialYear().getStartDate(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
+
+        profitLossTask.setOnFailed(e -> {
+            Throwable cause = profitLossTask.getException();
+            if (cause != null) {
+                System.err.println("ProfitLossTask failed:");
+                cause.printStackTrace();
             }
+        });
+
+        profitLossTask.setOnSucceeded(e -> {
+            listPLIncome = new ArrayList<>();
+            listPLExpense = new ArrayList<>();
+            List<LedgerBalance> fullProfitLossList = null;
+
+            try {
+                fullProfitLossList = profitLossTask.get();
+                if (fullProfitLossList == null || fullProfitLossList.isEmpty()) {
+                    System.out.println("Profit/Loss list was null or empty.");
+                    return;
+                }
+                for (LedgerBalance ledgerBalance : fullProfitLossList) {
+                    if (ledgerBalance != null) {
+                        ledgerBalance.setLedgerName(ledgerBalance.getLedgerName());
+                    }
+                }
+                listPLIncome = fullProfitLossList.stream()
+                        .filter(java.util.Objects::nonNull)
+                        .filter(p -> p.getIncomeExpense() == 1)
+                        .collect(Collectors.toList());
+
+                listPLExpense = fullProfitLossList.stream()
+                        .filter(java.util.Objects::nonNull)
+                        .filter(p -> p.getIncomeExpense() == 0)
+                        .collect(Collectors.toList());
+
+            } catch (InterruptedException | ExecutionException ex) {
+                System.err.println("Error retrieving Profit/Loss data:");
+                ex.printStackTrace();
+                return;
+            }
+            tablePLExpense.setItems(FXCollections.observableArrayList(listPLExpense));
+            tablePLIncome.setItems(FXCollections.observableArrayList(listPLIncome));
+            double incomeSum = listPLIncome.stream().mapToDouble(LedgerBalance::getBalance).sum();
+            double expenseSum = listPLExpense.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum();
+            double diff = incomeSum - expenseSum;
+
+            lblPl.setText(diff > 0 ? MainApp.getBundle().getString("grossprofit") : MainApp.getBundle().getString("grossloss"));
+            if (diff > 0) {
+                lblPl.setStyle("-fx-text-fill: #006400;");
+            } else {
+                lblPl.setStyle("-fx-text-fill: #888c91;");
+            }
+            lblPlBalance.setText(NumberUtil.twoDecimal(Math.abs(diff)));
         });
         new Thread(profitLossTask).start();
     }

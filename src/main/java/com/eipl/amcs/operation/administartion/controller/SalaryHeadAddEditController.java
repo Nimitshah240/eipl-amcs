@@ -190,7 +190,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("staffsalaryhead"),
                         resourceBundle.getString("staffsalaryhead.update.successful"));
                 alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SalaryHead.fxml")));
+//                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/SalaryHead.fxml")));
                 this.callback.reloadData(true);
                 this.stage.close();
             } catch (InterruptedException | ExecutionException ex) {

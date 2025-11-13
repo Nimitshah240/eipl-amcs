@@ -134,6 +134,7 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
             paymentCycle.setToDate(CommonUtils.getLocalDateTimeFromDateAndShift(toDateTemp, cboxToShift.getValue()));
             paymentCycle.setFromShift(cboxFromShift.getValue());
             paymentCycle.setToShift(cboxToShift.getValue());
+            paymentCycle.setSociety(MainApp.getUser().getSociety());
             paymentCycle.setIntervalValue((int) (Duration.between(paymentCycle.getFromDate(), paymentCycle.getToDate()).toDays() + 1));
 
             listPaymentCycle.add(paymentCycle);

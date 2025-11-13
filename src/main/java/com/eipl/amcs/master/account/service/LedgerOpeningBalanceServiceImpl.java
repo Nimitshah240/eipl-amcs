@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,11 +26,11 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
 
     @Override
     public List<LedgerOpeningBalance> findAll() {
-        List<LedgerOpeningBalance> list = ledgerOpeningBalanceRepository.findAll();
-        for (LedgerOpeningBalance ledgerOpeningBalance : list) {
-            ledgerOpeningBalance.setLedger(Hibernate.unproxy(ledgerOpeningBalance.getLedger(), Ledger.class));
-            ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(), Society.class));
-        }
+        List<LedgerOpeningBalance> list = ledgerOpeningBalanceRepository.findAll(Sort.by("code"));
+//        for (LedgerOpeningBalance ledgerOpeningBalance : list) {
+//            ledgerOpeningBalance.setLedger(Hibernate.unproxy(ledgerOpeningBalance.getLedger(), Ledger.class));
+//            ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(), Society.class));
+//        }
         log.info("cash findAll {} items fetched", list.size());
         return list;
     }

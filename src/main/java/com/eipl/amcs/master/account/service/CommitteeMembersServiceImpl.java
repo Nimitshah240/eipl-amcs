@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,11 +25,11 @@ public class CommitteeMembersServiceImpl implements CommitteeMembersService {
 
     @Override
     public List<CommitteeMembers> findAll() {
-        List<CommitteeMembers> list = committeeMembersRepository.findAll();
-        for (CommitteeMembers committeeMembers : list) {
-            committeeMembers.setSociety(Hibernate.unproxy(committeeMembers.getSociety(), Society.class));
-            committeeMembers.setDesignation(Hibernate.unproxy(committeeMembers.getDesignation(), Designation.class));
-        }
+        List<CommitteeMembers> list = committeeMembersRepository.findAll(Sort.by("code"));
+//        for (CommitteeMembers committeeMembers : list) {
+//            committeeMembers.setSociety(Hibernate.unproxy(committeeMembers.getSociety(), Society.class));
+//            committeeMembers.setDesignation(Hibernate.unproxy(committeeMembers.getDesignation(), Designation.class));
+//        }
         log.info("CommitteeMembers findAll {} items fetched", list.size());
         return list;
     }
@@ -56,8 +57,8 @@ public class CommitteeMembersServiceImpl implements CommitteeMembersService {
         committeeMembers.setCode(code);
         committeeMembers.setInitData();
         CommitteeMembers newdata = committeeMembersRepository.customSave(committeeMembers, identityInfo);
-        newdata.setSociety(Hibernate.unproxy(newdata.getSociety(), Society.class));
-        newdata.setDesignation(Hibernate.unproxy(newdata.getDesignation(), Designation.class));
+//        newdata.setSociety(Hibernate.unproxy(newdata.getSociety(), Society.class));
+//        newdata.setDesignation(Hibernate.unproxy(newdata.getDesignation(), Designation.class));
 
         return newdata;
     }
@@ -69,8 +70,8 @@ public class CommitteeMembersServiceImpl implements CommitteeMembersService {
                 0);
         committeeMembers.setupdateData();
         CommitteeMembers newdata = committeeMembersRepository.customSave(committeeMembers, identityInfo);
-        newdata.setSociety(Hibernate.unproxy(newdata.getSociety(), Society.class));
-        newdata.setDesignation(Hibernate.unproxy(newdata.getDesignation(), Designation.class));
+//        newdata.setSociety(Hibernate.unproxy(newdata.getSociety(), Society.class));
+//        newdata.setDesignation(Hibernate.unproxy(newdata.getDesignation(), Designation.class));
         return null;
     }
 

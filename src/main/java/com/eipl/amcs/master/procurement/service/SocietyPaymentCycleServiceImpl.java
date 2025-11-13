@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.procurement.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
@@ -60,6 +61,10 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
                 throw new BusinessValidationFailException(getClass(), rangeNotValid);
             }
             payment.setInitData();
+            payment.setBilling(false);
+            payment.setLockBillingProcess(false);
+//            payment.setUnionCode(payment.getSociety().getUnion().getCode());
+            payment.setUnionCode(MainApp.getUser().getUnionCode());
             societyPaymentCycleRepository.customSave(payment, identityInfo);
             nextCode = societyPaymentCycle.get(0).getSociety().getCode()
                     + (Integer.parseInt(nextCode.replace(societyPaymentCycle.get(0).getSociety().getCode(), "")) + 1);

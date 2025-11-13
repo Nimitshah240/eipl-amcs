@@ -195,22 +195,30 @@ public class ActivationController implements MyInitialization {
     }
 
     private void createMembers() {
-        if (txtCowRange.getText() == null || txtCowRange.getText().isEmpty() ||
-                txtBuffRange.getText() == null || txtBuffRange.getText().isEmpty())
-            return;
-        String[] arrCow = txtCowRange.getText().split("-");
-        String[] arrBuff = txtBuffRange.getText().split("-");
-        int cowMin = CommonUtils.strToInteger(arrCow[0]);
-        int cowMax = CommonUtils.strToInteger(arrCow[1]);
-        int buffMin = CommonUtils.strToInteger(arrBuff[0]);
-        int buffMax = CommonUtils.strToInteger(arrBuff[1]);
+        try {
 
-        MainApp.paneDrop.setVisible(true);
-        var task = new MemberCreateTask(this.society, txtServerDetail.getText(), cowMin, cowMax, buffMin, buffMax,
-                CommonUtils.strToInteger(txtSampleMilkNo.getText()));
-        task.setOnSucceeded(e -> callApi());
-        new Thread(task).start();
-        MainApp.lblMessage.textProperty().bind(task.messageProperty());
+            if (txtCowRange.getText() == null || txtCowRange.getText().isEmpty() ||
+                    txtBuffRange.getText() == null || txtBuffRange.getText().isEmpty())
+                return;
+            String[] arrCow = txtCowRange.getText().split("-");
+            String[] arrBuff = txtBuffRange.getText().split("-");
+            int cowMin = CommonUtils.strToInteger(arrCow[0]);
+            int cowMax = CommonUtils.strToInteger(arrCow[1]);
+            int buffMin = CommonUtils.strToInteger(arrBuff[0]);
+            int buffMax = CommonUtils.strToInteger(arrBuff[1]);
+
+            MainApp.paneDrop.setVisible(true);
+            var task = new MemberCreateTask(this.society, txtServerDetail.getText(), cowMin, cowMax, buffMin, buffMax,
+                    CommonUtils.strToInteger(txtSampleMilkNo.getText()));
+            task.setOnSucceeded(e -> callApi());
+            new Thread(task).start();
+            MainApp.lblMessage.textProperty().bind(task.messageProperty());
+
+        } catch (RuntimeException e) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    "Please Enter Valid Range.");
+            alert.createAlert();
+        }
     }
 
 

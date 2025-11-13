@@ -285,11 +285,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+
     public List<MemberDetail> findAllMemberDetails() {
-        List<MemberDetail> list = memberDetailrepository.findAll();
-        for (MemberDetail memberDetail : list) {
-            memberDetail.setMember(Hibernate.unproxy(memberDetail.getMember(), Member.class));
-        }
+        List<MemberDetail> list = memberDetailrepository.findAll(Sort.by("code"));
+//        for (MemberDetail memberDetail : list) {
+//            memberDetail.setMember(Hibernate.unproxy(memberDetail.getMember(), Member.class));
+//        }
         return list;
     }
 
