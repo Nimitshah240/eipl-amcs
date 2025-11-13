@@ -115,6 +115,7 @@ public class DockAddEditController implements MyInitialization {
         dto.setMilkTypes(new ArrayList<>(cboxMilkType.getCheckModel().getCheckedItems()));
         dto.getDock().setIsDefault(chkIsDefault.isSelected() ? AppConstant.ONE : AppConstant.ZERO);
         dto.getDock().setSociety(cboxSociety.getValue());
+        dto.getDock().setActive(chkIsActive.isSelected());
         return dto;
     }
 
@@ -259,6 +260,8 @@ public class DockAddEditController implements MyInitialization {
                 if (list != null) {
                     cboxSociety.setItems(FXCollections.observableList(list));
                     if (dto != null) {
+                        chkIsDefault.setSelected(dto.getDock().getIsDefault() != 0);
+                        chkIsActive.setSelected(dto.getDock().isActive());
                         cboxSociety.setValue(dto.getDock().getSociety());
                         txtDockNo.setText(dto.getDock().getDockNo());
                     }

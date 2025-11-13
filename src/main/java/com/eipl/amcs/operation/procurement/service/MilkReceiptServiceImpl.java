@@ -113,7 +113,8 @@ public class MilkReceiptServiceImpl implements MilkReceiptService {
     public MilkReceipt update(MilkReceiptDto dto, String identityInfo) {
         MilkReceipt milkReceipt = dto.getMilkReceipt();
         List<MilkReceipt> milkReceiptList = milkReceiptRepository.findAll();
-        Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> !p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
+//        Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> !p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
+        Optional<MilkReceipt> milkReceipt1 = milkReceiptList.stream().filter(p -> p.getMilkDispatch() != null && !p.getMilkDispatch().getChallanNo().equalsIgnoreCase(milkReceipt.getMilkDispatch().getChallanNo())).findAny();
         if (!milkReceipt1.isEmpty()) {
             FieldError wefdateNotValid = CommonUtils.getFieldError("milkreceipt", "MilkDispatch",
                     milkReceipt.getMilkDispatch().getChallanNo(), "challanno.not.valid");
