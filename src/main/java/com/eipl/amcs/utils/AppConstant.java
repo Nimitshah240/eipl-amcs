@@ -82,6 +82,10 @@ public class AppConstant {
         String RATE_DETAIL_DOWNLOAD = "realtime-services/purchase-rate-detail";
         String RATE_DOWNLOAD_ACK = "realtime-services/rate-download-acknowledgement";
 
+        String APP_UPDATE = "app-update";
+        String UPDATE_LOG = "/sync-app-update";
+        String DATA_PROCESSOR = "http://192.168.1.86:6375/eipl-amcs-processor/";
+
         String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://jaipurduss.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "https://amulamcs.yamatech.app/webservice/amcs/v1/";

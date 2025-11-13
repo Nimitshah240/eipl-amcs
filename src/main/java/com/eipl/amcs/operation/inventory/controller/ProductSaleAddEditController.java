@@ -45,7 +45,6 @@ import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -462,31 +461,38 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
 
     public void setProductSale(ProductSale productSale) {
-        this.productSale = productSale;
-        if (productSale != null) {
-            txtConsumerCode.setText(productSale.getConsumerCode().substring(7, 11));
-            setConsumerName(productSale.getConsumerCode());
-            dpDate.setValue(productSale.getInvoiceDate());
-            txtInvoiceNo.setText(productSale.getInvoiceNo());
-            btnSaveUpdate.setText(resourceBundle.getString("update"));
-            txtTotalAmountTax.setText(productSale.getTaxAmount().toString());
-            txtNetPayable.setText(productSale.getNetAmount().toString());
-            txtTotalDiscount.setText(productSale.getDiscount().toString());
-            txtTotalAmount.setText(productSale.getAmount().toString());
-            calculateCredit(productSale.getConsumerCode(), productSale.getConsumerType());
-            loadSaleTransaction();
-            if (productSale.getPaymentMode() == 0) {
-                rbtnCredit.setSelected(true);
-                txtNoOfInstallment.setDisable(false);
-                txtNoOfInstallment.setText(String.valueOf(productSale.getNoOfInstallments()));
-                dpDeductionStartDate.setValue(productSale.getDeductionStartDate());
-                dpDeductionStartDate.setDisable(false);
+        try {
+            this.productSale = productSale;
+            if (productSale != null) {
+                txtConsumerCode.setText(productSale.getConsumerCode().substring(7, 11));
+                setConsumerName(productSale.getConsumerCode());
+                dpDate.setValue(productSale.getInvoiceDate());
+                txtInvoiceNo.setText(productSale.getInvoiceNo());
+                btnSaveUpdate.setText(resourceBundle.getString("update"));
+                txtTotalAmountTax.setText(productSale.getTaxAmount().toString());
+                txtNetPayable.setText(productSale.getNetAmount().toString());
+                txtTotalDiscount.setText(productSale.getDiscount().toString());
+                txtTotalAmount.setText(productSale.getAmount().toString());
+                calculateCredit(productSale.getConsumerCode(), productSale.getConsumerType());
+                loadSaleTransaction();
+                if (productSale.getPaymentMode() == 0) {
+                    rbtnCredit.setSelected(true);
+                    txtNoOfInstallment.setDisable(false);
+                    txtNoOfInstallment.setText(String.valueOf(productSale.getNoOfInstallments()));
+                    dpDeductionStartDate.setValue(productSale.getDeductionStartDate());
+                    dpDeductionStartDate.setDisable(false);
+                }
+            } else {
+                btnSaveUpdate.setText(resourceBundle.getString("save"));
+                getNextCode();
             }
-        } else {
-            btnSaveUpdate.setText(resourceBundle.getString("save"));
-            getNextCode();
+            loadData();
+        } catch (Exception e) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), "Error");
+            alert.createAlert();
+            System.out.println("Nimit error : " + e);
+            throw new RuntimeException(e);
         }
-        loadData();
     }
 
     private void getNextCode() {

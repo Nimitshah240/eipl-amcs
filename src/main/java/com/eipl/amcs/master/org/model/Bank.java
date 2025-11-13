@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.org.model;
 
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,5 +36,10 @@ public class Bank extends BaseModel {
 
     public boolean isCheckedAcNoLength() {
         return checkedAcNoLength;
+    }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }

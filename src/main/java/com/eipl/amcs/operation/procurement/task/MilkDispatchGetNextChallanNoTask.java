@@ -17,8 +17,9 @@ public class MilkDispatchGetNextChallanNoTask extends Task<String> {
     @Override
     protected String call() throws Exception {
         try {
+            String code = MainApp.identityDto.getSociety().getCode() + "/" + MainApp.getFinancialYear().getCode() + "/";
             NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
-            String code = nextCodeService.getNextCode("MilkDispatch", "challanNo", MainApp.identityDto.getSociety().getCode(), 3);
+            code = nextCodeService.getNextCode("MilkDispatch", "challanNo", code, 3);
             if (code == null || code.isEmpty())
                 return null;
             return code;

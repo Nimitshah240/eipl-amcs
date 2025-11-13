@@ -1360,3 +1360,5 @@ milkcollectionpaymentcyclewise=दूध संग्रह भुगतान �
 payment_register_with_deduction=कटौती के साथ भुगतान रजिस्टर
 samplenovalidation=सैंपल नं. 4 अंकों से अधिक नहीं हो सकती है।
 invalid.password=अमान्य पासवर्ड
+route.insert.successful=मार्ग सफलतापूर्वक डाला गया
+route.update.successful=मार्ग सफलतापूर्वक अपडेट किया गया

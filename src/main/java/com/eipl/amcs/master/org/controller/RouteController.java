@@ -2,6 +2,8 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.alert.InformationAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.task.RouteLoadTask;
@@ -40,6 +42,8 @@ public class RouteController implements MyInitialization {
     @FXML
     private StackPane root;
 
+    private ResourceBundle resourceBundle;
+
     @Override
     public Node getRoot() {
         return root;
@@ -56,6 +60,7 @@ public class RouteController implements MyInitialization {
         btnSave.setOnAction(e -> {
             saveData();
         });
+        this.resourceBundle = resourceBundle;
     }
 
     @Override
@@ -152,6 +157,9 @@ public class RouteController implements MyInitialization {
     public void saveData() {
         RouteSaveTask task = new RouteSaveTask(tableRoute.getItems().get(0));
         task.setOnSucceeded(e -> {
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                    resourceBundle.getString("route.insert.successful"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }

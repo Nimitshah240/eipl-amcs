@@ -5,10 +5,7 @@ import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.repository.ProductPurchaseRateRepository;
-import com.eipl.amcs.master.inventory.repository.ProductRepository;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.utils.CommonUtils;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +89,7 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
     @Override
     public ProductPurchaseRate findProductRate(Product product, LocalDate date) {
         ProductPurchaseRate rate = productPurchaseRateRepository.findTop1ByProductAndWefDateLessThanEqualOrderByWefDateDesc(product, date);
-        rate.setUnion(Hibernate.unproxy(rate.getUnion(), Union.class));
+//        rate.setUnion(Hibernate.unproxy(rate.getUnion(), Union.class));
         return rate;
     }
 }

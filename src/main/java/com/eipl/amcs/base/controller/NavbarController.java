@@ -10,6 +10,7 @@ import com.eipl.amcs.auth.service.RolePermissionService;
 import com.eipl.amcs.auth.service.UserRoleService;
 import com.eipl.amcs.auth.service.UserService;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.dto.JarUpdate;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.task.*;
 import com.eipl.amcs.config.EmcsAppContext;
@@ -177,24 +178,33 @@ public class NavbarController implements MyInitialization {
         var task = new UpdaterCheckTask();
         task.setOnSucceeded(e -> {
             try {
-                Map<String, Object> res = task.get();
-                if (res != null) {
-                    Map<String, Object> map = (Map<String, Object>) res.get("data");
-                    if (map.get("url") != null && (Double.parseDouble((String) map.get("latestVersion")) - Double.parseDouble(AppConstant.versionNo) > 0)) {
-                        var task1 = new DownloadFileTask(map.get("url").toString());
+                JarUpdate jarUpdate = task.get();
+                if (jarUpdate != null) {
+//                    Map<String, Object> map = (Map<String, Object>) res.get("data");
+                    if (jarUpdate.getResourcePath() != null) {
+                        var task1 = new DownloadFileTask(jarUpdate.getResourcePath());
                         task1.setOnSucceeded(e1 -> {
-                            MyAlert alert = new InformationAlert(MainApp.getStage(), "Application Update Successful",
-                                    "Please Restart Your Computer");
-                            alert.createAlert();
+
+                            var task2 = new UpdaterLogTask(jarUpdate);
+                            task2.setOnSucceeded(e2 -> {
+                                MyAlert alert = new InformationAlert(MainApp.getStage(), "Application Update Successful",
+                                        "Please Restart Your Computer");
+                                alert.createAlert();
+                            });
+                            new Thread(task2).start();
+
+
                             try {
                                 File dir = new File("resources/appupdate");
-                                for (File file : dir.listFiles()) {
-                                    for (File listFile : file.listFiles()) {
-                                        listFile.delete();
+                                if (dir.listFiles() != null) {
+                                    for (File file : dir.listFiles()) {
+                                        for (File listFile : file.listFiles()) {
+                                            listFile.delete();
+                                        }
+                                        file.delete();
                                     }
-                                    file.delete();
+                                    dir.delete();
                                 }
-                                dir.delete();
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }

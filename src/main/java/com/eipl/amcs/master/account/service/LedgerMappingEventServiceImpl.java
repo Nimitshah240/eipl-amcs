@@ -55,10 +55,12 @@ public class LedgerMappingEventServiceImpl implements LedgerMappingEventService 
                 ledgerMappingEventRepository.customUpdate(ooo, identityInfo);
             } else {
                 mappingEvent.setInitData();
-                mappingEvent.setCreditLedger(mappingEvent.getCreditLedger().getCode().
-                        equalsIgnoreCase("0") ? null : mappingEvent.getCreditLedger());
-                mappingEvent.setDebitLedger(mappingEvent.getDebitLedger().getCode().
-                        equalsIgnoreCase("0") ? null : mappingEvent.getDebitLedger());
+                if (mappingEvent.getCreditLedger() != null)
+                    mappingEvent.setCreditLedger(mappingEvent.getCreditLedger().getCode().
+                            equalsIgnoreCase("0") ? null : mappingEvent.getCreditLedger());
+                if (mappingEvent.getDebitLedger() != null)
+                    mappingEvent.setDebitLedger(mappingEvent.getDebitLedger().getCode().
+                            equalsIgnoreCase("0") ? null : mappingEvent.getDebitLedger());
                 mappingEvent.setCode(mappingEvent.getEvents().getCode());
                 mappingEvent.setEventcode(Integer.parseInt(mappingEvent.getSociety().getCode() + mappingEvent.getEvents().getEventCode()));
                 ledgerMappingEventRepository.customSave(mappingEvent, identityInfo);

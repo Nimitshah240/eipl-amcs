@@ -579,7 +579,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     private void calculateAmount() {
         try {
             String rateText = txtRate.getText().trim();
-            String quantityText = txtQuantity.getText().trim();
             if (rateText != null || txtRate.getText() != "0") {
                 if (txtRate.getText() != null && txtRate.getText().length() > 0
                         && Double.parseDouble(txtRate.getText()) > 0 && Double.parseDouble(txtQuantity.getText()) > 0) {

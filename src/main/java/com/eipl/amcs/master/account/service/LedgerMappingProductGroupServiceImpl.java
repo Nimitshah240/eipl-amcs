@@ -40,7 +40,7 @@ public class LedgerMappingProductGroupServiceImpl implements LedgerMappingProduc
                     LedgerMappingProductGroup ooo = obj.get();
                     ooo.setupdateData();
                     ooo.setProductGroup(mappingProductGroup.getProductGroup());
-                    if (ooo.getLedgerPurchaseCode() != null) {
+                    if (ooo.getLedgerPurchaseCode() != null && mappingProductGroup.getLedgerPurchaseCode() != null) {
                         ooo.setLedgerPurchaseCode(mappingProductGroup.getLedgerPurchaseCode().getCode().
                                 equalsIgnoreCase("0") ? null : mappingProductGroup.getLedgerPurchaseCode());
                     } else {
@@ -57,8 +57,9 @@ public class LedgerMappingProductGroupServiceImpl implements LedgerMappingProduc
                     ledgerMappingProductGroupRepository.customUpdate(ooo, identityInfo);
                 } else {
                     mappingProductGroup.setInitData();
-                    mappingProductGroup.setLedgerPurchaseCode(mappingProductGroup.getLedgerPurchaseCode().getCode().
-                            equalsIgnoreCase("0") ? null : mappingProductGroup.getLedgerPurchaseCode());
+                    if (mappingProductGroup.getLedgerPurchaseCode() != null)
+                        mappingProductGroup.setLedgerPurchaseCode(mappingProductGroup.getLedgerPurchaseCode().getCode().
+                                equalsIgnoreCase("0") ? null : mappingProductGroup.getLedgerPurchaseCode());
                     mappingProductGroup.setLedgerSaleCode(mappingProductGroup.getLedgerSaleCode().getCode().
                             equalsIgnoreCase("0") ? null : mappingProductGroup.getLedgerSaleCode());
                     if (mappingProductGroup.getLedgerSaleCode() == null && mappingProductGroup.getLedgerPurchaseCode() == null)
@@ -66,6 +67,9 @@ public class LedgerMappingProductGroupServiceImpl implements LedgerMappingProduc
                     mappingProductGroup.setCode(societyCode + "-" + mappingProductGroup.getProductGroup().getCode());
                     ledgerMappingProductGroupRepository.customSave(mappingProductGroup, identityInfo);
                 }
+            } else {
+                if (mappingProductGroup.getCode() != null)
+                    ledgerMappingProductGroupRepository.customDelete(mappingProductGroup, identityInfo);
             }
         }
 

@@ -104,6 +104,7 @@ public class LedgerMappingEventController implements MyInitialization {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("mapping"),
                     resourceBundle.getString("save.successful"));
             alert.createAlert();
+            loadData();
         });
         new Thread(task).start();
     }
@@ -212,7 +213,7 @@ public class LedgerMappingEventController implements MyInitialization {
                                     mappingEvent.setxCol1("0");
                                 }
                             });
-                            if (mappingEvent.getxCol1().equalsIgnoreCase("1"))
+                            if (mappingEvent.getxCol1() != null && mappingEvent.getxCol1().equalsIgnoreCase("1"))
                                 setGraphic(chk);
                             else {
                                 setGraphic(chk);
