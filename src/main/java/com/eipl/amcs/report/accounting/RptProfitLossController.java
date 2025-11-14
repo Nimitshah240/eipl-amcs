@@ -80,10 +80,8 @@ public class RptProfitLossController implements MyInitialization {
                 param.put("p_from_date", dpFromDate.getValue());
                 param.put("p_to_date", dpToDate.getValue());
                 param.put("p_locale", MainApp.locale);
-//                listPLIncome = list.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
                 listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
                 param.put("p_imcome_side", listPLIncome);
-//                listPLExpense = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
                 listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
                 param.put("p_expense_side", listPLExpense);
 
