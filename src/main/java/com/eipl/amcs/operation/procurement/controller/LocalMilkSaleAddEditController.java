@@ -107,6 +107,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        txtQuantity.setText("0");
         dpSellDate.setValue(LocalDate.now());
         this.resourceBundle = resourceBundle;
         txtCash.setDisable(true);
@@ -562,7 +563,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 if (task.get() != null) {
                     this.rate = task.get().getRate();
                     txtRate.setText(rate.toString());
-                    txtQuantity.setText("0");
                     calculateAmount();
                 } else {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
@@ -624,7 +624,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             txtAmount.setText(dto.getAmount().toString());
             txtCash.setText(dto.getCash().toString());
             txtCredit.setText(dto.getCredit().toString());
-            txtCoupon.setText(dto.getCoupon().toString());
+            txtCoupon.setText(dto.getCoupon() == null ? "0" : dto.getCoupon().toString());
         }
     }
 }

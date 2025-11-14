@@ -35,9 +35,6 @@ public class SubLedgerServiceImpl implements SubLedgerService {
     @Override
     public List<SubLedger> findAll() {
         List<SubLedger> list = subLedgerRepository.findAll();
-        for (SubLedger subLedger : list) {
-            subLedger.setSociety(Hibernate.unproxy(subLedger.getSociety(), Society.class));
-        }
         log.info("SubLedgers findAll {} items fetched", list.size());
         return list;
     }
