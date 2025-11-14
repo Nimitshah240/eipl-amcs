@@ -172,8 +172,14 @@ public class MemberAddEditController implements MyInitialization {
             }
         });
         cboxMemberType.setOnAction(event -> {
-            if (cboxMemberType.getSelectionModel().getSelectedItem().getCode() == 1) {
-                dpRegistrationDate.setDisable(false);
+            MemberType selectedType = cboxMemberType.getSelectionModel().getSelectedItem();
+            if (selectedType != null) {
+                if (selectedType.getCode() == 1) {
+                    dpRegistrationDate.setDisable(false);
+                } else {
+                    dpRegistrationDate.setValue(null);
+                    dpRegistrationDate.setDisable(true);
+                }
             } else {
                 dpRegistrationDate.setValue(null);
                 dpRegistrationDate.setDisable(true);

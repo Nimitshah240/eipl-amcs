@@ -263,7 +263,18 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
             psi.setMember(member);
             psi.setBilling(false);
             psi.setType(3);
-            installmentList.add(psi);
+            if (installmentList == null) {
+                installmentList = new ArrayList<>();
+            }
+            if (psi != null) {
+                installmentList.add(psi);
+            } else {
+                System.err.println("Warning: psi object is null, cannot add to list.");
+                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("cashadvance"),
+                        resourceBundle.getString("error.occurred"));
+                alert1.createAlert();
+                return;
+            }
         }
     }
 

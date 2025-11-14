@@ -123,7 +123,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
 
     @Override
     public boolean checkDateRangeConflict(String str1, String str2, LocalDateTime fromDate, LocalDateTime toDate) {
-        return societyPaymentCycleRepository.checkDateRangeConflict(str1, str2, fromDate, toDate).size() <= 0;
+        return societyPaymentCycleRepository.checkDateRangeConflict(str1, str2, fromDate, toDate).size() >= 0; // TODO NEDD To confirm
     }
 
     @Override

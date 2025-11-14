@@ -130,6 +130,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        btnExport.setDisable(true);
         bonusList = new ArrayList<>();
         criteriaList = new ArrayList<>();
         criteriaList.add(resourceBundle.getString("percentage"));

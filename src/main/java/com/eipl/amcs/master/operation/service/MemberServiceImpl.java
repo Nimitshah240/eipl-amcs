@@ -266,16 +266,22 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional(readOnly = true)
     public MemberDetail findDetailByMember(Member member) {
-        MemberDetail dtl = memberDetailrepository.findByMember(member).get();
-        dtl.setMember(Hibernate.unproxy(dtl.getMember(), Member.class));
-        dtl.setState(Hibernate.unproxy(dtl.getState(), State.class));
-        dtl.setDistrict(Hibernate.unproxy(dtl.getDistrict(), District.class));
-        dtl.setVillage(Hibernate.unproxy(dtl.getVillage(), Village.class));
-        dtl.setSubDistrict(Hibernate.unproxy(dtl.getSubDistrict(), SubDistrict.class));
-        dtl.setHamlet(Hibernate.unproxy(dtl.getHamlet(), Hamlet.class));
-        dtl.setBank(Hibernate.unproxy(dtl.getBank(), Bank.class));
-        dtl.setBranch(Hibernate.unproxy(dtl.getBranch(), Branch.class));
-        return dtl;
+        Optional<MemberDetail> detailOptional = memberDetailrepository.findByMember(member);
+        MemberDetail detail = null;
+        if (detailOptional.isPresent()) {
+             detail = detailOptional.get();
+            detail.setMember(Hibernate.unproxy(detail.getMember(), Member.class));
+            detail.setState(Hibernate.unproxy(detail.getState(), State.class));
+            detail.setDistrict(Hibernate.unproxy(detail.getDistrict(), District.class));
+            detail.setVillage(Hibernate.unproxy(detail.getVillage(), Village.class));
+            detail.setSubDistrict(Hibernate.unproxy(detail.getSubDistrict(), SubDistrict.class));
+            detail.setHamlet(Hibernate.unproxy(detail.getHamlet(), Hamlet.class));
+            detail.setBank(Hibernate.unproxy(detail.getBank(), Bank.class));
+            detail.setBranch(Hibernate.unproxy(detail.getBranch(), Branch.class));
+        } else {
+            System.out.println("Member detail not found!");
+        }
+        return detail;
     }
 
     @Override

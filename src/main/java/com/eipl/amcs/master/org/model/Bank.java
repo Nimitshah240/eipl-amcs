@@ -36,8 +36,5 @@ public class Bank extends BaseModel {
     public boolean isCheckedAcNoLength() {
         return checkedAcNoLength;
     }
-    @Override
-    public String toString() {
-        return this.name;
-    }
+
 }

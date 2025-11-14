@@ -64,9 +64,4 @@ public class Branch extends BaseModel {
     public String getTableName() {
         return "branches";
     }
-
-    @Override
-    public String toString() {
-        return this.name;
-    }
 }
