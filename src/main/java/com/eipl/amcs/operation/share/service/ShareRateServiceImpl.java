@@ -8,6 +8,7 @@ import com.eipl.amcs.operation.share.repository.ShareRateRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,11 +23,12 @@ public class ShareRateServiceImpl implements ShareRateService {
     private NextCodeRepository nextCodeRepository;
 
     @Override
+
     public List<ShareRate> findAll() {
         List<ShareRate> shareRateList = shareRateRepository.findAll();
-        for (ShareRate shareRate : shareRateList) {
-            shareRate.setSociety(Hibernate.unproxy(shareRate.getSociety(), Society.class));
-        }
+//        for (ShareRate shareRate : shareRateList) {
+//            shareRate.setSociety(Hibernate.unproxy(shareRate.getSociety(), Society.class));
+//        }
         return shareRateList;
     }
 

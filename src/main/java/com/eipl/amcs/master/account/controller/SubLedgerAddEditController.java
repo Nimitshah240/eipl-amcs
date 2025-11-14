@@ -191,7 +191,7 @@ public class SubLedgerAddEditController implements MyInitialization {
     }
 
     private SubLedger setValuesInObject() {
-        subLedger.setCode(cboxType.getValue().getKey() <= 2 ? "M" + txtCode.getText() : "C" + txtCode.getText());
+        subLedger.setCode(cboxType.getValue().getKey() <= 2 ? "M" + txtCode.getText() : "C" + txtCode.getText()); // TODO Need to confirm
         subLedger.setName(txtName.getText());
         subLedger.setNameLocal(txtLocalName.getText());
         subLedger.setSociety(MainApp.identityDto.getSociety());

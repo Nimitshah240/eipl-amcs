@@ -346,7 +346,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 try {
                     Object list = task.get();
                     if (list != null) {
-                        System.out.println("thai jyu part two");
                         MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
                                 CommonUtils.getResourceString(resourceBundle, "member.bill.disburse.successful"));
                         alert.createAlert();

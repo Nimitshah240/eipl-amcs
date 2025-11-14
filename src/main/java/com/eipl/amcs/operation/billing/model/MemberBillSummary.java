@@ -35,7 +35,7 @@ public class MemberBillSummary extends BaseModelTxn {
     private BigDecimal disbursedAmount;
     private short status; //1-PENDING
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonSerialize(using = SocietyPaymentCycleSerialize.class)
     @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_member_bill_summary_payment_cycle_code"))

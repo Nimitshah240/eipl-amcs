@@ -27,6 +27,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
     private NextCodeRepository nextCodeRepository;
 
     @Override
+    @Transactional
     public List<ProductSaleRate> findAll() {
         List<ProductSaleRate> list = productSaleRateRepository.findAll(Sort.by("wefDate").descending());
         log.info("ProductSaleRates findAll {} items fetched", list.size());
@@ -34,6 +35,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
     }
 
     @Override
+    @Transactional
     public ProductSaleRate save(ProductSaleRate productSaleRate, String identityInfo) {
         String code = nextCodeRepository.getNextCode("ProductSaleRate", "code", productSaleRate.getSociety().getCode(),
                 0);
@@ -56,6 +58,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
     }
 
     @Override
+    @Transactional
     public ProductSaleRate update(ProductSaleRate productSaleRate, String identityInfo) {
         LocalDate chk = checkWefDate(productSaleRate.getProduct().getCode(), new ProductSaleRate().getCode());
         if (chk == null || chk.isBefore(productSaleRate.getWefDate())) {

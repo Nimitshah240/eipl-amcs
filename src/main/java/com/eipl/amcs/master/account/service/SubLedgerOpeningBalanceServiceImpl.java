@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,12 +28,12 @@ public class SubLedgerOpeningBalanceServiceImpl implements SubLedgerOpeningBalan
 
     @Override
     public List<SubLedgerOpeningBalance> findAll() {
-        List<SubLedgerOpeningBalance> list = subLedgerOpeningBalanceRepository.findAll();
-        for (SubLedgerOpeningBalance subLedgerOpeningBalance : list) {
-            subLedgerOpeningBalance.setLedger(Hibernate.unproxy(subLedgerOpeningBalance.getLedger(), Ledger.class));
-            subLedgerOpeningBalance.setSubLedger(Hibernate.unproxy(subLedgerOpeningBalance.getSubLedger(), SubLedger.class));
-            subLedgerOpeningBalance.setSociety(Hibernate.unproxy(subLedgerOpeningBalance.getSociety(), Society.class));
-        }
+        List<SubLedgerOpeningBalance> list = subLedgerOpeningBalanceRepository.findAll(Sort.by("code"));
+//        for (SubLedgerOpeningBalance subLedgerOpeningBalance : list) {
+//            subLedgerOpeningBalance.setLedger(Hibernate.unproxy(subLedgerOpeningBalance.getLedger(), Ledger.class));
+//            subLedgerOpeningBalance.setSubLedger(Hibernate.unproxy(subLedgerOpeningBalance.getSubLedger(), SubLedger.class));
+//            subLedgerOpeningBalance.setSociety(Hibernate.unproxy(subLedgerOpeningBalance.getSociety(), Society.class));
+//        }
         log.info("cash findAll {} items fetched", list.size());
         return list;
     }

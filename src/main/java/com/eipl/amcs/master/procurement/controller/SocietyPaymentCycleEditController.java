@@ -129,6 +129,7 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
         societyPaymentCycle.setLockBillingProcess(chkLockBillingProcess.isSelected());
         societyPaymentCycle.setBilling(chkIsBillingCompleted.isSelected());
         societyPaymentCycle.setIntervalValue(dto.getIntervalValue());
+        societyPaymentCycle.setSociety(MainApp.getUser().getSociety());
         return societyPaymentCycle;
     }
 

@@ -172,15 +172,12 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
+                if (obj == null) {
                     ApiError error = (ApiError) obj;
                     StringBuilder sb = new StringBuilder();
 
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getMessage() + "\n");
-                    }
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
-                            sb.toString());
+                            resourceBundle.getString("error.occurred"));
                     alert.createAlert();
                     return;
                 }

@@ -197,7 +197,6 @@ public class CommitteeMembersAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
                         resourceBundle.getString("committeemembers.update.successful"));
                 alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/CommitteeMembers.fxml")));
                 this.callback.reloadData(true);
                 this.stage.close();
             } catch (InterruptedException | ExecutionException ex) {

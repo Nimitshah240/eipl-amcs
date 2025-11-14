@@ -207,7 +207,7 @@ public class MeetingAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("meeting"),
                         resourceBundle.getString("meeting.update.successful"));
                 alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Meeting.fxml")));
+//                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Meeting.fxml")));
                 this.callback.reloadData(true);
                 this.stage.close();
             } catch (InterruptedException | ExecutionException ex) {

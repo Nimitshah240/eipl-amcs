@@ -100,7 +100,18 @@ public class ProductSaleRateAddEditController implements MyInitialization {
 
     private void calculateCommission() {
         try {
-            txtSecretaryCommission.setText(String.valueOf(new BigDecimal(txtSaleRate.getText()).subtract(new BigDecimal(txtPurchaseRate.getText()))));
+            BigDecimal saleRate = new BigDecimal(
+                    txtSaleRate.getText() == null || txtSaleRate.getText().trim().isEmpty() ?
+                            "0" : txtSaleRate.getText().trim()
+            );
+
+            BigDecimal purchaseRate = new BigDecimal(
+                    txtPurchaseRate.getText() == null || txtPurchaseRate.getText().trim().isEmpty() ?
+                            "0" : txtPurchaseRate.getText().trim()
+            );
+
+            BigDecimal commission = saleRate.subtract(purchaseRate);
+            txtSecretaryCommission.setText(String.valueOf(commission));
         } catch (Exception w) {
             w.printStackTrace();
         }
