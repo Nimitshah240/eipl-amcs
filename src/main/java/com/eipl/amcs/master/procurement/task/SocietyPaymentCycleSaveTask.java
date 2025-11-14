@@ -32,7 +32,7 @@ public class SocietyPaymentCycleSaveTask extends Task<Object> {
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {
-            e.printStackTrace();
+            return new RuntimeException("erorr");
         }
         return null;
     }

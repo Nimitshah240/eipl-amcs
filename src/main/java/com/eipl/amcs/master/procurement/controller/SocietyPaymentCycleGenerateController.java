@@ -8,8 +8,6 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
@@ -234,15 +232,9 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-
+                if (obj instanceof RuntimeException) {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
-                            sb.toString());
+                            resourceBundle.getString("error.occurred"));
                     alert.createAlert();
                     return;
                 }
@@ -251,7 +243,7 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
                 alert.createAlert();
                 this.callback.reloadData(true);
                 this.stage.close();
-            } catch (InterruptedException | ExecutionException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
