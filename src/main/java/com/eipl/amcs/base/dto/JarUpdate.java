@@ -23,6 +23,7 @@ public class JarUpdate {
     private String updatedBy;
     private Integer skipCount;
     private String societyCode;
+    private Boolean isJarAvailable;
 
     public JarUpdate(String appVersion, String societyCode) {
         this.appVersion = appVersion;
