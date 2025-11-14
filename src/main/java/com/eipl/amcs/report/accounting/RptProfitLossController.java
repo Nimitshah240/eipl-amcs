@@ -18,10 +18,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -70,6 +67,9 @@ public class RptProfitLossController implements MyInitialization {
         profitLossTask.setOnSucceeded(ee -> {
             try {
                 List<LedgerBalance> list = profitLossTask.get();
+                if (list == null) {
+                    list = Collections.emptyList();
+                }
                 Map<String, Object> param = new HashMap<>();
                 param.put("p_society_code", MainApp.identityDto.getSociety().getCode());
                 if (MainApp.locale.equals("en")) {
@@ -80,9 +80,11 @@ public class RptProfitLossController implements MyInitialization {
                 param.put("p_from_date", dpFromDate.getValue());
                 param.put("p_to_date", dpToDate.getValue());
                 param.put("p_locale", MainApp.locale);
-                listPLIncome = list.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
+//                listPLIncome = list.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
+                listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
                 param.put("p_imcome_side", listPLIncome);
-                listPLExpense = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+//                listPLExpense = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+                listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
                 param.put("p_expense_side", listPLExpense);
 
                 if (listPLExpense != null && listPLIncome != null) {
