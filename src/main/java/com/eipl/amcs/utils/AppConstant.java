@@ -28,8 +28,8 @@ public class AppConstant {
     public static final String EIPL_DB_PASS = "EAmcs2021";
     public static final String EIPL_DB_NAME = "eipl_amcs_db";
 
-    public static final String client = "AMUL"; // OR JAIPURDUSS OR AMUL
-    public static final String versionNo = "4.8";
+    public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
+    public static final String versionNo = "1.2";
 
     public static final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
             AppConstant.Formatter1, // Replace with your actual formatters
@@ -87,6 +87,7 @@ public class AppConstant {
         String DATA_PROCESSOR = "http://192.168.1.86:6375/eipl-amcs-processor/";
 
         String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
+//        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://jaipurduss.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "https://amulamcs.yamatech.app/webservice/amcs/v1/";
     }

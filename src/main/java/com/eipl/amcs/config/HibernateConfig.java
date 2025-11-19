@@ -1,6 +1,9 @@
 package com.eipl.amcs.config;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -9,6 +12,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -53,5 +57,18 @@ public class HibernateConfig {
     @Bean(name = "transactionManager")
     public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+    @PostConstruct
+    public void configureJasperReportsLogging() {
+
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ch.qos.logback.classic.Logger jdbcQueryLogger =
+                context.getLogger("net.sf.jasperreports.engine.query.JRJdbcQueryExecuter");
+
+        if (jdbcQueryLogger != null) {
+            jdbcQueryLogger.setLevel(Level.DEBUG);
+            System.out.println("--- Programmatically set logging level for JRJdbcQueryExecuter to DEBUG ---");
+        }
     }
 }

@@ -226,16 +226,17 @@ public class ActivationController implements MyInitialization {
         var task = new IdentityCheckTask(txtSociety.getText(), txtSampleMilkNo.getText());
         task.setOnSucceeded(e -> {
             try {
-                Map<String, Object> data = task.get();
-                if (data == null) {
-                    return;
-                }
                 Identity identity = new Identity();
+
+                Map<String, Object> data = task.get();
+                if (data != null) {
+                    identity.setSocietyRefCode((String) data.get("orgPkCode"));
+                    identity.setToken((String) data.get("token"));
+                }
                 identity.setDockNo(txtDock.getText());
                 identity.setSocietyCode(txtSociety.getText());
-                identity.setSocietyRefCode((String) data.get("orgPkCode"));
-                identity.setToken((String) data.get("token"));
                 identity.setSystemMac(MainApp.getProperty("identity.id", ""));
+
                 var task1 = new IdentitySaveTask(identity);
                 task1.setOnSucceeded(e1 -> {
                     MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
