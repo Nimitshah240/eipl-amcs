@@ -110,13 +110,27 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", null, this);
+
+            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+            controller.setMember(null);
+            MainApp.getContentPane().setCenter(controller.getRoot());
+
+//            TODO - FOR PASSWORD SYSTEM, DO NOT REMOVE COMMENT BELOW
+//            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", null, this);
         });
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_EDIT"))
                 throw new UnAuthorizedAccessException();
 
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", propMember.get(), this);
+            if (propMember.get() != null) {
+                MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil()
+                        .loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+                controller.setMember(propMember.get());
+                MainApp.getContentPane().setCenter((controller).getRoot());
+            }
+
+//            TODO - FOR PASSWORD SYSTEM, DO NOT REMOVE COMMENT BELOW
+//            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", propMember.get(), this);
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_DELETE"))
