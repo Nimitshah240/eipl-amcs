@@ -1226,7 +1226,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj == null) return;
+                if (obj == null) {
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
+                            "INVALID CODE");
+                    alert.createAlert();
+                }
 
                 if (obj instanceof ApiError) {
                     ApiError error = (ApiError) obj;

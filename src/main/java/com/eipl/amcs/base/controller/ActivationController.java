@@ -188,10 +188,8 @@ public class ActivationController implements MyInitialization {
         }
         this.dock = txtDock.getText();
         this.sampleNo = txtSampleMilkNo.getText();
-        makeFile();
         createMembers();
-
-
+        makeFile();
     }
 
     private void createMembers() {

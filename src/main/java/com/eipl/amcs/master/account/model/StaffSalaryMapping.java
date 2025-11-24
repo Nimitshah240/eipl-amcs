@@ -28,6 +28,7 @@ import java.time.LocalDate;
 @Table(name = "staff_salary_head_mapping")
 public class StaffSalaryMapping extends BaseModelTxn {
 
+    @Column(name = "is_active")
     protected boolean active;
     @Id
     private Integer code;

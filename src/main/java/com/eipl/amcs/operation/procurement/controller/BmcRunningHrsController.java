@@ -153,14 +153,22 @@ public class BmcRunningHrsController implements MyInitialization {
     }
 
     public void validateAndSave() {
-        bmcRunningHrs = new BmcRunningHours();
-        setValuesInObject();
-        var task = new BmcRunningHrsSaveTask(bmcRunningHrs, (short) 0);
-        task.setOnSucceeded(e -> {
-            loadData();
-            clearControls();
-        });
-        new Thread(task).start();
+        try {
+            bmcRunningHrs = new BmcRunningHours();
+            setValuesInObject();
+            var task = new BmcRunningHrsSaveTask(bmcRunningHrs, (short) 0);
+            task.setOnSucceeded(e -> {
+                loadData();
+                clearControls();
+            });
+            new Thread(task).start();
+
+        } catch (RuntimeException e) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
+                    "ERROR");
+            alert.createAlert();
+            throw new RuntimeException(e);
+        }
 
     }
 

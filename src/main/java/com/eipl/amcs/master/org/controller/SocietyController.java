@@ -2,6 +2,9 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.InformationAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
@@ -264,6 +267,14 @@ public class SocietyController implements MyInitialization {
     public void saveData() {
         SocietySaveTask task = new SocietySaveTask(tableSociety.getItems().get(0));
         task.setOnSucceeded(e -> {
+            MyAlert alert = new InformationAlert(MainApp.stage, "Success",
+                    "Success");
+            alert.createAlert();
+        });
+        task.setOnFailed(e -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(),"Error",
+                    "ERROR");
+            alert.createAlert();
         });
         new Thread(task).start();
     }

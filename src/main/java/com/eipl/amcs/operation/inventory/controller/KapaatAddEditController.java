@@ -140,6 +140,11 @@ public class KapaatAddEditController implements MyInitialization {
                 if (member != null) {
                     txtName.setText(member.getFirstName());
                     getBalance(memberCode);
+                } else {
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), "Invalid member");
+                    alert.createAlert();
+                    txtName.clear();
+                    FocusUtils.requestFocus(txtCode);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -390,4 +395,3 @@ public class KapaatAddEditController implements MyInitialization {
     }
 
 }
-

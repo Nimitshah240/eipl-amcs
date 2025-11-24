@@ -71,7 +71,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
                 String nextCode = task.get();
                 if (nextCode == null || nextCode.isEmpty())
                     return;
-                txtCode.setText(nextCode);
+                txtCode.setText(nextCode.substring(MainApp.getUser().getSociety().getCode().length()));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
