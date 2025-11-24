@@ -43,7 +43,7 @@ public class LedgerController implements MyInitialization {
     @FXML
     TableView<Ledger> tableLedger;
     @FXML
-    TableColumn<Ledger, String> colName, colLocalName;
+    TableColumn<Ledger, String> colName, colLocalName,colCode;
     @FXML
     TableColumn<Ledger, LedgerGroup> colLedgerGroup;
     @FXML
@@ -219,7 +219,7 @@ public class LedgerController implements MyInitialization {
 
     @Override
     public void setupTable() {
-//        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colLedgerGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerGroup()));
