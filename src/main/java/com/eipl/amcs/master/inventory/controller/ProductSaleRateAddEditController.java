@@ -12,8 +12,10 @@ import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateNumberLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateSaveTask;
 import com.eipl.amcs.master.org.model.Society;
@@ -86,6 +88,12 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         dpWefDate.setValue(LocalDate.now());
+
+        cboxProduct.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (dto == null)
+                loadProductPurchaseRate(newValue);
+        });
+
         txtPurchaseRate.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 calculateCommission();
@@ -284,6 +292,23 @@ public class ProductSaleRateAddEditController implements MyInitialization {
                 List<Product> list = task.get();
                 if (list != null)
                     cboxProduct.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadProductPurchaseRate(Product product) {
+        var task = new ProductPurchaseRateByProductTask(product.getCode(), LocalDate.now());
+        task.setOnSucceeded(e -> {
+            try {
+                ProductPurchaseRate productPurchaseRate = task.get();
+                if (productPurchaseRate != null && productPurchaseRate.getRate() != null) {
+                    txtPurchaseRate.setText(String.valueOf(productPurchaseRate.getRate()));
+                } else {
+                    txtPurchaseRate.setText(String.valueOf(BigDecimal.ZERO));
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

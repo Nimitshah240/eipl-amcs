@@ -92,6 +92,8 @@ public class BmcRunningHrsController implements MyInitialization {
         btnSave.setText(resourceBundle.getString("add"));
         vbox.getChildren().remove(gridMaster);
         this.resourceBundle = resourceBundle;
+        btnDelete.setDisable(true);
+        btnEdit.setDisable(true);
         dpDate.setValue(LocalDate.now());
         this.resourceBundle = resourceBundle;
         txtSocietyCode.setText(MainApp.identityDto.getSociety().getCode());
@@ -99,6 +101,7 @@ public class BmcRunningHrsController implements MyInitialization {
         txtAmount.setDisable(true);
         bmcRunningHrsObjectProperty.addListener((observable, oldValue, newValue) -> {
             btnDelete.setDisable(newValue == null);
+            btnEdit.setDisable(false);
         });
 
         btnSave.setOnAction(e -> {
@@ -169,7 +172,6 @@ public class BmcRunningHrsController implements MyInitialization {
             alert.createAlert();
             throw new RuntimeException(e);
         }
-
     }
 
     private void setValuesInObject() {

@@ -631,8 +631,9 @@ public class MemberBillServiceImpl implements MemberBillService {
         paymentCycle.setBilling(true);
         paymentCycleRepository.customUpdate(paymentCycle, "");
         List<MemberBill> memberBillList = billRepository.findByPaymentCycle(paymentCycle);
+        MemberBillSummary memberBillSummary = summaryRepository.findByPaymentCycle(paymentCycle).get();
         String voucherNo = nextCodeRepository.getNextCode("Voucher", "code", memberBillList.get(0).getSociety().getCode(), 1);
-
+        BigDecimal disburseAmount = BigDecimal.ZERO;
         for (MemberBill memberBill : memberBillList) {
             if (!memberList.contains(memberBill.getMember().getCode())) {
                 continue;
@@ -654,9 +655,12 @@ public class MemberBillServiceImpl implements MemberBillService {
                     memberBill.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 6);
             memberBill.setVoucherNo(voucherNo);
             createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo);
-
+            disburseAmount = disburseAmount.add(memberBill.getNetAmount());
             billRepository.save(memberBill);
         }
+        memberBillSummary.setDisbursedAmount(disburseAmount);
+        memberBillSummary.setStatus((short) 6);
+        summaryRepository.save(memberBillSummary);
         return true;
     }
 

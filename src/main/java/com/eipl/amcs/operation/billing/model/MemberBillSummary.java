@@ -33,7 +33,7 @@ public class MemberBillSummary extends BaseModelTxn {
     private BigDecimal otherDedAmount;
     private BigDecimal netAmount;
     private BigDecimal disbursedAmount;
-    private short status; //1-PENDING
+    private short status; //1-PENDING, 6-DISBURSED
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonSerialize(using = SocietyPaymentCycleSerialize.class)

@@ -67,6 +67,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         FocusUtils.requestFocus(btnAdd);
+        btnDelete.setDisable(true);
         propProductSaleDto.addListener((observable, oldValue, newValue) -> {
             btnDelete.setDisable(newValue == null);
         });

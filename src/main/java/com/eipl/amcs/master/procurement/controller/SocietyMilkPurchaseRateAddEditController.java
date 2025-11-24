@@ -7,7 +7,6 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -167,11 +166,14 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
 
     @Override
     public void saveData() {
+        MainApp.paneDrop.setVisible(true);
+        MainApp.lblMessage.setText("Loading...");
         var task = new SocietyMilkPurchaseRateSaveTask(dto);
         task.setOnSucceeded(e -> {
             try {
+                MainApp.paneDrop.setVisible(false);
                 Object obj = task.get();
-                if (obj  == null) {
+                if (obj == null) {
                     ApiError error = (ApiError) obj;
                     StringBuilder sb = new StringBuilder();
 
@@ -195,6 +197,7 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
             }
         });
         task.setOnFailed(e -> {
+            MainApp.paneDrop.setVisible(false);
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societymilkpurchaserate"),
                     task.getException().getMessage());
             alert.createAlert();

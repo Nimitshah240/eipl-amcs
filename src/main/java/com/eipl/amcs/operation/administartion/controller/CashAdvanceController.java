@@ -86,6 +86,8 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
         dpDate.setValue(LocalDate.now());
         vbox.getChildren().remove(gridMaster);
         this.resourceBundle = resourceBundle;
+        btnDelete.setDisable(true);
+        btnView.setDisable(true);
         propCashAdvanceDto.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnDelete.setDisable(false);

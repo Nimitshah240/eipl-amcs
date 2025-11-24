@@ -71,6 +71,10 @@ public class MomController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         chkOpen.setSelected(true);
+        btnDelete.setDisable(true);
+        btnEdit.setDisable(true);
+        btnActionTaken.setDisable(true);
+
         propMomDto.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnEdit.setDisable(false);

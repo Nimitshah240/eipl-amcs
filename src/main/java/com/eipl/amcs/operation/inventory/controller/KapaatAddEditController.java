@@ -104,9 +104,6 @@ public class KapaatAddEditController implements MyInitialization {
             txtTotal.setText("0");
             txtDue.setText("0");
             txtBalance.setText("0");
-            if (!newVal) {
-                fetchMemberDetails();
-            }
         });
         txtCode.setOnAction(e -> {
             fetchMemberDetails();
@@ -141,8 +138,6 @@ public class KapaatAddEditController implements MyInitialization {
                     txtName.setText(member.getFirstName());
                     getBalance(memberCode);
                 } else {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), "Invalid member");
-                    alert.createAlert();
                     txtName.clear();
                     FocusUtils.requestFocus(txtCode);
                 }
@@ -275,6 +270,11 @@ public class KapaatAddEditController implements MyInitialization {
     @Override
     public void saveData() {
         try {
+            if (member == null) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), "Invalid member");
+                alert.createAlert();
+                return;
+            }
             if (Double.parseDouble(txtDue.getText()) > 0) {
                 createDto();
                 var task = new ProductSaleSaveTask(productSaleDto, (short) 0);

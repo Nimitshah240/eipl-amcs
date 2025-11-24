@@ -141,6 +141,9 @@ public class CommitteeMembersAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("tenuretodatenullerror") + "\n");
         if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
+        if (dpTenureToDate.getValue().isBefore(dpTenureFromDate.getValue())) {
+            errorMsg.append(resourceBundle.getString("fromdatesmallerthantodate") + "\n");
+        }
         return errorMsg.length() == 0;
     }
 

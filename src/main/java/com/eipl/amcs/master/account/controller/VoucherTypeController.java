@@ -55,6 +55,8 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        btnEdit.setDisable(true);
+        btnDelete.setDisable(true);
         propVoucherType.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnEdit.setDisable(false);

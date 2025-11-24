@@ -246,6 +246,8 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
                 } else {
                     txtRate.setText(rate.getRate().toString());
                 }
+                calculateAmount();
+                calculateTaxAmount();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

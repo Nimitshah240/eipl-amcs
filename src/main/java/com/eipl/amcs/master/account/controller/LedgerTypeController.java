@@ -57,6 +57,8 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        btnEdit.setDisable(true);
+        btnDelete.setDisable(true);
         propLedgerType.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnEdit.setDisable(false);

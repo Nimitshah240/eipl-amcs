@@ -150,6 +150,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
             colOtherDed.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getOtherDedAmount()));
             colNetAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colDisbursedAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDisbursedAmount()));
+            colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getPaymentStatus(data.getValue().getStatus())));
 
             propSummary.bind(tableBillSummary.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {

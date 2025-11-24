@@ -80,6 +80,8 @@ public class ProductRequisitionController implements MyInitialization {
             controller.setProductRequisition(null);
             MainApp.contentPane.setCenter(controller.getRoot());
         });
+        btnEdit.setDisable(true);
+        btnDelete.setDisable(true);
         propProductRequisitionDto.addListener((observable, oldValue, newValue) -> {
 
             if (newValue != null) {

@@ -228,6 +228,8 @@ public class LedgerAddEditController implements MyInitialization {
     private boolean validate() {
         if (cboxLedgerGroup.getValue() == null)
             errorMsg.append(resourceBundle.getString("ledgergroupnullerror") + "\n");
+        if (txtName.getText() == null || txtName.getText().trim().isEmpty())
+            errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
 
         return errorMsg.length() == 0;
     }

@@ -88,6 +88,8 @@ public class ProductReceiptController implements MyInitialization {
             controller.setProductReceipt(null);
             MainApp.contentPane.setCenter(controller.getRoot());
         });
+        btnEdit.setDisable(true);
+        btnDelete.setDisable(true);
         propProductReceiptDto.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnEdit.setDisable(false);

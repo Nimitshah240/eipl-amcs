@@ -639,10 +639,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             try {
                 BigDecimal avgFat = CommonUtils.scale1RoundUp(kgFat.divide(totalLtr, MY_DECIMAL32).multiply(BigDecimal.valueOf(100)));
                 BigDecimal avgSnf = CommonUtils.scale1RoundUp(kgSnf.divide(totalLtr, MY_DECIMAL32).multiply(BigDecimal.valueOf(100)));
-                BigDecimal avgLtr = CommonUtils.scale1RoundUp(totalLtr.divide(BigDecimal.valueOf(list.size()), MY_DECIMAL32));
                 lblAvgFat.setText(avgFat.toString());
                 lblAvgSnf.setText(avgSnf.toString());
-                lblAvgQty.setText(avgLtr.toString());
+                lblAvgQty.setText(totalLtr.toString());
             } catch (ArithmeticException e) {
                 e.printStackTrace();
                 lblAvgFat.setText("0.0");
@@ -792,7 +791,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             var task = getSaveTask();
             new Thread(task).start();
         } else {
-            warningAlert("milkcollection", "error.occurred");
+            warningAlert("milkcollection", "paymentcyclenotfound");
         }
     }
 

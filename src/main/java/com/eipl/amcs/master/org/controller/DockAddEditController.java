@@ -241,7 +241,7 @@ public class DockAddEditController implements MyInitialization {
                         for (MilkType milkType : list) {
                             MilkType mt = dto.getMilkTypes().stream().filter(p -> p.getCode() == milkType.getCode()).findAny().orElse(null);
                             if (mt != null)
-                                cboxMilkType.getCheckModel().check(mt);
+                                cboxMilkType.getCheckModel().check(milkType.getCode() - 1);
                         }
                     }
                 }

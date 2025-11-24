@@ -72,6 +72,8 @@ public class BmcRecordingParameterController implements MyInitialization, PopupC
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnSave.setText(resourceBundle.getString("add"));
+        btnDelete.setDisable(true);
+        btnEdit.setDisable(true);
         dpDate.setValue(LocalDate.now());
         txtSocietyCode.setText(MainApp.identityDto.getSociety().getCode());
         txtSocietyCode.setDisable(true);
