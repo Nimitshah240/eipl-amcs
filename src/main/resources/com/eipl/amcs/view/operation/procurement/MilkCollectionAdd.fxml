@@ -271,9 +271,9 @@
                                             <columns>
                                                 <TableColumn fx:id="colSummaryMilkType" prefWidth="75.0" styleClass="cell-center-aligned" text="%milktype" />
                                                 <TableColumn fx:id="colSummaryMemberNos" prefWidth="75.0" styleClass="cell-center-aligned" text="%member.nos" />
+                                                <TableColumn fx:id="colSummaryQty" prefWidth="65.0" styleClass="cell-right-aligned" text="%qty" />
                                                 <TableColumn fx:id="colAvgFat" prefWidth="50.0" styleClass="cell-right-aligned" text="%fat" />
                                                 <TableColumn fx:id="colAvgSnf" prefWidth="50.0" styleClass="cell-right-aligned" text="%snf" />
-                                                <TableColumn fx:id="colSummaryQty" prefWidth="65.0" styleClass="cell-right-aligned" text="%qty" />
                                                 <TableColumn fx:id="colSummaryAmount" prefWidth="75.0" styleClass="cell-right-aligned" text="%amount" />
                                             </columns>
                                             <columnResizePolicy>
