@@ -146,6 +146,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         });
 
         btnProductSave.setOnAction(e -> {
+            if (txtRate.getText().trim().isEmpty() || new BigDecimal(txtRate.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), "RATE CAN'T BE ZERO");
+                alert.createAlert();
+                FocusUtils.requestFocus(txtRate);
+                return;
+            }
             if (productSale == null) {
                 productSale = new ProductSale();
                 setValuesInObject();
@@ -182,6 +188,18 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
         txtQuantity.focusedProperty().addListener((ob, oldVal, newVal) -> {
             if (!newVal) {
+                if (!txtQuantity.getText().isEmpty()) {
+                    if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                                "invalid quantity");
+                        alert.createAlert();
+                        txtQuantity.setText("");
+                        txtAmount.setText("");
+                        txtNetAmount.setText("");
+                        FocusUtils.requestFocus(txtQuantity);
+                        return;
+                    }
+                }
                 calculateAmount();
                 calculateTaxAmount();
             }
@@ -260,7 +278,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         ProductSaleTransaction txn = new ProductSaleTransaction();
         txn.setProduct(cboxProduct.getValue());
         txn.setRate(new BigDecimal(txtRate.getText()));
-        txn.setQuantity(BigDecimal.valueOf(Integer.valueOf(txtQuantity.getText())));
+        txn.setQuantity(new BigDecimal(txtQuantity.getText()));
         txn.setAmount(new BigDecimal(txtAmount.getText()));
         txn.setDiscount(new BigDecimal(0));
         txn.setTaxAmount(taxAmount);
@@ -343,6 +361,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     Member member = task.get();
                     if (member != null) {
                         txtConsumerName.setText(member.getFirstName());
+                    } else {
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                                "invalid consumer code");
+                        alert.createAlert();
+                        FocusUtils.requestFocus(txtConsumerCode);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();

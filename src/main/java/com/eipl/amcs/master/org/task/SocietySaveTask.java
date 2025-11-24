@@ -15,10 +15,14 @@ public class SocietySaveTask extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
-        SocietyService service = EmcsAppContext.getContext().getBean(SocietyService.class);
-        if (society == null)
-            return null;
+        try{
+            SocietyService service = EmcsAppContext.getContext().getBean(SocietyService.class);
+            if (society == null)
+                return null;
 
-        return service.save(society);
+            return service.save(society);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
