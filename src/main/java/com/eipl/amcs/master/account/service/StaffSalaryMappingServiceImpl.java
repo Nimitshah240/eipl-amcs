@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.account.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.master.account.model.StaffSalaryHead;
@@ -40,7 +41,7 @@ public class StaffSalaryMappingServiceImpl implements StaffSalaryMappingService 
     public String save(List<StaffSalaryMapping> staffSalaryMappingList, String identityInfo) {
         for (StaffSalaryMapping staffSalaryMapping : staffSalaryMappingList) {
             String c = nextCodeService.getNextCode("StaffSalaryMapping", "code", staffSalaryMapping.getSociety().getCode(), 3);
-            staffSalaryMapping.setCode(Integer.valueOf(c));
+            staffSalaryMapping.setCode(Integer.valueOf(c.substring(MainApp.getUser().getSociety().getCode().length())));
 
             staffSalaryMappingRepository.save(staffSalaryMapping);
         }

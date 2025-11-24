@@ -143,6 +143,7 @@ public class MemberCreateTask extends Task<Boolean> {
             // Member Details
             MemberDetail md = new MemberDetail();
             md.setGender(gender);
+            md.setPaymentMode((short) 0);
             md.setUnionCode(MainApp.identityDto.getUnion().getCode());
             md.setNumberOfCow((short) 0);
             md.setNumberOfBuffalo((short) 0);
