@@ -1226,8 +1226,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             try {
                 Object obj = task.get();
                 if (obj == null) {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
-                            "INVALID CODE");
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"),
+                            resourceBundle.getString("members.not.available"));
                     alert.createAlert();
                 }
 

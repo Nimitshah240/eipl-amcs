@@ -432,7 +432,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             });
             new Thread(task).start();
         } else {
-            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("error.occurred"));
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("paymentcyclenotfound"));
             alert1.createAlert();
         }
     }
@@ -463,6 +463,9 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
                     }
                 });
                 new Thread(task).start();
+            } else {
+                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("paymentcyclenotfound"));
+                alert1.createAlert();
             }
         }
     }

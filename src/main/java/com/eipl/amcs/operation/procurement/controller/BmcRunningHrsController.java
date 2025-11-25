@@ -167,8 +167,8 @@ public class BmcRunningHrsController implements MyInitialization {
             new Thread(task).start();
 
         } catch (RuntimeException e) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("dock"),
-                    "ERROR");
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("BmcRunningHrs"),
+                    resourceBundle.getString("error.occurred"));
             alert.createAlert();
             throw new RuntimeException(e);
         }

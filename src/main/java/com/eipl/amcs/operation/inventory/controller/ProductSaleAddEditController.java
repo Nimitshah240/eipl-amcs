@@ -146,10 +146,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         });
 
         btnProductSave.setOnAction(e -> {
-            if (txtRate.getText().trim().isEmpty() || new BigDecimal(txtRate.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), "RATE CAN'T BE ZERO");
+            if (!validateProductSave()) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                        errorMsg.toString());
                 alert.createAlert();
-                FocusUtils.requestFocus(txtRate);
                 return;
             }
             if (productSale == null) {
@@ -190,9 +190,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             if (!newVal) {
                 if (!txtQuantity.getText().isEmpty()) {
                     if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
-                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
-                                "invalid quantity");
-                        alert.createAlert();
                         txtQuantity.setText("");
                         txtAmount.setText("");
                         txtNetAmount.setText("");
@@ -363,9 +360,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtConsumerName.setText(member.getFirstName());
                     } else {
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
-                                "invalid consumer code");
+                                resourceBundle.getString("localmilk.sale.validation.vendor.empty")
+                        );
                         alert.createAlert();
-                        FocusUtils.requestFocus(txtConsumerCode);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -386,7 +383,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("error.occurred"));
                         alert.createAlert();
-                        FocusUtils.requestFocus(txtConsumerCode);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -405,7 +401,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("error.occurred"));
                         alert.createAlert();
-                        FocusUtils.requestFocus(txtConsumerCode);
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -849,6 +844,20 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtTotalAmountTax.setText(CommonUtils.scale2RoundUp(totalTaxAmt).toString());
         txtNetPayable.setText(CommonUtils.scale2RoundUp(netAmt).toString());
     }
+
+    private boolean validateProductSave() {
+        errorMsg = new StringBuilder();
+        if (txtRate.getText().trim().isEmpty() || new BigDecimal(txtRate.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
+            errorMsg.append(resourceBundle.getString("productsale.transaction.validation.rate.empty") + "\n");
+        }
+
+        if (txtQuantity.getText().trim().isEmpty() || new BigDecimal(txtQuantity.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
+            errorMsg.append(resourceBundle.getString("qtyzero") + "\n");
+        }
+        return errorMsg.length() == 0;
+
+    }
+
 }
 
 
