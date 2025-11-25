@@ -74,7 +74,7 @@
                                 <ComboBox fx:id="cboxQualityType" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                 <E_NumericField fx:id="txtQuantity" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                 <E_NumericField fx:id="txtFat" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                <E_NumericField fx:id="txtSnf" disable="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                <E_NumericField fx:id="txtSnf"  GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                 <E_NumericField fx:id="txtClr" disable="true" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                 <E_NumericField fx:id="txtRtpl" disable="true" GridPane.rowIndex="3" />
                                 <E_NumericField fx:id="txtAmount" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />

@@ -227,7 +227,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
                         prepareInstallment();
                         saveData();
                     } else {
-                        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
                                 resourceBundle.getString("societypaymentcycle.not.available"));
                         alert.createAlert();
                     }

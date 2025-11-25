@@ -87,7 +87,7 @@ public class MeetingAddEditController implements MyInitialization {
 
 
     public void loadControls() {
-        cboxMeetingType.getSelectionModel().select(dto.getMeetingType());
+        cboxMeetingType.getSelectionModel().select(dto.getMeetingType()-1);
         txtCode.setText(dto.getCode());
         txtMeetingTime.setText(dto.getMeetingTime());
         txtAgendaDetails.setText(dto.getDetailedAgenda());

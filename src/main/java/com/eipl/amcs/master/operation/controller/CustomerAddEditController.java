@@ -240,18 +240,6 @@ public class CustomerAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("customer"),
                         resourceBundle.getString("customer.insert.successful"));
                 alert.createAlert();
@@ -259,6 +247,11 @@ public class CustomerAddEditController implements MyInitialization {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(event -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }
@@ -269,18 +262,6 @@ public class CustomerAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("customer"),
                         resourceBundle.getString("customer.update.successful"));
                 alert.createAlert();
@@ -288,6 +269,11 @@ public class CustomerAddEditController implements MyInitialization {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(event -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("customer"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }

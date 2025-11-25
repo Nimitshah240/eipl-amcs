@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.SalaryHeadAddEditController">
+<StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.SalaryHeadAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white-drop-border">
             <children>
@@ -28,23 +28,22 @@
                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label maxWidth="1.7976931348623157E308" text="%code" GridPane.rowIndex="1" />
-                        <Label text="%name" GridPane.rowIndex="3" />
-                        <Label text="%type" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <E_TextField fx:id="txtCode" disable="true" GridPane.rowIndex="2" />
+                        <Label disable="true" maxWidth="1.7976931348623157E308" text="%code" visible="false" GridPane.rowIndex="2" />
+                        <Label text="%name" />
+                        <Label text="%type" GridPane.columnIndex="2" />
+                        <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <E_TextField fx:id="txtCode" disable="true" visible="false" GridPane.rowIndex="3" />
+                      <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                          <children>
+                              <E_Button fx:id="btnSaveUpdate" styleClass="button-primary" text="%save" />
+                              <E_Button fx:id="btnClose" text="%close" />
+                          </children>
+                      </HBox>
                     </children>
                 </GridPane>
-                <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15">
-                    <children>
-                        <E_Button fx:id="btnSaveUpdate" styleClass="button-primary" text="%save" />
-                        <E_Button fx:id="btnClose" text="%close" />
-                    </children>
-                </HBox>
             </children>
             <padding>
                 <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />

@@ -77,8 +77,10 @@ public class CommitteeMembersAddEditController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        setupComboBox();
         loadDesignation();
+        setupComboBox();
+//        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
+//        cboxDesignation.getSelectionModel().select(0);
         dpElectionDate.setValue(LocalDate.now());
         dpTenureToDate.setValue(LocalDate.now());
         dpTenureFromDate.setValue(LocalDate.now());
@@ -154,17 +156,6 @@ public class CommitteeMembersAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
                         resourceBundle.getString("committeemembers.insert.successful"));
                 alert.createAlert();
@@ -175,6 +166,12 @@ public class CommitteeMembersAddEditController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
+
+        task.setOnFailed(event -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
         new Thread(task).start();
     }
 
@@ -184,19 +181,6 @@ public class CommitteeMembersAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
                         resourceBundle.getString("committeemembers.update.successful"));
                 alert.createAlert();
@@ -206,12 +190,19 @@ public class CommitteeMembersAddEditController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
+
+        task.setOnFailed(event -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
         new Thread(task).start();
     }
 
     @Override
     public void setupComboBox() {
         cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
+        cboxDesignation.getSelectionModel().select(0);
     }
 
     private void loadDesignation() {
