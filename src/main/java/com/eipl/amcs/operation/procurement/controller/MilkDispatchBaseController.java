@@ -1,5 +1,8 @@
 package com.eipl.amcs.operation.procurement.controller;
 
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
@@ -21,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 public abstract class MilkDispatchBaseController {
@@ -31,6 +35,7 @@ public abstract class MilkDispatchBaseController {
     protected Map<String, BigDecimal> mapRateDetails;
     protected List<SocietyMilkPurchaseRateBased> listBased;
     String mapKey = null;
+    private ResourceBundle resourceBundle;
 
     protected void calculateClr(String fat, String snf) {
         if (!fat.isEmpty() && !snf.isEmpty()) {
@@ -109,6 +114,12 @@ public abstract class MilkDispatchBaseController {
 
     protected void fetchRateForDispatch(String fat, String snf, MilkType milkType, MilkQualityType milkQualityType, LocalDateTime dateTime) {
         if (!fat.isEmpty() && !snf.isEmpty() && milkType != null && milkQualityType != null) {
+           if (societyMilkPurchaseRate == null) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+                        resourceBundle.getString("ratemaster.not.found"));
+                alert.createAlert();
+                return;
+            }
             if (!(milkType.getCode() == 3 && milkQualityType.getCode() == 3)) {
 
                 if ((short) 1 == societyMilkPurchaseRate.getRateGenMethodCode() && listBased != null) {

@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -25,6 +26,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -59,7 +61,6 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     @FXML
     private GridPane gridMaster;
     private ResourceBundle resourceBundle;
-
 
     @Override
     public Node getRoot() {
@@ -158,21 +159,11 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("staffsalarymapping"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("staffsalarymapping"),
                         resourceBundle.getString("staffsalarymapping.insert.successful"));
                 alert.createAlert();
                 loadData();
+                staffSalaryMappingList.clear();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

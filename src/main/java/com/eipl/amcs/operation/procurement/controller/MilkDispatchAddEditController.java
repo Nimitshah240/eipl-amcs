@@ -307,6 +307,14 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     }
 
     private void copyData() {
+        fetchPurchaseRateCode();
+        if (societyMilkPurchaseRate == null) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+                    resourceBundle.getString("ratemaster.not.found"));
+            alert.createAlert();
+            return;
+        }
+
         listMilkDispatch.clear();
         for (MilkDispatchSummaryDto milkDispatchSummaryDto : milkDispatchSummaryDtoList) {
             dtoTxn = new MilkDispatchTransaction();
@@ -326,8 +334,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
 
             fetchRateForDispatchTable(String.valueOf(dtoTxn.getAvgFat()), String.valueOf(dtoTxn.getAvgSnf()), dtoTxn.getMilkType(), dtoTxn.getMilkQualityType(), dpFromDate.getValue().atStartOfDay(), dtoTxn);
 
-
             dtoTxn.setRate(milkDispatchSummaryDto.getAmount().divide(milkDispatchSummaryDto.getMilkCollection(), RoundingMode.HALF_UP));
+//            dtoTxn.setRate(milkDispatchSummaryDto.getAmount().divide(milkDispatchSummaryDto.getMilkCollection(), RoundingMode.HALF_UP));
             dtoTxn.setWater(BigDecimal.ZERO);
             dtoTxn.setAmount(milkDispatchSummaryDto.getAmount());
             dtoTxn.setNosOfCan(1);

@@ -783,6 +783,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         }
         saveData();
         FocusUtils.requestFocus(txtCode);
+        setupTable();
     }
 
     @Override
@@ -1880,7 +1881,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             for (int i = 0; i < lines.size(); ) {
                 String s = lines.get(i);
                 if (s.contains("{dcsshort}")) {
-                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName());
+                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName()+ "-" +MainApp.identityDto.getSociety().getCodeEx());
                 }
                 if (s.contains("{membername}")) {
                     if (s.contains("{membername}")) {

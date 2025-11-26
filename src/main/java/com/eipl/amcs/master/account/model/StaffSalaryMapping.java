@@ -31,7 +31,7 @@ public class StaffSalaryMapping extends BaseModelTxn {
     @Column(name = "is_active")
     protected boolean active;
     @Id
-    private Integer code;
+    private String code;
     private BigDecimal amount;
     private String unionCode;
     @JsonFormat(pattern = "yyyy-MM-dd")

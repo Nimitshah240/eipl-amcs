@@ -41,7 +41,7 @@ public class StaffSalaryMappingServiceImpl implements StaffSalaryMappingService 
     public String save(List<StaffSalaryMapping> staffSalaryMappingList, String identityInfo) {
         for (StaffSalaryMapping staffSalaryMapping : staffSalaryMappingList) {
             String c = nextCodeService.getNextCode("StaffSalaryMapping", "code", staffSalaryMapping.getSociety().getCode(), 3);
-            staffSalaryMapping.setCode(Integer.valueOf(c.substring(MainApp.getUser().getSociety().getCode().length())));
+            staffSalaryMapping.setCode(c);
 
             staffSalaryMappingRepository.save(staffSalaryMapping);
         }
