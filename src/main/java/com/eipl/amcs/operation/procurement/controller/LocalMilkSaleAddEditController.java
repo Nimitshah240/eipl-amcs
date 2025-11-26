@@ -11,8 +11,6 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
 import com.eipl.amcs.master.global.convertor.MilkClassConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
@@ -336,18 +334,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(CommonUtils.getResourceString(resourceBundle, resourceBundle.getString(subError.getMessage())) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
                         resourceBundle.getString("localmilksale.insert.successful"));
                 alert.createAlert();
@@ -358,6 +344,11 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
+        task.setOnFailed(e -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
         new Thread(task).start();
     }
 
@@ -367,19 +358,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
-
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
                         resourceBundle.getString("localmilksale.update.successful"));
                 alert.createAlert();
@@ -388,6 +366,11 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(e -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }
@@ -613,7 +596,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             dpSellDate.setValue(dto.getSaleDate().toLocalDate());
             cboxShift.getSelectionModel().select(dto.getShift());
             if (txtConsumerCode.getText() != null)
-                txtConsumerCode.setText(dto.getConsumerCode().substring(7));
+                txtConsumerCode.setText(dto.getConsumerCode().substring(MainApp.getUser().getSociety().getCode().length()));
             cboxPaymentType.getSelectionModel().select(dto.getPaymentMode() == 0 ? resourceBundle.getString("cash")
                     : dto.getPaymentMode() == 1 ? resourceBundle.getString("credit")
                     : resourceBundle.getString("coupon"));

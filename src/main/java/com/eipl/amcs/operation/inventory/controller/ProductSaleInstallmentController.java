@@ -70,7 +70,7 @@ public class ProductSaleInstallmentController implements MyInitialization {
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInstallmentAmount()));
             colTrDate.setText(resourceBundle.getString("period"));
             colTrDate.setCellValueFactory(data -> new SimpleStringProperty(dtf.format(data.getValue().getSocietyPaymentCycle().getFromDate().toLocalDate()) + " To " + dtf.format(data.getValue().getSocietyPaymentCycle().getToDate().toLocalDate())));
-            colSrNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().replace(data.getValue().getInvoiceNo() + "-", "")));
+//            colSrNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().replace(data.getValue().getInvoiceNo() + "-", "")));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? "Done" : "Pending"));
             tableProductInstallment.setItems(FXCollections.observableList(list));
         } catch (Exception e) {

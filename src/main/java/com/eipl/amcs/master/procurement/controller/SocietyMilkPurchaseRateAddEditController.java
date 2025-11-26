@@ -84,6 +84,7 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
     private RateType rateType;
     private StringBuilder errorMsg = null;
     private SocietyMilkPurchaseRateDto dto = null;
+    private boolean isRateAvailable = false;
 
     @Override
     public Node getRoot() {
@@ -131,6 +132,8 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
             errorMsg.append(resourceBundle.getString("shift.cannot.null") + "\n");
         if (cboxShiftApp.getValue() == null)
             errorMsg.append(resourceBundle.getString("shift.cannot.null") + "\n");
+        if (!isRateAvailable)
+            errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
 
         return errorMsg.length() == 0;
     }
@@ -176,8 +179,6 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
                 if (obj == null) {
                     ApiError error = (ApiError) obj;
                     StringBuilder sb = new StringBuilder();
-
-
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societymilkpurchaserate"),
                             resourceBundle.getString("error.occurred"));
                     alert.createAlert();
@@ -213,15 +214,18 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societymilkpurchaserate"),
                         "Rate file is imported");
                 alert.createAlert();
+                isRateAvailable = true;
             } catch (InterruptedException | ExecutionException ex) {
                 LOGGER.error(ex.getMessage(), ex);
             }
         });
         task.setOnFailed(e -> {
+            isRateAvailable = false;
+            tableRateDetails.getItems().clear();
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societymilkpurchaserate"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
             if (task.getException() instanceof IllegalArgumentException) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societymilkpurchaserate"),
-                        task.getException().getMessage());
-                alert.createAlert();
                 LOGGER.error(task.getException().getMessage(), task.getException());
             }
         });

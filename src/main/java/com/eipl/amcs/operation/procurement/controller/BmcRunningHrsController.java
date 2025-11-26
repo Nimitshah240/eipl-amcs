@@ -175,13 +175,20 @@ public class BmcRunningHrsController implements MyInitialization {
     }
 
     private void setValuesInObject() {
-        bmcRunningHrs.setSocietyCode(MainApp.identityDto.getSociety().getCode());
-        bmcRunningHrs.setUnionCode(MainApp.identityDto.getUnion().getCode());
-        bmcRunningHrs.setAmount(BigDecimal.ZERO);
-        bmcRunningHrs.setRunningHoursPower(Integer.valueOf(0));
-        bmcRunningHrs.setRunningHoursDg(Integer.parseInt(txtDgRunningHrs.getText()));
-        bmcRunningHrs.setTotalRunningHours(Integer.parseInt(txtBmcRunningHrs.getText()));
-        bmcRunningHrs.setIsActive(true);
+        try {
+            bmcRunningHrs.setSocietyCode(MainApp.identityDto.getSociety().getCode());
+            bmcRunningHrs.setUnionCode(MainApp.identityDto.getUnion().getCode());
+            bmcRunningHrs.setAmount(BigDecimal.ZERO);
+            bmcRunningHrs.setRunningHoursPower(Integer.valueOf(0));
+            bmcRunningHrs.setRunningHoursDg(Integer.parseInt(txtDgRunningHrs.getText()));
+            bmcRunningHrs.setTotalRunningHours(Integer.parseInt(txtBmcRunningHrs.getText()));
+            bmcRunningHrs.setIsActive(true);
+        } catch (Exception e) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("BmcRunningHrs"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+            throw new RuntimeException(e);
+        }
     }
 
     public void updateData() {

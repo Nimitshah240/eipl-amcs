@@ -123,7 +123,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
     private StaffSalaryHead setValuesInObject() {
         dto.setType(cboxType.getSelectionModel().getSelectedIndex() - 1);
         dto.setName(txtName.getText());
-        dto.setCode(Integer.valueOf(txtCode.getText()));
+//        dto.setCode(Integer.valueOf(txtCode.getText()));
         dto.setSociety(MainApp.identityDto.getSociety());
         return dto;
     }

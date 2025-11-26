@@ -8,8 +8,6 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
@@ -211,18 +209,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
 
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
                         resourceBundle.getString("productsalerate.insert.successful"));
                 alert.createAlert();
@@ -233,6 +220,12 @@ public class ProductSaleRateAddEditController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
+        task.setOnFailed(e -> {
+
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
         new Thread(task).start();
     }
 
@@ -242,18 +235,6 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
                         resourceBundle.getString("productsalerate.update.successful"));
                 alert.createAlert();
@@ -263,6 +244,12 @@ public class ProductSaleRateAddEditController implements MyInitialization {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(e -> {
+
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsalerate"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }

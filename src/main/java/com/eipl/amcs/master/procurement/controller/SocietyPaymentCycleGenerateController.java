@@ -119,7 +119,7 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
         while (fromDate.isBefore(toDate)) {
             int days = CommonUtils.strToInteger(txtInterval.getText());
             toDateTemp = fromDate.plusDays(cboxFromShift.getValue().getCode() == 1 ? days - 1 : days);
-            if (chkCheckMonth.isSelected()) {
+            if (chkCheckMonth.isSelected() && cboxFromShift.getValue().getCode() == 1) {
                 if (fromDate.getMonth() != toDateTemp.getMonth())
                     toDateTemp = fromDate.withDayOfMonth(fromDate.lengthOfMonth());
                 if (toDateTemp.getDayOfMonth() == 30)
@@ -232,12 +232,15 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
+
                 if (obj instanceof RuntimeException) {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                    RuntimeException error = (RuntimeException) obj;
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), MainApp.getBundle().getString("societypaymentcycle"),
                             resourceBundle.getString("error.occurred"));
                     alert.createAlert();
                     return;
                 }
+
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
                         resourceBundle.getString("societypaymentcycle.insert.successful"));
                 alert.createAlert();

@@ -3,10 +3,10 @@ package com.eipl.amcs.operation.inventory.model;
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.ProductReceiptDeserializer;
-import com.eipl.amcs.json.deserialize.ProductRequisitionTransactionDeserializer;
+import com.eipl.amcs.json.deserialize.ProductReceiptTransactionDeserializer;
 import com.eipl.amcs.json.deserialize.TaxDetailDeserializer;
 import com.eipl.amcs.json.serialize.ProductReceiptSerialize;
-import com.eipl.amcs.json.serialize.ProductRequisitionTransactionSerialize;
+import com.eipl.amcs.json.serialize.ProductReceiptTransactionSerialize;
 import com.eipl.amcs.json.serialize.TaxDetailSerialize;
 import com.eipl.amcs.master.account.model.TaxDetail;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -43,8 +43,8 @@ public class ProductReceiptTax extends BaseModelTxn {
     private ProductReceipt productReceipt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonSerialize(using = ProductRequisitionTransactionSerialize.class)
-    @JsonDeserialize(using = ProductRequisitionTransactionDeserializer.class)
+    @JsonSerialize(using = ProductReceiptTransactionSerialize.class)
+    @JsonDeserialize(using = ProductReceiptTransactionDeserializer.class)
     @JoinColumn(name = "grn_txn_no", foreignKey = @ForeignKey(name = "fk_product_receipt_tax_grn_txn_no"))
     @JsonIgnoreProperties(value = {"productReceipt", "product", "unit", "tax"})
     private ProductReceiptTransaction productReceiptTransaction;

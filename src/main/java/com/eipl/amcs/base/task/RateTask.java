@@ -462,7 +462,7 @@ public class RateTask extends Task<Void> {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return null;
     }

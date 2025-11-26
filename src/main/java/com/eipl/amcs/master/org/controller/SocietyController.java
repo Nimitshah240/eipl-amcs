@@ -85,6 +85,7 @@ public class SocietyController implements MyInitialization {
     @FXML
     private StackPane root;
     private Society dto;
+    private ResourceBundle resourceBundle;
 
     @Override
     public Node getRoot() {
@@ -98,6 +99,7 @@ public class SocietyController implements MyInitialization {
         loadBank();
         loadBranch();
         setupComboBox();
+        this.resourceBundle = resourceBundle;
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
@@ -267,12 +269,12 @@ public class SocietyController implements MyInitialization {
     public void saveData() {
         SocietySaveTask task = new SocietySaveTask(tableSociety.getItems().get(0));
         task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.stage, "Success",
+            MyAlert alert = new InformationAlert(MainApp.stage, resourceBundle.getString("society"),
                     "Success");
             alert.createAlert();
         });
         task.setOnFailed(e -> {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(),"Error",
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("society"),
                     "ERROR");
             alert.createAlert();
         });

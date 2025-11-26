@@ -187,6 +187,10 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
                         ex.printStackTrace();
                     }
                 });
+                task.setOnFailed(e -> {
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                });
                 new Thread(task).start();
             }
         }

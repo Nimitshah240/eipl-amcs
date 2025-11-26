@@ -3,6 +3,7 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.task.RateTask;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
@@ -93,17 +94,17 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
         MainApp.lblMessage.setText("Downloading...");
         rateTask.setOnSucceeded(e -> {
             loadData();
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("rate"),
+            MainApp.paneDrop.setVisible(false);
+            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
                     "Successful");
             alert.createAlert();
-            MainApp.paneDrop.setVisible(false);
         });
         rateTask.setOnFailed(e -> {
             loadData();
-            MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+            MainApp.paneDrop.setVisible(false);
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
                     "Failed");
             alert.createAlert();
-            MainApp.paneDrop.setVisible(false);
         });
         new Thread(rateTask).start();
     }

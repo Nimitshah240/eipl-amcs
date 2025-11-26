@@ -7,8 +7,6 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.geo.converter.*;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.geo.task.*;
@@ -43,6 +41,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -238,18 +237,6 @@ public class MemberAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + subError.getMessage() + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("member"),
                         resourceBundle.getString("member.insert.successful"));
                 alert.createAlert();
@@ -257,6 +244,11 @@ public class MemberAddEditController implements MyInitialization {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(e -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }
@@ -267,18 +259,6 @@ public class MemberAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
-                if (obj instanceof ApiError) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
-                    for (ApiValidationError subError : error.getSubErrors()) {
-                        sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
-                    }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
-                            sb.toString());
-                    alert.createAlert();
-                    return;
-                }
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("member"),
                         resourceBundle.getString("member.update.successful"));
                 alert.createAlert();
@@ -287,6 +267,12 @@ public class MemberAddEditController implements MyInitialization {
                 ex.printStackTrace();
             }
         });
+        task.setOnFailed(e -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
+
         new Thread(task).start();
     }
 
@@ -320,6 +306,7 @@ public class MemberAddEditController implements MyInitialization {
         member.setFirstNameLocal(txtLocalName.getText() == null ? "" : txtLocalName.getText());
         member.setMiddleNameLocal(txtMiddleLocalName.getText() == null ? "" : txtMiddleLocalName.getText());
         member.setLastNameLocal(txtLocalLastName.getText() == null ? "" : txtLocalLastName.getText());
+        member.setCreditLimit(new BigDecimal(txtCreditLimit.getText()));
         memberDetail.setUnionCode(MainApp.identityDto.getUnion().getCode());
         memberDetail.setRegistrationDate(dpRegistrationDate.getValue());
         memberDetail.setGender(cboxGender.getValue());
@@ -606,7 +593,7 @@ public class MemberAddEditController implements MyInitialization {
             txtAadharCardNo.setText(memberDetail.getAadharNo());
             txtPanNo.setText(memberDetail.getPanNo());
             txtNoOfCow.setText(memberDetail.getNumberOfCow() != null ? memberDetail.getNumberOfCow().toString() : "0");
-            txtNoOfCow.setText(memberDetail.getNumberOfBuffalo() != null ? memberDetail.getNumberOfBuffalo().toString() : "0");
+            txtNoOfBuffalo.setText(memberDetail.getNumberOfBuffalo() != null ? memberDetail.getNumberOfBuffalo().toString() : "0");
             if (memberDetail.getPaymentMode() != null) {
                 if (memberDetail.getPaymentMode() == 1) {
                     rbtnBank.setSelected(true);
