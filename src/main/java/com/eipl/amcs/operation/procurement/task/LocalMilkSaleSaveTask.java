@@ -3,10 +3,8 @@ package com.eipl.amcs.operation.procurement.task;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.service.LocalMilkSaleService;
-import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
-import org.springframework.web.client.HttpStatusCodeException;
 
 public class LocalMilkSaleSaveTask extends Task<Object> {
     private final LocalMilkSale dto;
@@ -27,11 +25,8 @@ public class LocalMilkSaleSaveTask extends Task<Object> {
                 service.update(dto, CommonUtils.setIdentityHeader());
             }
             return true;
-        } catch (HttpStatusCodeException e) {
-            return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 }

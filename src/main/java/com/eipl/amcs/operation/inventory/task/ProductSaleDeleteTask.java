@@ -21,8 +21,8 @@ public class ProductSaleDeleteTask extends Task<Boolean> {
             service.delete(invoiceNo, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
+//        return null;
     }
 }

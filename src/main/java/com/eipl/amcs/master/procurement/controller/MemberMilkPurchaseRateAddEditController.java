@@ -6,8 +6,6 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -85,6 +83,7 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
     private RateType rateType;
     private StringBuilder errorMsg = null;
     private MemberMilkPurchaseRateDto dto = null;
+    private boolean isRateAdded = false;
 
     @Override
     public Node getRoot() {
@@ -122,6 +121,9 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
             return;
         }
         setValuesInObject();
+
+        MainApp.paneDrop.setVisible(true);
+        MainApp.lblMessage.setText("Preparing Member Milk Purchase Rate...");
         saveData();
     }
 
@@ -132,6 +134,8 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
             errorMsg.append(resourceBundle.getString("shift.cannot.null") + "\n");
         if (cboxShiftApp.getValue() == null)
             errorMsg.append(resourceBundle.getString("shift.cannot.null") + "\n");
+        if (!isRateAdded)
+            errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
 
         return errorMsg.length() == 0;
     }
@@ -172,10 +176,8 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
+                MainApp.paneDrop.setVisible(false);
                 if (obj == null) {
-                    ApiError error = (ApiError) obj;
-                    StringBuilder sb = new StringBuilder();
-
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
                             resourceBundle.getString("error.occurred"));
                     alert.createAlert();
@@ -183,6 +185,7 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
                 }
 
                 if (obj instanceof String) {
+
                     MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
                             resourceBundle.getString("rate.insert.successful"));
                     alert.createAlert();
@@ -210,15 +213,18 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
                         "Rate file is imported");
                 alert.createAlert();
+                isRateAdded = true;
             } catch (InterruptedException | ExecutionException ex) {
                 LOGGER.error(ex.getMessage(), ex);
             }
         });
         task.setOnFailed(e -> {
+            tableRateDetails.getItems().clear();
+            isRateAdded = false;
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
             if (task.getException() instanceof IllegalArgumentException) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("membermilkpurchaserate"),
-                        task.getException().getMessage());
-                alert.createAlert();
                 LOGGER.error(task.getException().getMessage(), task.getException());
             }
         });

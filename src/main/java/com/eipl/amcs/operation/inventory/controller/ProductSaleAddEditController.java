@@ -359,6 +359,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     if (member != null) {
                         txtConsumerName.setText(member.getFirstName());
                     } else {
+                        txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("localmilk.sale.validation.vendor.empty")
                         );
@@ -380,6 +381,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtCreditLimit.setDisable(true);
                         rbtnCredit.setDisable(true);
                     } else {
+                        txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("error.occurred"));
                         alert.createAlert();
@@ -398,6 +400,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtConsumerName.setText(list.getFirstName());
                         rbtnCredit.setDisable(true);
                     } else {
+                        txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                                 resourceBundle.getString("error.occurred"));
                         alert.createAlert();
@@ -447,9 +450,14 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     public void deleteData() {
-        listProductSaleTransaction.remove(propSaleTxn.get());
-        tableProductSaleTransaction.setItems(listProductSaleTransaction);
-        calculateSummary();
+        if (btnSaveUpdate.getText().equalsIgnoreCase("Save")) {
+            listProductSaleTransaction.remove(propSaleTxn.get());
+            tableProductSaleTransaction.setItems(listProductSaleTransaction);
+            calculateSummary();
+        } else {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), resourceBundle.getString("cannot.delete.product"));
+            alert.createAlert();
+        }
     }
 
     public void setupTable() {
@@ -459,7 +467,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colTaxAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));
-            colActualAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
+            colActualAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             propSaleTxn.bind(tableProductSaleTransaction.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("ProductSaleAddEdit setuptable Exception");
@@ -482,7 +490,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         try {
             this.productSale = productSale;
             if (productSale != null) {
-                txtConsumerCode.setText(productSale.getConsumerCode().substring(7, 11));
+                txtConsumerCode.setText(productSale.getConsumerCode().substring(MainApp.getUser().getSociety().getCode().length()));
                 setConsumerName(productSale.getConsumerCode());
                 dpDate.setValue(productSale.getInvoiceDate());
                 txtInvoiceNo.setText(productSale.getInvoiceNo());

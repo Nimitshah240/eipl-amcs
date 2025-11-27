@@ -22,6 +22,7 @@ import javax.persistence.*;
 public class StaffSalaryHead extends BaseModelTxn {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer code;
     private Integer type;
     private String name;

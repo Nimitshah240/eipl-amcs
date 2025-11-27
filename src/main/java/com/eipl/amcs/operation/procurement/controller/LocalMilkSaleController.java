@@ -188,7 +188,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
     public void setupTable() {
         try {
             colConsumerType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeStrFromShort(data.getValue().getConsumerType())));
-            colConsumerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode().substring(7)));
+            colConsumerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode().substring(MainApp.getUser().getSociety().getCode().length())));
             colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(getConsumerName(data.getValue().getConsumerCode(), data.getValue().getConsumerType())));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaleDate().toLocalDate()));
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));

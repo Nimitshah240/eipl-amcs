@@ -1362,3 +1362,4 @@ samplenovalidation=सैंपल नं. 4 अंकों से अधिक
 invalid.password=अमान्य पासवर्ड
 route.insert.successful=मार्ग सफलतापूर्वक डाला गया
 route.update.successful=मार्ग सफलतापूर्वक अपडेट किया गया
+cannot.delete.product=उत्पाद को हटाया नहीं जा सकता
