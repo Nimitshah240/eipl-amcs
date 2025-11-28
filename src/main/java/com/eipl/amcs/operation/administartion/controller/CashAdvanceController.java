@@ -3,7 +3,10 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.*;
+import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.master.account.dto.CashAdvanceDto;
 import com.eipl.amcs.master.account.model.CashAdvance;
 import com.eipl.amcs.master.operation.model.Member;
@@ -179,6 +182,11 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
                 loadData();
                 clearControls();
             });
+            task.setOnFailed(e -> {
+                MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("cashadvance"),
+                        resourceBundle.getString("error.occurred"));
+                alert.createAlert();
+            });
             new Thread(task).start();
         } else {
             MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("cashadvance"),
@@ -242,41 +250,49 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
     }
 
     private void prepareInstallment() {
-        if (installmentList != null)
-            installmentList.clear();
-        Integer loopNo = Integer.parseInt(txtNoOfInstallment.getText());
-        BigDecimal totalAmount = new BigDecimal(txtAmount.getText());
-        BigDecimal noOfInstallment = new BigDecimal(txtNoOfInstallment.getText());
-        BigDecimal num = totalAmount.divide(noOfInstallment, RoundingMode.HALF_DOWN);
-        BigDecimal actualInstallment = new BigDecimal(txtAmount.getText());
-        BigDecimal lastAmount = actualInstallment.subtract(num.multiply(new BigDecimal(loopNo - 1)));
-        for (int i = 1; i <= loopNo; i++) {
-            ProductSaleInstallment psi = new ProductSaleInstallment();
-            psi.setActualInstallment(actualInstallment);
-            if (i == loopNo) {
-                psi.setInstallmentAmount(lastAmount);
-            } else {
-                psi.setInstallmentAmount(num);
+        try {
+            if (installmentList != null)
+                installmentList.clear();
+            Integer loopNo = Integer.parseInt(txtNoOfInstallment.getText());
+            BigDecimal totalAmount = new BigDecimal(txtAmount.getText());
+            BigDecimal noOfInstallment = new BigDecimal(txtNoOfInstallment.getText());
+            BigDecimal num = totalAmount.divide(noOfInstallment, RoundingMode.HALF_DOWN);
+            BigDecimal actualInstallment = new BigDecimal(txtAmount.getText());
+            BigDecimal lastAmount = actualInstallment.subtract(num.multiply(new BigDecimal(loopNo - 1)));
+            for (int i = 1; i <= loopNo; i++) {
+                ProductSaleInstallment psi = new ProductSaleInstallment();
+                psi.setActualInstallment(actualInstallment);
+                if (i == loopNo) {
+                    psi.setInstallmentAmount(lastAmount);
+                } else {
+                    psi.setInstallmentAmount(num);
+                }
+                psi.setDeductionDate(paymentCycleList.get(i - 1).getToDate().toLocalDate());
+                psi.setSocietyPaymentCycle(paymentCycleList.get(i - 1));
+                psi.setSocietyCode(MainApp.identityDto.getSociety().getCode());
+                psi.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                psi.setMember(member);
+                psi.setBilling(false);
+                psi.setType(3);
+                if (installmentList == null) {
+                    installmentList = new ArrayList<>();
+                }
+                if (psi != null) {
+                    installmentList.add(psi);
+                } else {
+                    System.err.println("Warning: psi object is null, cannot add to list.");
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("cashadvance"),
+                            resourceBundle.getString("error.occurred"));
+                    alert1.createAlert();
+                    return;
+                }
             }
-            psi.setDeductionDate(paymentCycleList.get(i - 1).getToDate().toLocalDate());
-            psi.setSocietyPaymentCycle(paymentCycleList.get(i - 1));
-            psi.setSocietyCode(MainApp.identityDto.getSociety().getCode());
-            psi.setUnionCode(MainApp.identityDto.getUnion().getCode());
-            psi.setMember(member);
-            psi.setBilling(false);
-            psi.setType(3);
-            if (installmentList == null) {
-                installmentList = new ArrayList<>();
-            }
-            if (psi != null) {
-                installmentList.add(psi);
-            } else {
-                System.err.println("Warning: psi object is null, cannot add to list.");
-                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("cashadvance"),
-                        resourceBundle.getString("error.occurred"));
-                alert1.createAlert();
-                return;
-            }
+        } catch (Exception e) {
+            System.out.println(" error : " + e);
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("cashadvance"),
+                    resourceBundle.getString("error.occurred"));
+            alert1.createAlert();
+            throw new RuntimeException(e);
         }
     }
 

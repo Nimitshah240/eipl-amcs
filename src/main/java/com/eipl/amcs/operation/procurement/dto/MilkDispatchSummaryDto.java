@@ -17,4 +17,5 @@ public class MilkDispatchSummaryDto {
     private BigDecimal milkBalance;
     private BigDecimal amount;
     private BigDecimal fat;
+    private BigDecimal snf;
 }

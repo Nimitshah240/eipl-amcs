@@ -16,6 +16,7 @@ import com.eipl.amcs.master.inventory.model.Product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 @Entity
@@ -75,6 +78,17 @@ public class ProductReceiptTransaction extends BaseModelTxn {
     @JoinColumn(name = "tax_code", foreignKey = @ForeignKey(name = "fk_product_receipt_transaction_tax_code"))
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;
+
+    @OneToMany(
+            mappedBy = "productReceiptTransaction",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY // Set to LAZY so it doesn't load unless explicitly accessed
+    )
+    @Getter(AccessLevel.PRIVATE) // Optional: Lombok annotation to keep the getter private if you make one
+    @Setter(AccessLevel.PRIVATE) // Optional: Lombok annotation to keep the setter private if you make one
+    private Set<ProductReceiptTaxAudit> productReceiptTaxAudits = new HashSet<>();
+
 
     @Override
     public String getTableName() {

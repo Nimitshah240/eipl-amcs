@@ -95,6 +95,9 @@ public class MemberBillTransactionController implements MyInitialization {
             colAdjusted.setCellFactory(TextFieldTableCell.forTableColumn());
             colAdjusted.setOnEditCommit(event -> {
                 if (event.getRowValue().getBillHead().getAllowAdjustment() == (short) 0) {
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member.bill.transaction"),
+                            resourceBundle.getString("adjustment.not.allowed"));
+                    alert.createAlert();
                     throw new IllegalArgumentException("Invalid Value!");
                 } else {
                     try {

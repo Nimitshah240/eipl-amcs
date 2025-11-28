@@ -1362,3 +1362,4 @@ invalid.password=અયોગ્ય પાસવર્ડ
 route.update.successful=રુટ અપડેટ સફળ
 route.insert.successful=રુટ સચવાયો સફળ
 cannot.delete.product=ઉત્પાદન કાઢી ન શકાય
+milkreceipttransactioncannotnull=દૂધ રસીદ વ્યવહાર ખાલી અથવા ખાલી ન હોઈ શકે.

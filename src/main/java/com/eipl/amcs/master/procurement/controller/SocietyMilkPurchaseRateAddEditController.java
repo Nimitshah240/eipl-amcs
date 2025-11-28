@@ -18,10 +18,13 @@ import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.RateTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.operation.model.Formula;
+import com.eipl.amcs.master.operation.task.FormulaLoadTask;
 import com.eipl.amcs.master.procurement.dto.PurchaseRateGenerate;
 import com.eipl.amcs.master.procurement.dto.SocietyMilkPurchaseRateDto;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateApplicability;
+import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateDetail;
 import com.eipl.amcs.master.procurement.task.SocietyMilkPurchaseRateSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
@@ -49,7 +52,6 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class SocietyMilkPurchaseRateAddEditController implements MyInitialization {
 
@@ -81,6 +83,7 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
     private List<MilkType> listMilkType;
     private List<MilkQualityType> listMilkQualityType;
     private List<RateType> listRateType;
+    private List<Formula> formulaList;
     private RateType rateType;
     private StringBuilder errorMsg = null;
     private SocietyMilkPurchaseRateDto dto = null;
@@ -158,10 +161,111 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
         app.setUnionCode(MainApp.identityDto.getUnion().getCode());
         app.setSociety(MainApp.identityDto.getSociety());
 
-        // Details
-        List<String> list = listDetails.stream().map(m -> m.getFat() + "#" + m.getSnf() + "#" + m.getRate() + "#" + m.getMilkType().getCode() + "#" + m.getMilkQualityType().getCode())
-                .collect(Collectors.toList());
+        // Details         //Based
+        BigDecimal firstFat = BigDecimal.valueOf(0.0);
+        BigDecimal firstSnf = BigDecimal.valueOf(0.0);
+        BigDecimal lastFat = BigDecimal.valueOf(0.0);
+        BigDecimal lastSnf = BigDecimal.valueOf(0.0);
+        MilkQualityType tempMilkQualityType = null;
+        MilkType tempmilkType = null;
+        Optional<Formula> formula = null;
+        SocietyMilkPurchaseRateBased societyMilkPurchaseRateBasedFat = new SocietyMilkPurchaseRateBased();
+        SocietyMilkPurchaseRateBased societyMilkPurchaseRateBasedSnf = new SocietyMilkPurchaseRateBased();
+        List<SocietyMilkPurchaseRateBased> societyMilkPurchaseRateBasedList = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
+        for (SocietyMilkPurchaseRateDetail m : listDetails) {
+            list.add(m.getFat() + "#" + m.getSnf() + "#" + m.getRate() + "#" + m.getMilkType().getCode() + "#" + m.getMilkQualityType().getCode());
+
+            switch (m.getMilkType().getCode()) {
+                case 1:
+                    formula = formulaList.stream()
+                            .filter(f -> f.getName().toLowerCase().contains("cow"))
+                            .findFirst();
+
+                    break;
+                case 2:
+                    formula = formulaList.stream()
+                            .filter(f -> f.getName().toLowerCase().contains("buff"))
+                            .findFirst();
+                    break;
+                case 3:
+                    formula = formulaList.stream()
+                            .filter(f -> f.getName().toLowerCase().contains("mix"))
+                            .findFirst();
+                    break;
+            }
+
+            if (tempmilkType == null || tempMilkQualityType == null) {
+                tempmilkType = m.getMilkType();
+                tempMilkQualityType = m.getMilkQualityType();
+                firstSnf = m.getSnf();
+                firstFat = m.getFat();
+                societyMilkPurchaseRateBasedFat.setStartVal(firstFat);
+                societyMilkPurchaseRateBasedFat.setMilkType(tempmilkType);
+                societyMilkPurchaseRateBasedFat.setMilkQualityType(tempMilkQualityType);
+                societyMilkPurchaseRateBasedFat.setQualityParam(1);
+                societyMilkPurchaseRateBasedFat.setKgRate(new BigDecimal(txtkgfat.getText()));
+                societyMilkPurchaseRateBasedFat.setVal(new BigDecimal("0.0"));
+                societyMilkPurchaseRateBasedFat.setRateType(rateType.getCode());
+                societyMilkPurchaseRateBasedFat.setFormula(formula.orElse(null));
+                societyMilkPurchaseRateBasedFat.setFixedPoint(new BigDecimal("0.0"));
+
+                societyMilkPurchaseRateBasedSnf.setStartVal(firstSnf);
+                societyMilkPurchaseRateBasedSnf.setMilkType(tempmilkType);
+                societyMilkPurchaseRateBasedSnf.setMilkQualityType(tempMilkQualityType);
+                societyMilkPurchaseRateBasedSnf.setQualityParam(2);
+                societyMilkPurchaseRateBasedSnf.setKgRate(new BigDecimal(txtkgfat.getText()));
+                societyMilkPurchaseRateBasedSnf.setVal(new BigDecimal("0.0"));
+                societyMilkPurchaseRateBasedSnf.setRateType(rateType.getCode());
+                societyMilkPurchaseRateBasedSnf.setFormula(formula.orElse(null));
+                societyMilkPurchaseRateBasedSnf.setFixedPoint(new BigDecimal("0.0"));
+            }
+
+            if (m.getMilkType() != tempmilkType || m.getMilkQualityType() != tempMilkQualityType) {
+                societyMilkPurchaseRateBasedFat.setEndVal(lastFat);
+                societyMilkPurchaseRateBasedSnf.setEndVal(lastSnf);
+
+                societyMilkPurchaseRateBasedList.add(societyMilkPurchaseRateBasedFat);
+                if (rateType.getCode() == 2)
+                    societyMilkPurchaseRateBasedList.add(societyMilkPurchaseRateBasedSnf);
+
+                tempmilkType = m.getMilkType();
+                tempMilkQualityType = m.getMilkQualityType();
+                firstSnf = m.getSnf();
+                firstFat = m.getFat();
+                societyMilkPurchaseRateBasedFat = new SocietyMilkPurchaseRateBased();
+                societyMilkPurchaseRateBasedFat.setStartVal(firstFat);
+                societyMilkPurchaseRateBasedFat.setMilkType(tempmilkType);
+                societyMilkPurchaseRateBasedFat.setMilkQualityType(tempMilkQualityType);
+                societyMilkPurchaseRateBasedFat.setQualityParam(1);
+                societyMilkPurchaseRateBasedFat.setKgRate(new BigDecimal(txtkgfat.getText()));
+                societyMilkPurchaseRateBasedFat.setVal(new BigDecimal("0.0"));
+                societyMilkPurchaseRateBasedFat.setRateType(rateType.getCode());
+                societyMilkPurchaseRateBasedFat.setFormula(formula.orElse(null));
+                societyMilkPurchaseRateBasedFat.setFixedPoint(new BigDecimal("0.0"));
+
+                societyMilkPurchaseRateBasedSnf = new SocietyMilkPurchaseRateBased();
+                societyMilkPurchaseRateBasedSnf.setStartVal(firstSnf);
+                societyMilkPurchaseRateBasedSnf.setMilkType(tempmilkType);
+                societyMilkPurchaseRateBasedSnf.setMilkQualityType(tempMilkQualityType);
+                societyMilkPurchaseRateBasedSnf.setQualityParam(2);
+                societyMilkPurchaseRateBasedSnf.setKgRate(new BigDecimal(txtkgfat.getText()));
+                societyMilkPurchaseRateBasedSnf.setVal(new BigDecimal("0.0"));
+                societyMilkPurchaseRateBasedSnf.setRateType(rateType.getCode());
+                societyMilkPurchaseRateBasedSnf.setFormula(formula.orElse(null));
+                societyMilkPurchaseRateBasedSnf.setFixedPoint(new BigDecimal("0.0"));
+            }
+            lastSnf = m.getSnf();
+            lastFat = m.getFat();
+        }
+        societyMilkPurchaseRateBasedFat.setEndVal(lastFat);
+        societyMilkPurchaseRateBasedSnf.setEndVal(lastSnf);
+        societyMilkPurchaseRateBasedList.add(societyMilkPurchaseRateBasedFat);
+        if (rateType.getCode() == 2)
+            societyMilkPurchaseRateBasedList.add(societyMilkPurchaseRateBasedSnf);
+
+        dto.setListRateBased(societyMilkPurchaseRateBasedList);
         dto.setPurchaseRate(rate);
         dto.setListApplicability(List.of(app));
         dto.setListDetail(list);
@@ -325,6 +429,16 @@ public class SocietyMilkPurchaseRateAddEditController implements MyInitializatio
             }
         });
         new Thread(task4).start();
+
+        var task5 = new FormulaLoadTask();
+        task5.setOnSucceeded(e -> {
+            try {
+                formulaList = task5.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task5).start();
     }
 
 

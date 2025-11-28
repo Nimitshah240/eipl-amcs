@@ -330,7 +330,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dtoTxn.setQuantityMode(qtyMode);
             dtoTxn.setConvertedQuantity(qtyMode == 0 ? CommonUtils.convertQty(AppConstant.CollectionType.DISPATCH, qty.toString()) : qty);
             dtoTxn.setConvertedQuantityMode(dtoTxn.getQuantityMode() == 0 ? 1 : 0);
-            dtoTxn.setAvgSnf(BigDecimal.valueOf(0));
+            dtoTxn.setAvgSnf(milkDispatchSummaryDto.getSnf().setScale(1, RoundingMode.DOWN));
 
             fetchRateForDispatchTable(String.valueOf(dtoTxn.getAvgFat()), String.valueOf(dtoTxn.getAvgSnf()), dtoTxn.getMilkType(), dtoTxn.getMilkQualityType(), dpFromDate.getValue().atStartOfDay(), dtoTxn);
 
@@ -705,6 +705,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
 
     private boolean validate() {
         errorMsg = new StringBuilder();
+        if (dispatchDto == null) {
+            errorMsg.append(resourceBundle.getString("dispatchedquantitynullerror") + "\n");
+        }
         if (cboxDispatchType.getValue() == null || cboxDispatchType.getValue().isEmpty()) {
             errorMsg.append(resourceBundle.getString("dispatchtypenullerror") + "\n");
         }
@@ -907,6 +910,12 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 errorMsg.append(resourceBundle.getString("noofcans.cannot.be.null") + "\n");
             }
         }
+
+        if (Double.parseDouble(
+                txtRtpl.getText() != null && !txtRtpl.getText().trim().isEmpty() ? txtRtpl.getText() : "0") == 0) {
+            errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
+        }
+
         if (!txtWater.isDisable()) {
             if (txtWater.getText() == null && txtWater.getText().isEmpty()) {
                 errorMsg.append(resourceBundle.getString("water.cannot.be.null") + "\n");

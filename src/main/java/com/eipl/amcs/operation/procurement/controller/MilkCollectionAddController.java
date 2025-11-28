@@ -1057,10 +1057,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             summary.setMemberCount(summary.getMemberCount() + 1);
 
             // calculate avg fat
-            BigDecimal kgFat = collNew.getFat().multiply(collNew.getQty()).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
+            BigDecimal kgFat = collNew.getFat().multiply(collNew.getQty()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             BigDecimal kgFat1 = summary.getAvgFat().multiply(summary.getQty()).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
             BigDecimal avgFat = BigDecimal.valueOf((kgFat.doubleValue() + kgFat1.doubleValue()) / (summary.getQty().doubleValue() + collNew.getQty().doubleValue()) * 100).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal kgSnf = collNew.getSnf().multiply(collNew.getQty()).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
+            BigDecimal kgSnf = collNew.getSnf().multiply(collNew.getQty()).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             BigDecimal kgSnf1 = summary.getAvgSnf().multiply(summary.getQty()).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
             BigDecimal avgSnf = BigDecimal.valueOf((kgSnf.doubleValue() + kgSnf1.doubleValue()) / (summary.getQty().doubleValue() + collNew.getQty().doubleValue()) * 100).setScale(2, RoundingMode.HALF_UP);
             summary.setAvgFat(avgFat);
@@ -1881,7 +1881,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             for (int i = 0; i < lines.size(); ) {
                 String s = lines.get(i);
                 if (s.contains("{dcsshort}")) {
-                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName()+ "-" +MainApp.identityDto.getSociety().getCodeEx());
+                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName() + "-" + MainApp.identityDto.getSociety().getCodeEx());
                 }
                 if (s.contains("{membername}")) {
                     if (s.contains("{membername}")) {

@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
@@ -96,6 +97,7 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
     }
 
     @Override
+    @Transactional
     public void delete(String cashAdvanceNo, String identityInfo) {
         List<ProductSaleInstallment> installmentList = installmentRepository.findByInvoiceNo(cashAdvanceNo);
         for (ProductSaleInstallment productSaleInstallment : installmentList) {

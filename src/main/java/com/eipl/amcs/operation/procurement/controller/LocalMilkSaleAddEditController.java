@@ -42,6 +42,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -130,19 +131,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
 
-        txtConsumerCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
-            if (!newValue && txtConsumerCode.getText().length() > 0) {
-                getRate(dpSellDate.getValue(), cboxMilkType.getValue(), cboxClass.getValue());
-                if (cboxConsumertype.getValue().getKey() < (short) 3) {
-                    String code = generateCode(txtConsumerCode.getText().trim());
-                    getNameFromMemberCode(code);
-                } else {
-                    String code = generateCode(txtConsumerCode.getText().trim());
-                    getNameFromCustomerCode(code);
-                }
-            }
-        });
-
         txtQuantity.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 if (txtQuantity.getText().trim().isEmpty() || Double.parseDouble(txtQuantity.getText().trim()) == 0) {
@@ -163,6 +151,20 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             paymentSelection();
         });
         FocusUtils.requestFocus(txtConsumerCode);
+
+        txtConsumerCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
+            if (!newValue && txtConsumerCode.getText().length() > 0) {
+                getRate(dpSellDate.getValue(), cboxMilkType.getValue(), cboxClass.getValue());
+                if (cboxConsumertype.getValue().getKey() < (short) 3) {
+                    String code = generateCode(txtConsumerCode.getText().trim());
+                    getNameFromMemberCode(code);
+                } else {
+                    String code = generateCode(txtConsumerCode.getText().trim());
+                    getNameFromCustomerCode(code);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -255,6 +257,9 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     private boolean validate() {
         try {
+            if (txtRate.getText() == null || Objects.equals(txtRate.getText(), "0")) {
+                errorMsg.append(resourceBundle.getString("localmilksaleratenotavailable") + "\n");
+            }
             if (dpSellDate.getValue() == null)
                 errorMsg.append(resourceBundle.getString("datenullerror") + "\n");
             if (cboxShift.getValue() == null)
@@ -434,6 +439,13 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 } else {
                     cboxShift.getSelectionModel().select(list.stream().filter(p -> p.getName().equalsIgnoreCase("evening")).findFirst().orElse(null));
                 }
+
+                if (dto != null) {
+                    Optional<Shift> shift = cboxShift.getItems().stream()
+                            .filter(p -> p.getCode() == dto.getShift().getCode()).findFirst();
+                    if (shift.isPresent())
+                        cboxShift.getSelectionModel().select(shift.get());
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -448,7 +460,14 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 List<MilkType> list = task.get();
                 if (list != null) {
                     cboxMilkType.setItems(FXCollections.observableList(list));
-                    cboxMilkType.getSelectionModel().select(1);
+                    if (dto != null) {
+                        Optional<MilkType> milkType = cboxMilkType.getItems().stream()
+                                .filter(p -> p.getCode() == dto.getMilkType().getCode()).findFirst();
+                        if (milkType.isPresent())
+                            cboxMilkType.getSelectionModel().select(milkType.get());
+                    } else {
+                        cboxMilkType.getSelectionModel().select(1);
+                    }
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -464,6 +483,13 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 List<MilkClass> list = task.get();
                 if (list != null) {
                     cboxClass.setItems(FXCollections.observableList(list));
+                }
+                if (dto != null) {
+                    Optional<MilkClass> milkClass = cboxClass.getItems().stream()
+                            .filter(p -> p.getCode() == dto.getMilkClass().getCode()).findFirst();
+                    if (milkClass.isPresent())
+                        cboxClass.getSelectionModel().select(milkClass.get());
+                } else {
                     cboxClass.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -546,12 +572,10 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 if (task.get() != null) {
                     this.rate = task.get().getRate();
                     txtRate.setText(rate.toString());
-                    calculateAmount();
                 } else {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
-                            resourceBundle.getString("localmilksaleratenotavailable"));
-                    alert.createAlert();
+                    txtRate.setText("0");
                 }
+                calculateAmount();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -562,7 +586,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     private void calculateAmount() {
         try {
             String rateText = txtRate.getText().trim();
-            if (rateText != null || txtRate.getText() != "0") {
+            if (rateText != null && !Objects.equals(txtRate.getText(), "0")) {
                 if (txtRate.getText() != null && txtRate.getText().length() > 0
                         && Double.parseDouble(txtRate.getText()) > 0 && Double.parseDouble(txtQuantity.getText()) > 0) {
                     if (Double.parseDouble(txtQuantity.getText()) <= 0) {
@@ -574,15 +598,12 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 }
             } else {
                 paymentSelection();
-                txtAmount.setText("");
-                txtRate.setText("");
+                txtAmount.setText("0");
+                txtRate.setText("0");
                 txtCash.setText("0");
                 txtCoupon.setText("0");
                 txtCredit.setText("0");
-                txtDiscount.setText("0");
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
-                        resourceBundle.getString("enterlocalsalerate"));
-                alert.createAlert();
+//                txtDiscount.setText("0");
             }
         } catch (Exception e) {
             e.printStackTrace();

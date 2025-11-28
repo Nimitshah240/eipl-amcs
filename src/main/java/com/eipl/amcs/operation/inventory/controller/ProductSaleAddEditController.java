@@ -100,6 +100,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     private SaleTxnTaxDto saleTxnTaxDto;
     private List<SocietyPaymentCycle> paymentCycleList;
     private List<TaxDto> taxDtoList;
+    private ProductSaleTransaction r = null;
 
     public ProductSaleAddEditController() {
         propSaleTxn = new SimpleObjectProperty<>();
@@ -172,6 +173,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
         propSaleTxn.addListener((observable, oldValue, newValue) -> {
             btnDelete.setDisable(newValue == null);
+            r = newValue;
         });
         txtConsumerCode.setOnAction(e -> {
             String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
@@ -450,14 +452,18 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     public void deleteData() {
-        if (btnSaveUpdate.getText().equalsIgnoreCase("Save")) {
-            listProductSaleTransaction.remove(propSaleTxn.get());
-            tableProductSaleTransaction.setItems(listProductSaleTransaction);
-            calculateSummary();
-        } else {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), resourceBundle.getString("cannot.delete.product"));
-            alert.createAlert();
+        SaleTxnTaxDto removesaleTxnTaxDto = null;
+        for (SaleTxnTaxDto saleTxnTaxDto1 : saleTxnTaxDtoList) {
+            if (saleTxnTaxDto1.getTransaction() == r) {
+                removesaleTxnTaxDto = saleTxnTaxDto1;
+                break;
+            }
         }
+
+        saleTxnTaxDtoList.remove(removesaleTxnTaxDto);
+        listProductSaleTransaction.remove(propSaleTxn.get());
+        tableProductSaleTransaction.setItems(listProductSaleTransaction);
+        calculateSummary();
     }
 
     public void setupTable() {
@@ -495,7 +501,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 dpDate.setValue(productSale.getInvoiceDate());
                 txtInvoiceNo.setText(productSale.getInvoiceNo());
                 btnSaveUpdate.setText(resourceBundle.getString("update"));
-                txtTotalAmountTax.setText(productSale.getTaxAmount().toString());
+                txtTotalAmountTax.setText(productSale.getTaxAmount() == null ? "0" : productSale.getTaxAmount().toString());
                 txtNetPayable.setText(productSale.getNetAmount().toString());
                 txtTotalDiscount.setText(productSale.getDiscount().toString());
                 txtTotalAmount.setText(productSale.getAmount().toString());

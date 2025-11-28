@@ -36,7 +36,7 @@ public class ProductSaleTaxAudit extends BaseModelTxnAudit {
     private String unionCode;
     private String societyCode;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductSaleTransactionSerialize.class)
     @JsonDeserialize(using = ProductSaleTransactionDeserializer.class)
     @JoinColumn(name = "invoice_txn_no", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))

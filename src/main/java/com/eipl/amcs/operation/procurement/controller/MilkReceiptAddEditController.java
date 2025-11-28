@@ -422,14 +422,14 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
     }
 
     private void validateAndSave() {
+        setValuesInObjectUpdate();
+
         if (!validate()) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkreceipt"),
                     errorMsg.toString());
             alert.createAlert();
             return;
         }
-
-        setValuesInObjectUpdate();
 
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
             updateData();
@@ -546,6 +546,9 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
         if (cboxToShift.getSelectionModel().getSelectedItem() == null) {
             errorMsg.append(resourceBundle.getString("secondshifterror") + "\n");
         }
+        if (receiptDto == null) {
+            errorMsg.append(resourceBundle.getString("milkreceipttransactioncannotnull") + "\n");
+        }
 
         return errorMsg.length() == 0;
     }
@@ -656,6 +659,9 @@ public class MilkReceiptAddEditController extends MilkDispatchBaseController imp
         }
         if (txtQuanity.getText().trim() == null || txtQuanity.getText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("Receiptedquantitynullerror") + "\n");
+        }
+        if (txtRtpl.getText().trim() == null || txtRtpl.getText().isEmpty() || txtRtpl.getText().equalsIgnoreCase("0")) {
+            errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
         }
 
         if (MainApp.getProperty("zero.amount.Receipt", "").equalsIgnoreCase("0")) {

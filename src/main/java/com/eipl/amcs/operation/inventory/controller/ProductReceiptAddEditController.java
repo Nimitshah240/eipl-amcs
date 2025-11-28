@@ -80,6 +80,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private List<Product> productList;
     private List<Unit> unitList;
     private List<TaxDto> taxDtoList;
+    private ProductReceiptTransaction r;
 
     public ProductReceiptAddEditController() {
         propReceiptTxn = new SimpleObjectProperty<>();
@@ -120,6 +121,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         propReceiptTxn.addListener((observable, oldValue, newValue) -> {
             btnDelete.setDisable(newValue == null);
+            r = newValue;
         });
 
 
@@ -323,6 +325,14 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     public void deleteData() {
+        ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
+        for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
+            if (receiptTxnTaxDto.getTransaction() == r) {
+                removeReceiptTxnTaxDto = receiptTxnTaxDto;
+                break;
+            }
+        }
+        receiptTxnTaxDtoList.remove(removeReceiptTxnTaxDto);
         listProductReceiptTransaction.remove(propReceiptTxn.get());
         tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
         calculateSummary();

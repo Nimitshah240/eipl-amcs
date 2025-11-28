@@ -7,6 +7,7 @@ import com.eipl.amcs.json.deserialize.ProductSaleDeserializer;
 import com.eipl.amcs.json.serialize.ProductSaleSerialize;
 import com.eipl.amcs.json.serialize.ProductSerialize;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,6 +18,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 @Entity
@@ -60,6 +62,15 @@ public class ProductSaleTransaction extends BaseModelTxn {
     @JoinColumn(name = "product_code", foreignKey = @ForeignKey(name = "fk_product_sale_transaction_product_code"))
     @JsonIgnoreProperties(value = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging", "union", "society"})
     private Product product;
+
+    @OneToMany(
+            mappedBy = "productSaleTransaction",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private Set<ProductSaleTaxAudit> productSaleTaxAudits;
 
     @Override
     public String getTableName() {

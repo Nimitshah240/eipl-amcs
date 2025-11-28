@@ -7,7 +7,6 @@ import com.eipl.amcs.master.global.repository.MilkTypeRepository;
 import com.eipl.amcs.master.global.repository.ShiftRepository;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Society;
-import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateApplicability;
@@ -187,6 +186,9 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
             double kgFatSum = listCollection.stream().filter(p -> p.getMilkType().getCode() == milkType.getCode())
                     .mapToDouble(m -> m.getFat().doubleValue() * m.getQty().doubleValue() / 100)
                     .sum();
+            double kgSnfSum = listCollection.stream().filter(p -> p.getMilkType().getCode() == milkType.getCode())
+                    .mapToDouble(m -> m.getSnf().doubleValue() * m.getQty().doubleValue() / 100)
+                    .sum();
             dto.setMilkType(Hibernate.unproxy(milkType, MilkType.class));
             dto.setMilkSale(listSale != null && !listSale.isEmpty() ? BigDecimal.valueOf(listSale.stream().filter(p -> p.getMilkType().getCode() == milkType.getCode())
                     .mapToDouble(m -> m.getQuantity().doubleValue()).sum()).setScale(3, RoundingMode.HALF_UP) : BigDecimal.ZERO);
@@ -195,6 +197,7 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
                     BigDecimal.valueOf(listCollection.stream().filter(p -> p.getMilkType().getCode() == milkType.getCode())
                             .mapToDouble(m -> m.getAmount().doubleValue()).sum()).setScale(3, RoundingMode.HALF_UP) : BigDecimal.ZERO);
             dto.setFat(BigDecimal.valueOf(kgFatSum / dto.getMilkCollection().doubleValue() * 100));
+            dto.setSnf(BigDecimal.valueOf(kgSnfSum / dto.getMilkCollection().doubleValue() * 100));
             list.add(dto);
         }
         return list;
