@@ -1364,3 +1364,4 @@ route.insert.successful=मार्ग सफलतापूर्वक डा
 route.update.successful=मार्ग सफलतापूर्वक अपडेट किया गया
 cannot.delete.product=उत्पाद को हटाया नहीं जा सकता
 milkreceipttransactioncannotnull=दूध रसीद लेनदेन शून्य या रिक्त नहीं हो सकता
+adjustment.not.allowed=समायोजन की अनुमति नहीं है
