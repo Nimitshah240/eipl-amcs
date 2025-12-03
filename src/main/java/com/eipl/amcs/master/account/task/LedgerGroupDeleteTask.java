@@ -16,7 +16,7 @@ public class LedgerGroupDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             LedgerGroupService service = EmcsAppContext.getContext().getBean(LedgerGroupService.class);
-            service.delete(Integer.valueOf(code), CommonUtils.setIdentityHeader());
+            service.delete(code, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

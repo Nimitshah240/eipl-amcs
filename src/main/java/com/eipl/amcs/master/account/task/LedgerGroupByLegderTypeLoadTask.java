@@ -13,9 +13,9 @@ import java.util.List;
 public class LedgerGroupByLegderTypeLoadTask extends Task<List<LedgerGroup>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask.class);
 
-    private final Integer code;
+    private final String code;
 
-    public LedgerGroupByLegderTypeLoadTask(Integer code) {
+    public LedgerGroupByLegderTypeLoadTask(String code) {
         this.code = code;
     }
 

@@ -10,7 +10,6 @@ import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.task.LedgerTypeDeleteTask;
 import com.eipl.amcs.master.account.task.LedgerTypeLoadTask;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -36,9 +35,7 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
     @FXML
     TableView<LedgerType> tableLedgerType;
     @FXML
-    TableColumn<LedgerType, Number> colCode;
-    @FXML
-    TableColumn<LedgerType, String> colName, colLocalName, colStatus;
+    TableColumn<LedgerType, String> colCode, colName, colLocalName, colStatus;
     @FXML
     TableColumn<LedgerType, String> colProfitAndLoss, colBalanceSheet;
     @FXML
@@ -88,7 +85,7 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCode()));
+        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));

@@ -568,14 +568,14 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     }
 
     private void validateAndSave() {
+        setValuesInObjectUpdate();
+
         if (!validate()) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                     errorMsg.toString());
             alert.createAlert();
             return;
         }
-
-        setValuesInObjectUpdate();
 
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
             updateData();

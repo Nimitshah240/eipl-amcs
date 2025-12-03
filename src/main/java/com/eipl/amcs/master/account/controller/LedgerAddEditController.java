@@ -153,8 +153,8 @@ public class LedgerAddEditController implements MyInitialization {
         txtCode.setText(ledger.getCode());
         txtName.setText(ledger.getName());
         txtLocalName.setText(ledger.getNameLocal());
-        LedgerType ledgerType = ledgerGroupList.stream().filter(p -> p.getCode().intValue() ==
-                ledger.getLedgerGroup().getCode().intValue()).findAny().get().getLedgerType();
+        LedgerType ledgerType = ledgerGroupList.stream().filter(p -> p.getCode() ==
+                ledger.getLedgerGroup().getCode()).findAny().get().getLedgerType();
         cboxLedgerType.getSelectionModel().select(ledgerType);
         cboxLedgerGroup.getSelectionModel().select(ledger.getLedgerGroup());
         chkBoxSubLedger.setSelected(ledger.getHasSubLedger());
@@ -359,7 +359,11 @@ public class LedgerAddEditController implements MyInitialization {
                 List<LedgerGroup> list = task.get();
                 if (list != null) {
                     cboxLedgerGroup.setItems(FXCollections.observableList(list));
-                    cboxLedgerGroup.getSelectionModel().select(0);
+                    if (ledger != null)
+                        cboxLedgerGroup.getSelectionModel().select(ledger.getLedgerGroup());
+                    else
+                        cboxLedgerGroup.getSelectionModel().select(0);
+
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

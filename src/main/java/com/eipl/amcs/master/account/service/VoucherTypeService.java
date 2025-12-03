@@ -16,7 +16,7 @@ public interface VoucherTypeService {
 
     Optional<VoucherType> findById(String voucherTypeNo);
 
-    void delete(Integer voucherTypeNo, String identityInfo);
+    void delete(String voucherTypeNo, String identityInfo);
 
     void delete(VoucherType voucherType, String identityInfo);
 

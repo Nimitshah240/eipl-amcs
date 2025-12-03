@@ -16,7 +16,7 @@ public class VoucherTypeDeleteTask extends Task<Boolean> {
     protected Boolean call() throws Exception {
         try {
             VoucherTypeService service = EmcsAppContext.getContext().getBean(VoucherTypeService.class);
-            service.delete(Integer.valueOf(code), CommonUtils.setIdentityHeader());
+            service.delete(code, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
             e.printStackTrace();

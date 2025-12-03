@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LedgerGroupRepository extends BaseRepository<LedgerGroup, Integer> {
+public interface LedgerGroupRepository extends BaseRepository<LedgerGroup, String> {
 
     @Override
     @EntityGraph(attributePaths = {"ledgerType"})
@@ -25,7 +25,7 @@ public interface LedgerGroupRepository extends BaseRepository<LedgerGroup, Integ
 
     @Override
     @EntityGraph(attributePaths = {"ledgerType"})
-    Optional<LedgerGroup> findById(Integer integer);
+    Optional<LedgerGroup> findById(String id);
 
 
     @EntityGraph(attributePaths = {"ledgerType"})

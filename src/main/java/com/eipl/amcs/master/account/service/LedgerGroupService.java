@@ -15,10 +15,10 @@ public interface LedgerGroupService {
 
     Optional<LedgerGroup> findById(String ledgerTypeNo);
 
-    void delete(Integer ledgerTypeNo, String identityInfo);
+    void delete(String ledgerTypeNo, String identityInfo);
 
     void delete(LedgerGroup ledgerGroup, String identityInfo);
 
-    List<LedgerGroup> findByLedgerType(Integer code);
+    List<LedgerGroup> findByLedgerType(String code);
 
 }

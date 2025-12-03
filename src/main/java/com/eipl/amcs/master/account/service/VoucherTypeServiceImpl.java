@@ -43,7 +43,7 @@ public class VoucherTypeServiceImpl implements VoucherTypeService {
     }
 
     @Override
-    public void delete(Integer voucherTypeNo, String identityInfo) {
+    public void delete(String voucherTypeNo, String identityInfo) {
         VoucherType voucherType = voucherTypeRepository.findById(voucherTypeNo).get();
         voucherTypeRepository.customDelete(voucherType, identityInfo);
     }

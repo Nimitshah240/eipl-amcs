@@ -36,9 +36,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
     @FXML
     TableView<VoucherType> tableVoucherType;
     @FXML
-    TableColumn<VoucherType, Number> colCode;
-    @FXML
-    TableColumn<VoucherType, String> colName, colLocalName, colStatus;
+    TableColumn<VoucherType, String>colCode, colName, colLocalName, colStatus;
     @FXML
     Button btnClose, btnAdd, btnEdit, btnDelete;
     private ResourceBundle resourceBundle;
@@ -86,7 +84,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCode()));
+        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?

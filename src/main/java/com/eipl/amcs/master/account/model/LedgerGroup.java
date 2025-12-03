@@ -22,7 +22,7 @@ import javax.persistence.*;
 public class LedgerGroup extends BaseModel {
 
     @Id
-    private Integer code;
+    private String code;
     private String name;
     private String nameLocal;
 

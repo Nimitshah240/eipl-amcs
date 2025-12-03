@@ -21,7 +21,7 @@ import javax.persistence.Table;
 public class VoucherType extends BaseModel {
 
     @Id
-    private Integer code;
+    private String code;
     private String name;
     private String nameLocal;
 

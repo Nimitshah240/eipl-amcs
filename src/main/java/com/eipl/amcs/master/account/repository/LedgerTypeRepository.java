@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LedgerTypeRepository extends BaseRepository<LedgerType, Integer> {
+public interface LedgerTypeRepository extends BaseRepository<LedgerType, String> {
 
     @Override
     List<LedgerType> findAll(Sort sort);
 
     @Override
-    Optional<LedgerType> findById(Integer integer);
+    Optional<LedgerType> findById(String integer);
 }

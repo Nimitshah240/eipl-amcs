@@ -117,7 +117,7 @@ public class LedgerTypeAddEditController implements MyInitialization {
     }
 
     private LedgerType setValuesInObject() {
-        dto.setCode(Integer.parseInt(txtCode.getText()));
+        dto.setCode(txtCode.getText());
         dto.setName(txtName.getText());
         dto.setNameLocal(txtLocalName.getText());
         dto.setActive(true);

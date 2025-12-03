@@ -16,7 +16,7 @@ public interface LedgerTypeService {
 
     Optional<LedgerType> findById(String ledgerTypeNo);
 
-    void delete(Integer ledgerTypeNo, String identityInfo);
+    void delete(String ledgerTypeNo, String identityInfo);
 
     void delete(LedgerType ledgerType, String identityInfo);
 

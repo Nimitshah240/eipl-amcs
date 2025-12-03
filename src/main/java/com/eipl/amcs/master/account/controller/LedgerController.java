@@ -43,7 +43,7 @@ public class LedgerController implements MyInitialization {
     @FXML
     TableView<Ledger> tableLedger;
     @FXML
-    TableColumn<Ledger, String> colName, colLocalName,colCode;
+    TableColumn<Ledger, String> colName, colLocalName, colCode;
     @FXML
     TableColumn<Ledger, LedgerGroup> colLedgerGroup;
     @FXML
@@ -121,7 +121,7 @@ public class LedgerController implements MyInitialization {
             txtSearch.setText("");
             if (cboxLedgerGroup.getValue() != null)
                 tableLedger.setItems(FXCollections.observableList(ledgerList.stream().filter(
-                                e1 -> e1.getLedgerGroup() != null && e1.getLedgerGroup().getCode().intValue() == cboxLedgerGroup.getValue().getCode().intValue()).
+                                e1 -> e1.getLedgerGroup() != null && e1.getLedgerGroup().getCode() == cboxLedgerGroup.getValue().getCode()).
                         collect(Collectors.toList())));
         });
     }

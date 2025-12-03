@@ -134,7 +134,7 @@ public class LedgerGroupAddEditController implements MyInitialization {
         dto.setName(txtName.getText());
         dto.setNameLocal(txtLocalName.getText());
         dto.setActive(true);
-        dto.setCode(Integer.valueOf(txtCode.getText()));
+        dto.setCode(txtCode.getText());
         return dto;
     }
 

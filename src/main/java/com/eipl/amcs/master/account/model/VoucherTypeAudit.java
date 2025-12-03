@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class VoucherTypeAudit extends BaseModelAudit {
 
     @Id
-    private Integer code;
+    private String code;
     private String name;
     private String nameLocal;
 

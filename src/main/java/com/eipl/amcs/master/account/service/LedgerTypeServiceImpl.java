@@ -43,7 +43,7 @@ public class LedgerTypeServiceImpl implements LedgerTypeService {
     }
 
     @Override
-    public void delete(Integer ledgerTypeNo, String identityInfo) {
+    public void delete(String ledgerTypeNo, String identityInfo) {
         typeRepository.customDelete(ledgerTypeNo, identityInfo);
     }
 

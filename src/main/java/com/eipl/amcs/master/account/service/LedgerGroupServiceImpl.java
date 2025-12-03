@@ -53,7 +53,7 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     }
 
     @Override
-    public void delete(Integer ledgerTypeNo, String identityInfo) {
+    public void delete(String ledgerTypeNo, String identityInfo) {
         LedgerGroup ledgerGroup = ledgerGroupRepository.findById(ledgerTypeNo).get();
         ledgerGroup.setLedgerType(Hibernate.unproxy(ledgerGroup.getLedgerType(), LedgerType.class));
         ledgerGroupRepository.customDelete(ledgerGroup, identityInfo);
@@ -66,7 +66,7 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     }
 
     @Override
-    public List<LedgerGroup> findByLedgerType(Integer code) {
+    public List<LedgerGroup> findByLedgerType(String code) {
         LedgerType ledgerType = typeRepository.findById(code).get();
         if (ledgerType != null)
             return ledgerGroupRepository.findByLedgerTypeAndActive(ledgerType, true);

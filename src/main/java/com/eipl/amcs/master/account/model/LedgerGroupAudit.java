@@ -20,7 +20,7 @@ import javax.persistence.*;
 public class LedgerGroupAudit extends BaseModelAudit {
 
     @Id
-    private Integer code;
+    private String code;
     private String name;
     private String nameLocal;
 

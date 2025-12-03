@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VoucherTypeRepository extends BaseRepository<VoucherType, Integer> {
+public interface VoucherTypeRepository extends BaseRepository<VoucherType, String> {
 
     @Override
     List<VoucherType> findAll(Sort sort);
 
 
     @Override
-    Optional<VoucherType> findById(Integer integer);
+    Optional<VoucherType> findById(String integer);
 }

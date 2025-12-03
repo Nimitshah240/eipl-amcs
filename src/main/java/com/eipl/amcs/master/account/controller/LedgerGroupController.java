@@ -11,7 +11,6 @@ import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.task.LedgerGroupDeleteTask;
 import com.eipl.amcs.master.account.task.LedgerGroupLoadTask;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -36,9 +35,7 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
     @FXML
     TableView<LedgerGroup> tableLedgerGroup;
     @FXML
-    TableColumn<LedgerGroup, Number> colCode;
-    @FXML
-    TableColumn<LedgerGroup, String> colName, colLocalName, colStatus;
+    TableColumn<LedgerGroup, String> colCode, colName, colLocalName, colStatus;
     @FXML
     TableColumn<LedgerGroup, LedgerType> colLedgerType;
     @FXML
@@ -114,7 +111,7 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getCode()));
+        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
