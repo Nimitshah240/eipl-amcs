@@ -2,6 +2,7 @@ package com.eipl.amcs.base.task;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.network.IdentityPayload;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
@@ -17,24 +18,26 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
-
 public class IdentityCheckTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IdentityCheckTask.class);
 
     private final String societyCode;
-    private final String mobileNo;
+    private final String baseUrl;
 
-    public IdentityCheckTask(String societyCode, String mobileNo) {
+    public IdentityCheckTask(String societyCode, String baseUrl) {
         this.societyCode = societyCode;
-        this.mobileNo = mobileNo;
+        this.baseUrl = baseUrl;
     }
 
     @Override
     protected Map<String, Object> call() throws Exception {
         try {
+            SocietyRepository societyRepository = EmcsAppContext.getContext().getBean(SocietyRepository.class);
+            String mobileNo = societyRepository.findById(societyCode).get().getContactPersonMobileNo();
+
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, LIVE_URL) + AppConstant.UrlPath.IDENTITY_CHECK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, baseUrl) + AppConstant.UrlPath.IDENTITY_CHECK;
+            LOGGER.info(url);
             IdentityPayload payload = new IdentityPayload(mobileNo);
             RealTimeRequest<IdentityPayload> requestPayload = new RealTimeRequest<>(societyCode, "", payload);
 
@@ -45,7 +48,7 @@ public class IdentityCheckTask extends Task<Map<String, Object>> {
             RealTimeResponse respBody = response.getBody();
             if (!"success".equalsIgnoreCase(respBody.getStatus()))
                 return null;
-
+            LOGGER.info("Token received :" + respBody.getData());
             return respBody.getData();
         } catch (Exception e) {
             LOGGER.error("Register Identity", e);

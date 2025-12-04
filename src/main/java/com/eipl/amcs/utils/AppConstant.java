@@ -69,7 +69,7 @@ public class AppConstant {
         String AMULAMCS = "AMULAMCS";
         String GOKARNA = "GOKARNA";
         String JAIPUR = "JAIPUR";
-        String IDENTITY_CHECK = "amcs-desktop/register";
+        String IDENTITY_CHECK = "androiddpu/v5/android-dpu/register";
         String VERIFICATION = "androiddpu/v5/android-dpu/verification";
         String NOTIFICATON = "realtime-services/notification";
         String SYNC_CHECK = "realtime-services/sync-request";
@@ -265,5 +265,11 @@ public class AppConstant {
 
     public interface SubLedgerType {
         short MEMBER = (short) 1;
+    }
+
+    public enum ClientCode {
+        AMULAMCS,
+        JAIPURAMCS,
+        LACTALIS_QA;
     }
 }

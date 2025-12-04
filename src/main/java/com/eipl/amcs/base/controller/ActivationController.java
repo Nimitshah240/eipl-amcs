@@ -2,12 +2,12 @@ package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.task.VerificationTask;
+import com.eipl.amcs.auth.task.VerifyIdentityTask;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.task.IdentityCheckTask;
 import com.eipl.amcs.base.task.IdentitySaveTask;
 import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
@@ -28,14 +28,11 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-
-import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
-import static com.eipl.amcs.utils.AppConstant.client;
 
 public class ActivationController implements MyInitialization {
 
@@ -43,7 +40,7 @@ public class ActivationController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private TextField txtServerDetail, txtUnion, txtSociety, txtDock, txtCowRange, txtBuffRange, txtSampleMilkNo;
+    private TextField txtServerDetail, txtUnion, txtSociety, txtDock, txtCowRange, txtBuffRange, txtSampleMilkNo, txtClientCode;
     @FXML
     private Button btnActivate;
     @FXML
@@ -54,6 +51,8 @@ public class ActivationController implements MyInitialization {
     private boolean societyCheckFlag = false;
     private boolean dockCheckFlag = false;
     private boolean validateCheckFlag = false;
+    private AppConstant.ClientCode clientCode;
+    private String baseUrl;
 
     @Override
     public Node getRoot() {
@@ -67,10 +66,36 @@ public class ActivationController implements MyInitialization {
         txtServerDetail.setText("http://localhost:8080/eipl-amcs/");
 
         btnActivate.setOnAction(e -> {
+            try {
+                clientCode = AppConstant.ClientCode.valueOf(txtClientCode.getText().toUpperCase());
+            } catch (Exception ex) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                        resourceBundle.getString("clientcodewrongerror"));
+                alert.createAlert();
+            }
             setFlag();
-            if (validateCheckFlag)
-                validateAndMakeFile();
-            else {
+            if (validateCheckFlag) {
+                try {
+                    CompletableFuture<String> future = verifyIdentityAsync();
+                    future.thenAccept(resp -> {
+                        if (resp == null) {
+                            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert.createAlert();
+                            return;
+                        }
+                        baseUrl = resp;
+                        System.out.println("Successfully received baseUrl: " + baseUrl);
+                        validateAndMakeFile();
+                    }).exceptionally(ex -> {
+                        ex.printStackTrace();
+                        return null;
+                    });
+                } catch (Exception exe) {
+                    throw new RuntimeException(exe);
+                }
+
+            } else {
                 errorMsg = new StringBuilder();
                 if (!validate()) {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
@@ -96,10 +121,22 @@ public class ActivationController implements MyInitialization {
                 this.dock = txtDock.getText();
                 this.sampleNo = txtSampleMilkNo.getText();
                 txtServerDetail.setText(txtServerDetail.getText().replace("localhost", txtSampleMilkNo.getText()));
-                makeFile();
-                confirmAndClose();
-
-
+                CompletableFuture<String> future = verifyIdentityAsync();
+                future.thenAccept(resp -> {
+                    if (resp == null) {
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                                resourceBundle.getString("error.occurred"));
+                        alert.createAlert();
+                        return;
+                    }
+                    baseUrl = resp;
+                    makeFile();
+                    confirmAndClose();
+                    System.out.println("Successfully received baseUrl: " + baseUrl);
+                }).exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
             }
         });
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -223,35 +260,34 @@ public class ActivationController implements MyInitialization {
 
 
     private void callApi() {
-        var task = new IdentityCheckTask(txtSociety.getText(), txtSampleMilkNo.getText());
+        var task = new IdentityCheckTask(txtSociety.getText(), baseUrl);
         task.setOnSucceeded(e -> {
             try {
                 Identity identity = new Identity();
 
                 Map<String, Object> data = task.get();
+
                 if (data != null) {
                     identity.setSocietyRefCode((String) data.get("orgPkCode"));
                     identity.setToken((String) data.get("token"));
-                    var task1 = new VerificationTask(txtSociety.getText(), identity.getToken());
-                    task1.setOnSucceeded(e1 -> {
-                        System.out.println("Verification");
-                    });
-                    new Thread(task1).start();
                 }
                 identity.setDockNo(txtDock.getText());
                 identity.setSocietyCode(txtSociety.getText());
                 identity.setSystemMac(MainApp.getProperty("identity.id", ""));
 
-                var task1 = new IdentitySaveTask(identity);
-                task1.setOnSucceeded(e1 -> {
-                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                            resourceBundle.getString("activation.success"));
-                    alert.createAlert();
-                });
-                new Thread(task1).start();
+                var verificationRunnable = new VerificationTask(txtSociety.getText(), identity.getToken(), baseUrl);
+                var identitySaveRunnable = new IdentitySaveTask(identity);
+
+                CompletableFuture<Void> comptask1 = CompletableFuture.runAsync(verificationRunnable);
+                CompletableFuture<Void> comptask2 = CompletableFuture.runAsync(identitySaveRunnable);
+
+                CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(comptask1, comptask2);
+                combinedFuture.join();
+
+                System.out.println("SUCCESS: All tasks are finished.");
+                System.exit(0);
             } catch (Exception exception) {
                 exception.printStackTrace();
-            } finally {
                 System.exit(0);
             }
         });
@@ -287,6 +323,9 @@ public class ActivationController implements MyInitialization {
         if (txtDock.getText().trim() == null || !CommonUtils.isNumeric(txtDock.getText().trim())) {
             errorMsg.append(resourceBundle.getString("docknullerror") + "\n");
         }
+        if (clientCode == null) {
+            errorMsg.append(resourceBundle.getString("clientcodenullerror") + "\n");
+        }
         return errorMsg.length() == 0;
 
     }
@@ -294,7 +333,7 @@ public class ActivationController implements MyInitialization {
     private List<String> writeAppProperty() {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(txtServerDetail.getText().getBytes(StandardCharsets.UTF_8))));
-        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(LIVE_URL.getBytes(StandardCharsets.UTF_8))));
+        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(baseUrl.getBytes(StandardCharsets.UTF_8))));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
         lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
@@ -355,6 +394,7 @@ public class ActivationController implements MyInitialization {
         lines.add("masetting=" + new String(Base64.getEncoder().encode(("Single MA").getBytes())));
         lines.add("product.purchaserate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
         lines.add("product.salerate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
+        lines.add("client.code=" + new String(Base64.getEncoder().encode((clientCode.toString().toUpperCase()).getBytes())));
 
         return lines;
     }
@@ -410,21 +450,44 @@ public class ActivationController implements MyInitialization {
 
     private void setFlag() {
         try {
-            switch (client) {
-                case "AMUL":
-                    validateCheckFlag = txtDock.getText().length() >= 9 && txtDock.getText().substring(8, 9).equalsIgnoreCase("1");
-                    societyCheckFlag = txtSociety.getText().length() == 7;
-                    dockCheckFlag = txtDock.getText().length() == 9;
+            societyCheckFlag = txtSociety.getText().length() >= 7;
+            dockCheckFlag = txtDock.getText().length() >= 9;
+            validateCheckFlag = txtDock.getText().substring(txtSociety.getText().length()).equalsIgnoreCase("01");
+
+//            TODO Remove this before production - NIMIT
+            switch (clientCode) {
+                case AMULAMCS:
                     break;
-                case "JAIPURDUSS":
-                    validateCheckFlag = txtDock.getText().length() >= 12 && txtDock.getText().substring(11, 12).equalsIgnoreCase("1");
-                    societyCheckFlag = txtSociety.getText().length() == 10;
-                    dockCheckFlag = txtDock.getText().length() == 12;
+                case JAIPURAMCS:
+                    break;
+                case LACTALIS_QA:
+                    validateCheckFlag = true;
+                    societyCheckFlag = true;
+                    dockCheckFlag = true;
                     break;
             }
         } catch (Exception e) {
             System.out.println("error : " + e);
-            throw new RuntimeException(e);
         }
+    }
+
+    private CompletableFuture<String> verifyIdentityAsync() {
+        CompletableFuture<String> futureBaseUrl = new CompletableFuture<>();
+        var task = new VerifyIdentityTask(txtClientCode.getText());
+        task.setOnSucceeded(ee -> {
+            try {
+                String baseUrl = task.get();
+                futureBaseUrl.complete(baseUrl);
+            } catch (InterruptedException | ExecutionException ex) {
+                futureBaseUrl.completeExceptionally(ex);
+            }
+        });
+
+        task.setOnFailed(ee -> {
+            futureBaseUrl.completeExceptionally(task.getException()); // Handle task failure
+        });
+
+        new Thread(task).start();
+        return futureBaseUrl;
     }
 }
