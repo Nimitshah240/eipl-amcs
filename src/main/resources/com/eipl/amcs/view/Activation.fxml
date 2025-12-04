@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="root" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.ActivationController">
+<StackPane fx:id="root" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.ActivationController">
     <children>
         <StackPane maxHeight="450.0" maxWidth="800.0" prefHeight="150.0" prefWidth="200.0" styleClass="pane-white-drop">
             <children>
@@ -36,6 +36,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%activation" textAlignment="CENTER" GridPane.columnSpan="3" />
@@ -51,13 +52,15 @@
                                <TextField fx:id="txtSampleMilkNo" GridPane.rowIndex="4" />
                               <TextField fx:id="txtCowRange" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <TextField fx:id="txtBuffRange" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                              <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                               <TextField fx:id="txtClientCode" GridPane.rowIndex="7" />
+                               <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                  <children>
                                     <Button fx:id="btnActivate" mnemonicParsing="false" styleClass="button-primary" text="%activate" />
                                  </children>
                               </HBox>
 
                               <Label fx:id="lblSampleNo" maxWidth="1.7976931348623157E308" text="Sample No." GridPane.rowIndex="3" />
+                              <Label fx:id="lblSampleNo1" maxWidth="1.7976931348623157E308" text="Client Code" GridPane.rowIndex="6" />
                            </children>
                         </GridPane>
                      </children>

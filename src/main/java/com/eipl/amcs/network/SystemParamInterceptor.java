@@ -22,7 +22,7 @@ public class SystemParamInterceptor implements ClientHttpRequestInterceptor {
     final List<String> urlToBypass = new ArrayList<String>() {{
         add("eipl-amcs/identity");
         add("eipl-amcs/home");
-        add("amcs-desktop/register");
+        add("eipl-app/verify-identity");
         add("realtime-services/purchase-rate");
     }};
 
