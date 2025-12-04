@@ -70,6 +70,7 @@ public class AppConstant {
         String GOKARNA = "GOKARNA";
         String JAIPUR = "JAIPUR";
         String IDENTITY_CHECK = "amcs-desktop/register";
+        String VERIFICATION = "androiddpu/v5/android-dpu/verification";
         String NOTIFICATON = "realtime-services/notification";
         String SYNC_CHECK = "realtime-services/sync-request";
         String SENT_BOX_CHECK = "realtime-services/sentbox";

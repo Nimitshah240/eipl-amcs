@@ -1,6 +1,7 @@
 package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.auth.task.VerificationTask;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.task.IdentityCheckTask;
@@ -27,6 +28,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -230,6 +232,11 @@ public class ActivationController implements MyInitialization {
                 if (data != null) {
                     identity.setSocietyRefCode((String) data.get("orgPkCode"));
                     identity.setToken((String) data.get("token"));
+                    var task1 = new VerificationTask(txtSociety.getText(), identity.getToken());
+                    task1.setOnSucceeded(e1 -> {
+                        System.out.println("Verification");
+                    });
+                    new Thread(task1).start();
                 }
                 identity.setDockNo(txtDock.getText());
                 identity.setSocietyCode(txtSociety.getText());
