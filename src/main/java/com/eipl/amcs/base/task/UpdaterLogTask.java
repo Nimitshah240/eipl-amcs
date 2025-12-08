@@ -34,7 +34,7 @@ public class UpdaterLogTask extends Task<String> {
             jarUpdate.setSocietyCode(MainApp.identityDto.getSociety().getCode());
             String url = MainApp.getProperty("syncUrl.realtime", AppConstant.UrlPath.DATA_PROCESSOR) + AppConstant.UrlPath.APP_UPDATE + AppConstant.UrlPath.UPDATE_LOG;
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
-                    .queryParam("client_code", AppConstant.UrlPath.JAIPUR);
+                    .queryParam("client_code", MainApp.getProperty("client.code", AppConstant.UrlPath.JAIPUR));
 
             ResponseEntity<String> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST,
                     new HttpEntity<>(jarUpdate), String.class);

@@ -1029,6 +1029,7 @@ public class GeneralBonusReportController implements MyInitialization {
     private void readFile() {
         try {
             if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/BonusSlip.txt");
+            else if (slipLanguage.equalsIgnoreCase("Hindi")) slipFile = new File("resources/collection/BonusSlipLocalHindi.txt");
             else slipFile = new File("resources/collection/BonusSlipLocal.txt");
         } catch (Exception exception) {
             System.out.println("Unexcpected error occurred!");

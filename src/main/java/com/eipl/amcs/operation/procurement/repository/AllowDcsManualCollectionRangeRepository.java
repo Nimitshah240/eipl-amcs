@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.repository;
 import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -18,13 +19,13 @@ public interface AllowDcsManualCollectionRangeRepository extends BaseRepository<
     @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
             "WHERE adr.fromDate <= :fromDate " +
             "AND adr.toDate >= :toDate")
-    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqual(LocalDateTime fromDate, LocalDateTime toDate);
+    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqual(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
 
     @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
             "WHERE adr.fromDate <= :fromDate " +
             "AND adr.toDate >= :toDate " +
             "AND adr.xCol1 = :type")
-    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqualAndxCol1(LocalDateTime fromDate, LocalDateTime toDate, String type);
+    List<AllowDcsManualCollectionRange> findByFromDateLessThanEqualAndToDateGreaterThanEqualAndxCol1(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate, @Param("type") String type);
 
     @Query("SELECT adr FROM AllowDcsManualCollectionRange adr " +
             "WHERE adr.fromDate <= :fromDate " +

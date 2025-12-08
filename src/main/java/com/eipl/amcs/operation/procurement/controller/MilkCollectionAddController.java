@@ -1855,6 +1855,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private void readFile() {
         try {
             if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/PrintSlip.txt");
+            else if (slipLanguage.equalsIgnoreCase("Hindi")) slipFile = new File("resources/collection/PrintSlipLocalHindi.txt");
             else slipFile = new File("resources/collection/PrintSlipLocal.txt");
         } catch (Exception exception) {
             exception.printStackTrace();
