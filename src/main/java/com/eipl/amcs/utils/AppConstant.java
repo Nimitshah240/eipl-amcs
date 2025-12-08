@@ -29,7 +29,7 @@ public class AppConstant {
     public static final String EIPL_DB_NAME = "eipl_amcs_db";
 
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
-    public static final String versionNo = "1.2";
+    public static final String versionNo = "1.1";
 
     public static final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
             AppConstant.Formatter1, // Replace with your actual formatters
@@ -273,6 +273,7 @@ public class AppConstant {
     public enum ClientCode {
         AMULAMCS,
         JAIPURAMCS,
-        LACTALIS_QA;
+        LACTALIS_QA,
+        AMCS_QAQCJ;
     }
 }
