@@ -21,7 +21,7 @@ public class UpdaterCheckTask extends Task<JarUpdate> {
     protected JarUpdate call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = AppConstant.UrlPath.DATA_PROCESSOR + AppConstant.UrlPath.APP_UPDATE;
+            String url = MainApp.getProperty("syncUrl.realtime", AppConstant.UrlPath.DATA_PROCESSOR) + AppConstant.UrlPath.APP_UPDATE;
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
                     .queryParam("client_code", AppConstant.UrlPath.JAIPUR);
 

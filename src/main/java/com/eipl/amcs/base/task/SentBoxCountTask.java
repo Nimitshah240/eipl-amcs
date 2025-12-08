@@ -3,13 +3,13 @@ package com.eipl.amcs.base.task;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.network.IdentityPayload;
-import com.eipl.amcs.network.IdentityPayloadForAcknowledgement;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
 import com.eipl.amcs.sync.model.Subscribed;
 import com.eipl.amcs.sync.repository.SubscribedRepository;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -20,10 +20,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@Slf4j
 public class SentBoxCountTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxCountTask.class);
     private final String societyCode;
@@ -41,7 +42,7 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
         try {
             SubscribedRepository subscribedRepository = EmcsAppContext.getContext().getBean(SubscribedRepository.class);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = AppConstant.UrlPath.LIVE_URL + AppConstant.UrlPath.SYNC_CHECK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.SENT_BOX_COUNT;
 
             IdentityPayload payload = new IdentityPayload();
             RealTimeRequest<IdentityPayload> requestPayload = new RealTimeRequest<>(societyCode, MainApp.identityDto.getIdentity().getToken(), payload);
@@ -50,6 +51,7 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
             try {
                 response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayload), RealTimeResponse.class);
             } catch (Exception e) {
+                LOGGER.error(e.toString());
             }
             if (response == null || (response != null && response.getStatusCode() != HttpStatus.OK))
                 return null;
@@ -60,14 +62,13 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
 
 
             int count = Integer.parseInt(String.valueOf(response.getBody().getData().get("count")));
+            log.info("Sent box count : {}", count);
             if (count != 0) {
-                StringBuilder code = new StringBuilder();
-                IdentityPayloadForAcknowledgement payloadForAcknowledgement;
-                RealTimeRequest<IdentityPayloadForAcknowledgement> requestPayloadForAcknowledgement;
+                RealTimeRequest<Map<String, List>> requestPayloadForAcknowledgement;
 
 //        checkSentBoxDataAndDownload
                 do {
-                    url = AppConstant.UrlPath.LIVE_URL + AppConstant.UrlPath.SENT_BOX_CHECK;
+                    url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.SENT_BOX_CHECK;
                     payload = new IdentityPayload();
                     requestPayload = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payload);
                     requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
@@ -84,18 +85,19 @@ public class SentBoxCountTask extends Task<Map<String, Object>> {
                     }
 
                     subscribedRepository.saveAll(subscribedList);
-
-                    code = new StringBuilder();
+                    List codeList = new ArrayList();
                     for (String uuid : sentBoxUuidList) {
-                        code.append(uuid);
-                        code.append(",");
+                        codeList.add(uuid);
                         System.out.println(uuid);
                     }
-                    url = AppConstant.UrlPath.LIVE_URL + AppConstant.UrlPath.SENT_BOX_ACK;
-                    payloadForAcknowledgement = new IdentityPayloadForAcknowledgement(code.toString());
-                    requestPayloadForAcknowledgement = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), payloadForAcknowledgement);
+                    url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.SENT_BOX_ACK;
+                    Map<String, List> uuidMap = new HashMap<>();
+                    uuidMap.put("uuid", codeList);
+                    requestPayloadForAcknowledgement = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), uuidMap);
                     requestPayloadForAcknowledgement.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-                    restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayloadForAcknowledgement), RealTimeResponse.class);
+                    ResponseEntity<RealTimeResponse> realTimeResponse = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayloadForAcknowledgement), RealTimeResponse.class);
+                    log.info("Realtimeresponse status : {} ", realTimeResponse.getStatusCode());
+                    log.info("Realtimeresponse body : {} ", realTimeResponse.getBody().getData());
                     count -= 5;
                 } while (count >= 0);
             }

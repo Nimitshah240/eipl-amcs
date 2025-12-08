@@ -16,8 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
-
 public class SentBoxCheckTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxCheckTask.class);
 
@@ -33,7 +31,7 @@ public class SentBoxCheckTask extends Task<Map<String, Object>> {
     protected Map<String, Object> call() throws Exception {
         try {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, LIVE_URL) + AppConstant.UrlPath.SENT_BOX_CHECK;
+            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, "") + AppConstant.UrlPath.SENT_BOX_CHECK;
 
             IdentityPayload payload = new IdentityPayload();
             RealTimeRequest<IdentityPayload> requestPayload = new RealTimeRequest<>(societyCode, MainApp.identityDto.getIdentity().getToken(), payload);

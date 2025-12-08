@@ -69,25 +69,28 @@ public class AppConstant {
         String AMULAMCS = "AMULAMCS";
         String GOKARNA = "GOKARNA";
         String JAIPUR = "JAIPUR";
-        String IDENTITY_CHECK = "androiddpu/v5/android-dpu/register";
-        String VERIFICATION = "androiddpu/v5/android-dpu/verification";
+
         String NOTIFICATON = "realtime-services/notification";
-        String SYNC_CHECK = "realtime-services/sync-request";
-        String SENT_BOX_CHECK = "realtime-services/sentbox";
-        String SENT_BOX_COUNT = "realtime-services/sentbox-count";
         String NOTIFICATON_ACK = "realtime-services/notification-acknowledgement";
-        String SENT_BOX_ACK = "realtime-services/acknowledgement";
+        String SYNC_CHECK = "realtime-services/sync-request";
         String SYNC_CHECK_ACK = "realtime-services/sync-request-acknowledgement";
 
-        String RATE_DOWNLOAD = "realtime-services/purchase-rate";
-        String RATE_DETAIL_DOWNLOAD = "realtime-services/purchase-rate-detail";
-        String RATE_DOWNLOAD_ACK = "realtime-services/rate-download-acknowledgement";
-
+        String IDENTITY_CHECK = "androiddpu/v5/android-dpu/register";
+        String VERIFICATION = "androiddpu/v5/android-dpu/verification";
+        String START_UP = "androiddpu/v5/android-dpu/start-up";
+        String RATE_DOWNLOAD = "androiddpu/v5/realtime-services/purchase-rate";
+        String RATE_DETAIL_DOWNLOAD = "androiddpu/v5/realtime-services/purchase-rate-detail";
+        String RATE_DOWNLOAD_ACK = "androiddpu/v5/realtime-services/rate-download-acknowledgement";
+        String SENT_BOX_COUNT = "androiddpu/v5/master-data/sentbox-count";
+        String SENT_BOX_CHECK = "androiddpu/v5/master-data/sentbox";
+        String SENT_BOX_ACK = "androiddpu/v5/master-data/acknowledgement";
+        String INBOX = "androiddpu/v5/master-data/inbox";
         String APP_UPDATE = "app-update";
         String UPDATE_LOG = "/sync-app-update";
         String DATA_PROCESSOR = "http://192.168.1.86:6375/eipl-amcs-processor/";
 
-        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
+//        String LIVE_URL = "http://qaqc.emilkpro.in/";
+//        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://jaipurduss.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "https://amulamcs.yamatech.app/webservice/amcs/v1/";

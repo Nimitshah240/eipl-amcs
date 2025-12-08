@@ -1,13 +1,14 @@
 package com.eipl.amcs.sync.producer;
 
 import com.eipl.amcs.EiplAmcsAppRunner;
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.sync.model.*;
 import com.eipl.amcs.sync.repository.BroadcastedLogRepository;
 import com.eipl.amcs.sync.repository.BroadcastedRepository;
+import com.eipl.amcs.utils.AppConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -27,12 +28,9 @@ public class BroadcastedProducer {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value(value = "${sync.url}")
-    private String syncUrl;
-
     public void produce(List<Broadcasted> broadcastedList) {
         try {
-            String[] strings = restTemplate.postForObject(syncUrl, new HttpEntity<>(broadcastedList), String[].class);
+            String[] strings = restTemplate.postForObject(MainApp.getProperty("syncUrl.realtime", AppConstant.UrlPath.DATA_PROCESSOR), new HttpEntity<>(broadcastedList), String[].class);
             if (strings == null || strings.length == 0) {
                 return;
             }

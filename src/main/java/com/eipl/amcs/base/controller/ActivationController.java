@@ -52,7 +52,8 @@ public class ActivationController implements MyInitialization {
     private boolean dockCheckFlag = false;
     private boolean validateCheckFlag = false;
     private AppConstant.ClientCode clientCode;
-    private String baseUrl;
+    private String baseUrlRealTime;
+    private String syncUrlRealTime;
 
     @Override
     public Node getRoot() {
@@ -84,8 +85,9 @@ public class ActivationController implements MyInitialization {
                             alert.createAlert();
                             return;
                         }
-                        baseUrl = resp;
-                        System.out.println("Successfully received baseUrl: " + baseUrl);
+                        baseUrlRealTime = resp.split("#")[0];
+                        syncUrlRealTime = resp.split("#")[1];
+                        System.out.println("Successfully received baseUrl: " + resp);
                         validateAndMakeFile();
                     }).exceptionally(ex -> {
                         ex.printStackTrace();
@@ -129,10 +131,11 @@ public class ActivationController implements MyInitialization {
                         alert.createAlert();
                         return;
                     }
-                    baseUrl = resp;
+                    baseUrlRealTime = resp.split("#")[0];
+                    syncUrlRealTime = resp.split("#")[1];
                     makeFile();
                     confirmAndClose();
-                    System.out.println("Successfully received baseUrl: " + baseUrl);
+                    System.out.println("Successfully received baseUrl: " + resp);
                 }).exceptionally(ex -> {
                     ex.printStackTrace();
                     return null;
@@ -260,7 +263,7 @@ public class ActivationController implements MyInitialization {
 
 
     private void callApi() {
-        var task = new IdentityCheckTask(txtSociety.getText(), baseUrl);
+        var task = new IdentityCheckTask(txtSociety.getText(), baseUrlRealTime);
         task.setOnSucceeded(e -> {
             try {
                 Identity identity = new Identity();
@@ -275,7 +278,7 @@ public class ActivationController implements MyInitialization {
                 identity.setSocietyCode(txtSociety.getText());
                 identity.setSystemMac(MainApp.getProperty("identity.id", ""));
 
-                var verificationRunnable = new VerificationTask(txtSociety.getText(), identity.getToken(), baseUrl);
+                var verificationRunnable = new VerificationTask(txtSociety.getText(), identity.getToken(), baseUrlRealTime);
                 var identitySaveRunnable = new IdentitySaveTask(identity);
 
                 CompletableFuture<Void> comptask1 = CompletableFuture.runAsync(verificationRunnable);
@@ -333,7 +336,9 @@ public class ActivationController implements MyInitialization {
     private List<String> writeAppProperty() {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(txtServerDetail.getText().getBytes(StandardCharsets.UTF_8))));
-        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(baseUrl.getBytes(StandardCharsets.UTF_8))));
+        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(baseUrlRealTime.getBytes(StandardCharsets.UTF_8))));
+        lines.add("client.code=" + new String(Base64.getEncoder().encode((clientCode.toString().toUpperCase()).getBytes())));
+        lines.add("syncUrl.realtime=" + new String(Base64.getEncoder().encode(syncUrlRealTime.getBytes(StandardCharsets.UTF_8))));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
         lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
@@ -394,7 +399,6 @@ public class ActivationController implements MyInitialization {
         lines.add("masetting=" + new String(Base64.getEncoder().encode(("Single MA").getBytes())));
         lines.add("product.purchaserate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
         lines.add("product.salerate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
-        lines.add("client.code=" + new String(Base64.getEncoder().encode((clientCode.toString().toUpperCase()).getBytes())));
 
         return lines;
     }
@@ -476,15 +480,15 @@ public class ActivationController implements MyInitialization {
         var task = new VerifyIdentityTask(txtClientCode.getText());
         task.setOnSucceeded(ee -> {
             try {
-                String baseUrl = task.get();
-                futureBaseUrl.complete(baseUrl);
+                String baseUrls = task.get();
+                futureBaseUrl.complete(baseUrls);
             } catch (InterruptedException | ExecutionException ex) {
                 futureBaseUrl.completeExceptionally(ex);
             }
         });
 
         task.setOnFailed(ee -> {
-            futureBaseUrl.completeExceptionally(task.getException()); // Handle task failure
+            futureBaseUrl.completeExceptionally(task.getException());
         });
 
         new Thread(task).start();
