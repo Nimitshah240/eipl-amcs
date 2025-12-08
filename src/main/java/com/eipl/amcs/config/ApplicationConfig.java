@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
         repositoryBaseClass = com.eipl.amcs.base.repository.BaseRepositoryImpl.class
 )
 @PropertySource("classpath:application.properties")
+@EnableScheduling
 public class ApplicationConfig {
 
     @Bean

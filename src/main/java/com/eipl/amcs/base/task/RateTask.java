@@ -17,6 +17,7 @@ import com.eipl.amcs.master.procurement.dto.SocietyMilkPurchaseRateDto;
 import com.eipl.amcs.master.procurement.model.*;
 import com.eipl.amcs.master.procurement.service.MemberMilkPurchaseRateService;
 import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
+import com.eipl.amcs.network.RealTimeMultipleResponse;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
 import com.eipl.amcs.utils.AppConstant;
@@ -57,6 +58,9 @@ public class RateTask extends Task<Void> {
     @Autowired
     private final MemberMilkPurchaseRateService memberMilkPurchaseRateService;
 
+    String memberApplicableRate = null;
+    String bmcApplicableRate = null;
+
     public RateTask() {
         formulaRepository = EmcsAppContext.getContext().getBean(FormulaRepository.class);
         milkQualityTypeService = EmcsAppContext.getContext().getBean(MilkQualityTypeService.class);
@@ -70,61 +74,88 @@ public class RateTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        try {
-            updateMessage("Checking Member Rate...");
 
-            RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
-            String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
+        Map<String, Object> mapOfStartUp = null;
+        updateMessage("Checking Member Rate...");
+        RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 
-            Map<String, String> contentRate = new HashMap<>();
-            contentRate.put("rateType", "MEMBER");
-            RealTimeRequest<Map<String, String>> requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
-                    MainApp.identityDto.getIdentity().getToken(), contentRate);
-            ResponseEntity<RealTimeResponse> response;
-            RealTimeResponse responseRate;
 
-            //shift
-            List<Shift> shiftList = shiftService.findAll();
-            Map<Integer, Shift> mapShift = new HashMap<>();
-            for (Shift shift : shiftList) {
-                mapShift.put(shift.getCode(), shift);
-            }
+        LOGGER.info("Initiating startup api");
+        String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.START_UP;
+        LOGGER.info(url);
+        RealTimeRequest<Map<String, Object>> requestPayloadStartup = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), null);
+        requestPayloadStartup.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+        ResponseEntity<RealTimeResponse> responseStartUp = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayloadStartup), RealTimeResponse.class);
+        if (responseStartUp.getStatusCode() != HttpStatus.OK)
+            return null;
 
-            // ratetype
-            List<RateType> rateTypeList = rateTypeService.findAll();
-            Map<Integer, RateType> mapRateType = new HashMap<>();
-            for (RateType rateType : rateTypeList) {
-                mapRateType.put(rateType.getCode(), rateType);
-            }
+        RealTimeResponse respBody = responseStartUp.getBody();
+        if (!"success".equalsIgnoreCase(respBody.getStatus()))
+            return null;
+        LOGGER.info("Fetching startup data successful : " + respBody.getData().toString());
+        mapOfStartUp = respBody.getData();
 
-            // milktype
-            List<MilkType> milkTypeList = milkTypeService.findAll();
-            Map<Integer, MilkType> mapMilkType = new HashMap<>();
-            for (MilkType milkType : milkTypeList) {
-                mapMilkType.put(milkType.getCode(), milkType);
-            }
+        Map<String, Object> mapOfRate = (Map<String, Object>) mapOfStartUp.get("rate");
+        LOGGER.info("Received Rate map :" + mapOfRate);
 
-            // milk quality type
-            List<MilkQualityType> milkQualityTypeList = milkQualityTypeService.findAll();
-            Map<Integer, MilkQualityType> mapMilkQuality = new HashMap<>();
-            for (MilkQualityType milkQualityType : milkQualityTypeList) {
-                mapMilkQuality.put(milkQualityType.getCode(), milkQualityType);
-            }
+        memberApplicableRate = mapOfRate.get("memberApplicableRate").toString();
+        bmcApplicableRate = mapOfRate.get("bmcApplicableRate").toString();
+        LOGGER.info("Received memberApplicableRate :" + memberApplicableRate);
+        LOGGER.info("Received bmcApplicableRate :" + bmcApplicableRate);
 
-            // Formula
-            List<Formula> formulaList = formulaRepository.findAll();
-            Map<String, Formula> mapFormula = new HashMap<>();
-            for (Formula formula : formulaList) {
-                mapFormula.put(formula.getCode(), formula);
-            }
 
-            Map<String, Object> data = new HashMap<>();
-            MemberMilkPurchaseRateDto memberRateDto = new MemberMilkPurchaseRateDto();
+        RealTimeRequest<Map<String, String>> requestPayload;
+        ResponseEntity<RealTimeResponse> response;
+        RealTimeResponse responseRate;
+
+        Map<String, String> contentRate = new HashMap<>();
+        contentRate.put("rateType", "MEMBER");
+        contentRate.put("purchaseRateCode", memberApplicableRate);
+        requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
+                MainApp.identityDto.getIdentity().getToken(), contentRate);
+
+        //shift
+        List<Shift> shiftList = shiftService.findAll();
+        Map<Integer, Shift> mapShift = new HashMap<>();
+        for (Shift shift : shiftList) {
+            mapShift.put(shift.getCode(), shift);
+        }
+
+        // ratetype
+        List<RateType> rateTypeList = rateTypeService.findAll();
+        Map<Integer, RateType> mapRateType = new HashMap<>();
+        for (RateType rateType : rateTypeList) {
+            mapRateType.put(rateType.getCode(), rateType);
+        }
+
+        // milktype
+        List<MilkType> milkTypeList = milkTypeService.findAll();
+        Map<Integer, MilkType> mapMilkType = new HashMap<>();
+        for (MilkType milkType : milkTypeList) {
+            mapMilkType.put(milkType.getCode(), milkType);
+        }
+
+        // milk quality type
+        List<MilkQualityType> milkQualityTypeList = milkQualityTypeService.findAll();
+        Map<Integer, MilkQualityType> mapMilkQuality = new HashMap<>();
+        for (MilkQualityType milkQualityType : milkQualityTypeList) {
+            mapMilkQuality.put(milkQualityType.getCode(), milkQualityType);
+        }
+
+        // Formula
+        List<Formula> formulaList = formulaRepository.findAll();
+        Map<String, Formula> mapFormula = new HashMap<>();
+        for (Formula formula : formulaList) {
+            mapFormula.put(formula.getCode(), formula);
+        }
+
+        Map<String, Object> data = new HashMap<>();
+        MemberMilkPurchaseRateDto memberRateDto = new MemberMilkPurchaseRateDto();
 //            // Rate
-            Map<String, Object> purchaseRate = new HashMap<>();
-
+        Map<String, Object> purchaseRate = new HashMap<>();
+        try {
             int a = 1;
-            while (a == 1 || purchaseRate != null) {
+            while (a == 1 || purchaseRate == null) {
                 url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
                 response = restTemplate.exchange(url, HttpMethod.POST,
                         new HttpEntity<>(requestPayload), RealTimeResponse.class);
@@ -208,21 +239,22 @@ public class RateTask extends Task<Void> {
                         contentRateDetail.put("milkQualityTypeCode", "1");
                         contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
                         contentRateDetail.put("rateType", "MEMBER");
-                        contentRateDetail.put("rateClass", "0");
-
+//                            contentRateDetail.put("rateClass", "0");
+                        LOGGER.info("purchaseRateCode : {}, milkQualityTypeCode : {}, milkTypeCode : {}, rateType : {}", purchaseRate.get("purchaseRateCode").toString(), "1", milkType.getCode().toString(), "MEMBER");
                         updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
 
                         requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                 MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
-                        ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
-                                new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                        requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+                        ResponseEntity<RealTimeMultipleResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
+                                new HttpEntity<>(requestPayload), RealTimeMultipleResponse.class);
                         if (responseRateDtl.getStatusCode() != HttpStatus.OK)
                             return null;
-                        RealTimeResponse respRateDtl = responseRateDtl.getBody();
+                        RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
                         if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
                             return null;
-                        Map<String, Object> dataDtl = respRateDtl.getData();
-                        List<String> listStr = (List) dataDtl.get("rateDetail");
+//                            Map<String, Object> dataDtl = respRateDtl.getData();
+                        List<String> listStr = respRateDtl.getData();
                         LOGGER.info("Member milk purchase rate detail: {}-{}", milkType.getName(), listStr.size());
                         if (listStr != null && !listStr.isEmpty()) {
                             for (String s : listStr) {
@@ -258,6 +290,7 @@ public class RateTask extends Task<Void> {
                             LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
                             requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                     MainApp.identityDto.getIdentity().getToken(), contentRateAck);
+                            requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                             ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
                                     new HttpEntity<>(requestPayload), RealTimeResponse.class);
                             if (responseRateDtl.getStatusCode() != HttpStatus.OK)
@@ -269,8 +302,8 @@ public class RateTask extends Task<Void> {
                             updateMessage("Member rate saved successfully");
                         } else {
                         }
-                    } catch (Exception e) {
-                        if (e.getMessage().contains("wefdate.not.valid")) {
+                    } catch (Exception ex) {
+                        if (ex.getMessage().contains("wefdate.not.valid")) {
                             url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
                             Map<String, String> contentRateAck = new HashMap<>();
                             contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
@@ -278,6 +311,7 @@ public class RateTask extends Task<Void> {
                             LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
                             requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                     MainApp.identityDto.getIdentity().getToken(), contentRateAck);
+                            requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                             ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
                                     new HttpEntity<>(requestPayload), RealTimeResponse.class);
                             if (responseRateDtl.getStatusCode() != HttpStatus.OK)
@@ -288,8 +322,16 @@ public class RateTask extends Task<Void> {
                             LOGGER.info("Member milk ack success for codes: {}", contentRateAck.get("rateAppCode"));
                         }
                     }
+                } else {
+                    LOGGER.info("No Member Rate Found");
+                    break;
                 }
+                a++;
             }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+        try {
             // **********************************
             // Society Rate Download and start
             // **********************************
@@ -302,16 +344,18 @@ public class RateTask extends Task<Void> {
 
             content = new HashMap<>();
             content.put("rateType", "BMC");
+            content.put("purchaseRateCode", bmcApplicableRate);
             payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                     MainApp.identityDto.getIdentity().getToken(), content);
             updateMessage("Society rate check...");
             SocietyMilkPurchaseRateDto socRateDto = new SocietyMilkPurchaseRateDto();
             // Rate
-            Map<String, Object> sRate = (Map) data.get("purchaseRate");
+            Map<String, Object> sRate = new HashMap<>();
             int b = 1;
-            while (b == 1 || sRate != null) {
+            while (b == 1 || sRate == null) {
                 payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                         MainApp.identityDto.getIdentity().getToken(), content);
+                payload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                 url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
                 socRateResponse = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(payload), RealTimeResponse.class);
                 if (socRateResponse.getStatusCode() != HttpStatus.OK)
@@ -380,16 +424,18 @@ public class RateTask extends Task<Void> {
                     List<String> listSocRateDetails = new ArrayList<>();
                     for (MilkType milkType : milkTypeList) {
                         content = new HashMap<>();
-                        content.put("purchaseRateCode", sRate.get("purchaseRateCode").toString());
+//                        content.put("purchaseRateCode", sRate.get("purchaseRateCode").toString());
+                        content.put("purchaseRateCode", bmcApplicableRate);
                         content.put("milkQualityTypeCode", "1");
                         content.put("milkTypeCode", milkType.getCode().toString());
                         content.put("rateType", "BMC");
-                        content.put("rateClass", "0");
+//                        content.put("rateClass", "0");
 
                         updateMessage("Download rate " + sRate.get("purchaseRateCode").toString() + "(" + milkType.toString() + ")");
 
                         payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                 MainApp.identityDto.getIdentity().getToken(), content);
+                        payload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                         socRateResponse = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(payload), RealTimeResponse.class);
                         if (socRateResponse.getStatusCode() != HttpStatus.OK)
                             return null;
@@ -432,6 +478,8 @@ public class RateTask extends Task<Void> {
                             LOGGER.info("Society milk ack for app: {}", content.get("rateAppCode"));
                             payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                     MainApp.identityDto.getIdentity().getToken(), content);
+                            payload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+
                             socRateResponse = restTemplate.exchange(url, HttpMethod.POST,
                                     new HttpEntity<>(payload), RealTimeResponse.class);
                             if (socRateResponse.getStatusCode() != HttpStatus.OK)
@@ -451,6 +499,7 @@ public class RateTask extends Task<Void> {
                         LOGGER.info("Society milk ack for app: {}", content.get("rateAppCode"));
                         payload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
                                 MainApp.identityDto.getIdentity().getToken(), content);
+                        payload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                         socRateResponse = restTemplate.exchange(url, HttpMethod.POST,
                                 new HttpEntity<>(payload), RealTimeResponse.class);
                         if (socRateResponse.getStatusCode() != HttpStatus.OK)
@@ -459,10 +508,17 @@ public class RateTask extends Task<Void> {
                         if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
                             return null;
                     }
+
+                } else {
+                    LOGGER.info("No Society Rate Found");
+                    break;
                 }
+
             }
+
+
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            LOGGER.error(e.getMessage());
         }
         return null;
     }

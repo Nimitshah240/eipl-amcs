@@ -31,8 +31,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import static com.eipl.amcs.utils.AppConstant.UrlPath.LIVE_URL;
-
 public class GeneralConfigController implements MyInitialization {
 
     File appProperty, old;
@@ -183,7 +181,9 @@ public class GeneralConfigController implements MyInitialization {
     private List<String> writeAppProperty() {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(MainApp.getProperty("baseurl", "http://localhost:8080/eipl-amcs/").getBytes())));
-        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(LIVE_URL.getBytes(StandardCharsets.UTF_8))));
+        lines.add("baseurl.realtime=" + new String(Base64.getEncoder().encode(MainApp.getProperty("baseurl.realtime", null).getBytes())));
+        lines.add("client.code=" + new String(Base64.getEncoder().encode(MainApp.getProperty("client.code", null).getBytes())));
+        lines.add("syncUrl.realtime=" + new String(Base64.getEncoder().encode(MainApp.getProperty("syncUrl.realtime", null).getBytes())));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
         lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));

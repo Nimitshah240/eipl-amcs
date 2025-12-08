@@ -179,7 +179,7 @@ public class BroadcastedService {
         return all.stream().collect(Collectors.groupingBy(Broadcasted::getTableName));
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 2 * 60 * 1000)
     public void sendBroadcasted() {
         LOGGER.info("In send broadcasted msg");
         try {
@@ -192,7 +192,7 @@ public class BroadcastedService {
         }
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 2 * 60 * 1000)
     public void sendInbox() {
         LOGGER.info("Sending Inbox");
         try {
@@ -205,7 +205,7 @@ public class BroadcastedService {
         }
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 2 * 60 * 1000)
     public void processSubscribed() {
         LOGGER.info("In Process Subscribed Message");
         try {

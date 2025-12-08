@@ -32,7 +32,7 @@ public class UpdaterLogTask extends Task<String> {
             JarUpdateLogRepository jarUpdateLogRepository = EmcsAppContext.getContext().getBean(JarUpdateLogRepository.class);
 
             jarUpdate.setSocietyCode(MainApp.identityDto.getSociety().getCode());
-            String url = AppConstant.UrlPath.DATA_PROCESSOR + AppConstant.UrlPath.APP_UPDATE + AppConstant.UrlPath.UPDATE_LOG;
+            String url = MainApp.getProperty("syncUrl.realtime", AppConstant.UrlPath.DATA_PROCESSOR) + AppConstant.UrlPath.APP_UPDATE + AppConstant.UrlPath.UPDATE_LOG;
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
                     .queryParam("client_code", AppConstant.UrlPath.JAIPUR);
 

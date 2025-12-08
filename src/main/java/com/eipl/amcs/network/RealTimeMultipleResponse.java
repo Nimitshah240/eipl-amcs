@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RealTimeMultipleResponse {
+public class RealTimeMultipleResponse<T> {
     private String status;
     private RealTimeError error;
-    private List<Map<String, Object>> data;
+    private List<T> data;
 }
