@@ -578,6 +578,7 @@ acnonullerror=खाता संख्या शून्य या खाल�
 branchnullerror=शाखा का नाम शून्य या खाली नहीं हो सकता
 banknullerror=बैंक शून्य या खाली नहीं हो सकता
 aadharcardnonullerror=मान्य आधार कार्ड नंबर दर्ज करें
+creditlimitnonullerror=क्रेडिट सीमा दर्ज करें
 nomineeaadharcardnonullerror=मान्य नामांकित व्यक्ति का आधार कार्ड नंबर दर्ज करें
 mobilenonullerror=मोबाइल नंबर शून्य या खाली नहीं हो सकता
 noofcowerror=गायों की संख्या शून्य या खाली नहीं हो सकती
