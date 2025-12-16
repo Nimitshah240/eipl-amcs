@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #bfb76c;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.HeaderBarController">
+    <children>
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #bfb76c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fitHeight="500.0" fitWidth="50.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/amulpng.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+        <HBox layoutX="50.0" prefHeight="39.0" prefWidth="441.0" style="-fx-background-color: #bfb76c;" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <MenuBar fx:id="menuBar" maxWidth="1.7976931348623157E308" prefHeight="35.0" style="-fx-background-color: #bfb76c;">
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+                </MenuBar>
+            </children>
+        </HBox>
+      <HBox layoutX="10.0" layoutY="39.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-alignment: CENTER; -fx-spacing: 20; -fx-background-color: #bfb76c;" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label fx:id="lblName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%societyinformation">
+               <font>
+                  <Font size="32.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="lblTitle" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%title" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font size="32.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+    </children>
+</AnchorPane>

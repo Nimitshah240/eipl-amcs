@@ -101,7 +101,7 @@ public class LoginController implements MyInitialization {
                         Rectangle2D rect = Screen.getPrimary().getVisualBounds();
                         MainApp.getContentPane().setMaxWidth(rect.getWidth());
                         MainApp.getContentPane().setMaxHeight(rect.getHeight());
-
+                        MainApp.getContentPane().setTop(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/HeaderBar.fxml")));
                         MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
                         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
                     }

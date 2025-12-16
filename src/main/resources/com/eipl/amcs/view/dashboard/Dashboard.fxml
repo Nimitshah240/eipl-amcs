@@ -23,7 +23,7 @@
 
 <AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.DashboardController">
     <children>
-        <HBox alignment="TOP_CENTER" layoutX="15.0" layoutY="5.0" style="-fx-background-color: 00a3de;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="TOP_CENTER" style="-fx-background-color: 00a3de;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Label maxHeight="1.7976931348623157E308" text="%username">
                     <padding>
@@ -191,16 +191,16 @@
                                                 </Label>
                                             </children>
                                         </HBox>
-                              <HBox GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                 <GridPane.margin>
-                                    <Insets left="10.0" />
-                                 </GridPane.margin>
-                                 <children>
-                                              <Button fx:id="btnSync" mnemonicParsing="false" text="%forcesync" />
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="btnPendingSync" mnemonicParsing="false" text="%pendingsync" />
-                                 </children>
-                              </HBox>
+                                        <HBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                            <GridPane.margin>
+                                                <Insets left="10.0" />
+                                            </GridPane.margin>
+                                            <children>
+                                                <Button fx:id="btnSync" mnemonicParsing="false" text="%forcesync" />
+                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="btnPendingSync" mnemonicParsing="false" text="%pendingsync" />
+                                            </children>
+                                        </HBox>
                                     </children>
                                     <padding>
                                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -272,10 +272,11 @@
                                                                 <Insets left="5.0" />
                                                             </HBox.margin>
                                                         </Label>
-                                          <E_ComboBox fx:id="cboxNotification" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                                             <HBox.margin>
-                                                <Insets right="5.0" />
-                                             </HBox.margin></E_ComboBox>
+                                                        <E_ComboBox fx:id="cboxNotification" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                                            <HBox.margin>
+                                                                <Insets right="5.0" />
+                                                            </HBox.margin>
+                                                        </E_ComboBox>
                                                     </children>
                                                 </HBox>
                                             </children>
