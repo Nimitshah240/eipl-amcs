@@ -78,8 +78,6 @@ public class NavbarController implements MyInitialization {
     @FXML
     Button btnDashboard;
     @FXML
-    private VBox menuVbox;
-    @FXML
     private Label lblVersion;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
@@ -94,7 +92,7 @@ public class NavbarController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnDashboard.setFont(Font.font(16));
         this.resourceBundle = resourceBundle;
-        lblVersion.setText("Version: " + AppConstant.versionNo);
+        lblVersion.setText("V: " + AppConstant.versionNo);
         loadData();
         btnDashboard.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -391,63 +389,6 @@ public class NavbarController implements MyInitialization {
         }
         var task = new SentBoxAcknowledgementTask(code.substring(0, code.length() - 1));
         task.setOnSucceeded(e -> {
-        });
-        new Thread(task).start();
-    }
-
-    @Override
-    public void loadData() {
-        if (MainApp.getUser() == null)
-            return;
-        var task = new MenuGenerateTask();
-        task.setOnSucceeded(e -> {
-            try {
-                short resp = task.get();
-                if (resp == (short) 0) {
-                    menu.forEach((main, sub) -> {
-                        final ContextMenu contextMenu = new ContextMenu();
-
-                        final Button btn = new Button(resourceBundle.getString(main.getDescription()));
-                        btn.setOnAction(event1 -> {
-                            contextMenu.show(btn, Side.RIGHT, -10, 0);
-                        });
-                        btn.setMnemonicParsing(true);
-                        btn.setMaxWidth(Double.MAX_VALUE);
-                        btn.getStyleClass().add("nav-button");
-                        btn.setFont(Font.font(16));
-                        menuVbox.getChildren().add(btn);
-
-                        // context menu
-                        sub.forEach((k, v) -> {
-                            try {
-                                if (v.isEmpty()) {
-
-                                    MenuItem item = new MenuItem(resourceBundle.getString(k.getDescription()));
-                                    setupClickEvent(item, k.getModule());
-                                    contextMenu.getItems().add(item);
-                                } else {
-                                    Menu menuSub = new Menu(resourceBundle.getString(k.getDescription()));
-
-                                    v.forEach(item -> {
-                                        try {
-                                            MenuItem menuItem = new MenuItem(resourceBundle.getString(item.getDescription()));
-                                            setupClickEvent(menuItem, item.getModule());
-                                            menuSub.getItems().add(menuItem);
-                                        } catch (Exception ex) {
-                                            ex.printStackTrace();
-                                        }
-                                    });
-                                    contextMenu.getItems().add(menuSub);
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-                    });
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
         });
         new Thread(task).start();
     }
