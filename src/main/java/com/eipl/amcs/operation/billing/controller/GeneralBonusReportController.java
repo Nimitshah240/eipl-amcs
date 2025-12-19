@@ -1029,7 +1029,8 @@ public class GeneralBonusReportController implements MyInitialization {
     private void readFile() {
         try {
             if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/BonusSlip.txt");
-            else if (slipLanguage.equalsIgnoreCase("Hindi")) slipFile = new File("resources/collection/BonusSlipLocalHindi.txt");
+            else if (slipLanguage.equalsIgnoreCase("Hindi"))
+                slipFile = new File("resources/collection/BonusSlipLocalHindi.txt");
             else slipFile = new File("resources/collection/BonusSlipLocal.txt");
         } catch (Exception exception) {
             System.out.println("Unexcpected error occurred!");
@@ -1056,7 +1057,7 @@ public class GeneralBonusReportController implements MyInitialization {
                 System.out.println(i);
                 String s = lines.get(i);
                 if (s.contains("{dcsshort}")) {
-                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName());
+                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName() + "-" + MainApp.identityDto.getSociety().getCodeEx());
                 }
                 if (s.contains("{membername}")) {
                     if (map.get("member_code") != null) {
@@ -1122,7 +1123,7 @@ public class GeneralBonusReportController implements MyInitialization {
                 System.out.println(i);
                 String s = lines.get(i);
                 if (s.contains("{dcsshort}")) {
-                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName());
+                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName() + "-" + MainApp.identityDto.getSociety().getCodeEx());
                 }
 
                 if (s.contains("{membername}")) {

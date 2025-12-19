@@ -66,14 +66,19 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
         loadData();
         setupTable();
         FocusUtils.requestFocus(btnAdd);
+        btnEdit.setDisable(true);
+        btnDelete.setDisable(true);
+        btnDispatchNote.setDisable(true);
 
         propMilkDispatch.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnEdit.setDisable(false);
                 btnDelete.setDisable(false);
+                btnDispatchNote.setDisable(false);
             } else {
                 btnEdit.setDisable(true);
                 btnDelete.setDisable(true);
+                btnDispatchNote.setDisable(true);
             }
         });
 

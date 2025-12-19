@@ -109,6 +109,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         txtQuantity.setText("0");
         dpSellDate.setValue(LocalDate.now());
         this.resourceBundle = resourceBundle;
+        txtQuantity.setText("0");
         txtCash.setDisable(true);
         txtCredit.setDisable(true);
         txtCoupon.setDisable(true);
@@ -188,7 +189,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 cboxConsumertype.getSelectionModel().select(dd.get());
         } else {
             Optional<CustomerTypeKeyValDto> dd = cboxConsumertype.getItems().stream()
-                    .filter(p -> p.getKey() == 5).findFirst();
+                    .filter(p -> p.getKey() == 0).findFirst();
             if (dd.isPresent())
                 cboxConsumertype.getSelectionModel().select(dd.get());
         }
@@ -343,8 +344,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                         resourceBundle.getString("localmilksale.insert.successful"));
                 alert.createAlert();
                 this.callback.reloadData(true);
-                this.stage.close();
-
+                reloadPage();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -373,6 +373,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             }
         });
         task.setOnFailed(e -> {
+            System.out.println("Error : " + e);
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
                     resourceBundle.getString("error.occurred"));
             alert.createAlert();
@@ -631,4 +632,17 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             txtCoupon.setText(dto.getCoupon() == null ? "0" : dto.getCoupon().toString());
         }
     }
+
+    private void reloadPage() {
+        try {
+            txtConsumerCode.setText("");
+            txtConsumerName.setText("");
+            txtQuantity.setText("0");
+            txtAmount.setText("0");
+            txtRate.setText("0");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

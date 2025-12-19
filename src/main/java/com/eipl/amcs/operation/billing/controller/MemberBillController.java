@@ -359,21 +359,27 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     }
 
     private void disburseMemberBill() {
-        if (cboxPaymentCycle.getValue().getLockBillingProcess()) {
-            long zeroAmountCount = memberBillList.stream().filter(p -> p.getMilkQty().doubleValue() > 0 && p.getMilkAmount().doubleValue() < 0).count();
-            if (zeroAmountCount > 0) {
-                MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
-                        CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
+        try {
+            if (cboxPaymentCycle.getValue().getLockBillingProcess()) {
+                long zeroAmountCount = memberBillList.stream().filter(p -> p.getMilkQty().doubleValue() > 0 && p.getMilkAmount().doubleValue() < 0).count();
+                if (zeroAmountCount > 0) {
+                    MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                            CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
+                    alert.createAlert();
+                    return;
+                }
+                FinalizeDto finalizeDto = new FinalizeDto();
+                finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
+                finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
+                saveLockData(finalizeDto, 1);
+            } else {
+                MyAlert alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                        resourceBundle.getString("finalize.first"));
                 alert.createAlert();
-                return;
             }
-            FinalizeDto finalizeDto = new FinalizeDto();
-            finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
-            finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
-            saveLockData(finalizeDto, 1);
-        } else {
-            MyAlert alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member.bill"),
-                    resourceBundle.getString("finalize.first"));
+        } catch (Exception e) {
+            MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("member.bill"),
+                    resourceBundle.getString("error.occurred"));
             alert.createAlert();
         }
     }
