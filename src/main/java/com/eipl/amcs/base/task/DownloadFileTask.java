@@ -106,6 +106,9 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                                         try {
                                             if (!f.getName().startsWith("eipl-amcs-boot"))
                                                 version = f.getName().substring(10, 13);
+
+                                            if (f.getName().startsWith("eipl-amcs-merge"))
+                                                version = f.getName().substring(16, 19);
                                             Files.copy(f.toPath(), new File(appDirPath, f.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                                         } catch (IndexOutOfBoundsException e) {
                                             version = null;
