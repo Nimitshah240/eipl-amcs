@@ -29,7 +29,7 @@ public class AppConstant {
     public static final String EIPL_DB_NAME = "eipl_amcs_db";
 
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
-    public static final String versionNo = "1.1";
+    public static final String versionNo = "1.0";
 
     public static final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
             AppConstant.Formatter1, // Replace with your actual formatters
@@ -88,7 +88,7 @@ public class AppConstant {
         String APP_UPDATE = "app-update";
         String UPDATE_LOG = "/sync-app-update";
         String DATA_PROCESSOR = "http://192.168.1.86:6375/eipl-amcs-processor/";
-
+        String PROCESSOR_SYNC = "sync";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/";
 //        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
@@ -142,7 +142,7 @@ public class AppConstant {
         String ALLOW_CASHPAYMENT = "allow.cashpayment";
         String SYSTEM_ID = "identity.id";
         String VERSION = "identity.version";
-        String BASE_URL_REALTIME = "baseurl.realtime";
+        String BASE_URL_REALTIME = "baseurl.realtimea";
     }
 
     public interface ReportPath {

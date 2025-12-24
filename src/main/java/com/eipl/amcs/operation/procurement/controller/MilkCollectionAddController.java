@@ -347,7 +347,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                         case "QLTY":
                             return "(F" + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtFat.getText() != null && txtFat.getText().trim().length() > 0 ? txtFat.getText().trim() : "00.0")) + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtSnf.getText() != null && txtSnf.getText().trim().length() > 0 ? txtSnf.getText().trim() : "00.0")) + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtWater.getText() != null && txtWater.getText().trim().length() > 0 ? txtWater.getText().trim() : "00.0")) + ")";
                         case "RTPL":
-                            return "(J" + MainApp.displaySerial.getRateDecimalFormat().format(Double.parseDouble(txtRate.getText() != null ? txtRate.getText().trim() : "0")) + ")";
+                            return "(J" + MainApp.displaySerial.getRateDecimalFormat().format(Double.parseDouble(txtRate.getText() != null ? txtRate.getText().trim() : "0")).replace(".", "") + ")";
                         case "AMT":
                             return "(G" + MainApp.displaySerial.getWgtDecimalFormat().format(Double.parseDouble(txtAmount.getText() != null ? txtAmount.getText().trim() : "0")) + ")";
                         case "ANIMAL":
@@ -1855,7 +1855,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private void readFile() {
         try {
             if (slipLanguage.equalsIgnoreCase("English")) slipFile = new File("resources/collection/PrintSlip.txt");
-            else if (slipLanguage.equalsIgnoreCase("Hindi")) slipFile = new File("resources/collection/PrintSlipLocalHindi.txt");
+            else if (slipLanguage.equalsIgnoreCase("Hindi"))
+                slipFile = new File("resources/collection/PrintSlipLocalHindi.txt");
             else slipFile = new File("resources/collection/PrintSlipLocal.txt");
         } catch (Exception exception) {
             exception.printStackTrace();

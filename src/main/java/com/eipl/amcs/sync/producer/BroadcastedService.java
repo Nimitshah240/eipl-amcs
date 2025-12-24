@@ -186,6 +186,7 @@ public class BroadcastedService {
             List<Broadcasted> list = repository.findTop50ByTableNameNotInOrderByCreatedAt(List.of("tbl_insurance_detail", "tbl_insurance_detail_summary"));
             if (list == null || list.isEmpty())
                 return;
+            LOGGER.info("SENDING BROADCAST COUNT : {}", list.size());
             producer.produce(list);
         } catch (Exception e) {
             e.printStackTrace();
