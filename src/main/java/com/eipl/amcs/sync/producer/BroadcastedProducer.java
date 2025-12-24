@@ -30,7 +30,7 @@ public class BroadcastedProducer {
 
     public void produce(List<Broadcasted> broadcastedList) {
         try {
-            String[] strings = restTemplate.postForObject(MainApp.getProperty("syncUrl.realtime", AppConstant.UrlPath.DATA_PROCESSOR), new HttpEntity<>(broadcastedList), String[].class);
+            String[] strings = restTemplate.postForObject(MainApp.getProperty("syncUrl.realtime", AppConstant.UrlPath.DATA_PROCESSOR) + AppConstant.UrlPath.PROCESSOR_SYNC, new HttpEntity<>(broadcastedList), String[].class);
             if (strings == null || strings.length == 0) {
                 return;
             }
