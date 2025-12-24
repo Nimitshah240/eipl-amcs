@@ -458,18 +458,18 @@ public class ActivationController implements MyInitialization {
             dockCheckFlag = txtDock.getText().length() >= 9;
             validateCheckFlag = txtDock.getText().substring(txtSociety.getText().length()).equalsIgnoreCase("01");
 
-//            TODO Remove this before production - NIMIT
-            switch (clientCode) {
-                case AMULAMCS:
-                    break;
-                case JAIPURAMCS:
-                    break;
-                case LACTALIS_QA:
-                    validateCheckFlag = true;
-                    societyCheckFlag = true;
-                    dockCheckFlag = true;
-                    break;
-            }
+////            TODO Remove this before production - NIMIT
+//            switch (clientCode) {
+//                case AMULAMCS:
+//                    break;
+//                case JAIPUR_AMCS:
+//                    break;
+//                case LACTALIS_QA:
+//                    validateCheckFlag = true;
+//                    societyCheckFlag = true;
+//                    dockCheckFlag = true;
+//                    break;
+//            }
         } catch (Exception e) {
             System.out.println("error : " + e);
         }

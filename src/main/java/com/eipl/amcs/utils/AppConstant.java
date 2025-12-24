@@ -142,7 +142,7 @@ public class AppConstant {
         String ALLOW_CASHPAYMENT = "allow.cashpayment";
         String SYSTEM_ID = "identity.id";
         String VERSION = "identity.version";
-        String BASE_URL_REALTIME = "baseurl.realtimea";
+        String BASE_URL_REALTIME = "baseurl.realtime";
     }
 
     public interface ReportPath {
@@ -272,7 +272,7 @@ public class AppConstant {
 
     public enum ClientCode {
         AMULAMCS,
-        JAIPURAMCS,
+        JAIPUR_AMCS,
         LACTALIS_QA,
         AMCS_QAQCJ;
     }
