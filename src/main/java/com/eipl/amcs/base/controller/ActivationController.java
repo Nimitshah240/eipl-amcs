@@ -33,6 +33,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import static com.eipl.amcs.utils.AppConstant.baseUrlRealTime;
+import static com.eipl.amcs.utils.AppConstant.syncUrlRealTime;
 
 public class ActivationController implements MyInitialization {
 
@@ -52,8 +54,7 @@ public class ActivationController implements MyInitialization {
     private boolean dockCheckFlag = false;
     private boolean validateCheckFlag = false;
     private AppConstant.ClientCode clientCode;
-    private String baseUrlRealTime;
-    private String syncUrlRealTime;
+
 
     @Override
     public Node getRoot() {

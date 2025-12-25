@@ -3,6 +3,7 @@ package com.eipl.amcs.auth;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.auth.task.LoginTask;
+import com.eipl.amcs.auth.task.VerifyIdentityTask;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
@@ -12,6 +13,8 @@ import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
+import com.eipl.amcs.setting.model.GeneralConfig;
+import com.eipl.amcs.setting.task.GeneralConfigSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.collections.FXCollections;
@@ -22,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +39,13 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.eipl.amcs.utils.AppConstant.baseUrlRealTime;
+import static com.eipl.amcs.utils.AppConstant.syncUrlRealTime;
+
+@Slf4j
 public class LoginController implements MyInitialization {
 
     @FXML
@@ -96,6 +105,7 @@ public class LoginController implements MyInitialization {
                         MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
                         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
                     }
+                    verifyIdentityAsync();
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
@@ -217,5 +227,69 @@ public class LoginController implements MyInitialization {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void verifyIdentityAsync() {
+        var task = new VerifyIdentityTask(MainApp.getProperty("client.code", null));
+        task.setOnSucceeded(ee -> {
+            try {
+                String baseUrls = task.get();
+                baseUrlRealTime = baseUrls.split("#")[0];
+                syncUrlRealTime = baseUrls.split("#")[1];
+                System.out.println("Successfully received vendor url: " + baseUrls);
+                writeAppProperty();
+            } catch (InterruptedException | ExecutionException ex) {
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void writeAppProperty() {
+        try {
+            Path path = Paths.get("resources/app.properties");
+            String targetBaseUrlKey = "baseurl.realtime=";
+            String newBaseUrlValue = targetBaseUrlKey + new String(Base64.getEncoder().encode(baseUrlRealTime.getBytes()));
+            String targetSyncUrlKey = "syncUrl.realtime=";
+            String newSyncUrlValue = targetSyncUrlKey + new String(Base64.getEncoder().encode(syncUrlRealTime.getBytes()));
+
+            List<String> lines = Files.readAllLines(path);
+            List<String> updatedLines = lines.stream()
+                    .map(line -> {
+                        if (line.trim().startsWith(targetBaseUrlKey))
+                            return newBaseUrlValue;
+                        else if (line.trim().startsWith(targetSyncUrlKey))
+                            return newSyncUrlValue;
+                        else
+                            return line;
+                    })
+                    .collect(Collectors.toList());
+            Files.write(path, updatedLines);
+            saveData();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void saveData() {
+        MainApp.loadProperties();
+        List<GeneralConfig> list = new ArrayList<>();
+        MainApp.properties.forEach((k, v) -> {
+            GeneralConfig generalConfig = new GeneralConfig();
+            generalConfig.setKey((String) k);
+            generalConfig.setValue((String) v);
+            generalConfig.setSociety(MainApp.identityDto.getSociety());
+            list.add(generalConfig);
+        });
+        System.out.println(list);
+        var task = new GeneralConfigSaveTask(list);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
