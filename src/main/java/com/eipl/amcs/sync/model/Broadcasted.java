@@ -1,6 +1,7 @@
 package com.eipl.amcs.sync.model;
 
 import com.eipl.amcs.EiplAmcsAppRunner;
+import com.eipl.amcs.MainApp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,6 +58,8 @@ public class Broadcasted {
         obj.setSourceSystemId(systemId);
         obj.setVersion(version);
         obj.setLanguage(language);
+        obj.setDestCode(MainApp.getUser().getUnionCode());
+        obj.setDestType("UNION");
         return obj;
     }
 
