@@ -58,7 +58,7 @@ public class Broadcasted {
         obj.setSourceSystemId(systemId);
         obj.setVersion(version);
         obj.setLanguage(language);
-        obj.setDestCode(MainApp.getUser().getUnionCode());
+        obj.setDestCode(MainApp.identityDto.getUnion().getCode());
         obj.setDestType("UNION");
         return obj;
     }

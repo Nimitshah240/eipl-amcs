@@ -5,6 +5,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.utils.ProcessUtil;
 import com.eipl.amcs.utils.task.DbBackupTask;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.*;
 
+@Slf4j
 public class DownloadFileTask extends Task<Map<String, Object>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadFileTask.class);
     public String url;
@@ -166,7 +168,9 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
 
                                     Files.copy(f.toPath(), destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
 //                                    Files.copy(f.toPath(), new File(destinationFilePath.toUri()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                                    ProcessUtil.executeScriptFile(f);
+                                    Boolean b = ProcessUtil.executeScriptFile(f);
+                                    log.info("statusCode = {}", b);
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
