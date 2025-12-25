@@ -1,5 +1,6 @@
 package com.eipl.amcs.sync.producer;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import com.eipl.amcs.base.service.NextCodeService;
@@ -846,7 +847,7 @@ public class BroadcastedService {
                                 schemeRateApplicability.setToDate(toDate);
                                 schemeRateApplicability.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
                                 schemeRateApplicability.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
-                                schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? (String) jsonText.get("applicableFor") : null);
+                                schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? MainApp.identityDto.getSociety().getCode() : null); // NIMIT - KEEP THIS BECAUSE PHP TEAM CHANGE REFCODE TO DCSCODE, WHICH CREATE ISSUE IN REPORT
                                 schemeRateApplicability.setApplicableCode(jsonText.get("applicableCode") != null ? (String) jsonText.get("applicableCode") : null);
                                 schemeRateApplicability.setIsMemberRate(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
                                 schemeRateApplicability.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
