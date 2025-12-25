@@ -75,7 +75,7 @@ public class ActivationController implements MyInitialization {
                 alert.createAlert();
             }
             setFlag();
-            if (validateCheckFlag) {
+            if (!validateCheckFlag) {
                 try {
                     CompletableFuture<String> future = verifyIdentityAsync();
                     future.thenAccept(resp -> {
@@ -145,7 +145,7 @@ public class ActivationController implements MyInitialization {
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
             setFlag();
             if (dockCheckFlag) {
-                if (!validateCheckFlag) {
+                if (validateCheckFlag) {
                     lblSampleNo.setText("Server Details");
                     txtCowRange.setDisable(true);
                     txtBuffRange.setDisable(true);
@@ -355,7 +355,7 @@ public class ActivationController implements MyInitialization {
         lines.add("ltr.to.kg=" + new String(Base64.getEncoder().encode("1.03".getBytes())));
         lines.add("clr.const1=" + new String(Base64.getEncoder().encode("0.21".getBytes())));
         lines.add("clr.const2=" + new String(Base64.getEncoder().encode("0.66".getBytes())));
-        lines.add("default.snf=" + new String(Base64.getEncoder().encode("1".getBytes())));
+        lines.add("default.snf=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("deafult.snf.value=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("hrs=" + new String(Base64.getEncoder().encode("72".getBytes())));
         lines.add("qty.reading.rounding=" + new String(Base64.getEncoder().encode("0".getBytes())));
@@ -456,20 +456,7 @@ public class ActivationController implements MyInitialization {
         try {
             societyCheckFlag = txtSociety.getText().length() >= 7;
             dockCheckFlag = txtDock.getText().length() >= 9;
-            validateCheckFlag = txtDock.getText().substring(txtSociety.getText().length()).equalsIgnoreCase("01");
-
-////            TODO Remove this before production - NIMIT
-//            switch (clientCode) {
-//                case AMULAMCS:
-//                    break;
-//                case JAIPUR_AMCS:
-//                    break;
-//                case LACTALIS_QA:
-//                    validateCheckFlag = true;
-//                    societyCheckFlag = true;
-//                    dockCheckFlag = true;
-//                    break;
-//            }
+            validateCheckFlag = txtDock.getText().substring(txtSociety.getText().length()).equalsIgnoreCase("02");
         } catch (Exception e) {
             System.out.println("error : " + e);
         }
