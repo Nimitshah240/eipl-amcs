@@ -25,7 +25,7 @@ public class VerifyIdentityTask extends Task<String> {
     @Override
     protected String call() throws Exception {
         try {
-            LOGGER.info("Verifying client code");
+            LOGGER.info("Verifying client code : {}", clientCode);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = "http://amcsapp.emilkpro.in/webservice/eipl/v1/eipl-app/verify-identity";
 

@@ -31,6 +31,9 @@ public class AppConstant {
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
     public static final String versionNo = "1.0";
 
+    public static String baseUrlRealTime;
+    public static String syncUrlRealTime;
+
     public static final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
             AppConstant.Formatter1, // Replace with your actual formatters
             AppConstant.Formatter2,
