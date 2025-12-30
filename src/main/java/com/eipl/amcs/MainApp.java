@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,6 +160,7 @@ public class MainApp extends Application {
         stage.setTitle("Everest Milk Collection System");
         stage.setScene(scene);
         stage.setMaximized(true);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(new Image(getClass().getResource("view/images/logo-small.png").toExternalForm()));
         stage.show();
 
