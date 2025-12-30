@@ -1055,7 +1055,7 @@ public class GeneralBonusReportController implements MyInitialization {
                 System.out.println(i);
                 String s = lines.get(i);
                 if (s.contains("{dcsshort}")) {
-                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName());
+                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName() + "-" + MainApp.identityDto.getSociety().getCodeEx());
                 }
                 if (s.contains("{membername}")) {
                     if (map.get("member_code") != null) {
@@ -1121,7 +1121,7 @@ public class GeneralBonusReportController implements MyInitialization {
                 System.out.println(i);
                 String s = lines.get(i);
                 if (s.contains("{dcsshort}")) {
-                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName());
+                    s = s.replace("{dcsshort}", MainApp.identityDto.getSociety().getName() + "-" + MainApp.identityDto.getSociety().getCodeEx());
                 }
 
                 if (s.contains("{membername}")) {
