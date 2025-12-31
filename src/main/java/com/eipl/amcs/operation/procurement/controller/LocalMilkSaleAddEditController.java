@@ -233,7 +233,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         dto.setCash(new BigDecimal(txtCash.getText().trim()));
         if (Double.parseDouble(txtCoupon.getText().trim()) > 0) {
             dto.setCoupon(BigDecimal.ZERO);
-            dto.setCash(new BigDecimal(txtCoupon.getText().trim()));
+            dto.setCoupon(new BigDecimal(txtCoupon.getText().trim()));
         }
         dto.setCredit(new BigDecimal(txtCredit.getText().trim()));
         dto.setSaleDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpSellDate.getValue(), cboxShift.getValue()));
