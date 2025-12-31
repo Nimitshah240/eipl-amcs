@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.MilkDispatchAddEditController">
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.MilkDispatchAddEditController">
     <children>
         <VBox focusTraversable="true" spacing="5.0">
             <children>
@@ -88,7 +88,7 @@
                                         <E_ComboBox fx:id="cboxRouteNo" editable="true" prefHeight="25.0" prefWidth="192.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                         <E_TextField fx:id="txtVehicleNo" prefHeight="25.0" prefWidth="274.0" GridPane.rowIndex="5" />
 
-                                        <TableView fx:id="tableMilkDispatchSummary" focusTraversable="false" prefWidth="346.0" GridPane.columnIndex="3" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
+                                        <TableView fx:id="tableMilkDispatchSummary" focusTraversable="false" prefWidth="346.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
                                             <columns>
                                                 <TableColumn fx:id="colCollecMilkType" prefWidth="100.0" text="%milktype" />
                                                 <TableColumn fx:id="colPurchaseMilk" prefWidth="125.0" styleClass="cell-right-aligned" text="%purchasemilk" />
@@ -104,6 +104,10 @@
                                         </TableView>
                               <E_MaskField fx:id="txtVehicleInTime" mask="DD:DD" placeholder="HH:MM" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <E_MaskField fx:id="txtVehicleOutTime" mask="DD:DD" placeholder="HH:MM" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <Label text="%dipstickreadingopening" GridPane.columnIndex="3" />
+                              <E_TextField fx:id="txtDipStickReadingOpening" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <E_TextField fx:id="txtDipStickReadingClosing" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <Label text="%dipstickreadingclosing" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                     </children>
                                 </GridPane>
                             </children>

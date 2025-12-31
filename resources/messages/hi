@@ -1366,3 +1366,7 @@ route.update.successful=मार्ग सफलतापूर्वक अप
 cannot.delete.product=उत्पाद को हटाया नहीं जा सकता
 milkreceipttransactioncannotnull=दूध रसीद लेनदेन शून्य या रिक्त नहीं हो सकता
 adjustment.not.allowed=समायोजन की अनुमति नहीं है
+ratemaster.not.found=Ratemaster Not Found
+dipstickreadingclosing=Dip Stick Reading Closing
+dipstickreadingopening=Dip Stick Reading Opening
+dipstickreadingclosing1 = new property

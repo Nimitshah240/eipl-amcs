@@ -72,7 +72,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     private GridPane gridMaster;
     @FXML
     private E_TextField txtChallanNo, txtVehicleNo, txtQuanity, txtFat, txtSnf, txtClr,
-            txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans;
+            txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans,txtDipStickReadingClosing, txtDipStickReadingOpening;
     @FXML
     private TextField txtVehicleInTime, txtVehicleOutTime;
     @FXML
@@ -607,6 +607,10 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     dto.setVehicleOutTime(LocalTime.parse(txtVehicleOutTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm")));
                 if (txtVehicleNo.getText().trim().length() != 0)
                     dto.setVehicleNo(txtVehicleNo.getText());
+                if(txtDipStickReadingOpening.getText().trim().length() != 0)
+                   dto.setDipStickReadingOpening(new BigDecimal(txtDipStickReadingOpening.getText()));
+                if(txtDipStickReadingClosing.getText().trim().length() != 0)
+                    dto.setDipStickReadingClosing(new BigDecimal(txtDipStickReadingClosing.getText()));
             } catch (Exception e) {
             }
             dto.setSociety(MainApp.identityDto.getSociety());
@@ -1041,6 +1045,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         txtChallanNo.setText(dto.getChallanNo().substring(8));
         int dispatch = dto.getDispatchType().intValue();
         cboxDispatchType.setValue(cboxDispatchType.getItems().get(dispatch));
+        txtDipStickReadingOpening.setText(dto.getDipStickReadingOpening().toString());
+        txtDipStickReadingClosing.setText(dto.getDipStickReadingClosing().toString());
         dpFromDate.setValue(dto.getFromDate().toLocalDate());
         cboxFromShift.setValue(dto.getFromShift());
         dpToDate.setValue(dto.getToDate().toLocalDate());
