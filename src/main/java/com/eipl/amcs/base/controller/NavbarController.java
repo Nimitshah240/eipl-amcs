@@ -76,7 +76,7 @@ public class NavbarController implements MyInitialization {
     @FXML
     AnchorPane root;
     @FXML
-    Button btnDashboard;
+    Button btnDashboard,btnKapaat,btnCollection,btnDispatch,btnProductSale,btnBilling,btnReceipt,btnLocalMilkSale;
     @FXML
     private Label lblVersion;
     private ResourceBundle resourceBundle;
@@ -96,6 +96,27 @@ public class NavbarController implements MyInitialization {
         loadData();
         btnDashboard.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+        });
+        btnCollection.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkCollectionAdd.fxml")));
+        });
+        btnDispatch.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
+        });
+        btnProductSale.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml")));
+        });
+        btnKapaat.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/Kapaat.fxml")));
+        });
+        btnBilling.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/billing/MemberBillSummary.fxml")));
+        });
+        btnReceipt.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkReceiptAddEdit.fxml")));
+        });
+        btnLocalMilkSale.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
         });
         loadNotification();
         callApi();

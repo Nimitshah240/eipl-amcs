@@ -9,85 +9,121 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxWidth="50.0" style="-fx-background-color: #bfb76c; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.NavbarController">
+<AnchorPane fx:id="root" maxWidth="50.0" style="-fx-background-color: #ebebeb; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.NavbarController">
     <children>
         <VBox fx:id="menuVbox" maxWidth="50.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
                 <Button fx:id="btnDashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
-                     <image>
-                        <Image url="@images/logo-small.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <tooltip>
-                  <Tooltip text="%dashboard" />
-               </tooltip>
-            </Button>
-            <Button fx:id="btnDashboard1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
-                     <image>
-                        <Image url="@images/mik-collection.PNG" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <tooltip>
-                  <Tooltip text="%milkcollection" />
-               </tooltip>
-            </Button>
-            <Button fx:id="btnDashboard3" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@images/dispatch.PNG" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <tooltip>
-                  <Tooltip text="%milkdispatch" />
-               </tooltip>
-            </Button>
-            <Button fx:id="btnDashboard2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@images/product-sale.PNG" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <tooltip>
-                  <Tooltip text="%productsale" />
-               </tooltip>
-            </Button>
-            <Button fx:id="btnDashboard4" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@images/billing.PNG" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <tooltip>
-                  <Tooltip text="%billing" />
-               </tooltip>
-            </Button>
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
+                            <image>
+                                <Image url="@images/logo-small.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%dashboard" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnCollection" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
+                            <image>
+                                <Image url="@images/mik-collection.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%milkcollection" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnDispatch" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/dispatch.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%milkdispatch" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnProductSale" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/product-sale.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%productsale" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnBilling" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/billing.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%billing" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnKapaat" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/product-sale.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%kapaat" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnReceipt" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/dispatch.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%milkreceipt" />
+                    </tooltip>
+                </Button>
+                <Button fx:id="btnLocalMilkSale" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
+                    <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
+                            <image>
+                                <Image url="@images/mik-collection.PNG" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <tooltip>
+                        <Tooltip text="%localmilksale" />
+                    </tooltip>
+                </Button>
             </children>
         </VBox>
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="50.0" spacing="10.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-         <children>
-              <ImageView fitHeight="60.0" fitWidth="50.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
-                  <image>
-                                      <Image url="@images/logo-small.png" />
-                  </image>
-              </ImageView>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="50.0" spacing="10.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+            <children>
+                <ImageView fitHeight="60.0" fitWidth="50.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/logo-small.png" />
+                    </image>
+                </ImageView>
                 <Label fx:id="lblVersion" alignment="CENTER" contentDisplay="BOTTOM" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="label-light" text="VR: 4.4" textAlignment="CENTER">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
                 </Label>
-         </children>
-      </VBox>
+            </children>
+        </VBox>
     </children>
 </AnchorPane>

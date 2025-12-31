@@ -15,10 +15,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.eipl.amcs.MainApp.stage;
 public class HeaderBarController implements MyInitialization, PopupCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeaderBarController.class);
@@ -39,7 +37,8 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     private Label lblTitle, lblName;
     @FXML
     private MenuBar menuBar;
-
+    @FXML
+    Button btnMinimize,btnClose;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
@@ -54,6 +53,9 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         loadControls();
         loadMenu();
+        btnClose.setOnAction(e -> {
+            stage.close();
+        });
     }
 
     @Override
