@@ -780,20 +780,20 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         if (txtChallanNo.getText().trim().isEmpty()) {
             errorMsg.append(resourceBundle.getString("challannullerror") + "\n");
         }
-        if (!txtVehicleInTime.getText().isEmpty()) {
-            try {
-                LocalTime.parse(txtVehicleInTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
-            } catch (Exception e) {
-                errorMsg.append(resourceBundle.getString("validintime") + "\n");
-            }
-        }
-        if (!txtVehicleOutTime.getText().isEmpty()) {
-            try {
-                LocalTime.parse(txtVehicleOutTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
-            } catch (Exception e) {
-                errorMsg.append(resourceBundle.getString("validouttime") + "\n");
-            }
-        }
+//        if (!txtVehicleInTime.getText().isEmpty()) {
+//            try {
+//                LocalTime.parse(txtVehicleInTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+//            } catch (Exception e) {
+//                errorMsg.append(resourceBundle.getString("validintime") + "\n");
+//            }
+//        }
+//        if (!txtVehicleOutTime.getText().isEmpty()) {
+//            try {
+//                LocalTime.parse(txtVehicleOutTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm"));
+//            } catch (Exception e) {
+//                errorMsg.append(resourceBundle.getString("validouttime") + "\n");
+//            }
+//        }
         if (cboxRouteNo.getSelectionModel().getSelectedItem() == null) {
             errorMsg.append(resourceBundle.getString("routeerror") + "\n");
         }

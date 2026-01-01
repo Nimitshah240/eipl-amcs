@@ -51,42 +51,17 @@
                                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
                                         <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER" />
                                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER" />
-                                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
                                     </rowConstraints>
                                     <children>
-                                        <Label layoutX="10.0" layoutY="16.0" text="%challanno" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                              <HBox alignment="CENTER_LEFT" GridPane.columnSpan="3" GridPane.rowIndex="2">
-                                 <children>
-                                              <Label maxWidth="1.7976931348623157E308" text="%fromdate" />
-                                              <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                                    <Label maxWidth="1.7976931348623157E308" prefWidth="150.0" text="%todate" />
-                                 </children>
-                              </HBox>
+                                        <Label layoutX="10.0" layoutY="16.0" text="%challanno" GridPane.columnIndex="3" />
                                         <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" text="%challandate" />
                                         <Label minHeight="35.0" prefHeight="35.0" text="%dispatchtype" GridPane.columnIndex="1" />
                                         <Label text="%routeno" GridPane.columnIndex="2" />
-                                        <Label text="%vehicleno" GridPane.rowIndex="4" />
-                                        <Label text="%vehicleintime" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                        <Label text="%vehicleouttime" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                        <Label text="%destinationtype" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                                        <Label text="%destination" GridPane.columnIndex="5" GridPane.rowIndex="4" />
 
                                         <E_DatePicker fx:id="dpChallanDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                                        <E_ComboBox fx:id="cboxDispatchType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <HBox spacing="5.0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
-                                 <children>
-                                              <E_DatePicker fx:id="dpFromDate" editable="false" maxWidth="1.7976931348623157E308" />
-                                              <E_ComboBox fx:id="cboxFromShift" maxWidth="1.7976931348623157E308" minWidth="60.0" prefWidth="60.0" HBox.hgrow="ALWAYS" />
-                                              <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" />
-                                              <E_ComboBox fx:id="cboxToShift" maxWidth="1.7976931348623157E308" minWidth="60.0" prefWidth="60.0" HBox.hgrow="ALWAYS" />
-                                 </children>
-                              </HBox>
-                                        <E_TextField fx:id="txtChallanNo" disable="true" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                                        <E_ComboBox fx:id="cboxDestinationType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" />
-                                        <E_ComboBox fx:id="cboxDestination" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                                        <E_ComboBox fx:id="cboxDispatchType" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <E_TextField fx:id="txtChallanNo" disable="true" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                         <E_ComboBox fx:id="cboxRouteNo" editable="true" prefHeight="25.0" prefWidth="192.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                        <E_TextField fx:id="txtVehicleNo" prefHeight="25.0" prefWidth="274.0" GridPane.rowIndex="5" />
 
                                         <TableView fx:id="tableMilkDispatchSummary" focusTraversable="false" prefWidth="346.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
                                             <columns>
@@ -102,12 +77,16 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                                         </TableView>
-                              <E_MaskField fx:id="txtVehicleInTime" mask="DD:DD" placeholder="HH:MM" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <E_MaskField fx:id="txtVehicleOutTime" mask="DD:DD" placeholder="HH:MM" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                              <Label text="%dipstickreadingopening" GridPane.columnIndex="3" />
-                              <E_TextField fx:id="txtDipStickReadingOpening" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                              <E_TextField fx:id="txtDipStickReadingClosing" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                              <Label text="%dipstickreadingclosing" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Label text="%destinationtype" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <E_ComboBox fx:id="cboxDestinationType" maxWidth="1.7976931348623157E308" visible="false" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                                        <E_ComboBox fx:id="cboxToShift" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                        <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                        <E_DatePicker fx:id="dpFromDate" editable="false" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+                                        <E_ComboBox fx:id="cboxFromShift" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label maxWidth="1.7976931348623157E308" prefWidth="150.0" text="%todate" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                        <Label maxWidth="1.7976931348623157E308" text="%fromdate" GridPane.rowIndex="2" />
+                              <Label maxWidth="1.7976931348623157E308" text="%fromshift" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label maxWidth="1.7976931348623157E308" text="%toshift" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                     </children>
                                 </GridPane>
                             </children>
@@ -171,7 +150,6 @@
                                         <Insets />
                                     </GridPane.margin>
                                 </HBox>
-                                <Separator prefWidth="200.0" GridPane.columnSpan="6" GridPane.rowIndex="4" />
                         <E_Button fx:id="btnCopy" minWidth="75.0" text="%copy" GridPane.rowIndex="5" />
                             </children>
                             <columnConstraints>
@@ -205,11 +183,42 @@
                         <TableColumn fx:id="colWater" prefWidth="120.0" text="%water" />
                     </columns>
                 </TableView>
+            <GridPane fx:id="gridMaster1" hgap="10.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+               </rowConstraints>
+               <children>
+                  <Label text="%destination" visible="false" GridPane.columnIndex="5" />
+                  <E_ComboBox fx:id="cboxDestination" editable="true" maxWidth="1.7976931348623157E308" visible="false" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                            <Label text="%vehicleno" />
+                            <Label text="%vehicleintime" GridPane.columnIndex="1" />
+                            <Label text="%vehicleouttime" GridPane.columnIndex="2" />
+                            <E_TextField fx:id="txtVehicleNo" prefHeight="25.0" prefWidth="274.0" GridPane.rowIndex="1" />
+                  <E_MaskField fx:id="txtVehicleInTime" mask="DD:DD" placeholder="HH:MM" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <E_MaskField fx:id="txtVehicleOutTime" mask="DD:DD" placeholder="HH:MM" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Label text="%dipstickreadingopening" GridPane.columnIndex="3" />
+                  <E_TextField fx:id="txtDipStickReadingOpening" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <E_TextField fx:id="txtDipStickReadingClosing" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <Label text="%dipstickreadingclosing" GridPane.columnIndex="4" />
+               </children>
+            </GridPane>
                 <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" spacing="10.0">
                     <children>
                         <E_Button fx:id="btnSaveUpdate" minWidth="75.0" styleClass="button-primary" text="%save" />
                         <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
                     </children>
+               <padding>
+                  <Insets bottom="5.0" left="10.0" top="5.0" />
+               </padding>
                 </HBox>
             </children>
         </VBox>
