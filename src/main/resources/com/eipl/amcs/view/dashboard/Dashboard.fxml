@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_ComboBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import com.eipl.amcs.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.DashboardController">
+<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.DashboardController">
     <children>
         <HBox alignment="TOP_CENTER" style="-fx-background-color: 00a3de;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -201,11 +191,19 @@
                                                                 <Insets left="5.0" />
                                                             </HBox.margin>
                                                         </Label>
-                                                        <E_ComboBox fx:id="cboxNotification" HBox.hgrow="ALWAYS">
-                                                            <HBox.margin>
-                                                                <Insets right="5.0" />
-                                                            </HBox.margin>
-                                                        </E_ComboBox>
+                                          <HBox spacing="10.0">
+                                             <children>
+                                                              <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Month" />
+                                                              <ComboBox fx:id="cboxMonth" />
+                                                              <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Year" />
+                                                              <ComboBox fx:id="cboxYearNotification" prefWidth="120.0" />
+                                                              <E_ComboBox fx:id="cboxNotification">
+                                                   <padding>
+                                                      <Insets right="10.0" />
+                                                   </padding>
+                                                              </E_ComboBox>
+                                             </children>
+                                          </HBox>
                                                     </children>
                                                 </HBox>
                                             </children>

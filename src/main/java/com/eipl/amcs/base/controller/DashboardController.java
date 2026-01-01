@@ -18,6 +18,7 @@ import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import com.eipl.amcs.utils.task.BroadcastedTask;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -85,7 +87,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     private Button btnLoad, btnMilkCollection, btnLocalMilkSale, btnMilkDispatch, btnProductSale, btnBilling, btnKapaat, btnMilkReceipt, btnSync, btnPendingSync;
     @FXML
-    private ComboBox<String> cboxYear;
+    private ComboBox<String> cboxYear, cboxYearNotification, cboxMonth;
     @FXML
     private Button btnSearch;
     @FXML
@@ -105,24 +107,31 @@ public class DashboardController implements MyInitialization, PopupCallback {
     }
 
     public void loadNotificationList() {
-        if (cboxNotification == null || lv == null) return;
-        if (cboxNotification.getSelectionModel().getSelectedIndex() == 0)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList));
-        else if (cboxNotification.getSelectionModel().getSelectedIndex() == 1)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 1).collect(Collectors.toList())));
-        else if (cboxNotification.getSelectionModel().getSelectedIndex() == 2)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 2).collect(Collectors.toList())));
-        else if (cboxNotification.getSelectionModel().getSelectedIndex() == 3)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 3).collect(Collectors.toList())));
-        else if (cboxNotification.getSelectionModel().getSelectedIndex() == 4)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 4).collect(Collectors.toList())));
-        else if (cboxNotification.getSelectionModel().getSelectedIndex() == 5)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 5).collect(Collectors.toList())));
-        else if (cboxNotification.getSelectionModel().getSelectedIndex() == 6)
-            lv.setItems(FXCollections.observableList(MainApp.notificationList.stream().filter(e -> e.getNotificationType() == 6).collect(Collectors.toList())));
-        else
-            lv.setItems(FXCollections.observableList(MainApp.notificationList));
+        if (cboxNotification == null || lv == null || cboxYearNotification == null || cboxMonth == null) {
+            return;
+        }
+        int selectedTypeIndex = cboxNotification.getSelectionModel().getSelectedIndex();
+        String selectedYear = cboxYearNotification.getSelectionModel().getSelectedItem();
+        String selectedMonth = cboxMonth.getSelectionModel().getSelectedItem();
+
+        List<Notification> filtered = MainApp.notificationList.stream()
+                .filter(n -> {
+                    if (n.getWefDate() == null) return false;
+                    String entryYear = String.valueOf(n.getWefDate().getYear());
+                    String entryMonth = n.getWefDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+                    boolean matchesDate = entryYear.equals(selectedYear) && entryMonth.equals(selectedMonth);
+                    boolean matchesType;
+                    if (selectedTypeIndex == 0) {
+                        matchesType = true;
+                    } else {
+                        matchesType = (n.getNotificationType() != null && n.getNotificationType() == selectedTypeIndex);
+                    }
+                    return matchesDate && matchesType;
+                })
+                .collect(Collectors.toList());
+        lv.setItems(FXCollections.observableList(filtered));
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -132,16 +141,43 @@ public class DashboardController implements MyInitialization, PopupCallback {
         loadShift();
         loadMilkType();
         setupTable();
+
+        //  Years
+        int currentYear = LocalDate.now().getYear();
+        List<String> years = new ArrayList<>();
+        for (int i = currentYear; i >= currentYear - 5; i--) {
+            years.add(String.valueOf(i));
+        }
+        if (cboxYear != null) {
+            cboxYear.setItems(FXCollections.observableArrayList(years));
+            cboxYear.getSelectionModel().selectFirst();
+        }
+        if (cboxYearNotification != null) {
+            cboxYearNotification.setItems(FXCollections.observableArrayList(years));
+            cboxYearNotification.getSelectionModel().selectFirst();
+        }
+        //  months
+        ObservableList<String> months = FXCollections.observableArrayList();
+        for (Month month : Month.values()) {
+            months.add(month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+        cboxMonth.setItems(months);
+        String currentMonthName = LocalDate.now()
+                .getMonth()
+                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+        cboxMonth.getSelectionModel().select(currentMonthName);
         if (cboxNotification != null) {
             cboxNotification.getItems().addAll("All", "Alert", "Paripatra", "Special Message", "Milk Bill", "Bacteria Test", "EVEREST Bill");
             cboxNotification.getSelectionModel().select(0);
-            cboxNotification.setOnAction(e -> {
-                loadNotificationList();
-            });
         }
+        cboxYearNotification.setOnAction(e -> loadNotificationList());
+        cboxMonth.setOnAction(e -> loadNotificationList());
+        cboxNotification.setOnAction(e -> loadNotificationList());
+        loadNotificationList();
+
         loadData();
 //        if (btnMilkCollection != null) FocusUtils.requestFocus(btnMilkCollection);
-
         if (cboxLang != null) {
             String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati").split(",");
             cboxLang.setItems(FXCollections.observableList(Arrays.asList(arr)));
@@ -152,6 +188,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
             } else {
                 cboxLang.setValue("English");
             }
+
             cboxLang.setOnAction(e -> {
                 createAndSetLocale();
                 Rectangle2D rect = Screen.getPrimary().getVisualBounds();
@@ -162,39 +199,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
             });
         }
-
         if (btnLoad != null) btnLoad.setOnAction(e -> loadData());
         if (dpDate != null) dpDate.setValue(LocalDate.now());
-
-//        if (btnMilkCollection != null) {
-//            btnMilkCollection.setOnAction(e -> openMilkCollection());
-//            btnMilkCollection.setText(btnMilkCollection.getText() + " (F1)");
-//        }
-//        if (btnLocalMilkSale != null) {
-//            btnLocalMilkSale.setText(btnLocalMilkSale.getText() + " (F2)");
-//            btnLocalMilkSale.setOnAction(e -> openLocalMilkSale());
-//        }
-//        if (btnMilkDispatch != null) {
-//            btnMilkDispatch.setText(btnMilkDispatch.getText() + " (F3)");
-//            btnMilkDispatch.setOnAction(e -> openMilkDispatch());
-//        }
-//        if (btnProductSale != null) {
-//            btnProductSale.setText(btnProductSale.getText() + " (F5)");
-//            btnProductSale.setOnAction(e -> openProductSale());
-//        }
-//        if (btnBilling != null) {
-//            btnBilling.setText(btnBilling.getText() + " (F7)");
-//            btnBilling.setOnAction(e -> openBilling());
-//        }
-//        if (btnKapaat != null) {
-//            btnKapaat.setText(btnKapaat.getText() + " (F6)");
-//            btnKapaat.setOnAction(e -> openKapaat());
-//        }
-//        if (btnMilkReceipt != null) {
-//            btnMilkReceipt.setText(btnMilkReceipt.getText() + " (F4)");
-//            btnMilkReceipt.setOnAction(e -> openReceipt());
-//        }
-
         loadMsg();
         loadNotification();
 
@@ -217,7 +223,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
             });
         }
         if (root != null) {
-            root.setOnKeyReleased(event -> {
+            root.setFocusTraversable(true);
+            Platform.runLater(() -> root.requestFocus());
+            root.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
                 switch (event.getCode()) {
                     case F1:
                         openMilkCollection();
@@ -241,38 +249,18 @@ public class DashboardController implements MyInitialization, PopupCallback {
                         openBilling();
                         break;
                     case L:
-                        if (cboxLang != null) {
-                            if (cboxLang.getSelectionModel().getSelectedIndex() == 0)
-                                cboxLang.getSelectionModel().select(1);
-                            else if (cboxLang.getSelectionModel().getSelectedIndex() == 1)
-                                cboxLang.getSelectionModel().select(2);
-                            else
-                                cboxLang.getSelectionModel().select(0);
-                        }else{
-                            if (cboxLang.getSelectionModel().getSelectedIndex() == 0)
-                                cboxLang.getSelectionModel().select(1);
-                            else if (cboxLang.getSelectionModel().getSelectedIndex() == 1)
-                                cboxLang.getSelectionModel().select(2);
-                            else
-                                cboxLang.getSelectionModel().select(0);
-                        }
+                        if (cboxLang.getSelectionModel().getSelectedIndex() == 0)
+                            cboxLang.getSelectionModel().select(1);
+                        else if (cboxLang.getSelectionModel().getSelectedIndex() == 1)
+                            cboxLang.getSelectionModel().select(2);
+                        else
+                            cboxLang.getSelectionModel().select(0);
                         break;
                 }
             });
         }
         fetchPendingSync();
         loadTimingList();
-
-        // Initialize Year ComboBox
-        int currentYear = LocalDate.now().getYear();
-        List<String> years = new ArrayList<>();
-        for (int i = currentYear; i >= currentYear - 5; i--) {
-            years.add(String.valueOf(i));
-        }
-        if (cboxYear != null) {
-            cboxYear.setItems(FXCollections.observableArrayList(years));
-            cboxYear.getSelectionModel().selectFirst();
-        }
 
         if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
         loadChartData();
@@ -352,38 +340,22 @@ public class DashboardController implements MyInitialization, PopupCallback {
             }
             lineChart.getData().add(series);
 
-            String color = null;
-            if ("Cow".equalsIgnoreCase(entry.getKey())) {
-                color = "orange";
-            } else if ("Buffalo".equalsIgnoreCase(entry.getKey())) {
-                color = "blue";
-            } else if ("Mix".equalsIgnoreCase(entry.getKey())) {
-                color = "red";
-            }
+            int seriesIndex = 1;
 
-            if (color != null) {
-                final String cssColor = color;
-                javafx.application.Platform.runLater(() -> {
-                    Node line = series.getNode();
-                    if (line != null) {
-                        line.setStyle("-fx-stroke: " + cssColor + ";");
-                    }
-                    for (XYChart.Data<String, Number> data : series.getData()) {
-                        Node symbol = data.getNode();
-                        if (symbol != null) {
-                            symbol.setStyle("-fx-background-color: " + cssColor + ", white;");
-                        }
-                    }
-                    for (Node n : lineChart.lookupAll(".chart-legend-item")) {
-                        if (n instanceof Label && ((Label) n).getText().equalsIgnoreCase(entry.getKey())) {
-                            Node symbol = n.lookup(".chart-legend-item-symbol");
-                            if (symbol != null) {
-                                symbol.setStyle("-fx-background-color: " + cssColor + ", white;");
-                            }
-                        }
-                    }
-                });
-            }
+                String cssColor = "";
+                if ("Cow".equalsIgnoreCase(series.getName())) {
+                    cssColor = "orange";
+                } else if ("Buffalo".equalsIgnoreCase(series.getName())) {
+                    cssColor = "blue";
+                } else if ("Mix".equalsIgnoreCase(series.getName())) {
+                    cssColor = "red";
+                }
+
+                if (!cssColor.isEmpty()) {
+                    lineChart.setStyle(lineChart.getStyle() + String.format("CHART_COLOR_%d: %s;", seriesIndex, cssColor));
+                }
+                seriesIndex++;
+
         }
         lineChart.setLegendSide(javafx.geometry.Side.BOTTOM);
     }
@@ -643,7 +615,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
                             tableCollection.getColumns().add(col);
                         }
                     }
-                    listCollectionSummary.addAll(rowMember, rowQty, rowAmount, rowFat, rowSnf);
+                    listCollectionSummary.addAll(rowMember, rowQty, rowFat, rowSnf, rowAmount);
                     tableCollection.setItems(listCollectionSummary);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -666,7 +638,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        // Columns are generated dynamically in loadData
+        tableCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void loadMilkType() {
