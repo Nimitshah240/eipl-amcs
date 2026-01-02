@@ -1,6 +1,7 @@
 package com.eipl.amcs.utils.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.sync.model.Broadcasted;
 import com.eipl.amcs.sync.producer.BroadcastedService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -22,14 +23,23 @@ public class BroadcastedGroupDataTask extends Task<Map<String, Integer>> {
     protected Map<String, Integer> call() {
         try {
             BroadcastedService broadcastedService = EmcsAppContext.getContext().getBean(BroadcastedService.class);
-            String json = broadcastedService.getGroupedByTableName().toString();
+//            String json = broadcastedService.getGroupedByTableName().toString();
+            Map<String, List<Broadcasted>> rawData = broadcastedService.getGroupedByTableName();
+
+            if (rawData != null) {
+                rawData.forEach((key, list) -> {
+                    if (list != null) {
+                        groupedCount.put(key, list.size());
+                    }
+                });
+            }
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             // Parse as Map<String, List<Object>> to avoid Broadcasted model mapping issues
-            Map<String, List<Object>> raw = mapper.readValue(json, new TypeReference<>() {
-            });
-            raw.forEach((key, list) -> groupedCount.put(key, list.size()));
+           // Map<String, List<Object>> raw = mapper.readValue(json, new TypeReference<>() {
+           // });
+           // raw.forEach((key, list) -> groupedCount.put(key, list.size()));
 
             updateMessage("Success!");
             return groupedCount;

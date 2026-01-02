@@ -247,9 +247,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
         }
         fetchPendingSync();
         loadTimingList();
-
-        if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
         loadChartData();
+       // if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
+        cboxYear.setOnAction(e-> loadChartData());
     }
 
     private void setupDateFilters(){

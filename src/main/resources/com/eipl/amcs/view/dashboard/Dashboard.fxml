@@ -133,11 +133,11 @@
                                  <children>
                                     <Label text="Year" />
                                     <ComboBox fx:id="cboxYear" prefWidth="120.0" />
-                                    <Button fx:id="btnSearch" mnemonicParsing="false" styleClass="button-primary" text="%search">
-                                       <HBox.margin>
-                                          <Insets right="10.0" />
-                                       </HBox.margin>
-                                    </Button>
+<!--                                    <Button fx:id="btnSearch" mnemonicParsing="false" styleClass="button-primary" text="%search">-->
+<!--                                       <HBox.margin>-->
+<!--                                          <Insets right="10.0" />-->
+<!--                                       </HBox.margin>-->
+<!--                                    </Button>-->
                                  </children>
                               </HBox>
                               <LineChart fx:id="lineChart" title="%monthlysummary">
