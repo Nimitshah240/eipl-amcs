@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.DecimalFormat;
@@ -73,12 +75,24 @@ public class MainApp extends Application {
     public static boolean isIncentive = false;
     public static double incentiveValue = 1.0;
     private static FinancialYear financialYear;
+    private static ServerSocket uniqueInstanceSocket;
 
     public static String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
     }
 
     public static void main(String[] args) {
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        System.setProperty("java.net.preferIPv4Addresses", "true");
+
+        try {
+            //          uniqueInstanceSocket = new ServerSocket(55555);
+            uniqueInstanceSocket = new ServerSocket(55555, 0, InetAddress.getByName("127.0.0.1"));
+        } catch (IOException e) {
+            System.err.println("APPLICATION is already running....");
+            System.exit(1);
+            return;
+        }
         try {
             launch(args);
         } catch (Exception e) {

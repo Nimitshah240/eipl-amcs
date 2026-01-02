@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.operation.billing.dto.MemberSummaryDto;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.dto.MemberWiseCollectionDto;
@@ -16,6 +17,8 @@ import java.util.Optional;
 public interface MilkCollectionService {
 
     List<MilkCollection> findAllBetween(LocalDateTime fromDt, LocalDateTime toDt);
+
+    List<MemberSummaryDto> findTop10MemberSummaries(int year, int month, Integer selectedMilkTypeCode);
 
     List<MilkCollection> findAllCollectionByDate(LocalDateTime fromDt, LocalDateTime toDt, String heades);
 

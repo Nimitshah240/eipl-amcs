@@ -11,20 +11,24 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.operation.billing.dto.MemberSummaryDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.DpuIncentiveRequestLoadTask;
+import com.eipl.amcs.operation.procurement.task.MemberDataSummaryLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
-import com.eipl.amcs.utils.FocusUtils;
 import com.eipl.amcs.utils.task.BroadcastedTask;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -33,6 +37,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -77,6 +82,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     private TableView<RowData> tableCollection;
     @FXML
+    private TableView<MemberSummaryDto> tableCollectionFarmers;
+    @FXML
     private DatePicker dpDate;
     @FXML
     private ComboBox<Shift> cboxShift;
@@ -87,7 +94,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     private Button btnLoad, btnMilkCollection, btnLocalMilkSale, btnMilkDispatch, btnProductSale, btnBilling, btnKapaat, btnMilkReceipt, btnSync, btnPendingSync;
     @FXML
-    private ComboBox<String> cboxYear, cboxYearNotification, cboxMonth;
+    private ComboBox<String> cboxYear, cboxYearNotification, cboxMonth, cboxMonthMember, cboxYearMember;
+    @FXML
+    private ComboBox<MilkType> cboxMilkType;
     @FXML
     private Button btnSearch;
     @FXML
@@ -141,32 +150,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
         loadShift();
         loadMilkType();
         setupTable();
-
-        //  Years
-        int currentYear = LocalDate.now().getYear();
-        List<String> years = new ArrayList<>();
-        for (int i = currentYear; i >= currentYear - 5; i--) {
-            years.add(String.valueOf(i));
-        }
-        if (cboxYear != null) {
-            cboxYear.setItems(FXCollections.observableArrayList(years));
-            cboxYear.getSelectionModel().selectFirst();
-        }
-        if (cboxYearNotification != null) {
-            cboxYearNotification.setItems(FXCollections.observableArrayList(years));
-            cboxYearNotification.getSelectionModel().selectFirst();
-        }
-        //  months
-        ObservableList<String> months = FXCollections.observableArrayList();
-        for (Month month : Month.values()) {
-            months.add(month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-        }
-        cboxMonth.setItems(months);
-        String currentMonthName = LocalDate.now()
-                .getMonth()
-                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-        cboxMonth.getSelectionModel().select(currentMonthName);
+        setupDateFilters();
+        loadFarmers();
+        cboxMonthMember.setOnAction(e->loadFarmers());
+        cboxYearMember.setOnAction(e->loadFarmers());
+        cboxMilkType.setOnAction(e->loadFarmers());
         if (cboxNotification != null) {
             cboxNotification.getItems().addAll("All", "Alert", "Paripatra", "Special Message", "Milk Bill", "Bacteria Test", "EVEREST Bill");
             cboxNotification.getSelectionModel().select(0);
@@ -174,7 +162,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         cboxYearNotification.setOnAction(e -> loadNotificationList());
         cboxMonth.setOnAction(e -> loadNotificationList());
         cboxNotification.setOnAction(e -> loadNotificationList());
-        loadNotificationList();
 
         loadData();
 //        if (btnMilkCollection != null) FocusUtils.requestFocus(btnMilkCollection);
@@ -202,7 +189,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         if (btnLoad != null) btnLoad.setOnAction(e -> loadData());
         if (dpDate != null) dpDate.setValue(LocalDate.now());
         loadMsg();
-        loadNotification();
 
         if (btnSync != null) {
             btnSync.setOnAction(e -> {
@@ -261,9 +247,47 @@ public class DashboardController implements MyInitialization, PopupCallback {
         }
         fetchPendingSync();
         loadTimingList();
-
-        if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
         loadChartData();
+       // if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
+        cboxYear.setOnAction(e-> loadChartData());
+    }
+
+    private void setupDateFilters(){
+        // year
+        int currentYear = LocalDate.now().getYear();
+        List<String> years = new ArrayList<>();
+        for (int i = currentYear; i >= currentYear - 5; i--) {
+            years.add(String.valueOf(i));
+        }
+        ObservableList<String> yearOptions = FXCollections.observableArrayList(years);
+        if (cboxYear != null) {
+            cboxYear.setItems(yearOptions);
+            cboxYear.getSelectionModel().selectFirst();
+        }
+        if (cboxYearNotification != null) {
+            cboxYearNotification.setItems(yearOptions);
+            cboxYearNotification.getSelectionModel().selectFirst();
+        }if (cboxYearMember != null) {
+            cboxYearMember.setItems(yearOptions);
+            cboxYearMember.getSelectionModel().selectFirst();
+        }
+
+        //  month
+        ObservableList<String> months = FXCollections.observableArrayList();
+        for (Month month : Month.values()) {
+            months.add(month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+        String currentMonthName = LocalDate.now()
+                .getMonth()
+                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        if (cboxMonth != null) {
+            cboxMonth.setItems(months);
+            cboxMonth.getSelectionModel().select(currentMonthName);
+        }
+        if(cboxMonthMember != null){
+            cboxMonthMember.setItems(months);
+            cboxMonthMember.getSelectionModel().select(currentMonthName);
+        }
     }
 
     private void loadChartData() {
@@ -513,11 +537,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         });
     }
 
-    public void loadNotification() {
-        if (lv == null) return;
-        lv.setItems(FXCollections.observableArrayList(MainApp.notificationList));
-    }
-
 
     private Node createNode(Notification item) {
         Label lblTitle = new Label(item.getTitle());
@@ -625,6 +644,62 @@ public class DashboardController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
+    private void loadFarmers(){
+        if (tableCollectionFarmers == null) return;
+        tableCollectionFarmers.setPlaceholder(new Label("Loading top 10 members..."));
+
+        Month month = Month.from(CommonUtils.MONTH_SHORT_FORMATTER.parse(cboxMonthMember.getSelectionModel().getSelectedItem()));
+        int selectedMonth = month.getValue();
+        int selectedYear = Integer.parseInt(cboxYearMember.getSelectionModel().getSelectedItem());
+
+        Integer selectedMilkTypeCode = null;
+        var selectedItem = cboxMilkType.getValue();
+        if (selectedItem != null && !"All".equalsIgnoreCase(selectedItem.getName())) {
+            selectedMilkTypeCode = selectedItem.getCode();
+        }
+        setupSummaryTableColumns();
+        var summaryTask = new MemberDataSummaryLoadTask(selectedYear, selectedMonth, selectedMilkTypeCode);
+        summaryTask.setOnSucceeded(e -> {
+            try {
+                List<MemberSummaryDto> summaries = summaryTask.get();
+                if (summaries == null || summaries.isEmpty()) {
+                    tableCollectionFarmers.getItems().clear();
+                    tableCollectionFarmers.setPlaceholder(new Label("No member data found."));
+                } else {
+                    ObservableList<MemberSummaryDto> observableSummaries = FXCollections.observableArrayList(summaries);
+                    tableCollectionFarmers.setItems(observableSummaries);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+                tableCollectionFarmers.setPlaceholder(new Label("Error loading member data."));
+            }
+        });
+
+        new Thread(summaryTask).start();
+    }
+    private void setupSummaryTableColumns() {
+        tableCollectionFarmers.getColumns().clear();
+        TableColumn<MemberSummaryDto, String> memberCodeCol = new TableColumn<>("Members");
+        memberCodeCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getMemberCode())
+        );
+
+        TableColumn<MemberSummaryDto, String> milkTypeCodeCol = new TableColumn<>("Milk Type");
+        milkTypeCodeCol.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(cellData.getValue().getMilkTypeCode()))
+        );
+
+        TableColumn<MemberSummaryDto, BigDecimal> qtyCol = new TableColumn<>("Total Quantity");
+        qtyCol.setCellValueFactory(new PropertyValueFactory<>("totalQty"));
+        qtyCol.setStyle("-fx-alignment: CENTER-RIGHT;");
+
+        TableColumn<MemberSummaryDto, BigDecimal> amountCol = new TableColumn<>("Total Amount");
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
+        amountCol.setStyle("-fx-alignment: CENTER-RIGHT;");
+
+        tableCollectionFarmers.getColumns().addAll(memberCodeCol, milkTypeCodeCol, qtyCol, amountCol);
+    }
+
     private String getString(String key) {
         try {
             if (resources != null) {
@@ -639,6 +714,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @Override
     public void setupTable() {
         tableCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableCollectionFarmers.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void loadMilkType() {
@@ -648,6 +724,13 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 List<MilkType> list = task1.get();
                 if (list != null) {
                     listMilkType.addAll(list);
+                    List<MilkType> comboList = new ArrayList<>();
+                    MilkType milkType = new MilkType();
+                    milkType.setName("All");
+                    comboList.add(0, milkType);
+                    comboList.addAll(list);
+                    cboxMilkType.setItems(FXCollections.observableList(comboList));
+                    cboxMilkType.getSelectionModel().selectFirst();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
