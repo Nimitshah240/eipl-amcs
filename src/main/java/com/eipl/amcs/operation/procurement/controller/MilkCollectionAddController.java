@@ -106,9 +106,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_NumericField txtSampleNo, txtCode, txtQty, txtFat, txtSnf1, txtFat1, txtSnf2, txtFat2, txtSnf3, txtFat3, txtSnf4, txtFat4, txtSnf, txtClr, txtWater, txtRate, txtAmount;
     @FXML
-    private E_Button btnSave, btnClose, btnStart, btnExport;
+    private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime,lblStarttime,lblEndTime;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -518,7 +518,18 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             }
         });
         btnSave.setOnAction(e -> validateAndSave());
-
+        btnDispatch.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
+        });
+        btnLocalMilkSale.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
+        });
+        btnSetting.setOnAction(e -> {
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CollectionSetting", null, this);
+        });
+        btnShiftReport.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/ShiftReportCode.fxml")));
+        });
         txtFat.textProperty().addListener(qualityParamChangeListener);
         txtSnf.textProperty().addListener(qualityParamChangeListener);
         txtQty.textProperty().addListener(qtyRateChangeListener);
@@ -727,7 +738,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         colCollRate1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRtpl()));
         colCollAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
         colCollMilkType1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
-
+        tableSummary.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tablePrevCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         propCollection.bind(tableCollection.getSelectionModel().selectedItemProperty());
         propCollectionSummary.bind(tablePrevCollection.getSelectionModel().selectedItemProperty());
     }
