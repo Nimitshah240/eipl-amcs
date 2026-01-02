@@ -54,6 +54,21 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
             + " and collection_date between ?2 and ?3")
     Map<String, BigDecimal> findAvgFatAndSnf(String code, LocalDateTime date1, LocalDateTime date2);
 
+    @Query(value = "SELECT m.member_code, " +
+                    "       m.milk_type_code, " +
+                    "       SUM(m.qty) AS totalQty, " +
+                    "       SUM(m.amount) AS totalAmount " +
+                    "FROM milk_collection m " +
+                    "WHERE m.collection_date >= :startDate " +
+                    "  AND m.collection_date < :endDate " +
+                    "  AND (:milkType IS NULL OR m.milk_type_code = :milkType) " +
+                    "GROUP BY m.member_code, m.milk_type_code " +
+                    "ORDER BY SUM(m.qty) DESC " +
+                    "LIMIT 10",
+            nativeQuery = true)
+    List<Object[]> findTop10MemberSummaries(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate, @Param("milkType") Integer selectedMilkTypeCode );
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "shift", "milkType", "milkQualityType", "society",
             "dock"})

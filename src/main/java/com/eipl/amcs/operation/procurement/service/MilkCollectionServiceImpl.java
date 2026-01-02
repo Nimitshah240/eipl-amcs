@@ -21,6 +21,7 @@ import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicabilit
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateApplicabilityRepository;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
+import com.eipl.amcs.operation.billing.dto.MemberSummaryDto;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.dto.MemberWiseCollectionDto;
@@ -90,6 +91,21 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
                 Sort.by("collectionDate").descending().and(Sort.by("sampleNo")));
     }
 
+    @Override
+    public List<MemberSummaryDto> findTop10MemberSummaries(int year, int month, Integer selectedMilkTypeCode) {
+
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.plusMonths(1);
+
+        List<Object[]> rows = milkCollectionRepository.findTop10MemberSummaries(start, end, selectedMilkTypeCode);
+        List<MemberSummaryDto> result = new ArrayList<>();
+
+        for (Object[] row : rows) {
+            MemberSummaryDto dto = new MemberSummaryDto((String) row[0], ((Number) row[1]).intValue(), (BigDecimal) row[2], (BigDecimal) row[3]);
+            result.add(dto);
+        }
+        return result;
+    }
     @Override
     public List<MilkCollection> findAllCollectionByDate(LocalDateTime fromDt, LocalDateTime toDt, String headers) {
         List<MilkCollection> milkCollectionList = milkCollectionRepository.findByCollectionDateBetween(fromDt, toDt, Sort.by("collectionDate"));
