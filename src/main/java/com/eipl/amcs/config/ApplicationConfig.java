@@ -5,6 +5,9 @@ import com.eipl.amcs.network.LoggingRequestInterceptor;
 import com.eipl.amcs.network.SystemParamInterceptor;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -50,4 +53,17 @@ public class ApplicationConfig {
         return new ApiJsonUtil();
     }
 
+    @Bean
+    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
+        return factory -> {
+            System.out.println("Applying Server Config: Port 8080, Path /eipl-amcs");
+            factory.setPort(8080);
+            factory.setContextPath("/eipl-amcs");
+        };
+    }
+
+    @Bean
+    public TomcatServletWebServerFactory servletWebServerFactory() {
+        return new TomcatServletWebServerFactory();
+    }
 }

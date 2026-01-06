@@ -146,6 +146,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private StringBuilder errorMsg = null;
     private boolean printOnOff = true;
     private File slipFile = null;
+    Boolean doubleDock = false;
 
 
     private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
@@ -452,6 +453,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collectionType = AppConstant.CollectionType.MEMBER_COLL;
         dpDate.setValue(LocalDate.now());
         FocusUtils.requestFocus(btnStart);
+
+        doubleDock = !MainApp.identityDto.getDock().getDockNo().substring(MainApp.identityDto.getSociety().getCode().length()).equals("01");
 
         bindingFat1 = Bindings.createStringBinding(() -> txtFat1.getText(), txtFat1.textProperty());
         bindingFat1.addListener(new ChangeListener<String>() {
@@ -871,7 +874,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     private MilkCollectionSaveTask getSaveTask() {
-        var task = new MilkCollectionSaveTask(collection, (short) 0);
+        var task = new MilkCollectionSaveTask(collection, (short) 0, doubleDock);
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
@@ -998,7 +1001,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     private MilkCollectionSaveTask getMilkCollectionSaveTask() {
-        var task = new MilkCollectionSaveTask(collection, (short) 0);
+        var task = new MilkCollectionSaveTask(collection, (short) 0,doubleDock);
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();

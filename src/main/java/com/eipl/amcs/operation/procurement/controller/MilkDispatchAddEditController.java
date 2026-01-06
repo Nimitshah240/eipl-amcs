@@ -314,6 +314,12 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             alert.createAlert();
             return;
         }
+        if (milkDispatchSummaryDtoList == null || milkDispatchSummaryDtoList.isEmpty()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+                    resourceBundle.getString("select.valid.date"));
+            alert.createAlert();
+            return;
+        }
 
         listMilkDispatch.clear();
         for (MilkDispatchSummaryDto milkDispatchSummaryDto : milkDispatchSummaryDtoList) {
@@ -1016,7 +1022,14 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         var task = new SocietyRateBasedLoadTask(code);
         task.setOnSucceeded(e -> {
             try {
-                listBased = task.get();
+
+                if (listBased != null) {
+                    listBased = task.get();
+                }else{
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+                            resourceBundle.getString("ratemaster.not.found"));
+                    alert.createAlert();
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
