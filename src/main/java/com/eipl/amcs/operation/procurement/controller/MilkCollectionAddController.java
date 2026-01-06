@@ -88,7 +88,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     List<Shift> shiftList = new ArrayList<>();
     String text;
     DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd/MM/yy");
-    DateTimeFormatter dTF1 = DateTimeFormatter.ofPattern("HH:mm");
+    DateTimeFormatter dTF1 = DateTimeFormatter.ofPattern("HH:mm:ss");
     @FXML
     private StackPane root;
     @FXML
@@ -108,7 +108,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime,lblStarttime,lblEndTime;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime,lblStartTime,lblEndTime;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -1059,6 +1059,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private void setDataInTables(MilkCollection collNew) {
         listCollection.add(0, collNew);
+        updateStartEndTime();
         CollectionSummary summary = listCollectionSummary.stream().filter(p -> p.getMilkType().getCode() == collNew.getMilkType().getCode()).findAny().orElse(null);
         if (summary == null) {
             summary = new CollectionSummary(collNew.getMilkType(), 1, collNew.getQty(), collNew.getAmount());
@@ -1364,6 +1365,36 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         new Thread(task).start();
     }
 
+    private void updateStartEndTime() {
+        if (!listCollection.isEmpty()) {
+            LocalDateTime minTime = listCollection.stream()
+                    .map(MilkCollection::getCreatedAt)
+                    .filter(Objects::nonNull)
+                    .min(LocalDateTime::compareTo)
+                    .orElse(null);
+
+            LocalDateTime maxTime = listCollection.stream()
+                    .map(MilkCollection::getCreatedAt)
+                    .filter(Objects::nonNull)
+                    .max(LocalDateTime::compareTo)
+                    .orElse(null);
+
+            if (minTime != null) {
+                lblStartTime.setText(minTime.format(dTF1));
+            } else {
+                lblStartTime.setText("");
+            }
+            if (maxTime != null) {
+                lblEndTime.setText(maxTime.format(dTF1));
+            } else {
+                lblEndTime.setText("");
+            }
+        } else {
+            lblStartTime.setText("");
+            lblEndTime.setText("");
+        }
+    }
+
     private void fetchCurrentShiftCollection() {
         var task = new MilkCollectionLoadTask(collectionDate, collectionDate, MainApp.identityDto.getDock().getDockNo(), 0);
         task.setOnSucceeded(e -> {
@@ -1377,6 +1408,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     listCollection.addAll(temp);
                     listCollection.sort(Comparator.comparingInt(MilkCollection::getSampleNo).reversed());
                     tableCollection.setItems(listCollection);
+                    updateStartEndTime();
 
                     // summary
                     for (MilkType item : cboxMilkType.getItems()) {
@@ -1434,6 +1466,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     listCollection.clear();
                     listCollectionSummary.clear();
                     tableCollection.setItems(listCollection);
+                    updateStartEndTime();
 
                     CollectionSummary summary = null;
                     for (MilkType item : cboxMilkType.getItems()) {

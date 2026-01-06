@@ -27,4 +27,12 @@ public class MilkCollectionSummaryData {
     private Society society;
     private MilkQualityType milkQualityType;
     private String union;
+
+
+    public MilkCollectionSummaryData(Member member, MilkType milkType, BigDecimal milkQuantity, BigDecimal milkAmount) {
+        this.member = member;
+        this.milkType = milkType;
+        this.milkQuantity = milkQuantity;
+        this.milkAmount = milkAmount;
+    }
 }

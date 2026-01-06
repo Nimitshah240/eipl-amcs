@@ -5,6 +5,7 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,21 +55,22 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
             + " and collection_date between ?2 and ?3")
     Map<String, BigDecimal> findAvgFatAndSnf(String code, LocalDateTime date1, LocalDateTime date2);
 
-    @Query(value = "SELECT m.member_code, " +
-                    "       m.milk_type_code, " +
-                    "       SUM(m.qty) AS totalQty, " +
-                    "       SUM(m.amount) AS totalAmount " +
-                    "FROM milk_collection m " +
-                    "WHERE m.collection_date >= :startDate " +
-                    "  AND m.collection_date < :endDate " +
-                    "  AND (:milkType IS NULL OR m.milk_type_code = :milkType) " +
-                    "GROUP BY m.member_code, m.milk_type_code " +
-                    "ORDER BY SUM(m.qty) DESC " +
-                    "LIMIT 10",
-            nativeQuery = true)
-    List<Object[]> findTop10MemberSummaries(
+    @Query("SELECT new com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData(" +
+            "  m.member, " +
+            "  m.milkType, " +
+            "  SUM(m.qty), " +
+            "  SUM(m.amount)) " +
+            "FROM MilkCollection m " +
+            "WHERE m.collectionDate >= :startDate " +
+            "  AND m.collectionDate < :endDate " +
+            "  AND (:milkType IS NULL OR m.milkType.code = :milkType) " +
+            "GROUP BY m.member, m.milkType " +
+            "ORDER BY SUM(m.qty) DESC"
+    )
+    List<MilkCollectionSummaryData> findTop10MemberSummaries(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate, @Param("milkType") Integer selectedMilkTypeCode );
+            @Param("endDate") LocalDateTime endDate,
+            @Param("milkType") Integer selectedMilkTypeCode, Pageable pageable);
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "shift", "milkType", "milkQualityType", "society",
             "dock"})

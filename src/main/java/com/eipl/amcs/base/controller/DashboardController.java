@@ -11,7 +11,7 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.operation.billing.dto.MemberSummaryDto;
+import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.DpuIncentiveRequestLoadTask;
 import com.eipl.amcs.operation.procurement.task.MemberDataSummaryLoadTask;
@@ -82,7 +82,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     private TableView<RowData> tableCollection;
     @FXML
-    private TableView<MemberSummaryDto> tableCollectionFarmers;
+    private TableView<MilkCollectionSummaryData> tableCollectionFarmers;
     @FXML
     private DatePicker dpDate;
     @FXML
@@ -179,8 +179,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
             cboxLang.setOnAction(e -> {
                 createAndSetLocale();
                 Rectangle2D rect = Screen.getPrimary().getVisualBounds();
-                MainApp.getContentPane().setMaxWidth(rect.getWidth());
-                MainApp.getContentPane().setMaxHeight(rect.getHeight());
+//                MainApp.getContentPane().setMaxWidth(rect.getWidth());
+//                MainApp.getContentPane().setMaxHeight(rect.getHeight());
                 MainApp.getContentPane().setTop(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/HeaderBar.fxml")));
                 MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -653,6 +653,13 @@ public class DashboardController implements MyInitialization, PopupCallback {
         int selectedYear = Integer.parseInt(cboxYearMember.getSelectionModel().getSelectedItem());
 
         Integer selectedMilkTypeCode = null;
+//        Object selectedItem = cboxMilkType.getValue();
+//        if (selectedItem instanceof MilkType) {
+//            MilkType mt = (MilkType) selectedItem;
+//            if (!"All".equalsIgnoreCase(mt.getName())) {
+//                selectedMilkTypeCode = mt.getCode();
+//            }
+//        }
         var selectedItem = cboxMilkType.getValue();
         if (selectedItem != null && !"All".equalsIgnoreCase(selectedItem.getName())) {
             selectedMilkTypeCode = selectedItem.getCode();
@@ -661,12 +668,12 @@ public class DashboardController implements MyInitialization, PopupCallback {
         var summaryTask = new MemberDataSummaryLoadTask(selectedYear, selectedMonth, selectedMilkTypeCode);
         summaryTask.setOnSucceeded(e -> {
             try {
-                List<MemberSummaryDto> summaries = summaryTask.get();
+                List<MilkCollectionSummaryData> summaries = summaryTask.get();
                 if (summaries == null || summaries.isEmpty()) {
                     tableCollectionFarmers.getItems().clear();
                     tableCollectionFarmers.setPlaceholder(new Label("No member data found."));
                 } else {
-                    ObservableList<MemberSummaryDto> observableSummaries = FXCollections.observableArrayList(summaries);
+                    ObservableList<MilkCollectionSummaryData> observableSummaries = FXCollections.observableArrayList(summaries);
                     tableCollectionFarmers.setItems(observableSummaries);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -679,22 +686,35 @@ public class DashboardController implements MyInitialization, PopupCallback {
     }
     private void setupSummaryTableColumns() {
         tableCollectionFarmers.getColumns().clear();
-        TableColumn<MemberSummaryDto, String> memberCodeCol = new TableColumn<>("Members");
-        memberCodeCol.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getMemberCode())
-        );
+        TableColumn<MilkCollectionSummaryData, String> memberCodeCol = new TableColumn<>("Members");
+        memberCodeCol.setCellValueFactory(cellData ->{
+            String fullCode = cellData.getValue().getMember().getCode()
+                    ;
+            if (fullCode != null && fullCode.length() >= 4) {
+                String lastFour = fullCode.substring(fullCode.length() - 4);
+                return new SimpleStringProperty(lastFour);
+            }
+            return new SimpleStringProperty(fullCode == null ? "" : fullCode);
+        });
 
-        TableColumn<MemberSummaryDto, String> milkTypeCodeCol = new TableColumn<>("Milk Type");
-        milkTypeCodeCol.setCellValueFactory(cellData ->
-                new SimpleStringProperty(String.valueOf(cellData.getValue().getMilkTypeCode()))
-        );
+        TableColumn<MilkCollectionSummaryData, String> milkTypeCodeCol = new TableColumn<>("Milk Type");
+        milkTypeCodeCol.setCellValueFactory(cellData -> {
+            int code = cellData.getValue().getMilkType().getCode();
 
-        TableColumn<MemberSummaryDto, BigDecimal> qtyCol = new TableColumn<>("Total Quantity");
-        qtyCol.setCellValueFactory(new PropertyValueFactory<>("totalQty"));
+            String typeName = listMilkType.stream()
+                    .filter(t -> t.getCode() == code)
+                    .map(MilkType::getName)
+                    .findFirst()
+                    .orElse("Unknown (" + code + ")");
+
+            return new SimpleStringProperty(typeName);
+        });
+        TableColumn<MilkCollectionSummaryData, BigDecimal> qtyCol = new TableColumn<>("Total Quantity");
+        qtyCol.setCellValueFactory(new PropertyValueFactory<>("milkQuantity"));
         qtyCol.setStyle("-fx-alignment: CENTER-RIGHT;");
 
-        TableColumn<MemberSummaryDto, BigDecimal> amountCol = new TableColumn<>("Total Amount");
-        amountCol.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
+        TableColumn<MilkCollectionSummaryData, BigDecimal> amountCol = new TableColumn<>("Total Amount");
+        amountCol.setCellValueFactory(new PropertyValueFactory<>("milkAmount"));
         amountCol.setStyle("-fx-alignment: CENTER-RIGHT;");
 
         tableCollectionFarmers.getColumns().addAll(memberCodeCol, milkTypeCodeCol, qtyCol, amountCol);

@@ -132,7 +132,7 @@
                                                 </Label>
                                                             <Label fx:id="lblAvgFat" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                    <font>
-                                                      <Font name="System Bold" size="18.0" />
+                                                      <Font name="System Bold" size="20.0" />
                                                    </font>
                                                 </Label>
                                              </children>
@@ -146,7 +146,7 @@
                                                 </Label>
                                                             <Label fx:id="lblAvgSnf" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                    <font>
-                                                      <Font name="System Bold" size="18.0" />
+                                                      <Font name="System Bold" size="20.0" />
                                                    </font>
                                                 </Label>
                                              </children>
@@ -160,7 +160,7 @@
                                                 </Label>
                                                             <Label fx:id="lblAvgQty" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                    <font>
-                                                      <Font name="System Bold" size="18.0" />
+                                                      <Font name="System Bold" size="20.0" />
                                                    </font>
                                                 </Label>
                                              </children>
@@ -247,15 +247,39 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                             </columnResizePolicy>
                                         </TableView>
+                              <HBox spacing="15.0" styleClass="pane-white-drop-border">
+                                 <children>
+                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%starttime">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lblStartTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%starttimedata">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%endtime">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="lblEndTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%endtimedata">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
                                     </children>
                                 </VBox>
                             </children>
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0">
                             <children>
-                                <VBox prefHeight="589.6" prefWidth="396.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <VBox prefHeight="589.6" prefWidth="396.8" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                        <Label fx:id="lblShiftTime" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="396.0" style="-fx-font-size: 10; -fx-text-fill: red;">
+                                        <Label fx:id="lblShiftTime" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="396.0" style="-fx-font-size: 10; -fx-text-fill: red;">
                                  <font>
                                     <Font size="8.0" />
                                  </font></Label>
@@ -397,10 +421,6 @@
                                                 </VBox>
                                             </children>
                                         </GridPane>
-                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                                 <font>
-                                    <Font size="8.0" />
-                                 </font></Label>
                                         <TableView fx:id="tableSummary" prefHeight="235.0" prefWidth="397.0">
                                             <columns>
                                                 <TableColumn fx:id="colSummaryMilkType" prefWidth="75.0" styleClass="cell-center-aligned" text="%milktype" />
@@ -429,30 +449,6 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                             </columnResizePolicy>
                                         </TableView>
-                              <HBox spacing="15.0">
-                                 <children>
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%starttime">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblStartTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%starttimedata">
-                                       <font>
-                                          <Font name="System Bold" size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%endtime">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblEndTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%endtimedata">
-                                       <font>
-                                          <Font name="System Bold" size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
                                     </children>
                                 </VBox>
                             </children>
@@ -465,7 +461,7 @@
                         <Label fx:id="lblShortcut1" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
                         <Label fx:id="lblShortcut" maxWidth="1.7976931348623157E308" prefHeight="40.0" text="%F11SwitchCollectionModeF7SettingF3EditDelete" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font></Label>
                         <E_Button fx:id="btnExport" disable="true" mnemonicParsing="true" prefHeight="40.0" prefWidth="100.0" text="%export" />
                     </children>

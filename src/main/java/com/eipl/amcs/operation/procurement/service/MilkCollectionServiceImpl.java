@@ -21,7 +21,6 @@ import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateApplicabilit
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateApplicabilityRepository;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
-import com.eipl.amcs.operation.billing.dto.MemberSummaryDto;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.dto.MemberWiseCollectionDto;
@@ -34,6 +33,8 @@ import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.VoucherUtil;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;
@@ -92,19 +93,13 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     }
 
     @Override
-    public List<MemberSummaryDto> findTop10MemberSummaries(int year, int month, Integer selectedMilkTypeCode) {
+    public List<MilkCollectionSummaryData> findTop10MemberSummaries(int year, int month, Integer selectedMilkTypeCode) {
 
         LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
         LocalDateTime end = start.plusMonths(1);
+        Pageable topTen = PageRequest.of(0, 10);
 
-        List<Object[]> rows = milkCollectionRepository.findTop10MemberSummaries(start, end, selectedMilkTypeCode);
-        List<MemberSummaryDto> result = new ArrayList<>();
-
-        for (Object[] row : rows) {
-            MemberSummaryDto dto = new MemberSummaryDto((String) row[0], ((Number) row[1]).intValue(), (BigDecimal) row[2], (BigDecimal) row[3]);
-            result.add(dto);
-        }
-        return result;
+        return milkCollectionRepository.findTop10MemberSummaries(start, end, selectedMilkTypeCode, topTen);
     }
     @Override
     public List<MilkCollection> findAllCollectionByDate(LocalDateTime fromDt, LocalDateTime toDt, String headers) {
