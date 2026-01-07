@@ -29,12 +29,14 @@
                     <children>
                         <Label fx:id="lblTitle" styleClass="header-text" text="%milkcollection" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Label styleClass="header-text" text="%kgfatrate" />
+                  <Label fx:id="lblKgFatRate" styleClass="header-text" />
                         <E_DatePicker fx:id="dpDate" prefWidth="140.0" />
                         <E_ComboBox fx:id="cboxShift" prefWidth="120.0" />
                         <E_Button fx:id="btnStart" mnemonicParsing="true" prefHeight="30.0" prefWidth="120.0" text="%start.collection" />
                     </children>
                 </HBox>
-                <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0" styleClass="transparent-back" VBox.vgrow="ALWAYS">
+                <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" prefHeight="160.0" prefWidth="200.0" styleClass="transparent-back" VBox.vgrow="ALWAYS">
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="0.0">
                             <children>
@@ -61,9 +63,9 @@
                                           <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="ALWAYS" />
                                                   </rowConstraints>
                                                   <children>
-                                                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%code">
+                                                      <Label alignment="BOTTOM_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%membercode">
                                              <font>
-                                                <Font size="18.0" />
+                                                <Font size="15.0" />
                                              </font>
                                           </Label>
                                                       <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%name" GridPane.columnIndex="1">
