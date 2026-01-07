@@ -101,6 +101,8 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         }
     };
 
+    private Boolean doubleDock;
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -144,6 +146,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        doubleDock = !MainApp.identityDto.getDock().getDockNo().substring(MainApp.identityDto.getSociety().getCode().length()).equals("01");
 
         btnEdit.setDisable(true);
         btnDelete.setDisable(true);
@@ -404,7 +407,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
     @Override
     public void updateData() {
         if (!this.milkCollection.getSocietyPaymentCycle().getLockBillingProcess()) {
-            var task = new MilkCollectionSaveTask(this.milkCollection, (short) 1);
+            var task = new MilkCollectionSaveTask(this.milkCollection, (short) 1, doubleDock);
             writeEditCollection();
             task.setOnSucceeded(e -> {
                 try {

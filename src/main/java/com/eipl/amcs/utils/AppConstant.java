@@ -92,6 +92,7 @@ public class AppConstant {
         String UPDATE_LOG = "/sync-app-update";
         String DATA_PROCESSOR = "http://192.168.1.86:6375/eipl-amcs-processor/";
         String PROCESSOR_SYNC = "sync";
+        String MILK_COLLECTION = "milk-collection";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/";
 //        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
