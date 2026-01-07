@@ -108,7 +108,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime,lblStartTime,lblEndTime;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -565,6 +565,14 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     MainApp.displaySerial.displayQuantity(getStringForDisplay("ANIMAL"));
             }
             setupBindingForAutoResult();
+            if (memberRateBasedList != null && !memberRateBasedList.isEmpty()) {
+                var matchedData = memberRateBasedList.stream()
+                        .filter(data -> data.getMilkType().getCode().equals(cboxMilkType.getValue().getCode()))
+                        .findFirst()
+                        .orElse(memberRateBasedList.get(0));
+                BigDecimal rate = matchedData.getKgRate();
+                lblKgFatRate.setText(String.valueOf(rate));
+            }
         });
 
         root.setOnKeyReleased(event -> {
@@ -573,11 +581,16 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CollectionSetting", null, this);
                     break;
                 case F3:
-                    if (MainApp.getProperty("hrs", "72") == null || !collectionDate.isBefore(LocalDateTime.now().minusHours(Long.parseLong(MainApp.getProperty("hrs", "72"))))) {
-                        CollectionEditDelete obj = new CollectionEditDelete(collectionDate != null ? collectionDate : null, "UPDATE");
-                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkCollectionEditDelete", obj, this);
-                        reloadData(true);
-                    }
+//                    if (MainApp.getProperty("hrs", "72") == null || !collectionDate.isBefore(LocalDateTime.now().minusHours(Long.parseLong(MainApp.getProperty("hrs", "72"))))) {
+//                        CollectionEditDelete obj = new CollectionEditDelete(collectionDate != null ? collectionDate : null, "UPDATE");
+//                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkCollectionEditDelete", obj, this);
+//                        reloadData(true);
+//                    }
+//                    break;
+                    openMemberAdd();
+                    break;
+                case F8:
+                    openLocalMilkSale();
                     break;
                 case F4:
                     if (MainApp.getProperty("hrs", "72") == null || !collectionDate.isBefore(LocalDateTime.now().minusHours(Long.parseLong(MainApp.getProperty("hrs", "72"))))) {
@@ -589,6 +602,12 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 case F11:
                 case T:
                     tareWs();
+                    break;
+                case D:
+                    openMilkDispatch();
+                    break;
+                case S:
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CollectionSetting", null, this);
                     break;
                 case F10:
                 case P:
@@ -606,22 +625,42 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     refreshDevice();
                     break;
                 case F5:
-                    if (!getQty().isEmpty()) {
-                        weightLock = new BigDecimal(getQty());
-                        tareWs();
-                    }
+//                    if (!getQty().isEmpty()) {
+//                        weightLock = new BigDecimal(getQty());
+//                        tareWs();
+//                    }
+                    refreshDevice();
                     break;
                 case F1:
                 case C:
                     FocusUtils.requestFocus(txtCode);
                     break;
+                case E:
+                    if (MainApp.getProperty("hrs", "72") == null || !collectionDate.isBefore(LocalDateTime.now().minusHours(Long.parseLong(MainApp.getProperty("hrs", "72"))))) {
+                        CollectionEditDelete obj = new CollectionEditDelete(collectionDate != null ? collectionDate : null, "UPDATE");
+                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkCollectionEditDelete", obj, this);
+                        reloadData(true);
+                    }
                 case F:
                     FocusUtils.requestFocus(txtFat);
+                    break;
+                case M:
+                    int totalItems = cboxMilkType.getItems().size();
+                    if (totalItems > 0) {
+                        int currentIndex = cboxMilkType.getSelectionModel().getSelectedIndex();
+                        int nextIndex = (currentIndex + 1) % totalItems;
+                        cboxMilkType.getSelectionModel().select(nextIndex);
+                    }
                     break;
                 case Q:
                 case L:
                     FocusUtils.requestFocus(txtQty);
                     break;
+                case SPACE:
+                    if (!getQty().isEmpty()) {
+                        weightLock = new BigDecimal(getQty());
+                        tareWs();
+                    }
                 case ESCAPE:
                     break;
             }
@@ -633,6 +672,17 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         rbtMa2.setOnAction(e -> setCurrentMaSelection("MA2"));
         rbtMa3.setOnAction(e -> setCurrentMaSelection("MA3"));
         rbtMa4.setOnAction(e -> setCurrentMaSelection("MA4"));
+    }
+
+
+    private void openMemberAdd() {
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml")));
+    }
+    private void openLocalMilkSale() {
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
+    }
+    private void openMilkDispatch() {
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
     }
 
     private void calculateAvgAndSet() {
