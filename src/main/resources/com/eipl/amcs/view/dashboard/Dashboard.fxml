@@ -97,7 +97,7 @@
                            <children>
                               <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%topfarmers">
+                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%topmember">
                                        <HBox.margin>
                                           <Insets left="5.0" />
                                        </HBox.margin>
@@ -136,7 +136,6 @@
                            <children>
                               <HBox alignment="CENTER_RIGHT" spacing="10.0">
                                  <children>
-                                    <Label text="Year" />
                                     <ComboBox fx:id="cboxYear" editable="true" />
 <!--                                    <Button fx:id="btnSearch" mnemonicParsing="false" styleClass="button-primary" text="%search">-->
 <!--                                       <HBox.margin>-->

@@ -24,11 +24,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -152,9 +150,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
         setupTable();
         setupDateFilters();
         loadFarmers();
-        cboxMonthMember.setOnAction(e->loadFarmers());
-        cboxYearMember.setOnAction(e->loadFarmers());
-        cboxMilkType.setOnAction(e->loadFarmers());
+        cboxMonthMember.setOnAction(e -> loadFarmers());
+        cboxYearMember.setOnAction(e -> loadFarmers());
+        cboxMilkType.setOnAction(e -> loadFarmers());
         if (cboxNotification != null) {
             cboxNotification.getItems().addAll("All", "Alert", "Paripatra", "Special Message", "Milk Bill", "Bacteria Test", "EVEREST Bill");
             cboxNotification.getSelectionModel().select(0);
@@ -248,11 +246,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
         fetchPendingSync();
         loadTimingList();
         loadChartData();
-       // if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
-        cboxYear.setOnAction(e-> loadChartData());
+        // if (btnSearch != null) btnSearch.setOnAction(e -> loadChartData());
+        cboxYear.setOnAction(e -> loadChartData());
     }
 
-    private void setupDateFilters(){
+    private void setupDateFilters() {
         // year
         int currentYear = LocalDate.now().getYear();
         List<String> years = new ArrayList<>();
@@ -267,7 +265,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
         if (cboxYearNotification != null) {
             cboxYearNotification.setItems(yearOptions);
             cboxYearNotification.getSelectionModel().selectFirst();
-        }if (cboxYearMember != null) {
+        }
+        if (cboxYearMember != null) {
             cboxYearMember.setItems(yearOptions);
             cboxYearMember.getSelectionModel().selectFirst();
         }
@@ -284,7 +283,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
             cboxMonth.setItems(months);
             cboxMonth.getSelectionModel().select(currentMonthName);
         }
-        if(cboxMonthMember != null){
+        if (cboxMonthMember != null) {
             cboxMonthMember.setItems(months);
             cboxMonthMember.getSelectionModel().select(currentMonthName);
         }
@@ -366,19 +365,19 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
             int seriesIndex = 1;
 
-                String cssColor = "";
-                if ("Cow".equalsIgnoreCase(series.getName())) {
-                    cssColor = "orange";
-                } else if ("Buffalo".equalsIgnoreCase(series.getName())) {
-                    cssColor = "blue";
-                } else if ("Mix".equalsIgnoreCase(series.getName())) {
-                    cssColor = "red";
-                }
+            String cssColor = "";
+            if ("Cow".equalsIgnoreCase(series.getName())) {
+                cssColor = "orange";
+            } else if ("Buffalo".equalsIgnoreCase(series.getName())) {
+                cssColor = "blue";
+            } else if ("Mix".equalsIgnoreCase(series.getName())) {
+                cssColor = "red";
+            }
 
-                if (!cssColor.isEmpty()) {
-                    lineChart.setStyle(lineChart.getStyle() + String.format("CHART_COLOR_%d: %s;", seriesIndex, cssColor));
-                }
-                seriesIndex++;
+            if (!cssColor.isEmpty()) {
+                lineChart.setStyle(lineChart.getStyle() + String.format("CHART_COLOR_%d: %s;", seriesIndex, cssColor));
+            }
+            seriesIndex++;
 
         }
         lineChart.setLegendSide(javafx.geometry.Side.BOTTOM);
@@ -583,11 +582,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
                     listCollectionSummary.clear();
                     tableCollection.getColumns().clear();
 
-                    RowData rowMember = new RowData(getString("member.nos"));
-                    RowData rowQty = new RowData(getString("qty"));
-                    RowData rowAmount = new RowData(getString("amount"));
-                    RowData rowFat = new RowData(getString("avgfat"));
-                    RowData rowSnf = new RowData(getString("avgsnf"));
+                    RowData rowMember = new RowData(getString(resources.getString("members")));
+                    RowData rowQty = new RowData(getString(resources.getString("qty")));
+                    RowData rowAmount = new RowData(getString(resources.getString("amount")));
+                    RowData rowFat = new RowData(getString(resources.getString("avgfat")));
+                    RowData rowSnf = new RowData(getString(resources.getString("avgsnf")));
 
                     TableColumn<RowData, String> colDesc = new TableColumn<>("");
                     colDesc.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDescription()));
@@ -612,11 +611,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
                                                 divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP))
                                         .setScale(2, RoundingMode.HALF_UP);
                             }
-                            
+
                             BigDecimal avgFat = BigDecimal.ZERO;
                             if (qty.doubleValue() > 0)
                                 avgFat = BigDecimal.valueOf(kgFat.doubleValue() / qty.doubleValue() * 100).setScale(2, RoundingMode.HALF_UP);
-                            
+
                             BigDecimal avgSnf = BigDecimal.ZERO;
                             if (qty.doubleValue() > 0)
                                 avgSnf = BigDecimal.valueOf(snf.doubleValue() / qty.doubleValue() * 100).setScale(2, RoundingMode.HALF_UP);
@@ -644,7 +643,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
-    private void loadFarmers(){
+    private void loadFarmers() {
         if (tableCollectionFarmers == null) return;
         tableCollectionFarmers.setPlaceholder(new Label("Loading top 10 members..."));
 
@@ -684,12 +683,12 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
         new Thread(summaryTask).start();
     }
+
     private void setupSummaryTableColumns() {
         tableCollectionFarmers.getColumns().clear();
-        TableColumn<MilkCollectionSummaryData, String> memberCodeCol = new TableColumn<>("Members");
-        memberCodeCol.setCellValueFactory(cellData ->{
-            String fullCode = cellData.getValue().getMember().getCode()
-                    ;
+        TableColumn<MilkCollectionSummaryData, String> memberCodeCol = new TableColumn<>(resources.getString("members"));
+        memberCodeCol.setCellValueFactory(cellData -> {
+            String fullCode = cellData.getValue().getMember().getCode();
             if (fullCode != null && fullCode.length() >= 4) {
                 String lastFour = fullCode.substring(fullCode.length() - 4);
                 return new SimpleStringProperty(lastFour);
@@ -697,7 +696,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
             return new SimpleStringProperty(fullCode == null ? "" : fullCode);
         });
 
-        TableColumn<MilkCollectionSummaryData, String> milkTypeCodeCol = new TableColumn<>("Milk Type");
+        TableColumn<MilkCollectionSummaryData, String> milkTypeCodeCol = new TableColumn<>(resources.getString("milktype"));
         milkTypeCodeCol.setCellValueFactory(cellData -> {
             int code = cellData.getValue().getMilkType().getCode();
 
@@ -709,11 +708,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
             return new SimpleStringProperty(typeName);
         });
-        TableColumn<MilkCollectionSummaryData, BigDecimal> qtyCol = new TableColumn<>("Total Quantity");
+        TableColumn<MilkCollectionSummaryData, BigDecimal> qtyCol = new TableColumn<>(resources.getString("totalqty"));
         qtyCol.setCellValueFactory(new PropertyValueFactory<>("milkQuantity"));
         qtyCol.setStyle("-fx-alignment: CENTER-RIGHT;");
 
-        TableColumn<MilkCollectionSummaryData, BigDecimal> amountCol = new TableColumn<>("Total Amount");
+        TableColumn<MilkCollectionSummaryData, BigDecimal> amountCol = new TableColumn<>(resources.getString("totalamount"));
         amountCol.setCellValueFactory(new PropertyValueFactory<>("milkAmount"));
         amountCol.setStyle("-fx-alignment: CENTER-RIGHT;");
 
@@ -746,7 +745,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
                     listMilkType.addAll(list);
                     List<MilkType> comboList = new ArrayList<>();
                     MilkType milkType = new MilkType();
-                    milkType.setName("All");
+                    milkType.setName(resources.getString("all"));
                     comboList.add(0, milkType);
                     comboList.addAll(list);
                     cboxMilkType.setItems(FXCollections.observableList(comboList));
