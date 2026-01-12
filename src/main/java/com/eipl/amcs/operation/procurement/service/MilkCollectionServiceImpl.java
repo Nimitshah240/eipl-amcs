@@ -87,6 +87,12 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     private DockRepository dockRepository;
 
     @Override
+    public List<MilkCollection> findAllByMember(String code) {
+        Member member = memberRepository.getById(code);
+        return milkCollectionRepository.findAllByMemberOrderByCollectionDateDesc(member);
+    }
+
+    @Override
     public List<MilkCollection> findAllBetween(LocalDateTime fromDt, LocalDateTime toDt) {
         return milkCollectionRepository.findByCollectionDateBetween(fromDt, toDt,
                 Sort.by("collectionDate").descending().and(Sort.by("sampleNo")));

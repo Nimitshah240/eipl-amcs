@@ -83,6 +83,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private final ObservableList<CollectionSummary> listCollectionSummary = FXCollections.observableArrayList();
     private final ObjectProperty<MilkCollection> propCollection;
     private final ObjectProperty<MilkCollection> propCollectionSummary;
+
     //Printer
     private final ArrayList<String> masterLines = new ArrayList<>();
     List<Shift> shiftList = new ArrayList<>();
@@ -102,13 +103,15 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_ComboBox<MilkQualityType> cboxMilkQuality;
     @FXML
+    private E_ComboBox<String> cboxShortCut;
+    @FXML
     private E_TextField txtName;
     @FXML
     private E_NumericField txtSampleNo, txtCode, txtQty, txtFat, txtSnf1, txtFat1, txtSnf2, txtFat2, txtSnf3, txtFat3, txtSnf4, txtFat4, txtSnf, txtClr, txtWater, txtRate, txtAmount;
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate,lblManual ,lblLocalTime;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -453,6 +456,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collectionType = AppConstant.CollectionType.MEMBER_COLL;
         dpDate.setValue(LocalDate.now());
         FocusUtils.requestFocus(btnStart);
+        lblLocalTime.setText(String.valueOf(LocalDate.now()));
+        cboxShortCut.getItems().addAll("ShortCut List","M → MilkType" ,"Space → Weight Lock" ,"ESC → Exit" ,"F3 → Add Member" ,"F4 → Delete" ,"F5 / F6 → Refresh" ,"F7 / S → Setting" ,"F8 → Local Milk Sale" ,"F9 → Print" ,"F10 / P → Reprint" ,"F11 / T → Tare" ,"C → Farmer Code" ,"D → Milk Dispatch" ,"E → Edit");
+        cboxShortCut.getSelectionModel().select(0);
 
         doubleDock = !MainApp.identityDto.getDock().getDockNo().substring(MainApp.identityDto.getSociety().getCode().length()).equals("01");
 
@@ -686,33 +692,82 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     private void calculateAvgAndSet() {
-        List<MilkCollection> list = memberSocietyInfoDto.getPrevCollectionData().stream().filter(p -> p.getMilkType().getCode().compareTo(cboxMilkType.getValue().getCode()) == 0).collect(Collectors.toList());
-        if (list != null) {
+        resetAvgLabels();
+        if (memberSocietyInfoDto.getMember() == null || cboxMilkType.getValue() == null ||
+                cboxShift.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        String memberCode = memberSocietyInfoDto.getMember().getCode();
+        //memberSocietyInfoDto.getCurrentPaymentCycleData();
+        var task = new MilkCollectionLoadTask(memberCode);
+
+        task.setOnSucceeded(e -> {
+            List<MilkCollection> listCollection = task.getValue();
+            if (listCollection == null || listCollection.isEmpty()) return;
+
+            Integer currentMilkCode = cboxMilkType.getValue().getCode();
+            String currentShiftName = cboxShift.getSelectionModel().getSelectedItem().getName();
+            int lastNShifts = Integer.parseInt(MainApp.getProperty("variation.no.param", "5"));
+
+            List<MilkCollection> filteredList = listCollection.stream()
+                    .filter(p -> p.getMilkType().getCode().equals(currentMilkCode))
+                    .filter(p -> p.getShift().getName().equalsIgnoreCase(currentShiftName))
+                   // .filter(p -> p.getSocietyPaymentCycle().getSociety().equals(cur))
+                    .sorted((c1, c2) -> c2.getCollectionDate().compareTo(c1.getCollectionDate()))
+                    .collect(Collectors.toList());
+
+            if (filteredList.isEmpty()) return;
+
+            List<String> uniqueShiftKeys = filteredList.stream()
+                    .map(coll -> coll.getCollectionDate().toLocalDate().toString() + coll.getShift().getName())
+                    .distinct()
+                    .limit(lastNShifts)
+                    .collect(Collectors.toList());
+
+
+            List<MilkCollection> finalProcessingList = filteredList.stream()
+                    .filter(coll -> uniqueShiftKeys.contains(
+                            coll.getCollectionDate().toLocalDate().toString() + coll.getShift().getName()))
+                    .collect(Collectors.toList());
 
             BigDecimal kgFat = BigDecimal.ZERO;
             BigDecimal kgSnf = BigDecimal.ZERO;
             BigDecimal totalLtr = BigDecimal.ZERO;
 
-            // ROUND(SUM(fat * qty / 100) / SUM(qty) * 100, 2)
-            for (MilkCollection coll : list) {
+            for (MilkCollection coll : finalProcessingList) {
                 kgFat = kgFat.add(CommonUtils.calculateKgFat(coll.getFat(), coll.getQty().toString()));
                 kgSnf = kgSnf.add(CommonUtils.calculateKgFat(coll.getSnf(), coll.getQty().toString()));
                 totalLtr = totalLtr.add(coll.getQty());
             }
 
             try {
-                BigDecimal avgFat = CommonUtils.scale1RoundUp(kgFat.divide(totalLtr, MY_DECIMAL32).multiply(BigDecimal.valueOf(100)));
-                BigDecimal avgSnf = CommonUtils.scale1RoundUp(kgSnf.divide(totalLtr, MY_DECIMAL32).multiply(BigDecimal.valueOf(100)));
-                lblAvgFat.setText(avgFat.toString());
-                lblAvgSnf.setText(avgSnf.toString());
-                lblAvgQty.setText(totalLtr.toString());
-            } catch (ArithmeticException e) {
-                e.printStackTrace();
-                lblAvgFat.setText("0.0");
-                lblAvgSnf.setText("0.0");
-                lblAvgQty.setText("0.0");
+                if (totalLtr.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal avgFat = CommonUtils.scale1RoundUp(kgFat.divide(totalLtr, MY_DECIMAL32).multiply(BigDecimal.valueOf(100)));
+                    BigDecimal avgSnf = CommonUtils.scale1RoundUp(kgSnf.divide(totalLtr, MY_DECIMAL32).multiply(BigDecimal.valueOf(100)));
+
+                    lblAvgFat.setText(avgFat.toString());
+                    lblAvgSnf.setText(avgSnf.toString());
+                    lblAvgQty.setText(totalLtr.toString());
+                }
+            } catch (ArithmeticException ex) {
+                resetAvgLabels();
             }
-        }
+        });
+
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+            resetAvgLabels();
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void resetAvgLabels() {
+        lblAvgFat.setText("0.0");
+        lblAvgSnf.setText("0.0");
+        lblAvgQty.setText("0.0");
     }
 
     private void printToggle() {
@@ -798,11 +853,86 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         propCollectionSummary.bind(tablePrevCollection.getSelectionModel().selectedItemProperty());
     }
 
+    private boolean isQtyVariationValid() {
+        String variationProp = MainApp.getProperty("variation.qty", "20");
+        double variationLimit = Double.parseDouble(variationProp);
+        if (variationLimit> 0
+                && !lblAvgQty.getText().trim().isEmpty()
+                && Double.parseDouble(lblAvgQty.getText().trim()) > 0) {
+
+            double currentQty = Double.parseDouble(txtQty.getText().trim().isEmpty() ? "0" : txtQty.getText().trim());
+            double avgQty = Double.parseDouble(lblAvgQty.getText().trim());
+            double variationPercentage = (currentQty * 100) / avgQty;
+
+            return variationPercentage <= (100 + variationLimit);
+        }
+        return true;
+    }
+
+    private boolean isFatVariationValid() {
+        double fatLimit = Double.parseDouble(MainApp.getProperty("variation.fat", "30"));
+        if (fatLimit > 0 && !lblAvgFat.getText().trim().isEmpty()) {
+            double avgFat = Double.parseDouble(lblAvgFat.getText().trim());
+            if (avgFat > 0) {
+                double currentFat = Double.parseDouble(txtFat.getText().trim().isEmpty() ? "0" : txtFat.getText().trim());
+                return currentFat >= (avgFat - fatLimit) && currentFat <= (avgFat + fatLimit);
+            }
+        }
+        return true;
+    }
+
+    private boolean isSnfVariationValid() {
+        double snfLimit = Double.parseDouble(MainApp.getProperty("variation.snf", "30"));
+        if (snfLimit > 0 && !lblAvgSnf.getText().trim().isEmpty()) {
+            double avgSnf = Double.parseDouble(lblAvgSnf.getText().trim());
+            if (avgSnf > 0) {
+                double currentSnf = Double.parseDouble(txtSnf.getText().trim().isEmpty() ? "0" : txtSnf.getText().trim());
+                return currentSnf >= (avgSnf - snfLimit) && currentSnf <= (avgSnf + snfLimit);
+            }
+        }
+        return true;
+    }
+
+
     private void validateAndSave() {
         if (!validate()) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), errorMsg.toString());
             alert.createAlert();
             return;
+        }
+
+        boolean isBlockEnabled = "1".equalsIgnoreCase(MainApp.getProperty("variation.qty.block", "0"));
+        if (!isQtyVariationValid() && !isBlockEnabled) {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(),
+                    resourceBundle.getString("milkcollection"),
+                    resourceBundle.getString("milkcollection.alert.qtyvariation"));
+
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isEmpty() || resp.get() != ButtonType.OK) {
+                return;
+            }
+        }
+        boolean isFatBlockEnabled = "1".equalsIgnoreCase(MainApp.getProperty("variation.fat.block", "0"));
+        if (!isFatVariationValid() && !isFatBlockEnabled) {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(),
+                    resourceBundle.getString("milkcollection"),
+                    resourceBundle.getString("milkcollection.alert.fatvariation"));
+
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isEmpty() || resp.get() != ButtonType.OK) {
+                return;
+            }
+        }
+        boolean isSnfBlockEnabled = "1".equalsIgnoreCase(MainApp.getProperty("variation.snf.block", "0"));
+        if (!isSnfVariationValid() && !isSnfBlockEnabled) {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(),
+                    resourceBundle.getString("milkcollection"),
+                    resourceBundle.getString("milkcollection.alert.snfvariation"));
+
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isEmpty() || resp.get() != ButtonType.OK) {
+                return;
+            }
         }
 
         if (memberSocietyInfoDto.getMemberCollection().size() > 0) {
@@ -1249,6 +1379,18 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private boolean validate() {
         errorMsg = new StringBuilder();
+        boolean isBlockEnabled = "1".equalsIgnoreCase(MainApp.getProperty("variation.qty.block", "0"));
+        if (!isQtyVariationValid() && isBlockEnabled) {
+            errorMsg.append(resourceBundle.getString("milkcollection.error.qtyvariation")).append("\n");
+        }
+        boolean isFatBlockEnabled = "1".equalsIgnoreCase(MainApp.getProperty("variation.fat.block", "0"));
+        if (!isFatVariationValid() && isFatBlockEnabled) {
+            errorMsg.append(resourceBundle.getString("milkcollection.error.fatvariation")).append("\n");
+        }
+        boolean isSnfBlockEnabled = "1".equalsIgnoreCase(MainApp.getProperty("variation.snf.block", "0"));
+        if (!isSnfVariationValid() && isSnfBlockEnabled) {
+            errorMsg.append(resourceBundle.getString("milkcollection.error.snfvariation")).append("\n");
+        }
         if (txtSampleNo.getText() == null || txtSampleNo.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("sampleno.cannot.be.null") + "\n");
         if (txtCode.getText() == null || txtCode.getText().isEmpty())
@@ -1288,7 +1430,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         LOGGER.info("Fetch member info for {}", code);
 
         var task = new MemberSocietyInfoLoadTask(code, collectionDate);
-        task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
+       // task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
+        task.setCount(CommonUtils.strToInteger(MainApp.getProperty("variation.no.param", "5")));
         task.setPaymentCycleCode(collectionPreReqDto.getPaymentCycle().getCode());
         task.setOnSucceeded(e -> {
             try {
@@ -1354,7 +1497,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         LOGGER.info("Fetch member info for {}", code);
 
         var task = new MemberSocietyInfoLoadTask(code, collectionDate);
-        task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
+      //  task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
+        task.setCount(CommonUtils.strToInteger(MainApp.getProperty("variation.no.param", "5")));
         task.setPaymentCycleCode(collectionPreReqDto.getPaymentCycle().getCode());
         task.setOnSucceeded(e -> {
             try {
