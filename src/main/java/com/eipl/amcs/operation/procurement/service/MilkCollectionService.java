@@ -1,10 +1,12 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.dto.CollectionImportDto;
 import com.eipl.amcs.operation.procurement.dto.MemberWiseCollectionDto;
 import com.eipl.amcs.operation.procurement.dto.MilkCollectionPreReqDto;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface MilkCollectionService {
+
+    List<MilkCollection> findAllByMember(String code);
 
     List<MilkCollection> findAllBetween(LocalDateTime fromDt, LocalDateTime toDt);
 

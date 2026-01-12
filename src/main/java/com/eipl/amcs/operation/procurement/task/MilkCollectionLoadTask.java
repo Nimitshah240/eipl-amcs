@@ -10,11 +10,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
-    private final LocalDateTime fromDate;
+    private LocalDateTime fromDate;
     private LocalDateTime toDate;
     private String dockNo;
     private int sync;
+    private String code;
 
+    public MilkCollectionLoadTask(String code) {
+        this.code = code;
+    }
     public MilkCollectionLoadTask(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
@@ -40,6 +44,9 @@ public class MilkCollectionLoadTask extends Task<List<MilkCollection>> {
             if (sync == 1) {
                 service.findAllCollectionByDate(fromDate, toDate, CommonUtils.setIdentityHeader());
                 return null;
+            }
+            if (code != null) {
+                return service.findAllByMember(code);
             }
 
             if (dockNo != null)

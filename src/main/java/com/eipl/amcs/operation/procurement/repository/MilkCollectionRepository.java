@@ -118,4 +118,22 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
                                                        @Param("p_to_date") LocalDateTime toDate
 
     );
+
+//    @Query("SELECT DISTINCT mc FROM MilkCollection mc " +
+//            "JOIN FETCH mc.shift " +
+//            "JOIN FETCH mc.milkType " +
+//            "WHERE mc.member.code = :code " +
+//            "ORDER BY mc.collectionDate DESC")
+//    List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("code") String code);
+
+
+
+        @Query("SELECT DISTINCT mc FROM MilkCollection mc " +
+                "JOIN FETCH mc.shift " +
+                "JOIN FETCH mc.milkType " +
+                "WHERE mc.member = :member " +
+                "ORDER BY mc.collectionDate DESC")
+        List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("member") Member member);
+
+
 }
