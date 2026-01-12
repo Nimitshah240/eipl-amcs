@@ -76,9 +76,9 @@ public class NavbarController implements MyInitialization {
     @FXML
     AnchorPane root;
     @FXML
-    Button btnDashboard,btnKapaat,btnCollection,btnDispatch,btnProductSale,btnBilling,btnReceipt,btnLocalMilkSale;
-    @FXML
-    private Label lblVersion;
+    Button btnDashboard,btnKapaat,btnCollection,btnDispatch,btnProductSale,btnBilling,btnReceipt,btnLocalMilkSale,btnShiftReport,btnMember,btnGeneralConfig,btnSetting;
+//    @FXML
+//    private Label lblVersion;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
@@ -92,7 +92,7 @@ public class NavbarController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         btnDashboard.setFont(Font.font(16));
         this.resourceBundle = resourceBundle;
-        lblVersion.setText("V: " + AppConstant.versionNo);
+//        lblVersion.setText("V: " + AppConstant.versionNo);
         loadData();
         btnDashboard.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -117,6 +117,18 @@ public class NavbarController implements MyInitialization {
         });
         btnLocalMilkSale.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
+        });
+        btnShiftReport.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/ShiftReportCode.fxml")));
+        });
+        btnMember.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml")));
+        });
+        btnSetting.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/HardwareConfiguration.fxml")));
+        });
+        btnGeneralConfig.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/GeneralConfig.fxml")));
         });
         loadNotification();
         callApi();
