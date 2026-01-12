@@ -34,11 +34,11 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     @FXML
     AnchorPane root;
     @FXML
-    private Label lblTitle, lblName;
+    private Label  lblName;
     @FXML
     private MenuBar menuBar;
-    @FXML
-    Button btnMinimize,btnClose;
+//    @FXML
+//    Button btnMinimize,btnClose;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
@@ -53,14 +53,14 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         loadControls();
         loadMenu();
-        btnClose.setOnAction(e -> {
-            stage.close();
-        });
+//        btnClose.setOnAction(e -> {
+//            stage.close();
+//        });
     }
 
     @Override
     public void loadControls() {
-        lblName.setText(MainApp.identityDto.getSociety().getName());
+        lblName.setText("Society Name: "+MainApp.identityDto.getSociety().getName()+" - " + MainApp.identityDto.getSociety().getCode());
     }
 
     private void loadMenu() {

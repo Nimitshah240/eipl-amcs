@@ -5,6 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.task.PendingSyncTask;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -18,12 +19,15 @@ import com.eipl.amcs.operation.procurement.task.MemberDataSummaryLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.task.BroadcastedGroupDataTask;
 import com.eipl.amcs.utils.task.BroadcastedTask;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -42,6 +46,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.awt.*;
 import java.io.File;
@@ -70,13 +76,14 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     public ListView<Notification> lv;
     public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    public DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
     ObservableList<RowData> listCollectionSummary = FXCollections.observableArrayList();
     List<MilkType> listMilkType = new ArrayList<>();
     @FXML
     private AnchorPane root;
     @FXML
-    private Label lblCode, lblName, lblDock, lblFinancialYear, lblLanguage, lblUserName, lblSyncCount;
+    private Label lblCode, lblName, lblDock, lblFinancialYear, lblLanguage, lblUserName, lblSyncCount,lbltollfree,lbltiming,lblemail;
     @FXML
     private TableView<RowData> tableCollection;
     @FXML
@@ -99,6 +106,16 @@ public class DashboardController implements MyInitialization, PopupCallback {
     private Button btnSearch;
     @FXML
     private LineChart<String, Number> lineChart;
+
+    private final ObservableList<TableData> tableDataList = FXCollections.observableArrayList();
+    @FXML
+    private TableView<TableData> tablePendingSync;
+    @FXML
+    private TableColumn<TableData, String> colTableName;
+//    @FXML
+//    private E_Button btnClose;
+    @FXML
+    private TableColumn<TableData, Integer> colPendingData;
 
     private Stage stage;
     private ResourceBundle resources;
@@ -509,6 +526,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
         if (lblCode != null) lblCode.setText(MainApp.identityDto.getSociety().getCodeEx());
         if (lblName != null) lblName.setText(MainApp.identityDto.getSociety().getName());
         if (lblDock != null) lblDock.setText(MainApp.identityDto.getDock().getDockNo());
+        lbltollfree.setText("0000-0000-0000");
+        lblemail.setText("0000-0000-0000");
+        lbltiming.setText(LocalDateTime.now().format(formatter1));
         if (lblUserName != null) lblUserName.setText(MainApp.user.getUsername());
         try {
             if (lblFinancialYear != null) lblFinancialYear.setText(MainApp.getFinancialYear().toString());
@@ -641,6 +661,26 @@ public class DashboardController implements MyInitialization, PopupCallback {
             }
         });
         new Thread(task).start();
+
+        tableDataList.clear();
+
+        Task<Map<String, Integer>> task2 = new BroadcastedGroupDataTask();
+        task2.setOnSucceeded(e -> {
+            tableDataList.clear();
+            Map<String, Integer> result = task2.getValue();
+            if (result != null) {
+                for (Map.Entry<String, Integer> entry : result.entrySet()) {
+                    tableDataList.add(new TableData(entry.getKey(), entry.getValue()));
+                }
+            }
+        });
+
+        task2.setOnFailed(e -> {
+            Throwable ex = task2.getException();
+            ex.printStackTrace();
+        });
+
+        new Thread(task2).start();
     }
 
     private void loadFarmers() {
@@ -734,6 +774,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
     public void setupTable() {
         tableCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableCollectionFarmers.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        colTableName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTableName()));
+        colPendingData.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPendingCount()).asObject());
+        tablePendingSync.setItems(tableDataList);
     }
 
     private void loadMilkType() {
@@ -811,5 +854,12 @@ public class DashboardController implements MyInitialization, PopupCallback {
         public Map<String, Object> getData() {
             return data;
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class TableData {
+        private final String tableName;
+        private final int pendingCount;
     }
 }

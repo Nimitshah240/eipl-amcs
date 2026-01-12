@@ -42,7 +42,7 @@
                             <children>
                                 <VBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                              <HBox VBox.vgrow="ALWAYS">
+                              <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                  <children>
                                               <GridPane fx:id="gridCollection" hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0" HBox.hgrow="ALWAYS">
                                                   <columnConstraints>
@@ -93,12 +93,12 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate" GridPane.rowIndex="7">
+                                                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate" GridPane.rowIndex="6">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                                      <E_NumericField fx:id="txtSampleNo" disable="true" editable="false" focusTraversable="false" maxHeight="1.7976931348623157E308" styleClass="text-black" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                                      <E_NumericField fx:id="txtSampleNo" disable="true" editable="false" focusTraversable="false" maxHeight="1.7976931348623157E308" styleClass="text-black" visible="false" GridPane.columnIndex="3" />
                                                       <E_NumericField fx:id="txtCode" maxHeight="1.7976931348623157E308" styleClass="text-green" GridPane.rowIndex="1" />
                                                       <E_TextField fx:id="txtName" disable="true" maxHeight="1.7976931348623157E308" style="-fx-font-size: 24;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                              <font>
@@ -106,7 +106,7 @@
                                              </font>
                                           </E_TextField>
                                                       <E_ComboBox fx:id="cboxMilkType" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                      <E_ComboBox fx:id="cboxMilkQuality" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                                      <E_ComboBox fx:id="cboxMilkQuality" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" visible="false" GridPane.columnIndex="3" />
                                                       <E_NumericField fx:id="txtQty" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-font-size: 24;" styleClass="text-green" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <font>
                                                 <Font size="22.0" />
@@ -122,9 +122,8 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </E_NumericField>
-                                                      <E_NumericField fx:id="txtClr" disable="true" maxHeight="1.7976931348623157E308" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                          <E_NumericField fx:id="txtWater" disable="true" maxHeight="1.7976931348623157E308" text="0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                                                      <E_Button fx:id="btnSave" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" styleClass="button-primary" text="%save" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                                                      <E_NumericField fx:id="txtClr" disable="true" maxHeight="1.7976931348623157E308" visible="false" GridPane.columnIndex="3" />
+                                          <E_NumericField fx:id="txtWater" disable="true" maxHeight="1.7976931348623157E308" text="0" visible="false" GridPane.columnIndex="3" />
                                           <HBox spacing="15.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                              <children>
                                                             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%avgfat">
@@ -134,7 +133,7 @@
                                                 </Label>
                                                             <Label fx:id="lblAvgFat" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                    <font>
-                                                      <Font name="System Bold" size="20.0" />
+                                                      <Font name="System Bold" size="18.0" />
                                                    </font>
                                                 </Label>
                                              </children>
@@ -148,7 +147,7 @@
                                                 </Label>
                                                             <Label fx:id="lblAvgSnf" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                    <font>
-                                                      <Font name="System Bold" size="20.0" />
+                                                      <Font name="System Bold" size="18.0" />
                                                    </font>
                                                 </Label>
                                              </children>
@@ -162,32 +161,33 @@
                                                 </Label>
                                                             <Label fx:id="lblAvgQty" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                    <font>
-                                                      <Font name="System Bold" size="20.0" />
+                                                      <Font name="System Bold" size="18.0" />
                                                    </font>
                                                 </Label>
                                              </children>
                                           </HBox>
                                                       <Label contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%avgparam" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                              <font>
-                                                <Font name="System Bold" size="16.0" />
+                                                <Font name="System Bold" size="15.0" />
                                              </font>
                                           </Label>
-                                                        <E_NumericField fx:id="txtAmount" disable="true" maxWidth="1.7976931348623157E308" style="-fx-font-size: 24;" styleClass="text-black" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                        <E_NumericField fx:id="txtAmount" disable="true" maxWidth="1.7976931348623157E308" style="-fx-font-size: 24;" styleClass="text-black" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
                                              <font>
                                                 <Font size="20.0" />
                                              </font>
                                           </E_NumericField>
-                                                        <E_NumericField fx:id="txtRate" disable="true" maxWidth="1.7976931348623157E308" style="-fx-font-size: 22;" styleClass="text-black" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-                                          <Label fx:id="lblSave" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="SAVED" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                        <E_NumericField fx:id="txtRate" disable="true" maxWidth="1.7976931348623157E308" style="-fx-font-size: 20;" styleClass="text-black" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                          <Label fx:id="lblSave" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="SAVED" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="7">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%amount" GridPane.rowIndex="6">
+                                                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%amount" GridPane.rowIndex="7">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
+                                                      <E_Button fx:id="btnSave" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" styleClass="button-primary" text="%save" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                                                   </children>
                                        <HBox.margin>
                                           <Insets />
@@ -200,6 +200,7 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                                              </columnConstraints>
                                              <rowConstraints>
+                                                <RowConstraints maxHeight="51.0" minHeight="51.0" prefHeight="51.0" vgrow="SOMETIMES" />
                                                 <RowConstraints maxHeight="51.0" minHeight="51.0" prefHeight="51.0" vgrow="SOMETIMES" />
                                                 <RowConstraints maxHeight="51.0" minHeight="51.0" prefHeight="51.0" vgrow="SOMETIMES" />
                                                 <RowConstraints maxHeight="51.0" minHeight="51.0" prefHeight="51.0" vgrow="SOMETIMES" />
@@ -235,42 +236,47 @@
                                     </VBox>
                                  </children>
                               </HBox>
-                                        <TableView fx:id="tablePrevCollection" prefHeight="180.0" prefWidth="396.0" VBox.vgrow="ALWAYS">
-                                            <columns>
-                                                <TableColumn fx:id="colCollMemberCode1" prefWidth="70.0" styleClass="cell-center-aligned" text="%date" />
-                                                <TableColumn fx:id="colCollMilkType1" prefWidth="70.0" styleClass="cell-center-aligned" text="%milktype" />
-                                                <TableColumn fx:id="colCollQty1" prefWidth="70.0" styleClass="cell-right-aligned" text="%qty" />
-                                                <TableColumn fx:id="colCollFat1" prefWidth="70.0" styleClass="cell-right-aligned" text="%fat" />
-                                                <TableColumn fx:id="colCollSnf1" prefWidth="70.0" styleClass="cell-right-aligned" text="%snf" />
-                                                <TableColumn fx:id="colCollRate1" prefWidth="70.0" styleClass="cell-right-aligned" text="%rate" />
-                                                <TableColumn fx:id="colCollAmount1" prefWidth="75.0" styleClass="cell-right-aligned" text="%amount" />
-                                            </columns>
-                                            <columnResizePolicy>
-                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                            </columnResizePolicy>
-                                        </TableView>
-                              <HBox spacing="15.0" styleClass="pane-white-drop-border">
+                              <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%starttime">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblStartTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%starttimedata">
-                                       <font>
-                                          <Font name="System Bold" size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%endtime">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="lblEndTime" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%endtimedata">
-                                       <font>
-                                          <Font name="System Bold" size="16.0" />
-                                       </font>
-                                    </Label>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="%starttime" GridPane.rowIndex="1" />
+                                          <Label fx:id="lblStartTime" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label text="%endtime" GridPane.rowIndex="2" />
+                                          <Label fx:id="lblEndTime" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label text="%manual" GridPane.rowIndex="3" />
+                                          <Label fx:id="lblManual" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <Label text="%localdate" />
+                                          <Label fx:id="lblLocalTime" text="Label" GridPane.columnIndex="1" />
+                                       </children>
+                                    </GridPane>
+                                              <TableView fx:id="tablePrevCollection">
+                                                  <columns>
+                                                      <TableColumn fx:id="colCollMemberCode1" prefWidth="70.0" styleClass="cell-center-aligned" text="%date" />
+                                                      <TableColumn fx:id="colCollMilkType1" prefWidth="70.0" styleClass="cell-center-aligned" text="%milktype" />
+                                                      <TableColumn fx:id="colCollQty1" prefWidth="70.0" styleClass="cell-right-aligned" text="%qty" />
+                                                      <TableColumn fx:id="colCollFat1" prefWidth="70.0" styleClass="cell-right-aligned" text="%fat" />
+                                                      <TableColumn fx:id="colCollSnf1" prefWidth="70.0" styleClass="cell-right-aligned" text="%snf" />
+                                                      <TableColumn fx:id="colCollRate1" prefWidth="70.0" styleClass="cell-right-aligned" text="%rate" />
+                                                      <TableColumn fx:id="colCollAmount1" prefWidth="75.0" styleClass="cell-right-aligned" text="%amount" />
+                                                  </columns>
+                                                  <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                  </columnResizePolicy>
+                                       <HBox.margin>
+                                          <Insets right="-10.0" />
+                                       </HBox.margin>
+                                              </TableView>
                                  </children>
                               </HBox>
                                     </children>
@@ -281,10 +287,7 @@
                             <children>
                                 <VBox prefHeight="589.6" prefWidth="396.8" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
-                                        <Label fx:id="lblShiftTime" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="396.0" style="-fx-font-size: 10; -fx-text-fill: red;">
-                                 <font>
-                                    <Font size="8.0" />
-                                 </font></Label>
+                                        <Label fx:id="lblShiftTime" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefWidth="396.0" style="-fx-font-size: 12; -fx-text-fill: red;" VBox.vgrow="ALWAYS" />
                                         <GridPane fx:id="gridMa" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                             <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -423,7 +426,7 @@
                                                 </VBox>
                                             </children>
                                         </GridPane>
-                                        <TableView fx:id="tableSummary" prefHeight="235.0" prefWidth="397.0">
+                                        <TableView fx:id="tableSummary" prefHeight="235.0" prefWidth="397.0" VBox.vgrow="ALWAYS">
                                             <columns>
                                                 <TableColumn fx:id="colSummaryMilkType" prefWidth="75.0" styleClass="cell-center-aligned" text="%milktype" />
                                                 <TableColumn fx:id="colSummaryMemberNos" prefWidth="75.0" styleClass="cell-center-aligned" text="%member.nos" />
@@ -465,6 +468,7 @@
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font></Label>
+                  <E_ComboBox fx:id="cboxShortCut" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
                         <E_Button fx:id="btnExport" disable="true" mnemonicParsing="true" prefHeight="40.0" prefWidth="100.0" text="%export" />
                     </children>
                 </HBox>

@@ -174,7 +174,7 @@ public class MainApp extends Application {
         stage.setTitle("Everest Milk Collection System");
         stage.setScene(scene);
         stage.setMaximized(true);
-        stage.initStyle(StageStyle.UNDECORATED);
+//        stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(new Image(getClass().getResource("view/images/logo-small.png").toExternalForm()));
         stage.show();
 
