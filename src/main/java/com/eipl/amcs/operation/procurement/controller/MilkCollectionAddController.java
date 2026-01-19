@@ -18,6 +18,8 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
+import com.eipl.amcs.master.operation.task.SchemeRateApplicabilityLoadTask;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import com.eipl.amcs.operation.procurement.dto.*;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
@@ -151,6 +153,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private File slipFile = null;
     Boolean doubleDock = false;
 
+    private SchemeRateApplicability schemeRateApplicability;
 
     private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
@@ -158,6 +161,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             if (MainApp.displaySerial != null)
                 MainApp.displaySerial.displayQuantity(getStringForDisplay("QTY"));
         }
+        loadSchemeRate();
     };
     private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
@@ -2123,7 +2127,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
             masterLines.clear();
             lines = Files.readAllLines(slipFile.toPath(), StandardCharsets.UTF_8);
-
+            int removepdline = -1;
             if (lines == null) return;
             for (int i = 0; i < lines.size(); ) {
                 String s = lines.get(i);
@@ -2198,6 +2202,19 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     s = s.replace("{tAmt}", collection.getxCol2() != null ? collection.getxCol2() : "");
                 }
 
+                if (s.contains("{pdRate}")) {
+                    if (schemeRateApplicability != null) {
+                        s = s.replace("{pdRate}", schemeRateApplicability.getRtpl() != null ? schemeRateApplicability.getRtpl().toString() : "0");
+                    } else {
+                        removepdline = i;
+                    }
+                }
+                if (s.contains("{pdAmt}")) {
+                    s = s.replace("{pdAmt}", schemeRateApplicability.getRtpl() != null ? (schemeRateApplicability.getRtpl().multiply(collection.getQty()).add(collection.getAmount())).toString() : "0");
+                }
+
+
+
                 if (resp != null) {
                     if (s.contains("{totalQty}")) {
                         s = s.replace("{totalQty}", String.valueOf(NumberUtil.round((double) resp[0], 2)));
@@ -2213,6 +2230,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 masterLines.add(s);
                 s = null;
             }
+            if (removepdline >= 0) {
+                lines.remove(removepdline);
+                masterLines.remove(removepdline);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2438,4 +2460,31 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 break;
         }
     }
+
+    private void loadSchemeRate() {
+        var task = new SchemeRateApplicabilityLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<SchemeRateApplicability> schemeRateApplicabilities = task.get();
+                if (schemeRateApplicabilities == null || schemeRateApplicabilities.isEmpty())
+                    return;
+                for (SchemeRateApplicability schemeRateApplicability1 : schemeRateApplicabilities) {
+                    if (collectionDate.toLocalDate().isAfter(schemeRateApplicability1.getFromDate().toLocalDate())
+                            && collectionDate.toLocalDate().isBefore(schemeRateApplicability1.getToDate().toLocalDate())) {
+                        this.schemeRateApplicability = schemeRateApplicability1;
+                    } else if ((collectionDate.toLocalDate().isEqual(schemeRateApplicability1.getFromDate().toLocalDate()) && (schemeRateApplicability1.getFromShift() <= cboxShift.getValue().getCode()) || (collectionDate.toLocalDate().isEqual(schemeRateApplicability1.getToDate().toLocalDate()) && schemeRateApplicability1.getToShift() >= cboxShift.getValue().getCode()))) {
+                        this.schemeRateApplicability = schemeRateApplicability1;
+                    }
+                }
+                if (schemeRateApplicability != null)
+                    LOGGER.info(String.valueOf(schemeRateApplicability.getSchemeRateAppCode()));
+                else
+                    LOGGER.info("No Scheme Found");
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
 }

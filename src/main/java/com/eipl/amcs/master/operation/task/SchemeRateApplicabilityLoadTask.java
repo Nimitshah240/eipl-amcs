@@ -6,6 +6,7 @@ import com.eipl.amcs.master.operation.repository.SchemeRateApplicabilityReposito
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class SchemeRateApplicabilityLoadTask extends Task<List<SchemeRateApplica
     protected List<SchemeRateApplicability> call() throws Exception {
         try {
             SchemeRateApplicabilityRepository schemeRateApplicabilityRepository = EmcsAppContext.getContext().getBean(SchemeRateApplicabilityRepository.class);
-            List<SchemeRateApplicability> list = schemeRateApplicabilityRepository.findByIsActiveTrue();
+            List<SchemeRateApplicability> list = schemeRateApplicabilityRepository.findByIsActiveTrue(Sort.by("schemeRateAppCode").descending());
             if (list == null || list.isEmpty())
                 return null;
             return list;

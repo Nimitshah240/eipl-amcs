@@ -777,6 +777,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
         colTableName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTableName()));
         colPendingData.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPendingCount()).asObject());
         tablePendingSync.setItems(tableDataList);
+        tablePendingSync.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
     }
 
     private void loadMilkType() {
