@@ -28,7 +28,7 @@ public class HibernateConfig {
     @Bean
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3366/eipl_amcs_db");
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3366/eipl_amcs_db?allowPublicKeyRetrieval=true&characterEncoding=UTF-8&useSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("EAmcs2021");
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");

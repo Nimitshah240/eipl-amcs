@@ -952,31 +952,33 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
 
         setValuesInObjectUpdate();
-        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
-            LocalDateTime fromDate = LocalDateTime.parse(MainApp.timingList.get(0).getFromDate() + " " + MainApp.timingList.get(0).getxCol1(), AppConstant.Formatter6);
-            LocalDateTime toDate = LocalDateTime.parse(MainApp.timingList.get(0).getToDate() + " " + MainApp.timingList.get(0).getxCol2(), AppConstant.Formatter6);
-            LocalDateTime currentDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
+        // DpuIncentive Load Data comment
 
-            boolean isBetweenInclusive = (currentDate.isEqual(fromDate) || currentDate.isAfter(fromDate)) &&
-                    (currentDate.isEqual(toDate) || currentDate.isBefore(toDate));
-
-            if (isBetweenInclusive) {
-                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("farmervoting"));
-                Optional<ButtonType> resp = alert.createYesNoConfirmationAlert();
-                if (resp.isPresent() && resp.get() == ButtonType.YES) {
-                    collection.setxCol4("Y");
-                    alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("appreciationfarmerforvoting"));
-                    resp = alert.createYesNoConfirmationAlert();
-                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
-                        MainApp.isIncentive = true;
-                        MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
-                        collection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(collection.getQty())));
-                        collection.setxCol5(collection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(collection.getQty()));
-                    }
-
-                }
-            }
-        }
+//        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
+//            LocalDateTime fromDate = LocalDateTime.parse(MainApp.timingList.get(0).getFromDate() + " " + MainApp.timingList.get(0).getxCol1(), AppConstant.Formatter6);
+//            LocalDateTime toDate = LocalDateTime.parse(MainApp.timingList.get(0).getToDate() + " " + MainApp.timingList.get(0).getxCol2(), AppConstant.Formatter6);
+//            LocalDateTime currentDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
+//
+//            boolean isBetweenInclusive = (currentDate.isEqual(fromDate) || currentDate.isAfter(fromDate)) &&
+//                    (currentDate.isEqual(toDate) || currentDate.isBefore(toDate));
+//
+//            if (isBetweenInclusive) {
+//                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("farmervoting"));
+//                Optional<ButtonType> resp = alert.createYesNoConfirmationAlert();
+//                if (resp.isPresent() && resp.get() == ButtonType.YES) {
+//                    collection.setxCol4("Y");
+//                    alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("appreciationfarmerforvoting"));
+//                    resp = alert.createYesNoConfirmationAlert();
+//                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
+//                        MainApp.isIncentive = true;
+//                        MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
+//                        collection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(collection.getQty())));
+//                        collection.setxCol5(collection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(collection.getQty()));
+//                    }
+//
+//                }
+//            }
+//        }
         saveData();
         FocusUtils.requestFocus(txtCode);
         setupTable();
@@ -1941,15 +1943,15 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         });
         new Thread(task2).start();
     }
-
+// DpuIncentive Load Data comment
     public void loadRequestData() {
-        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
-            if (MainApp.locale.equalsIgnoreCase("en")) {
-                lblShiftTime.setText("Shift Timing :- Morning : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "Evening : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
-            } else {
-                lblShiftTime.setText("શિફ્ટ નો સમય :- સવાર : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "સાંજ : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
-            }
-        }
+//        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
+//            if (MainApp.locale.equalsIgnoreCase("en")) {
+//                lblShiftTime.setText("Shift Timing :- Morning : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "Evening : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
+//            } else {
+//                lblShiftTime.setText("શિફ્ટ નો સમય :- સવાર : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "સાંજ : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
+//            }
+//        }
 
         var task2 = new AllowDcsManualCollectionDateShiftLoadTask(CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue()), CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue()), null);
         task2.setOnSucceeded(e1 -> {
