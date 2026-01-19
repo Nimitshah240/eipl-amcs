@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,7 +49,7 @@ public class FooterBarController implements MyInitialization, PopupCallback {
         loadControls();
         checkConnection();
         lblVersion.setText("Version: " + AppConstant.versionNo + " - " + LocalDate.now());
-        
+
         String baseUrl = MainApp.getProperty("baseurl", "");
         try {
             if (baseUrl != null && !baseUrl.isEmpty()) {
@@ -87,7 +88,7 @@ public class FooterBarController implements MyInitialization, PopupCallback {
                     }
                 });
                 try {
-                    Thread.sleep(300000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -100,15 +101,13 @@ public class FooterBarController implements MyInitialization, PopupCallback {
     private boolean isInternetAvailable() {
         try {
             URL url = new URL("https://www.google.com");
-            URLConnection connection = url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(3000);
             connection.connect();
-            return true;
+            return connection.getResponseCode() == 200;
         } catch (Exception e) {
             return false;
         }
     }
-
-
 }
