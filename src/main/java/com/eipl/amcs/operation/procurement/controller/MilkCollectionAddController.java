@@ -113,7 +113,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate,lblManual ,lblLocalTime;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate,lblManual ,lblLocalTime,lblEdited;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -460,7 +460,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collectionType = AppConstant.CollectionType.MEMBER_COLL;
         dpDate.setValue(LocalDate.now());
         FocusUtils.requestFocus(btnStart);
-        lblLocalTime.setText(String.valueOf(LocalDate.now()));
+
         cboxShortCut.getItems().addAll("ShortCut List","M → MilkType" ,"Space → Weight Lock" ,"ESC → Exit" ,"F3 → Add Member" ,"F4 → Delete" ,"F5 / F6 → Refresh" ,"F7 / S → Setting" ,"F8 → Local Milk Sale" ,"F9 → Print" ,"F10 / P → Reprint" ,"F11 / T → Tare" ,"C → Farmer Code" ,"D → Milk Dispatch" ,"E → Edit");
         cboxShortCut.getSelectionModel().select(0);
 
@@ -666,12 +666,13 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 case L:
                     FocusUtils.requestFocus(txtQty);
                     break;
-                case SPACE:
+                case W:
                     if (!getQty().isEmpty()) {
                         weightLock = new BigDecimal(getQty());
                         tareWs();
                     }
                 case ESCAPE:
+                    btnClose.fire();
                     break;
             }
         });
@@ -1369,6 +1370,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collection.setMilkQualityType(cboxMilkQuality.getValue());
         collection.setSociety(MainApp.identityDto.getSociety());
         collection.setDock(MainApp.identityDto.getDock());
+        collection.setUpdatedBy(MainApp.identityDto.getSociety().getCode());
 
         BigDecimal totalQty = BigDecimal.ZERO;
         BigDecimal totalAmt = BigDecimal.ZERO;
@@ -1596,6 +1598,24 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             lblStartTime.setText("");
             lblEndTime.setText("");
         }
+        if (cboxShift.getSelectionModel().getSelectedIndex() == 0) {
+            LocalTime mTime = MainApp.timingList.get(0).getMstime();
+            lblLocalTime.setText(mTime.format(dTF1));
+        }else {
+            LocalTime eTime = MainApp.timingList.get(0).getEstime();
+            lblLocalTime.setText(eTime.format(dTF1));
+        }
+        updateManualCountLabel();
+    }
+    private void updateManualCountLabel() {
+        long count = listCollection.stream()
+                .filter(item -> !item.isQualityAuto() && !item.isWeightAuto())
+                .count();
+        lblManual.setText(String.valueOf(count));
+        long editedCount = listCollection.stream()
+                .filter(item -> item.getUpdatedBy() != null && item.getUpdatedBy().equals(MainApp.identityDto.getSociety().getCode()))
+                .count();
+        lblEdited.setText(String.valueOf(editedCount));
     }
 
     private void fetchCurrentShiftCollection() {

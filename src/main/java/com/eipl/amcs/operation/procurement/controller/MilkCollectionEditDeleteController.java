@@ -328,30 +328,30 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
         if (btnEdit.getText().equals(resourceBundle.getString("update"))) {
 
             setValuesInObject();
-            if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
-                LocalDateTime fromDate = LocalDateTime.parse(MainApp.timingList.get(0).getFromDate() + " " + MainApp.timingList.get(0).getxCol1(), AppConstant.Formatter6);
-                LocalDateTime toDate = LocalDateTime.parse(MainApp.timingList.get(0).getToDate() + " " + MainApp.timingList.get(0).getxCol2(), AppConstant.Formatter6);
-                LocalDateTime currentDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
-
-                boolean isBetweenInclusive = (currentDate.isEqual(fromDate) || currentDate.isAfter(fromDate)) &&
-                        (currentDate.isEqual(toDate) || currentDate.isBefore(toDate));
-
-                if (isBetweenInclusive) {
-                    MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("farmervoting"));
-                    Optional<ButtonType> resp = alert.createYesNoConfirmationAlert();
-                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
-                        this.milkCollection.setxCol4("Y");
-                        alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("appreciationfarmerforvoting"));
-                        resp = alert.createYesNoConfirmationAlert();
-                        if (resp.isPresent() && resp.get() == ButtonType.YES) {
-                            MainApp.isIncentive = true;
-                            MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
-                            this.milkCollection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(this.milkCollection.getQty())));
-                            this.milkCollection.setxCol5(this.milkCollection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(this.milkCollection.getQty()));
-                        }
-                    }
-                }
-            }
+//            if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
+//                LocalDateTime fromDate = LocalDateTime.parse(MainApp.timingList.get(0).getFromDate() + " " + MainApp.timingList.get(0).getxCol1(), AppConstant.Formatter6);
+//                LocalDateTime toDate = LocalDateTime.parse(MainApp.timingList.get(0).getToDate() + " " + MainApp.timingList.get(0).getxCol2(), AppConstant.Formatter6);
+//                LocalDateTime currentDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
+//
+//                boolean isBetweenInclusive = (currentDate.isEqual(fromDate) || currentDate.isAfter(fromDate)) &&
+//                        (currentDate.isEqual(toDate) || currentDate.isBefore(toDate));
+//
+//                if (isBetweenInclusive) {
+//                    MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("farmervoting"));
+//                    Optional<ButtonType> resp = alert.createYesNoConfirmationAlert();
+//                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
+//                        this.milkCollection.setxCol4("Y");
+//                        alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("appreciationfarmerforvoting"));
+//                        resp = alert.createYesNoConfirmationAlert();
+//                        if (resp.isPresent() && resp.get() == ButtonType.YES) {
+//                            MainApp.isIncentive = true;
+//                            MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
+//                            this.milkCollection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(this.milkCollection.getQty())));
+//                            this.milkCollection.setxCol5(this.milkCollection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(this.milkCollection.getQty()));
+//                        }
+//                    }
+//                }
+//            }
             updateData();
         }
     }
@@ -368,6 +368,7 @@ public class MilkCollectionEditDeleteController extends MilkCollectionBaseContro
             milkCollection.setQty(new BigDecimal(txtQuantity.getText()));
             milkCollection.setRtpl(new BigDecimal(txtRtpl.getText()));
             milkCollection.setAmount(new BigDecimal(txtAmount.getText()));
+            milkCollection.setUpdatedBy(MainApp.identityDto.getSociety().getCode());
 
             milkCollection.setxCol1(new BigDecimal(milkCollection.getxCol1()).subtract(oldQty).add(new BigDecimal(txtQuantity.getText())).toString());
             milkCollection.setxCol2(new BigDecimal(milkCollection.getxCol2()).subtract(oldAmount).add(new BigDecimal(txtAmount.getText())).toString());
