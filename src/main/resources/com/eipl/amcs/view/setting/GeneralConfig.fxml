@@ -66,6 +66,7 @@
                                                       <RowConstraints />
                                                       <RowConstraints />
                                                       <RowConstraints />
+                                                      <RowConstraints />
                                                                     </rowConstraints>
                                                                     <children>
                                                                         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
@@ -194,7 +195,7 @@
                                                                                 <TextField fx:id="txtAvgPIfMachineOff" disable="true" prefWidth="100.0" />
                                                                             </children>
                                                                         </HBox>
-                                                                      <HBox alignment="CENTER_RIGHT" spacing="15.0" GridPane.rowIndex="20">
+                                                                      <HBox alignment="CENTER_RIGHT" spacing="15.0" GridPane.rowIndex="22">
                                                                           <children>
                                                                               <Button fx:id="btnSave" styleClass="button-primary" text="%save" />
                                                                               <Button fx:id="btnClose" text="%close" />
@@ -231,8 +232,6 @@
                                                                               </children>
                                                                           </HBox>
                                                       <E_CheckBox fx:id="chkCodeMilkTypeParsing" text="%lastdighitmilktype" GridPane.rowIndex="16" />
-
-
                                                                     </children>
                                                                 </GridPane>
                                                             </children>

@@ -14,6 +14,7 @@ import com.eipl.amcs.base.dto.JarUpdate;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.task.*;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.geo.model.District;
@@ -76,7 +77,7 @@ public class NavbarController implements MyInitialization {
     @FXML
     AnchorPane root;
     @FXML
-    Button btnDashboard,btnKapaat,btnCollection,btnDispatch,btnProductSale,btnBilling,btnReceipt,btnLocalMilkSale,btnShiftReport,btnMember,btnGeneralConfig,btnSetting;
+    E_Button btnDashboard,btnKapaat,btnCollection,btnDispatch,btnProductSale,btnBilling,btnReceipt,btnLocalMilkSale,btnShiftReport,btnMember,btnGeneralConfig,btnSetting;
 //    @FXML
 //    private Label lblVersion;
     private ResourceBundle resourceBundle;

@@ -1401,4 +1401,5 @@ shifttimedata=શિફ્ટ સમય
 manual=મેન્યુઅલ
 jadap=જડપ
 localdate=સ્થાનિક તારીખ
-lastdigitmilktype=છેલ્લો દૂધ પ્રકાર
+lastdigitmilktype=દૂધ પ્રકાર
+databaseerror=Database connection failed. Please enter correct I.P.

@@ -186,6 +186,7 @@ public class GeneralConfigController implements MyInitialization {
         txtBackupPath.setText(MainApp.getProperty("backuppath", ""));
         txtSpace.setText(MainApp.getProperty("no.of.enter", "0"));
         txtCollectionSlip.setText(MainApp.getProperty("no.of.enters.collection.slip", "0"));
+        chkCodeMilkTypeParsing.setSelected(MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1"));
         cboxSlipLanguage.getSelectionModel().select(MainApp.getProperty("slip.language", ""));
         cboxApplicationLanguage.getSelectionModel().select(MainApp.getProperty("application.language", "English"));
         try {
@@ -264,12 +265,13 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("variation.qty=" + new String(Base64.getEncoder().encode(txtVariationQty.getText().trim().getBytes())));
         lines.add("variation.fat=" + new String(Base64.getEncoder().encode(txtVariationFat.getText().trim().getBytes())));
         lines.add("variation.snf=" + new String(Base64.getEncoder().encode(txtVariationSnf.getText().trim().getBytes())));
+        lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode((chkCodeMilkTypeParsing.isSelected() ? "1" : "0").getBytes())));
 
 //        lines.add("shift.param=" + new String(Base64.getEncoder().encode(
 //                (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
 //        lines.add("based.on.param=" + new String(Base64.getEncoder().encode(
 //                (cboxAvgBasedOn.getValue() != null ? cboxAvgBasedOn.getValue() : "").getBytes(StandardCharsets.UTF_8))));
-//        lines.add("variation.no.param=" + new String(Base64.getEncoder().encode(txtNo.getText().trim().getBytes())));
+        lines.add("variation.no.param=" + new String(Base64.getEncoder().encode(txtNo.getText().trim().getBytes())));
         return lines;
     }
 

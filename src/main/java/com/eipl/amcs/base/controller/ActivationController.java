@@ -20,6 +20,7 @@ import com.eipl.amcs.utils.task.MemberCreateTask;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -54,7 +55,7 @@ public class ActivationController implements MyInitialization {
     private boolean dockCheckFlag = false;
     private boolean validateCheckFlag = false;
     private AppConstant.ClientCode clientCode;
-
+    private CheckBox chkCodeMilkTypeParsing;
 
     @Override
     public Node getRoot() {
@@ -400,6 +401,7 @@ public class ActivationController implements MyInitialization {
         lines.add("masetting=" + new String(Base64.getEncoder().encode(("Single MA").getBytes())));
         lines.add("product.purchaserate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
         lines.add("product.salerate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
+        lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode((chkCodeMilkTypeParsing.isSelected() ? "1" : "0").getBytes())));
 
         return lines;
     }

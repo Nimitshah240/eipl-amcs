@@ -548,7 +548,29 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         txtQty.textProperty().addListener(qtyRateChangeListener);
         txtRate.textProperty().addListener(qtyRateChangeListener);
         txtCode.focusedProperty().addListener((ob, oldVal, newVal) -> {
-            if (!newVal) fetchMemberSocietyDetails();
+//            if (!newVal) fetchMemberSocietyDetails();
+            if (!newVal) {
+                boolean milkTypeSetBySuffix = false;
+                if (MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1")) {
+                    String code = txtCode.getText();
+                    if (code != null && !code.isEmpty()) {
+                        String lastDigit = code.substring(code.length() - 1);
+                        if (CommonUtils.isNumeric(lastDigit)) {
+                            int typeCode = Integer.parseInt(lastDigit);
+                            if (typeCode >= 1 && typeCode <= 4) {
+                                String memberCode = code.substring(0, code.length() - 1);
+                                txtCode.setText(memberCode);
+                                cboxMilkType.getItems().stream()
+                                        .filter(mt -> mt.getCode() == typeCode)
+                                        .findFirst()
+                                        .ifPresent(mt -> cboxMilkType.getSelectionModel().select(mt));
+                                milkTypeSetBySuffix = true;
+                            }
+                        }
+                    }
+                }
+                fetchMemberSocietyDetails(milkTypeSetBySuffix);
+            }
         });
         txtRate.focusedProperty().addListener((ob, oldVal, newVal) -> {
             if (!newVal) {
@@ -1370,7 +1392,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collection.setMilkQualityType(cboxMilkQuality.getValue());
         collection.setSociety(MainApp.identityDto.getSociety());
         collection.setDock(MainApp.identityDto.getDock());
-        collection.setUpdatedBy(MainApp.identityDto.getSociety().getCode());
+//        collection.setUpdatedBy(MainApp.identityDto.getSociety().getCode());
 
         BigDecimal totalQty = BigDecimal.ZERO;
         BigDecimal totalAmt = BigDecimal.ZERO;
@@ -1432,8 +1454,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         return errorMsg.length() == 0;
     }
 
-    private void fetchMemberSocietyDetails() {
-        if (txtCode.getText().isEmpty()) return;
+//    private void fetchMemberSocietyDetails() {
+private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
+    if (txtCode.getText().isEmpty()) return;
         String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
         LOGGER.info("Fetch member info for {}", code);
 
@@ -1477,7 +1500,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                         Optional<ButtonType> resp = alert.createConfirmationAlert();
                         if (resp.isPresent() && resp.get() == ButtonType.OK) {
                             txtName.setText(memberSocietyInfoDto.getMember().toMemberName());
-                            cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+//                            cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                            if (!milkTypeAlreadySet) {
+                                cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                            }
                             FocusUtils.requestFocus(cboxMilkType);
                         } else {
                             clearControls();
@@ -1486,7 +1512,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                         }
                     } else {
                         txtName.setText(memberSocietyInfoDto.getMember().toMemberName());
-                        cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+//                        cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                        if (!milkTypeAlreadySet) {
+                            cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                        }
                     }
                     if (MainApp.displaySerial != null) {
                         MainApp.displaySerial.displayQuantity(getStringForDisplay("ANIMAL"));
@@ -1606,12 +1635,15 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             lblLocalTime.setText(eTime.format(dTF1));
         }
         updateManualCountLabel();
+        EditableCountLabel();
     }
     private void updateManualCountLabel() {
         long count = listCollection.stream()
                 .filter(item -> !item.isQualityAuto() && !item.isWeightAuto())
                 .count();
         lblManual.setText(String.valueOf(count));
+    }
+    private void EditableCountLabel() {
         long editedCount = listCollection.stream()
                 .filter(item -> item.getUpdatedBy() != null && item.getUpdatedBy().equals(MainApp.identityDto.getSociety().getCode()))
                 .count();
