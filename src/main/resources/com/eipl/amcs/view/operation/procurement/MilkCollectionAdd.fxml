@@ -202,7 +202,7 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                                      <E_Button fx:id="btnSave" mnemonicParsing="true" styleClass="button-primary" text="%save" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                                                      <E_Button fx:id="btnSave" maxHeight="1.7976931348623157E308" maxWidth="75.0" mnemonicParsing="true" styleClass="button-primary" text="%save" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="7">
                                              <font>
                                                 <Font size="16.0" />
                                              </font></E_Button>
@@ -277,7 +277,7 @@
                                                 </E_Button>
                                              </children>
                                              <padding>
-                                                <Insets bottom="10.0" top="10.0" />
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </padding>
                                           </GridPane>
                                        </children>
@@ -399,7 +399,7 @@
                         </AnchorPane>
                         <AnchorPane minHeight="0.0" minWidth="0.0">
                             <children>
-                                <VBox prefHeight="589.6" prefWidth="396.8" spacing="15.0" styleClass="pane-white-drop-border" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <VBox prefHeight="589.6" prefWidth="396.8" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <Label fx:id="lblShiftTime" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" prefWidth="396.0" style="-fx-font-size: 12; -fx-text-fill: red;" VBox.vgrow="ALWAYS" />
                                         <GridPane fx:id="gridMa" hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">

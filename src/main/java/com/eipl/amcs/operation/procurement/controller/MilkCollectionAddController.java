@@ -553,7 +553,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 boolean milkTypeSetBySuffix = false;
                 if (MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1")) {
                     String code = txtCode.getText();
-                    if (code != null && !code.isEmpty()) {
+//                    if (code != null && !code.isEmpty()) {
+                    if (code != null && code.length()>1) {
                         String lastDigit = code.substring(code.length() - 1);
                         if (CommonUtils.isNumeric(lastDigit)) {
                             int typeCode = Integer.parseInt(lastDigit);
