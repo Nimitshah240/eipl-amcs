@@ -280,6 +280,7 @@ public class AppConstant {
         AMULAMCS,
         JAIPUR_AMCS,
         LACTALIS_QA,
+        BANAS_AMCS,
         AMCS_QAQCJ;
     }
 }
