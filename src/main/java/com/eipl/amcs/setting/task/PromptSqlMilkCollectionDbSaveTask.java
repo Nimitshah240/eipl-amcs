@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
     private final List<MilkType> milkTypeList;
     private final List<Shift> shiftList;
@@ -147,7 +149,7 @@ public class PromptSqlMilkCollectionDbSaveTask extends Task<Boolean> {
 
                     // split map and save in mysql
                     List<List<Map<String, Object>>> listTemp = ListUtils.partition(mapCollection, AppConstant.MIGRATION_LIST_SIZE);
-                    String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+                    String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
                     try (Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
                         String sql = "INSERT INTO milk_collection(code,sample_no,collection_date,fat,snf,clr,water,density," + "lectose,protein,rtpl,qty,amount,is_weight_auto,is_quality_auto,is_avg_param,union_code," + "qty_mode,converted_qty,converted_qty_mode,member_code,shift_code,milk_type_code,milk_quality_type_code," + "society_code,dock_no,created_at,created_by) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         int current = 1;

@@ -25,8 +25,9 @@ public class AppConstant {
 
     public static final String PROMPT_DB_PASS = "PNM^$)&(%*";
     public static final int MIGRATION_LIST_SIZE = 50;
-    public static final String EIPL_DB_PASS = "EAmcs2021";
-    public static final String EIPL_DB_NAME = "eipl_amcs_db";
+    public static String EIPL_DB_PASS = "";
+    public static String EIPL_DB_NAME = "";
+    public static String DB_LOC = "localhost";
 
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
     public static final String versionNo = "1.0";
@@ -93,6 +94,9 @@ public class AppConstant {
         String DATA_PROCESSOR = "http://192.168.1.86:6375/eipl-amcs-processor/";
         String PROCESSOR_SYNC = "sync";
         String MILK_COLLECTION = "milk-collection";
+        String SENT_BOX_DESKTOP = "androiddpu/v5/master-data/sentbox-desktop";
+        String SENT_BOX_DESKTOP_COUNT = "androiddpu/v5/master-data/sentbox-count-desktop";
+        String SENT_BOX_DESKTOP_ACK = "androiddpu/v5/master-data/acknowledgement-desktop";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/";
 //        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
