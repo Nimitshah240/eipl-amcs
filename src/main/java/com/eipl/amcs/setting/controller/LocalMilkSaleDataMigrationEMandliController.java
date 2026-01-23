@@ -41,6 +41,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class LocalMilkSaleDataMigrationEMandliController implements MyInitialization {
     @FXML
     StackPane root;
@@ -244,7 +246,7 @@ public class LocalMilkSaleDataMigrationEMandliController implements MyInitializa
 
                         // split map and save in mysql
                         List<List<Map<String, Object>>> listTemp = ListUtils.partition(mapCollection, AppConstant.MIGRATION_LIST_SIZE);
-                        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+                        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
                         try (Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
                             String sql = "INSERT INTO local_milk_sale(code,invoice_no,consumer_type,consumer_code,sale_date,shift_code,entry_type,payment_mode," +
                                     "quantity,rate,amount,cash,milk_type_code,milk_class_code,union_code," +

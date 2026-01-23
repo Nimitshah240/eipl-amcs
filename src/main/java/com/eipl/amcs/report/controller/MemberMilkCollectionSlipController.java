@@ -35,6 +35,8 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class MemberMilkCollectionSlipController implements MyInitialization {
 
     private final ArrayList<String> masterLines = new ArrayList<>();
@@ -161,7 +163,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     private void loadTextFile() {
         masterLines.clear();
         data.clear();
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         String query = "call rpt_member_milk_collection_slip('" + MainApp.identityDto.getSociety().getCode() + "','" +
                 cboxSocietyPaymentCycleCode.getValue().getCode() + "','" + cboxMemberCode.getValue().getCode() + "','" + MainApp.getLocale() + "')";
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
@@ -195,7 +197,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     private void loadTextFilePartTwo(String code) {
         masterLines.clear();
         data.clear();
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         String query = "call rpt_member_milk_collection_slip('" + MainApp.identityDto.getSociety().getCode() + "','" +
                 cboxSocietyPaymentCycleCode.getValue().getCode() + "','" + code + "','" + MainApp.getLocale() + "')";
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
@@ -227,7 +229,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     }
 
     private void loadTextFileForDeduction(String code) {
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         String query = "call rpt_member_milk_collection_slip_head_wise('" + MainApp.identityDto.getSociety().getCode() + "','" +
                 cboxSocietyPaymentCycleCode.getValue().getCode() + "','" + code + "','" + MainApp.getLocale() + "')";
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {

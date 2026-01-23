@@ -14,6 +14,8 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class DbBackupTask extends Task<Boolean> {
     private final String path;
 
@@ -54,11 +56,11 @@ public class DbBackupTask extends Task<Boolean> {
             if (!file1.exists())
                 file1.mkdir();
             if (file.exists()) {
-                command = "cd " + mysqlPath + " && mysqldump --routines -u root -p" + AppConstant.EIPL_DB_PASS + " --port=3366 --host=localhost --add-drop-database " +
+                command = "cd " + mysqlPath + " && mysqldump --routines -u root -p" + AppConstant.EIPL_DB_PASS + " --port=3366 --host=" + DB_LOC + " --add-drop-database " +
                         "--complete-insert=TRUE --default-character-set=utf8 --single-transaction=TRUE  --databases \"" + AppConstant.EIPL_DB_NAME + "\" --result-file=" +
                         path + File.separator + filename;
             } else {
-                command = "mysqldump --routines -u root -p" + AppConstant.EIPL_DB_PASS + " --port=3366 --host=localhost --add-drop-database " +
+                command = "mysqldump --routines -u root -p" + AppConstant.EIPL_DB_PASS + " --port=3366 --host=" + DB_LOC + " --add-drop-database " +
                         "--complete-insert=TRUE --default-character-set=utf8 --single-transaction=TRUE  --databases \"" + AppConstant.EIPL_DB_NAME + "\" --result-file=" +
                         path + File.separator + filename;
             }

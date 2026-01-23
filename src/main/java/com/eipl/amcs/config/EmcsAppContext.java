@@ -1,5 +1,6 @@
 package com.eipl.amcs.config;
 
+import com.eipl.amcs.exception.AuthenticationFailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -16,13 +17,14 @@ public class EmcsAppContext {
     public static void initializeEmcsAppContext() {
         try {
             context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-
-            TomcatServletWebServerFactory factory = context.getBean(TomcatServletWebServerFactory.class);
-            var customizer = context.getBean(WebServerFactoryCustomizer.class);
-            customizer.customize(factory);
-            WebServer webServer = factory.getWebServer();
-            webServer.start();
         } catch (Exception e) {
+            Throwable cause = e;
+            while (cause != null) {
+                if (cause instanceof AuthenticationFailException) {
+                    throw new AuthenticationFailException(HibernateConfig.class, "Failed to connect Database");
+                }
+                cause = cause.getCause();
+            }
             LOGGER.error("EmcsAppContextInitialization Error", e);
         }
     }

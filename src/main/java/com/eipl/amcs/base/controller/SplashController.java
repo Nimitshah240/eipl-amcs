@@ -13,7 +13,6 @@ import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -34,8 +33,7 @@ public class SplashController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            File appProperty = new File("resources/app.properties");
-            if (appProperty.exists()) //
+            if (!MainApp.properties.isEmpty())
                 checkHealth();
             else {
                 Platform.runLater(() -> {

@@ -2,7 +2,9 @@ package com.eipl.amcs.config;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
+import com.eipl.amcs.exception.AuthenticationFailException;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,23 +19,40 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+import static com.eipl.amcs.base.controller.ActivationController.recoverFromPreferences;
+import static com.eipl.amcs.utils.AppConstant.*;
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "com.eipl.amcs",
         repositoryBaseClass = com.eipl.amcs.base.repository.BaseRepositoryImpl.class
 )
+@Slf4j
 public class HibernateConfig {
 
     @Bean
     public DataSource dataSource() {
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3366/eipl_amcs_db?allowPublicKeyRetrieval=true&characterEncoding=UTF-8&useSSL=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("EAmcs2021");
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setMaximumPoolSize(5);
-        return dataSource;
+        try {
+            recoverFromPreferences();
+            log.info(DB_LOC);
+            if (DB_LOC == null) {
+                log.error("----------- NO DATABASE FOUND -------------");
+                return null;
+            }
+
+            HikariDataSource dataSource = new HikariDataSource();
+            //        dataSource.setJdbcUrl("jdbc:mysql://" + DB_LOC +":3366/eipl_amcs_db?characterEncoding=UTF-8&useSSL=false");
+            dataSource.setJdbcUrl("jdbc:mysql://" + DB_LOC + ":3366/" + EIPL_DB_NAME + "?allowPublicKeyRetrieval=true&characterEncoding=UTF-8&useSSL=false");
+            dataSource.setUsername("root");
+            dataSource.setPassword(EIPL_DB_PASS);
+            dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            dataSource.setMaximumPoolSize(5);
+            dataSource.getConnection().close();
+            return dataSource;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new AuthenticationFailException(HibernateConfig.class, "Failed to connect Database");
+        }
     }
 
     @Bean

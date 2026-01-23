@@ -12,4 +12,6 @@ public interface IdentityRepository extends BaseRepository<Identity, String> {
     @Override
     List<Identity> findAll(Sort sort);
 
+    Identity findBySocietyRefCode(String societyRefCode);
+
 }

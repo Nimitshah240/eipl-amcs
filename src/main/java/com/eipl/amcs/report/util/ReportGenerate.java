@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Map;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class ReportGenerate {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ReportGenerate.class);
 
@@ -50,7 +52,7 @@ public class ReportGenerate {
 
     public static JasperPrint getReportDataSourceJasperPrint(String path, Map<String, Object> params) {
         try {
-            String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+            String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
             try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
                 return JasperFillManager.fillReport(getPath(path), params, connection);
             }

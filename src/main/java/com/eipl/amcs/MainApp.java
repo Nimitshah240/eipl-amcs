@@ -5,9 +5,11 @@ import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.FxmlLoaderUtil;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.task.SentBoxCountTask;
+import com.eipl.amcs.base.task.SentBoxDesktopTask;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.AuthenticationFailException;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
 import com.eipl.amcs.operation.procurement.model.DpuIncentiveRequest;
@@ -76,6 +78,7 @@ public class MainApp extends Application {
     public static double incentiveValue = 1.0;
     private static FinancialYear financialYear;
     private static ServerSocket uniqueInstanceSocket;
+    boolean isActivated = true;
 
     public static String getProperty(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue);
@@ -167,6 +170,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        fxmlLoaderUtil = new FxmlLoaderUtil();
         MainApp.stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource("view/EmcsApp.fxml"));
         Scene scene = new Scene(root);
@@ -180,9 +184,26 @@ public class MainApp extends Application {
 
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
             try {
-                EmcsAppContext.initializeEmcsAppContext();
+                File appProperty = new File("resources/app.properties");
+                if (!appProperty.exists()) {
+                    isActivated = false;
+                } else {
+                    loadProperties();
+                    EmcsAppContext.initializeEmcsAppContext();
+                }
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
+                Throwable cause = e;
+                while (cause != null) {
+                    if (cause instanceof AuthenticationFailException) {
+                        Platform.runLater(() -> {
+                            isActivated = false;
+                            MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/Activation.fxml")));
+                        });
+                    }
+                    cause = cause.getCause();
+                }
+                throw new RuntimeException("Initialization Error", e);
             }
             return "Task Completed!";
         });
@@ -190,21 +211,18 @@ public class MainApp extends Application {
         future.thenAccept(result -> {
             Platform.runLater(() -> {
                 try {
-                    EiplAmcsAppRunner eiplAmcsAppRunner = new EiplAmcsAppRunner();
-                    eiplAmcsAppRunner.fetchNavigation();
                     MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/Splash.fxml")));
-                    System.out.println("Result: " + result);
+                    if (isActivated) {
+                        EiplAmcsAppRunner eiplAmcsAppRunner = new EiplAmcsAppRunner();
+                        eiplAmcsAppRunner.fetchNavigation();
+                        System.out.println("Result: " + result);
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             });
         });
-
-
         createAndSetLocale();
-        loadProperties();
-
-
         stage.setOnCloseRequest(event -> {
             event.consume();
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), bundle.getString("doyouwanttoclose"),
@@ -215,7 +233,6 @@ public class MainApp extends Application {
             }
         });
 
-        fxmlLoaderUtil = new FxmlLoaderUtil();
         // Splash screen load
         MainApp.contentPane.setCenter(MainApp.fxmlLoaderUtil.load(MainApp.class.getResource("view/LaunchScreen.fxml")));
 
@@ -248,6 +265,16 @@ public class MainApp extends Application {
             }
         });
         new Thread(task).start();
+
+        SentBoxDesktopTask task1 = new SentBoxDesktopTask(MainApp.identityDto.getSociety().getCode());
+        task1.setOnSucceeded(e -> {
+            try {
+                Map<String, Object> map = task1.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task1).start();
     }
 
     private void closeDeviceIfAny() {
