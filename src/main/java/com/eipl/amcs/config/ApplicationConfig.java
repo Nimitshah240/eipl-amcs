@@ -22,10 +22,6 @@ import java.util.List;
 @Configuration
 @Import(value = {HibernateConfig.class})
 @ComponentScan(basePackages = {"com.eipl.amcs"})
-@EnableJpaRepositories(
-        basePackages = "com.eipl.amcs",
-        repositoryBaseClass = com.eipl.amcs.base.repository.BaseRepositoryImpl.class
-)
 @PropertySource("classpath:application.properties")
 @EnableScheduling
 public class ApplicationConfig {
@@ -51,19 +47,5 @@ public class ApplicationConfig {
     @Bean
     public ApiJsonUtil apiJsonUtil() {
         return new ApiJsonUtil();
-    }
-
-    @Bean
-    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> webServerFactoryCustomizer() {
-        return factory -> {
-            System.out.println("Applying Server Config: Port 8080, Path /eipl-amcs");
-            factory.setPort(8080);
-            factory.setContextPath("/eipl-amcs");
-        };
-    }
-
-    @Bean
-    public TomcatServletWebServerFactory servletWebServerFactory() {
-        return new TomcatServletWebServerFactory();
     }
 }

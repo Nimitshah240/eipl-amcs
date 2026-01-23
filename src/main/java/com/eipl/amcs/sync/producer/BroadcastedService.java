@@ -2,6 +2,7 @@ package com.eipl.amcs.sync.producer;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.base.repository.IdentityRepository;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.geo.model.*;
@@ -72,6 +73,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,6 +162,8 @@ public class BroadcastedService {
     private SchemeRateRepository schemeRateRepository;
     @Autowired
     private SchemeRateApplicabilityRepository schemeRateApplicabilityRepository;
+    @Autowired
+    private IdentityRepository identityRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -938,6 +942,49 @@ public class BroadcastedService {
                             break;
                     }
                     break;
+                case "tbl_milk_collection":
+                    try {
+                        DateTimeFormatter CODE_DATE_FMT = DateTimeFormatter.ofPattern("yyMMdd");
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                MilkCollection milkCollection = new MilkCollection();
+                                milkCollection.setCode(MainApp.identityDto.getDock().getDockNo() + "-" + (LocalDateTime.parse((String) jsonText.get("dateTimeOfCollection")).format(CODE_DATE_FMT)
+                                        + milkCollection.getShift().getCode() + "-" + milkCollection.getSampleNo()));
+                                milkCollection.setAmount(jsonText.get("amount") != null ? new BigDecimal(String.valueOf(jsonText.get("amount"))) : new BigDecimal(0));
+                                milkCollection.setConvertedQty(jsonText.get("convertedQty") != null ? new BigDecimal(String.valueOf(jsonText.get("convertedQty"))) : new BigDecimal(0));
+                                milkCollection.setConvertedQtyMode(jsonText.get("convertedQtyMode") != null ? (int) jsonText.get("convertedQtyMode") : null);
+                                milkCollection.setClr(jsonText.get("clr") != null ? new BigDecimal(String.valueOf(jsonText.get("clr"))) : new BigDecimal(0));
+                                milkCollection.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
+                                milkCollection.setFat(jsonText.get("fat") != null ? new BigDecimal(String.valueOf(jsonText.get("fat"))) : null);
+                                milkCollection.setSnf(jsonText.get("snf") != null ? new BigDecimal(String.valueOf(jsonText.get("snf"))) : null);
+                                milkCollection.setWater(jsonText.get("water") != null ? new BigDecimal(String.valueOf(jsonText.get("water"))) : null);
+                                milkCollection.setWsCode(jsonText.get("wsCode") != null ? (String) jsonText.get("wsCode") : null);
+                                milkCollection.setLectose(jsonText.get("lactose") != null ? new BigDecimal(String.valueOf(jsonText.get("lactose"))) : null);
+                                milkCollection.setMember(jsonText.get("memberCode") != null ? memberRepository.findByCode((String) jsonText.get("memberCode")) : null);
+                                milkCollection.setAnalyserCode(jsonText.get("milkAnalyserTypeCode") != null ? (String) jsonText.get("milkAnalyserTypeCode") : null);
+                                milkCollection.setMilkQualityType((jsonText.get("milkQualityTypeCode") != null ? milkQualityTypeRepository.findById((int) jsonText.get("milkQualityTypeCode")).get() : null));
+                                milkCollection.setMilkType(jsonText.get("milkTypeCode") != null ? milkTypeRepository.findByCode((int) jsonText.get("milkTypeCode")) : null);
+                                milkCollection.setShift(jsonText.get("shiftCode") != null ? shiftRepository.findById((int) jsonText.get("shiftCode")).get() : null);
+                                milkCollection.setProtein(jsonText.get("protein") != null ? new BigDecimal(String.valueOf(jsonText.get("protein"))) : null);
+                                milkCollection.setRateCode(jsonText.get("purchaseRateCode") != null ? jsonText.get("purchaseRateCode").toString() : null);
+                                milkCollection.setQualityAuto(jsonText.get("qltyAuto") != null ? (boolean) jsonText.get("qltyAuto") : null);
+
+                                milkCollection.setQualityAt(jsonText.get("qltyTime") != null ? LocalDateTime.parse((String) jsonText.get("qltyTime")) : null);
+                                milkCollection.setQtyMode(jsonText.get("qtyMode") != null ? (int) jsonText.get("qtyMode") : null);
+                                milkCollection.setQty(jsonText.get("qty") != null ? new BigDecimal(String.valueOf(jsonText.get("qty"))) : null);
+                                milkCollection.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
+                                milkCollection.setSampleNo(jsonText.get("sampleNo") != null ? (int) (jsonText.get("sampleNo")) : null);
+
+                                milkCollectionRepository.save(milkCollection, CommonUtils.setIdentityHeader());
+                                break;
+                            case "DELETE":
+//                                milkCollectionRepository.delete((String) jsonText.get("schemeRateAppCode"));
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 default:
                     break;
             }

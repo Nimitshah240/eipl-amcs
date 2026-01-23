@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class SyncDataController implements MyInitialization {
 
     @FXML
@@ -109,7 +111,7 @@ public class SyncDataController implements MyInitialization {
 
 
     private void syncData() {
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         try {
             Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS);
             Statement stmt = connMySql.createStatement();
