@@ -14,6 +14,7 @@ import com.eipl.amcs.base.dto.JarUpdate;
 import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.task.*;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.geo.model.District;
@@ -50,11 +51,9 @@ import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -76,8 +75,8 @@ public class NavbarController implements MyInitialization {
     @FXML
     AnchorPane root;
     @FXML
-    Button btnDashboard,btnKapaat,btnCollection,btnDispatch,btnProductSale,btnBilling,btnReceipt,btnLocalMilkSale,btnShiftReport,btnMember,btnGeneralConfig,btnSetting;
-//    @FXML
+    E_Button btnDashboard, btnKapaat, btnCollection, btnDispatch, btnProductSale, btnBilling, btnReceipt, btnLocalMilkSale, btnShiftReport, btnMember, btnGeneralConfig, btnSetting;
+    //    @FXML
 //    private Label lblVersion;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
@@ -122,7 +121,7 @@ public class NavbarController implements MyInitialization {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/ShiftReportCode.fxml")));
         });
         btnMember.setOnAction(e -> {
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml")));
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Member.fxml")));
         });
         btnSetting.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/HardwareConfiguration.fxml")));

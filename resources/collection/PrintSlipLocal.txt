@@ -1,8 +1,15 @@
+{dcsshort}
 કોડ: {code}
 નામ: {membername}
-તારીખ: {date} - {shift}   દૂધ: {type}
-જથ્થો(લી): {qty}    ફેટ%: {fat}
-રેટ: {rate}     રુ: {amount}
+તારીખ: {date} - {shift}
+દૂધ: {type}
+જથ્થો(લી): {qty}
+ફેટ%: {fat}
+એસ એન એફ: {snf}
+રેટ: {rate}
+રુ: {amount}
 તારીખ : {dateRange}
-ટોટલ જથ્થો : {tQty} રુ : {tAmt}
+ટોટલ જથ્થો : {tQty}
+રુ : {tAmt}
+સ્કીમ રેટ : {pdRate} સ્કીમ રેટ રુ : {pdAmt}
 કિલો ફેટ રેટ: {kgfat}

@@ -20,6 +20,7 @@ import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
 import com.eipl.amcs.network.RealTimeMultipleResponse;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.network.RealTimeResponse;
+import com.eipl.amcs.operation.procurement.task.DpuIncentiveSaveTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 public class RateTask extends Task<Void> {
@@ -94,7 +96,16 @@ public class RateTask extends Task<Void> {
             return null;
         LOGGER.info("Fetching startup data successful : " + respBody.getData().toString());
         mapOfStartUp = respBody.getData();
-
+        Map<String, Object> mapOfCollectionConfig = (Map<String, Object>) mapOfStartUp.get("collectionConfig");
+        var task = new DpuIncentiveSaveTask(mapOfCollectionConfig);
+        task.setOnSucceeded(e -> {
+            try {
+                task.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
         Map<String, Object> mapOfRate = (Map<String, Object>) mapOfStartUp.get("rate");
         LOGGER.info("Received Rate map :" + mapOfRate);
 
@@ -153,183 +164,191 @@ public class RateTask extends Task<Void> {
         MemberMilkPurchaseRateDto memberRateDto = new MemberMilkPurchaseRateDto();
 //            // Rate
         Map<String, Object> purchaseRate = new HashMap<>();
-        try {
-            int a = 1;
-            while (a == 1 || purchaseRate == null) {
-                url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
-                response = restTemplate.exchange(url, HttpMethod.POST,
-                        new HttpEntity<>(requestPayload), RealTimeResponse.class);
-                if (response.getStatusCode() != HttpStatus.OK)
-                    return null;
-                responseRate = response.getBody();
-                if (responseRate == null || !"success".equalsIgnoreCase(responseRate.getStatus()))
-                    return null;
+        List<String> listOfRate = new ArrayList<>();
+        if (memberApplicableRate.contains(","))
+            listOfRate = List.of(memberApplicableRate.split(","));
+        else
+            listOfRate.add(memberApplicableRate);
+
+        for (String rateCode : listOfRate) {
+            try {
+                int a = 1;
+                while (a == 1 || purchaseRate == null) {
+                    url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
+                    response = restTemplate.exchange(url, HttpMethod.POST,
+                            new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                    if (response.getStatusCode() != HttpStatus.OK)
+                        return null;
+                    responseRate = response.getBody();
+                    if (responseRate == null || !"success".equalsIgnoreCase(responseRate.getStatus()))
+                        return null;
 
 
-                data = responseRate.getData();
-                memberRateDto = new MemberMilkPurchaseRateDto();
-                // Rate
-                purchaseRate = (Map) data.get("purchaseRate");
+                    data = responseRate.getData();
+                    memberRateDto = new MemberMilkPurchaseRateDto();
+                    // Rate
+                    purchaseRate = (Map) data.get("purchaseRate");
 
-                if (purchaseRate != null) {
-                    LOGGER.info("Member milk purchase rate download: {}", purchaseRate.get("purchaseRateCode"));
-                    MemberMilkPurchaseRate rate = new MemberMilkPurchaseRate();
-                    rate.setDescription(purchaseRate.get("description").toString());
-                    rate.setRateGenMethodCode((short) 1);
-                    rate.setShift(mapShift.get((int) purchaseRate.get("shiftId")));
-                    rate.setShiftApplicable(mapShift.get((int) purchaseRate.get("shiftApplicability")));
-                    rate.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                    rate.setWefDate(CommonUtils.getLocalDateTimeFromDateAndShift(LocalDate.parse(purchaseRate.get("wefDate").toString().split(" ")[0]), rate.getShift()));
-                    rate.setSociety(MainApp.identityDto.getSociety());
-                    rate.setxCol1("0-0");
+                    if (purchaseRate != null) {
+                        LOGGER.info("Member milk purchase rate download: {}", purchaseRate.get("purchaseRateCode"));
+                        MemberMilkPurchaseRate rate = new MemberMilkPurchaseRate();
+                        rate.setDescription(purchaseRate.get("description").toString());
+                        rate.setRateGenMethodCode((short) 1);
+                        rate.setShift(mapShift.get((int) purchaseRate.get("shiftId")));
+                        rate.setShiftApplicable(mapShift.get((int) purchaseRate.get("shiftApplicability")));
+                        rate.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                        rate.setWefDate(CommonUtils.getLocalDateTimeFromDateAndShift(LocalDate.parse(purchaseRate.get("wefDate").toString().split(" ")[0]), rate.getShift()));
+                        rate.setSociety(MainApp.identityDto.getSociety());
+                        rate.setxCol1("0-0");
 
 
-                    // Based
-                    List<Map<String, Object>> basedList = (List) data.get("purchaseRateBased");
-                    LOGGER.info("Member milk purchase rate based: {}", basedList.size());
-                    List<MemberMilkPurchaseRateBased> listMemberRateBased = new ArrayList<>();
-                    for (Map<String, Object> map : basedList) {
-                        MemberMilkPurchaseRateBased based = new MemberMilkPurchaseRateBased();
-                        based.setRateType(map.get("rateTypeCode") == null ? 1 : (int) map.get("rateTypeCode"));
-                        based.setQualityParam((int) map.get("qualityParamCode"));
-                        based.setStartVal(new BigDecimal(map.get("startRange").toString()));
-                        based.setEndVal(new BigDecimal(map.get("endRange").toString()));
-                        based.setKgRate(new BigDecimal(map.get("kgRate").toString()));
-                        based.setDeductionType((int) map.get("deductionType"));
-                        based.setRefType((int) map.get("refType"));
-                        based.setVal(new BigDecimal(map.get("value").toString()));
-                        based.setFixedPoint(new BigDecimal(map.get("fixedPoint").toString()));
-                        based.setStep((int) map.get("step"));
-                        based.setFormula(map.get("formulaCode") == null ? null : mapFormula.get(map.get("formulaCode").toString()));
-                        based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
-                        based.setMilkQualityType(mapMilkQuality.get(1));
-                        listMemberRateBased.add(based);
-                    }
-                    memberRateDto.setListRateBased(listMemberRateBased);
+                        // Based
+                        List<Map<String, Object>> basedList = (List) data.get("purchaseRateBased");
+                        LOGGER.info("Member milk purchase rate based: {}", basedList.size());
+                        List<MemberMilkPurchaseRateBased> listMemberRateBased = new ArrayList<>();
+                        for (Map<String, Object> map : basedList) {
+                            MemberMilkPurchaseRateBased based = new MemberMilkPurchaseRateBased();
+                            based.setRateType(map.get("rateTypeCode") == null ? 1 : (int) map.get("rateTypeCode"));
+                            based.setQualityParam((int) map.get("qualityParamCode"));
+                            based.setStartVal(new BigDecimal(map.get("startRange").toString()));
+                            based.setEndVal(new BigDecimal(map.get("endRange").toString()));
+                            based.setKgRate(new BigDecimal(map.get("kgRate").toString()));
+                            based.setDeductionType((int) map.get("deductionType"));
+                            based.setRefType((int) map.get("refType"));
+                            based.setVal(new BigDecimal(map.get("value").toString()));
+                            based.setFixedPoint(new BigDecimal(map.get("fixedPoint").toString()));
+                            based.setStep((int) map.get("step"));
+                            based.setFormula(map.get("formulaCode") == null ? null : mapFormula.get(map.get("formulaCode").toString()));
+                            based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
+                            based.setMilkQualityType(mapMilkQuality.get(1));
+                            listMemberRateBased.add(based);
+                        }
+                        memberRateDto.setListRateBased(listMemberRateBased);
 
-                    if (!listMemberRateBased.isEmpty()) {
-                        rate.setRateType(mapRateType.get(listMemberRateBased.get(0).getRateType()));
-                    }
-                    memberRateDto.setPurchaseRate(rate);
+                        if (!listMemberRateBased.isEmpty()) {
+                            rate.setRateType(mapRateType.get(listMemberRateBased.get(0).getRateType()));
+                        }
+                        memberRateDto.setPurchaseRate(rate);
 
-                    // Applicability
-                    List<Map<String, Object>> appList = (List) data.get("purchaseRateApplicabilityMultiple");
-                    LOGGER.info("Member milk purchase rate applicability: {}", appList.size());
-                    List<MemberMilkPurchaseRateApplicability> applicabilityList = new ArrayList<>();
-                    StringBuilder appCode = new StringBuilder();
-                    for (Map<String, Object> map : appList) {
-                        MemberMilkPurchaseRateApplicability app = new MemberMilkPurchaseRateApplicability();
-                        app.setShift(mapShift.get((int) map.get("shiftCode")));
-                        app.setWefDate(CommonUtils.getLocalDateTimeFromDateAndShift(
-                                LocalDate.parse(map.get("wefDate").toString().split(" ")[0]), app.getShift()));
-                        app.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                        app.setSociety(MainApp.identityDto.getSociety());
-                        applicabilityList.add(app);
-                        appCode.append(map.get("rateAppCode").toString() + ",");
-                    }
-                    memberRateDto.setListApplicability(applicabilityList);
+                        // Applicability
+                        List<Map<String, Object>> appList = (List) data.get("purchaseRateApplicabilityMultiple");
+                        LOGGER.info("Member milk purchase rate applicability: {}", appList.size());
+                        List<MemberMilkPurchaseRateApplicability> applicabilityList = new ArrayList<>();
+                        StringBuilder appCode = new StringBuilder();
+                        for (Map<String, Object> map : appList) {
+                            MemberMilkPurchaseRateApplicability app = new MemberMilkPurchaseRateApplicability();
+                            app.setShift(mapShift.get((int) map.get("shiftCode")));
+                            app.setWefDate(CommonUtils.getLocalDateTimeFromDateAndShift(
+                                    LocalDate.parse(map.get("wefDate").toString().split(" ")[0]), app.getShift()));
+                            app.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                            app.setSociety(MainApp.identityDto.getSociety());
+                            applicabilityList.add(app);
+                            appCode.append(map.get("rateAppCode").toString() + ",");
+                        }
+                        memberRateDto.setListApplicability(applicabilityList);
 
-                    // Rate detail download
+                        // Rate detail download
 
-                    url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
-                    List<String> listRateDetails = new ArrayList<>();
-                    for (MilkType milkType : milkTypeList) {
-                        Map<String, String> contentRateDetail = new HashMap<>();
-                        contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
-                        contentRateDetail.put("milkQualityTypeCode", "1");
-                        contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
-                        contentRateDetail.put("rateType", "MEMBER");
+                        url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
+                        List<String> listRateDetails = new ArrayList<>();
+                        for (MilkType milkType : milkTypeList) {
+                            Map<String, String> contentRateDetail = new HashMap<>();
+                            contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
+                            contentRateDetail.put("milkQualityTypeCode", "1");
+                            contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
+                            contentRateDetail.put("rateType", "MEMBER");
 //                            contentRateDetail.put("rateClass", "0");
-                        LOGGER.info("purchaseRateCode : {}, milkQualityTypeCode : {}, milkTypeCode : {}, rateType : {}", purchaseRate.get("purchaseRateCode").toString(), "1", milkType.getCode().toString(), "MEMBER");
-                        updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
+                            LOGGER.info("purchaseRateCode : {}, milkQualityTypeCode : {}, milkTypeCode : {}, rateType : {}", purchaseRate.get("purchaseRateCode").toString(), "1", milkType.getCode().toString(), "MEMBER");
+                            updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
 
-                        requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
-                                MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
-                        requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-                        ResponseEntity<RealTimeMultipleResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
-                                new HttpEntity<>(requestPayload), RealTimeMultipleResponse.class);
-                        if (responseRateDtl.getStatusCode() != HttpStatus.OK)
-                            return null;
-                        RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
-                        if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
-                            return null;
+                            requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
+                                    MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
+                            requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+                            ResponseEntity<RealTimeMultipleResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
+                                    new HttpEntity<>(requestPayload), RealTimeMultipleResponse.class);
+                            if (responseRateDtl.getStatusCode() != HttpStatus.OK)
+                                return null;
+                            RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
+                            if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
+                                return null;
 //                            Map<String, Object> dataDtl = respRateDtl.getData();
-                        List<String> listStr = respRateDtl.getData();
-                        LOGGER.info("Member milk purchase rate detail: {}-{}", milkType.getName(), listStr.size());
-                        if (listStr != null && !listStr.isEmpty()) {
-                            for (String s : listStr) {
-                                String[] arr = s.split("#");
-                                String sb = arr[0] +
-                                        "#" +
-                                        arr[1] +
-                                        "#" +
-                                        arr[2] +
-                                        "#" +
-                                        milkType.getCode() +
-                                        "#" +
-                                        "1";
-                                listRateDetails.add(sb);
+                            List<String> listStr = respRateDtl.getData();
+                            LOGGER.info("Member milk purchase rate detail: {}-{}", milkType.getName(), listStr.size());
+                            if (listStr != null && !listStr.isEmpty()) {
+                                for (String s : listStr) {
+                                    String[] arr = s.split("#");
+                                    String sb = arr[0] +
+                                            "#" +
+                                            arr[1] +
+                                            "#" +
+                                            arr[2] +
+                                            "#" +
+                                            milkType.getCode() +
+                                            "#" +
+                                            "1";
+                                    listRateDetails.add(sb);
+                                }
                             }
                         }
-                    }
-                    memberRateDto.setListDetail(listRateDetails);
+                        memberRateDto.setListDetail(listRateDetails);
 
-                    // Save member Rate
+                        // Save member Rate
 
-                    try {
-                        String responseRateSave = memberMilkPurchaseRateService.savePurchaseRate(memberRateDto);
-                        if (responseRateSave == null)
-                            return null;
-
-                        LOGGER.info("Member milk rate save: {}", responseRateSave);
-                        if (responseRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
-                            url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
-                            Map<String, String> contentRateAck = new HashMap<>();
-                            contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
-                            contentRateAck.put("rateType", "MEMBER");
-                            LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
-                            requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
-                                    MainApp.identityDto.getIdentity().getToken(), contentRateAck);
-                            requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-                            ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
-                                    new HttpEntity<>(requestPayload), RealTimeResponse.class);
-                            if (responseRateDtl.getStatusCode() != HttpStatus.OK)
+                        try {
+                            String responseRateSave = memberMilkPurchaseRateService.savePurchaseRate(memberRateDto);
+                            if (responseRateSave == null)
                                 return null;
-                            RealTimeResponse respRateDtl = responseRateDtl.getBody();
-                            if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
-                                return null;
-                            LOGGER.info("Member milk ack success for codes: {}", contentRateAck.get("rateAppCode"));
-                            updateMessage("Member rate saved successfully");
-                        } else {
+
+                            LOGGER.info("Member milk rate save: {}", responseRateSave);
+                            if (responseRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
+                                url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
+                                Map<String, String> contentRateAck = new HashMap<>();
+                                contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
+                                contentRateAck.put("rateType", "MEMBER");
+                                LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
+                                requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
+                                        MainApp.identityDto.getIdentity().getToken(), contentRateAck);
+                                requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+                                ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
+                                        new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                                if (responseRateDtl.getStatusCode() != HttpStatus.OK)
+                                    return null;
+                                RealTimeResponse respRateDtl = responseRateDtl.getBody();
+                                if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
+                                    return null;
+                                LOGGER.info("Member milk ack success for codes: {}", contentRateAck.get("rateAppCode"));
+                                updateMessage("Member rate saved successfully");
+                            } else {
+                            }
+                        } catch (Exception ex) {
+                            if (ex.getMessage().contains("wefdate.not.valid")) {
+                                url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
+                                Map<String, String> contentRateAck = new HashMap<>();
+                                contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
+                                contentRateAck.put("rateType", "MEMBER");
+                                LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
+                                requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
+                                        MainApp.identityDto.getIdentity().getToken(), contentRateAck);
+                                requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+                                ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
+                                        new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                                if (responseRateDtl.getStatusCode() != HttpStatus.OK)
+                                    return null;
+                                RealTimeResponse respRateDtl = responseRateDtl.getBody();
+                                if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
+                                    return null;
+                                LOGGER.info("Member milk ack success for codes: {}", contentRateAck.get("rateAppCode"));
+                            }
                         }
-                    } catch (Exception ex) {
-                        if (ex.getMessage().contains("wefdate.not.valid")) {
-                            url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
-                            Map<String, String> contentRateAck = new HashMap<>();
-                            contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
-                            contentRateAck.put("rateType", "MEMBER");
-                            LOGGER.info("Member milk ack for app: {}", contentRateAck.get("rateAppCode"));
-                            requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
-                                    MainApp.identityDto.getIdentity().getToken(), contentRateAck);
-                            requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-                            ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
-                                    new HttpEntity<>(requestPayload), RealTimeResponse.class);
-                            if (responseRateDtl.getStatusCode() != HttpStatus.OK)
-                                return null;
-                            RealTimeResponse respRateDtl = responseRateDtl.getBody();
-                            if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
-                                return null;
-                            LOGGER.info("Member milk ack success for codes: {}", contentRateAck.get("rateAppCode"));
-                        }
+                    } else {
+                        LOGGER.info("No Member Rate Found");
+                        break;
                     }
-                } else {
-                    LOGGER.info("No Member Rate Found");
-                    break;
+                    a++;
                 }
-                a++;
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage());
             }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
         }
         try {
             // **********************************

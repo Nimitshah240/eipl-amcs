@@ -1,9 +1,15 @@
 {dcsshort}
 कोड:{code}
 नाम:{membername}
-दिनांक : {date} - {shift}   दूध: {type}
-मात्रा (लीटर): {qty}    फैट%: {fat}
-दर: {rate}       रकम: {amount}
+दिनांक : {date} - {shift}
+दूध: {type}
+मात्रा (लीटर): {qty}
+फैट%: {fat}
+एसएनएफ: {snf}
+दर: {rate}
+रकम: {amount}
 दिनांक : {dateRange}
-कुल मात्रा : {tQty}  रकम: {tAmt}
+कुल मात्रा : {tQty}
+रकम: {tAmt}
+पी.डी. दर : {pdRate} पी.डी. रकम : {pdAmt}
 किलो फ़ेट दर : {kgfat}

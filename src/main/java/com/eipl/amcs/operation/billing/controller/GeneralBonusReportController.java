@@ -62,6 +62,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class GeneralBonusReportController implements MyInitialization {
 
     private final ArrayList<String> masterLines = new ArrayList<>();
@@ -245,7 +247,7 @@ public class GeneralBonusReportController implements MyInitialization {
 
     private void excelDev(LocalDate fromDate, LocalDate toDate) {
 
-        String jdbcUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String jdbcUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         String username = "root";
         String password = AppConstant.EIPL_DB_PASS;
 
@@ -325,7 +327,7 @@ public class GeneralBonusReportController implements MyInitialization {
     }
 
     public void loadExcel1() {
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
             String call = "{call rpt_bonus_excel(?,?,?,?,?,?,?,?)}";
             try (CallableStatement stmt = connection.prepareCall(call)) {
@@ -370,7 +372,7 @@ public class GeneralBonusReportController implements MyInitialization {
     }
 
     public void loadExcel2() {
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
             String call = "{call rpt_bonus_for_all(?,?,?,?,?,?,?,?,?)}";
             try (CallableStatement stmt = connection.prepareCall(call)) {
@@ -397,7 +399,7 @@ public class GeneralBonusReportController implements MyInitialization {
     }
 
     public void loadExcel3() {
-        String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+        String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
         try (Connection connection = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
             String call = "{call rpt_bonus_for_all(?,?,?,?,?,?,?,?,?)}";
             try (CallableStatement stmt = connection.prepareCall(call)) {

@@ -37,6 +37,8 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+
 public class ProductSaleDataMigrationNishaController implements MyInitialization {
     @FXML
     StackPane root;
@@ -222,7 +224,7 @@ public class ProductSaleDataMigrationNishaController implements MyInitialization
 
                     // split map and save in mysql
                     List<List<Map<String, Object>>> listTemp = ListUtils.partition(mapCollection, AppConstant.MIGRATION_LIST_SIZE);
-                    String mysqlUrl = "jdbc:mysql://localhost:3366/" + AppConstant.EIPL_DB_NAME;
+                    String mysqlUrl = "jdbc:mysql://" + DB_LOC + ":3366/" + AppConstant.EIPL_DB_NAME;
                     try (Connection connMySql = DriverManager.getConnection(mysqlUrl, "root", AppConstant.EIPL_DB_PASS)) {
                         String sql = "INSERT INTO product_sale(invoice_no,invoice_date,consumer_code,consumer_type,transaction_type," +
                                 "amount,net_amount)" +

@@ -18,6 +18,8 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
+import com.eipl.amcs.master.operation.task.SchemeRateApplicabilityLoadTask;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import com.eipl.amcs.operation.procurement.dto.*;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
@@ -111,7 +113,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate,lblManual ,lblLocalTime;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate,lblManual ,lblLocalTime,lblEdited;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -151,6 +153,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private File slipFile = null;
     Boolean doubleDock = false;
 
+    private SchemeRateApplicability schemeRateApplicability;
 
     private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
@@ -158,6 +161,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             if (MainApp.displaySerial != null)
                 MainApp.displaySerial.displayQuantity(getStringForDisplay("QTY"));
         }
+        loadSchemeRate();
     };
     private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
@@ -456,7 +460,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collectionType = AppConstant.CollectionType.MEMBER_COLL;
         dpDate.setValue(LocalDate.now());
         FocusUtils.requestFocus(btnStart);
-        lblLocalTime.setText(String.valueOf(LocalDate.now()));
+
         cboxShortCut.getItems().addAll("ShortCut List","M → MilkType" ,"Space → Weight Lock" ,"ESC → Exit" ,"F3 → Add Member" ,"F4 → Delete" ,"F5 / F6 → Refresh" ,"F7 / S → Setting" ,"F8 → Local Milk Sale" ,"F9 → Print" ,"F10 / P → Reprint" ,"F11 / T → Tare" ,"C → Farmer Code" ,"D → Milk Dispatch" ,"E → Edit");
         cboxShortCut.getSelectionModel().select(0);
 
@@ -544,7 +548,30 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         txtQty.textProperty().addListener(qtyRateChangeListener);
         txtRate.textProperty().addListener(qtyRateChangeListener);
         txtCode.focusedProperty().addListener((ob, oldVal, newVal) -> {
-            if (!newVal) fetchMemberSocietyDetails();
+//            if (!newVal) fetchMemberSocietyDetails();
+            if (!newVal) {
+                boolean milkTypeSetBySuffix = false;
+                if (MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1")) {
+                    String code = txtCode.getText();
+//                    if (code != null && !code.isEmpty()) {
+                    if (code != null && code.length()>1) {
+                        String lastDigit = code.substring(code.length() - 1);
+                        if (CommonUtils.isNumeric(lastDigit)) {
+                            int typeCode = Integer.parseInt(lastDigit);
+                            if (typeCode >= 1 && typeCode <= 4) {
+                                String memberCode = code.substring(0, code.length() - 1);
+                                txtCode.setText(memberCode);
+                                cboxMilkType.getItems().stream()
+                                        .filter(mt -> mt.getCode() == typeCode)
+                                        .findFirst()
+                                        .ifPresent(mt -> cboxMilkType.getSelectionModel().select(mt));
+                                milkTypeSetBySuffix = true;
+                            }
+                        }
+                    }
+                }
+                fetchMemberSocietyDetails(milkTypeSetBySuffix);
+            }
         });
         txtRate.focusedProperty().addListener((ob, oldVal, newVal) -> {
             if (!newVal) {
@@ -662,12 +689,13 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 case L:
                     FocusUtils.requestFocus(txtQty);
                     break;
-                case SPACE:
+                case W:
                     if (!getQty().isEmpty()) {
                         weightLock = new BigDecimal(getQty());
                         tareWs();
                     }
                 case ESCAPE:
+                    btnClose.fire();
                     break;
             }
         });
@@ -952,31 +980,33 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
 
         setValuesInObjectUpdate();
-        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
-            LocalDateTime fromDate = LocalDateTime.parse(MainApp.timingList.get(0).getFromDate() + " " + MainApp.timingList.get(0).getxCol1(), AppConstant.Formatter6);
-            LocalDateTime toDate = LocalDateTime.parse(MainApp.timingList.get(0).getToDate() + " " + MainApp.timingList.get(0).getxCol2(), AppConstant.Formatter6);
-            LocalDateTime currentDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
+        // DpuIncentive Load Data comment
 
-            boolean isBetweenInclusive = (currentDate.isEqual(fromDate) || currentDate.isAfter(fromDate)) &&
-                    (currentDate.isEqual(toDate) || currentDate.isBefore(toDate));
-
-            if (isBetweenInclusive) {
-                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("farmervoting"));
-                Optional<ButtonType> resp = alert.createYesNoConfirmationAlert();
-                if (resp.isPresent() && resp.get() == ButtonType.YES) {
-                    collection.setxCol4("Y");
-                    alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("appreciationfarmerforvoting"));
-                    resp = alert.createYesNoConfirmationAlert();
-                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
-                        MainApp.isIncentive = true;
-                        MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
-                        collection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(collection.getQty())));
-                        collection.setxCol5(collection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(collection.getQty()));
-                    }
-
-                }
-            }
-        }
+//        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
+//            LocalDateTime fromDate = LocalDateTime.parse(MainApp.timingList.get(0).getFromDate() + " " + MainApp.timingList.get(0).getxCol1(), AppConstant.Formatter6);
+//            LocalDateTime toDate = LocalDateTime.parse(MainApp.timingList.get(0).getToDate() + " " + MainApp.timingList.get(0).getxCol2(), AppConstant.Formatter6);
+//            LocalDateTime currentDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
+//
+//            boolean isBetweenInclusive = (currentDate.isEqual(fromDate) || currentDate.isAfter(fromDate)) &&
+//                    (currentDate.isEqual(toDate) || currentDate.isBefore(toDate));
+//
+//            if (isBetweenInclusive) {
+//                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("farmervoting"));
+//                Optional<ButtonType> resp = alert.createYesNoConfirmationAlert();
+//                if (resp.isPresent() && resp.get() == ButtonType.YES) {
+//                    collection.setxCol4("Y");
+//                    alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkcollection"), resourceBundle.getString("appreciationfarmerforvoting"));
+//                    resp = alert.createYesNoConfirmationAlert();
+//                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
+//                        MainApp.isIncentive = true;
+//                        MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
+//                        collection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(collection.getQty())));
+//                        collection.setxCol5(collection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(collection.getQty()));
+//                    }
+//
+//                }
+//            }
+//        }
         saveData();
         FocusUtils.requestFocus(txtCode);
         setupTable();
@@ -1363,6 +1393,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         collection.setMilkQualityType(cboxMilkQuality.getValue());
         collection.setSociety(MainApp.identityDto.getSociety());
         collection.setDock(MainApp.identityDto.getDock());
+//        collection.setUpdatedBy(MainApp.identityDto.getSociety().getCode());
 
         BigDecimal totalQty = BigDecimal.ZERO;
         BigDecimal totalAmt = BigDecimal.ZERO;
@@ -1424,8 +1455,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         return errorMsg.length() == 0;
     }
 
-    private void fetchMemberSocietyDetails() {
-        if (txtCode.getText().isEmpty()) return;
+//    private void fetchMemberSocietyDetails() {
+private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
+    if (txtCode.getText().isEmpty()) return;
         String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
         LOGGER.info("Fetch member info for {}", code);
 
@@ -1469,7 +1501,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                         Optional<ButtonType> resp = alert.createConfirmationAlert();
                         if (resp.isPresent() && resp.get() == ButtonType.OK) {
                             txtName.setText(memberSocietyInfoDto.getMember().toMemberName());
-                            cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+//                            cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                            if (!milkTypeAlreadySet) {
+                                cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                            }
                             FocusUtils.requestFocus(cboxMilkType);
                         } else {
                             clearControls();
@@ -1478,7 +1513,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                         }
                     } else {
                         txtName.setText(memberSocietyInfoDto.getMember().toMemberName());
-                        cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+//                        cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                        if (!milkTypeAlreadySet) {
+                            cboxMilkType.getSelectionModel().select(memberSocietyInfoDto.getMember().getMilkType());
+                        }
                     }
                     if (MainApp.displaySerial != null) {
                         MainApp.displaySerial.displayQuantity(getStringForDisplay("ANIMAL"));
@@ -1590,6 +1628,27 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             lblStartTime.setText("");
             lblEndTime.setText("");
         }
+        if (cboxShift.getSelectionModel().getSelectedIndex() == 0) {
+            LocalTime mTime = MainApp.timingList.get(0).getMstime();
+            lblLocalTime.setText(mTime.format(dTF1));
+        }else {
+            LocalTime eTime = MainApp.timingList.get(0).getEstime();
+            lblLocalTime.setText(eTime.format(dTF1));
+        }
+        updateManualCountLabel();
+        EditableCountLabel();
+    }
+    private void updateManualCountLabel() {
+        long count = listCollection.stream()
+                .filter(item -> !item.isQualityAuto() && !item.isWeightAuto())
+                .count();
+        lblManual.setText(String.valueOf(count));
+    }
+    private void EditableCountLabel() {
+        long editedCount = listCollection.stream()
+                .filter(item -> item.getUpdatedBy() != null && item.getUpdatedBy().equals(MainApp.identityDto.getSociety().getCode()))
+                .count();
+        lblEdited.setText(String.valueOf(editedCount));
     }
 
     private void fetchCurrentShiftCollection() {
@@ -1941,15 +2000,15 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         });
         new Thread(task2).start();
     }
-
+// DpuIncentive Load Data comment
     public void loadRequestData() {
-        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
-            if (MainApp.locale.equalsIgnoreCase("en")) {
-                lblShiftTime.setText("Shift Timing :- Morning : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "Evening : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
-            } else {
-                lblShiftTime.setText("શિફ્ટ નો સમય :- સવાર : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "સાંજ : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
-            }
-        }
+//        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
+//            if (MainApp.locale.equalsIgnoreCase("en")) {
+//                lblShiftTime.setText("Shift Timing :- Morning : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "Evening : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
+//            } else {
+//                lblShiftTime.setText("શિફ્ટ નો સમય :- સવાર : " + MainApp.timingList.get(0).getMstime() + "-" + MainApp.timingList.get(0).getMltime() + " | " + "સાંજ : " + MainApp.timingList.get(0).getEstime().minusHours(12) + "-" + MainApp.timingList.get(0).getEltime().minusHours(12));
+//            }
+//        }
 
         var task2 = new AllowDcsManualCollectionDateShiftLoadTask(CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue()), CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue()), null);
         task2.setOnSucceeded(e1 -> {
@@ -2121,7 +2180,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
             masterLines.clear();
             lines = Files.readAllLines(slipFile.toPath(), StandardCharsets.UTF_8);
-
+            int removepdline = -1;
             if (lines == null) return;
             for (int i = 0; i < lines.size(); ) {
                 String s = lines.get(i);
@@ -2196,6 +2255,19 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     s = s.replace("{tAmt}", collection.getxCol2() != null ? collection.getxCol2() : "");
                 }
 
+                if (s.contains("{pdRate}")) {
+                    if (schemeRateApplicability != null) {
+                        s = s.replace("{pdRate}", schemeRateApplicability.getRtpl() != null ? schemeRateApplicability.getRtpl().toString() : "0");
+                    } else {
+                        removepdline = i;
+                    }
+                }
+                if (s.contains("{pdAmt}")) {
+                    s = s.replace("{pdAmt}", schemeRateApplicability.getRtpl() != null ? (schemeRateApplicability.getRtpl().multiply(collection.getQty()).add(collection.getAmount())).toString() : "0");
+                }
+
+
+
                 if (resp != null) {
                     if (s.contains("{totalQty}")) {
                         s = s.replace("{totalQty}", String.valueOf(NumberUtil.round((double) resp[0], 2)));
@@ -2211,6 +2283,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 masterLines.add(s);
                 s = null;
             }
+            if (removepdline >= 0) {
+                lines.remove(removepdline);
+                masterLines.remove(removepdline);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2436,4 +2513,31 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 break;
         }
     }
+
+    private void loadSchemeRate() {
+        var task = new SchemeRateApplicabilityLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<SchemeRateApplicability> schemeRateApplicabilities = task.get();
+                if (schemeRateApplicabilities == null || schemeRateApplicabilities.isEmpty())
+                    return;
+                for (SchemeRateApplicability schemeRateApplicability1 : schemeRateApplicabilities) {
+                    if (collectionDate.toLocalDate().isAfter(schemeRateApplicability1.getFromDate().toLocalDate())
+                            && collectionDate.toLocalDate().isBefore(schemeRateApplicability1.getToDate().toLocalDate())) {
+                        this.schemeRateApplicability = schemeRateApplicability1;
+                    } else if ((collectionDate.toLocalDate().isEqual(schemeRateApplicability1.getFromDate().toLocalDate()) && (schemeRateApplicability1.getFromShift() <= cboxShift.getValue().getCode()) || (collectionDate.toLocalDate().isEqual(schemeRateApplicability1.getToDate().toLocalDate()) && schemeRateApplicability1.getToShift() >= cboxShift.getValue().getCode()))) {
+                        this.schemeRateApplicability = schemeRateApplicability1;
+                    }
+                }
+                if (schemeRateApplicability != null)
+                    LOGGER.info(String.valueOf(schemeRateApplicability.getSchemeRateAppCode()));
+                else
+                    LOGGER.info("No Scheme Found");
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
 }

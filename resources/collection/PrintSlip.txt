@@ -1,9 +1,15 @@
 {dcsshort}
 Code: {code}
 Name: {membername}
-Date: {date} - {shift}   MT: {type}
-Qty(L): {qty}    FAT%: {fat}
-Rate: {rate}     Amt: {amount}
+Date: {date} - {shift}
+MT: {type}
+Qty(L): {qty}
+FAT%: {fat}
+SNF: {snf}
+Rate: {rate}
+Amt: {amount}
 Date Period : {dateRange}
-Total Qty : {tQty} Amt : {tAmt}
+Total Qty : {tQty}
+Amt : {tAmt}
+PD Rate : {pdRate} PD Amount : {pdAmt}
 Kg Fat Rate: {kgfat}

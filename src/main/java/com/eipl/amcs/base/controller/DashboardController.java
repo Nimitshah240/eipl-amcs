@@ -228,25 +228,28 @@ public class DashboardController implements MyInitialization, PopupCallback {
             Platform.runLater(() -> root.requestFocus());
             root.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
                 switch (event.getCode()) {
-                    case F1:
+                    case C:
                         openMilkCollection();
                         break;
-                    case F2:
+                    case ENTER:
+                        openMilkCollection();
+                        break;
+                    case M:
                         openLocalMilkSale();
                         break;
-                    case F3:
+                    case D:
                         openMilkDispatch();
                         break;
-                    case F4:
+                    case R:
                         openReceipt();
                         break;
-                    case F5:
+                    case P:
                         openProductSale();
                         break;
-                    case F6:
+                    case K:
                         openKapaat();
                         break;
-                    case F7:
+                    case B:
                         openBilling();
                         break;
                     case L:
@@ -496,11 +499,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
     }
 
     private void openProductSale() {
-        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml")));
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml")));
     }
 
     private void openMilkDispatch() {
-        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatchAddEdit.fxml")));
     }
 
     private void openLocalMilkSale() {
@@ -777,6 +780,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
         colTableName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTableName()));
         colPendingData.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPendingCount()).asObject());
         tablePendingSync.setItems(tableDataList);
+        tablePendingSync.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
     }
 
     private void loadMilkType() {

@@ -1,6 +1,8 @@
 package com.eipl.amcs.master.operation.repository;
 
 import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
+import net.bytebuddy.TypeCache;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
@@ -10,5 +12,5 @@ public interface SchemeRateApplicabilityRepository extends JpaRepository<SchemeR
     @Transactional
     void deleteBySchemeRateAppCode(Integer schemeRateAppCode);
 
-    List<SchemeRateApplicability> findByIsActiveTrue();
+    List<SchemeRateApplicability> findByIsActiveTrue(Sort sort);
 }

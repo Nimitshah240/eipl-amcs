@@ -1,16 +1,24 @@
 package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.auth.task.IdentityTask;
 import com.eipl.amcs.auth.task.VerificationTask;
 import com.eipl.amcs.auth.task.VerifyIdentityTask;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.task.IdentityCheckTask;
 import com.eipl.amcs.base.task.IdentitySaveTask;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
+import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.global.repository.MilkTypeRepository;
+import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
+import com.eipl.amcs.master.org.model.Dock;
+import com.eipl.amcs.master.org.repository.SocietyRepository;
+import com.eipl.amcs.master.org.service.DockService;
 import com.eipl.amcs.setting.model.GeneralConfig;
 import com.eipl.amcs.setting.task.GeneralConfigSaveTask;
 import com.eipl.amcs.utils.ActivationUtil;
@@ -20,6 +28,7 @@ import com.eipl.amcs.utils.task.MemberCreateTask;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -33,8 +42,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import static com.eipl.amcs.utils.AppConstant.baseUrlRealTime;
-import static com.eipl.amcs.utils.AppConstant.syncUrlRealTime;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+
+import static com.eipl.amcs.utils.AppConstant.*;
+import static com.eipl.amcs.utils.AppConstant.DB_LOC;
+import static com.eipl.amcs.utils.AppConstant.EIPL_DB_NAME;
+import static com.eipl.amcs.utils.AppConstant.EIPL_DB_PASS;
 
 public class ActivationController implements MyInitialization {
 
@@ -55,7 +69,6 @@ public class ActivationController implements MyInitialization {
     private boolean validateCheckFlag = false;
     private AppConstant.ClientCode clientCode;
 
-
     @Override
     public Node getRoot() {
         return root;
@@ -66,7 +79,7 @@ public class ActivationController implements MyInitialization {
 
         this.resourceBundle = resourceBundle;
         txtServerDetail.setText("http://localhost:8080/eipl-amcs/");
-
+        checkActivation();
         btnActivate.setOnAction(e -> {
             try {
                 clientCode = AppConstant.ClientCode.valueOf(txtClientCode.getText().toUpperCase());
@@ -76,8 +89,10 @@ public class ActivationController implements MyInitialization {
                 alert.createAlert();
             }
             setFlag();
+            String DB_LOC = "localhost";
             if (!validateCheckFlag) {
                 try {
+                    setupPreferenceForDbSettings(DB_LOC);
                     CompletableFuture<String> future = verifyIdentityAsync();
                     future.thenAccept(resp -> {
                         if (resp == null) {
@@ -99,48 +114,7 @@ public class ActivationController implements MyInitialization {
                 }
 
             } else {
-                errorMsg = new StringBuilder();
-                if (!validate()) {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                            errorMsg.toString());
-                    alert.createAlert();
-                    return;
-                }
-
-                this.union = txtUnion.getText();
-                if (!societyCheckFlag) {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                            "Please Enter Valid Society No.");
-                    alert.createAlert();
-                    return;
-                }
-                this.society = txtSociety.getText();
-                if (!dockCheckFlag) {
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                            "Please Enter Valid Dock No.");
-                    alert.createAlert();
-                    return;
-                }
-                this.dock = txtDock.getText();
-                this.sampleNo = txtSampleMilkNo.getText();
-                txtServerDetail.setText(txtServerDetail.getText().replace("localhost", txtSampleMilkNo.getText()));
-                CompletableFuture<String> future = verifyIdentityAsync();
-                future.thenAccept(resp -> {
-                    if (resp == null) {
-                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                                resourceBundle.getString("error.occurred"));
-                        alert.createAlert();
-                        return;
-                    }
-                    baseUrlRealTime = resp.split("#")[0];
-                    syncUrlRealTime = resp.split("#")[1];
-                    makeFile();
-                    confirmAndClose();
-                    System.out.println("Successfully received baseUrl: " + resp);
-                }).exceptionally(ex -> {
-                    ex.printStackTrace();
-                    return null;
-                });
+                doubleDockProcess();
             }
         });
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -400,6 +374,7 @@ public class ActivationController implements MyInitialization {
         lines.add("masetting=" + new String(Base64.getEncoder().encode(("Single MA").getBytes())));
         lines.add("product.purchaserate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
         lines.add("product.salerate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
+        lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode(("0").getBytes())));
 
         return lines;
     }
@@ -481,5 +456,146 @@ public class ActivationController implements MyInitialization {
 
         new Thread(task).start();
         return futureBaseUrl;
+    }
+
+    public static void setupPreferenceForDbSettings(String DB_LOC) {
+        try {
+            Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+            preferences.put("AMCS_DB_LOC", DB_LOC);
+            try {
+                preferences.flush();
+                MainApp.paneDrop.setVisible(true);
+                startSpring();
+            } catch (BackingStoreException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void recoverFromPreferences() {
+        try {
+            DB_LOC = null;
+            Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+            DB_LOC = preferences.get("AMCS_DB_LOC", null);
+            EIPL_DB_PASS = preferences.get("AMCS_DB_PASS", null);
+            EIPL_DB_NAME = preferences.get("AMCS_DB_NAME", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean startSpring() {
+        try {
+            EmcsAppContext.initializeEmcsAppContext();
+        } catch (Exception e) {
+            System.out.println("error : " + e);
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public void checkActivation() {
+        if (!MainApp.properties.isEmpty()) {
+            txtSociety.setText(MainApp.getProperty("identity.society", ""));
+            txtUnion.setText(MainApp.getProperty("identity.union", ""));
+            txtDock.setText(MainApp.getProperty("identity.dock", ""));
+            txtSampleMilkNo.setText(MainApp.getProperty("samplemilk", ""));
+            txtClientCode.setText(MainApp.getProperty("client.code", ""));
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    resourceBundle.getString("databaseerror"));
+            alert.createAlert();
+            setFlag();
+            if (validateCheckFlag) {
+                lblSampleNo.setText("Server Details");
+                txtCowRange.setDisable(true);
+                txtBuffRange.setDisable(true);
+            } else {
+                lblSampleNo.setText("Sample No.");
+                txtCowRange.setDisable(false);
+                txtBuffRange.setDisable(false);
+            }
+        }
+    }
+
+    private void doubleDockSave() {
+        SocietyRepository societyRepository = EmcsAppContext.getContext().getBean(SocietyRepository.class);
+        MilkTypeRepository milkTypeRepository = EmcsAppContext.getContext().getBean(MilkTypeRepository.class);
+        Dock dock1 = new Dock();
+        dock1.setDockNo(txtDock.getText());
+        dock1.setUnionCode(txtUnion.getText());
+        dock1.setSociety(societyRepository.findById(txtSociety.getText()).get());
+        dock1.setIsDefault((short) 1);
+        dock1.setActive(true);
+        List<MilkType> milkTypeList = milkTypeRepository.findAll();
+        DockMilkTypeDto dto = new DockMilkTypeDto(dock1, milkTypeList);
+        DockService service = EmcsAppContext.getContext().getBean(DockService.class);
+        if (dto != null)
+            service.save(dto, null);
+        initializeIdentity();
+    }
+
+
+    private void initializeIdentity() {
+        var task = new IdentityTask(txtDock.getText(),
+                txtSociety.getText(),
+                txtUnion.getText());
+        task.setOnSucceeded(t -> {
+            try {
+                MainApp.identityDto = task.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void doubleDockProcess() {
+        errorMsg = new StringBuilder();
+        if (!validate()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    errorMsg.toString());
+            alert.createAlert();
+            return;
+        }
+
+        this.union = txtUnion.getText();
+        if (!societyCheckFlag) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    "Please Enter Valid Society No.");
+            alert.createAlert();
+            return;
+        }
+        this.society = txtSociety.getText();
+        if (!dockCheckFlag) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    "Please Enter Valid Dock No.");
+            alert.createAlert();
+            return;
+        }
+        this.dock = txtDock.getText();
+        this.sampleNo = txtSampleMilkNo.getText();
+        txtServerDetail.setText(txtServerDetail.getText().replace("localhost", txtSampleMilkNo.getText()));
+        DB_LOC = txtSampleMilkNo.getText();
+        setupPreferenceForDbSettings(DB_LOC);
+        doubleDockSave();
+        CompletableFuture<String> future = verifyIdentityAsync();
+        future.thenAccept(resp -> {
+            if (resp == null) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                        resourceBundle.getString("error.occurred"));
+                alert.createAlert();
+                return;
+            }
+            baseUrlRealTime = resp.split("#")[0];
+            syncUrlRealTime = resp.split("#")[1];
+            makeFile();
+            confirmAndClose();
+            System.out.println("Successfully received baseUrl: " + resp);
+        }).exceptionally(ex -> {
+            ex.printStackTrace();
+            return null;
+        });
     }
 }
