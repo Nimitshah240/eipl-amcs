@@ -50,6 +50,14 @@ public class MainApp extends Application {
     public static final DecimalFormat DECIMAL_FORMAT_1_DIGIT = new DecimalFormat("0.0");
     public static final DecimalFormat DECIMAL_FORMAT_2_DIGIT = new DecimalFormat("0.00");
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
+    public static final int OPERATION_SOURCE = 1;
+    public static final String SOURCE_RECORD_ORG_TYPE = "SELF";
+    public static final String OPERATION_CREATE = "INSERT";
+    public static final String OPERATION_UPDATE = "UPDATE";
+    public static final String OPERATION_DELETE = "DELETE";
+    public static Map<String, List<TableColItem>> tableConfiguration = new HashMap<>();
+    public static final String MORNING_SHIFT = "06:00";
+    public static final String EVENING_SHIFT = "16:00";
     public static Stage stage;
     public static BorderPane contentPane;
     public static StackPane paneDrop;
@@ -58,7 +66,7 @@ public class MainApp extends Application {
     public static FxmlLoaderUtil fxmlLoaderUtil;
     public static ResourceBundle bundle;
     public static Long syncCount;
-    public static Map<String, List<TableColItem>> tableConfiguration = new HashMap<>();
+//    public static Map<String, List<TableColItem>> tableConfiguration = new HashMap<>();
     public static IdentityDto identityDto;
     public static User user;
     public static String systemId = "";

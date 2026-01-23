@@ -57,6 +57,8 @@ public class LocalMilkSale extends BaseModelTxn {
     private BigDecimal credit;
     private String unionCode;
     private String voucherNo;
+    @Column(name = "is_delete")
+    private Boolean isDelete;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ShiftSerialize.class)

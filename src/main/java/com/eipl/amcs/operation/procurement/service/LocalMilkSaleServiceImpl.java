@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.master.account.model.*;
@@ -11,6 +12,9 @@ import com.eipl.amcs.master.operation.repository.MemberCreditLimitTransactionRep
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
+import com.eipl.amcs.operation.procurement.model.CouponBalance;
+import com.eipl.amcs.operation.procurement.model.CouponBalanceTransaction;
+import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.repository.LocalMilkSaleRepository;
 import com.eipl.amcs.utils.AppConstant;
@@ -25,6 +29,7 @@ import org.springframework.validation.FieldError;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +60,8 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
     @Autowired
     private MemberCreditLimitRepository memberCreditLimitRepository;
+    @Autowired
+    private CouponBalanceService couponBalanceService;
 
     @Override
     public List<LocalMilkSale> findAll(LocalDateTime fromDt, LocalDateTime toDt) {
@@ -490,6 +497,116 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
             localMilkSaleRepository.save(localMilkSale);
         }
         return dtoList;
+    }
+
+    @Override
+    public double countCoupon(CouponIssue issue) {
+        if (issue == null) return 0.0;
+        short  one = 1;
+        short  two = 2;
+        if (issue.getConsumerType() == 3 || issue.getConsumerType() == 4) {
+            one = 3;
+            two = 4;
+        }
+
+        try {
+            LocalDateTime fromDateTime = LocalDateTime.of(
+                    MainApp.getFinancialYear().getStartDate(),
+                    LocalTime.parse(MainApp.MORNING_SHIFT)
+            );
+            LocalDateTime toDateTime = LocalDateTime.of(
+                    MainApp.getFinancialYear().getEndDate(),
+                    LocalTime.parse(MainApp.EVENING_SHIFT)
+            );
+
+            Double count = localMilkSaleRepository.sumCouponByMemberAndTypePairs(
+                    false,
+                    issue.getConsumerCode(),
+                    one,
+                    two,
+                    issue.getMilkType(),
+                    issue.getMilkClass(),
+                    fromDateTime,
+                    toDateTime
+            );
+            return (count != null) ? count : 0.0;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return 0.0;
+        }
+    }
+
+    @Override
+    public boolean insertBalance(LocalMilkSale localMilkSale, int intType, String strSourceOrgType, String strOperationType) {
+
+        try {
+            if (intType == 1) {
+                CouponBalance couponBal = couponBalanceService.fetchBalanceForConsumer(localMilkSale.getConsumerType(),
+                        localMilkSale.getConsumerCode(), localMilkSale.getMilkType(), localMilkSale.getMilkClass());
+                if (couponBal != null) {
+                    if (couponBal.getBalance() - localMilkSale.getCoupon().doubleValue() < 0)
+                        throw new Exception();
+
+                    couponBal.setValuesInObject(localMilkSale.getConsumerCode(), localMilkSale.getConsumerType(),
+                            couponBal.getBalance() - localMilkSale.getCoupon().doubleValue(), localMilkSale.getMilkType(),
+                            localMilkSale.getMilkClass());
+                    couponBal.setUpdatedAt(LocalDateTime.now());
+                    couponBal.setUpdatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
+                    couponBalanceService.update(couponBal, intType, strSourceOrgType, MainApp.OPERATION_UPDATE);
+
+                    CouponBalanceTransaction prevTxn = couponBalanceService.fetchPrevTxn(localMilkSale.getConsumerType(),
+                            localMilkSale.getConsumerCode(), localMilkSale.getMilkType(), localMilkSale.getMilkClass());
+                    CouponBalanceTransaction txn = new CouponBalanceTransaction();
+                    txn.setValuesInObject(localMilkSale.getConsumerCode(), localMilkSale.getConsumerType(),
+                            localMilkSale.getMilkClass(), localMilkSale.getMilkType(), couponBal.getCouponBalanceCode(),
+                            "Local Milk Sale", prevTxn.getBalance(), localMilkSale.getCoupon().doubleValue(),
+                            prevTxn.getBalance() - localMilkSale.getCoupon().doubleValue());
+                    couponBalanceService.insert(txn, intType, strSourceOrgType, MainApp.OPERATION_CREATE);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateBalance(LocalMilkSale localMilkSale, int intType, String strSourceOrgType, String strOperationType) {
+        try {
+            if (intType == 1) {
+                LocalMilkSale localMilkSalePrev = localMilkSaleRepository.findById(localMilkSale.getCode()).orElse(null);
+
+                CouponBalance couponBal = couponBalanceService.fetchBalanceForConsumer(localMilkSale.getConsumerType(),
+                        localMilkSale.getConsumerCode(), localMilkSale.getMilkType(), localMilkSale.getMilkClass());
+                if (couponBal != null) {
+                    if (couponBal.getBalance() + (localMilkSalePrev.getCoupon().doubleValue() - localMilkSale.getCoupon().doubleValue()) < 0)
+                        throw new Exception();
+
+                    couponBal.setValuesInObject(localMilkSale.getConsumerCode(), localMilkSale.getConsumerType(),
+                            couponBal.getBalance() + (localMilkSalePrev.getCoupon().doubleValue() - localMilkSale.getCoupon().doubleValue()),
+                            localMilkSale.getMilkType(), localMilkSale.getMilkClass());
+                    couponBal.setUpdatedAt(LocalDateTime.now());
+                    couponBal.setUpdatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
+                    couponBalanceService.update(couponBal, intType, strSourceOrgType, MainApp.OPERATION_UPDATE);
+
+                    CouponBalanceTransaction prevTxn = couponBalanceService.fetchPrevTxn(localMilkSale.getConsumerType(),
+                            localMilkSale.getConsumerCode(), localMilkSale.getMilkType(), localMilkSale.getMilkClass());
+                    CouponBalanceTransaction txn = new CouponBalanceTransaction();
+                    txn.setValuesInObject(localMilkSale.getConsumerCode(), localMilkSale.getConsumerType(),
+                            localMilkSale.getMilkClass(), localMilkSale.getMilkType(), couponBal.getCouponBalanceCode(),
+                            "Local Milk Sale Edit", prevTxn.getBalance(),
+                            localMilkSalePrev.getCoupon().doubleValue() - localMilkSale.getCoupon().doubleValue(),
+                            prevTxn.getBalance() + (localMilkSalePrev.getCoupon().doubleValue() - localMilkSale.getCoupon().doubleValue()));
+                    couponBalanceService.insert(txn, intType, strSourceOrgType, MainApp.OPERATION_CREATE);
+                    return true;
+                }
+            }
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return false;
     }
 
 }

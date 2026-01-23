@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.procurement.task;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.service.LocalMilkSaleService;
@@ -19,10 +20,35 @@ public class LocalMilkSaleSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             LocalMilkSaleService service = EmcsAppContext.getContext().getBean(LocalMilkSaleService.class);
+            boolean isCoupon = (dto.getPaymentMode() == 2);
+
+//            if (this.update == 0) {
+//                service.insertBalance(dto, MainApp.OPERATION_SOURCE, MainApp.SOURCE_RECORD_ORG_TYPE,
+//                        MainApp.OPERATION_CREATE);
+//                service.save(dto, CommonUtils.setIdentityHeader());
+//            } else {
+//                service.updateBalance(dto, MainApp.OPERATION_SOURCE, MainApp.SOURCE_RECORD_ORG_TYPE,
+//                        MainApp.OPERATION_CREATE);
+//                service.update(dto, CommonUtils.setIdentityHeader());
+//            }
+
             if (this.update == 0) {
-                service.save(dto, CommonUtils.setIdentityHeader());
-            } else {
-                service.update(dto, CommonUtils.setIdentityHeader());
+                if(isCoupon){
+                    service.insertBalance(dto, MainApp.OPERATION_SOURCE, MainApp.SOURCE_RECORD_ORG_TYPE,
+                            MainApp.OPERATION_CREATE);
+                    service.save(dto, CommonUtils.setIdentityHeader());
+                }else {
+                    service.save(dto, CommonUtils.setIdentityHeader());
+                }
+            }else{
+                if (isCoupon) {
+                    service.updateBalance(dto, MainApp.OPERATION_SOURCE, MainApp.SOURCE_RECORD_ORG_TYPE,
+                            MainApp.OPERATION_CREATE);
+                    service.update(dto, CommonUtils.setIdentityHeader());
+                }else {
+                    service.update(dto, CommonUtils.setIdentityHeader());
+                }
+
             }
             return true;
         } catch (Exception e) {
