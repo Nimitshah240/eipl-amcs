@@ -165,11 +165,11 @@ public class GeneralConfigController implements MyInitialization {
         txtVariationFat.setText(MainApp.getProperty("variation.fat", "30.0"));
         txtVariationSnf.setText(MainApp.getProperty("variation.snf", "30.0"));
 
-        cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
-        cboxAvgBasedOn.setValue(
-                MainApp.getProperty("based.on.param", "Shift").equalsIgnoreCase("Shift") ? "Shift" :
-                        MainApp.getProperty("based.on.param", "Shift").equalsIgnoreCase("Day") ? "Day" : "Payment Cycle"
-        );
+     //   cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
+//        cboxAvgBasedOn.setValue(
+//                MainApp.getProperty("based.on.param", "Shift").equalsIgnoreCase("Shift") ? "Shift" :
+//                        MainApp.getProperty("based.on.param", "Shift").equalsIgnoreCase("Day") ? "Day" : "Payment Cycle"
+//        );
         txtNo.setText(MainApp.getProperty("variation.no.param", "5"));
         chkBlockQty.setSelected(MainApp.getProperty("variation.qty.block", "0").equalsIgnoreCase("1"));
         chkBlockFat.setSelected(MainApp.getProperty("variation.fat.block", "0").equalsIgnoreCase("1"));
@@ -264,10 +264,10 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("variation.fat=" + new String(Base64.getEncoder().encode(txtVariationFat.getText().trim().getBytes())));
         lines.add("variation.snf=" + new String(Base64.getEncoder().encode(txtVariationSnf.getText().trim().getBytes())));
 
-        lines.add("shift.param=" + new String(Base64.getEncoder().encode(
-                (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
-        lines.add("based.on.param=" + new String(Base64.getEncoder().encode(
-                (cboxAvgBasedOn.getValue() != null ? cboxAvgBasedOn.getValue() : "").getBytes(StandardCharsets.UTF_8))));
+        //lines.add("shift.param=" + new String(Base64.getEncoder().encode(
+             //   (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
+//        lines.add("based.on.param=" + new String(Base64.getEncoder().encode(
+//                (cboxAvgBasedOn.getValue() != null ? cboxAvgBasedOn.getValue() : "").getBytes(StandardCharsets.UTF_8))));
         lines.add("variation.no.param=" + new String(Base64.getEncoder().encode(txtNo.getText().trim().getBytes())));
         return lines;
     }
@@ -380,8 +380,8 @@ public class GeneralConfigController implements MyInitialization {
         cboxQualityMachine.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));
 //        cboxShift.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));
 //        cboxAvgBasedOn.setItems(FXCollections.observableList(Arrays.asList(arrQuality)));
-        cboxShift.setItems(FXCollections.observableArrayList("All", "Morning/Evening"));
-        cboxAvgBasedOn.setItems(FXCollections.observableArrayList("Shift", "Day", "Payment Cycle"));
+//        cboxShift.setItems(FXCollections.observableArrayList("All", "Morning/Evening"));
+//        cboxAvgBasedOn.setItems(FXCollections.observableArrayList("Shift", "Day", "Payment Cycle"));
     }
 
     @Override

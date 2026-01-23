@@ -1023,13 +1023,13 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         task.setOnSucceeded(e -> {
             try {
 
-                if (listBased != null) {
+//                if (listBased != null) {
                     listBased = task.get();
-                }else{
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
-                            resourceBundle.getString("ratemaster.not.found"));
-                    alert.createAlert();
-                }
+//                }else{
+//                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+//                            resourceBundle.getString("ratemaster.not.found"));
+//                    alert.createAlert();
+//                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

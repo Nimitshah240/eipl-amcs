@@ -57,7 +57,7 @@ public class MilkDispatchReportController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        cboxFormat.getItems().addAll("Format 1", "Format 2");
+        cboxFormat.getItems().addAll("Format 1", "Format 2", "Format 3");
         setupComboBox();
         cboxFormat.getSelectionModel().select(0);
         btnGenerate.setOnAction(e -> validateAndGenerate());
@@ -71,6 +71,8 @@ public class MilkDispatchReportController implements MyInitialization {
                 break;
             case 2:
                 validateAndGenerateReport();
+            case 3:
+                validateAndGenerateReportThree();
                 break;
         }
     }
@@ -98,6 +100,14 @@ public class MilkDispatchReportController implements MyInitialization {
         params.put("p_challan_no", dto.getChallanNo());
         params.put("p_locale", MainApp.locale);
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_TWO, params);
+        JasperViewer.viewReport(print, false);
+    }
+    private void validateAndGenerateReportThree() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_challan_no", dto.getChallanNo());
+        params.put("p_locale", MainApp.locale);
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_THREE, params);
         JasperViewer.viewReport(print, false);
     }
 }
