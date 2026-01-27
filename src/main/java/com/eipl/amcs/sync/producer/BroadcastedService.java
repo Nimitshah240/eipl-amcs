@@ -35,6 +35,7 @@ import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
+import com.eipl.amcs.master.procurement.repository.MemberMilkPurchaseRateDetailRepository;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
 import com.eipl.amcs.master.procurement.service.SocietyMilkPurchaseRateService;
 import com.eipl.amcs.operation.inventory.model.*;
@@ -164,6 +165,10 @@ public class BroadcastedService {
     private SchemeRateApplicabilityRepository schemeRateApplicabilityRepository;
     @Autowired
     private IdentityRepository identityRepository;
+    @Autowired
+    private SocietyPaymentCycleRepository societyPaymentCycleRepository;
+    @Autowired
+    private MemberMilkPurchaseRateDetailRepository memberMilkPurchaseRateDetailRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -950,8 +955,10 @@ public class BroadcastedService {
                             case "UPDATE":
                                 MilkCollection milkCollection = new MilkCollection();
                                 milkCollection.setCode(MainApp.identityDto.getDock().getDockNo() + "-" + (LocalDateTime.parse((String) jsonText.get("dateTimeOfCollection")).format(CODE_DATE_FMT)
-                                        + milkCollection.getShift().getCode() + "-" + milkCollection.getSampleNo()));
+                                        + jsonText.get("shiftCode") + "-" + milkCollection.getSampleNo()));
+                                milkCollection.setDock(MainApp.identityDto.getDock());
                                 milkCollection.setAmount(jsonText.get("amount") != null ? new BigDecimal(String.valueOf(jsonText.get("amount"))) : new BigDecimal(0));
+                                milkCollection.setCollectionDate(LocalDateTime.parse(jsonText.get("dateTimeOfCollection").toString()));
                                 milkCollection.setConvertedQty(jsonText.get("convertedQty") != null ? new BigDecimal(String.valueOf(jsonText.get("convertedQty"))) : new BigDecimal(0));
                                 milkCollection.setConvertedQtyMode(jsonText.get("convertedQtyMode") != null ? (int) jsonText.get("convertedQtyMode") : null);
                                 milkCollection.setClr(jsonText.get("clr") != null ? new BigDecimal(String.valueOf(jsonText.get("clr"))) : new BigDecimal(0));
@@ -975,7 +982,8 @@ public class BroadcastedService {
                                 milkCollection.setQty(jsonText.get("qty") != null ? new BigDecimal(String.valueOf(jsonText.get("qty"))) : null);
                                 milkCollection.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
                                 milkCollection.setSampleNo(jsonText.get("sampleNo") != null ? (int) (jsonText.get("sampleNo")) : null);
-
+                                milkCollection.setSocietyPaymentCycle(societyPaymentCycleRepository.findSocietyPaymentCycle(LocalDateTime.parse((String) jsonText.get("dateTimeOfCollection"))));
+                                milkCollection.setRateCode(memberMilkPurchaseRateDetailRepository.findRateCode(new BigDecimal(String.valueOf(jsonText.get("fat"))), new BigDecimal(String.valueOf(jsonText.get("snf")))));
                                 milkCollectionRepository.save(milkCollection, CommonUtils.setIdentityHeader());
                                 break;
                             case "DELETE":
