@@ -11,7 +11,7 @@
 <StackPane fx:id="root" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.EmcsAppController">
     <children>
-        <BorderPane fx:id="contentPane" styleClass="pane-off-white" prefHeight="200.0" prefWidth="200.0"/>
+        <BorderPane fx:id="contentPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" styleClass="pane-off-white" />
         <StackPane fx:id="paneDrop" styleClass="panebackdrop" visible="false">
             <children>
                 <AnchorPane maxHeight="150.0" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0"
