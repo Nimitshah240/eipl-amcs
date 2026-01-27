@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.eipl.amcs.controls.E_Button?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import com.eipl.amcs.controls.E_Button?>
-<AnchorPane fx:id="root" maxWidth="50.0" style="-fx-background-color: #ebebeb; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.NavbarController">
+<AnchorPane fx:id="root" maxWidth="30.0" style="-fx-background-color: #ebebeb; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.NavbarController">
     <children>
-        <VBox fx:id="menuVbox" maxWidth="50.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <VBox fx:id="menuVbox" maxWidth="30.0" spacing="3.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
                 <E_Button fx:id="btnDashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;">
                     <graphic>
@@ -51,7 +51,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
                             <image>
-                                <Image url="@images/Local-Sale.png" />
+                                <Image url="@images/Milk_Sale.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -75,7 +75,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Daily-Book_1.png" />
+                                <Image url="@images/Receipt.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -123,7 +123,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Daily-Book.png" />
+                                <Image url="@images/Bill.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -147,7 +147,7 @@
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/Setting_1.png" />
+                        <Image url="@images/Configuration.png" />
                      </image>
                   </ImageView>
                </graphic>

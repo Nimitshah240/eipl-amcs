@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.DashboardController">
+<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="820.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.DashboardController">
     <children>
         <StackPane layoutY="35.0" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="340.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="400.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                         <ColumnConstraints hgrow="SOMETIMES" />
                     </columnConstraints>
@@ -26,7 +26,7 @@
                             <children>
                                 <HBox alignment="CENTER" spacing="10.0">
                                     <children>
-                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%collectionsummary" HBox.hgrow="ALWAYS">
+                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="101.0" text="%collectionsummary" HBox.hgrow="ALWAYS">
                                             <HBox.margin>
                                                 <Insets left="5.0" />
                                             </HBox.margin>
@@ -34,10 +34,9 @@
                                                 <Insets left="5.0" />
                                             </padding>
                                         </Label>
-                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                                        <DatePicker fx:id="dpDate" maxWidth="150.0" />
-                                        <ComboBox fx:id="cboxShift" editable="true" prefHeight="25.0" prefWidth="94.0" />
-                                        <E_Button fx:id="btnLoad" text="%search">
+                                        <DatePicker fx:id="dpDate" maxWidth="150.0" prefHeight="25.0" prefWidth="100.0" />
+                                        <ComboBox fx:id="cboxShift" editable="true" prefHeight="25.0" prefWidth="70.0" />
+                                        <E_Button fx:id="btnLoad" prefHeight="25.0" prefWidth="75.0" text="%search">
                                             <HBox.margin>
                                                 <Insets right="5.0" />
                                             </HBox.margin>
