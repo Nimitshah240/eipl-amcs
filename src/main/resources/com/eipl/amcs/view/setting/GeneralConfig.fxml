@@ -31,7 +31,7 @@
                      <font>
                         <Font size="16.0" />
                      </font></Label>
-                        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="pane-white-drop-border" VBox.vgrow="ALWAYS">
+                        <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                             <children>
                                 <TabPane fx:id="tabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE">
                                     <tabs>

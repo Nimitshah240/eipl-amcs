@@ -34,8 +34,8 @@
                                                 <Insets left="5.0" />
                                             </padding>
                                         </Label>
-                                        <DatePicker fx:id="dpDate" maxWidth="150.0" prefHeight="25.0" prefWidth="100.0" />
-                                        <ComboBox fx:id="cboxShift" editable="true" prefHeight="25.0" prefWidth="70.0" />
+                                        <DatePicker fx:id="dpDate" maxWidth="150.0" prefHeight="25.0" prefWidth="124.0" />
+                                        <ComboBox fx:id="cboxShift" editable="true" prefHeight="25.0" prefWidth="127.0" />
                                         <E_Button fx:id="btnLoad" prefHeight="25.0" prefWidth="75.0" text="%search">
                                             <HBox.margin>
                                                 <Insets right="5.0" />
