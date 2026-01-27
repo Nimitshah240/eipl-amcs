@@ -306,7 +306,7 @@
                                              <padding>
                                                 <Insets left="5.0" />
                                              </padding></Label>
-                                          <Label fx:id="lblStartTime" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                          <Label fx:id="lblStartTime" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
@@ -320,7 +320,7 @@
                                              <padding>
                                                 <Insets left="5.0" />
                                              </padding></Label>
-                                          <Label fx:id="lblEndTime" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                          <Label fx:id="lblEndTime" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
@@ -334,7 +334,7 @@
                                              <padding>
                                                 <Insets left="5.0" />
                                              </padding></Label>
-                                          <Label fx:id="lblManual" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                          <Label fx:id="lblManual" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
@@ -348,7 +348,7 @@
                                              <padding>
                                                 <Insets left="5.0" />
                                              </padding></Label>
-                                          <Label fx:id="lblLocalTime" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1">
+                                          <Label fx:id="lblLocalTime" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>
@@ -360,7 +360,7 @@
                                                 <Insets left="5.0" />
                                              </padding>
                                           </Label>
-                                          <Label fx:id="lblEdited" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                          <Label fx:id="lblEdited" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
                                              </font>

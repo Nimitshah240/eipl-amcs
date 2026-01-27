@@ -28,7 +28,6 @@ import com.eipl.amcs.utils.task.MemberCreateTask;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -46,9 +45,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import static com.eipl.amcs.utils.AppConstant.*;
-import static com.eipl.amcs.utils.AppConstant.DB_LOC;
-import static com.eipl.amcs.utils.AppConstant.EIPL_DB_NAME;
-import static com.eipl.amcs.utils.AppConstant.EIPL_DB_PASS;
 
 public class ActivationController implements MyInitialization {
 
@@ -81,41 +77,45 @@ public class ActivationController implements MyInitialization {
         txtServerDetail.setText("http://localhost:8080/eipl-amcs/");
         checkActivation();
         btnActivate.setOnAction(e -> {
-            try {
-                clientCode = AppConstant.ClientCode.valueOf(txtClientCode.getText().toUpperCase());
-            } catch (Exception ex) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                        resourceBundle.getString("clientcodewrongerror"));
-                alert.createAlert();
-            }
-            setFlag();
-            String DB_LOC = "localhost";
-            if (!validateCheckFlag) {
+            MainApp.paneDrop.setVisible(true);
+            CompletableFuture.runAsync(() -> {
                 try {
-                    setupPreferenceForDbSettings(DB_LOC);
-                    CompletableFuture<String> future = verifyIdentityAsync();
-                    future.thenAccept(resp -> {
-                        if (resp == null) {
-                            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert.createAlert();
-                            return;
-                        }
-                        baseUrlRealTime = resp.split("#")[0];
-                        syncUrlRealTime = resp.split("#")[1];
-                        System.out.println("Successfully received baseUrl: " + resp);
-                        validateAndMakeFile();
-                    }).exceptionally(ex -> {
-                        ex.printStackTrace();
-                        return null;
-                    });
-                } catch (Exception exe) {
-                    throw new RuntimeException(exe);
+                    clientCode = AppConstant.ClientCode.valueOf(txtClientCode.getText().toUpperCase());
+                } catch (Exception ex) {
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                            resourceBundle.getString("clientcodewrongerror"));
+                    alert.createAlert();
                 }
+                setFlag();
+                String DB_LOC = "localhost";
+                if (!validateCheckFlag) {
+                    try {
+                        setupPreferenceForDbSettings(DB_LOC);
+                        CompletableFuture<String> future = verifyIdentityAsync();
+                        future.thenAccept(resp -> {
+                            if (resp == null) {
+                                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                                        resourceBundle.getString("error.occurred"));
+                                alert.createAlert();
+                                MainApp.paneDrop.setVisible(false);
+                                return;
+                            }
+                            baseUrlRealTime = resp.split("#")[0];
+                            syncUrlRealTime = resp.split("#")[1];
+                            System.out.println("Successfully received baseUrl: " + resp);
+                            validateAndMakeFile();
+                        }).exceptionally(ex -> {
+                            ex.printStackTrace();
+                            return null;
+                        });
+                    } catch (Exception exe) {
+                        throw new RuntimeException(exe);
+                    }
 
-            } else {
-                doubleDockProcess();
-            }
+                } else {
+                    doubleDockProcess();
+                }
+            });
         });
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
             setFlag();
@@ -464,7 +464,6 @@ public class ActivationController implements MyInitialization {
             preferences.put("AMCS_DB_LOC", DB_LOC);
             try {
                 preferences.flush();
-                MainApp.paneDrop.setVisible(true);
                 startSpring();
             } catch (BackingStoreException e) {
                 e.printStackTrace();
@@ -586,6 +585,7 @@ public class ActivationController implements MyInitialization {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                         resourceBundle.getString("error.occurred"));
                 alert.createAlert();
+                MainApp.paneDrop.setVisible(false);
                 return;
             }
             baseUrlRealTime = resp.split("#")[0];
