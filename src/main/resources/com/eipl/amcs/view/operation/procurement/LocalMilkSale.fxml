@@ -63,6 +63,7 @@
                         <TableColumn fx:id="colQuantity" prefWidth="75.0" styleClass="cell-right-aligned" text="%quantity" />
                         <TableColumn fx:id="colRate" prefWidth="75.0" styleClass="cell-right-aligned" text="%rate" />
                         <TableColumn fx:id="colAmount" prefWidth="100.0" styleClass="cell-right-aligned" text="%amount" />
+<!--                        <TableColumn fx:id="colCouponBalance" prefWidth="100.0" styleClass="cell-right-aligned" text="%couponbalance" />-->
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">

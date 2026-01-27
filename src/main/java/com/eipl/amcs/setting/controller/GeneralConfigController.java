@@ -166,6 +166,8 @@ public class GeneralConfigController implements MyInitialization {
         txtVariationFat.setText(MainApp.getProperty("variation.fat", "30.0"));
         txtVariationSnf.setText(MainApp.getProperty("variation.snf", "30.0"));
 
+     //   cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
+
 //        cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
 //        cboxAvgBasedOn.setValue(
 //                MainApp.getProperty("based.on.param", "Shift").equalsIgnoreCase("Shift") ? "Shift" :
@@ -266,6 +268,9 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("variation.fat=" + new String(Base64.getEncoder().encode(txtVariationFat.getText().trim().getBytes())));
         lines.add("variation.snf=" + new String(Base64.getEncoder().encode(txtVariationSnf.getText().trim().getBytes())));
         lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode((chkCodeMilkTypeParsing.isSelected() ? "1" : "0").getBytes())));
+
+        //lines.add("shift.param=" + new String(Base64.getEncoder().encode(
+             //   (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
 
 //        lines.add("shift.param=" + new String(Base64.getEncoder().encode(
 //                (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));

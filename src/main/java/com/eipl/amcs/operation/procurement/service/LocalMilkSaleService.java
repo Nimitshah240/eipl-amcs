@@ -1,6 +1,9 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.exception.BusinessValidationFailException;
+import com.eipl.amcs.operation.procurement.model.CouponBalance;
+import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 
 import java.time.LocalDateTime;
@@ -24,5 +27,8 @@ public interface LocalMilkSaleService {
 
     List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header);
 
+    double  countCoupon(CouponIssue issue);
 
+    boolean insertBalance(LocalMilkSale localMilkSale, int intType, String strSourceOrgType, String strOperationType);
+    boolean updateBalance(LocalMilkSale localMilkSale, int intType, String strSourceOrgType, String strOperationType);
 }
