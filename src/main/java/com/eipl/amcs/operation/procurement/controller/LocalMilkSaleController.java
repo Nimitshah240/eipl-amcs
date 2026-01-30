@@ -140,7 +140,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             LocalMilkSale dto = propLocalMilkSaleDto.get();
             if (dto != null) {
-                var task = new LocalMilkSaleDeleteTask(dto.getCode());
+                var task = new LocalMilkSaleDeleteTask(dto);
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();

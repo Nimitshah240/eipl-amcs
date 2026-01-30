@@ -1,6 +1,7 @@
 package com.eipl.amcs.operation.procurement.model;
 
-import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.base.JsonAndTableBuilder;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.MilkClassDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
@@ -11,6 +12,7 @@ import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.operation.model.CustomerDetailsAudit;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,16 +33,15 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "coupon_issue")
-public class CouponIssue extends BaseModel {
+public class CouponIssue extends BaseModelTxn {
 
     @Id
-    @Column(name = "coupon_issue_no", length = 20)
-    private String couponIssueNo;
-
+    private String code;
     private Double amount;
     private String consumerCode;
     private Integer consumerType;
     private String flgSentboxEntry;
+    @Column(name = "is_active")
     private boolean active;
     private Boolean isDelete;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -107,10 +108,60 @@ public class CouponIssue extends BaseModel {
     public String getConsumerTypeString() {
         if (this.consumerType == null) return "";
         switch (this.consumerType) {
-            case 1: case 2: return "member";
-            case 3: return "vendor";
-            case 4: return "institute";
-            default: return "consumer";
+            case 1:
+            case 2:
+                return "member";
+            case 3:
+                return "vendor";
+            case 4:
+                return "institute";
+            default:
+                return "consumer";
         }
     }
+
+    @Override
+    public Object getId() {
+        return this.getCode();
+    }
+
+    @Override
+    public String getTableName() {
+        return "coupon_issue";
+    }
+
+
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        CouponIssueAudit audit = new CouponIssueAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
+
+        audit.setCouponIssueCode(this.getCode());
+        audit.setAmount(this.getAmount());
+        audit.setConsumerCode(this.getConsumerCode());
+        audit.setConsumerType(this.getConsumerType());
+        audit.setFlgSentboxEntry(this.getFlgSentboxEntry());
+        audit.setIsDelete(this.isDelete);
+        audit.setIssueDate(this.getIssueDate());
+        audit.setSyncStatus(this.getSyncStatus());
+        audit.setSyncTimestamp(this.getSyncTimestamp());
+        audit.setVoucherNo(this.getVoucherNo());
+
+        audit.setMilkClass(this.getMilkClass());
+        audit.setMilkType(this.getMilkType());
+        audit.setUnion(this.getUnion());
+        audit.setSociety(this.getSociety());
+
+        audit.setCreatedAt(this.getCreatedAt());
+        audit.setCreatedBy(this.getCreatedBy());
+        audit.setUpdatedAt(this.getUpdatedAt());
+        audit.setUpdatedBy(this.getUpdatedBy());
+        audit.setXCol1(this.getXCol1());
+        audit.setXCol2(this.getXCol2());
+        audit.setXCol3(this.getXCol3());
+
+        return audit;
+    }
+
 }

@@ -10,18 +10,11 @@ public interface CouponBalanceService {
 
 
     CouponBalance fetchBalanceForConsumer(int consumerType, String consumerCode,
-                                              MilkType animalType, MilkClass milkClass) throws Exception;
+                                          MilkType animalType) throws Exception;
 
 
-    public boolean insert(CouponBalance couponBalance, int intType, String strSourceOrgType, String strOperationType);
+    boolean insert(CouponBalance couponBalance);
 
-    public boolean update(CouponBalance couponBalance, int intType, String strSourceOrgType, String strOperationType);
-
-    public boolean insert(CouponBalanceTransaction couponBalanceTxn, int intType, String strSourceOrgType,
-                          String strOperationType);
-
-    CouponBalanceTransaction fetchPrevTxn(int consumerType, String consumerCode,
-                                          MilkType animalType, MilkClass milkClass) throws Exception;
-
+    boolean update(CouponBalance couponBalance);
 
 }

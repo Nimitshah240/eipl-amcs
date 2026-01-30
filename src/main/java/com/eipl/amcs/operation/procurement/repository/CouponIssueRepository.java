@@ -5,6 +5,7 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.operation.procurement.model.CouponIssue;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,16 +22,16 @@ public interface CouponIssueRepository extends BaseRepository<CouponIssue, Strin
 
         @Override
         @EntityGraph(attributePaths = {"society", "milkClass", "milkType", "union"})
-        List<CouponIssue> findAll();
+        List<CouponIssue> findAll(Sort sort);
 
-        CouponIssue findTopByConsumerCodeAndConsumerTypeAndIsDeleteFalseAndCouponIssueNoNotOrderByIssueDateDesc(
+        CouponIssue findTopByConsumerCodeAndConsumerTypeAndIsDeleteFalseAndCodeNotOrderByIssueDateDesc(
                 String consumerCode,
                 int consumerType,
                 String couponIssueNo
         );
 
         @EntityGraph(attributePaths = {"union", "society", "milkType", "milkClass"})
-        CouponIssue findByCouponIssueNo(String couponIssueNo);
+        CouponIssue findByCode(String couponIssueNo);
 
         @Query("SELECT SUM(cc.amount) FROM CouponIssue cc " +
                 "WHERE cc.isDelete = :isDelete " +
@@ -40,7 +41,7 @@ public interface CouponIssueRepository extends BaseRepository<CouponIssue, Strin
                 "AND cc.milkType = :milkType " +
                 "AND cc.milkClass = :milkClass " +
                 "AND cc.issueDate BETWEEN :fromDate AND :toDate " +
-                "AND cc.couponIssueNo != :couponIssueNo")
+                "AND cc.code != :couponIssueNo")
         Double sumAmountByMemberExceptCurrent(
                 @Param("type1") int type1,
                 @Param("type2") int type2,
@@ -56,6 +57,6 @@ public interface CouponIssueRepository extends BaseRepository<CouponIssue, Strin
 
         @Modifying
         @Transactional
-        @Query("DELETE FROM CouponIssue sd WHERE sd.couponIssueNo = :couponIssueNo")
-        void deleteByCouponIssueNo(@Param("couponIssueNo") String couponIssueNo);
+        @Query("DELETE FROM CouponIssue sd WHERE sd.code = :couponIssueNo")
+        void deleteByCode(@Param("couponIssueNo") String code);
 }

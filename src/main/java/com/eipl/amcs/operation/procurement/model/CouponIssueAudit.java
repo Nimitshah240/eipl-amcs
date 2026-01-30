@@ -1,6 +1,7 @@
 package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.model.BaseModelAudit;
+import com.eipl.amcs.base.model.BaseModelTxnAudit;
 import com.eipl.amcs.json.deserialize.MilkClassDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
@@ -29,7 +30,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "coupon_issue_audit")
-public class CouponIssueAudit extends BaseModelAudit {
+public class CouponIssueAudit extends BaseModelTxnAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +38,7 @@ public class CouponIssueAudit extends BaseModelAudit {
     private Double amount;
     private String consumerCode;
     private Integer consumerType;
-    private String couponIssueNo;
+    private String couponIssueCode;
     private String flgSentboxEntry;
     private Boolean isDelete;
 
@@ -48,11 +49,6 @@ public class CouponIssueAudit extends BaseModelAudit {
     private LocalDateTime syncTimestamp;
 
     private String voucherNo;
-    //    @JsonSerialize(using = CollectionPointSerializer.class)
-//    @JsonDeserialize(using = CollectionPointDeserializer.class)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "collection_point_no", foreignKey = @ForeignKey(name = "fk_coupon_issue_collection_point_no"))
-//    private CollectionPoint collectionPointNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)

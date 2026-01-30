@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
@@ -29,7 +28,6 @@ import com.eipl.amcs.master.operation.task.LocalMilkSaleRateTask;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.operation.procurement.model.CouponBalance;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.service.CouponBalanceService;
 import com.eipl.amcs.operation.procurement.task.CouponBalanceForConsumerFetchTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleGetInvoiceNoTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleSaveTask;
@@ -77,7 +75,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     private LocalMilkSale dto = null;
     private PopupCallback callback;
     private BigDecimal rate;
-    private double oldCoupon = 0;
+    private CouponBalance couponBalance;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -117,7 +115,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         txtQuantity.setText("0");
         txtCash.setDisable(true);
         txtCredit.setDisable(true);
-        txtCouponBalance.setDisable(true);
+        txtCoupon.setDisable(true);
         txtAmount.setDisable(true);
         txtRate.setDisable(true);
         loadShift();
@@ -126,12 +124,22 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         loadMilkTypes();
         loadMilkClass();
         getNextCode();
+        fetchCouponBalance();
         cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("credit"), resourceBundle.getString("coupon"));
         cboxPaymentType.getSelectionModel().select(0);
         cboxPaymentType.setOnAction(e -> {
             paymentSelection();
+            fetchCouponBalance();
             if (cboxPaymentType.isFocused())
                 calculateValues();
+        });
+
+        cboxMilkType.setOnAction(e -> {
+            fetchCouponBalance();
+        });
+
+        cboxConsumertype.setOnAction(e -> {
+            fetchCouponBalance();
         });
 
         btnClose.setOnAction(e -> this.stage.close());
@@ -160,6 +168,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
         txtConsumerCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
             if (!newValue && txtConsumerCode.getText().length() > 0) {
+                fetchCouponBalance();
                 getRate(dpSellDate.getValue(), cboxMilkType.getValue(), cboxClass.getValue());
                 if (cboxConsumertype.getValue().getKey() < (short) 3) {
                     String code = generateCode(txtConsumerCode.getText().trim());
@@ -200,60 +209,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         }
     }
 
-//    private void validateAndSave() {
-//        errorMsg = new StringBuilder();
-//        if (!validate()) {
-//            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
-//                    errorMsg.toString());
-//            alert.createAlert();
-//            return;
-//        }
-//
-//        if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
-//            if (this.dto == null) return;
-//            setValuesInObject();
-//        } else {
-//            this.dto = new LocalMilkSale();
-//            setValuesInObject();
-//        }
-//
-//        CouponBalanceForConsumerFetchTask balanceTask = new CouponBalanceForConsumerFetchTask(dto);
-//
-//        balanceTask.setOnSucceeded(e -> {
-//            CouponBalance bal = (CouponBalance) balanceTask.getValue();
-//            oldCoupon  = dto.getCoupon().doubleValue();
-//            double currentCoupon = (dto.getCoupon() != null) ? dto.getCoupon().doubleValue() : 0.0;
-//            double availableBalance = (bal != null && bal.getBalance() != null) ? bal.getBalance() : 0.0;
-//
-//            if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
-//                if (bal != null && (availableBalance + (oldCoupon - currentCoupon) >= 0)) {
-//                    updateData();
-//                }else {
-//                    new ErrorAlert(MainApp.getStage(),
-//                            resourceBundle.getString("localmilk.sale.title"),
-//                            resourceBundle.getString("localmilk.sale.validation.couponlimit")).createAlert();
-//                }
-//            } else {
-//                if (bal != null && (availableBalance - currentCoupon >= 0)) {
-//                    saveData();
-//                }else {
-//                    new ErrorAlert(MainApp.getStage(),
-//                            resourceBundle.getString("localmilk.sale.title"),
-//                            resourceBundle.getString("localmilk.sale.validation.couponlimit")).createAlert();
-//                }
-//            }
-//        });
-//
-//        balanceTask.setOnFailed(e -> {
-//            balanceTask.getException().printStackTrace();
-//
-//        });
-//        Thread thread = new Thread(balanceTask);
-//        thread.setDaemon(true);
-//        thread.start();
-//
-//    }
-
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {
@@ -262,69 +217,27 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             alert.createAlert();
             return;
         }
-        boolean isUpdate = btnSaveUpdate.getText().equals(resourceBundle.getString("update"));
-        if (isUpdate) {
-            if (this.dto == null) return;
-            oldCoupon  = dto.getCoupon().doubleValue();
-            setValuesInObject();
-        } else {
-            this.dto = new LocalMilkSale();
-            setValuesInObject();
+
+        if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("coupon"))) {
+//           DO NOT CHANGE THIS POSITION - NIMIT
+            reCalculateCouponBalance();
         }
-
-        String selectedPayment = cboxPaymentType.getSelectionModel().getSelectedItem();
-        boolean isCouponPayment = selectedPayment != null && selectedPayment.equals(resourceBundle.getString("coupon"));
-
-        if (isCouponPayment) {
-            checkBalanceCoupon(isUpdate);
-        } else {
-            if (isUpdate) {
+        if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
+            if (this.dto != null) {
+                setValuesInObject();
                 updateData();
-            } else {
-                saveData();
             }
+        } else {
+            dto = new LocalMilkSale();
+            setValuesInObject();
+            saveData();
         }
-    }
-
-    private void checkBalanceCoupon(boolean isUpdate) {
-        CouponBalanceForConsumerFetchTask balanceTask = new CouponBalanceForConsumerFetchTask(dto);
-        balanceTask.setOnSucceeded(e -> {
-            CouponBalance bal = (CouponBalance) balanceTask.getValue();
-            double currentCoupon = (dto.getCoupon() != null) ? dto.getCoupon().doubleValue() : 0.0;
-            double availableBalance = (bal != null && bal.getBalance() != null) ? bal.getBalance() : 0.0;
-
-            if (isUpdate) {
-                if (bal != null && (availableBalance + (oldCoupon - currentCoupon) >= 0)) {
-                    updateData();
-                } else {
-                    new ErrorAlert(MainApp.getStage(),
-                            resourceBundle.getString("localmilk.sale.title"),
-                            resourceBundle.getString("localmilk.sale.validation.couponlimit")).createAlert();
-                }
-            } else {
-                if (bal != null && (availableBalance - currentCoupon >= 0)) {
-                    saveData();
-                } else {
-                    new ErrorAlert(MainApp.getStage(),
-                            resourceBundle.getString("localmilk.sale.title"),
-                            resourceBundle.getString("localmilk.sale.validation.couponlimit")).createAlert();
-                }
-            }
-        });
-
-        balanceTask.setOnFailed(e -> balanceTask.getException().printStackTrace());
-
-        Thread thread = new Thread(balanceTask);
-        thread.setDaemon(true);
-        thread.start();
     }
 
     private void setValuesInObject() {
         dto.setConsumerCode(generateCode(txtConsumerCode.getText().trim()));
         dto.setInvoiceNo(invoice);
         dto.setConsumerType(cboxConsumertype.getValue().getKey());
-//        dto.setPaymentMode((short) (cboxPaymentType.getSelectionModel().getSelectedIndex() == 0 ? 0 :
-//                (cboxPaymentType.getSelectionModel().getSelectedIndex() == 1 ? 1 : 0)));
         dto.setPaymentMode((short) cboxPaymentType.getSelectionModel().getSelectedIndex());
         dto.setMilkType(cboxMilkType.getValue());
         dto.setMilkClass(cboxClass.getValue());
@@ -334,12 +247,11 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         dto.setConvertedQuantityMode(dto.getQuantityMode() == 0 ? (short) 1 : (short) 0);
         dto.setRate(new BigDecimal(txtRate.getText()));
         dto.setAmount(new BigDecimal(txtAmount.getText().trim()));
-        dto.setCoupon(new BigDecimal(txtCouponBalance.getText().trim()));
-        dto.setIsDelete(false);
         dto.setCash(new BigDecimal(txtCash.getText().trim()));
-        if (Double.parseDouble(txtCouponBalance.getText().trim()) > 0) {
+        if (Double.parseDouble(txtCoupon.getText().trim()) > 0) {
+            dto.setCoupon(new BigDecimal(txtCoupon.getText().trim()));
+        } else {
             dto.setCoupon(BigDecimal.ZERO);
-            dto.setCoupon(new BigDecimal(txtCouponBalance.getText().trim()));
         }
         dto.setCredit(new BigDecimal(txtCredit.getText().trim()));
         dto.setSaleDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpSellDate.getValue(), cboxShift.getValue()));
@@ -394,18 +306,20 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("cash"))) {
                     if (txtCredit.getText().trim() == null || txtCredit.getText().isEmpty())
                         errorMsg.append(resourceBundle.getString("creditnullerror") + "\n");
-                    if (txtCouponBalance.getText().trim() == null || txtCouponBalance.getText().isEmpty())
+                    if (txtCoupon.getText().trim() == null || txtCoupon.getText().isEmpty())
                         errorMsg.append(resourceBundle.getString("couponnullerror") + "\n");
                 } else if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("credit"))) {
                     if (txtCash.getText().trim() == null || txtCash.getText().isEmpty())
                         errorMsg.append(resourceBundle.getString("cashnullerror") + "\n");
-                    if (txtCouponBalance.getText().trim() == null || txtCouponBalance.getText().isEmpty())
+                    if (txtCoupon.getText().trim() == null || txtCoupon.getText().isEmpty())
                         errorMsg.append(resourceBundle.getString("couponnullerror") + "\n");
                 } else if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("coupon"))) {
                     if (txtCredit.getText().trim() == null || txtCredit.getText().isEmpty())
                         errorMsg.append(resourceBundle.getString("creditnullerror") + "\n");
                     if (txtCash.getText().trim() == null || txtCash.getText().isEmpty())
                         errorMsg.append(resourceBundle.getString("cashnullerror") + "\n");
+                    if (checkBalance())
+                        errorMsg.append(resourceBundle.getString("insufficient.balance") + "\n");
                 }
             }
             if (errorMsg.length() == 0) {
@@ -421,7 +335,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
                 }
                 try {
-                    coupon = Double.parseDouble(txtCouponBalance.getText().trim());
+                    coupon = Double.parseDouble(txtCoupon.getText().trim());
                 } catch (NumberFormatException e) {
 
                 }
@@ -439,10 +353,16 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         return errorMsg.length() == 0;
     }
 
-
     @Override
     public void saveData() {
-        var task = new LocalMilkSaleSaveTask(dto, (short) 0);
+        LocalMilkSaleSaveTask newTask = null;
+        if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("coupon"))) {
+            newTask = new LocalMilkSaleSaveTask(dto, (short) 0, couponBalance);
+        } else {
+            newTask = new LocalMilkSaleSaveTask(dto, (short) 0);
+        }
+        var task = newTask;
+//        var task = new LocalMilkSaleSaveTask(dto, (short) 0);
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
@@ -465,7 +385,14 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     @Override
     public void updateData() {
-        var task = new LocalMilkSaleSaveTask(dto, (short) 1);
+        LocalMilkSaleSaveTask newTask = null;
+        if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("coupon"))) {
+            newTask = new LocalMilkSaleSaveTask(dto, (short) 1, couponBalance);
+        } else {
+            newTask = new LocalMilkSaleSaveTask(dto, (short) 1);
+        }
+        var task = newTask;
+//        var task = new LocalMilkSaleSaveTask(dto, (short) 1);
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
@@ -491,34 +418,18 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         if (cboxPaymentType.getSelectionModel().getSelectedItem() != null) {
             if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("cash"))) {
                 txtCash.setText(txtAmount.getText());
+                txtCoupon.setText("0.0");
                 txtCouponBalance.setText("0.0");
                 txtCredit.setText("0.0");
             } else if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("credit"))) {
                 txtCash.setText("0.0");
                 txtCredit.setText(txtAmount.getText());
+                txtCoupon.setText("0.0");
                 txtCouponBalance.setText("0.0");
             } else if (cboxPaymentType.getSelectionModel().getSelectedItem().equals(resourceBundle.getString("coupon"))) {
                 txtCash.setText("0.0");
                 txtCredit.setText("0.0");
-                txtCouponBalance.setText(txtAmount.getText());
-//                CouponBalanceForConsumerFetchTask balanceTask = new CouponBalanceForConsumerFetchTask(dto);
-//                balanceTask.setOnSucceeded(event -> {
-//                    CouponBalance bal = (CouponBalance) balanceTask.getValue();
-//                    if (bal != null && bal.getBalance() != null) {
-//                        txtCouponBalance.setText(bal.getBalance().toString());
-//                    } else {
-//                        txtCouponBalance.setText("0");
-//                    }
-//
-//                });
-//                balanceTask.setOnFailed(event -> {
-//                    Throwable exception = balanceTask.getException();
-//                    System.err.println("Task failed: " + exception.getMessage());
-//                    txtCouponBalance.setText("Error");
-//                });
-//                new Thread(balanceTask).start();
-//
-//            }
+                txtCoupon.setText(txtAmount.getText());
             }
         }
     }
@@ -542,12 +453,11 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             } else {
                 txtCredit.setText(String.valueOf((amount - discount) - cash - coupon));
             }
-        }
-        else if (cboxPaymentType.getValue().equals(resourceBundle.getString("coupon"))) {
+        } else if (cboxPaymentType.getValue().equals(resourceBundle.getString("coupon"))) {
             if ((amount - discount) - credit - cash < 0) {
-                txtCouponBalance.setText("0");
+                txtCoupon.setText("0");
             } else {
-                txtCouponBalance.setText(String.valueOf((amount - discount) - cash - credit));
+                txtCoupon.setText(String.valueOf((amount - discount) - cash - credit));
             }
         }
     }
@@ -647,7 +557,6 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
-
     private void getNameFromCustomerCode(String code) {
         //Code and name from customer code
         var task = new CustomerByIdLoadTask(code);
@@ -727,7 +636,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 txtAmount.setText("0");
                 txtRate.setText("0");
                 txtCash.setText("0");
-                txtCouponBalance.setText("0");
+                txtCoupon.setText("0");
                 txtCredit.setText("0");
 //                txtDiscount.setText("0");
             }
@@ -744,10 +653,9 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             cboxShift.getSelectionModel().select(dto.getShift());
             if (txtConsumerCode.getText() != null)
                 txtConsumerCode.setText(dto.getConsumerCode().substring(MainApp.getUser().getSociety().getCode().length()));
-//            cboxPaymentType.getSelectionModel().select(dto.getPaymentMode() == 0 ? resourceBundle.getString("cash")
-//                    : dto.getPaymentMode() == 1 ? resourceBundle.getString("credit")
-//                    : resourceBundle.getString("coupon"));
-            cboxPaymentType.getSelectionModel().select(dto.getPaymentMode());
+            cboxPaymentType.getSelectionModel().select(dto.getPaymentMode() == 0 ? resourceBundle.getString("cash")
+                    : dto.getPaymentMode() == 1 ? resourceBundle.getString("credit")
+                    : resourceBundle.getString("coupon"));
             cboxMilkType.getSelectionModel().select(dto.getMilkType());
             cboxClass.getSelectionModel().select(dto.getMilkClass());
             txtQuantity.setText(dto.getQuantity().toString());
@@ -755,25 +663,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             txtAmount.setText(dto.getAmount().toString());
             txtCash.setText(dto.getCash().toString());
             txtCredit.setText(dto.getCredit().toString());
-            txtCouponBalance.setText(dto.getCoupon() == null ? "0" : dto.getCoupon().toString());
-
-//            CouponBalanceForConsumerFetchTask balanceTask = new CouponBalanceForConsumerFetchTask(dto);
-//            balanceTask.setOnSucceeded(event -> {
-//                Object result = balanceTask.getValue();
-//                if (result instanceof CouponBalance) {
-//                    CouponBalance bal = (CouponBalance) result;
-//                    txtCouponBalance.setText(bal == null ? "0" : bal.toString());
-//                } else {
-//                    txtCouponBalance.setText("0");
-//                }
-//            });
-//
-//            balanceTask.setOnFailed(event -> {
-//                Throwable exception = balanceTask.getException();
-//                System.err.println("Task failed: " + exception.getMessage());
-//                txtCouponBalance.setText("Error");
-//            });
-//            new Thread(balanceTask).start();
+            txtCoupon.setText(dto.getCoupon() == null ? "0" : dto.getCoupon().toString());
         }
     }
 
@@ -784,9 +674,67 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             txtQuantity.setText("0");
             txtAmount.setText("0");
             txtRate.setText("0");
+            txtCouponBalance.setText("0");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private void fetchCouponBalance() {
+        try {
+            String selectedPayment = cboxPaymentType.getSelectionModel().getSelectedItem();
+            MilkType milkType = cboxMilkType.getSelectionModel().getSelectedItem();
+            String consumerCode = generateCode(txtConsumerCode.getText());
+            CustomerTypeKeyValDto consumerType = cboxConsumertype.getSelectionModel().getSelectedItem();
+            boolean isCouponPayment = selectedPayment != null && selectedPayment.equals(resourceBundle.getString("coupon"));
+
+            if (isCouponPayment && milkType != null && consumerCode != null && consumerType != null) {
+                CouponBalanceForConsumerFetchTask balanceTask = new CouponBalanceForConsumerFetchTask(Integer.valueOf(consumerType.getKey()), consumerCode, milkType);
+                balanceTask.setOnSucceeded(e -> {
+                    try {
+                        couponBalance = balanceTask.get();
+                        if (couponBalance != null)
+                            txtCouponBalance.setText(String.valueOf(couponBalance.getBalance()));
+                        else
+                            txtCouponBalance.setText("0.0");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+
+                balanceTask.setOnFailed(e -> {
+                    balanceTask.getException().printStackTrace();
+
+                });
+                new Thread(balanceTask).start();
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean checkBalance() {
+        BigDecimal newAmount = new BigDecimal(txtAmount.getText());
+        BigDecimal currentCouponBalance = new BigDecimal(txtCouponBalance.getText());
+        // return true means insufficient balance
+        if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
+            BigDecimal oldAmount = this.dto.getAmount();
+            BigDecimal oldCouponBalance = currentCouponBalance.add(oldAmount);
+            return !(oldCouponBalance.subtract(newAmount).floatValue() >= 0f);
+        } else {
+            return !(currentCouponBalance.subtract(newAmount).floatValue() >= 0f);
+        }
+    }
+
+    private void reCalculateCouponBalance() {
+        BigDecimal newAmount = new BigDecimal(txtAmount.getText());
+        BigDecimal currentCouponBalance = new BigDecimal(txtCouponBalance.getText());
+        if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
+            BigDecimal oldAmount = this.dto.getAmount();
+            BigDecimal oldCouponBalance = currentCouponBalance.add(oldAmount);
+            this.couponBalance.setBalance(oldCouponBalance.subtract(newAmount).doubleValue());
+        } else {
+            this.couponBalance.setBalance(currentCouponBalance.subtract(newAmount).doubleValue());
+        }
+    }
 }

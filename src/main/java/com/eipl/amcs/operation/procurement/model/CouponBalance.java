@@ -1,7 +1,9 @@
 package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.base.model.BaseModelTxn;
 import com.eipl.amcs.json.deserialize.MilkClassDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
@@ -30,7 +32,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "coupon_balance")
-public class CouponBalance extends BaseModel {
+public class CouponBalance extends BaseModelTxn {
     @Id
     @Column(name = "coupon_balance_code", length = 15)
     private String couponBalanceCode;
@@ -96,5 +98,41 @@ public class CouponBalance extends BaseModel {
         this.setMilkClass(milkClass);
         this.setMilkType(animalType);
         this.setUnion(MainApp.identityDto.getUnion() != null ? MainApp.identityDto.getUnion() : null);
+    }
+
+    @Override
+    public Object getId() {
+        return this.getCouponBalanceCode();
+    }
+
+    @Override
+    public String getTableName() {
+        return "coupon_balance";
+    }
+
+
+    @Override
+    public JsonAndTableBuilder getAuditModel(String operation, String user) {
+        CouponBalanceAudit audit = new CouponBalanceAudit();
+        audit.setOperationType(operation);
+        audit.setAuditCreatedBy(user);
+        audit.setCouponBalanceCode(this.getCouponBalanceCode());
+        audit.setBalance(this.getBalance());
+        audit.setConsumerCode(this.getConsumerCode());
+        audit.setConsumerType(this.getConsumerType());
+        audit.setMilkClass(this.getMilkClass());
+        audit.setMilkType(this.getMilkType());
+        audit.setFlgSentboxEntry(this.getFlgSentboxEntry());
+        audit.setSyncStatus(this.getSyncStatus());
+        audit.setSyncTimestamp(this.getSyncTimestamp());
+        audit.setUnion(this.getUnion());
+        audit.setSociety(this.getSociety());
+        audit.setOriginatingOrgCode(this.getOriginatingOrgCode());
+        audit.setOriginatingOrgType(this.getOriginatingOrgType());
+        audit.setOriginatingType(this.getOriginatingType());
+        audit.setXCol4(this.getXCol4());
+        audit.setXCol5(this.getXCol5());
+
+        return audit;
     }
 }

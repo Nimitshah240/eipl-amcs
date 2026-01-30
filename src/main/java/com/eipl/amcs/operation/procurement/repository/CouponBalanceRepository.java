@@ -11,11 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CouponBalanceRepository extends BaseRepository<CouponBalance, String> {
 
-    CouponBalance findFirstByConsumerTypeAndConsumerCodeAndMilkTypeAndMilkClass(
+    CouponBalance findFirstByConsumerTypeAndConsumerCodeAndMilkType(
             int consumerType,
             String consumerCode,
-            MilkType milkType,
-            MilkClass milkClass
+            MilkType milkType
     );
 
     @EntityGraph(attributePaths = {"milkType", "milkClass", "society", "union"})

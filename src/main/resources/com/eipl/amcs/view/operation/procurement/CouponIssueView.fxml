@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <?import javafx.geometry.Insets?>
+        <?import javafx.scene.control.Button?>
+        <?import javafx.scene.control.DatePicker?>
+        <?import javafx.scene.control.Label?>
+        <?import javafx.scene.control.TableColumn?>
+        <?import javafx.scene.control.TableView?>
+        <?import javafx.scene.layout.ColumnConstraints?>
+        <?import javafx.scene.layout.GridPane?>
+        <?import javafx.scene.layout.HBox?>
+        <?import javafx.scene.layout.RowConstraints?>
+        <?import javafx.scene.layout.StackPane?>
+        <?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.CouponIssueController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <HBox prefHeight="51.0" prefWidth="600.0" spacing="5.0">
+                    <children>
+                        <Label styleClass="header-text" text="%couponissue.title" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                        <Label contentDisplay="RIGHT" prefHeight="31.0" prefWidth="176.0" text=" " />
+                        <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS">
+                            <!--                            <children>-->
+                            <!--                                <GridPane alignment="TOP_RIGHT" hgap="10.0" prefHeight="40.0" prefWidth="600.0" vgap="5.0">-->
+                            <!--                                    <columnConstraints>-->
+                            <!--                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="23.0" prefWidth="100.0" />-->
+                            <!--                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />-->
+                            <!--                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="106.0" minWidth="10.0" percentWidth="23.0" prefWidth="102.0" />-->
+                            <!--                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" percentWidth="23.0" prefWidth="106.0" />-->
+                            <!--                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="88.0" minWidth="10.0" percentWidth="13.0" prefWidth="69.0" />-->
+                            <!--                                    </columnConstraints>-->
+                            <!--                                    <rowConstraints>-->
+                            <!--                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />-->
+                            <!--                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />-->
+                            <!--                                    </rowConstraints>-->
+                            <!--                                    <children>-->
+                            <!--                                        <Label text="%fromdate" GridPane.columnIndex="2" />-->
+                            <!--                                        <DatePicker fx:id="dpFromDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />-->
+                            <!--                                        <Label text="%todate" GridPane.columnIndex="3" />-->
+                            <!--                                        <DatePicker fx:id="dpToDate" GridPane.columnIndex="3" GridPane.rowIndex="1" />-->
+                            <!--                                        <Button fx:id="btnSearch" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="0.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%search" GridPane.columnIndex="4" GridPane.rowIndex="1" />-->
+                            <!--                                    </children>-->
+                            <!--                                </GridPane>-->
+                            <!--                            </children>-->
+                        </HBox>
+                    </children>
+                </HBox>
+                <TableView fx:id="tableIssueCoupon" prefHeight="317.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colDcsName" prefWidth="125.0" text="%dcs" />
+                        <TableColumn fx:id="colDate" prefWidth="100.0" text="%couponissue.table.date" />
+                        <TableColumn fx:id="colCode" prefWidth="125.0" text="%couponissue.table.consumercode" />
+                        <TableColumn fx:id="colConsumerType" prefWidth="125.0" text="%couponissue.table.consumertype" />
+                        <TableColumn fx:id="colName" prefWidth="250.0" text="%consumer.name" />
+                        <TableColumn fx:id="colMilkType" prefWidth="100.0" text="%couponissue.table.milktype" />
+                        <TableColumn fx:id="colMilkGrade" prefWidth="60.0" text="%couponissue.table.milkgrade" />
+                        <TableColumn fx:id="colAmount" prefWidth="150.0" text="%couponissue.table.couponamount" />
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnAddSave" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
+                        <Button fx:id="btnEditUpdate" disable="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
+                        <Button fx:id="btnDelete" disable="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
+                        <Button fx:id="btnCancel" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

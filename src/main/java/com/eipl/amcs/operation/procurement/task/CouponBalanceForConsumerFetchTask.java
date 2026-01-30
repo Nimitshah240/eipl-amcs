@@ -9,16 +9,20 @@ import com.eipl.amcs.operation.procurement.service.CouponBalanceService;
 import javafx.concurrent.Task;
 
 public class CouponBalanceForConsumerFetchTask extends Task<CouponBalance> {
-    private LocalMilkSale dto;
+    private int consumerType;
+    private String consumerCode;
+    private MilkType milkType;
 
-    public CouponBalanceForConsumerFetchTask( LocalMilkSale dto){
-        this.dto = dto;
+    public CouponBalanceForConsumerFetchTask(int consumerType, String consumerCode, MilkType milkType) {
+        this.consumerType = consumerType;
+        this.consumerCode = consumerCode;
+        this.milkType = milkType;
     }
 
     @Override
     protected CouponBalance call() throws Exception {
         CouponBalanceService couponBalanceService = EmcsAppContext.getContext().getBean(CouponBalanceService.class);
-        CouponBalance bal = couponBalanceService.fetchBalanceForConsumer(dto.getConsumerType(), dto.getConsumerCode(), dto.getMilkType(), dto.getMilkClass());
+        CouponBalance bal = couponBalanceService.fetchBalanceForConsumer(consumerType, consumerCode, milkType);
         return bal;
     }
 }

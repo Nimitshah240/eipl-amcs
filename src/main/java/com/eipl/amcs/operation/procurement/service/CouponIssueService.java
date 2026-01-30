@@ -8,12 +8,13 @@ import java.util.List;
 
 public interface CouponIssueService {
 
-     String getNextCode(Society society);
-     boolean insert(CouponIssue couponIssue, int intType, String strSourceOrgType, String strOperationType);
-     boolean update(CouponIssue couponIssue, int intType, String strSourceOrgType, String strOperationType);
-    boolean delete(CouponIssue couponIssue, int intType, String strSourceOrgType, String strOperationType);
-    public List<CouponIssue> fetchAll();
-    LocalDate fetchLatestDateByMember(String code, int intConsumerType, CouponIssue couponIssue);
-    double fetchAllByMemberExceptCurrent(CouponIssue issue);
+    String getNextCode(Society society);
 
+    boolean insert(CouponIssue couponIssue);
+
+    boolean update(CouponIssue couponIssue);
+
+    boolean delete(CouponIssue couponIssue);
+
+    List<CouponIssue> fetchAll();
 }

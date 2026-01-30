@@ -26,9 +26,4 @@ public interface LocalMilkSaleService {
     void delete(LocalMilkSale localMilkSale, String identityInfo);
 
     List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header);
-
-    double  countCoupon(CouponIssue issue);
-
-    boolean insertBalance(LocalMilkSale localMilkSale, int intType, String strSourceOrgType, String strOperationType);
-    boolean updateBalance(LocalMilkSale localMilkSale, int intType, String strSourceOrgType, String strOperationType);
 }

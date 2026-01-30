@@ -7,31 +7,24 @@ import javafx.concurrent.Task;
 
 public class CouponIssueSaveTask extends Task<Boolean> {
     private final CouponIssue couponIssue;
-    private final int source;
-    private final boolean isUpdate;
-    private final String orgType;
-    private final String operation;
+    private final short update;
 
-    public CouponIssueSaveTask(CouponIssue couponIssue, boolean isUpdate, int source, String orgType, String operation) {
+    public CouponIssueSaveTask(CouponIssue couponIssue, short update) {
         this.couponIssue = couponIssue;
-        this.isUpdate = isUpdate;
-        this.source = source;
-        this.orgType = orgType;
-        this.operation = operation;
+        this.update = update;
     }
 
     @Override
-    protected Boolean  call() throws Exception {
+    protected Boolean call() throws Exception {
 
         if (couponIssue == null) {
             return false;
         }
         CouponIssueService service = EmcsAppContext.getContext().getBean(CouponIssueService.class);
-        if (isUpdate) {
-            return service.insert(couponIssue, source, orgType, operation);
-        }else{
-            return service.update(couponIssue, source, orgType, operation);
+        if (this.update == 0) {
+            return service.insert(couponIssue);
+        } else {
+            return service.update(couponIssue);
         }
-
     }
 }

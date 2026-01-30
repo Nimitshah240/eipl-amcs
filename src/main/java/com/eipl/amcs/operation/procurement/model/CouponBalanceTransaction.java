@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "coupon_balance_transaction")
+@Table(name = "coupon_balance_audit")
 public class CouponBalanceTransaction extends BaseModelTxn {
 
     @Id

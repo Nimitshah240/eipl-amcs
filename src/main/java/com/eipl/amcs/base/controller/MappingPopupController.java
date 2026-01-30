@@ -41,6 +41,7 @@ import com.eipl.amcs.operation.inventory.dto.SaleTxnDto;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.procurement.controller.*;
 import com.eipl.amcs.operation.procurement.dto.CollectionEditDelete;
+import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
@@ -494,6 +495,13 @@ public class MappingPopupController implements MyInitialization {
                     controller60.setStage(stage);
                     controller60.setCallback(callback);
                     root.setCenter(controller60.getRoot());
+                    break;
+                case "CouponIssue":
+                    var controller61 = (CouponIssueAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/procurement/CouponIssueAddEdit.fxml"));
+                    controller61.setCouponIssue(object != null ? (CouponIssue) object : null);
+                    controller61.setStage(stage);
+                    controller61.setCallback(callback);
+                    root.setCenter(controller61.getRoot());
                     break;
             }
         } catch (Exception e) {
