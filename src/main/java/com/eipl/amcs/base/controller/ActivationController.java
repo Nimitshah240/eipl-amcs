@@ -2,9 +2,9 @@ package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.task.IdentityTask;
-import com.eipl.amcs.auth.task.VerificationTask;
 import com.eipl.amcs.auth.task.VerifyIdentityTask;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.base.task.IdentityCheckTask;
 import com.eipl.amcs.base.task.IdentitySaveTask;
@@ -46,7 +46,7 @@ import java.util.prefs.Preferences;
 
 import static com.eipl.amcs.utils.AppConstant.*;
 
-public class ActivationController implements MyInitialization {
+public class ActivationController implements MyInitialization, PopupCallback {
 
     public static final Properties properties1 = new Properties();
     @FXML
@@ -206,7 +206,6 @@ public class ActivationController implements MyInitialization {
         this.dock = txtDock.getText();
         this.sampleNo = txtSampleMilkNo.getText();
         createMembers();
-        makeFile();
     }
 
     private void createMembers() {
@@ -253,20 +252,14 @@ public class ActivationController implements MyInitialization {
                 identity.setSocietyCode(txtSociety.getText());
                 identity.setSystemMac(MainApp.getProperty("identity.id", ""));
 
-                var verificationRunnable = new VerificationTask(txtSociety.getText(), identity.getToken(), baseUrlRealTime);
-                var identitySaveRunnable = new IdentitySaveTask(identity);
-
-                CompletableFuture<Void> comptask1 = CompletableFuture.runAsync(verificationRunnable);
-                CompletableFuture<Void> comptask2 = CompletableFuture.runAsync(identitySaveRunnable);
-
-                CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(comptask1, comptask2);
-                combinedFuture.join();
-
-                System.out.println("SUCCESS: All tasks are finished.");
-                System.exit(0);
+                var task1 = new IdentitySaveTask(identity);
+                task1.setOnSucceeded(ex -> {
+                    System.out.println("SUCCESS: All tasks are finished.");
+                    openLicenseActivatePopup();
+                });
+                new Thread(task1).start();
             } catch (Exception exception) {
                 exception.printStackTrace();
-                System.exit(0);
             }
         });
         new Thread(task).start();
@@ -283,11 +276,22 @@ public class ActivationController implements MyInitialization {
                 Files.write(appProperties.toPath(), writeAppProperty(), StandardCharsets.UTF_8);
                 System.out.println("Created app.properties");
                 loadProperties();
+                System.exit(0);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private void openLicenseActivatePopup() {
+        try {
+            MainApp.paneDrop.setVisible(false);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), "Error", "Could not open License Activation window.");
+            alert.createAlert();
+        }
     }
 
     private boolean validate() {
@@ -461,7 +465,7 @@ public class ActivationController implements MyInitialization {
     public static void setupPreferenceForDbSettings(String DB_LOC) {
         try {
             Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
-            preferences.put("AMCS_DB_LOC", DB_LOC);
+            preferences.put("AMCS_DB_LOC", new String(Base64.getEncoder().encode(DB_LOC.getBytes())));
             try {
                 preferences.flush();
                 startSpring();
@@ -477,22 +481,22 @@ public class ActivationController implements MyInitialization {
         try {
             DB_LOC = null;
             Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
-            DB_LOC = preferences.get("AMCS_DB_LOC", null);
-            EIPL_DB_PASS = preferences.get("AMCS_DB_PASS", null);
-            EIPL_DB_NAME = preferences.get("AMCS_DB_NAME", null);
+            DB_LOC = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_LOC", null)));
+            EIPL_DB_PASS = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_PASS", null)));
+            EIPL_DB_NAME = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_NAME", null)));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static boolean startSpring() {
+    public static void startSpring() {
         try {
             EmcsAppContext.initializeEmcsAppContext();
         } catch (Exception e) {
             System.out.println("error : " + e);
+            MainApp.paneDrop.setVisible(false);
             throw new RuntimeException(e);
         }
-        return false;
     }
 
     public void checkActivation() {
@@ -590,12 +594,22 @@ public class ActivationController implements MyInitialization {
             }
             baseUrlRealTime = resp.split("#")[0];
             syncUrlRealTime = resp.split("#")[1];
-            makeFile();
             confirmAndClose();
             System.out.println("Successfully received baseUrl: " + resp);
         }).exceptionally(ex -> {
             ex.printStackTrace();
             return null;
         });
+    }
+
+    @Override
+    public void reloadData(boolean flag) {
+        if (flag)
+            makeFile();
+        else {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    resourceBundle.getString("verificationfailed"));
+            alert.createAlert();
+        }
     }
 }

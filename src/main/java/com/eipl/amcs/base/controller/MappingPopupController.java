@@ -495,6 +495,12 @@ public class MappingPopupController implements MyInitialization {
                     controller60.setCallback(callback);
                     root.setCenter(controller60.getRoot());
                     break;
+                case "LicenseActivatePopUp":
+                    var controller61 = (LicenseActivateController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/LicenseActivatePopUp.fxml"));
+                    controller61.setStage(stage);
+                    controller61.setCallback(callback);
+                    root.setCenter(controller61.getRoot());
+                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
