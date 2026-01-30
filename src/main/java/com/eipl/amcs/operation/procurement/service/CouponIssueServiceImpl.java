@@ -8,7 +8,6 @@ import com.eipl.amcs.master.operation.service.CustomerService;
 import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.operation.procurement.model.CouponBalance;
-import com.eipl.amcs.operation.procurement.model.CouponBalanceTransaction;
 import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.repository.CouponIssueRepository;
 import com.eipl.amcs.utils.CommonUtils;
@@ -20,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,12 +57,11 @@ public class CouponIssueServiceImpl implements CouponIssueService {
             if (couponBal == null) {
                 couponBal = new CouponBalance();
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
-                        couponIssue.getAmount(), couponIssue.getMilkType(), couponIssue.getMilkClass());
+                        couponIssue.getAmount(), couponIssue.getMilkType());
                 couponBalanceService.insert(couponBal);
             } else {
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
-                        couponIssue.getAmount() + couponBal.getBalance(), couponIssue.getMilkType(),
-                        couponIssue.getMilkClass());
+                        couponIssue.getAmount() + couponBal.getBalance(), couponIssue.getMilkType());
                 couponBal.setUpdatedAt(LocalDateTime.now());
                 couponBal.setUpdatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
                 couponBalanceService.update(couponBal);
@@ -97,17 +93,17 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     if (couponBalanceNew == null) {
                         couponBalanceNew = new CouponBalance();
                         couponBalanceNew.setValuesInObject(updatedCouponIssue.getConsumerCode(), updatedCouponIssue.getConsumerType(),
-                                updatedCouponIssue.getAmount(), updatedCouponIssue.getMilkType(), updatedCouponIssue.getMilkClass());
+                                updatedCouponIssue.getAmount(), updatedCouponIssue.getMilkType());
                         couponBalanceService.insert(couponBalanceNew);
                     } else {
                         couponBalanceNew.setValuesInObject(updatedCouponIssue.getConsumerCode(), updatedCouponIssue.getConsumerType(),
                                 couponBalanceNew.getBalance() + (updatedCouponIssue.getAmount()),
-                                updatedCouponIssue.getMilkType(), updatedCouponIssue.getMilkClass());
+                                updatedCouponIssue.getMilkType());
                         couponBalanceService.update(couponBalanceNew);
                     }
                     couponBalancePrev.setValuesInObject(couponIssuePrev.getConsumerCode(), couponIssuePrev.getConsumerType(),
                             couponBalancePrev.getBalance() - (couponIssuePrev.getAmount()),
-                            couponIssuePrev.getMilkType(), couponIssuePrev.getMilkClass());
+                            couponIssuePrev.getMilkType());
                     couponBalanceService.update(couponBalancePrev);
                 } else {
                     throw new RuntimeException("insufficient.balance");
@@ -116,7 +112,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 if (couponBalanceNew != null && (couponBalanceNew.getBalance() + (updatedCouponIssue.getAmount() - couponIssuePrev.getAmount())) >= 0) {
                     couponBalanceNew.setValuesInObject(updatedCouponIssue.getConsumerCode(), updatedCouponIssue.getConsumerType(),
                             couponBalanceNew.getBalance() + (updatedCouponIssue.getAmount() - couponIssuePrev.getAmount()),
-                            updatedCouponIssue.getMilkType(), updatedCouponIssue.getMilkClass());
+                            updatedCouponIssue.getMilkType());
                     couponBalanceService.update(couponBalanceNew);
                 } else {
                     throw new RuntimeException("insufficient.balance");
@@ -143,8 +139,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
 
 
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
-                        couponBal.getBalance() - couponIssuePrev.getAmount(), couponIssue.getMilkType(),
-                        couponIssue.getMilkClass());
+                        couponBal.getBalance() - couponIssuePrev.getAmount(), couponIssue.getMilkType());
                 couponBal.setUpdatedAt(LocalDateTime.now());
                 couponBal.setUpdatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
                 couponBalanceService.update(couponBal);
@@ -182,6 +177,16 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     } else {
                         item.setConsumerName(item.getConsumerCode());
                     }
+                }
+                try {
+                    CouponBalance couponBal = couponBalanceService.fetchBalanceForConsumer(
+                            item.getConsumerType(), item.getConsumerCode(),
+                            item.getMilkType());
+                    if (couponBal != null) {
+                        item.setBalance(couponBal.getBalance());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             if (item.getConsumerName() == null || item.getConsumerName().isEmpty()) {

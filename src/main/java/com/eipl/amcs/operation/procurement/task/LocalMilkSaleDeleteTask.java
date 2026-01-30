@@ -27,7 +27,7 @@ public class LocalMilkSaleDeleteTask extends Task<Boolean> {
                 } else {
                     couponBalance = new CouponBalance();
                     couponBalance.setValuesInObject(localMilkSale.getConsumerCode(), localMilkSale.getConsumerType(),
-                            Double.parseDouble(localMilkSale.getAmount().toString()), localMilkSale.getMilkType(), localMilkSale.getMilkClass());
+                            Double.parseDouble(localMilkSale.getAmount().toString()), localMilkSale.getMilkType());
                     couponBalanceService.insert(couponBalance);
                 }
             }

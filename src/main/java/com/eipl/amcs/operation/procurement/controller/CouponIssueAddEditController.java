@@ -11,11 +11,8 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.MilkClassConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
-import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.task.MilkClassLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Member;
@@ -37,7 +34,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,7 +43,7 @@ import java.util.concurrent.ExecutionException;
 public class CouponIssueAddEditController implements MyInitialization {
 
     @FXML
-    private E_TextField txtName, txtDcs;
+    private E_TextField txtName;
     @FXML
     private E_NumericField txtCode, txtAmount, txtIssueNumber;
     @FXML
@@ -58,8 +54,6 @@ public class CouponIssueAddEditController implements MyInitialization {
     private VBox vbox;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
-    @FXML
-    private ComboBox<MilkClass> cboxGread;
     @FXML
     private E_Button btnClose, btnSaveUpdate;
     @FXML
@@ -86,9 +80,9 @@ public class CouponIssueAddEditController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        loadControls();
         setupTable();
         loadData();
-        loadControls();
         setupComboBox();
 
         cboxType.setOnAction(event -> {
@@ -102,6 +96,7 @@ public class CouponIssueAddEditController implements MyInitialization {
 
         btnSaveUpdate.setOnAction(event -> {
             validateAndSave();
+            FocusUtils.requestFocus(txtCode);
         });
 
         txtCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
@@ -140,28 +135,6 @@ public class CouponIssueAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
-    public void loadMilkClass() {
-        var task = new MilkClassLoadTask();
-        task.setOnSucceeded(e -> {
-            try {
-                List<MilkClass> list = task.get();
-                if (list != null) {
-                    cboxGread.setItems(FXCollections.observableList(list));
-                }
-                if (dto != null) {
-                    Optional<MilkClass> milkClass = cboxGread.getItems().stream()
-                            .filter(p -> p.getCode() == dto.getMilkClass().getCode()).findFirst();
-                    if (milkClass.isPresent())
-                        cboxGread.getSelectionModel().select(milkClass.get());
-                } else {
-                    cboxGread.getSelectionModel().select(0);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
-    }
 
     public void loadCustomerType() {
         cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForLocalMilkSale()));
@@ -245,12 +218,10 @@ public class CouponIssueAddEditController implements MyInitialization {
 
                 cboxType.getSelectionModel().select(dto.getConsumerType() - 1);
                 dpDate.setValue(dto.getIssueDate());
-                txtDcs.setText(dto.getSociety().getCode());
                 txtIssueNumber.setText(dto.getCode());
                 txtName.setText(dto.getConsumerName());
                 txtCode.setText(dto.getConsumerCode().substring(MainApp.identityDto.getSociety().getCode().length()));
                 txtAmount.setText(String.valueOf(dto.getAmount()));
-                cboxGread.getSelectionModel().select(dto.getMilkClass());
                 cboxMilkType.getSelectionModel().select(dto.getMilkType());
             } else {
                 getNextCouponIssue();
@@ -266,7 +237,6 @@ public class CouponIssueAddEditController implements MyInitialization {
         dto.setAmount(Double.parseDouble(txtAmount.getText().trim().isEmpty() ? "0" : txtAmount.getText().trim()));
         dto.setConsumerCode(generateCode(txtCode.getText().trim()));
         dto.setConsumerType(cboxType.getSelectionModel().getSelectedIndex() + 1);
-        dto.setMilkClass(cboxGread.getSelectionModel().getSelectedItem());
         dto.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
         dto.setCode(txtIssueNumber.getText().trim());
         dto.setActive(true);
@@ -285,16 +255,13 @@ public class CouponIssueAddEditController implements MyInitialization {
     @Override
     public void setupComboBox() {
         cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxGread.setConverter(new MilkClassConvertor(cboxGread));
         dpDate.setConverter(new LocalDateConvertor());
     }
 
     @Override
     public void loadData() {
-        loadMilkClass();
         loadMilkType();
         loadCustomerType();
-        txtDcs.setText(MainApp.identityDto.getSociety().getCode());
     }
 
     @Override
@@ -303,19 +270,18 @@ public class CouponIssueAddEditController implements MyInitialization {
         txtCode.clear();
         txtName.clear();
         txtIssueNumber.clear();
-        dpDate.setValue(null);
+        dpDate.setValue(LocalDate.now());
         cboxMilkType.valueProperty().set(null);
-        cboxGread.valueProperty().set(null);
     }
 
     @Override
     public void loadControls() {
         txtIssueNumber.setDisable(true);
-        txtDcs.setDisable(true);
         dpDate.setValue(LocalDate.now());
     }
 
     private void validateAndSave() {
+        loadControls();
         errorMsg = new StringBuilder();
         if (!validate()) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("couponissue"),
@@ -420,8 +386,6 @@ public class CouponIssueAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("consumernamenullerror") + "\n");
         if (cboxMilkType.getValue() == null)
             errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
-        if (cboxGread.getValue() == null)
-            errorMsg.append(resourceBundle.getString("classnullerror") + "\n");
         if (txtAmount.getText() == null)
             errorMsg.append(resourceBundle.getString("amount.cannot.be.null") + "\n");
 

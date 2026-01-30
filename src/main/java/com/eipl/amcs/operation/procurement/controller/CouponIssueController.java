@@ -7,10 +7,7 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.task.CouponIssueDeleteTask;
 import com.eipl.amcs.operation.procurement.task.CouponIssueLoadTask;
@@ -35,17 +32,17 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
 
     private ObservableList<CouponIssue> listCouponIssue;
     @FXML
-    private Button btnCancel, btnAddSave, btnEditUpdate, btnDelete;
+    private Button btnCancel, btnAddSave, btnEditUpdate, btnDelete,btnView;
     @FXML
     private TableView<CouponIssue> tableIssueCoupon;
     @FXML
-    private TableColumn<CouponIssue, String> colName, colCode, colConsumerType, colMilkGrade;
+    private TableColumn<CouponIssue, String> colName, colCode, colConsumerType;
     @FXML
     private TableColumn<CouponIssue, MilkType> colMilkType;
     @FXML
-    private TableColumn<CouponIssue, Society> colDcsName;
-    @FXML
     private TableColumn<CouponIssue, Number> colAmount;
+    @FXML
+    private TableColumn<CouponIssue, Double> colBalance;
     @FXML
     private TableColumn<CouponIssue, LocalDate> colDate;
     private ObjectProperty<CouponIssue> propertyCouponIssue = new SimpleObjectProperty<>();
@@ -73,12 +70,15 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnAddSave.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssue", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", null, this);
+        });
+        btnView.setOnAction(e -> {
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponBalance", null, this);
         });
         btnEditUpdate.setOnAction(e -> {
             CouponIssue dto = propertyCouponIssue.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssue", dto, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this);
         });
 
         btnDelete.setOnAction(e -> {
@@ -96,14 +96,19 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
     @Override
     public void setupTable() {
         try {
-            colCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getConsumerCode()));
+            colCode.setCellValueFactory(data -> {
+                String code = data.getValue().getConsumerCode();
+                String lastFour = (code != null && code.length() >= 4)
+                        ? code.substring(code.length() - 4)
+                        : code;
+                return new SimpleObjectProperty<>(lastFour);
+            });
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getIssueDate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colConsumerType.setCellValueFactory(data -> new SimpleStringProperty(resourceBundle.getString(data.getValue().getConsumerTypeString().toLowerCase())));
-            colMilkGrade.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMilkClass().toString()));
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerName()));
-            colDcsName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSociety()));
+            tableIssueCoupon.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             propertyCouponIssue.bind(tableIssueCoupon.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("LocalMilkSake setuptable Exception");

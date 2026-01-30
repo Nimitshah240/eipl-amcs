@@ -1,6 +1,5 @@
 package com.eipl.amcs.operation.procurement.service;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.master.account.model.*;
@@ -12,9 +11,6 @@ import com.eipl.amcs.master.operation.repository.MemberCreditLimitTransactionRep
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
-import com.eipl.amcs.operation.procurement.model.CouponBalance;
-import com.eipl.amcs.operation.procurement.model.CouponBalanceTransaction;
-import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.repository.LocalMilkSaleRepository;
 import com.eipl.amcs.utils.AppConstant;
@@ -29,7 +25,6 @@ import org.springframework.validation.FieldError;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 

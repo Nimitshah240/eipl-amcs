@@ -21,7 +21,7 @@ public interface CouponIssueRepository extends BaseRepository<CouponIssue, Strin
 
 
         @Override
-        @EntityGraph(attributePaths = {"society", "milkClass", "milkType", "union"})
+        @EntityGraph(attributePaths = {"society", "milkType", "union"})
         List<CouponIssue> findAll(Sort sort);
 
         CouponIssue findTopByConsumerCodeAndConsumerTypeAndIsDeleteFalseAndCodeNotOrderByIssueDateDesc(
@@ -30,30 +30,9 @@ public interface CouponIssueRepository extends BaseRepository<CouponIssue, Strin
                 String couponIssueNo
         );
 
-        @EntityGraph(attributePaths = {"union", "society", "milkType", "milkClass"})
+        @EntityGraph(attributePaths = {"union", "society", "milkType"})
         CouponIssue findByCode(String couponIssueNo);
 
-        @Query("SELECT SUM(cc.amount) FROM CouponIssue cc " +
-                "WHERE cc.isDelete = :isDelete " +
-                "AND (cc.consumerType = :type1 OR cc.consumerType = :type2) " +
-                "AND cc.consumerCode = :code " +
-                "AND cc.issueDate <= :date " +
-                "AND cc.milkType = :milkType " +
-                "AND cc.milkClass = :milkClass " +
-                "AND cc.issueDate BETWEEN :fromDate AND :toDate " +
-                "AND cc.code != :couponIssueNo")
-        Double sumAmountByMemberExceptCurrent(
-                @Param("type1") int type1,
-                @Param("type2") int type2,
-                @Param("code") String code,
-                @Param("date") LocalDate date,
-                @Param("isDelete") boolean isDelete,
-                @Param("milkType") MilkType milkType,
-                @Param("milkClass") MilkClass milkClass,
-                @Param("fromDate") LocalDate fromDate,
-                @Param("toDate") LocalDate toDate,
-                @Param("couponIssueNo") String couponIssueNo
-        );
 
         @Modifying
         @Transactional

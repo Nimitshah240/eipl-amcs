@@ -1,10 +1,10 @@
 package com.eipl.amcs.operation.procurement.service;
 
-import com.eipl.amcs.MainApp;
-import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.operation.procurement.model.CouponBalance;
-import com.eipl.amcs.operation.procurement.model.CouponBalanceTransaction;
+import com.eipl.amcs.operation.procurement.model.CouponIssue;
+
+import java.util.List;
 
 public interface CouponBalanceService {
 
@@ -16,5 +16,7 @@ public interface CouponBalanceService {
     boolean insert(CouponBalance couponBalance);
 
     boolean update(CouponBalance couponBalance);
+    List<CouponBalance> fetchAll();
+    List<CouponBalance> fetchAllGroupedByConsumerCode();
 
 }
