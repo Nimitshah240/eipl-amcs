@@ -59,7 +59,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
     @FXML
     private TableColumn<LocalMilkSale, MilkClass> colClass;
     @FXML
-    private TableColumn<LocalMilkSale, BigDecimal> colQuantity, colRate, colAmount;
+    private TableColumn<LocalMilkSale, BigDecimal> colQuantity, colRate, colAmount,colCouponBalance;
     @FXML
     private Button btnAdd, btnClose, btnEdit, btnDelete, btnSearch;
     private ResourceBundle resourceBundle;
@@ -140,7 +140,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
             LocalMilkSale dto = propLocalMilkSaleDto.get();
             if (dto != null) {
-                var task = new LocalMilkSaleDeleteTask(dto.getCode());
+                var task = new LocalMilkSaleDeleteTask(dto);
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
@@ -196,6 +196,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             colQuantity.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getQuantity()));
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
+   //         colCouponBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCoupon()));
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
             propLocalMilkSaleDto.bind(tableLocalMilkSale.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {

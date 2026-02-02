@@ -59,12 +59,14 @@
                         <Label text="%quantity" GridPane.rowIndex="6" />
                         <Label text="%rate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="%amount" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                        <Label text="%couponbalance" GridPane.rowIndex="10" />
                         <E_ComboBox fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
                         <E_ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <E_ComboBox fx:id="cboxClass" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <E_TextField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" />
                         <E_TextField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                         <E_TextField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <E_TextField fx:id="txtCouponBalance" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                         <E_TextField fx:id="txtCash" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.rowIndex="9" />
                         <E_TextField fx:id="txtCredit" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                         <E_TextField fx:id="txtCoupon" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="9" />

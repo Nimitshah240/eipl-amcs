@@ -52,6 +52,7 @@ public class MainApp extends Application {
     public static final DecimalFormat DECIMAL_FORMAT_1_DIGIT = new DecimalFormat("0.0");
     public static final DecimalFormat DECIMAL_FORMAT_2_DIGIT = new DecimalFormat("0.00");
     private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
+    public static Map<String, List<TableColItem>> tableConfiguration = new HashMap<>();
     public static Stage stage;
     public static BorderPane contentPane;
     public static StackPane paneDrop;
@@ -60,7 +61,6 @@ public class MainApp extends Application {
     public static FxmlLoaderUtil fxmlLoaderUtil;
     public static ResourceBundle bundle;
     public static Long syncCount;
-    public static Map<String, List<TableColItem>> tableConfiguration = new HashMap<>();
     public static IdentityDto identityDto;
     public static User user;
     public static String systemId = "";

@@ -1,9 +1,13 @@
 package com.eipl.amcs.operation.procurement.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.global.model.MilkClass;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -23,4 +27,6 @@ public interface LocalMilkSaleRepository extends BaseRepository<LocalMilkSale, S
     @Override
     @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
     Optional<LocalMilkSale> findById(String id);
+
+
 }

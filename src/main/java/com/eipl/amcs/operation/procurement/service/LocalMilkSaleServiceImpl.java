@@ -55,6 +55,8 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
     @Autowired
     private MemberCreditLimitRepository memberCreditLimitRepository;
+    @Autowired
+    private CouponBalanceService couponBalanceService;
 
     @Override
     public List<LocalMilkSale> findAll(LocalDateTime fromDt, LocalDateTime toDt) {
@@ -491,5 +493,4 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         }
         return dtoList;
     }
-
 }
