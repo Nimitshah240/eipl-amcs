@@ -1442,3 +1442,6 @@ couponbalance=कूपन शेष
 localmilk.sale.title=स्थानीय दूध बिक्री
 localmilk.sale.validation.couponlimit=कूपन सीमा समाप्त
 insufficient.balance=अपर्याप्त शेष राशि
+passcode=पास कोड
+verify=जांचना
+verificationfailed=जांचना असफल

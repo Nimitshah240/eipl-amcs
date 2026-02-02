@@ -1440,3 +1440,6 @@ couponbalance=કૂપન બેલેન્સ
 localmilk.sale.title=સ્થાનિક દૂધ વેચાણ
 localmilk.sale.validation.couponlimit=કૂપન મર્યાદા વટાવી ગઈ છે
 insufficient.balance=અપૂરતું બેલેન્સ
+passcode=પાસ કોડ
+verify=ચકાસણી
+verificationfailed=ચકાસણી નિષ્ફળ
