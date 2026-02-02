@@ -501,6 +501,7 @@ public class MappingPopupController implements MyInitialization {
                     controller61.setStage(stage);
                     controller61.setCallback(callback);
                     root.setCenter(controller61.getRoot());
+                    break;
                 case "CouponIssueAddEdit":
                     var controller62 = (CouponIssueAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/procurement/CouponIssueAddEdit.fxml"));
                     controller62.setCouponIssue(object != null ? (CouponIssue) object : null);
