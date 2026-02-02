@@ -3,10 +3,11 @@ package com.eipl.amcs.operation.procurement.service;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.operation.model.Customer;
+import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.service.CustomerService;
 import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.operation.procurement.model.CouponBalance;
-import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.repository.CouponBalanceAuditRepository;
 import com.eipl.amcs.operation.procurement.repository.CouponBalanceRepository;
 import com.eipl.amcs.operation.procurement.repository.CouponIssueRepository;
@@ -42,6 +43,7 @@ public class CouponBalanceServiceImpl implements CouponBalanceService {
     private MemberService memberService;
     @Autowired
     private CustomerService customerService;
+
 
     private static Logger logger = LogManager.getLogger(CouponBalanceServiceImpl.class.getName());
 
@@ -111,9 +113,36 @@ public class CouponBalanceServiceImpl implements CouponBalanceService {
             MilkType milkType = new MilkType();
             milkType.setCode((Integer) result[3]);
             milkType.setName((String) result[4]);
+            milkType.setNameLocal((String) result[5]);
             couponBalance.setMilkType(milkType);
-            couponBalance.setConsumerType((Integer) result[5]);
 
+            couponBalance.setConsumerType((Integer) result[6]);
+
+            if (couponBalance.getConsumerType() != null && couponBalance.getConsumerCode() != null) {
+                int type = couponBalance.getConsumerType();
+                if (type == 1 || type == 2) {
+                    couponBalance.setConsumerTypeString("member");
+                    Member m = memberService.findByMemberCode(couponBalance.getConsumerCode());
+                    if (m != null) couponBalance.setConsumerName(m.getFirstName());
+
+                } else if (type == 3 || type == 4) {
+                    couponBalance.setConsumerTypeString(type == 3 ? "institute" : "retail sale");
+                    Customer c = customerService.findByCustomerCode(couponBalance.getConsumerCode());
+                    if (c != null) couponBalance.setConsumerName(c.getName());
+
+                } else {
+                    couponBalance.setConsumerTypeString("consumer");
+                    Customer c = customerService.findByCustomerCode(couponBalance.getConsumerCode());
+                    if (c != null) {
+                        couponBalance.setConsumerName(c.getName());
+                    } else {
+                        couponBalance.setConsumerName(couponBalance.getConsumerCode());
+                    }
+                }
+            }
+            if (couponBalance.getConsumerName() == null || couponBalance.getConsumerName().isEmpty()) {
+                couponBalance.setConsumerName(couponBalance.getConsumerCode());
+            }
 
             couponBalances.add(couponBalance);
         }

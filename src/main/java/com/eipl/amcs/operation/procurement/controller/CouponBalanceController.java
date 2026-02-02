@@ -4,7 +4,6 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.operation.procurement.model.CouponBalance;
-import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.task.CouponBalanceLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,7 +20,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
@@ -35,15 +33,13 @@ public class CouponBalanceController implements MyInitialization, PopupCallback 
     private TableView<CouponBalance> tableIssueCoupon;
     @FXML
     private TableColumn<CouponBalance, String> colCode;
-//    @FXML
-//    private TableColumn<CouponIssue, String>  colName;
+    @FXML
+    private TableColumn<CouponBalance, String> colName;
     @FXML
     private TableColumn<CouponBalance, MilkType> colMilkType;
 
     @FXML
     private TableColumn<CouponBalance, Double> colBalance;
-    @FXML
-    private TableColumn<CouponBalance, LocalDate> colDate;
     private ObjectProperty<CouponBalance> propertyCouponIssue = new SimpleObjectProperty<>();
     @FXML
     private StackPane root;
@@ -82,7 +78,7 @@ public class CouponBalanceController implements MyInitialization, PopupCallback 
                         : code;
                 return new SimpleObjectProperty<>(lastFour);
             });
-//            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerName()));
+            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerName()));
             colBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBalance()));
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             tableIssueCoupon.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

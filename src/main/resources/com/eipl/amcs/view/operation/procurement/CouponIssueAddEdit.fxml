@@ -29,6 +29,7 @@
                         <RowConstraints vgrow="ALWAYS"/>
                     </rowConstraints>
                     <children>
+                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
                         <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
                                   GridPane.rowIndex="1"/>
                         <ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
@@ -36,7 +37,6 @@
                         <Label text="%couponissue.create.milktype" GridPane.columnIndex="2"/>
                         <Label text="%couponissue.create.date"/>
                         <!--                                <ComboBox fx:id="cboxSubCenter" editable="true" layoutX="10.0" layoutY="43.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
-                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
                         <Label text="%couponissue.create.type" GridPane.columnIndex="1"/>
                         <E_NumericField fx:id="txtCode" maxLength="11" GridPane.rowIndex="3"/>
                         <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0"

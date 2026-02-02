@@ -27,6 +27,6 @@ public interface CouponBalanceRepository extends BaseRepository<CouponBalance, S
     @EntityGraph(attributePaths = {"milkType", "society", "union"})
     List<CouponBalance> findAll(Sort sort);
 
-    @Query("SELECT cb.consumerCode, SUM(cb.balance), MAX(cb.createdAt), mt.code, mt.name, MAX(cb.consumerType) FROM CouponBalance cb JOIN cb.milkType mt GROUP BY cb.consumerCode, mt")
+    @Query("SELECT cb.consumerCode, SUM(cb.balance), MAX(cb.createdAt), mt.code, mt.name, mt.nameLocal, MAX(cb.consumerType) FROM CouponBalance cb JOIN cb.milkType mt GROUP BY cb.consumerCode, mt")
     List<Object[]> findAllGroupedByConsumerCode();
 }

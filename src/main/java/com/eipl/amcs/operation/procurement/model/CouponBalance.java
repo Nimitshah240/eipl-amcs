@@ -56,6 +56,11 @@ public class CouponBalance extends BaseModelTxn {
     private String xCol4;
     private String xCol5;
 
+    @Transient
+    private String consumerName;
+    @Transient
+    private String consumerTypeString;
+
 
     public void setValuesInObject(String consumerCode, int consumerType, double balance, MilkType animalType) {
         this.setBalance(balance);
