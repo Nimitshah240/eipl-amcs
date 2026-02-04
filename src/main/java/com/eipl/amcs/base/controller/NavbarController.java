@@ -389,10 +389,10 @@ public class NavbarController implements MyInitialization {
                 if (task1.get() != null) {
                     MainApp.notificationList = new ArrayList<>();
                     MainApp.notificationList.addAll(task1.get());
-                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+//                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
                 } else {
                     MainApp.notificationList = new ArrayList<>();
-                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+//                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
                 }
             } catch (InterruptedException | ExecutionException ee) {
                 throw new RuntimeException(ee);
