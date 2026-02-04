@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.MainApp.stage;
 public class HeaderBarController implements MyInitialization, PopupCallback {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HeaderBarController.class);
@@ -34,10 +33,10 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     @FXML
     AnchorPane root;
     @FXML
-    private Label  lblName;
+    private Label lblName;
     @FXML
     private MenuBar menuBar;
-//    @FXML
+    //    @FXML
 //    Button btnMinimize,btnClose;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
@@ -60,7 +59,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadControls() {
-        lblName.setText("Society Name: "+MainApp.identityDto.getSociety().getName()+" - " + MainApp.identityDto.getSociety().getCode());
+        lblName.setText("Society Name: " + MainApp.identityDto.getSociety().getName() + " - " + MainApp.identityDto.getSociety().getCode());
     }
 
     private void loadMenu() {
@@ -108,9 +107,16 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     }
 
     private void setupClickEvent(MenuItem menuItem, String urlPath) {
-        menuItem.setOnAction(e -> {
-            MainApp.contentPane.setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource(urlPath.trim())));
-        });
+        try {
+            menuItem.setOnAction(e -> {
+                if (MainApp.contentPane.getLeft() == null) {
+                    MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+                }
+                MainApp.contentPane.setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource(urlPath.trim())));
+            });
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     class MenuGenerateTask extends Task<Short> {
