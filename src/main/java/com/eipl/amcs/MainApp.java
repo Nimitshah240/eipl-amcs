@@ -361,8 +361,11 @@ public class MainApp extends Application {
         if (backupPath != null) {
             backupPath = backupPath.replace(" ", "");
         }
-        if (backupPath == null || backupPath.isEmpty())
+        if (backupPath == null || backupPath.isEmpty()) {
             Platform.exit();
+            System.exit(0);
+        }
+
         paneDrop.setVisible(true);
         lblMessage.setText("Backup is running...");
         var task = new DbBackupTask(backupPath);
