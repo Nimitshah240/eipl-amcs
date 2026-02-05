@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           xmlns="http://javafx.com/javafx/11"
+           fx:controller="com.eipl.amcs.master.org.controller.UsersController" styleClass="pane-center"
+           prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
+            <children>
+                <Label styleClass="header-text" text="%user"/>
+                <TableView fx:id="tableUsers" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colUsername" prefWidth="200.0" text="%username"/>
+                        <TableColumn fx:id="colName" prefWidth="250.0" text="%name"/>
+                        <TableColumn fx:id="colMobileNo" prefWidth="150.0" text="%mobileno"/>
+                    </columns>
+                </TableView>
+                <HBox prefWidth="200.0" spacing="15">
+                    <children>
+                        <Button fx:id="btnEdit" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" disable="true"
+                                text="%edit"/>
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
+                                text="%close"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>
