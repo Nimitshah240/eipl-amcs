@@ -984,7 +984,7 @@ public class BroadcastedService {
                                 milkCollection.setSampleNo(jsonText.get("sampleNo") != null ? (int) (jsonText.get("sampleNo")) : null);
                                 milkCollection.setSocietyPaymentCycle(societyPaymentCycleRepository.findSocietyPaymentCycle(LocalDateTime.parse((String) jsonText.get("dateTimeOfCollection"))));
                                 milkCollection.setRateCode(memberMilkPurchaseRateDetailRepository.findRateCode(new BigDecimal(String.valueOf(jsonText.get("fat"))), new BigDecimal(String.valueOf(jsonText.get("snf")))));
-                                milkCollectionRepository.save(milkCollection, CommonUtils.setIdentityHeader());
+                                milkCollectionRepository.desktopCollectionSave(milkCollection, CommonUtils.setIdentityHeader());
                                 break;
                             case "DELETE":
 //                                milkCollectionRepository.delete((String) jsonText.get("schemeRateAppCode"));
