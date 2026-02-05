@@ -40,6 +40,7 @@ public class UsersAddEditController implements MyInitialization {
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
     private User user;
+    private StringBuilder errorMsg = null;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -50,13 +51,10 @@ public class UsersAddEditController implements MyInitialization {
     }
 
     public void setUser(User user) {
-        this.user = user;
-        if (this.user != null) {
-                txtUsername.setText(this.user.getUsername());
-                txtUsername.setDisable(true);
-                if (this.user.getName() != null) txtName.setText(this.user.getName());
-                if (this.user.getMobileNo() != null) txtMobile.setText(this.user.getMobileNo());
-                if (this.user.getPassword() != null) txtPassword.setText(this.user.getPassword());
+        if (user != null) {
+            this.user = user;
+            btnUpdate.setText(resourceBundle.getString("update"));
+            loadControls();
         }
     }
 
@@ -68,52 +66,74 @@ public class UsersAddEditController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        setupComboBox();
         btnUpdate.setOnAction(e -> validateAndSave());
         btnClose.setOnAction(e -> stage.close());
     }
 
+    @Override
+    public void loadControls() {
+        txtUsername.setText(this.user.getUsername());
+        txtUsername.setDisable(true);
+        if (this.user.getName() != null) txtName.setText(this.user.getName());
+        if (this.user.getMobileNo() != null) txtMobile.setText(this.user.getMobileNo());
+        if (this.user.getPassword() != null) txtPassword.setText(this.user.getPassword());
+    }
+
     private void validateAndSave() {
-        if (user == null) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("error.occurred"), "No user is selected for editing.");
+        errorMsg = new StringBuilder();
+        if (!validate()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("user"),
+                    errorMsg.toString());
             alert.createAlert();
             return;
+        }
+
+        if (btnUpdate.getText().equals(resourceBundle.getString("update"))) {
+            if (this.user != null) {
+                user = setValuesInObject();
+                updateData();
+            }
+        }
+    }
+
+    private User setValuesInObject() {
+        user.setName(txtName.getText());
+        user.setMobileNo(txtMobile.getText());
+        user.setPassword(txtPassword.getText());
+        return user;
+    }
+
+    private boolean validate() {
+        if (user == null) {
+            errorMsg.append(resourceBundle.getString("No.user.is.selected.for.editing.") + "\n");
         }
 
         String newName = txtName.getText();
         if (newName == null || newName.trim().isEmpty()) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("names"), "Name Can Not Be Empty.");
-            alert.createAlert();
-            return;
+            errorMsg.append(resourceBundle.getString("name.cannot.be.empty.") + "\n");
+        } else if (!newName.matches("^[a-zA-Z\\s.]+$")) {
+            errorMsg.append(resourceBundle.getString("Name.contains.invalid.characters.")+"\n");
         }
-        if (!newName.matches("^[a-zA-Z\\s.]+$")) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("names"), "Name contains invalid characters.");
-            alert.createAlert();
-            return;
-        }
-        user.setName(newName);
 
         String newMobile = txtMobile.getText();
         if (newMobile == null || newMobile.trim().isEmpty()) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("mobile"), "Mobile Number Cannot Be Empty.");
-            alert.createAlert();
-            return;
+            errorMsg.append(resourceBundle.getString("mobile.cannot.be.empty.") + "\n");
+        } else if (!newMobile.matches("\\d{10}")) {
+            errorMsg.append(resourceBundle.getString("Mobile.Number.must.be.10.digits.")+"\n");
         }
-        if (!newMobile.matches("\\d{10}")) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("mobile"), "Mobile Number must be 10 digits.");
-            alert.createAlert();
-            return;
-        }
-        user.setMobileNo(newMobile);
 
         String newPassword = txtPassword.getText();
         if (newPassword == null || newPassword.trim().isEmpty()) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("passwords"), "Password Cannot Be Empty.");
-            alert.createAlert();
-            return;
+            errorMsg.append(resourceBundle.getString("Password.Cannot.Be.Empty.")+"\n");
         }
-        user.setPassword(newPassword);
 
-        updateData();
+        return errorMsg.length() == 0;
+    }
+
+    @Override
+    public void saveData() {
+
     }
 
     @Override
@@ -122,14 +142,14 @@ public class UsersAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 task.get();
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("password"),
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("user"),
                         resourceBundle.getString("record.update.successful"));
                 alert.createAlert();
                 callback.reloadData(true);
                 stage.close();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("password"),
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("user"),
                         resourceBundle.getString("error.occurred"));
                 alert.createAlert();
             }

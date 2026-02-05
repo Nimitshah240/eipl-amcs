@@ -63,8 +63,6 @@ public class UsersController implements MyInitialization, PopupCallback {
         });
 
         btnEdit.setOnAction(e -> {
-            if (!MainApp.user.getPermissions().contains("ACTION_DOCK_EDIT"))
-                throw new UnAuthorizedAccessException();
             User dto = propUser.get();
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "UsersAddEdit",dto, this);
