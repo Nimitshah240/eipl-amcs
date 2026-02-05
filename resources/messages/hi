@@ -1445,3 +1445,7 @@ insufficient.balance=अपर्याप्त शेष राशि
 passcode=पास कोड
 verify=जांचना
 verificationfailed=जांचना असफल
+names=नाम खाली नहीं हो सकता
+mobile=मोबाइल नंबर 10 अंकों का होना चाहिए।
+passwords=पासवर्ड खाली नहीं हो सकता
+credentials=क्रेडेंशियल संशोधित करें
