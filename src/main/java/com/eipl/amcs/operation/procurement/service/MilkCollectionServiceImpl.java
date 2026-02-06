@@ -671,4 +671,29 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
             return milkCollectionRepository.findTotalCollectionDateBetweenAndMember(code, societyPaymentCycleCode, spc.get().getFromDate(), spc.get().getToDate());
         return null;
     }
+
+    @Override
+    public MilkCollection desktopCollectionSave(MilkCollection collection, String identityInfo) {
+        //voucher entry
+        String existngVoucherNo = null;
+        if (collection.getSampleNo() > 1) {
+            Optional<MilkCollection> collPrev = milkCollectionRepository.findTop1ByDockAndCollectionDateOrderBySampleNoDesc(collection.getDock(), collection.getCollectionDate());
+            if (collPrev.isPresent())
+                existngVoucherNo = collPrev.get().getVoucherNo();
+        }
+        String voucherNo = createVoucher(collection, existngVoucherNo, identityInfo, (short) 1, null);
+        collection.setCode(collection.getDock().getDockNo() + "-" + collection.getCollectionDate().format(CODE_DATE_FMT)
+                + collection.getShift().getCode() + "-" + collection.getSampleNo());
+        collection.setVoucherNo(voucherNo);
+        collection.setInitData();
+        MilkCollection collNew = milkCollectionRepository.save(collection);
+        collNew.setSociety(collection.getSociety());
+        collNew.setDock(collection.getDock());
+        collNew.setSocietyPaymentCycle(collection.getSocietyPaymentCycle());
+        collNew.setShift(collection.getShift());
+        collNew.setMember(collection.getMember());
+        collNew.setMilkQualityType(collection.getMilkQualityType());
+        collNew.setMilkType(collection.getMilkType());
+        return collNew;
+    }
 }

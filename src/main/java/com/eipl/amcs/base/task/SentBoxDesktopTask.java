@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Slf4j
 public class SentBoxDesktopTask extends Task<Map<String, Object>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxCountTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SentBoxDesktopTask.class);
     private final String societyCode;
     List<String> sentBoxUuidList;
     List<Subscribed> subscribedList;

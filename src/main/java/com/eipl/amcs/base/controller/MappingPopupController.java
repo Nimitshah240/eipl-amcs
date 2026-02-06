@@ -1,6 +1,7 @@
 package com.eipl.amcs.base.controller;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.master.account.controller.*;
@@ -20,6 +21,7 @@ import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.controller.DockAddEditController;
+import com.eipl.amcs.master.org.controller.UsersAddEditController;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.procurement.controller.LocalMilkSaleRateAddEditController;
 import com.eipl.amcs.master.procurement.controller.MilkRateViewController;
@@ -515,6 +517,14 @@ public class MappingPopupController implements MyInitialization {
                     controller63.setCallback(callback);
                     root.setCenter(controller63.getRoot());
                     break;
+                case "UsersAddEdit":
+                    var controller64 = (UsersAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/org/UsersAddEdit.fxml"));
+                    controller64.setStage(stage);
+                    controller64.setCallback(callback);
+                    controller64.setUser(object != null ? (User) object : null);
+                    root.setCenter(controller64.getRoot());
+                    break;
+
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
