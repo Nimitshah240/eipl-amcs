@@ -102,6 +102,7 @@ public class AppConstant {
 //        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://jaipurduss.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "https://amulamcs.yamatech.app/webservice/amcs/v1/";
+          String MEMBER_DOWNLOAD = "androiddpu/v5/realtime-services/member-download";
     }
 
     public interface CollectionType {

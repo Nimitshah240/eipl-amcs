@@ -24,6 +24,8 @@ public class SystemParamInterceptor implements ClientHttpRequestInterceptor {
         add("eipl-amcs/home");
         add("eipl-app/verify-identity");
         add("realtime-services/purchase-rate");
+//        add("androiddpu/v5/realtime-services/member-download");
+//        add("androiddpu/v5/android-dpu/register");
     }};
 
     @Override

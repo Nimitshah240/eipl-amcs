@@ -231,18 +231,26 @@ public class LoginController implements MyInitialization {
     }
 
     private void verifyIdentityAsync() {
-        var task = new VerifyIdentityTask(MainApp.getProperty("client.code", null));
-        task.setOnSucceeded(ee -> {
+        VerifyIdentityTask task = new VerifyIdentityTask(MainApp.getProperty("client.code", (String) null));
+        task.setOnSucceeded((ee) -> {
             try {
-                String baseUrls = task.get();
-                baseUrlRealTime = baseUrls.split("#")[0];
-                syncUrlRealTime = baseUrls.split("#")[1];
-                System.out.println("Successfully received vendor url: " + baseUrls);
-                writeAppProperty();
-            } catch (InterruptedException | ExecutionException ex) {
+                String baseUrls = (String) task.get();
+                log.info(baseUrls);
+                if (baseUrls != null) {
+                    AppConstant.baseUrlRealTime = baseUrls.split("#")[0];
+                    AppConstant.syncUrlRealTime = baseUrls.split("#")[1];
+                    System.out.println("Successfully received vendor url: " + baseUrls);
+                } else {
+                    AppConstant.baseUrlRealTime = MainApp.getProperty("baseurl.realtime", (String) null);
+                    AppConstant.syncUrlRealTime = MainApp.getProperty("syncUrl.realtime", (String) null);
+                }
+
+                this.writeAppProperty();
+            } catch (ExecutionException | InterruptedException var4) {
             }
+
         });
-        new Thread(task).start();
+        (new Thread(task)).start();
     }
 
     private void writeAppProperty() {

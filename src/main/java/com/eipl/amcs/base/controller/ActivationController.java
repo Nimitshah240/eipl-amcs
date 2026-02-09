@@ -15,6 +15,7 @@ import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.repository.MilkTypeRepository;
+import com.eipl.amcs.master.operation.task.MemberDownloadTask;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
@@ -78,6 +79,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         checkActivation();
         btnActivate.setOnAction(e -> {
             MainApp.paneDrop.setVisible(true);
+
             CompletableFuture.runAsync(() -> {
                 try {
                     clientCode = AppConstant.ClientCode.valueOf(txtClientCode.getText().toUpperCase());
@@ -87,31 +89,8 @@ public class ActivationController implements MyInitialization, PopupCallback {
                     alert.createAlert();
                 }
                 setFlag();
-                String DB_LOC = "localhost";
                 if (!validateCheckFlag) {
-                    try {
-                        setupPreferenceForDbSettings(DB_LOC);
-                        CompletableFuture<String> future = verifyIdentityAsync();
-                        future.thenAccept(resp -> {
-                            if (resp == null) {
-                                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                                        resourceBundle.getString("error.occurred"));
-                                alert.createAlert();
-                                MainApp.paneDrop.setVisible(false);
-                                return;
-                            }
-                            baseUrlRealTime = resp.split("#")[0];
-                            syncUrlRealTime = resp.split("#")[1];
-                            System.out.println("Successfully received baseUrl: " + resp);
-                            validateAndMakeFile();
-                        }).exceptionally(ex -> {
-                            ex.printStackTrace();
-                            return null;
-                        });
-                    } catch (Exception exe) {
-                        throw new RuntimeException(exe);
-                    }
-
+                    firstDockProcess();
                 } else {
                     doubleDockProcess();
                 }
@@ -133,6 +112,12 @@ public class ActivationController implements MyInitialization, PopupCallback {
         });
     }
 
+
+    /**
+     * Summary sentence: Load Property File
+     * <p>
+     * Load Data from a property file.
+     */
     public void loadProperties() {
         Properties prop = new Properties();
         try (InputStream inputStream = new FileInputStream("resources/app.properties")) {
@@ -147,6 +132,12 @@ public class ActivationController implements MyInitialization, PopupCallback {
         saveData();
     }
 
+
+    /**
+     * Summary sentence: Save General Config
+     * <p>
+     * Save general config from property file.
+     */
     @Override
     public void saveData() {
 
@@ -179,7 +170,13 @@ public class ActivationController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
-    private void validateAndMakeFile() {
+    /**
+     * Summary sentence:Validate and callApis
+     * <p>
+     * First check the validation from setFlag and validate method then first initialize identity
+     * and then call api.
+     */
+    private void firstDockProcess() {
         errorMsg = new StringBuilder();
         if (!validate()) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
@@ -188,26 +185,281 @@ public class ActivationController implements MyInitialization, PopupCallback {
             return;
         }
 
-        setFlag();
-        this.union = txtUnion.getText();
-        if (!societyCheckFlag) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    "Please Enter Valid Society No.");
-            alert.createAlert();
-            return;
-        }
         this.society = txtSociety.getText();
-        if (!dockCheckFlag) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    "Please Enter Valid Dock No.");
-            alert.createAlert();
-            return;
-        }
+        this.union = txtUnion.getText();
         this.dock = txtDock.getText();
         this.sampleNo = txtSampleMilkNo.getText();
-        createMembers();
+
+        DB_LOC = "localhost";
+        setupPreferenceForDbSettings(DB_LOC);
+        initializeIdentity();
+
+//        createMembers();
+//        callApi();
     }
 
+
+    /**
+     * Summary sentence: Validate length of dock and society
+     * <p>
+     * Validate length of dock and society
+     */
+    private void setFlag() {
+        try {
+            societyCheckFlag = txtSociety.getText().length() >= 7;
+            dockCheckFlag = txtDock.getText().length() >= 9;
+            validateCheckFlag = txtDock.getText().substring(txtSociety.getText().length()).equalsIgnoreCase("02");
+        } catch (Exception e) {
+            System.out.println("error : " + e);
+        }
+    }
+
+
+    /**
+     * Summary sentence: Validation of input
+     * <p>
+     * Validate null pointer of input.
+     */
+    private boolean validate() {
+
+        if (txtUnion.getText().trim() == null || !CommonUtils.isNumeric(txtUnion.getText().trim())) {
+            errorMsg.append(resourceBundle.getString("unionnullerror") + "\n");
+        }
+        if (txtSociety.getText().trim() == null || !CommonUtils.isNumeric(txtSociety.getText().trim())) {
+            errorMsg.append(resourceBundle.getString("societynullerror") + "\n");
+        }
+        if (txtDock.getText().trim() == null || !CommonUtils.isNumeric(txtDock.getText().trim())) {
+            errorMsg.append(resourceBundle.getString("docknullerror") + "\n");
+        }
+        if (clientCode == null) {
+            errorMsg.append(resourceBundle.getString("clientcodenullerror") + "\n");
+        }
+        if (errorMsg.length() == 0) {
+            setFlag();
+            if (!societyCheckFlag) {
+                errorMsg.append("Please Enter Valid Society No." + "\n");
+            }
+
+            if (!dockCheckFlag) {
+                errorMsg.append("Please Enter Valid Dock No." + "\n");
+            }
+        }
+
+        return errorMsg.length() == 0;
+
+    }
+
+
+    /**
+     * Summary sentence: Set DB data in registry
+     * <p>
+     * Set db location in registry. new for double dock.
+     */
+    public static void setupPreferenceForDbSettings(String DB_LOC) {
+        try {
+            Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+            preferences.put("AMCS_DB_LOC", new String(Base64.getEncoder().encode(DB_LOC.getBytes())));
+            try {
+                preferences.flush();
+                startSpring();
+            } catch (BackingStoreException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Summary sentence: Get DB data from registry
+     * <p>
+     * Get db data from registry to connect db
+     */
+    public static void recoverFromPreferences() {
+        try {
+            DB_LOC = null;
+            Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
+            DB_LOC = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_LOC", null)));
+            EIPL_DB_PASS = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_PASS", null)));
+            EIPL_DB_NAME = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_NAME", null)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Summary sentence: Start spring application.
+     * <p>
+     * To start spring application
+     */
+    public static void startSpring() {
+        try {
+            EmcsAppContext.initializeEmcsAppContext();
+        } catch (Exception e) {
+            System.out.println("error : " + e);
+            MainApp.paneDrop.setVisible(false);
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /**
+     * Summary sentence: Validate activation input with DB.
+     * <p>
+     * Validate union, society and dock with db and set in MainApp.identity
+     */
+    private void initializeIdentity() {
+        var task = new IdentityTask(txtDock.getText(),
+                txtSociety.getText(),
+                txtUnion.getText());
+        task.setOnSucceeded(t -> {
+            try {
+                MainApp.identityDto = task.get();
+
+                if (MainApp.identityDto != null) {
+                    CompletableFuture<String> future = verifyIdentityAsync();
+                    future.thenAccept(resp -> {
+                        if (resp == null) {
+                            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert.createAlert();
+                            MainApp.paneDrop.setVisible(false);
+                            return;
+                        }
+                        baseUrlRealTime = resp.split("#")[0];
+                        syncUrlRealTime = resp.split("#")[1];
+                        if (!validateCheckFlag) {
+                            callApi();
+                        }
+                        System.out.println("Successfully received baseUrl: " + resp);
+
+                    }).exceptionally(ex -> {
+                        ex.printStackTrace();
+                        return null;
+                    });
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+
+    /**
+     * Summary sentence: To get baseUrlRealTime and syncUrlRealTime
+     * <p>
+     * Call api to get baseUrlRealTime and syncUrlRealTime
+     */
+    private CompletableFuture<String> verifyIdentityAsync() {
+        CompletableFuture<String> futureBaseUrl = new CompletableFuture<>();
+        var task = new VerifyIdentityTask(txtClientCode.getText());
+        task.setOnSucceeded(ee -> {
+            try {
+                String baseUrls = task.get();
+                futureBaseUrl.complete(baseUrls);
+            } catch (InterruptedException | ExecutionException ex) {
+                futureBaseUrl.completeExceptionally(ex);
+            }
+        });
+
+        task.setOnFailed(ee -> {
+            futureBaseUrl.completeExceptionally(task.getException());
+        });
+
+        new Thread(task).start();
+        return futureBaseUrl;
+    }
+
+    private void getBaseUrlRealTime() {
+
+    }
+
+
+    /**
+     * Summary sentence:Call all necessary apis.
+     * <p>
+     * First start with the register api, on successful registration get token and
+     * set in identity with all necessary identity details. After that call createMembers method
+     * and after that identitySaveTask to save identity.
+     */
+    private void callApi() {
+        var task = new IdentityCheckTask(txtSociety.getText(), baseUrlRealTime);
+        task.setOnSucceeded(e -> {
+            try {
+                Identity identity = new Identity();
+
+                Map<String, Object> data = task.get();
+
+                if (data != null) {
+                    identity.setSocietyRefCode((String) data.get("orgPkCode"));
+                    identity.setToken((String) data.get("token"));
+                }
+                identity.setDockNo(txtDock.getText());
+                identity.setSocietyCode(txtSociety.getText());
+                identity.setSystemMac(MainApp.getProperty("identity.id", ""));
+                saveIdentity(identity);
+                downloadMembers(identity);
+
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+
+    private void confirmAndClose() {
+        callApi();
+    }
+
+    private void saveIdentity(Identity identity) {
+        var task1 = new IdentitySaveTask(identity);
+        task1.setOnSucceeded(ex -> {
+            System.out.println("SUCCESS: All tasks are finished.");
+            openLicenseActivatePopup();
+        });
+        new Thread(task1).start();
+    }
+
+
+    /**
+     * Summary sentence:Download already available member
+     * <p>
+     * Download member from the main db if it isn't found, then create member manually.
+     */
+    private void downloadMembers(Identity identity) {
+        MainApp.paneDrop.setVisible(true);
+        var memberDownloadTask = new MemberDownloadTask(identity);
+        MainApp.lblMessage.textProperty().bind(memberDownloadTask.messageProperty());
+
+        memberDownloadTask.setOnSucceeded(e -> {
+            try {
+                boolean needToCreateMember = (boolean) memberDownloadTask.get();
+                if (needToCreateMember) {
+                    createMembers();
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        memberDownloadTask.setOnFailed(e -> {
+            System.err.println("Member download failed. Trying to create members if needed.");
+            createMembers();
+        });
+
+        new Thread(memberDownloadTask).start();
+    }
+
+
+    /**
+     * Summary sentence:Manual member creation
+     * <p>
+     * Create number of members on the basis of the user input if member download failed or
+     * on not getting data.
+     */
     private void createMembers() {
         try {
 
@@ -224,51 +476,119 @@ public class ActivationController implements MyInitialization, PopupCallback {
             MainApp.paneDrop.setVisible(true);
             var task = new MemberCreateTask(this.society, txtServerDetail.getText(), cowMin, cowMax, buffMin, buffMax,
                     CommonUtils.strToInteger(txtSampleMilkNo.getText()));
-            task.setOnSucceeded(e -> callApi());
+            task.setOnSucceeded(e2 -> MainApp.paneDrop.setVisible(false));
             new Thread(task).start();
             MainApp.lblMessage.textProperty().bind(task.messageProperty());
 
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                     "Please Enter Valid Range.");
+            alert.createAlert();
+            MainApp.paneDrop.setVisible(false);
+        }
+    }
+
+
+    /**
+     * Summary sentence:LicenseKey Popup
+     * <p>
+     * Open LicenseKey popup on activation.
+     */
+    private void openLicenseActivatePopup() {
+        try {
+            MainApp.paneDrop.setVisible(false);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), "Error", "Could not open License Activation window.");
             alert.createAlert();
         }
     }
 
 
-    private void callApi() {
-        var task = new IdentityCheckTask(txtSociety.getText(), baseUrlRealTime);
-        task.setOnSucceeded(e -> {
-            try {
-                Identity identity = new Identity();
-
-                Map<String, Object> data = task.get();
-
-                if (data != null) {
-                    identity.setSocietyRefCode((String) data.get("orgPkCode"));
-                    identity.setToken((String) data.get("token"));
-                }
-                identity.setDockNo(txtDock.getText());
-                identity.setSocietyCode(txtSociety.getText());
-                identity.setSystemMac(MainApp.getProperty("identity.id", ""));
-
-                var task1 = new IdentitySaveTask(identity);
-                task1.setOnSucceeded(ex -> {
-                    System.out.println("SUCCESS: All tasks are finished.");
-                    openLicenseActivatePopup();
-                });
-                new Thread(task1).start();
-            } catch (Exception exception) {
-                exception.printStackTrace();
+    /**
+     * Summary sentence: Activation page for DB Failed.
+     * <p>
+     * Set data on activation page when DB connection failed, mainly for second dock.
+     */
+    public void checkActivation() {
+        if (!MainApp.properties.isEmpty()) {
+            txtSociety.setText(MainApp.getProperty("identity.society", ""));
+            txtUnion.setText(MainApp.getProperty("identity.union", ""));
+            txtDock.setText(MainApp.getProperty("identity.dock", ""));
+            txtSampleMilkNo.setText(MainApp.getProperty("samplemilk", ""));
+            txtClientCode.setText(MainApp.getProperty("client.code", ""));
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    resourceBundle.getString("databaseerror"));
+            alert.createAlert();
+            setFlag();
+            if (validateCheckFlag) {
+                lblSampleNo.setText("Server Details");
+                txtCowRange.setDisable(true);
+                txtBuffRange.setDisable(true);
+            } else {
+                lblSampleNo.setText("Sample No.");
+                txtCowRange.setDisable(false);
+                txtBuffRange.setDisable(false);
             }
-        });
-        new Thread(task).start();
+        }
     }
 
-    private void confirmAndClose() {
-        callApi();
+
+    /**
+     * Summary sentence: Processes for double dock activation.
+     * <p>
+     * Validate data and start spring with activation key popup, save second dock in db and also get baseUrlRealtime on successful.
+     */
+    private void doubleDockProcess() {
+        errorMsg = new StringBuilder();
+        if (!validate()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    errorMsg.toString());
+            alert.createAlert();
+            return;
+        }
+        this.union = txtUnion.getText();
+        this.society = txtSociety.getText();
+        this.dock = txtDock.getText();
+        this.sampleNo = txtSampleMilkNo.getText();
+        txtServerDetail.setText(txtServerDetail.getText().replace("localhost", txtSampleMilkNo.getText()));
+
+        DB_LOC = txtSampleMilkNo.getText();
+        setupPreferenceForDbSettings(DB_LOC);
+        doubleDockSave();
+        openLicenseActivatePopup();
     }
 
+
+    /**
+     * Summary sentence: Second Dock save data.
+     * <p>
+     * Set double dock data and save it in db and call initializeIdentity at last.
+     */
+    private void doubleDockSave() {
+        SocietyRepository societyRepository = EmcsAppContext.getContext().getBean(SocietyRepository.class);
+        MilkTypeRepository milkTypeRepository = EmcsAppContext.getContext().getBean(MilkTypeRepository.class);
+        Dock dock1 = new Dock();
+        dock1.setDockNo(txtDock.getText());
+        dock1.setUnionCode(txtUnion.getText());
+        dock1.setSociety(societyRepository.findById(txtSociety.getText()).get());
+        dock1.setIsDefault((short) 1);
+        dock1.setActive(true);
+        List<MilkType> milkTypeList = milkTypeRepository.findAll();
+        DockMilkTypeDto dto = new DockMilkTypeDto(dock1, milkTypeList);
+        DockService service = EmcsAppContext.getContext().getBean(DockService.class);
+        if (dto != null)
+            service.save(dto, null);
+        initializeIdentity();
+    }
+
+
+    /**
+     * Summary sentence:Property file creation
+     * <p>
+     * Create a property file and add data in that file using writeAppProperty method.
+     */
     private void makeFile() {
         try {
             File appProperties = new File("resources/app.properties");
@@ -283,35 +603,12 @@ public class ActivationController implements MyInitialization, PopupCallback {
         }
     }
 
-    private void openLicenseActivatePopup() {
-        try {
-            MainApp.paneDrop.setVisible(false);
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this);
-        } catch (Exception e) {
-            e.printStackTrace();
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), "Error", "Could not open License Activation window.");
-            alert.createAlert();
-        }
-    }
 
-    private boolean validate() {
-
-        if (txtUnion.getText().trim() == null || !CommonUtils.isNumeric(txtUnion.getText().trim())) {
-            errorMsg.append(resourceBundle.getString("unionnullerror") + "\n");
-        }
-        if (txtSociety.getText().trim() == null || !CommonUtils.isNumeric(txtSociety.getText().trim())) {
-            errorMsg.append(resourceBundle.getString("societynullerror") + "\n");
-        }
-        if (txtDock.getText().trim() == null || !CommonUtils.isNumeric(txtDock.getText().trim())) {
-            errorMsg.append(resourceBundle.getString("docknullerror") + "\n");
-        }
-        if (clientCode == null) {
-            errorMsg.append(resourceBundle.getString("clientcodenullerror") + "\n");
-        }
-        return errorMsg.length() == 0;
-
-    }
-
+    /**
+     * Summary sentence: Write app property file
+     * <p>
+     * Write all data in the app property file
+     */
     private List<String> writeAppProperty() {
         List<String> lines = new ArrayList<>();
         lines.add("baseurl=" + new String(Base64.getEncoder().encode(txtServerDetail.getText().getBytes(StandardCharsets.UTF_8))));
@@ -383,6 +680,17 @@ public class ActivationController implements MyInitialization, PopupCallback {
         return lines;
     }
 
+    @Override
+    public void reloadData(boolean flag) {
+        if (flag)
+            makeFile();
+        else {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                    resourceBundle.getString("verificationfailed"));
+            alert.createAlert();
+        }
+    }
+
     private String appKeyGenerator() {
         try {
             String appGetKey = "1814";
@@ -429,187 +737,6 @@ public class ActivationController implements MyInitialization, PopupCallback {
         } catch (Exception e) {
             e.printStackTrace();
             return "";
-        }
-    }
-
-    private void setFlag() {
-        try {
-            societyCheckFlag = txtSociety.getText().length() >= 7;
-            dockCheckFlag = txtDock.getText().length() >= 9;
-            validateCheckFlag = txtDock.getText().substring(txtSociety.getText().length()).equalsIgnoreCase("02");
-        } catch (Exception e) {
-            System.out.println("error : " + e);
-        }
-    }
-
-    private CompletableFuture<String> verifyIdentityAsync() {
-        CompletableFuture<String> futureBaseUrl = new CompletableFuture<>();
-        var task = new VerifyIdentityTask(txtClientCode.getText());
-        task.setOnSucceeded(ee -> {
-            try {
-                String baseUrls = task.get();
-                futureBaseUrl.complete(baseUrls);
-            } catch (InterruptedException | ExecutionException ex) {
-                futureBaseUrl.completeExceptionally(ex);
-            }
-        });
-
-        task.setOnFailed(ee -> {
-            futureBaseUrl.completeExceptionally(task.getException());
-        });
-
-        new Thread(task).start();
-        return futureBaseUrl;
-    }
-
-    public static void setupPreferenceForDbSettings(String DB_LOC) {
-        try {
-            Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
-            preferences.put("AMCS_DB_LOC", new String(Base64.getEncoder().encode(DB_LOC.getBytes())));
-            try {
-                preferences.flush();
-                startSpring();
-            } catch (BackingStoreException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void recoverFromPreferences() {
-        try {
-            DB_LOC = null;
-            Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
-            DB_LOC = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_LOC", null)));
-            EIPL_DB_PASS = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_PASS", null)));
-            EIPL_DB_NAME = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_NAME", null)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void startSpring() {
-        try {
-            EmcsAppContext.initializeEmcsAppContext();
-        } catch (Exception e) {
-            System.out.println("error : " + e);
-            MainApp.paneDrop.setVisible(false);
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void checkActivation() {
-        if (!MainApp.properties.isEmpty()) {
-            txtSociety.setText(MainApp.getProperty("identity.society", ""));
-            txtUnion.setText(MainApp.getProperty("identity.union", ""));
-            txtDock.setText(MainApp.getProperty("identity.dock", ""));
-            txtSampleMilkNo.setText(MainApp.getProperty("samplemilk", ""));
-            txtClientCode.setText(MainApp.getProperty("client.code", ""));
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    resourceBundle.getString("databaseerror"));
-            alert.createAlert();
-            setFlag();
-            if (validateCheckFlag) {
-                lblSampleNo.setText("Server Details");
-                txtCowRange.setDisable(true);
-                txtBuffRange.setDisable(true);
-            } else {
-                lblSampleNo.setText("Sample No.");
-                txtCowRange.setDisable(false);
-                txtBuffRange.setDisable(false);
-            }
-        }
-    }
-
-    private void doubleDockSave() {
-        SocietyRepository societyRepository = EmcsAppContext.getContext().getBean(SocietyRepository.class);
-        MilkTypeRepository milkTypeRepository = EmcsAppContext.getContext().getBean(MilkTypeRepository.class);
-        Dock dock1 = new Dock();
-        dock1.setDockNo(txtDock.getText());
-        dock1.setUnionCode(txtUnion.getText());
-        dock1.setSociety(societyRepository.findById(txtSociety.getText()).get());
-        dock1.setIsDefault((short) 1);
-        dock1.setActive(true);
-        List<MilkType> milkTypeList = milkTypeRepository.findAll();
-        DockMilkTypeDto dto = new DockMilkTypeDto(dock1, milkTypeList);
-        DockService service = EmcsAppContext.getContext().getBean(DockService.class);
-        if (dto != null)
-            service.save(dto, null);
-        initializeIdentity();
-    }
-
-
-    private void initializeIdentity() {
-        var task = new IdentityTask(txtDock.getText(),
-                txtSociety.getText(),
-                txtUnion.getText());
-        task.setOnSucceeded(t -> {
-            try {
-                MainApp.identityDto = task.get();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
-    }
-
-    private void doubleDockProcess() {
-        errorMsg = new StringBuilder();
-        if (!validate()) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    errorMsg.toString());
-            alert.createAlert();
-            return;
-        }
-
-        this.union = txtUnion.getText();
-        if (!societyCheckFlag) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    "Please Enter Valid Society No.");
-            alert.createAlert();
-            return;
-        }
-        this.society = txtSociety.getText();
-        if (!dockCheckFlag) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    "Please Enter Valid Dock No.");
-            alert.createAlert();
-            return;
-        }
-        this.dock = txtDock.getText();
-        this.sampleNo = txtSampleMilkNo.getText();
-        txtServerDetail.setText(txtServerDetail.getText().replace("localhost", txtSampleMilkNo.getText()));
-        DB_LOC = txtSampleMilkNo.getText();
-        setupPreferenceForDbSettings(DB_LOC);
-        doubleDockSave();
-        CompletableFuture<String> future = verifyIdentityAsync();
-        future.thenAccept(resp -> {
-            if (resp == null) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                        resourceBundle.getString("error.occurred"));
-                alert.createAlert();
-                MainApp.paneDrop.setVisible(false);
-                return;
-            }
-            baseUrlRealTime = resp.split("#")[0];
-            syncUrlRealTime = resp.split("#")[1];
-            confirmAndClose();
-            System.out.println("Successfully received baseUrl: " + resp);
-        }).exceptionally(ex -> {
-            ex.printStackTrace();
-            return null;
-        });
-    }
-
-    @Override
-    public void reloadData(boolean flag) {
-        if (flag)
-            makeFile();
-        else {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                    resourceBundle.getString("verificationfailed"));
-            alert.createAlert();
         }
     }
 }
