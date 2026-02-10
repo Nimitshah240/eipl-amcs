@@ -1,5 +1,6 @@
 package com.eipl.amcs.auth.repository;
 
+import com.eipl.amcs.auth.model.Permission;
 import com.eipl.amcs.auth.model.Role;
 import com.eipl.amcs.auth.model.RolePermission;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -14,4 +15,6 @@ public interface RolePermissionRepository extends JpaRepository<RolePermission, 
 
     @EntityGraph(type = EntityGraphType.FETCH, attributePaths = {"role", "permission"})
     List<RolePermission> findAllByRoleIn(List<Role> roles);
+
+    RolePermission findByPermission(Permission permission);
 }

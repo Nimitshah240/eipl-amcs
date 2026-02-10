@@ -11,6 +11,9 @@ import com.eipl.amcs.auth.service.UserRoleService;
 import com.eipl.amcs.auth.service.UserService;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.base.model.FavoriteMenu;
+import com.eipl.amcs.base.repository.FavoriteMenuRepository;
+import com.eipl.amcs.base.service.FavoriteMenuService;
 import com.eipl.amcs.config.EmcsAppContext;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -42,6 +45,8 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
 
+    private FavoriteMenuService favoriteMenuService;
+
     @Override
     public Node getRoot() {
         return root;
@@ -52,6 +57,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         loadControls();
         loadMenu();
+        favoriteMenuService = EmcsAppContext.getContext().getBean(FavoriteMenuService.class);
 //        btnClose.setOnAction(e -> {
 //            stage.close();
 //        });
@@ -63,9 +69,8 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     }
 
     private void loadMenu() {
-        if (MainApp.getUser() == null)
-            return;
-        var task = new HeaderBarController.MenuGenerateTask();
+        if (MainApp.getUser() == null) return;
+        var task = new MenuGenerateTask();
         task.setOnSucceeded(e -> {
             try {
                 short resp = task.get();
@@ -84,7 +89,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                                     Menu subMenu = new Menu(resourceBundle.getString(k.getDescription()));
                                     v.forEach(item -> {
                                         try {
-                                            MenuItem menuItem = new MenuItem(resourceBundle.getString(item.getDescription()));
+                                            CustomMenuItem menuItem = favoriteMenuService.createMenuItem(resourceBundle.getString(item.getDescription()), item);
                                             setupClickEvent(menuItem, item.getModule());
                                             subMenu.getItems().add(menuItem);
                                         } catch (Exception ex) {
@@ -127,6 +132,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                 UserService service = EmcsAppContext.getContext().getBean(UserService.class);
                 UserRoleService userRoleService = EmcsAppContext.getContext().getBean(UserRoleService.class);
                 RolePermissionService rolePermissionService = EmcsAppContext.getContext().getBean(RolePermissionService.class);
+                FavoriteMenuRepository favoriteMenuRepository = EmcsAppContext.getContext().getBean(FavoriteMenuRepository.class);
                 String username = MainApp.getUser().getUsername();
                 Optional<User> user = service.findByUsername(username);
                 if (user.isEmpty()) {
@@ -143,10 +149,17 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                 if (userRoles.isEmpty()) {
                     return null;
                 }
+                permissions = rolePermissions.stream().map(m -> m.getPermission()).collect(Collectors.toList());
 
-                permissions = rolePermissions.stream().map(m -> m.getPermission())
-                        .collect(Collectors.toList());
-
+                List<FavoriteMenu> favoriteMenuList = favoriteMenuRepository.findByUser(MainApp.getUser());
+                List<Permission> favoriteMenuPermission = favoriteMenuList.stream().map(m -> {
+                    Permission permission = m.getPermission();
+                    permission.setParentCode(m.getParentCode());
+                    permission.setObject(m.getObject());
+                    permission.setType(m.getPermissionType());
+                    return permission;
+                }).collect(Collectors.toList());
+                permissions.addAll(favoriteMenuPermission);
                 permissions.sort(Comparator.comparing(Permission::getCode));
 
                 menu = new TreeMap<>(new PermissionComparator());
