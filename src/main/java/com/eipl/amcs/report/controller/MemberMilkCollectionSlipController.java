@@ -295,7 +295,8 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                 }
                 print(masterLines);
                 masterLines.clear();
-            } else {
+            }
+            else if (MainApp.getLocale().equalsIgnoreCase("gu")){
                 masterLines.add("----------------સંગ્રહ કાપલી---------------");
                 if (MainApp.identityDto.getSociety().getNameLocal() != null) {
                     masterLines.add("મંડળી: " + MainApp.identityDto.getSociety().getCode() + "-" +
@@ -329,6 +330,52 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                 }
                 masterLines.add("---------------------------------------");
                 stringBuilder.append(String.format("%6s", "Total"));
+                stringBuilder.append(String.format("%11.2f", new BigDecimal(qty.toString())));
+                stringBuilder.append(String.format("%7.2f", fat.divide(qty, RoundingMode.HALF_DOWN).multiply(BigDecimal.valueOf(100))));
+                stringBuilder.append(String.format("%16.2f", new BigDecimal(amount.toString())));
+                masterLines.add(stringBuilder.toString());
+                stringBuilder.setLength(0);
+
+                loadTextFileForDeduction((String) val.get(0).get("member_original_code"));
+                for (int i = 0; i < Integer.parseInt(MainApp.getProperty("no.of.enters.collection.slip", "0")); i++) {
+                    masterLines.add("\n");
+                }
+                print(masterLines);
+                masterLines.clear();
+            } else if (MainApp.getLocale().equalsIgnoreCase("hi")){
+                masterLines.add("----------------संग्रहण पर्ची---------------");
+                if (MainApp.identityDto.getSociety().getNameLocal() != null) {
+                    masterLines.add("मंडरी: " + MainApp.identityDto.getSociety().getCode() + "-" +
+                            MainApp.identityDto.getSociety().getNameLocal());
+                } else {
+                    masterLines.add("मंडरी: " + MainApp.identityDto.getSociety().getCode() + "-" +
+                            MainApp.identityDto.getSociety().getName());
+                }
+                masterLines.add("कोड: " + val.get(0).get("member_code_ex"));
+                masterLines.add("नाम: " + val.get(0).get("member_name"));
+                masterLines.add("अवधि: " + val.get(0).get("pc_code"));
+                masterLines.add("---------------------------------------");
+                masterLines.add("तारीख   दूध    लीटर     फेट      दर      रुपये");
+                masterLines.add("---------------------------------------");
+                StringBuilder stringBuilder = new StringBuilder();
+                BigDecimal qty = BigDecimal.ZERO;
+                BigDecimal amount = BigDecimal.ZERO;
+                BigDecimal fat = BigDecimal.ZERO;
+                for (Map<String, Object> m : val) {
+                    stringBuilder.append(m.get("collection_date").toString().replace(" ", ""));
+                    stringBuilder.append(String.format("%4s", m.get("animal_type_name").toString().charAt(0)));
+                    stringBuilder.append(String.format("%8.2f", new BigDecimal(m.get("quantity").toString())));
+                    qty = qty.add(new BigDecimal(m.get("quantity").toString()));
+                    stringBuilder.append(String.format("%7.2f", new BigDecimal(m.get("fat").toString())));
+                    fat = fat.add(new BigDecimal(m.get("fat").toString()).multiply(new BigDecimal(m.get("quantity").toString())).divide(BigDecimal.valueOf(100)));
+                    stringBuilder.append(String.format("%8.2f", new BigDecimal(m.get("rate").toString())));
+                    stringBuilder.append(String.format("%8.2f", new BigDecimal(m.get("amount").toString())));
+                    amount = amount.add(new BigDecimal(m.get("amount").toString()));
+                    masterLines.add(stringBuilder.toString());
+                    stringBuilder.setLength(0);
+                }
+                masterLines.add("---------------------------------------");
+                stringBuilder.append(String.format("%6s", "कुल"));
                 stringBuilder.append(String.format("%11.2f", new BigDecimal(qty.toString())));
                 stringBuilder.append(String.format("%7.2f", fat.divide(qty, RoundingMode.HALF_DOWN).multiply(BigDecimal.valueOf(100))));
                 stringBuilder.append(String.format("%16.2f", new BigDecimal(amount.toString())));

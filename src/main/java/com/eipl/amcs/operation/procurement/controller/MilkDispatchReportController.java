@@ -71,6 +71,7 @@ public class MilkDispatchReportController implements MyInitialization {
                 break;
             case 2:
                 validateAndGenerateReport();
+                break;
             case 3:
                 validateAndGenerateReportThree();
                 break;
