@@ -89,11 +89,32 @@ public class ActivationController implements MyInitialization, PopupCallback {
                     alert.createAlert();
                 }
                 setFlag();
-                if (!validateCheckFlag) {
-                    firstDockProcess();
-                } else {
-                    doubleDockProcess();
-                }
+                DB_LOC = !validateCheckFlag ? "localhost" : txtSampleMilkNo.getText();
+                setupPreferenceForDbSettings(DB_LOC);
+
+                CompletableFuture<String> future = verifyIdentityAsync();
+                future.thenAccept(resp -> {
+                    if (resp == null) {
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                                resourceBundle.getString("error.occurred"));
+                        alert.createAlert();
+                        MainApp.paneDrop.setVisible(false);
+                        return;
+                    }
+                    baseUrlRealTime = resp.split("#")[0];
+                    syncUrlRealTime = resp.split("#")[1];
+                    System.out.println("Successfully received baseUrl: " + resp);
+
+                    if (!validateCheckFlag) {
+                        firstDockProcess();
+                    } else {
+                        doubleDockProcess();
+                    }
+
+                }).exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
             });
         });
         txtDock.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -190,12 +211,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         this.dock = txtDock.getText();
         this.sampleNo = txtSampleMilkNo.getText();
 
-        DB_LOC = "localhost";
-        setupPreferenceForDbSettings(DB_LOC);
-        initializeIdentity();
-
-//        createMembers();
-//        callApi();
+        callApi();
     }
 
 
@@ -318,27 +334,11 @@ public class ActivationController implements MyInitialization, PopupCallback {
             try {
                 MainApp.identityDto = task.get();
 
-                if (MainApp.identityDto != null) {
-                    CompletableFuture<String> future = verifyIdentityAsync();
-                    future.thenAccept(resp -> {
-                        if (resp == null) {
-                            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert.createAlert();
-                            MainApp.paneDrop.setVisible(false);
-                            return;
-                        }
-                        baseUrlRealTime = resp.split("#")[0];
-                        syncUrlRealTime = resp.split("#")[1];
-                        if (!validateCheckFlag) {
-                            callApi();
-                        }
-                        System.out.println("Successfully received baseUrl: " + resp);
-
-                    }).exceptionally(ex -> {
-                        ex.printStackTrace();
-                        return null;
-                    });
+                if (MainApp.identityDto == null) {
+                    MainApp.paneDrop.setVisible(false);
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
+                            "Error"); // TODO Make change here later - NIMIT
+                    alert.createAlert();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -373,10 +373,6 @@ public class ActivationController implements MyInitialization, PopupCallback {
         return futureBaseUrl;
     }
 
-    private void getBaseUrlRealTime() {
-
-    }
-
 
     /**
      * Summary sentence:Call all necessary apis.
@@ -401,8 +397,6 @@ public class ActivationController implements MyInitialization, PopupCallback {
                 identity.setSocietyCode(txtSociety.getText());
                 identity.setSystemMac(MainApp.getProperty("identity.id", ""));
                 saveIdentity(identity);
-                downloadMembers(identity);
-
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -411,13 +405,10 @@ public class ActivationController implements MyInitialization, PopupCallback {
     }
 
 
-    private void confirmAndClose() {
-        callApi();
-    }
-
     private void saveIdentity(Identity identity) {
         var task1 = new IdentitySaveTask(identity);
         task1.setOnSucceeded(ex -> {
+            initializeIdentity();
             System.out.println("SUCCESS: All tasks are finished.");
             openLicenseActivatePopup();
         });
@@ -481,10 +472,10 @@ public class ActivationController implements MyInitialization, PopupCallback {
             MainApp.lblMessage.textProperty().bind(task.messageProperty());
 
         } catch (Exception e) {
+            MainApp.paneDrop.setVisible(false);
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                     "Please Enter Valid Range.");
             alert.createAlert();
-            MainApp.paneDrop.setVisible(false);
         }
     }
 
@@ -554,8 +545,6 @@ public class ActivationController implements MyInitialization, PopupCallback {
         this.sampleNo = txtSampleMilkNo.getText();
         txtServerDetail.setText(txtServerDetail.getText().replace("localhost", txtSampleMilkNo.getText()));
 
-        DB_LOC = txtSampleMilkNo.getText();
-        setupPreferenceForDbSettings(DB_LOC);
         doubleDockSave();
         openLicenseActivatePopup();
     }

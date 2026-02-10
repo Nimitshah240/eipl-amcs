@@ -1,7 +1,9 @@
 package com.eipl.amcs.base.task;
 
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.auth.dto.IdentityDto;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.network.IdentityPayload;
 import com.eipl.amcs.network.RealTimeRequest;
@@ -33,7 +35,12 @@ public class IdentityCheckTask extends Task<Map<String, Object>> {
     protected Map<String, Object> call() throws Exception {
         try {
             SocietyRepository societyRepository = EmcsAppContext.getContext().getBean(SocietyRepository.class);
-            String mobileNo = societyRepository.findById(societyCode).get().getContactPersonMobileNo();
+            Society society = societyRepository.findById(societyCode).orElse(null);
+            MainApp.identityDto = new IdentityDto();
+            MainApp.identityDto.setSociety(society);
+            if (society == null)
+                return null;
+            String mobileNo = society.getContactPersonMobileNo();
 
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, baseUrl) + AppConstant.UrlPath.IDENTITY_CHECK;
