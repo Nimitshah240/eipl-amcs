@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -75,6 +77,9 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
     @Transactional
     public MilkDispatch save(MilkDispatchDto dto, String identityInfo) {
         MilkDispatch milkDispatch = dto.getMilkDispatch();
+        if (dispatchRepository.existsByFromDateAndFromShift(milkDispatch.getFromDate(), milkDispatch.getFromShift())) {
+            throw new BusinessValidationFailException(MilkDispatch.class, new FieldError("MilkDispatch", "fromDate", "Dispatch already exists for this date and shift"));
+        }
         milkDispatch.setInitData();
         dispatchRepository.customSave(milkDispatch, identityInfo);
         List<MilkDispatchTransaction> listDispatchTransactions = dto.getMilkDispatchTransaction();
@@ -94,6 +99,9 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
     @Override
     public MilkDispatch update(MilkDispatchDto dto, String identityInfo) {
         MilkDispatch milkDispatch = dto.getMilkDispatch();
+        if (dispatchRepository.existsByFromDateAndFromShiftAndChallanNoNot(milkDispatch.getFromDate(), milkDispatch.getFromShift(), milkDispatch.getChallanNo())) {
+            throw new BusinessValidationFailException(MilkDispatch.class, new FieldError("MilkDispatch", "fromDate", "Dispatch already exists for this date and shift"));
+        }
         milkDispatch.setupdateData();
         dispatchRepository.customUpdate(milkDispatch, identityInfo);
         List<MilkDispatchTransaction> listDispatchTransactions = dto.getMilkDispatchTransaction();

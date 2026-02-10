@@ -10,6 +10,7 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
@@ -575,7 +576,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
 
     private void validateAndSave() {
         setValuesInObjectUpdate();
-
         if (!validate()) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                     errorMsg.toString());
@@ -643,6 +643,16 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     alert.createAlert();
                     return;
                 }
+                if (obj instanceof BusinessValidationFailException) {
+                    BusinessValidationFailException exception = (BusinessValidationFailException) obj;
+                    StringBuilder sb = new StringBuilder();
+                    for (org.springframework.validation.FieldError error : exception.getListFieldErrors()) {
+                        sb.append(error.getDefaultMessage()).append("\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"), sb.toString());
+                    alert.createAlert();
+                    return;
+                }
                 MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                         resourceBundle.getString("record.save.successful") + "\n"
                                 + resourceBundle.getString("alert.dispatchnote"));
@@ -687,6 +697,16 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     }
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                             sb.toString());
+                    alert.createAlert();
+                    return;
+                }
+                if (obj instanceof BusinessValidationFailException) {
+                    BusinessValidationFailException exception = (BusinessValidationFailException) obj;
+                    StringBuilder sb = new StringBuilder();
+                    for (org.springframework.validation.FieldError error : exception.getListFieldErrors()) {
+                        sb.append(error.getDefaultMessage()).append("\n");
+                    }
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"), sb.toString());
                     alert.createAlert();
                     return;
                 }

@@ -1,6 +1,7 @@
 package com.eipl.amcs.operation.procurement.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchDto;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import com.eipl.amcs.operation.procurement.service.MilkDispatchService;
@@ -36,6 +37,8 @@ public class MilkDispatchSaveTask extends Task<Object> {
 
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
+        } catch (BusinessValidationFailException e) {
+            return e;
         } catch (Exception e) {
             e.printStackTrace();
         }
