@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
@@ -28,6 +29,7 @@ import com.eipl.amcs.master.operation.task.LocalMilkSaleRateTask;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.operation.procurement.model.CouponBalance;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
+import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.CouponBalanceForConsumerFetchTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleGetInvoiceNoTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleSaveTask;
@@ -42,6 +44,7 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -143,7 +146,16 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         });
 
         btnClose.setOnAction(e -> this.stage.close());
-        btnSaveUpdate.setOnAction(e -> validateAndSave());
+        btnSaveUpdate.setOnAction(e -> {
+            LocalDateTime saleDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpSellDate.getValue(), cboxShift.getValue());
+            MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+            if (milkDispatchRepository.existsByFromDateAndFromShift(saleDateTime, cboxShift.getValue())) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"), resourceBundle.getString("dispatch.already.done"));
+                alert.createAlert();
+            } else {
+                validateAndSave();
+            }
+        });
 
         txtQuantity.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

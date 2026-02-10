@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
@@ -24,6 +25,7 @@ import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
 import com.eipl.amcs.operation.procurement.dto.*;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
+import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import com.eipl.amcs.utils.AppConstant;
@@ -497,8 +499,15 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         tableCollection.setItems(listCollection);
         tableSummary.setItems(listCollectionSummary);
         btnStart.setOnAction(e -> {
-            loadRequestData();
-            btnExport.setDisable(false);
+            LocalDateTime collectionDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
+            MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+            if (milkDispatchRepository.existsByFromDateAndFromShift(collectionDateTime, cboxShift.getValue())) {
+                MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("milkcollection"), resourceBundle.getString("dispatch.already.done"));
+                alert.createAlert();
+            } else {
+                loadRequestData();
+                btnExport.setDisable(false);
+            }
         });
         btnExport.setOnAction(event -> {
             if (listCollection == null || listCollection.isEmpty()) {
@@ -532,15 +541,27 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         });
         btnSave.setOnAction(e -> validateAndSave());
         btnDispatch.setOnAction(e -> {
+            if (MainApp.contentPane.getLeft() == null) { //TODO PUT IN COLLECTION
+                MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+            }
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
         });
         btnLocalMilkSale.setOnAction(e -> {
+            if (MainApp.contentPane.getLeft() == null) { //TODO PUT IN COLLECTION
+                MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+            }
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
         });
         btnSetting.setOnAction(e -> {
+            if (MainApp.contentPane.getLeft() == null) { //TODO PUT IN COLLECTION
+                MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+            }
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CollectionSetting", null, this);
         });
         btnShiftReport.setOnAction(e -> {
+            if (MainApp.contentPane.getLeft() == null) { //TODO PUT IN COLLECTION
+                MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+            }
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/ShiftReportCode.fxml")));
         });
         txtFat.textProperty().addListener(qualityParamChangeListener);
@@ -2259,11 +2280,15 @@ private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
                     if (schemeRateApplicability != null) {
                         s = s.replace("{pdRate}", schemeRateApplicability.getRtpl() != null ? schemeRateApplicability.getRtpl().toString() : "0");
                     } else {
-                        removepdline = i;
+                        s = s.replace("{pdRate}", "0");
                     }
                 }
                 if (s.contains("{pdAmt}")) {
-                    s = s.replace("{pdAmt}", schemeRateApplicability.getRtpl() != null ? (schemeRateApplicability.getRtpl().multiply(collection.getQty()).add(collection.getAmount())).toString() : "0");
+                    if (schemeRateApplicability != null) {
+                        s = s.replace("{pdAmt}", schemeRateApplicability.getRtpl() != null ? (schemeRateApplicability.getRtpl().multiply(collection.getQty()).add(collection.getAmount())).toString() : "0");
+                    } else {
+                        s = s.replace("{pdAmt}", "0");
+                    }
                 }
 
 

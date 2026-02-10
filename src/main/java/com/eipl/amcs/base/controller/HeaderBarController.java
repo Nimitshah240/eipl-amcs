@@ -114,7 +114,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     private void setupClickEvent(MenuItem menuItem, String urlPath) {
         try {
             menuItem.setOnAction(e -> {
-                if (MainApp.contentPane.getLeft() == null) {
+                if (MainApp.contentPane.getLeft() == null) { //TODO PUT IN COLLECTION
                     MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
                 }
                 MainApp.contentPane.setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource(urlPath.trim())));
