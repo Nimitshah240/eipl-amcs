@@ -22,6 +22,7 @@
                               <Label text="%paymentcycleid" />
                               <ComboBox fx:id="cboxPaymentCycle" editable="true" prefWidth="230.0" />
                               <Button fx:id="btnGenerate" mnemonicParsing="false" text="%generate" />
+                        <Button fx:id="btnReport" mnemonicParsing="false" text="%generalreport" />
                         <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                             <HBox alignment="CENTER_LEFT" spacing="10.0">
                                 <children>

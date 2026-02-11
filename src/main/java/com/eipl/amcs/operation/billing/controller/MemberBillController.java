@@ -52,7 +52,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     @FXML
     private ComboBox<SocietyPaymentCycle> cboxPaymentCycle;
     @FXML
-    private Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport;
+    private Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport, btnReport;
     @FXML
     private DatePicker dpDisburseDate;
     @FXML
@@ -111,9 +111,12 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 try {
                     short generate = 0;
                     MemberBillSummary memberBillSummary = task.get();
+                    billSummary = memberBillSummary;
                     if (memberBillSummary == null) {
+                        btnReport.setDisable(true);
                         generate = 1;
                     } else {
+                        btnReport.setDisable(false);
                         MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
                                 CommonUtils.getResourceString(resourceBundle, "member.bill.generated.confirmation"));
                         Optional<ButtonType> resp = alert.createConfirmationAlert();
@@ -168,6 +171,12 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         btnExport.setOnAction(event -> {
             List<MemberBill> list = memberBillList.stream().collect(Collectors.toList());
             exportExcel(list);
+        });
+
+        btnReport.setOnAction(e -> {
+            if (billSummary != null) {
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "GeneralReportPopup", billSummary, this);
+            }
         });
 
     }
