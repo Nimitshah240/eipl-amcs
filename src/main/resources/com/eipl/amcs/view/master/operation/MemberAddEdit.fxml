@@ -164,8 +164,8 @@
                         </GridPane>
 
                         <Label text="%creditlimit" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-<!--                  <E_TextField fx:id="txtGroupCode" GridPane.columnIndex="3" GridPane.rowIndex="3" />-->
-<!--                  <Label text="%groupcode" GridPane.columnIndex="3" GridPane.rowIndex="2" />-->
+                  <E_TextField fx:id="txtGroupCode" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Label text="%groupcode" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>
                 <Separator prefWidth="200.0" />
