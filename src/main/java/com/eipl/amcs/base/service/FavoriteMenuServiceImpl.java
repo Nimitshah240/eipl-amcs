@@ -59,8 +59,16 @@ public class FavoriteMenuServiceImpl implements FavoriteMenuService {
     private static void updateIcon(Label icon, boolean isFavorite) {
         if (isFavorite) {
             icon.setText("★");
+            icon.setStyle("-fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 0 5px; " +
+                    "-fx-text-fill: gold; " +
+                    "-fx-text-stroke-color: black; " +
+                    "-fx-text-stroke-width: 0.5px;");
         } else {
             icon.setText("☆");
+            icon.setStyle("-fx-cursor: hand; -fx-font-size: 14px; -fx-padding: 0 5px; " +
+                    "-fx-text-fill: black; " +
+                    "-fx-text-stroke-color: black; " +
+                    "-fx-text-stroke-width: 0.5px;");
         }
     }
 
