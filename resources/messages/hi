@@ -1460,3 +1460,4 @@ fromDate=तारीख से
 Dispatch.already.exists.for.this.date.and.shift=इस दिनांक और शिफ्ट के लिए डिस्पैच पहले से मौजूद है
 challanNo=चालान नंबर
 users=उपयोगकर्ता
+mobileDigitError=मोबाइल नंबर ठीक 10 अंकों का होना चाहिए
