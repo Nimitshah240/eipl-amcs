@@ -301,6 +301,7 @@ public class MemberAddEditController implements MyInitialization {
         member.setMilkType(cboxDefaultMilkType.getValue());
         member.setMobileNo(txtMobileNo.getText());
         member.setFirstName(txtName.getText());
+        member.setxCol1(MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtGroupCode.getText()));
         member.setMiddleName(txtMiddleName.getText() == null ? "" : txtMiddleName.getText());
         member.setLastName(txtLastName.getText() == null ? "" : txtLastName.getText());
         member.setFirstNameLocal(txtLocalName.getText() == null ? "" : txtLocalName.getText());
@@ -618,6 +619,7 @@ public class MemberAddEditController implements MyInitialization {
         txtMiddleLocalName.setText(member.getMiddleNameLocal());
         txtLocalLastName.setText(member.getLastNameLocal());
         txtMobileNo.setText(member.getMobileNo());
+        txtGroupCode.setText(member.getxCol1().replace(MainApp.identityDto.getSociety().getCode(), ""));
         if (member.getCreditLimit() != null)
             txtCreditLimit.setText(member.getCreditLimit().toString());
     }

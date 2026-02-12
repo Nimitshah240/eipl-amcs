@@ -11,5 +11,6 @@ Amt: {amount}
 Date Period : {dateRange}
 Total Qty : {tQty}
 Amt : {tAmt}
-PD Rate : {pdRate} PD Amount : {pdAmt}
+PD Rate : {pdRate}
+PD Amount : {pdAmt}
 Kg Fat Rate: {kgfat}
