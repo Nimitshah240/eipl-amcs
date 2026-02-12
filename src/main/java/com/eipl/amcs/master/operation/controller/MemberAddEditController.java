@@ -346,13 +346,15 @@ public class MemberAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
         if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
-        if (txtAadharCardNo.getText() == null || txtAadharCardNo.getText().trim() == null || txtAadharCardNo.getText().trim().isEmpty())
+        if (txtAadharCardNo.getText() == null || txtAadharCardNo.getText().trim() == null || txtAadharCardNo.getText().trim().isEmpty() || !txtAadharCardNo.getText().matches("\\d{12}"))
             errorMsg.append(resourceBundle.getString("aadharcardnonullerror") + "\n");
         if (txtCreditLimit.getText() == null || txtCreditLimit.getText().trim() == null || txtCreditLimit.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("creditlimitnonullerror") + "\n");
-        if (txtMobileNo.getText().trim() == null || txtMobileNo.getText().trim().isEmpty())
+        if (txtMobileNo.getText().trim() == null || txtMobileNo.getText().trim().isEmpty()){
             errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
-
+        } else if (!txtMobileNo.getText().matches("^[0-9]{10}$")) {
+            errorMsg.append(resourceBundle.getString("mobileDigitError")+ "\n");
+        }
         return errorMsg.length() == 0;
     }
 
