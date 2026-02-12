@@ -2,6 +2,8 @@ package com.eipl.amcs.master.operation.task;
 
 import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.global.repository.MilkTypeRepository;
 import com.eipl.amcs.master.operation.dto.MemberDownloadDto;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
@@ -13,6 +15,7 @@ import com.eipl.amcs.utils.AppConstant;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +43,12 @@ public class MemberDownloadTask extends Task<Object> {
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             MemberRepository memberRepository = EmcsAppContext.getContext().getBean(MemberRepository.class);
             MemberDetailRepository memberDetailRepository = EmcsAppContext.getContext().getBean(MemberDetailRepository.class);
-
+            MilkTypeRepository milkTypeRepository = EmcsAppContext.getContext().getBean(MilkTypeRepository.class);
             long count = memberRepository.count();
             if (count > 0) {
                 return false;
             }
+            List<MilkType> milkTypeList = milkTypeRepository.findAll(Sort.by("code").ascending());
 
 //        Map<String,String> map = new HashMap<>(MainApp.identityDto.getSociety().getCode());
 
@@ -84,6 +88,7 @@ public class MemberDownloadTask extends Task<Object> {
                 member.setLastNameLocal(dto.getLocalSurname());
                 member.setMobileNo(dto.getMobileNo());
                 member.setCreditLimit(new BigDecimal(0));
+                member.setMilkType(milkTypeList.get((Integer.parseInt(dto.getAnimalTypeCode()) - 1)));
                 memberList.add(member);
 
                 memberDetail.setCode(dto.getRefCode());
