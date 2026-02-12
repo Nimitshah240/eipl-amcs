@@ -333,13 +333,17 @@ public class ActivationController implements MyInitialization, PopupCallback {
         task.setOnSucceeded(t -> {
             try {
                 MainApp.identityDto = task.get();
-
                 if (MainApp.identityDto == null) {
                     MainApp.paneDrop.setVisible(false);
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("activation"),
                             "Error"); // TODO Make change here later - NIMIT
                     alert.createAlert();
+                    return;
                 }
+                if (!validateCheckFlag) {
+                    downloadMembers(MainApp.identityDto.getIdentity());
+                }
+                openLicenseActivatePopup();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -410,7 +414,6 @@ public class ActivationController implements MyInitialization, PopupCallback {
         task1.setOnSucceeded(ex -> {
             initializeIdentity();
             System.out.println("SUCCESS: All tasks are finished.");
-            openLicenseActivatePopup();
         });
         new Thread(task1).start();
     }

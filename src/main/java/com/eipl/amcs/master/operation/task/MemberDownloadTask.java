@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.operation.task;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.model.Identity;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -89,6 +90,7 @@ public class MemberDownloadTask extends Task<Object> {
                 member.setMobileNo(dto.getMobileNo());
                 member.setCreditLimit(new BigDecimal(0));
                 member.setMilkType(milkTypeList.get((Integer.parseInt(dto.getAnimalTypeCode()) - 1)));
+                member.setSociety(MainApp.identityDto.getSociety());
                 memberList.add(member);
 
                 memberDetail.setCode(dto.getRefCode());
