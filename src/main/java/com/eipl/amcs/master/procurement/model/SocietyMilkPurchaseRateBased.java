@@ -38,7 +38,7 @@ public class SocietyMilkPurchaseRateBased extends BaseModelTxn {
     private BigDecimal startVal;
     @Digits(integer = 2, fraction = 2)
     private BigDecimal endVal;
-    @Digits(integer = 3, fraction = 2)
+    @Digits(integer = 6, fraction = 2)
     private BigDecimal kgRate;
 
     private int deductionType; //0-NA, 1-Value Addition, 2-Value Deduction,3-Percentage Addition, 4-Percentage Deduction

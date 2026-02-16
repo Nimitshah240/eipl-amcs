@@ -141,9 +141,11 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
 
     private void exportExcel(List<MilkCollection> list) {
         boolean exported = true;
+        boolean cancelled = false;
         try {
             FileChooser fileDialog = new FileChooser();
             fileDialog.setTitle("Export Collection");
+            fileDialog.setInitialFileName("Milk_Collection_Report-" + dpFromDate.getValue() + "-" + cboxFromShift.getValue()+" To "+dpToDate.getValue() + "-" + cboxToShift.getValue()+ ".xls");
             fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
             File file = fileDialog.showSaveDialog(MainApp.stage);
             if (file != null) {
@@ -231,13 +233,19 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                 } catch (Exception e) {
                     exported = false;
                 }
+            } else {
+                cancelled = true;
+                exported = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
             exported = false;
         }
         MyAlert alert;
-        if (exported) {
+        if (cancelled) {
+            alert = new InformationAlert(MainApp.stage, resourceBundle.getString("milkcollection"),
+                    resourceBundle.getString("export.cancelled"));
+        } else if (exported) {
             alert = new InformationAlert(MainApp.stage, resourceBundle.getString("milkcollection"),
                     resourceBundle.getString("successful"));
         } else {

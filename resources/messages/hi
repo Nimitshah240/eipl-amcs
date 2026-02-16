@@ -1462,3 +1462,7 @@ challanNo=चालान नंबर
 users=उपयोगकर्ता
 mobileDigitError=मोबाइल नंबर ठीक 10 अंकों का होना चाहिए
 milkdispatcherr=मिल्क डिस्पैच डिलीट करने से पहले, मिल्क रिसीप्ट डिलीट करें।
+productlocalnamenullerror=स्थानीय नाम रिक्त नहीं हो सकता
+export.cancelled= निर्यात रद्द किया गया
+Kg/Fat.out.of.bounds=किलोग्राम/फैट सीमा से बाहर है
+kgfat.cannot.be.empty=किलोग्राम/फैट खाली नहीं हो सकता

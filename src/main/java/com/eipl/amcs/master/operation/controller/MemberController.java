@@ -178,9 +178,11 @@ public class MemberController implements MyInitialization, PopupCallback {
 
     private void exportExcel(List<Member> list) {
         boolean exported = true;
+        boolean cancelled = false;
         try {
             FileChooser fileDialog = new FileChooser();
             fileDialog.setTitle("Export Members");
+            fileDialog.setInitialFileName(" Members" + "-" + "List" + ".xls");
             fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
             File file = fileDialog.showSaveDialog(MainApp.stage);
 
@@ -296,13 +298,18 @@ public class MemberController implements MyInitialization, PopupCallback {
                 } catch (Exception e) {
                     exported = false;
                 }
+            } else {
+                cancelled = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
             exported = false;
         }
         MyAlert alert;
-        if (exported) {
+        if (cancelled) {
+            alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member"),
+                    resourceBundle.getString("export.cancelled"));
+        } else if (exported) {
             alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member"),
                     resourceBundle.getString("successful"));
         } else {

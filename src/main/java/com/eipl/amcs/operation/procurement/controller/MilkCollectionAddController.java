@@ -185,6 +185,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private void exportExcel(List<MilkCollection> list) {
         try {
             boolean exported = true;
+            boolean cancelled = false;
             CollectionSummary summary = listCollectionSummary.stream().filter(p -> p.getMilkType().getName().equalsIgnoreCase("ALL")).findFirst().orElse(null);
 
             try {
@@ -322,6 +323,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     outputStream.close();
                     workbook.close();
                 } else {
+                    cancelled = true;
                     exported = false;
                 }
             } catch (Exception e) {
@@ -330,7 +332,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             }
 
             MyAlert alert;
-            if (exported) {
+            if (cancelled) {
+                alert = new InformationAlert(MainApp.stage,
+                        resourceBundle.getString("milkcollection"),
+                        resourceBundle.getString("export.cancelled"));
+            } else if (exported) {
                 alert = new InformationAlert(MainApp.stage,
                         resourceBundle.getString("milkcollection"),
                         resourceBundle.getString("successful"));

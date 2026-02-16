@@ -139,6 +139,16 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
             errorMsg.append(resourceBundle.getString("shift.cannot.null") + "\n");
         if (!isRateAdded)
             errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
+        if (txtkgfat.getText() != null && !txtkgfat.getText().trim().isEmpty()) {
+
+                BigDecimal kgRate = new BigDecimal(txtkgfat.getText());
+                if (kgRate.compareTo(new BigDecimal("9999.99")) > 0) {
+                    errorMsg.append(resourceBundle.getString("Kg/Fat.out.of.bounds") + "\n");
+            }
+
+        } else {
+            errorMsg.append(resourceBundle.getString("kgfat.cannot.be.empty")).append("\n");
+        }
 
         return errorMsg.length() == 0;
     }
