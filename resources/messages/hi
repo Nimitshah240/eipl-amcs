@@ -1459,3 +1459,7 @@ MilkDispatch=दूध डिस्पैच
 fromDate=तारीख से
 Dispatch.already.exists.for.this.date.and.shift=इस दिनांक और शिफ्ट के लिए डिस्पैच पहले से मौजूद है
 challanNo=चालान नंबर
+productlocalnamenullerror=स्थानीय नाम रिक्त नहीं हो सकता
+export.cancelled= निर्यात रद्द किया गया
+Kg/Fat.out.of.bounds=किलोग्राम/फैट सीमा से बाहर है
+kgfat.cannot.be.empty=किलोग्राम/फैट खाली नहीं हो सकता

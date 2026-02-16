@@ -101,7 +101,7 @@
                         <Label text="%pincode" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="%mobileno" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <Label text="%registrationdate" GridPane.columnIndex="3" />
-                        <TextField fx:id="txtCodeEx" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtCodeEx" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <ComboBox fx:id="cboxMemberType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <DatePicker fx:id="dpRegistrationDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />

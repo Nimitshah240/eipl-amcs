@@ -61,6 +61,7 @@ public class ProductAddEditController implements MyInitialization {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        this.stage.setOnShown(e -> cboxProductGroup.requestFocus());
     }
 
     @Override
@@ -87,6 +88,7 @@ public class ProductAddEditController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         loadUnit();
         setupComboBox();
+        txtReferenceCode.setEditable(false);
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
     }
@@ -164,8 +166,12 @@ public class ProductAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("productgroupnullerror") + "\n");
         if (cboxTaxName.getValue() == null)
             errorMsg.append(resourceBundle.getString("taxnullerror") + "\n");
-        if (txtReferenceCode.getText() == null)
+        if (txtReferenceCode.getText() == null || txtReferenceCode.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("referencecodenullerror") + "\n");
+        if (txtName.getText() == null || txtName.getText().trim().isEmpty())
+            errorMsg.append(resourceBundle.getString("productnamenullerror") + "\n");
+        if (txtLocalName.getText() == null || txtLocalName.getText().trim().isEmpty())
+            errorMsg.append(resourceBundle.getString("productlocalnamenullerror") + "\n");
         return errorMsg.length() == 0;
     }
 
