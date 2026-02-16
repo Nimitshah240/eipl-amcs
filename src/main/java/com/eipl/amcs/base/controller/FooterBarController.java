@@ -36,7 +36,7 @@ public class FooterBarController implements MyInitialization, PopupCallback {
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
-    public DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     @Override
     public Node getRoot() {
@@ -48,6 +48,7 @@ public class FooterBarController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         loadControls();
         checkConnection();
+        startClock();
         lblVersion.setText("Version: " + AppConstant.versionNo + " - " + LocalDate.now());
 
         String baseUrl = MainApp.getProperty("baseurl", "");
@@ -96,6 +97,23 @@ public class FooterBarController implements MyInitialization, PopupCallback {
         });
         networkThread.setDaemon(true);
         networkThread.start();
+    }
+
+    public void startClock() {
+        Thread clockThread = new Thread(() -> {
+            while (true) {
+                Platform.runLater(() -> {
+                    lbltiming.setText(LocalDateTime.now().format(formatter1));
+                });
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        clockThread.setDaemon(true);
+        clockThread.start();
     }
 
     private boolean isInternetAvailable() {
