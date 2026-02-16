@@ -24,6 +24,6 @@ public class MilkDispatchDeleteTask extends Task<Boolean> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
     }
 }

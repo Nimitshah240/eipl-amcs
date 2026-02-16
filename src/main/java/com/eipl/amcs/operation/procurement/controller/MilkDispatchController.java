@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
@@ -157,6 +158,10 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
                     boolean isDelete = task.get();
                     if (isDelete)
                         loadData();
+                    else {
+                        MyAlert errorAlert = new ErrorAlert(MainApp.stage, resourceBundle.getString("milkdispatch"), resourceBundle.getString("milkdispatcherr"));
+                        errorAlert.createAlert();
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }

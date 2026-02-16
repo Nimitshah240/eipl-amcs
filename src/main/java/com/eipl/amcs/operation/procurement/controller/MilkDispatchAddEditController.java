@@ -599,7 +599,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 dto.setChallanNo(this.challanNo);
             dto.setDestinationCode(cboxDestination.getValue());
             dto.setDestinationCode("1");
-            dto.setDispatchType(0);
+            dto.setDispatchType(cboxDispatchType.getSelectionModel().getSelectedIndex());
             dto.setDestinationType(0);
             dto.setRouteNo(cboxRouteNo.getValue().getCode());
             dto.setFromDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
@@ -1078,8 +1078,12 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         txtChallanNo.setText(dto.getChallanNo().substring(8));
         int dispatch = dto.getDispatchType().intValue();
         cboxDispatchType.setValue(cboxDispatchType.getItems().get(dispatch));
-        txtDipStickReadingOpening.setText(dto.getDipStickReadingOpening().toString());
-        txtDipStickReadingClosing.setText(dto.getDipStickReadingClosing().toString());
+        if (!txtDipStickReadingOpening.getText().isEmpty() && dto != null && dto.getDipStickReadingOpening() != null) {
+            txtDipStickReadingOpening.setText(String.valueOf(dto.getDipStickReadingOpening()));
+        }
+        if(!txtDipStickReadingClosing.getText().isEmpty() && dto != null && dto.getDipStickReadingClosing() != null){
+            txtDipStickReadingClosing.setText(String.valueOf(dto.getDipStickReadingClosing()));
+        }
         dpFromDate.setValue(dto.getFromDate().toLocalDate());
         cboxFromShift.setValue(dto.getFromShift());
         dpToDate.setValue(dto.getToDate().toLocalDate());
