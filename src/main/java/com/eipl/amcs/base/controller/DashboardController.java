@@ -651,6 +651,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
                             rowSnf.getData().put(key, avgSnf);
 
                             TableColumn<RowData, Object> col = new TableColumn<>(item.toString());
+                            if (item.getName() != null) {
+                                col.setPrefWidth(item.getName().length() * 10 + 32);
+                            }
                             col.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getData().get(key)));
                             col.setStyle("-fx-alignment: CENTER-RIGHT;");
                             tableCollection.getColumns().add(col);
@@ -775,7 +778,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        tableCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableCollection.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         tableCollectionFarmers.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         colTableName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTableName()));
         colPendingData.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPendingCount()).asObject());
