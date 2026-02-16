@@ -1463,3 +1463,7 @@ dispatch.already.done=રવાનગી પહેલાથી જ પૂર્�
 users=વપરાશકર્તાઓ
 mobileDigitError=મોબાઇલ નંબર બરાબર 10 અંકનો હોવો જોઈએ
 milkdispatcherr=મિલ્ક ડિસ્પેચ (Milk Dispatch) ડિલીટ કરતા પહેલા, મિલ્ક રિસીપ્ટ (Milk Receipt) ડિલીટ કરો.
+export.cancelled= નિકાસ રદ કરવામાં આવી
+productlocalnamenullerror= સ્થાનિક નામ ખાલી હોઈ શકતું નથી
+Kg/Fat.out.of.bounds=કિલોગ્રામ/ફેટ મર્યાદાની બહાર છે
+kgfat.cannot.be.empty=કિલોગ્રામ/ફેટ ખાલી ન હોઈ શકે
