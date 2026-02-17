@@ -1002,11 +1002,11 @@ public class BroadcastedService {
                         e.printStackTrace();
                     }
                 case "tbl_route":
+                    Route route = new Route();
                     try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
                             case "UPDATE":
-                                Route route = new Route();
                                 route.setCode(String.valueOf(jsonText.get("routeCode")));
                                 route.setCodeEx(String.valueOf(jsonText.get("routeCodeEx")));
                                 route.setName(String.valueOf(jsonText.get("routeName")));
@@ -1025,6 +1025,11 @@ public class BroadcastedService {
                                 route.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
                                 route.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
                                 route.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                routeRepository.save(route);
+                                break;
+                            case "DELETE":
+                                route.setCode(String.valueOf(jsonText.get("routeCode")));
+                                route.setActive(false);
                                 routeRepository.save(route);
                                 break;
                         }
