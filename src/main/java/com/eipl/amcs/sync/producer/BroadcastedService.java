@@ -30,7 +30,10 @@ import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
 import com.eipl.amcs.master.operation.repository.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.repository.BmcRepository;
+import com.eipl.amcs.master.org.repository.RouteRepository;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRateBased;
@@ -169,6 +172,10 @@ public class BroadcastedService {
     private SocietyPaymentCycleRepository societyPaymentCycleRepository;
     @Autowired
     private MemberMilkPurchaseRateDetailRepository memberMilkPurchaseRateDetailRepository;
+    @Autowired
+    private RouteRepository routeRepository;
+    @Autowired
+    private BmcRepository bmcRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -989,6 +996,36 @@ public class BroadcastedService {
                                 break;
                             case "DELETE":
 //                                milkCollectionRepository.delete((String) jsonText.get("schemeRateAppCode"));
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "tbl_route":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                Route route = new Route();
+                                route.setCode(String.valueOf(jsonText.get("routeCode")));
+                                route.setCodeEx(String.valueOf(jsonText.get("routeCodeEx")));
+                                route.setName(String.valueOf(jsonText.get("routeName")));
+                                route.setNameLocal(String.valueOf(jsonText.get("localName")));
+                                route.setCapacity(jsonText.get("capacity") != null ? Integer.valueOf(jsonText.get("capacity").toString()) : null);
+                                route.setLengthKms(jsonText.get("routeLengthKms") != null ? Integer.valueOf(String.valueOf(jsonText.get("routeLengthKms"))) : null);
+                                route.setStartTime(jsonText.get("morningStartTime") != null ? LocalTime.parse((String) jsonText.get("morningStartTime")) : null);
+                                route.setReturnTime(jsonText.get("morningEndTime") != null ? LocalTime.parse((String) jsonText.get("morningEndTime")):null);
+                                route.setUnion(MainApp.identityDto.getUnion());
+                                route.setBmc(bmcRepository.findAll().get(0));
+                                route.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                route.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                route.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                route.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                route.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                route.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                route.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                route.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                routeRepository.save(route);
                                 break;
                         }
                     } catch (Exception e) {
