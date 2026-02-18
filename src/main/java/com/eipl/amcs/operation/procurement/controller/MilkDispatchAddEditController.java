@@ -193,7 +193,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 dpToDate.setDisable(true);
                 txtCans.clear();
                 txtCans.setDisable(false);
-                if (cboxFromShift.getSelectionModel() != null && cboxFromShift.getSelectionModel().getSelectedIndex() >= 0) {
+                if (cboxFromShift.getSelectionModel() != null) {
                     cboxToShift.valueProperty().set(null);
                     cboxToShift.setValue(cboxFromShift.getValue());
                 }
