@@ -3,9 +3,7 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
@@ -77,6 +75,9 @@ public class ProductController implements MyInitialization, PopupCallback {
                 if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_DELETE"))
                     throw new UnAuthorizedAccessException();
                 deleteData();
+            } else {
+                MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.delete.fail"));
+                errorAlert.createAlert();
             }
         });
         btnEdit.setOnAction(e -> {
@@ -86,6 +87,9 @@ public class ProductController implements MyInitialization, PopupCallback {
                 Product dto = propProductDto.get();
                 if (dto != null)
                     MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", dto, this);
+            } else {
+                MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.update.fail"));
+                errorAlert.createAlert();
             }
         });
     }

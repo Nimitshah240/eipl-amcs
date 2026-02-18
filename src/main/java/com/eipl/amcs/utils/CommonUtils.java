@@ -79,7 +79,7 @@ public class CommonUtils {
         if ("en".equalsIgnoreCase(MainApp.getLocale()))
             return main;
 
-        if (local == null)
+        if (local == null || local.isEmpty())
             return main;
         return local;
     }
