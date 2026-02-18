@@ -31,7 +31,7 @@ public class LedgerGroup extends BaseModel {
     @JsonDeserialize(using = LedgerTypeDeserializer.class)
     @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(name = "fk_ledger_groups_ledger_type_code"))
     private LedgerType ledgerType;
-
+    private String unionCode;
     @Override
     public String getTableName() {
         return "ledger_groups";
@@ -47,7 +47,7 @@ public class LedgerGroup extends BaseModel {
         LedgerGroupAudit audit = new LedgerGroupAudit();
         audit.setOperationType(operation);
         audit.setAuditCreatedBy(user);
-
+        audit.setUnionCode(this.getUnionCode());
         audit.setCode(this.getCode());
         audit.setName(this.getName());
         audit.setNameLocal(this.getNameLocal());

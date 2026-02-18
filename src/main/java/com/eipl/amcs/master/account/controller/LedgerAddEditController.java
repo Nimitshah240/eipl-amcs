@@ -13,6 +13,7 @@ import com.eipl.amcs.master.account.converter.LedgerTypeConvertor;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -117,6 +118,7 @@ public class LedgerAddEditController implements MyInitialization {
         loadLedgerType();
         setupSubLedgerTable();
         loadSubLedger();
+        FocusUtils.requestFocus(cboxLedgerType);
         ledgerSubLedgerMappingList = new ArrayList<>();
         chkBoxSelectAll.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {

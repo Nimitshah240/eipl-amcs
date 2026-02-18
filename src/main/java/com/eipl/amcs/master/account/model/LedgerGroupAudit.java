@@ -2,7 +2,11 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.model.BaseModelAudit;
 import com.eipl.amcs.json.deserialize.LedgerTypeDeserializer;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
 import com.eipl.amcs.json.serialize.LedgerTypeSerialize;
+import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Union;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -29,7 +33,7 @@ public class LedgerGroupAudit extends BaseModelAudit {
     @JsonDeserialize(using = LedgerTypeDeserializer.class)
     @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private LedgerType ledgerType;
-
+    private String unionCode;
     @Override
     public String getTableName() {
         return "ledger_groups_audit";

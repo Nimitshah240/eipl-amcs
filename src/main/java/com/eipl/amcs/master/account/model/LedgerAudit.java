@@ -44,7 +44,9 @@ public class LedgerAudit extends BaseModelAudit {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     private String unionCode;
-
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
     @Override
     public String getTableName() {
         return "ledgers_audit";

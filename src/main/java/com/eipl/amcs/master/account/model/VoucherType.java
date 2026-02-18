@@ -2,14 +2,17 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.LedgerDeserializer;
+import com.eipl.amcs.json.serialize.LedgerSerialize;
 import com.eipl.amcs.utils.CommonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @SuppressWarnings("serial")
@@ -24,7 +27,15 @@ public class VoucherType extends BaseModel {
     private String code;
     private String name;
     private String nameLocal;
-
+    private Integer voucherType;
+    @Column(name = "credit_debit")
+    private Boolean creditDebit;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_types_ledger_code"))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger ledger;
     @Override
     public String getTableName() {
         return "voucher_types";
@@ -45,7 +56,9 @@ public class VoucherType extends BaseModel {
         audit.setCode(this.getCode());
         audit.setName(this.getName());
         audit.setNameLocal(this.getNameLocal());
-
+        audit.setVoucherType(this.getVoucherType());
+        audit.setCreditDebit(this.getCreditDebit());
+        audit.setLedger(this.getLedger());
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());
         audit.setUpdatedAt(this.getUpdatedAt());

@@ -46,6 +46,9 @@ public class Ledger extends BaseModel {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     private String unionCode;
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
     @Transient
     private BooleanProperty selected;
 
@@ -81,8 +84,10 @@ public class Ledger extends BaseModel {
         audit.setHasSubLedger(this.getHasSubLedger());
         audit.setLedgerGroup(this.getLedgerGroup());
         audit.setUnionCode(this.getUnionCode());
+        audit.setPlantCode(this.getPlantCode());
+        audit.setMccCode(this.getMccCode());
+        audit.setBmcCode(this.getBmcCode());
         audit.setSociety(this.getSociety());
-
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());
         audit.setUpdatedAt(this.getUpdatedAt());

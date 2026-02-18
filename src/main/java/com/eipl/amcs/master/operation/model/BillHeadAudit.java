@@ -1,10 +1,13 @@
 package com.eipl.amcs.master.operation.model;
 
 import com.eipl.amcs.base.model.BaseModelAudit;
+import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -36,7 +39,26 @@ public class BillHeadAudit extends BaseModelAudit {
     private Boolean disburseAllowed;
     private short allowAdjustment;
     private short headType;
-
+    private String calculationBasedOn;
+    private String billHeadFor;
+    private Integer defaultBillHeadCode;
+    private String generalFormul;
+    private String generalFormulaCode;
+    private String generalFormulaComma;
+    @Column(name = "has_slab")
+    private Boolean hasSlab;
+    @Column(name = "is_hold")
+    private Boolean hold;
+    @Column(name = "is_reserved")
+    private Boolean reserved;
+    private String paymentCycleType;
+    private Integer sapSeqNo;
+    private Integer sequenceNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
+    @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private MilkType milkType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)

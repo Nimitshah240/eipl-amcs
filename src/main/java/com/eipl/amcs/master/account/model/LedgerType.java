@@ -2,15 +2,18 @@ package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.utils.CommonUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -29,7 +32,7 @@ public class LedgerType extends BaseModel {
     private boolean profitLoss;
     @Column(name = "balance_sheet")
     private boolean balanceSheet;
-
+    private String unionCode;
     @Override
     public String getTableName() {
         return "ledger_types";
@@ -46,7 +49,7 @@ public class LedgerType extends BaseModel {
         LedgerTypeAudit audit = new LedgerTypeAudit();
         audit.setOperationType(operation);
         audit.setAuditCreatedBy(user);
-
+        audit.setUnionCode(this.getUnionCode());
         audit.setCode(this.getCode());
         audit.setName(this.getName());
         audit.setNameLocal(this.getNameLocal());

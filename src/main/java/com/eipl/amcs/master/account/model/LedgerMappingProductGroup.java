@@ -60,7 +60,9 @@ public class LedgerMappingProductGroup extends BaseModelTxn {
     private ProductGroup productGroup;
 
     private String unionCode;
-
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
 
     @Override
     public String getTableName() {

@@ -66,7 +66,9 @@ public class LedgerMappingBillHead extends BaseModelTxn {
     private BillCriteria billCriteria;
 
     private String unionCode;
-
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
 
     @Override
     public String getTableName() {
