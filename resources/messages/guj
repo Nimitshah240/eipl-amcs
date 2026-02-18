@@ -1467,3 +1467,5 @@ export.cancelled= નિકાસ રદ કરવામાં આવી
 productlocalnamenullerror= સ્થાનિક નામ ખાલી હોઈ શકતું નથી
 Kg/Fat.out.of.bounds=કિલોગ્રામ/ફેટ મર્યાદાની બહાર છે
 kgfat.cannot.be.empty=કિલોગ્રામ/ફેટ ખાલી ન હોઈ શકે
+product.update.fail=તમે આમાં ફેરફાર કરી શકતા નથી
+product.delete.fail=તમે આને કાઢી શકતા નથી
