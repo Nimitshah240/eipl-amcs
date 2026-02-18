@@ -73,7 +73,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     private GridPane gridMaster;
     @FXML
     private E_TextField txtChallanNo, txtVehicleNo, txtQuanity, txtFat, txtSnf, txtClr,
-            txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans,txtDipStickReadingClosing, txtDipStickReadingOpening;
+            txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans, txtDipStickReadingClosing, txtDipStickReadingOpening;
     @FXML
     private TextField txtVehicleInTime, txtVehicleOutTime;
     @FXML
@@ -193,7 +193,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 dpToDate.setDisable(true);
                 txtCans.clear();
                 txtCans.setDisable(false);
-                if (cboxFromShift.getSelectionModel().getSelectedIndex() >= 0) {
+                if (cboxFromShift.getSelectionModel() != null && cboxFromShift.getSelectionModel().getSelectedIndex() >= 0) {
                     cboxToShift.valueProperty().set(null);
                     cboxToShift.setValue(cboxFromShift.getValue());
                 }
@@ -613,9 +613,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     dto.setVehicleOutTime(LocalTime.parse(txtVehicleOutTime.getText().trim(), DateTimeFormatter.ofPattern("HH:mm")));
                 if (txtVehicleNo.getText().trim().length() != 0)
                     dto.setVehicleNo(txtVehicleNo.getText());
-                if(txtDipStickReadingOpening.getText().trim().length() != 0)
-                   dto.setDipStickReadingOpening(new BigDecimal(txtDipStickReadingOpening.getText()));
-                if(txtDipStickReadingClosing.getText().trim().length() != 0)
+                if (txtDipStickReadingOpening.getText().trim().length() != 0)
+                    dto.setDipStickReadingOpening(new BigDecimal(txtDipStickReadingOpening.getText()));
+                if (txtDipStickReadingClosing.getText().trim().length() != 0)
                     dto.setDipStickReadingClosing(new BigDecimal(txtDipStickReadingClosing.getText()));
             } catch (Exception e) {
             }
@@ -1044,7 +1044,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             try {
 
 //                if (listBased != null) {
-                    listBased = task.get();
+                listBased = task.get();
 //                }else{
 //                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
 //                            resourceBundle.getString("ratemaster.not.found"));
@@ -1081,7 +1081,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         if (!txtDipStickReadingOpening.getText().isEmpty() && dto != null && dto.getDipStickReadingOpening() != null) {
             txtDipStickReadingOpening.setText(String.valueOf(dto.getDipStickReadingOpening()));
         }
-        if(!txtDipStickReadingClosing.getText().isEmpty() && dto != null && dto.getDipStickReadingClosing() != null){
+        if (!txtDipStickReadingClosing.getText().isEmpty() && dto != null && dto.getDipStickReadingClosing() != null) {
             txtDipStickReadingClosing.setText(String.valueOf(dto.getDipStickReadingClosing()));
         }
         dpFromDate.setValue(dto.getFromDate().toLocalDate());

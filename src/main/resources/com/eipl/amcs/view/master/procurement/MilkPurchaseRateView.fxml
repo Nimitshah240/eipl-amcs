@@ -22,7 +22,10 @@
                         <ComboBox fx:id="cboxMilkQualityType" editable="true" prefWidth="125.0"/>
                     </children>
                 </HBox>
-                <TableView fx:id="tableRateDetails" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS"/>
+                <HBox VBox.vgrow="ALWAYS" spacing="0">
+                    <TableView fx:id="tableFixed" prefWidth="100.0" minWidth="100.0" maxWidth="100.0"/>
+                    <TableView fx:id="tableRateDetails" HBox.hgrow="ALWAYS" />
+                </HBox>
                 <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
                     <children>
                         <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
