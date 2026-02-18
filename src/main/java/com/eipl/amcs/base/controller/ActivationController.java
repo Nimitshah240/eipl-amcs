@@ -275,6 +275,8 @@ public class ActivationController implements MyInitialization, PopupCallback {
         try {
             Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
             preferences.put("AMCS_DB_LOC", new String(Base64.getEncoder().encode(DB_LOC.getBytes())));
+            preferences.put("AMCS_DB_NAME", "ZWlwbF9hbWNzX2Ri");
+            preferences.put("AMCS_DB_PASS", "RUFtY3MyMDIx");
             try {
                 preferences.flush();
                 startSpring();
