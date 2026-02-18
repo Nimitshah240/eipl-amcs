@@ -984,7 +984,7 @@ public class BroadcastedService {
                                 milkCollection.setProtein(jsonText.get("protein") != null ? new BigDecimal(String.valueOf(jsonText.get("protein"))) : null);
                                 milkCollection.setRateCode(jsonText.get("purchaseRateCode") != null ? jsonText.get("purchaseRateCode").toString() : null);
                                 milkCollection.setQualityAuto(jsonText.get("qltyAuto") != null ? (boolean) jsonText.get("qltyAuto") : null);
-
+                                milkCollection.setUnionCode(MainApp.identityDto.getUnion().getCode());
                                 milkCollection.setQualityAt(jsonText.get("qltyTime") != null ? LocalDateTime.parse((String) jsonText.get("qltyTime")) : null);
                                 milkCollection.setQtyMode(jsonText.get("qtyMode") != null ? (int) jsonText.get("qtyMode") : null);
                                 milkCollection.setQty(jsonText.get("qty") != null ? new BigDecimal(String.valueOf(jsonText.get("qty"))) : null);

@@ -737,12 +737,21 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
 
     private void openMemberAdd() {
+        if (MainApp.contentPane.getLeft() == null) {
+            MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+        }
         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml")));
     }
     private void openLocalMilkSale() {
+        if (MainApp.contentPane.getLeft() == null) {
+            MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+        }
         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
     }
     private void openMilkDispatch() {
+        if (MainApp.contentPane.getLeft() == null) {
+            MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
+        }
         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
     }
 
