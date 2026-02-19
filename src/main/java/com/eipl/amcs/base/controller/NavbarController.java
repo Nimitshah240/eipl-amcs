@@ -477,7 +477,8 @@ public class NavbarController implements MyInitialization {
                             menu.put(r, new TreeMap<>(new PermissionComparator()));
                         }
                     }
-                    MainApp.getUser().getPermissions().add(r.getName());
+                    if (r.isActive())
+                        MainApp.getUser().getPermissions().add(r.getName());
                 });
 
                 for (Permission permission : permissions) {
@@ -495,7 +496,8 @@ public class NavbarController implements MyInitialization {
                             });
                         });
                     }
-                    MainApp.getUser().getPermissions().add(permission.getName());
+                    if (permission.isActive())
+                        MainApp.getUser().getPermissions().add(permission.getName());
                 }
                 LOGGER.info("Menu {}", menu);
                 return (short) 0;

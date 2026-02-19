@@ -170,7 +170,8 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                             menu.put(r, new TreeMap<>(new PermissionComparator()));
                         }
                     }
-                    MainApp.getUser().getPermissions().add(r.getName());
+                    if (r.isActive())
+                        MainApp.getUser().getPermissions().add(r.getName());
                 });
 
                 for (Permission permission : permissions) {
@@ -188,7 +189,9 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                             });
                         });
                     }
-                    MainApp.getUser().getPermissions().add(permission.getName());
+                    if (permission.isActive())
+                        MainApp.getUser().getPermissions().add(permission.getName());
+//                    MainApp.getUser().getPermissions().add(permission.getName());
                 }
                 LOGGER.info("Menu {}", menu);
                 return (short) 0;
