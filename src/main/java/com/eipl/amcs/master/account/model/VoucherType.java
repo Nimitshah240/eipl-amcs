@@ -27,9 +27,9 @@ public class VoucherType extends BaseModel {
     private String code;
     private String name;
     private String nameLocal;
-    private Integer voucherType;
+    private Integer voucherType; // 0-cash,1-bank
     @Column(name = "credit_debit")
-    private Boolean creditDebit;
+    private Boolean creditDebit; // 0-debit,1-credit
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = LedgerSerialize.class)
     @JsonDeserialize(using = LedgerDeserializer.class)

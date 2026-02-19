@@ -3,23 +3,30 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.VoucherType;
+import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.master.account.task.VoucherTypeNumberLoadTask;
 import com.eipl.amcs.master.account.task.VoucherTypeSaveTask;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
@@ -30,6 +37,12 @@ public class VoucherTypeAddEditController implements MyInitialization {
     private Button btnClose, btnSaveUpdate;
     @FXML
     private E_TextField txtCode, txtName, txtLocalName;
+    @FXML
+    private E_ComboBox<Ledger> cboxLedgers;
+    @FXML
+    private E_ComboBox<Integer> cboxVoucherType; // 0-cash,1-bank
+    @FXML
+    private E_ComboBox<Boolean> cboxCreditDebit; // 0-debit,1-credit
     private Stage stage;
     private PopupCallback callback;
     private ResourceBundle resourceBundle;
@@ -70,12 +83,92 @@ public class VoucherTypeAddEditController implements MyInitialization {
         txtLocalName.setOnAction(e -> {
             FocusUtils.requestFocus(btnSaveUpdate);
         });
+        cboxVoucherType.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+            if (newValue == 0) { // Cash
+                cboxLedgers.setDisable(false);
+                cboxCreditDebit.setValue(false); // Debit
+                loadLedgers();
+            } else if (newValue == 1) { // Bank
+                cboxLedgers.setDisable(true);
+                cboxLedgers.getSelectionModel().clearSelection();
+                cboxCreditDebit.getSelectionModel().clearSelection();
+            }
+        });
+    }
+
+    @Override
+    public void setupComboBox() {
+        cboxVoucherType.setItems(FXCollections.observableArrayList(0, 1));
+        cboxVoucherType.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Integer object) {
+                if (object == null) return "";
+                return object == 0 ? "Cash" : "Bank";
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                return "Cash".equals(string) ? 0 : 1;
+            }
+        });
+
+        cboxCreditDebit.setItems(FXCollections.observableArrayList(false, true));
+        cboxCreditDebit.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Boolean object) {
+                if (object == null) return "";
+                return !object ? "Debit" : "Credit";
+            }
+
+            @Override
+            public Boolean fromString(String string) {
+                return "Credit".equals(string);
+            }
+        });
+
+        cboxLedgers.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Ledger object) {
+                if (object == null) return "";
+                return CommonUtils.getLocalString(object.getName(), object.getNameLocal());
+            }
+
+            @Override
+            public Ledger fromString(String string) {
+                return null; // Not needed for this use case
+            }
+        });
+    }
+
+    private void loadLedgers() {
+        var task = new LedgerLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Ledger> ledgers = task.get();
+                if (ledgers != null && !ledgers.isEmpty()) {
+                    cboxLedgers.setItems(FXCollections.observableArrayList(ledgers));
+                } else {
+                    cboxLedgers.setItems(FXCollections.observableArrayList());
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     public void loadControls() {
         txtCode.setText(dto.getCode().toString());
         txtName.setText(dto.getName());
         txtLocalName.setText(dto.getNameLocal());
+        cboxVoucherType.setValue(dto.getVoucherType());
+        cboxCreditDebit.setValue(dto.getCreditDebit());
+        if (dto.getLedger() != null) {
+            cboxLedgers.setValue(dto.getLedger());
+        }
     }
 
     private void validateAndSave() {
@@ -119,6 +212,9 @@ public class VoucherTypeAddEditController implements MyInitialization {
         dto.setName(txtName.getText());
         dto.setNameLocal(txtLocalName.getText());
         dto.setActive(true);
+        dto.setVoucherType(cboxVoucherType.getValue());
+        dto.setCreditDebit(cboxCreditDebit.getValue());
+        dto.setLedger(cboxLedgers.getValue());
         return dto;
     }
 

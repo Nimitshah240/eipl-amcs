@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_TextField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import com.eipl.amcs.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import com.eipl.amcs.controls.E_Button?>
-<StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherTypeAddEditController">
+<StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherTypeAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white-drop-border">
             <children>
@@ -25,6 +19,8 @@
                     <rowConstraints>
                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <Label maxWidth="1.7976931348623157E308" text="%code" />
@@ -33,6 +29,12 @@
                         <E_TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <E_ComboBox fx:id="cboxVoucherType" prefWidth="150.0" GridPane.rowIndex="3" />
+                  <E_ComboBox fx:id="cboxCreditDebit" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <E_ComboBox fx:id="cboxLedgers" disable="true" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%vouchertype" GridPane.rowIndex="2" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%creditdebit" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%ledgercode" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15">

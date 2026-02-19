@@ -123,6 +123,7 @@ public class LedgerTypeAddEditController implements MyInitialization {
         dto.setActive(true);
         dto.setBalanceSheet(chkBalanceSheet.isSelected());
         dto.setProfitLoss(chkProfitLoss.isSelected());
+        dto.setUnionCode(MainApp.identityDto.getUnion().getCode());
         return dto;
     }
 
