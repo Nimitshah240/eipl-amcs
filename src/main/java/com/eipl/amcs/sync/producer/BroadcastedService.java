@@ -5,6 +5,12 @@ import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.repository.IdentityRepository;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import com.eipl.amcs.base.service.NextCodeService;
+import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.model.LedgerGroup;
+import com.eipl.amcs.master.account.model.LedgerType;
+import com.eipl.amcs.master.account.repository.LedgerGroupRepository;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
+import com.eipl.amcs.master.account.repository.LedgerTypeRepository;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkQualityType;
@@ -23,15 +29,9 @@ import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.master.inventory.repository.ProductGroupRepository;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
-import com.eipl.amcs.master.operation.model.Member;
-import com.eipl.amcs.master.operation.model.MemberDetail;
-import com.eipl.amcs.master.operation.model.SchemeRate;
-import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
+import com.eipl.amcs.master.operation.model.*;
 import com.eipl.amcs.master.operation.repository.*;
-import com.eipl.amcs.master.org.model.Bank;
-import com.eipl.amcs.master.org.model.Branch;
-import com.eipl.amcs.master.org.model.Route;
-import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.model.*;
 import com.eipl.amcs.master.org.repository.BmcRepository;
 import com.eipl.amcs.master.org.repository.RouteRepository;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
@@ -176,6 +176,14 @@ public class BroadcastedService {
     private RouteRepository routeRepository;
     @Autowired
     private BmcRepository bmcRepository;
+    @Autowired
+    private LedgerGroupRepository ledgerGroupRepository;
+    @Autowired
+    private LedgerTypeRepository ledgerTypeRepository;
+    @Autowired
+    private  LedgerRepository ledgerRepository;
+    @Autowired
+    private BillHeadRepository billHeadRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -1031,6 +1039,150 @@ public class BroadcastedService {
                                 route.setCode(String.valueOf(jsonText.get("routeCode")));
                                 route.setActive(false);
                                 routeRepository.save(route);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "tbl_ledger_types":
+                    LedgerType ledgerType = new LedgerType();
+                    try{
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                ledgerType.setCode(jsonText.get("ledgerTypeCode") != null ? String.valueOf(jsonText.get("ledgerTypeCode")) : null);
+                                ledgerType.setName(jsonText.get("ledgerTypeName") != null ? String.valueOf(jsonText.get("ledgerTypeName")) : null);
+                                ledgerType.setNameLocal(jsonText.get("localName") != null ? String.valueOf(jsonText.get("localName")) : null);
+                                ledgerType.setBalanceSheet(jsonText.get("balanceSheet") != null ? Boolean.parseBoolean(String.valueOf(jsonText.get("balanceSheet"))) : null);
+                                ledgerType.setProfitLoss(jsonText.get("profitLoss") != null ? Boolean.parseBoolean(String.valueOf(jsonText.get("profitLoss"))) : null);
+
+                                ledgerType.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                ledgerType.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                ledgerType.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                ledgerType.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                ledgerType.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                ledgerType.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                ledgerType.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                ledgerType.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                ledgerType.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                ledgerTypeRepository.save(ledgerType);
+                                break;
+                            case "DELETE":
+                                break;
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                case "tbl_ledger_groups":
+                    LedgerGroup ledgerGroup = new LedgerGroup();
+                    try{
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                ledgerGroup.setCode(String.valueOf(jsonText.get("ledgerGroupCode")));
+                                ledgerGroup.setName(String.valueOf(jsonText.get("ledgerGroupName")));
+                                ledgerGroup.setNameLocal(String.valueOf(jsonText.get("localName")));
+                                ledgerGroup.setLedgerType(ledgerTypeRepository.findById(String.valueOf(jsonText.get("ledgerTypeCode"))).orElse(null));
+                                ledgerGroup.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                ledgerGroup.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                ledgerGroup.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                ledgerGroup.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                ledgerGroup.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                ledgerGroup.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                ledgerGroup.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                ledgerGroup.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                ledgerGroup.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                ledgerGroupRepository.save(ledgerGroup);
+                                break;
+                            case "DELETE":
+                                break;
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                case "tbl_ledgers":
+                    Ledger ledger = new Ledger();
+                    try{
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                ledger.setCode(String.valueOf(jsonText.get("ledgerCode")));
+                                ledger.setName(String.valueOf(jsonText.get("ledgerName")));
+                                ledger.setNameLocal(String.valueOf(jsonText.get("localName")));
+                                ledger.setHasSubLedger(jsonText.get("hasSubLedger") != null ? (boolean) jsonText.get("hasSubLedger") : null);
+                                ledger.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                ledger.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
+                                if (jsonText.get("ledgerGroupCode") != null) {
+                                    ledger.setLedgerGroup(ledgerGroupRepository.findById(String.valueOf(jsonText.get("ledgerGroupCode"))).orElse(null));
+                                }
+
+                                ledger.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                ledger.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                ledger.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                ledger.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                ledger.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                ledger.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                ledger.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                ledger.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                ledger.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
+                                ledger.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
+                                ledger.setBmcCode(jsonText.get("bmcCode") != null ? String.valueOf(jsonText.get("bmcCode")) : null);
+                                ledgerRepository.save(ledger);
+                                break;
+                            case "DELETE":
+                                break;
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                case "tbl_bill_head":
+                    BillHead billHead = new BillHead();
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+
+                                billHead.setCode(jsonText.get("billHeadCode") != null ? String.valueOf(jsonText.get("billHeadCode")) : null);
+                                billHead.setName(jsonText.get("billHeadName") != null ? String.valueOf(jsonText.get("billHeadName")) : null);
+                                billHead.setNameLocal(jsonText.get("billHeadName") != null ? String.valueOf(jsonText.get("billHeadName")) : null);
+                                if (jsonText.get("isDefault") != null)
+                                    billHead.setDefaultHead(Boolean.valueOf((String) jsonText.get("isDefault")));
+                                if (jsonText.get("isDisburseAllowed") != null)
+                                    billHead.setDisburseAllowed(Boolean.valueOf((String) jsonText.get("isDisburseAllowed")));
+                                billHead.setUnion(MainApp.identityDto.getUnion());
+                                billHead.setSociety(MainApp.identityDto.getSociety());
+                                billHead.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                billHead.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                billHead.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                billHead.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                billHead.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                billHead.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                billHead.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                billHead.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                billHead.setHeadType(jsonText.get("billHeadType") != null ? Short.parseShort(String.valueOf(jsonText.get("billHeadType"))) : 0);
+//                                billHead.setAllowAdjustment(jsonText.get("allowAdjustment") != null ? Short.parseShort(String.valueOf(jsonText.get("allowAdjustment"))) : 0);
+                                billHead.setCalculationBasedOn(jsonText.get("calculationBasedOn") != null ? String.valueOf(jsonText.get("calculationBasedOn")) : null);
+                                billHead.setBillHeadFor(jsonText.get("billHeadFor") != null ? String.valueOf(jsonText.get("billHeadFor")) : null);
+                                billHead.setDefaultBillHeadCode(jsonText.get("defaultBillHeadCode") != null ? Integer.parseInt(String.valueOf(jsonText.get("defaultBillHeadCode"))) : null);
+                                if(jsonText.get("isDisburseAllowed") != null)
+                                    billHead.setDisburseAllowed(Boolean.parseBoolean(String.valueOf(jsonText.get("isDisburseAllowed"))));
+                                billHead.setGeneralFormul(jsonText.get("generalFormula") != null ? String.valueOf(jsonText.get("generalFormula")) : null);
+                                billHead.setGeneralFormulaCode(jsonText.get("generalFormulaCode") != null ? String.valueOf(jsonText.get("generalFormulaCode")) : null);
+                                billHead.setGeneralFormulaComma(jsonText.get("generalFormulaComma") != null ? String.valueOf(jsonText.get("generalFormulaComma")) : null);
+                                if(jsonText.get("hasSlab") != null)
+                                    billHead.setHasSlab(Boolean.parseBoolean(String.valueOf(jsonText.get("hasSlab"))));
+                                if (jsonText.get("isHold") != null)
+                                    billHead.setHold(Boolean.parseBoolean(String.valueOf(jsonText.get("isHold"))));
+                                if (jsonText.get("isReserved") != null)
+                                    billHead.setReserved(Boolean.parseBoolean(String.valueOf(jsonText.get("isReserved"))));
+                                billHead.setPaymentCycleType(jsonText.get("paymentCycleType") != null ? String.valueOf(jsonText.get("paymentCycleType")) : null);
+                                billHead.setSapSeqNo(jsonText.get("sapSeqNo") != null ? Integer.parseInt(String.valueOf(jsonText.get("sapSeqNo"))) : null);
+                                billHead.setSequenceNo(jsonText.get("sequenceNo") != null ? Integer.parseInt(String.valueOf(jsonText.get("sequenceNo"))) : null);
+                                billHead.setMilkType(jsonText.get("milkTypeCode") != null ? milkTypeRepository.findByCode((int) jsonText.get("milkTypeCode")) : null);
+                                billHeadRepository.save(billHead);
                                 break;
                         }
                     } catch (Exception e) {
