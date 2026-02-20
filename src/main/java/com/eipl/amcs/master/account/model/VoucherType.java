@@ -27,6 +27,7 @@ public class VoucherType extends BaseModel {
     private String code;
     private String name;
     private String nameLocal;
+    private String unionCode;
     private Integer voucherType; // 0-cash,1-bank
     @Column(name = "credit_debit")
     private Boolean creditDebit; // 0-debit,1-credit

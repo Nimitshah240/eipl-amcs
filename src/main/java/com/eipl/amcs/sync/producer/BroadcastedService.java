@@ -5,12 +5,8 @@ import com.eipl.amcs.base.model.Notification;
 import com.eipl.amcs.base.repository.IdentityRepository;
 import com.eipl.amcs.base.repository.NotificationRepository;
 import com.eipl.amcs.base.service.NextCodeService;
-import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.model.LedgerGroup;
-import com.eipl.amcs.master.account.model.LedgerType;
-import com.eipl.amcs.master.account.repository.LedgerGroupRepository;
-import com.eipl.amcs.master.account.repository.LedgerRepository;
-import com.eipl.amcs.master.account.repository.LedgerTypeRepository;
+import com.eipl.amcs.master.account.model.*;
+import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkQualityType;
@@ -31,7 +27,11 @@ import com.eipl.amcs.master.inventory.repository.ProductGroupRepository;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.operation.model.*;
 import com.eipl.amcs.master.operation.repository.*;
-import com.eipl.amcs.master.org.model.*;
+import com.eipl.amcs.master.org.model.Bank;
+import com.eipl.amcs.master.org.model.Branch;
+import com.eipl.amcs.master.org.model.Route;
+import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.repository.BankRepository;
 import com.eipl.amcs.master.org.repository.BmcRepository;
 import com.eipl.amcs.master.org.repository.RouteRepository;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
@@ -181,9 +181,21 @@ public class BroadcastedService {
     @Autowired
     private LedgerTypeRepository ledgerTypeRepository;
     @Autowired
-    private  LedgerRepository ledgerRepository;
+    private LedgerRepository ledgerRepository;
     @Autowired
     private BillHeadRepository billHeadRepository;
+    @Autowired
+    private BankRepository bankRepository;
+    @Autowired
+    private VoucherTypeRepository voucherTypeRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private LedgerMappingProductGroupRepository ledgerMappingProductGroupRepository;
+    @Autowired
+    private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
+    @Autowired
+    private BillCriteriaRepository billCriteriaRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -324,7 +336,6 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    break;
                 case "tbl_product_dispatch":
                     try {
                         ProductDispatch productDispatch = new ProductDispatch();
@@ -583,8 +594,6 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    break;
-
                 case "tbl_insurance_detail_summary":
                     try {
                         switch (subscribed.getOperation()) {
@@ -622,8 +631,6 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    break;
-
                 case "tbl_insurance_detail":
                     try {
                         switch (subscribed.getOperation()) {
@@ -685,8 +692,6 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    break;
-
                 case "rfc_call":
                     try {
 //                    LocalDate fromDate = LocalDate.parse(String.valueOf(jsonText.get("prodate")), AppConstant.RFC_CALL_FORMAT);
@@ -850,7 +855,6 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    break;
                 case "tbl_scheme_rate_applicability":
                     try {
                         switch (subscribed.getOperation()) {
@@ -902,7 +906,6 @@ public class BroadcastedService {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    break;
                 case "tbl_force_sync_request":
                     switch ((String) jsonText.get("tableName")) {
                         case "tbl_milk_collection":
@@ -1022,7 +1025,7 @@ public class BroadcastedService {
                                 route.setCapacity(jsonText.get("capacity") != null ? Integer.valueOf(jsonText.get("capacity").toString()) : null);
                                 route.setLengthKms(jsonText.get("routeLengthKms") != null ? Integer.valueOf(String.valueOf(jsonText.get("routeLengthKms"))) : null);
                                 route.setStartTime(jsonText.get("morningStartTime") != null ? LocalTime.parse((String) jsonText.get("morningStartTime")) : null);
-                                route.setReturnTime(jsonText.get("morningEndTime") != null ? LocalTime.parse((String) jsonText.get("morningEndTime")):null);
+                                route.setReturnTime(jsonText.get("morningEndTime") != null ? LocalTime.parse((String) jsonText.get("morningEndTime")) : null);
                                 route.setUnion(MainApp.identityDto.getUnion());
                                 route.setBmc(bmcRepository.findAll().get(0));
                                 route.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
@@ -1046,7 +1049,7 @@ public class BroadcastedService {
                     }
                 case "tbl_ledger_types":
                     LedgerType ledgerType = new LedgerType();
-                    try{
+                    try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
                             case "UPDATE":
@@ -1071,12 +1074,12 @@ public class BroadcastedService {
                                 break;
                         }
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 case "tbl_ledger_groups":
                     LedgerGroup ledgerGroup = new LedgerGroup();
-                    try{
+                    try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
                             case "UPDATE":
@@ -1099,12 +1102,12 @@ public class BroadcastedService {
                                 break;
                         }
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 case "tbl_ledgers":
                     Ledger ledger = new Ledger();
-                    try{
+                    try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
                             case "UPDATE":
@@ -1114,10 +1117,7 @@ public class BroadcastedService {
                                 ledger.setHasSubLedger(jsonText.get("hasSubLedger") != null ? (boolean) jsonText.get("hasSubLedger") : null);
                                 ledger.setUnionCode(MainApp.identityDto.getUnion().getCode());
                                 ledger.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
-                                if (jsonText.get("ledgerGroupCode") != null) {
-                                    ledger.setLedgerGroup(ledgerGroupRepository.findById(String.valueOf(jsonText.get("ledgerGroupCode"))).orElse(null));
-                                }
-
+                                ledger.setLedgerGroup(ledgerGroupRepository.findById(String.valueOf(jsonText.get("ledgerGroupCode"))).orElse(null));
                                 ledger.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
                                 ledger.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                                 ledger.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
@@ -1135,7 +1135,7 @@ public class BroadcastedService {
                                 break;
                         }
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 case "tbl_bill_head":
@@ -1148,12 +1148,10 @@ public class BroadcastedService {
                                 billHead.setCode(jsonText.get("billHeadCode") != null ? String.valueOf(jsonText.get("billHeadCode")) : null);
                                 billHead.setName(jsonText.get("billHeadName") != null ? String.valueOf(jsonText.get("billHeadName")) : null);
                                 billHead.setNameLocal(jsonText.get("billHeadName") != null ? String.valueOf(jsonText.get("billHeadName")) : null);
-                                if (jsonText.get("isDefault") != null)
-                                    billHead.setDefaultHead(Boolean.valueOf((String) jsonText.get("isDefault")));
-                                if (jsonText.get("isDisburseAllowed") != null)
-                                    billHead.setDisburseAllowed(Boolean.valueOf((String) jsonText.get("isDisburseAllowed")));
+                                billHead.setDefaultHead(Boolean.valueOf((String) jsonText.get("isDefault")));
+                                billHead.setDisburseAllowed(Boolean.valueOf((String) jsonText.get("isDisburseAllowed")));
                                 billHead.setUnion(MainApp.identityDto.getUnion());
-                                billHead.setSociety(MainApp.identityDto.getSociety());
+                                billHead.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
                                 billHead.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
                                 billHead.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                                 billHead.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
@@ -1163,26 +1161,158 @@ public class BroadcastedService {
                                 billHead.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
                                 billHead.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
                                 billHead.setHeadType(jsonText.get("billHeadType") != null ? Short.parseShort(String.valueOf(jsonText.get("billHeadType"))) : 0);
-//                                billHead.setAllowAdjustment(jsonText.get("allowAdjustment") != null ? Short.parseShort(String.valueOf(jsonText.get("allowAdjustment"))) : 0);
                                 billHead.setCalculationBasedOn(jsonText.get("calculationBasedOn") != null ? String.valueOf(jsonText.get("calculationBasedOn")) : null);
                                 billHead.setBillHeadFor(jsonText.get("billHeadFor") != null ? String.valueOf(jsonText.get("billHeadFor")) : null);
                                 billHead.setDefaultBillHeadCode(jsonText.get("defaultBillHeadCode") != null ? Integer.parseInt(String.valueOf(jsonText.get("defaultBillHeadCode"))) : null);
-                                if(jsonText.get("isDisburseAllowed") != null)
-                                    billHead.setDisburseAllowed(Boolean.parseBoolean(String.valueOf(jsonText.get("isDisburseAllowed"))));
+                                billHead.setDisburseAllowed(Boolean.parseBoolean(String.valueOf(jsonText.get("isDisburseAllowed"))));
                                 billHead.setGeneralFormul(jsonText.get("generalFormula") != null ? String.valueOf(jsonText.get("generalFormula")) : null);
                                 billHead.setGeneralFormulaCode(jsonText.get("generalFormulaCode") != null ? String.valueOf(jsonText.get("generalFormulaCode")) : null);
                                 billHead.setGeneralFormulaComma(jsonText.get("generalFormulaComma") != null ? String.valueOf(jsonText.get("generalFormulaComma")) : null);
-                                if(jsonText.get("hasSlab") != null)
-                                    billHead.setHasSlab(Boolean.parseBoolean(String.valueOf(jsonText.get("hasSlab"))));
-                                if (jsonText.get("isHold") != null)
-                                    billHead.setHold(Boolean.parseBoolean(String.valueOf(jsonText.get("isHold"))));
-                                if (jsonText.get("isReserved") != null)
-                                    billHead.setReserved(Boolean.parseBoolean(String.valueOf(jsonText.get("isReserved"))));
+                                billHead.setHasSlab(Boolean.parseBoolean(String.valueOf(jsonText.get("hasSlab"))));
+                                billHead.setHold(Boolean.parseBoolean(String.valueOf(jsonText.get("isHold"))));
+                                billHead.setReserved(Boolean.parseBoolean(String.valueOf(jsonText.get("isReserved"))));
                                 billHead.setPaymentCycleType(jsonText.get("paymentCycleType") != null ? String.valueOf(jsonText.get("paymentCycleType")) : null);
                                 billHead.setSapSeqNo(jsonText.get("sapSeqNo") != null ? Integer.parseInt(String.valueOf(jsonText.get("sapSeqNo"))) : null);
                                 billHead.setSequenceNo(jsonText.get("sequenceNo") != null ? Integer.parseInt(String.valueOf(jsonText.get("sequenceNo"))) : null);
                                 billHead.setMilkType(jsonText.get("milkTypeCode") != null ? milkTypeRepository.findByCode((int) jsonText.get("milkTypeCode")) : null);
                                 billHeadRepository.save(billHead);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "banks":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                Bank bank = new Bank();
+
+                                bank.setCode(jsonText.get("bankCode") != null ? String.valueOf(jsonText.get("bankCode")) : null);
+                                bank.setName(jsonText.get("bankName") != null ? String.valueOf(jsonText.get("bankName")) : null);
+                                bank.setNameLocal(jsonText.get("localName") != null ? String.valueOf(jsonText.get("localName")) : null);
+                                bank.setAcNoLength(jsonText.get("acNoLength") != null ? Short.parseShort(String.valueOf(jsonText.get("acNoLength"))) : null);
+                                bank.setCheckedAcNoLength(jsonText.get("checkedAcNo") != null && String.valueOf(jsonText.get("checkedAcNo")).equals("1"));
+                                bank.setNationalizedBank(jsonText.get("nationalizedBank") != null && String.valueOf(jsonText.get("nationalizedBank")).equals("1"));
+                                bank.setLedger(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerCode"))).orElse(null));
+                                bank.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                bank.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                bank.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                bank.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                bank.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                bank.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                bank.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                bank.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+
+                                bankRepository.save(bank);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "voucher_types":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                VoucherType vType = new VoucherType();
+                                vType.setCode(jsonText.get("voucherTypeCode") != null ? String.valueOf(jsonText.get("voucherTypeCode")) : null);
+                                vType.setName(jsonText.get("voucherTypeName") != null ? String.valueOf(jsonText.get("voucherTypeName")) : null);
+                                vType.setNameLocal(jsonText.get("localName") != null ? String.valueOf(jsonText.get("localName")) : null);
+                                vType.setVoucherType(jsonText.get("voucherType") != null ? Integer.valueOf(String.valueOf(jsonText.get("voucherType"))) : null);
+                                vType.setCreditDebit(Boolean.valueOf((String) jsonText.get("creditDebit")));
+                                vType.setLedger(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerCode"))).orElse(null));
+                                vType.setUnionCode((String) jsonText.get("unionCode"));
+                                vType.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                vType.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                vType.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                vType.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                vType.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                vType.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                vType.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                vType.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+
+                                voucherTypeRepository.save(vType);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "financial_years":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                FinancialYear financialYear = new FinancialYear();
+                                financialYear.setCode(jsonText.get("code") != null ? String.valueOf(jsonText.get("code")) : null);
+                                financialYear.setStartDate(jsonText.get("startingDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("startingDate"))) : null);
+                                financialYear.setEndDate(jsonText.get("endingDate") != null ? LocalDate.parse(String.valueOf(jsonText.get("endingDate"))) : null);
+                                financialYear.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
+                                financialYear.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                financialYear.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                financialYear.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                financialYear.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+
+                                financialYearRepository.save(financialYear);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "ledger_mapping_product_group":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                LedgerMappingProductGroup mapping = new LedgerMappingProductGroup();
+
+                                mapping.setCode(jsonText.get("ledgerMappingProductGroupCode") != null ? String.valueOf(jsonText.get("ledgerMappingProductGroupCode")) : null);
+                                mapping.setLedgerSaleCode(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerSaleCode"))).orElse(null));
+                                mapping.setLedgerPurchaseCode(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerPurchaseCode"))).orElse(null));
+                                mapping.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
+                                mapping.setProductGroup(productGroupRepository.findById(String.valueOf(jsonText.get("productGroupCode"))).orElse(null));
+                                mapping.setUnionCode(jsonText.get("unionCode") != null ? String.valueOf(jsonText.get("unionCode")) : null);
+                                mapping.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
+                                mapping.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
+                                mapping.setBmcCode(jsonText.get("bmcCode") != null ? String.valueOf(jsonText.get("bmcCode")) : null);
+                                mapping.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                mapping.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                mapping.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                mapping.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+
+                                ledgerMappingProductGroupRepository.save(mapping);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "ledger_mapping_bill_head":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                LedgerMappingBillHead mapping = new LedgerMappingBillHead();
+                                mapping.setCode(jsonText.get("ledgerMappingBillHeadCode") != null ? String.valueOf(jsonText.get("ledgerMappingBillHeadCode")) : null);
+                                mapping.setType(jsonText.get("type") != null ? Integer.parseInt(String.valueOf(jsonText.get("type"))) : 0);
+                                mapping.setLedger(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerCode"))).orElse(null));
+                                mapping.setBillHead(billHeadRepository.findById(String.valueOf(jsonText.get("billHeadCode"))).orElse(null));
+                                mapping.setBillCriteria(billCriteriaRepository.findById(String.valueOf(jsonText.get("billCriteriaCode"))).orElse(null));
+                                mapping.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
+                                mapping.setHasSubLedger(Boolean.parseBoolean(String.valueOf(jsonText.get("hasSubLedger"))));
+                                mapping.setCreditDebit(Boolean.valueOf((String) jsonText.get("creditDebit")));
+                                mapping.setUnionCode(jsonText.get("unionCode") != null ? String.valueOf(jsonText.get("unionCode")) : null);
+                                mapping.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
+                                mapping.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
+                                mapping.setBmcCode(jsonText.get("bmcCode") != null ? String.valueOf(jsonText.get("bmcCode")) : null);
+                                mapping.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                mapping.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                mapping.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                mapping.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                mapping.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                                mapping.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                                mapping.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+
+                                ledgerMappingBillHeadRepository.save(mapping);
                                 break;
                         }
                     } catch (Exception e) {
