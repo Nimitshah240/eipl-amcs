@@ -241,8 +241,8 @@ public class LoginController implements MyInitialization {
                     AppConstant.syncUrlRealTime = baseUrls.split("#")[1];
                     System.out.println("Successfully received vendor url: " + baseUrls);
                 } else {
-                    AppConstant.baseUrlRealTime = MainApp.getProperty("baseurl.realtime", (String) null);
-                    AppConstant.syncUrlRealTime = MainApp.getProperty("syncUrl.realtime", (String) null);
+                    AppConstant.baseUrlRealTime = MainApp.getProperty("baseurl.realtime", null);
+                    AppConstant.syncUrlRealTime = MainApp.getProperty("syncUrl.realtime", null);
                 }
 
                 this.writeAppProperty();

@@ -11,6 +11,7 @@ import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -20,6 +21,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 @Entity
@@ -59,6 +62,18 @@ public class MemberMilkPurchaseRate extends BaseModel {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})
     private Society society;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberMilkPurchaseRate", fetch = FetchType.LAZY)
+    private List<MemberMilkPurchaseRateDetail> listDetails = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberMilkPurchaseRate", fetch = FetchType.LAZY)
+    private List<MemberMilkPurchaseRateBased> listBased = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberMilkPurchaseRate", fetch = FetchType.LAZY)
+    private List<MemberMilkPurchaseRateApplicability> memberMilkPurchaseRateApplicability = new ArrayList<>();
 
     @Override
     public String getTableName() {
