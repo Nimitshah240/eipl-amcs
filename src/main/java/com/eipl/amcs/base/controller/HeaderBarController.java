@@ -88,9 +88,12 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                         sub.forEach((k, v) -> {
                             try {
                                 if (v.isEmpty()) {
-                                    MenuItem item = new MenuItem(resourceBundle.getString(k.getDescription()));
-                                    setupClickEvent(item, k.getModule());
-                                    mainMenu.getItems().add(item);
+//                                    MenuItem item = new MenuItem(resourceBundle.getString(k.getDescription()));
+//                                    setupClickEvent(item, k.getModule());
+//                                    mainMenu.getItems().add(item);
+                                    CustomMenuItem menuItem = favoriteMenuService.createMenuItem(resourceBundle.getString(k.getDescription()), k);
+                                    setupClickEvent(menuItem, k.getModule());
+                                    mainMenu.getItems().add(menuItem);
                                 } else {
                                     Menu subMenu = new Menu(resourceBundle.getString(k.getDescription()));
                                     v.forEach(item -> {
