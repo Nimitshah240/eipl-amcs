@@ -29,6 +29,11 @@
     -fx-font-size: 18.0px;
     -fx-text-fill: -fx-primary-color;
 }
+.headerbar-text {
+    -fx-font-family: 'Source Sans Pro SemiBold';
+    -fx-font-size: 25.0px;
+    -fx-text-fill: -fx-primary-color;
+}
 .bold {
     -fx-font-family: 'Source Sans Pro SemiBold';
 }
