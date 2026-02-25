@@ -24,7 +24,7 @@ import javax.persistence.*;
 public class VoucherType extends BaseModel {
 
     @Id
-    private String code;
+    private Long code;
     private String name;
     private String nameLocal;
     private String unionCode;

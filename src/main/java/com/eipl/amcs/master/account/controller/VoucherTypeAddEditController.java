@@ -161,7 +161,7 @@ public class VoucherTypeAddEditController implements MyInitialization {
     }
 
     public void loadControls() {
-        txtCode.setText(dto.getCode().toString());
+        txtCode.setText(String.valueOf(dto.getCode()));
         txtName.setText(dto.getName());
         txtLocalName.setText(dto.getNameLocal());
         cboxVoucherType.setValue(dto.getVoucherType());
@@ -208,7 +208,7 @@ public class VoucherTypeAddEditController implements MyInitialization {
     }
 
     private VoucherType setValuesInObject() {
-        dto.setCode(txtCode.getText());
+        dto.setCode(Long.valueOf(txtCode.getText()));
         dto.setName(txtName.getText());
         dto.setNameLocal(txtLocalName.getText());
         dto.setActive(true);

@@ -22,7 +22,7 @@ import javax.persistence.*;
 public class VoucherTypeAudit extends BaseModelAudit {
 
     @Id
-    private String code;
+    private Long code;
     private String name;
     private String nameLocal;
     private Integer voucherType;

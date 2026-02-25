@@ -84,7 +84,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+        colCode.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getCode())));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
