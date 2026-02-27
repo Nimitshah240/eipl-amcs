@@ -167,6 +167,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         setupTable();
         setupCollectionTable();
         FocusUtils.requestFocus(cboxDispatchType);
+        btnAdd.setDisable(true);
         cboxRouteNo.getSelectionModel().select(0);
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
