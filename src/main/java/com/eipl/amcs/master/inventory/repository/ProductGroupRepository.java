@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductGroupRepository extends BaseRepository<ProductGroup, String> {
+public interface ProductGroupRepository extends BaseRepository<ProductGroup, Integer> {
 
     @Override
     @EntityGraph(attributePaths = {"unit"})
@@ -21,5 +21,5 @@ public interface ProductGroupRepository extends BaseRepository<ProductGroup, Str
 
     @Override
     @EntityGraph(attributePaths = {"unit"})
-    Optional<ProductGroup> findById(String id);
+    Optional<ProductGroup> findById(Integer id);
 }
