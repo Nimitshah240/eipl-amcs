@@ -1220,7 +1220,7 @@ public class BroadcastedService {
                         e.printStackTrace();
                     }
                     break;
-                case "banks":
+                case "tbl_banks":
                     try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
@@ -1230,9 +1230,13 @@ public class BroadcastedService {
                                 bank.setCode(jsonText.get("bankCode") != null ? String.valueOf(jsonText.get("bankCode")) : null);
                                 bank.setName(jsonText.get("bankName") != null ? String.valueOf(jsonText.get("bankName")) : null);
                                 bank.setNameLocal(jsonText.get("localName") != null ? String.valueOf(jsonText.get("localName")) : null);
-                                bank.setAcNoLength(jsonText.get("acNoLength") != null ? Short.parseShort(String.valueOf(jsonText.get("acNoLength"))) : null);
-                                bank.setCheckedAcNoLength(jsonText.get("checkedAcNo") != null && String.valueOf(jsonText.get("checkedAcNo")).equals("1"));
-                                bank.setNationalizedBank(jsonText.get("nationalizedBank") != null && String.valueOf(jsonText.get("nationalizedBank")).equals("1"));
+//                                bank.setAcNoLength(jsonText.get("acNoLength") != null ? Short.parseShort(String.valueOf(jsonText.get("acNoLength"))) : null);
+                                if (jsonText.get("acNoLength") != null) {
+                                    double len = Double.parseDouble(String.valueOf(jsonText.get("acNoLength")));
+                                    bank.setAcNoLength((short) len);
+                                }
+                                bank.setCheckedAcNoLength("1".equals(String.valueOf(jsonText.get("checkedAcNo"))));
+                                bank.setNationalizedBank("1".equals(String.valueOf(jsonText.get("nationalizedBank"))));
                                 bank.setLedger(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerCode"))).orElse(null));
                                 bank.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
                                 bank.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
@@ -1250,7 +1254,7 @@ public class BroadcastedService {
                         e.printStackTrace();
                     }
                     break;
-                case "financial_years":
+                case "tbl_financial_year":
                     try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
@@ -1272,7 +1276,7 @@ public class BroadcastedService {
                         e.printStackTrace();
                     }
                     break;
-                case "ledger_mapping_product_group":
+                case "tbl_ledger_mapping_product_group":
                     try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
@@ -1283,7 +1287,7 @@ public class BroadcastedService {
                                 mapping.setLedgerSaleCode(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerSaleCode"))).orElse(null));
                                 mapping.setLedgerPurchaseCode(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerPurchaseCode"))).orElse(null));
                                 mapping.setSociety(MainApp.identityDto.getSociety());
-                                mapping.setProductGroup(productGroupRepository.findById(String.valueOf(jsonText.get("productGroupCode"))).orElse(null));
+                                mapping.setProductGroup(productGroupRepository.findById(Integer.parseInt(String.valueOf(jsonText.get("productGroupCode")))).orElse(null));
                                 mapping.setUnionCode(jsonText.get("unionCode") != null ? String.valueOf(jsonText.get("unionCode")) : null);
                                 mapping.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
                                 mapping.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
@@ -1300,7 +1304,7 @@ public class BroadcastedService {
                         e.printStackTrace();
                     }
                     break;
-                case "ledger_mapping_bill_head":
+                case "tbl_ledger_mapping_bill_head":
                     try {
                         switch (subscribed.getOperation()) {
                             case "INSERT":
@@ -1311,10 +1315,19 @@ public class BroadcastedService {
                                 mapping.setHasSubLedger("1".equalsIgnoreCase(String.valueOf(jsonText.get("hasSubLedger"))));
                                 mapping.setCreditDebit("1".equalsIgnoreCase(String.valueOf(jsonText.get("creditDebit"))));
                                 mapping.setLedger(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerCode"))).orElse(null));
-                                mapping.setBillHead(billHeadRepository.findById(String.valueOf(jsonText.get("billHeadCode"))).orElse(null));
                                 mapping.setBillCriteria(billCriteriaRepository.findById(String.valueOf(jsonText.get("billCriteriaCode"))).orElse(null));
                                 mapping.setSociety(MainApp.identityDto.getSociety());
                                 mapping.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                if (jsonText.get("billHeadCode") != null) {
+                                    String code = String.valueOf(jsonText.get("billHeadCode"));
+                                    try {
+                                        code = String.valueOf(Long.valueOf(code));
+                                    } catch (Exception e) {
+                                    }
+                                    mapping.setBillHead(billHeadRepository.findById(code).orElse(null));
+                                } else {
+                                    mapping.setBillHead(null);
+                                }
                                 mapping.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
                                 mapping.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
                                 mapping.setBmcCode(jsonText.get("bmcCode") != null ? String.valueOf(jsonText.get("bmcCode")) : null);

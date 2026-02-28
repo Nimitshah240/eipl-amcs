@@ -19,6 +19,7 @@
                         <TableColumn fx:id="colLedgerMaster" minWidth="250.0" prefWidth="250.0" text="%ledgermaster" />
                         <TableColumn fx:id="colType" editable="false" prefWidth="160.0" styleClass="cell-center-aligned" text="%type" />
                         <TableColumn fx:id="colSubLedger" prefWidth="120.0" styleClass="cell-center-aligned" text="%hassubledger" />
+                        <TableColumn fx:id="colCreditDebit" prefWidth="120.0" styleClass="cell-center-aligned" text="%creditdebit" />
                   <TableColumn fx:id="colAction" prefWidth="120.0" styleClass="cell-center-aligned" text="%action" />
                     </columns>
                 </TableView>
