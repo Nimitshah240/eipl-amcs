@@ -196,6 +196,10 @@ public class BroadcastedService {
     private LedgerMappingBillHeadRepository ledgerMappingBillHeadRepository;
     @Autowired
     private BillCriteriaRepository billCriteriaRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -1126,7 +1130,7 @@ public class BroadcastedService {
                                 ledger.setNameLocal(jsonText.get("localName") != null ? String.valueOf(jsonText.get("localName")) : null);
                                 ledger.setHasSubLedger("1".equalsIgnoreCase(String.valueOf(jsonText.get("hasSubLedger"))));
                                 ledger.setUnionCode(MainApp.identityDto.getUnion().getCode());
-                                ledger.setSociety(jsonText.get("dcsCode") != null ? societyRepository.findById(identityRepository.findBySocietyRefCode((String) jsonText.get("dcsCode")).getSocietyCode()).get() : null);
+                                ledger.setSociety(MainApp.identityDto.getSociety());
                                 ledger.setLedgerGroup(ledgerGroupRepository.findById(String.valueOf(jsonText.get("ledgerGroupCode"))).orElse(null));
                                 ledger.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
                                 ledger.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
@@ -1345,6 +1349,51 @@ public class BroadcastedService {
                         e.printStackTrace();
                     }
                     break;
+                case "tbl_ledger_mapping_event":
+                    try {
+                        switch (subscribed.getOperation()) {
+                            case "INSERT":
+                            case "UPDATE":
+                                LedgerMappingEvent eventMapping = new LedgerMappingEvent();
+
+                                eventMapping.setCode(jsonText.get("code") != null ? Integer.parseInt(String.valueOf(jsonText.get("code"))) : null);
+                                eventMapping.setEventcode(jsonText.get("eventcode") != null ? Integer.parseInt(String.valueOf(jsonText.get("eventcode"))) : 0);
+
+                                eventMapping.setCreditSubLedger("1".equalsIgnoreCase(String.valueOf(jsonText.get("creditSubLedger"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("creditSubLedger"))));
+                                eventMapping.setDebitSubLedger("1".equalsIgnoreCase(String.valueOf(jsonText.get("debitSubLedger"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("debitSubLedger"))));
+
+                                eventMapping.setSociety(MainApp.identityDto.getSociety());
+                                eventMapping.setUnionCode(MainApp.identityDto.getUnion().getCode());
+
+                                if (jsonText.get("event_code") != null) {
+                                    eventMapping.setEvents(eventRepository.findById(Integer.parseInt(String.valueOf(jsonText.get("event_code")))).orElse(null));
+                                }
+
+                                if (jsonText.get("credit_ledger_code") != null) {
+                                    eventMapping.setCreditLedger(ledgerRepository.findById(String.valueOf(jsonText.get("credit_ledger_code"))).orElse(null));
+                                }
+
+                                if (jsonText.get("debit_ledger_code") != null) {
+                                    eventMapping.setDebitLedger(ledgerRepository.findById(String.valueOf(jsonText.get("debit_ledger_code"))).orElse(null));
+                                }
+
+                                if (jsonText.get("voucher_type_code") != null) {
+                                    eventMapping.setVoucherType(voucherTypeRepository.findById(String.valueOf(Integer.parseInt(String.valueOf(jsonText.get("voucher_type_code"))))).orElse(null));
+                                }
+
+                                eventMapping.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                                eventMapping.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
+                                eventMapping.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                                eventMapping.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+
+                                ledgerMappingEventRepository.save(eventMapping);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
                 default:
                     break;
             }

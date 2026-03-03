@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.dto.ProductGroupMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingProductGroup;
@@ -25,6 +26,7 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class LedgerMappingProductGroupController implements MyInitialization {
 
@@ -73,6 +75,8 @@ public class LedgerMappingProductGroupController implements MyInitialization {
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
         btnSave.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("SUB_MENU_LEDGER_MAPPING_PRODUCT_GROUP_SAVE"))
+                throw new UnAuthorizedAccessException();
             saveData();
         });
     }
@@ -99,8 +103,17 @@ public class LedgerMappingProductGroupController implements MyInitialization {
 
     @Override
     public void setupTable() {
-        colProductGroupCode.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getProductGroup().getCode().toString()));
-        colProductGroupName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getProductGroup().getName()));
+        colProductGroupCode.setCellValueFactory(cell -> {
+            if (cell.getValue() != null && cell.getValue().getProductGroup() != null && cell.getValue().getProductGroup().getCode() != null) {
+                return new SimpleStringProperty(cell.getValue().getProductGroup().getCode().toString());
+            }
+            return new SimpleStringProperty("");
+        });
+        colProductGroupName.setCellValueFactory(cell -> {
+            if (cell.getValue() != null && cell.getValue().getProductGroup() != null)
+                return new SimpleStringProperty(cell.getValue().getProductGroup().getName());
+            return new SimpleStringProperty("");
+        });
 
         colLedgerSale.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getLedgerSaleCode()));
         colLedgerSale.setCellFactory(ComboBoxTableCell.forTableColumn(converter, ledgerList));
@@ -127,7 +140,9 @@ public class LedgerMappingProductGroupController implements MyInitialization {
 
                 ledgerList = FXCollections.observableArrayList(dto.getLedgerList());
                 setupTable();
-                tableData.setItems(FXCollections.observableList(dto.getListMapping()));
+                tableData.setItems(FXCollections.observableList(dto.getListMapping().stream()
+                        .filter(item -> item.getProductGroup() != null && item.getProductGroup().getCode() != null)
+                        .collect(Collectors.toList())));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

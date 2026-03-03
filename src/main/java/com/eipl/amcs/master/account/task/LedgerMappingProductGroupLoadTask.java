@@ -37,7 +37,9 @@ public class LedgerMappingProductGroupLoadTask extends Task<ProductGroupMappingD
 
             List<LedgerMappingProductGroup> listMapping = new ArrayList<>(mapping);
             for (LedgerMappingProductGroup mp : listMapping) {
-                productGroupList.removeIf(p -> p.getCode().toString().equalsIgnoreCase(mp.getProductGroup().getCode().toString()));
+                if (mp.getProductGroup() != null) {
+                    productGroupList.removeIf(p -> p.getCode().toString().equalsIgnoreCase(mp.getProductGroup().getCode().toString()));
+                }
             }
             for (ProductGroup productGroup : productGroupList) {
                 LedgerMappingProductGroup mp = new LedgerMappingProductGroup();

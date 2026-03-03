@@ -120,7 +120,7 @@ public class BillHeadController implements MyInitialization, PopupCallback {
     @Override
     public void loadData() {
         tableBillHead.setItems(null);
-        var task = new BillHeadLoadTask();
+        var task = new BillHeadLoadTask("MEMBER");
         task.setOnSucceeded(e -> {
             try {
                 List<BillHead> list = task.get();

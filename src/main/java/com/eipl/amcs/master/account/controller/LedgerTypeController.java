@@ -6,6 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.task.LedgerTypeDeleteTask;
 import com.eipl.amcs.master.account.task.LedgerTypeLoadTask;
@@ -68,15 +69,21 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
         setupTable();
         loadData();
         btnAdd.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_TYPE_ADD"))
+                throw new UnAuthorizedAccessException();
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerTypeAddEdit", null, this);
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnDelete.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_TYPE_DELETE"))
+                throw new UnAuthorizedAccessException();
             deleteData();
         });
         btnEdit.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_TYPE_EDIT"))
+                throw new UnAuthorizedAccessException();
             LedgerType dto = propLedgerType.get();
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerTypeAddEdit", dto, this);

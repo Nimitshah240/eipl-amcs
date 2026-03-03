@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.dto.BillHeadMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
@@ -32,7 +33,7 @@ public class LedgerMappingBillHeadController implements MyInitialization {
     @FXML
     AnchorPane root;
     @FXML
-    TableView<LedgerMappingBillHead> tableBillHeadData;
+    TableView<LedgerMappingBillHead> tableBillHeadData,tableBillHeadData1;
     @FXML
     TableColumn<LedgerMappingBillHead, String> colMemberBillHead;
     @FXML
@@ -64,6 +65,8 @@ public class LedgerMappingBillHeadController implements MyInitialization {
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
         btnSave.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("SUB_MENU_LEDGER_MAPPING_BILL_HEAD_SAVE"))
+                throw new UnAuthorizedAccessException();
             saveData();
         });
     }

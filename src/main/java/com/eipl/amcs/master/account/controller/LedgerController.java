@@ -6,6 +6,7 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.converter.LedgerGroupConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerGroup;
@@ -73,13 +74,16 @@ public class LedgerController implements MyInitialization {
         loadLedgerGroups();
         FocusUtils.requestFocus(btnAdd);
         btnDelete.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_DELETE"))
+                throw new UnAuthorizedAccessException();
             deleteData();
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnAdd.setOnAction(e -> {
-
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_ADD"))
+                throw new UnAuthorizedAccessException();
             LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
             controller.setLedger(null);
             MainApp.getContentPane().setCenter(controller.getRoot());
@@ -89,6 +93,8 @@ public class LedgerController implements MyInitialization {
         });
 
         btnEdit.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_EDIT"))
+                throw new UnAuthorizedAccessException();
             if (propLedger.get() != null) {
                 LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil()
                         .loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));

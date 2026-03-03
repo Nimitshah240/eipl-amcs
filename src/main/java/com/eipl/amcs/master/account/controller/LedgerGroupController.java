@@ -6,6 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.model.LedgerGroup;
 import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.task.LedgerGroupDeleteTask;
@@ -71,7 +72,8 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
         setupTable();
         loadData();
         btnAdd.setOnAction(e -> {
-
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_GROUP_ADD"))
+                throw new UnAuthorizedAccessException();
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerGroupAddEdit", null, this);
         });
 
@@ -79,11 +81,15 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnEdit.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_GROUP_EDIT"))
+                throw new UnAuthorizedAccessException();
             LedgerGroup dto = propLedgerGroup.get();
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerGroupAddEdit", dto, this);
         });
         btnDelete.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_GROUP_DELETE"))
+                throw new UnAuthorizedAccessException();
             deleteData();
         });
         txtSearch.textProperty().addListener((observable, oldValue, newValue) -> {
