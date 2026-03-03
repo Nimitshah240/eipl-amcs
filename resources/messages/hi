@@ -1475,3 +1475,4 @@ fixedpoint=निश्चित बिंदु
 step=चरण
 qualityparam=गुणवत्ता मापदंड
 kgrate=किलो दर
+milk.quantity.error=दूध की मात्रा शून्य से अधिक होनी चाहिए

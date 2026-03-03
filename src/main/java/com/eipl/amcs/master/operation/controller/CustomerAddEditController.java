@@ -120,7 +120,7 @@ public class CustomerAddEditController implements MyInitialization {
         loadBank();
 
         btnClose.setOnAction(e -> {
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/customer.fxml")));
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Customer.fxml")));
         });
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         cboxState.setOnAction(e -> {
