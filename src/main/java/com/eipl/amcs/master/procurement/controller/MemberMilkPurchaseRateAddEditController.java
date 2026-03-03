@@ -631,6 +631,7 @@ public class MemberMilkPurchaseRateAddEditController implements MyInitialization
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
             return null;
         }

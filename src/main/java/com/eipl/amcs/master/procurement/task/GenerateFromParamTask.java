@@ -10,6 +10,7 @@ import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateDetail;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.NumberUtil;
 import javafx.concurrent.Task;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class GenerateFromParamTask extends Task<MemberMilkPurchaseRate> {
     private MemberMilkPurchaseRate memberMilkPurchaseRate;
     private List<MemberMilkPurchaseRateBased> memberMilkPurchaseRateBasedList;
@@ -46,7 +48,7 @@ public class GenerateFromParamTask extends Task<MemberMilkPurchaseRate> {
                         dtl.setRate(NumberUtil.round(getRtplWithAdditionDeduction(p1, new BigDecimal(0),
                                 String.valueOf(tempBased.getRateType()), "", tempBased, null), 2));
                         dtl.setSnf(BigDecimal.valueOf(0));
-
+                        log.info("{} # {} # {} # {} # {}",tempBased.getMilkType(), tempBased.getMilkQualityType(), dtl.getFat(),dtl.getSnf(), dtl.getRate() );
                         memberMilkPurchaseRate.getListDetails().add(dtl);
                     }
                 }
@@ -75,7 +77,7 @@ public class GenerateFromParamTask extends Task<MemberMilkPurchaseRate> {
                                 dtl.setRate(NumberUtil.round(getRtplWithAdditionDeduction(p1, p2,
                                         String.valueOf(tempBased.getRateType()), "", tempBased, tempBased2), 2));
                                 dtl.setSnf(p2);
-
+                                log.info("{} # {} # {} # {} # {}",tempBased.getMilkType(), tempBased.getMilkQualityType(), dtl.getFat(),dtl.getSnf(), dtl.getRate() );
                                 memberMilkPurchaseRate.getListDetails().add(dtl);
                             }
                         }
