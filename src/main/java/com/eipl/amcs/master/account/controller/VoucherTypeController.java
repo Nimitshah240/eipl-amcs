@@ -6,11 +6,11 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.task.VoucherTypeDeleteTask;
 import com.eipl.amcs.master.account.task.VoucherTypeLoadTask;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -36,7 +36,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
     @FXML
     TableView<VoucherType> tableVoucherType;
     @FXML
-    TableColumn<VoucherType, String>colCode, colName, colLocalName, colStatus;
+    TableColumn<VoucherType, String> colCode, colName, colLocalName, colStatus, colVoucherType, colCreditDebit;
     @FXML
     Button btnClose, btnAdd, btnEdit, btnDelete;
     private ResourceBundle resourceBundle;
@@ -67,15 +67,21 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
         setupTable();
         loadData();
         btnAdd.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_VOUCHER_TYPE_ADD"))
+                throw new UnAuthorizedAccessException();
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherTypeAddEdit", null, this);
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnDelete.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_VOUCHER_TYPE_DELETE"))
+                throw new UnAuthorizedAccessException();
             deleteData();
         });
         btnEdit.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_VOUCHER_TYPE_EDIT"))
+                throw new UnAuthorizedAccessException();
             VoucherType dto = propVoucherType.get();
             if (dto != null)
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherTypeAddEdit", dto, this);
@@ -84,11 +90,16 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+        tableVoucherType.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        colCode.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getCode())));
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ?
                 resourceBundle.getString("active") : resourceBundle.getString("inactive")));
+        colVoucherType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucherType() == 0 ?
+                resourceBundle.getString("cash") : resourceBundle.getString("bank")));
+        colCreditDebit.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCreditDebit() ?
+                resourceBundle.getString("credit") : resourceBundle.getString("debit")));
         propVoucherType.bind(tableVoucherType.getSelectionModel().selectedItemProperty());
     }
 

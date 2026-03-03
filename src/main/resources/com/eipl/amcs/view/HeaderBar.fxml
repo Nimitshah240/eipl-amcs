@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" minHeight="60.0" prefHeight="60.0" style="-fx-background-color: #ebebeb; -fx-border-color: black; -fx-border-width: 0 0 1 0;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.HeaderBarController">
+<AnchorPane fx:id="root" minHeight="60.0" prefHeight="60.0" style="-fx-background-color: #ebebeb; -fx-border-color: black; -fx-border-width: 0 0 1 0;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.HeaderBarController">
     <children>
-        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="0.0">
             <children>
                 <ImageView fx:id="logoView" fitHeight="65.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                     <image>
@@ -22,13 +25,13 @@
                     </padding>
                 </MenuBar>
 
+                <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+
                 <Label fx:id="lblName" styleClass="headerbar-text" text="%societyinformation">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
                 </Label>
-
-                <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
     </children>
