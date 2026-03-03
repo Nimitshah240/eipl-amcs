@@ -26,7 +26,7 @@ public class UpdaterCheckTask extends Task<JarUpdate> {
                     .queryParam("client_code", MainApp.getProperty("client.code", AppConstant.UrlPath.JAIPUR));
 
             ResponseEntity<JarUpdate> response = restTemplate.exchange(builder.toUriString(), HttpMethod.POST,
-                    new HttpEntity<>(new JarUpdate(AppConstant.versionNo, MainApp.identityDto.getSociety().getCode())), JarUpdate.class);
+                    new HttpEntity<>(new JarUpdate(MainApp.getProperty("identity.version", AppConstant.versionNo), MainApp.identityDto.getSociety().getCode())), JarUpdate.class);
             if (response == null || response.getStatusCode() != HttpStatus.OK)
                 return null;
             LOGGER.info("Updater Information fetched: {}", response.getBody());

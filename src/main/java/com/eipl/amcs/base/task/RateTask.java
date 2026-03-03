@@ -119,12 +119,6 @@ public class RateTask extends Task<Void> {
         ResponseEntity<RealTimeResponse> response;
         RealTimeResponse responseRate;
 
-        Map<String, String> contentRate = new HashMap<>();
-        contentRate.put("rateType", "MEMBER");
-        contentRate.put("purchaseRateCode", memberApplicableRate);
-        requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
-                MainApp.identityDto.getIdentity().getToken(), contentRate);
-
         //shift
         List<Shift> shiftList = shiftService.findAll();
         Map<Integer, Shift> mapShift = new HashMap<>();
@@ -172,6 +166,12 @@ public class RateTask extends Task<Void> {
 
         for (String rateCode : listOfRate) {
             try {
+                Map<String, String> contentRate = new HashMap<>();
+                contentRate.put("rateType", "MEMBER");
+                contentRate.put("purchaseRateCode", rateCode);
+                requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
+                        MainApp.identityDto.getIdentity().getToken(), contentRate);
+
                 int a = 1;
                 while (a == 1 || purchaseRate == null) {
                     url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
@@ -252,42 +252,46 @@ public class RateTask extends Task<Void> {
                         url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
                         List<String> listRateDetails = new ArrayList<>();
                         for (MilkType milkType : milkTypeList) {
-                            Map<String, String> contentRateDetail = new HashMap<>();
-                            contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
-                            contentRateDetail.put("milkQualityTypeCode", "1");
-                            contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
-                            contentRateDetail.put("rateType", "MEMBER");
+                            try {
+                                Map<String, String> contentRateDetail = new HashMap<>();
+                                contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
+                                contentRateDetail.put("milkQualityTypeCode", "1");
+                                contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
+                                contentRateDetail.put("rateType", "MEMBER");
 //                            contentRateDetail.put("rateClass", "0");
-                            LOGGER.info("purchaseRateCode : {}, milkQualityTypeCode : {}, milkTypeCode : {}, rateType : {}", purchaseRate.get("purchaseRateCode").toString(), "1", milkType.getCode().toString(), "MEMBER");
-                            updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
+                                LOGGER.info("purchaseRateCode : {}, milkQualityTypeCode : {}, milkTypeCode : {}, rateType : {}", purchaseRate.get("purchaseRateCode").toString(), "1", milkType.getCode().toString(), "MEMBER");
+                                updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
 
-                            requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
-                                    MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
-                            requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-                            ResponseEntity<RealTimeMultipleResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
-                                    new HttpEntity<>(requestPayload), RealTimeMultipleResponse.class);
-                            if (responseRateDtl.getStatusCode() != HttpStatus.OK)
-                                return null;
-                            RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
-                            if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
-                                return null;
+                                requestPayload = new RealTimeRequest<>(MainApp.identityDto.getIdentity().getSocietyRefCode(),
+                                        MainApp.identityDto.getIdentity().getToken(), contentRateDetail);
+                                requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
+                                ResponseEntity<RealTimeMultipleResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
+                                        new HttpEntity<>(requestPayload), RealTimeMultipleResponse.class);
+                                if (responseRateDtl.getStatusCode() != HttpStatus.OK)
+                                    return null;
+                                RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
+                                if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
+                                    return null;
 //                            Map<String, Object> dataDtl = respRateDtl.getData();
-                            List<String> listStr = respRateDtl.getData();
-                            LOGGER.info("Member milk purchase rate detail: {}-{}", milkType.getName(), listStr.size());
-                            if (listStr != null && !listStr.isEmpty()) {
-                                for (String s : listStr) {
-                                    String[] arr = s.split("#");
-                                    String sb = arr[0] +
-                                            "#" +
-                                            arr[1] +
-                                            "#" +
-                                            arr[2] +
-                                            "#" +
-                                            milkType.getCode() +
-                                            "#" +
-                                            "1";
-                                    listRateDetails.add(sb);
+                                List<String> listStr = respRateDtl.getData();
+                                LOGGER.info("Member milk purchase rate detail: {}-{}", milkType.getName(), listStr.size());
+                                if (listStr != null && !listStr.isEmpty()) {
+                                    for (String s : listStr) {
+                                        String[] arr = s.split("#");
+                                        String sb = arr[0] +
+                                                "#" +
+                                                arr[1] +
+                                                "#" +
+                                                arr[2] +
+                                                "#" +
+                                                milkType.getCode() +
+                                                "#" +
+                                                "1";
+                                        listRateDetails.add(sb);
+                                    }
                                 }
+                            } catch (Exception e) {
+                                LOGGER.error("DETAIL ERROR : "+ e.getMessage());
                             }
                         }
                         memberRateDto.setListDetail(listRateDetails);
