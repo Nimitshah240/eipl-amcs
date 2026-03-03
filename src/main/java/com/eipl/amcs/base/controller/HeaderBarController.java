@@ -19,6 +19,8 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,9 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;
 
+    @FXML
+    private ImageView logoView;
+
     private FavoriteMenuService favoriteMenuService;
 
     @Override
@@ -54,6 +59,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setDynamicLogo();
         this.resourceBundle = resourceBundle;
         loadControls();
         loadMenu();
@@ -65,7 +71,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
 
     @Override
     public void loadControls() {
-        lblName.setText("Society Name: " + MainApp.identityDto.getSociety().getName() + " - " + MainApp.identityDto.getSociety().getCode());
+        lblName.setText(MainApp.identityDto.getSociety().getName() + " - " + MainApp.identityDto.getSociety().getCode());
     }
 
     private void loadMenu() {
@@ -82,9 +88,12 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                         sub.forEach((k, v) -> {
                             try {
                                 if (v.isEmpty()) {
-                                    MenuItem item = new MenuItem(resourceBundle.getString(k.getDescription()));
-                                    setupClickEvent(item, k.getModule());
-                                    mainMenu.getItems().add(item);
+//                                    MenuItem item = new MenuItem(resourceBundle.getString(k.getDescription()));
+//                                    setupClickEvent(item, k.getModule());
+//                                    mainMenu.getItems().add(item);
+                                    CustomMenuItem menuItem = favoriteMenuService.createMenuItem(resourceBundle.getString(k.getDescription()), k);
+                                    setupClickEvent(menuItem, k.getModule());
+                                    mainMenu.getItems().add(menuItem);
                                 } else {
                                     Menu subMenu = new Menu(resourceBundle.getString(k.getDescription()));
                                     v.forEach(item -> {
@@ -121,6 +130,37 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
             });
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void setDynamicLogo() {
+        try {
+            String clientCode = MainApp.getProperty("client.code", "AMUL");
+            String imageUrl = "/com/eipl/amcs/view/images/";
+
+            switch (clientCode) {
+                case "JAIPUR_AMCS":
+                    imageUrl = imageUrl.concat("saras_logo_crop.png");
+                    logoView.setFitHeight(65);
+                    logoView.setFitWidth(100);
+                    break;
+                case "BANAS_AMCS":
+                    imageUrl = imageUrl.concat("amulpng.png");
+                    logoView.setFitHeight(50);
+                    logoView.setFitWidth(100);
+                    break;
+                default:
+                    imageUrl = imageUrl.concat("logo.png");
+                    logoView.setFitHeight(70);
+                    logoView.setFitWidth(100);
+                    break;
+            }
+
+            Image image = new Image(getClass().getResource(imageUrl).toExternalForm());
+            logoView.setImage(image);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

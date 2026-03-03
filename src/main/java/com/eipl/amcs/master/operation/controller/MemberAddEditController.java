@@ -351,7 +351,7 @@ public class MemberAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("aadharcardnonullerror") + "\n");
         if (txtCreditLimit.getText() == null || txtCreditLimit.getText().trim() == null || txtCreditLimit.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("creditlimitnonullerror") + "\n");
-        if (txtMobileNo.getText().trim() == null || txtMobileNo.getText().trim().isEmpty()){
+        if (txtMobileNo.getText() == null || txtMobileNo.getText().trim().isEmpty()){
             errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
         } else if (!txtMobileNo.getText().matches("^[0-9]{10}$")) {
             errorMsg.append(resourceBundle.getString("mobileDigitError")+ "\n");

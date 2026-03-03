@@ -10,6 +10,7 @@ import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.procurement.dto.PurchaseRateGenerate;
 import com.eipl.amcs.master.procurement.dto.RateViewDto;
+import com.eipl.amcs.master.procurement.task.NewGeneratedRateViewTask;
 import com.eipl.amcs.master.procurement.task.RateViewTask;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -67,7 +68,6 @@ public class MilkRateViewController implements MyInitialization {
 
         btnClose.setOnAction(e -> stage.close());
 
-
         tableFixed.addEventFilter(javafx.scene.input.ScrollEvent.ANY, event -> {
             tableRateDetails.fireEvent(event);
             event.consume();
@@ -77,19 +77,15 @@ public class MilkRateViewController implements MyInitialization {
     private void syncScrollBars() {
         Node fixedScroll = tableFixed.lookup(".scroll-bar:vertical");
         Node scrollableScroll = tableRateDetails.lookup(".scroll-bar:vertical");
-
         if (fixedScroll instanceof ScrollBar && scrollableScroll instanceof ScrollBar) {
             ScrollBar s1 = (ScrollBar) fixedScroll;
             ScrollBar s2 = (ScrollBar) scrollableScroll;
-
             if (s1.getUserData() == null) {
                 s1.valueProperty().bindBidirectional(s2.valueProperty());
-
                 s1.setVisible(false);
                 s1.setMaxWidth(0);
                 s1.setMinWidth(0);
                 s1.setPrefWidth(0);
-
                 s1.setUserData("bound");
             }
         }
@@ -111,33 +107,56 @@ public class MilkRateViewController implements MyInitialization {
     private void loadRateDetailsData() {
         if (cboxMilkType.getValue() == null || cboxMilkQualityType.getValue() == null)
             return;
-
         tableFixed.getItems().clear();
         tableRateDetails.getItems().clear();
         tableRateDetails.setPlaceholder(new Label("Loading data..."));
-        var task = new RateViewTask(rateViewDto.getRateType(), rateViewDto.getRateType() == (short) 0 ? rateViewDto.getMemberRate().getCode() : rateViewDto.getSocietyRate().getCode(),
-                cboxMilkType.getValue().getCode(), cboxMilkQualityType.getValue().getCode());
-        task.setOnSucceeded(e -> {
-            try {
-                List<String> list = task.get();
-                if (list == null || list.isEmpty()) {
-                    tableRateDetails.setPlaceholder(new Label("No data..."));
-                    return;
+        String code = rateViewDto.getRateType() == (short) 0 ? rateViewDto.getMemberRate().getCode() : rateViewDto.getSocietyRate().getCode();
+        if (code != null) {
+            var task = new RateViewTask(rateViewDto.getRateType(), rateViewDto.getRateType() == (short) 0 ? rateViewDto.getMemberRate().getCode() : rateViewDto.getSocietyRate().getCode(),
+                    cboxMilkType.getValue().getCode(), cboxMilkQualityType.getValue().getCode());
+            task.setOnSucceeded(e -> {
+                try {
+                    List<String> list = task.get();
+                    if (list == null || list.isEmpty()) {
+                        tableRateDetails.setPlaceholder(new Label("No data..."));
+                        return;
+                    }
+                    prepareMap(list);
+                    prepareTableData();
+
+                    tableFixed.applyCss();
+                    tableFixed.layout();
+                    tableRateDetails.applyCss();
+                    tableRateDetails.layout();
+                    syncScrollBars();
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
                 }
-                prepareMap(list);
-                prepareTableData();
-
-                tableFixed.applyCss();
-                tableFixed.layout();
-                tableRateDetails.applyCss();
-                tableRateDetails.layout();
-
-                syncScrollBars();
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+            });
+            new Thread(task).start();
+        } else {
+            var task = new NewGeneratedRateViewTask(rateViewDto,
+                    cboxMilkType.getValue(), cboxMilkQualityType.getValue());
+            task.setOnSucceeded(e -> {
+                try {
+                    List<String> list = task.get();
+                    if (list == null || list.isEmpty()) {
+                        tableRateDetails.setPlaceholder(new Label("No data..."));
+                        return;
+                    }
+                    prepareMap(list);
+                    prepareTableData();
+                    tableFixed.applyCss();
+                    tableFixed.layout();
+                    tableRateDetails.applyCss();
+                    tableRateDetails.layout();
+                    syncScrollBars();
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
+        }
     }
 
     private void prepareMap(List<String> details) {
@@ -174,11 +193,11 @@ public class MilkRateViewController implements MyInitialization {
     private void prepareTableData() {
         if (cboxMilkType.getValue() == null || cboxMilkQualityType.getValue() == null)
             return;
+
         if (tableFixed.getItems() != null)
             tableFixed.getItems().clear();
         if (tableFixed.getColumns() != null)
             tableFixed.getColumns().clear();
-
         if (tableRateDetails.getItems() != null)
             tableRateDetails.getItems().clear();
         if (tableRateDetails.getColumns() != null)
@@ -211,7 +230,7 @@ public class MilkRateViewController implements MyInitialization {
                 List<MilkType> list = task2.get();
                 if (list != null)
                     cboxMilkType.setItems(FXCollections.observableList(list));
-                    cboxMilkType.getSelectionModel().selectFirst();
+                cboxMilkType.getSelectionModel().selectFirst();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -224,7 +243,7 @@ public class MilkRateViewController implements MyInitialization {
                 List<MilkQualityType> list = task3.get();
                 if (list != null)
                     cboxMilkQualityType.setItems(FXCollections.observableList(list));
-                    cboxMilkQualityType.getSelectionModel().selectFirst();
+                cboxMilkQualityType.getSelectionModel().selectFirst();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

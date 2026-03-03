@@ -253,6 +253,29 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                             }
                         }
 
+                        try {
+                            if (version != null && !version.isEmpty()) {
+                                List<String> lines = Files.readAllLines(new File("resources/app.properties").toPath());
+                                List<String> newLines = new ArrayList<>();
+                                for (String line : lines) {
+                                    if (line.contains("identity.version")) {
+                                        System.out.println(version);
+                                        newLines.add("identity.version=" + new String(Base64.getEncoder().encode(version.getBytes())));
+                                        System.out.println("app pro changed");
+                                    } else {
+                                        newLines.add(line);
+                                    }
+                                }
+                                File appPro = new File("resources/app.properties");
+                                Files.write(appPro.toPath(), newLines);
+                                File libDir = new File(appDirPath, "resources");
+                                Files.copy(appPro.toPath(), new File(libDir, appPro.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                            }
+                        } catch (Exception ex1) {
+                            ex1.printStackTrace();
+                        }
+
                         //SP update
                         Process process1 = Runtime.getRuntime().exec("cmd /c SP.bat", null, appDirPath);
                         int res1 = process1.waitFor();
@@ -294,28 +317,7 @@ public class DownloadFileTask extends Task<Map<String, Object>> {
                         int res3 = process3.waitFor();
                         System.out.println("account res: " + res3);
 
-                        try {
-                            if (version != null && !version.isEmpty()) {
-                                List<String> lines = Files.readAllLines(new File("resources/app.properties").toPath());
-                                List<String> newLines = new ArrayList<>();
-                                for (String line : lines) {
-                                    if (line.contains("identity.version")) {
-                                        System.out.println(version);
-                                        newLines.add("identity.version=" + new String(Base64.getEncoder().encode(version.getBytes())));
-                                        System.out.println("app pro changed");
-                                    } else {
-                                        newLines.add(line);
-                                    }
-                                }
-                                File appPro = new File("resources/app.properties");
-                                Files.write(appPro.toPath(), newLines);
-                                File libDir = new File(appDirPath, "resources");
-                                Files.copy(appPro.toPath(), new File(libDir, appPro.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                            }
-                        } catch (Exception ex1) {
-                            ex1.printStackTrace();
-                        }
                     }
                 } catch (Exception ee) {
                     System.out.println(ee.getMessage());

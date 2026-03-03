@@ -319,6 +319,7 @@ public class CouponIssueAddEditController implements MyInitialization {
 
                 loadData();
                 clearControls();
+                getNextCouponIssue();
                 this.callback.reloadData(true);
                 FocusUtils.requestFocus(btnSaveUpdate);
             } else {
@@ -353,6 +354,7 @@ public class CouponIssueAddEditController implements MyInitialization {
 
                     loadData();
                     clearControls();
+                    getNextCouponIssue();
                     this.callback.reloadData(true);
                     FocusUtils.requestFocus(btnSaveUpdate);
                 } else {

@@ -20,7 +20,7 @@ public class ProductGroupDeserializer extends JsonDeserializer<ProductGroup> {
     @Override
     public ProductGroup deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
-        return productGroupRepository.findById(String.valueOf(parser.getValueAsInt())).get();
+        return productGroupRepository.findById(parser.getValueAsInt()).get();
     }
 
 }

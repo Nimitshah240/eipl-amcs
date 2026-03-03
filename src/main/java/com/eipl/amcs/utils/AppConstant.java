@@ -30,7 +30,7 @@ public class AppConstant {
     public static String DB_LOC = "localhost";
 
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
-    public static final String versionNo = "1.0";
+    public static final String versionNo = "1.1";
 
     public static String baseUrlRealTime;
     public static String syncUrlRealTime;

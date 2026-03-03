@@ -167,6 +167,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         setupTable();
         setupCollectionTable();
         FocusUtils.requestFocus(cboxDispatchType);
+        btnAdd.setDisable(true);
         cboxRouteNo.getSelectionModel().select(0);
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
@@ -331,6 +332,12 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dtoTxn.setAvgFat(milkDispatchSummaryDto.getFat().setScale(1, RoundingMode.DOWN));
             BigDecimal qty = milkDispatchSummaryDto.getMilkCollection().subtract(milkDispatchSummaryDto.getMilkSale());
 
+            if (qty.compareTo(BigDecimal.ZERO) <= 0){
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+                        resourceBundle.getString("milk.quantity.error"));
+                alert.createAlert();
+                continue;
+            }
             int qtyMode = CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.DISPATCH_QTY_MODE, "1"));
 
             dtoTxn.setQty(qtyMode == 0 ? qty : CommonUtils.convertQtyToKg(qty.toString()));
