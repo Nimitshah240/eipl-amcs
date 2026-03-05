@@ -3,7 +3,9 @@ package com.eipl.amcs.master.inventory.model;
 import com.eipl.amcs.base.model.BaseModelAudit;
 import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Tax;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
@@ -43,6 +45,11 @@ public class ProductAudit extends BaseModelAudit {
     private Boolean indent;
     @Column(name = "is_saleable")
     private Boolean saleable;
+    @Column(name = "is_milk")
+    private boolean milk;
+    private String originatingOrgCode;
+    private String originatingOrgType;
+    private Integer originatingType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = UnitSerialize.class)
@@ -83,6 +90,38 @@ public class ProductAudit extends BaseModelAudit {
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "milk_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
+    private MilkType milkType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "other_state_tax_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
+    @JsonIgnoreProperties(value = {"union"})
+    private Tax otherStateTax;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "purchase_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Ledger purchaseLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "stock_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Ledger stockLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "local_sale_ledger_code",  foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Ledger localSaleLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "sale_ledger_code",  foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Ledger saleLedger;
 
     @Override
     public String getTableName() {

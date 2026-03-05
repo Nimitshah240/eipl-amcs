@@ -3,6 +3,7 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -10,9 +11,13 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Tax;
+import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Unit;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
 import com.eipl.amcs.master.inventory.convertor.ProductGroupConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
@@ -25,6 +30,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -33,8 +39,10 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ProductAddEditController implements MyInitialization {
     @FXML
@@ -42,9 +50,16 @@ public class ProductAddEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<ProductGroup> cboxProductGroup;
+    private E_ComboBox<ProductGroup> cboxProductGroup;
     @FXML
-    private ComboBox<Tax> cboxTaxName;
+    private E_ComboBox<Tax> cboxTaxName, cboxOtherTax;
+    @FXML
+    private E_ComboBox<MilkType> cboxMilkType;
+    @FXML
+    private E_ComboBox<Ledger> cboxPurchaseLedger, cboxSaleLedger, cboxStockLedger, cboxLocalSaleLedger;
+    @FXML
+    private CheckBox chkIsMilk;
+
     @FXML
     private E_TextField txtCode, txtName, txtLocalName, txtReferenceCode;
 
@@ -84,13 +99,29 @@ public class ProductAddEditController implements MyInitialization {
     }
 
     @Override
+    public void loadData() {
+        loadMilkType();
+        loadLedger();
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         loadUnit();
         setupComboBox();
+        loadData();
         txtReferenceCode.setEditable(false);
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
+        chkIsMilk.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            cboxMilkType.setDisable(!newVal);
+            cboxLocalSaleLedger.setDisable(!newVal);
+            if (!newVal){
+                cboxMilkType.getSelectionModel().select(null);
+                cboxLocalSaleLedger.getSelectionModel().select(null);
+            }
+        });
+
     }
 
     public void loadControls() {
@@ -100,13 +131,19 @@ public class ProductAddEditController implements MyInitialization {
         txtName.setText(dto.getName());
         txtLocalName.setText(dto.getNameLocal());
         txtReferenceCode.setText(dto.getReferenceCode());
+        cboxOtherTax.getSelectionModel().select(dto.getOtherStateTax());
+        cboxPurchaseLedger.getSelectionModel().select(dto.getPurchaseLedger());
+        cboxSaleLedger.getSelectionModel().select(dto.getSaleLedger());
+        cboxStockLedger.getSelectionModel().select(dto.getStockLedger());
+        cboxMilkType.getSelectionModel().select(dto.getMilkType());
+        cboxLocalSaleLedger.getSelectionModel().select(dto.getLocalSaleLedger());
+        chkIsMilk.setSelected(dto.isMilk());
     }
 
     private void validateAndSave() {
         errorMsg = new StringBuilder();
         if (!validate()) {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                    errorMsg.toString());
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"), errorMsg.toString());
             alert.createAlert();
             return;
         }
@@ -128,8 +165,7 @@ public class ProductAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 String nextCode = task.get();
-                if (nextCode == null || nextCode.isEmpty())
-                    return;
+                if (nextCode == null || nextCode.isEmpty()) return;
                 txtCode.setText(nextCode);
                 txtReferenceCode.setText(nextCode.replace(MainApp.identityDto.getSociety().getCode(), ""));
             } catch (InterruptedException | ExecutionException ex) {
@@ -158,20 +194,40 @@ public class ProductAddEditController implements MyInitialization {
         dto.setActive(true);
         dto.setConversionUnit(unitList.get(0));
         dto.setPrimaryUom(unitList.get(0));
+
+        dto.setOtherStateTax(cboxOtherTax.getSelectionModel().getSelectedItem());
+        dto.setPurchaseLedger(cboxPurchaseLedger.getSelectionModel().getSelectedItem());
+        dto.setSaleLedger(cboxSaleLedger.getSelectionModel().getSelectedItem());
+        dto.setLocalSaleLedger(cboxLocalSaleLedger.getSelectionModel().getSelectedItem());
+        dto.setStockLedger(cboxStockLedger.getSelectionModel().getSelectedItem());
+        dto.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
+        dto.setMilk(chkIsMilk.isSelected());
+
+        dto.setOriginatingOrgCode(MainApp.identityDto.getSociety().getCode());
+        dto.setOriginatingOrgType("VLC");
+        dto.setOriginatingType(0);
         return dto;
     }
 
     private boolean validate() {
         if (cboxProductGroup.getValue() == null)
             errorMsg.append(resourceBundle.getString("productgroupnullerror") + "\n");
-        if (cboxTaxName.getValue() == null)
-            errorMsg.append(resourceBundle.getString("taxnullerror") + "\n");
+        if (cboxTaxName.getValue() == null) errorMsg.append(resourceBundle.getString("taxnullerror") + "\n");
         if (txtReferenceCode.getText() == null || txtReferenceCode.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("referencecodenullerror") + "\n");
         if (txtName.getText() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("productnamenullerror") + "\n");
         if (txtLocalName.getText() == null || txtLocalName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("productlocalnamenullerror") + "\n");
+
+        if (cboxOtherTax.getValue() == null) errorMsg.append(resourceBundle.getString("othertaxnullerror") + "\n");
+        if (cboxPurchaseLedger.getValue() == null) errorMsg.append(resourceBundle.getString("purhcaseledgernullerror") + "\n");
+        if (cboxSaleLedger.getValue() == null) errorMsg.append(resourceBundle.getString("saleledgernullerror") + "\n");
+        if (cboxStockLedger.getValue() == null) errorMsg.append(resourceBundle.getString("stockledgernullerror") + "\n");
+        if (chkIsMilk.isSelected()) {
+            if (cboxMilkType.getValue() == null) errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
+            if (cboxLocalSaleLedger.getValue() == null) errorMsg.append(resourceBundle.getString("localsaleledgernullerror") + "\n");
+        }
         return errorMsg.length() == 0;
     }
 
@@ -188,13 +244,11 @@ public class ProductAddEditController implements MyInitialization {
                     for (ApiValidationError subError : error.getSubErrors()) {
                         sb.append(subError.getField() + " " + resourceBundle.getString(subError.getMessage()) + "\n");
                     }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                            sb.toString());
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"), sb.toString());
                     alert.createAlert();
                     return;
                 }
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                        resourceBundle.getString("product.insert.successful"));
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"), resourceBundle.getString("product.insert.successful"));
                 alert.createAlert();
                 this.callback.reloadData(true);
                 this.stage.close();
@@ -219,14 +273,12 @@ public class ProductAddEditController implements MyInitialization {
                     for (ApiValidationError subError : error.getSubErrors()) {
                         sb.append(subError.getField() + " " + subError.getMessage() + "\n");
                     }
-                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                            sb.toString());
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"), sb.toString());
                     alert.createAlert();
                     return;
                 }
 
-                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                        resourceBundle.getString("product.update.successful"));
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("product"), resourceBundle.getString("product.update.successful"));
                 alert.createAlert();
                 this.callback.reloadData(true);
                 this.stage.close();
@@ -248,15 +300,13 @@ public class ProductAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<ProductGroup> list = task.get();
-                if (list != null)
-                    cboxProductGroup.setItems(FXCollections.observableList(list));
+                if (list != null) cboxProductGroup.setItems(FXCollections.observableList(list));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
         });
         new Thread(task).start();
     }
-
 
     private void loadUnit() {
         var task = new UnitLoadTask();
@@ -275,10 +325,46 @@ public class ProductAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<Tax> list = CommonUtils.getTaxFromDto(task.get());
-                if (list != null)
+                if (list != null) {
                     cboxTaxName.setItems(FXCollections.observableList(list));
+                    cboxOtherTax.setItems(FXCollections.observableList(list));
+                }
                 if (dto == null) {
                     cboxTaxName.getSelectionModel().select(list.stream().filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
+                    cboxOtherTax.getSelectionModel().select(list.stream().filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadMilkType() {
+        var task = new MilkTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task.get();
+                if (list != null) cboxMilkType.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadLedger() {
+        var task = new LedgerLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Ledger> list = task.get();
+                if (list != null) {
+                    Map<String, List<Ledger>> grouped = list.stream().filter(l -> l.getLedgerGroup() != null && l.getLedgerGroup().getLedgerType() != null && l.getLedgerGroup().getLedgerType().getName() != null).collect(Collectors.groupingBy(l -> l.getLedgerGroup().getLedgerType().getName().toLowerCase()));
+
+                    cboxPurchaseLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("purchase", List.of())));
+                    cboxStockLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("asset", List.of())));
+                    cboxSaleLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("sale", List.of())));
+                    cboxLocalSaleLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("sale", List.of())));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

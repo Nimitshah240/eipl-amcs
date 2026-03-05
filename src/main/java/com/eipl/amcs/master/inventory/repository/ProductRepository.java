@@ -28,7 +28,7 @@ public interface ProductRepository extends BaseRepository<Product, String> {
     List<Product> checkName(String str, String Code);
 
     @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-            "union", "society"})
+            "union", "society", "milkType", "otherStateTax", "purchaseLedger", "stockLedger", "localSaleLedger", "saleLedger"})
     List<Product> findAllBySociety(Society society, Sort by);
 
     @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
