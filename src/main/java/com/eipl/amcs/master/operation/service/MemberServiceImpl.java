@@ -1,8 +1,11 @@
 package com.eipl.amcs.master.operation.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
+import com.eipl.amcs.master.account.model.SubLedger;
+import com.eipl.amcs.master.account.repository.SubLedgerRepository;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
@@ -56,6 +59,8 @@ public class MemberServiceImpl implements MemberService {
     private SocietyRepository socRepository;
     @Autowired
     private SocietyPaymentCycleRepository paymentCycleRepository;
+    @Autowired
+    private SubLedgerRepository subLedgerRepository;
 
     @Override
     public List<Member> findAll() {
@@ -300,4 +305,24 @@ public class MemberServiceImpl implements MemberService {
         return list;
     }
 
+    public void createSubLedgerOfMember(){
+        List<Member> memberList = repository.findAll();
+        List<SubLedger> subLedgerList = new ArrayList<>();
+        for (Member member : memberList) {
+            SubLedger subLedger = new SubLedger();
+            subLedger.setCode(member.getCode());
+            subLedger.setName(member.getFirstName());
+            subLedger.setNameLocal(member.getFirstNameLocal());
+            subLedger.setReferenceCode(member.getCode());
+            subLedger.setType((short) 1);
+            subLedger.setUnionCode(MainApp.identityDto.getUnion().getCode());
+            subLedger.setSociety(MainApp.identityDto.getSociety());
+            subLedger.setActive(true);
+
+            subLedger.setCreatedAt(LocalDateTime.now());
+            subLedger.setCreatedBy(MainApp.identityDto.getSociety().getCode());
+            subLedgerList.add(subLedger);
+        }
+        subLedgerRepository.saveAll(subLedgerList);
+    }
 }

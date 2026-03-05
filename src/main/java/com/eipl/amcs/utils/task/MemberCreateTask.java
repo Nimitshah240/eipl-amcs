@@ -118,7 +118,7 @@ public class MemberCreateTask extends Task<Boolean> {
                     e.printStackTrace();
                 }
             }
-
+            memberService.createSubLedgerOfMember();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

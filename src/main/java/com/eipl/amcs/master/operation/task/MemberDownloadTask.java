@@ -10,6 +10,7 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
 import com.eipl.amcs.master.operation.repository.MemberRepository;
+import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.network.RealTimeMultipleResponse;
 import com.eipl.amcs.network.RealTimeRequest;
 import com.eipl.amcs.utils.AppConstant;
@@ -45,6 +46,7 @@ public class MemberDownloadTask extends Task<Object> {
             MemberRepository memberRepository = EmcsAppContext.getContext().getBean(MemberRepository.class);
             MemberDetailRepository memberDetailRepository = EmcsAppContext.getContext().getBean(MemberDetailRepository.class);
             MilkTypeRepository milkTypeRepository = EmcsAppContext.getContext().getBean(MilkTypeRepository.class);
+            MemberService memberService = EmcsAppContext.getContext().getBean(MemberService.class);
             long count = memberRepository.count();
             if (count > 0) {
                 return false;
@@ -112,6 +114,7 @@ public class MemberDownloadTask extends Task<Object> {
                 List<Member> memberList1 = memberRepository.saveAll(memberList);
                 boolean needToCreateMember = memberList1.isEmpty();
                 memberDetailRepository.saveAll(memberDetailList);
+                memberService.createSubLedgerOfMember();
                 return needToCreateMember;
             } else {
                 return true;

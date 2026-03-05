@@ -37,4 +37,6 @@ public interface MemberService {
     MemberRegister findMemberRegisterData(String societyCode, LocalDateTime dt, String memberType);
 
     List<MemberDetail> findAllMemberDetails();
+
+    void createSubLedgerOfMember();
 }
