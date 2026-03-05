@@ -298,9 +298,9 @@ public class ActivationController implements MyInitialization, PopupCallback {
         try {
             DB_LOC = null;
             Preferences preferences = Preferences.userNodeForPackage(MainApp.class);
-            DB_LOC = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_LOC", null)));
-            EIPL_DB_PASS = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_PASS", null)));
-            EIPL_DB_NAME = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_NAME", null)));
+            DB_LOC = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_LOC", "bG9jYWxob3N0")));
+            EIPL_DB_PASS = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_PASS", "RUFtY3MyMDIx")));
+            EIPL_DB_NAME = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_NAME", "ZWlwbF9hbWNzX2Ri")));
         } catch (Exception e) {
             e.printStackTrace();
         }

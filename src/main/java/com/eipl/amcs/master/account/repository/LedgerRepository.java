@@ -21,7 +21,7 @@ public interface LedgerRepository extends BaseRepository<Ledger, String> {
     @EntityGraph(attributePaths = {"ledgerGroup", "society"})
     List<Ledger> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"ledgerGroup", "society"})
+    @EntityGraph(attributePaths = {"ledgerGroup", "society", "ledgerGroup.ledgerType"})
     List<Ledger> findAllByActive(Boolean isActive);
 
     @Query(nativeQuery = true, value = "select * from ledgers order by cast(code AS DECIMAL) ")
