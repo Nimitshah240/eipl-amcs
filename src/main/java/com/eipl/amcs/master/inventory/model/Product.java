@@ -4,7 +4,9 @@ import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.json.deserialize.*;
 import com.eipl.amcs.json.serialize.*;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Tax;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
@@ -42,6 +44,11 @@ public class Product extends BaseModel {
     private Boolean indent;
     @Column(name = "is_saleable")
     private Boolean saleable;
+    @Column(name = "is_milk")
+    private boolean milk;
+    private String originatingOrgCode;
+    private String originatingOrgType;
+    private Integer originatingType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = UnitSerialize.class)
@@ -83,6 +90,38 @@ public class Product extends BaseModel {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district",
             "subDistrict", "village", "hamlet"})
     private Society society;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = MilkTypeSerialize.class)
+    @JsonDeserialize(using = MilkTypeDeserializer.class)
+    @JoinColumn(name = "milk_type_code", referencedColumnName = "code")
+    private MilkType milkType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "other_state_tax_code", referencedColumnName = "code")
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
+    @JsonIgnoreProperties(value = {"union"})
+    private Tax otherStateTax;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "purchase_ledger_code", referencedColumnName = "code")
+    private Ledger purchaseLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "stock_ledger_code", referencedColumnName = "code")
+    private Ledger stockLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "local_sale_ledger_code", referencedColumnName = "code")
+    private Ledger localSaleLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "sale_ledger_code", referencedColumnName = "code")
+    private Ledger saleLedger;
 
     public Product(String code, String name, String nameLocal) {
         this.code = code;
@@ -131,6 +170,17 @@ public class Product extends BaseModel {
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
 
+        audit.setMilkType(this.getMilkType());
+        audit.setSaleLedger(this.getSaleLedger());
+        audit.setLocalSaleLedger(this.getLocalSaleLedger());
+        audit.setPurchaseLedger(this.getPurchaseLedger());
+        audit.setStockLedger(this.getStockLedger());
+        audit.setMilk(this.isMilk());
+        audit.setOtherStateTax(this.getOtherStateTax());
+
+        audit.setOriginatingOrgCode(this.getOriginatingOrgCode());
+        audit.setOriginatingOrgType(this.getOriginatingOrgType());
+        audit.setOriginatingType(this.getOriginatingType());
         return audit;
     }
 

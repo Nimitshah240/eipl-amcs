@@ -200,6 +200,8 @@ public class BroadcastedService {
     private LedgerMappingEventRepository ledgerMappingEventRepository;
     @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private TaxRepository taxRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -484,6 +486,17 @@ public class BroadcastedService {
                         product.setProductGroup(group);
                         product.setActive(true);
                         product.setCreatedBy("PORTAL");
+                        product.setOriginatingOrgCode((String.valueOf(jsonText.get("originatingOrgCode"))));
+                        product.setOriginatingType(Integer.valueOf((String.valueOf(jsonText.get("originatingType")))));
+                        product.setOriginatingOrgType((String.valueOf(jsonText.get("originatingOrgType"))));
+                        product.setMilk("1".equalsIgnoreCase(String.valueOf(jsonText.get("isMilk"))));
+                        product.setSaleLedger(jsonText.get("saleLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("saleLedger"))).orElse(null) : null);
+                        product.setPurchaseLedger(jsonText.get("purchaseLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("purchaseLedger"))).orElse(null) : null);
+                        product.setStockLedger(jsonText.get("stockLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("stockLedger"))).orElse(null) : null);
+                        product.setLocalSaleLedger(jsonText.get("localSaleLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("localSaleLedger"))).orElse(null) : null);
+                        product.setMilkType(jsonText.get("milkType") != null ? milkTypeRepository.findByCode((int) jsonText.get("milkType")) : null);
+                        product.setTax(jsonText.get("taxCode") != null ? taxRepository.findById(String.valueOf(jsonText.get("taxCode"))).orElse(null) : null);
+                        product.setOtherStateTax(jsonText.get("otherStateTaxCode") != null ? taxRepository.findById(String.valueOf(jsonText.get("otherStateTaxCode"))).orElse(null) : null);
                         productRepository.save(product);
                         break;
                     } catch (Exception e) {
