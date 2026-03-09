@@ -27,6 +27,7 @@ public class Route extends BaseModel {
     @Id
     private String code;
     private String codeEx;
+    private String refCode;
     private String name;
     private String nameLocal;
 
