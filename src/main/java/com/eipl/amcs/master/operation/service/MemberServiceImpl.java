@@ -96,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
         memberDetail.setCode(member.getCode());
         memberDetail.setInitData();
         memberDtoNew.setMemberDetail(memberDetailrepository.customSave(memberDetail, identityInfo));
-
+        createSubLedgerOfMember(memberDtoNew.getMember());
         // Credit limit
         if (memberDtoNew.getMember().getMemberType().getCode() == 1)
             setMemberCreditLimit(memberDtoNew.getMember(), memberDtoNew.getMemberDetail());
@@ -199,6 +199,7 @@ public class MemberServiceImpl implements MemberService {
         MemberDetail memberDetail = memberDto.getMemberDetail();
         memberDetail.setupdateData();
         dtoNew.setMemberDetail(memberDetailrepository.customUpdate(memberDetail, identityInfo));
+        createSubLedgerOfMember(dtoNew.getMember());
         return dtoNew;
     }
 
@@ -305,12 +306,19 @@ public class MemberServiceImpl implements MemberService {
         return list;
     }
 
-    public void createSubLedgerOfMember(){
-        List<Member> memberList = repository.findAll();
+    public void createSubLedgerOfMember(Member newMember) {
+
+        List<Member> memberList;
+        if (newMember == null) {
+            memberList = repository.findAll();
+        } else {
+            memberList = List.of(newMember);
+        }
+
         List<SubLedger> subLedgerList = new ArrayList<>();
         for (Member member : memberList) {
             SubLedger subLedger = new SubLedger();
-            subLedger.setCode(member.getCode());
+            subLedger.setCode(subLedgerList.isEmpty() ? nextCodeRepository.getNextCode("SubLedger", "code", MainApp.identityDto.getSociety().getCode(), 0) : String.valueOf((Long.valueOf(subLedgerList.get(subLedgerList.size() - 1).getCode()) + 1)));
             subLedger.setName(member.getFirstName());
             subLedger.setNameLocal(member.getFirstNameLocal());
             subLedger.setReferenceCode(member.getCode());

@@ -114,7 +114,7 @@ public class MemberDownloadTask extends Task<Object> {
                 List<Member> memberList1 = memberRepository.saveAll(memberList);
                 boolean needToCreateMember = memberList1.isEmpty();
                 memberDetailRepository.saveAll(memberDetailList);
-                memberService.createSubLedgerOfMember();
+                memberService.createSubLedgerOfMember(null);
                 return needToCreateMember;
             } else {
                 return true;

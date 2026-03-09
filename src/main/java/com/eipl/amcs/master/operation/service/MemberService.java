@@ -38,5 +38,5 @@ public interface MemberService {
 
     List<MemberDetail> findAllMemberDetails();
 
-    void createSubLedgerOfMember();
+    void createSubLedgerOfMember(Member member);
 }
