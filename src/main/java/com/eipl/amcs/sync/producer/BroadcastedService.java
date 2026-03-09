@@ -484,7 +484,9 @@ public class BroadcastedService {
                         product.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
                         ProductGroup group = productGroupRepository.findByCode(Integer.valueOf(String.valueOf(jsonText.get("productGroupCode"))));
                         product.setProductGroup(group);
-                        product.setActive(true);
+                        product.setSociety(MainApp.identityDto.getSociety());
+                        product.setUnion(MainApp.identityDto.getUnion());
+                        product.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
                         product.setCreatedBy("PORTAL");
                         product.setOriginatingOrgCode((String.valueOf(jsonText.get("originatingOrgCode"))));
                         product.setOriginatingType(Integer.valueOf((String.valueOf(jsonText.get("originatingType")))));
