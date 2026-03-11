@@ -30,7 +30,7 @@ public class RouteController implements MyInitialization {
     @FXML
     TableView<Route> tableRoute;
     @FXML
-    TableColumn<Route, String> colCode, colName, colLocalName, colCodeEx;
+    TableColumn<Route, String> colCode, colName, colLocalName, colCodeEx, colRefCode;
     @FXML
     TableColumn<Route, Bmc> colBmc;
     @FXML
@@ -70,6 +70,14 @@ public class RouteController implements MyInitialization {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
             colBmc.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBmc()));
+            colRefCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRefCode()));
+            colRefCode.setCellFactory(TextFieldTableCell.forTableColumn());
+            colRefCode.setOnEditCommit(e -> {
+                Route r = e.getRowValue();
+                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase("")) {
+                    r.setRefCode(e.getNewValue());
+                }
+            });
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colName.setCellFactory(TextFieldTableCell.forTableColumn());
             colName.setOnEditCommit(e -> {
@@ -155,7 +163,7 @@ public class RouteController implements MyInitialization {
 
     @Override
     public void saveData() {
-        RouteSaveTask task = new RouteSaveTask(tableRoute.getItems().get(0));
+        RouteSaveTask task = new RouteSaveTask(tableRoute.getItems());
         task.setOnSucceeded(e -> {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
                     resourceBundle.getString("route.insert.successful"));
