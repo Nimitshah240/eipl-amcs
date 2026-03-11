@@ -18,6 +18,7 @@
                         <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%code" />
                         <TableColumn fx:id="colCodeEx" prefWidth="120.0" styleClass="cell-center-aligned" text="%codeex" />
                         <TableColumn fx:id="colBmc" prefWidth="200.0" text="%bmc" />
+                        <TableColumn fx:id="colRefCode" prefWidth="200.0" text="%routeno" />
                         <TableColumn fx:id="colName" prefWidth="200.0" text="%name" />
                         <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname" />
                         <TableColumn fx:id="colCapacity" prefWidth="120.0" styleClass="cell-center-aligned" text="%capacity" />
