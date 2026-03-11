@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.account.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.account.model.Events;
 import com.eipl.amcs.master.account.model.LedgerMappingEvent;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -22,5 +23,8 @@ public interface LedgerMappingEventRepository extends BaseRepository<LedgerMappi
 
     @EntityGraph(attributePaths = {"society", "voucherType", "creditLedger", "debitLedger", "events"})
     List<LedgerMappingEvent> findByEventcode(int eventCode);
+
+    @EntityGraph(attributePaths = {"society", "voucherType", "creditLedger", "debitLedger"})
+    LedgerMappingEvent findByEvents(Events events);
 
 }

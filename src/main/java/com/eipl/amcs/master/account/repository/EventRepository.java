@@ -22,4 +22,7 @@ public interface EventRepository extends BaseRepository<Events, Integer> {
 
     @EntityGraph(attributePaths = {"society"})
     List<Events> findByEventCode(Integer eventCode);
+
+    @EntityGraph(attributePaths = {"society"})
+    Events findByEventNameContainingIgnoreCase(String eventName);
 }

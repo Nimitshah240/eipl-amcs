@@ -1,6 +1,8 @@
 package com.eipl.amcs.master.account.service;
 
+import com.eipl.amcs.master.account.model.Events;
 import com.eipl.amcs.master.account.model.LedgerMappingEvent;
+import com.eipl.amcs.master.account.repository.EventRepository;
 import com.eipl.amcs.master.account.repository.LedgerMappingEventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,8 @@ public class LedgerMappingEventServiceImpl implements LedgerMappingEventService 
     private static final Logger log = LoggerFactory.getLogger(LedgerMappingEventServiceImpl.class);
     @Autowired
     private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private EventRepository eventRepository;
 
     @Override
     public List<LedgerMappingEvent> findAll() {
@@ -75,4 +79,13 @@ public class LedgerMappingEventServiceImpl implements LedgerMappingEventService 
         return Optional.empty();
     }
 
+    public LedgerMappingEvent findMilkCollectionLedgerMappingEvent() {
+        try {
+            Events events = eventRepository.findByEventNameContainingIgnoreCase("Milk Collection");
+            return ledgerMappingEventRepository.findByEvents(events);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return null;
+    }
 }

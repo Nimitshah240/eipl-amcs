@@ -18,7 +18,7 @@ public class VoucherNumberLoadTask extends Task<String> {
         try {
             String code = MainApp.identityDto.getSociety().getCode() + "/" + MainApp.getFinancialYear().getCode() + "/";
             NextCodeService nextCodeService = EmcsAppContext.getContext().getBean(NextCodeService.class);
-            String codeI = nextCodeService.getNextCode("Voucher", "code", code, 6);
+            String codeI = nextCodeService.getNextCode("Voucher", "code", code, 0);
             if (codeI == null || codeI.isBlank())
                 return null;
             return codeI;

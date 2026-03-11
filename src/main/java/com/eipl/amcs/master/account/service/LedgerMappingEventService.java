@@ -11,4 +11,6 @@ public interface LedgerMappingEventService {
     String save(List<LedgerMappingEvent> ledgerMappingEvent, String identityInfo);
 
     Optional<LedgerMappingEvent> findById(String ledgerTypeNo);
+
+    LedgerMappingEvent findMilkCollectionLedgerMappingEvent();
 }
