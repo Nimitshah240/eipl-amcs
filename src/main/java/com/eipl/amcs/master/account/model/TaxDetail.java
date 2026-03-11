@@ -39,6 +39,16 @@ public class TaxDetail extends BaseModelTxn {
     @JsonIgnoreProperties(value = {"union"})
     private Tax tax;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = TaxSerialize.class)
+    @JsonDeserialize(using = TaxDeserializer.class)
+    @JoinColumn(name = "tax_group_code", foreignKey = @ForeignKey(name = "fk_tax_detail_tax_group_code"))
+    private TaxGroup taxGroup;
+
+    @Column(name = "is_active")
+    private Boolean active;
+    private String unionCode;
+
     @Override
     public String getTableName() {
         return "tax_detail";
