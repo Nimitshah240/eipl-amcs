@@ -33,9 +33,11 @@ public class TaxDepend extends BaseModel {
     @JsonDeserialize(using = TaxDetailDeserializer.class)
     @JoinColumn(name = "tax_details_code", foreignKey = @ForeignKey(name = "fk_tax_depends_tax_details_code"))
     private TaxDetail taxDetails;
+    @Transient
+    private String UnionCode;
 
     @Override
     public String getTableName() {
-        return "tax_detail";
+        return "tax_depends";
     }
 }

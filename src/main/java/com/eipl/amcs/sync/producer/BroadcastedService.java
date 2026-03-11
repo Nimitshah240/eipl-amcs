@@ -212,6 +212,8 @@ public class BroadcastedService {
     private LedgerMappingTaxDetailRepository ledgerMappingTaxDetailRepository;
     @Autowired
     private FormulaRepository formulaRepository;
+    @Autowired
+    private TaxDependsRepository taxDependsRepository;
 
     public String sendBroadcastedAll() {
         List<Broadcasted> list;
@@ -467,7 +469,8 @@ public class BroadcastedService {
                         Tax tax = new Tax();
                         tax.setCode(String.valueOf(jsonText.get("taxCode")));
                         tax.setName(String.valueOf(jsonText.get("taxName")));
-                        tax.setActive("1".equals(String.valueOf(jsonText.get("isActive"))));
+//                        tax.setActive("1".equals(String.valueOf(jsonText.get("isActive"))));
+                        tax.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
                         String localName = String.valueOf(jsonText.get("nameLocal"));
                         tax.setNameLocal((localName == null || localName.equalsIgnoreCase("null") || localName.isEmpty())
                                 ? String.valueOf(jsonText.get("taxName"))
@@ -514,7 +517,7 @@ public class BroadcastedService {
                         if (jsonText.get("taxCode") != null) {
                             taxDetail.setTax(taxRepository.findById(String.valueOf(jsonText.get("taxCode"))).orElse(null));
                         }
-                        taxDetail.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
+                        taxDetail.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
                         taxDetail.setUnionCode(MainApp.identityDto.getUnion().getCode());
                         taxDetail.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         taxDetail.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : "PORTAL");
@@ -524,6 +527,29 @@ public class BroadcastedService {
                         taxDetail.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
                         taxDetail.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
                         taxDetailRepository.save(taxDetail);
+                        break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                case "tbl_tax_depends":
+                    try {
+                        TaxDepend taxDepends = new TaxDepend();
+                        taxDepends.setCode(jsonText.get("taxDependsCode") != null ? String.valueOf(jsonText.get("taxDependsCode")) : null);
+                        if (jsonText.get("taxDetailCode") != null) {
+                            taxDepends.setTaxDetail(taxDetailRepository.findById(String.valueOf(jsonText.get("taxDetailCode"))).orElse(null));
+                        }
+                        taxDepends.setSteps(jsonText.get("steps") != null ? (short) Integer.parseInt(String.valueOf(jsonText.get("steps"))) : 0);
+                        taxDepends.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
+                        taxDepends.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                        taxDepends.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
+                        taxDepends.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : "PORTAL");
+                        taxDepends.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
+                        taxDepends.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                        taxDepends.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
+                        taxDepends.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
+                        taxDepends.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+
+                        taxDependsRepository.save(taxDepends);
                         break;
                     } catch (Exception e) {
                         e.printStackTrace();

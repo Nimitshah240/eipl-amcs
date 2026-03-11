@@ -46,7 +46,7 @@ public class VoucherTypeLedgerConfig extends BaseModelTxn {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = VoucherTypeSerialize.class)
     @JsonDeserialize(using = VoucherTypeDeserializer.class)
-    @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_voucher_type"))
+    @JoinColumn(name = "voucher_type_code", foreignKey = @ForeignKey(name = "fk_voucher_type_ledger_config_voucher_type_code"))
     private VoucherType voucherType;
 
     @Override

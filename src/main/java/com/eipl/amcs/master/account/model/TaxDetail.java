@@ -46,7 +46,7 @@ public class TaxDetail extends BaseModelTxn {
     private Taxgroup taxGroup;
 
     @Column(name = "is_active")
-    private boolean active;
+    private Boolean active;
     private String unionCode;
 
     @Override
