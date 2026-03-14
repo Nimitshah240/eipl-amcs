@@ -145,8 +145,8 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                     logoView.setFitWidth(100);
                     break;
                 case "BANAS_AMCS":
-                    imageUrl = imageUrl.concat("amulpng.png");
-                    logoView.setFitHeight(50);
+                    imageUrl = imageUrl.concat("banas-logo.png");
+                    logoView.setFitHeight(70);
                     logoView.setFitWidth(100);
                     break;
                 default:
