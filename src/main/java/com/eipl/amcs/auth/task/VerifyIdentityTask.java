@@ -28,9 +28,10 @@ public class VerifyIdentityTask extends Task<String> {
             LOGGER.info("Verifying client code : {}", clientCode);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = "http://amcsapp.emilkpro.in/webservice/eipl/v1/eipl-app/verify-identity";
-
+            LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
             FtpRequestPayload payload = new FtpRequestPayload(null, "", clientCode, "", "", "");
             ResponseEntity<RealTimeResponse> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(payload), RealTimeResponse.class);
+            LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
             if (response == null || response.getStatusCode() != HttpStatus.OK)
                 return null;
 
