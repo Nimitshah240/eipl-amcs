@@ -251,7 +251,14 @@
                                                             <Insets bottom="10.0" />
                                                          </GridPane.margin>
                                                       </HBox>
-                                                      <CheckBox fx:id="chkAcceptOtherMilk" mnemonicParsing="false" text="%acceptmilktype" GridPane.rowIndex="6" />
+                                                      <HBox spacing="15.0" GridPane.rowIndex="6">
+                                                         <children>
+                                                            <CheckBox fx:id="chkAcceptOtherMilk" mnemonicParsing="false" text="%acceptmilktype" />
+                                                            <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="13.0" />
+                                                            <Label text="%printslipfont" />
+                                                            <ComboBox fx:id="cboxFont" editable="true" />
+                                                         </children>
+                                                      </HBox>
                                                    </children>
                                                 </GridPane>
                                              </children>
