@@ -20,8 +20,12 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import lombok.extern.slf4j.Slf4j;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -29,8 +33,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+@Slf4j
 public class GeneralConfigController implements MyInitialization {
 
     File appProperty, old;
@@ -44,20 +50,22 @@ public class GeneralConfigController implements MyInitialization {
     @FXML
     private TextField txtLtrToKg, txtClrConst1, txtClrConst2, txtDefaultSnfValue, txtSampleSize, txtAvgPBasedOnPrevShift,
             txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs, txtCollectionSlip, txtDecimalValue,
-    txtVariationQty, txtVariationFat, txtVariationSnf, txtNo;
+            txtVariationQty, txtVariationFat, txtVariationSnf, txtNo;
     @FXML
     private ComboBox<String> cboxDefaultSnf, cboxWeightSetting, cboxQualitySetting, cboxMemberCollectionQtyMode,
             cboxBmcCollectionQtyMode, cboxLocalMilkSaleQtyMode, cboxDispatchMilkQtyMode, cboxReceiptMilkQtyMode, cboxPaymentMode,
             cboxPaymentOption, cboxQualityMachine;
-//    , cboxAvgBasedOn, cboxShift
+    //    , cboxAvgBasedOn, cboxShift
     @FXML
     private CheckBox chkAcceptOtherMilk, chkAllowMultiEntry, chkAllowMultiEntryDiffType, chkPurchaseRate,
-            chkSaleRate, chkPaymentMode, chkAvgParam, chkAllowZeroDispatch, chkBlockQty, chkBlockFat, chkBlockSnf,chkCodeMilkTypeParsing;
+            chkSaleRate, chkPaymentMode, chkAvgParam, chkAllowZeroDispatch, chkBlockQty, chkBlockFat, chkBlockSnf, chkCodeMilkTypeParsing;
     @FXML
     private Button btnSave, btnClose, btnSave1, btnClose1, btnSave2, btnClose2, btnBrowse, btnBackup;
     @FXML
     private ComboBox<String> cboxSlipLanguage, cboxApplicationLanguage;
     private ResourceBundle resourceBundle;
+    @FXML
+    private ComboBox<String> cboxFont;
 
     @Override
     public Node getRoot() {
@@ -71,6 +79,7 @@ public class GeneralConfigController implements MyInitialization {
         setValuesInComboBox();
         setupComboBox();
         setValuesInControls();
+        loadData();
         btnSave.setText("Next");
         btnSave1.setText("Next");
         btnSave.setOnAction(e -> {
@@ -138,6 +147,18 @@ public class GeneralConfigController implements MyInitialization {
         });
     }
 
+    @Override
+    public void loadData() {
+        try {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            List<String> fontNames = List.of(ge.getAvailableFontFamilyNames());
+            cboxFont.getItems().addAll(FXCollections.observableList(fontNames));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+    }
+
+
     private void setValuesInControls() {
         txtLtrToKg.setText(MainApp.getProperty("ltr.to.kg", "1.03"));
         txtClrConst1.setText(MainApp.getProperty("clr.const1", "0.21"));
@@ -166,7 +187,7 @@ public class GeneralConfigController implements MyInitialization {
         txtVariationFat.setText(MainApp.getProperty("variation.fat", "30.0"));
         txtVariationSnf.setText(MainApp.getProperty("variation.snf", "30.0"));
 
-     //   cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
+        //   cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
 
 //        cboxShift.setValue(MainApp.getProperty("shift.param", "All").equalsIgnoreCase("All") ? "All" : "Morning/Evening");
 //        cboxAvgBasedOn.setValue(
@@ -190,6 +211,7 @@ public class GeneralConfigController implements MyInitialization {
         txtCollectionSlip.setText(MainApp.getProperty("no.of.enters.collection.slip", "0"));
         chkCodeMilkTypeParsing.setSelected(MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1"));
         cboxSlipLanguage.getSelectionModel().select(MainApp.getProperty("slip.language", ""));
+        cboxFont.getSelectionModel().select(MainApp.getProperty("slip.font", "Nirmala UI"));
         cboxApplicationLanguage.getSelectionModel().select(MainApp.getProperty("application.language", "English"));
         try {
             cboxQualityMachine.getSelectionModel().select(arrQuality[Integer.parseInt(MainApp.getProperty("masetting", "")) - 1]);
@@ -270,13 +292,14 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode((chkCodeMilkTypeParsing.isSelected() ? "1" : "0").getBytes())));
 
         //lines.add("shift.param=" + new String(Base64.getEncoder().encode(
-             //   (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
+        //   (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
 
 //        lines.add("shift.param=" + new String(Base64.getEncoder().encode(
 //                (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
 //        lines.add("based.on.param=" + new String(Base64.getEncoder().encode(
 //                (cboxAvgBasedOn.getValue() != null ? cboxAvgBasedOn.getValue() : "").getBytes(StandardCharsets.UTF_8))));
         lines.add("variation.no.param=" + new String(Base64.getEncoder().encode(txtNo.getText().trim().getBytes())));
+        lines.add("slip.font=" + new String(Base64.getEncoder().encode(cboxFont.getSelectionModel().getSelectedItem().trim().getBytes())));
         return lines;
     }
 

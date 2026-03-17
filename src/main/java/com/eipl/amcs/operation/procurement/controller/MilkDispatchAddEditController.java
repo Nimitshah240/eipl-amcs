@@ -8,7 +8,6 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
@@ -23,9 +22,14 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.org.convertor.RouteConvertor;
-import com.eipl.amcs.master.org.model.*;
-import com.eipl.amcs.master.org.task.*;
+import com.eipl.amcs.master.org.model.Bmc;
+import com.eipl.amcs.master.org.model.Mcc;
+import com.eipl.amcs.master.org.model.Plant;
+import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.master.org.task.BmcLoadTask;
+import com.eipl.amcs.master.org.task.MccLoadTask;
+import com.eipl.amcs.master.org.task.PlantLoadTask;
+import com.eipl.amcs.master.org.task.UnionLoadTask;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchDto;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchSummaryDto;
@@ -73,7 +77,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     private GridPane gridMaster;
     @FXML
     private E_TextField txtChallanNo, txtVehicleNo, txtQuanity, txtFat, txtSnf, txtClr,
-            txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans, txtDipStickReadingClosing, txtDipStickReadingOpening;
+            txtWater, txtRtpl, txtAmount, txtChamberNo, txtCans, txtDipStickReadingClosing, txtDipStickReadingOpening, txtRouteNo;
     @FXML
     private TextField txtVehicleInTime, txtVehicleOutTime;
     @FXML
@@ -82,8 +86,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
     private ComboBox<String> cboxDispatchType;
-    @FXML
-    private ComboBox<Route> cboxRouteNo;
+    //    @FXML
+//    private ComboBox<Route> cboxRouteNo;
     @FXML
     private ComboBox<String> cboxDestinationType;
     @FXML
@@ -168,7 +172,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         setupCollectionTable();
         FocusUtils.requestFocus(cboxDispatchType);
         btnAdd.setDisable(true);
-        cboxRouteNo.getSelectionModel().select(0);
+        //cboxRouteNo.getSelectionModel().select(0);
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("save"))) {
@@ -332,7 +336,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dtoTxn.setAvgFat(milkDispatchSummaryDto.getFat().setScale(1, RoundingMode.DOWN));
             BigDecimal qty = milkDispatchSummaryDto.getMilkCollection().subtract(milkDispatchSummaryDto.getMilkSale());
 
-            if (qty.compareTo(BigDecimal.ZERO) <= 0){
+            if (qty.compareTo(BigDecimal.ZERO) <= 0) {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
                         resourceBundle.getString("milk.quantity.error"));
                 alert.createAlert();
@@ -513,22 +517,22 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         });
         new Thread(task2).start();
 
-        var task3 = new RouteLoadTask();
-        task3.setOnSucceeded(e -> {
-            try {
-                List<Route> list = task3.get();
-                if (list != null) {
-                    cboxRouteNo.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxRouteNo);
-                    if (dto != null) {
-                        cboxRouteNo.getSelectionModel().select(list.stream().filter(p -> p.getCode().equals(dto.getRouteNo())).findFirst().orElse(null));
-                    }
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task3).start();
+//        var task3 = new RouteLoadTask();
+//        task3.setOnSucceeded(e -> {
+//            try {
+//                List<Route> list = task3.get();
+//                if (list != null) {
+//                    cboxRouteNo.setItems(FXCollections.observableList(list));
+//                    new AutoCompleteComboBoxListener<>(cboxRouteNo);
+//                    if (dto != null) {
+//                        cboxRouteNo.getSelectionModel().select(list.stream().filter(p -> p.getCode().equals(dto.getRouteNo())).findFirst().orElse(null));
+//                    }
+//                }
+//            } catch (InterruptedException | ExecutionException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        new Thread(task3).start();
     }
 
     @Override
@@ -537,7 +541,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         cboxMilkQuality.setConverter(new MilkQualityConvertor(cboxMilkQuality));
         cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
         cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxRouteNo.setConverter(new RouteConvertor(cboxRouteNo));
+        //cboxRouteNo.setConverter(new RouteConvertor(cboxRouteNo));
         dpChallanDate.setConverter(new LocalDateConvertor());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -608,7 +612,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dto.setDestinationCode("1");
             dto.setDispatchType(cboxDispatchType.getSelectionModel().getSelectedIndex());
             dto.setDestinationType(0);
-            dto.setRouteNo(cboxRouteNo.getValue().getCode());
+            dto.setRouteNo(txtRouteNo.getText().trim());
             dto.setFromDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             dto.setToDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()));
             dto.setFromShift(cboxFromShift.getValue());
@@ -669,7 +673,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
                     params.put("p_challan_no", dto.getChallanNo());
                     params.put("p_locale", MainApp.locale);
-                    JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_TWO, params);
+                    JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_THREE, params);
                     JasperViewer.viewReport(print, false);
                     MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/MilkDispatch.fxml")));
 
@@ -775,9 +779,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         if (txtChallanNo.getText().trim().isEmpty()) {
             errorMsg.append(resourceBundle.getString("challannullerror") + "\n");
         }
-        if (cboxRouteNo.getSelectionModel().getSelectedItem() == null) {
-            errorMsg.append(resourceBundle.getString("routeerror") + "\n");
-        }
+//        if (txtRouteNo.getText().trim().isEmpty()) {
+//            errorMsg.append(resourceBundle.getString("routeerror") + "\n");
+//        }
         return errorMsg.length() == 0;
     }
 
@@ -827,9 +831,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
 //                errorMsg.append(resourceBundle.getString("validouttime") + "\n");
 //            }
 //        }
-        if (cboxRouteNo.getSelectionModel().getSelectedItem() == null) {
-            errorMsg.append(resourceBundle.getString("routeerror") + "\n");
-        }
+//        if (txtRouteNo.getText().trim().isEmpty()) {
+//            errorMsg.append(resourceBundle.getString("routeerror") + "\n");
+//        }
 
         return errorMsg.length() == 0;
     }
@@ -1107,6 +1111,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             txtVehicleOutTime.setText(dto.getVehicleOutTime().toString());
         if (this.listMilkDispatch != null)
             tableMilkDispatch.setItems(listMilkDispatch);
+        if (dto.getRouteNo() != null)
+            txtRouteNo.setText(dto.getRouteNo());
 
     }
 

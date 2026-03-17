@@ -19,7 +19,7 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public List<Route> findAll() {
-        List<Route> list = routeRepository.findAll(Sort.by("name"));
+        List<Route> list = routeRepository.findAll(Sort.by("code"));
         log.info("Routes findAll {} items fetched", list.size());
         return list;
     }

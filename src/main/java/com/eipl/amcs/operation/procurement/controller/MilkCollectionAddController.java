@@ -113,9 +113,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_NumericField txtSampleNo, txtCode, txtQty, txtFat, txtSnf1, txtFat1, txtSnf2, txtFat2, txtSnf3, txtFat3, txtSnf4, txtFat4, txtSnf, txtClr, txtWater, txtRate, txtAmount;
     @FXML
-    private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting,btnShiftReport;
+    private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting, btnShiftReport;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate,lblManual ,lblLocalTime,lblEdited;
+    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate, lblManual, lblLocalTime, lblEdited;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -469,7 +469,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         dpDate.setValue(LocalDate.now());
         FocusUtils.requestFocus(btnStart);
 
-        cboxShortCut.getItems().addAll("ShortCut List","M → MilkType" ,"Space → Weight Lock" ,"ESC → Exit" ,"F3 → Add Member" ,"F4 → Delete" ,"F5 / F6 → Refresh" ,"F7 / S → Setting" ,"F8 → Local Milk Sale" ,"F9 → Print" ,"F10 / P → Reprint" ,"F11 / T → Tare" ,"C → Farmer Code" ,"D → Milk Dispatch" ,"E → Edit");
+        cboxShortCut.getItems().addAll("ShortCut List", "M → MilkType", "Space → Weight Lock", "ESC → Exit", "F3 → Add Member", "F4 → Delete", "F5 / F6 → Refresh", "F7 / S → Setting", "F8 → Local Milk Sale", "F9 → Print", "F10 / P → Reprint", "F11 / T → Tare", "C → Farmer Code", "D → Milk Dispatch", "E → Edit");
         cboxShortCut.getSelectionModel().select(0);
 
         doubleDock = !MainApp.identityDto.getDock().getDockNo().substring(MainApp.identityDto.getSociety().getCode().length()).equals("01");
@@ -581,7 +581,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 if (MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1")) {
                     String code = txtCode.getText();
 //                    if (code != null && !code.isEmpty()) {
-                    if (code != null && code.length()>1) {
+                    if (code != null && code.length() > 1) {
                         String lastDigit = code.substring(code.length() - 1);
                         if (CommonUtils.isNumeric(lastDigit)) {
                             int typeCode = Integer.parseInt(lastDigit);
@@ -742,12 +742,14 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         }
         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml")));
     }
+
     private void openLocalMilkSale() {
         if (MainApp.contentPane.getLeft() == null) {
             MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
         }
         MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
     }
+
     private void openMilkDispatch() {
         if (MainApp.contentPane.getLeft() == null) {
             MainApp.getContentPane().setLeft(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/Navbar.fxml")));
@@ -776,7 +778,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             List<MilkCollection> filteredList = listCollection.stream()
                     .filter(p -> p.getMilkType().getCode().equals(currentMilkCode))
                     .filter(p -> p.getShift().getName().equalsIgnoreCase(currentShiftName))
-                   // .filter(p -> p.getSocietyPaymentCycle().getSociety().equals(cur))
+                    // .filter(p -> p.getSocietyPaymentCycle().getSociety().equals(cur))
                     .sorted((c1, c2) -> c2.getCollectionDate().compareTo(c1.getCollectionDate()))
                     .collect(Collectors.toList());
 
@@ -920,7 +922,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private boolean isQtyVariationValid() {
         String variationProp = MainApp.getProperty("variation.qty", "20");
         double variationLimit = Double.parseDouble(variationProp);
-        if (variationLimit> 0
+        if (variationLimit > 0
                 && !lblAvgQty.getText().trim().isEmpty()
                 && Double.parseDouble(lblAvgQty.getText().trim()) > 0) {
 
@@ -1247,7 +1249,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     private MilkCollectionSaveTask getMilkCollectionSaveTask() {
-        var task = new MilkCollectionSaveTask(collection, (short) 0,doubleDock);
+        var task = new MilkCollectionSaveTask(collection, (short) 0, doubleDock);
         task.setOnSucceeded(e -> {
             try {
                 Object obj = task.get();
@@ -1491,14 +1493,14 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         return errorMsg.length() == 0;
     }
 
-//    private void fetchMemberSocietyDetails() {
-private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
-    if (txtCode.getText().isEmpty()) return;
+    //    private void fetchMemberSocietyDetails() {
+    private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
+        if (txtCode.getText().isEmpty()) return;
         String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
         LOGGER.info("Fetch member info for {}", code);
 
         var task = new MemberSocietyInfoLoadTask(code, collectionDate);
-       // task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
+        // task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
         task.setCount(CommonUtils.strToInteger(MainApp.getProperty("variation.no.param", "5")));
         task.setPaymentCycleCode(collectionPreReqDto.getPaymentCycle().getCode());
         task.setOnSucceeded(e -> {
@@ -1571,7 +1573,7 @@ private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
         LOGGER.info("Fetch member info for {}", code);
 
         var task = new MemberSocietyInfoLoadTask(code, collectionDate);
-      //  task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
+        //  task.setCount(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.AVG_PARAM_PREV_SHIFTS, "5")));
         task.setCount(CommonUtils.strToInteger(MainApp.getProperty("variation.no.param", "5")));
         task.setPaymentCycleCode(collectionPreReqDto.getPaymentCycle().getCode());
         task.setOnSucceeded(e -> {
@@ -1626,7 +1628,7 @@ private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
                     String printer = getPrinterName(collectionPreReqDto.getHardwareConfigList());
                     if (printer != null && !printer.isEmpty()) {
                         if (printerHelper == null)
-                            printerHelper = new PrinterHelper(printer, "Arial Unicode MS", 11);
+                            printerHelper = new PrinterHelper(printer, MainApp.getProperty("slip.font", "Nirmala UI"), 11);
                     }
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -1667,19 +1669,21 @@ private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
         if (cboxShift.getSelectionModel().getSelectedIndex() == 0) {
             LocalTime mTime = MainApp.timingList.get(0).getMstime();
             lblLocalTime.setText(mTime.format(dTF1));
-        }else {
+        } else {
             LocalTime eTime = MainApp.timingList.get(0).getEstime();
             lblLocalTime.setText(eTime.format(dTF1));
         }
         updateManualCountLabel();
         EditableCountLabel();
     }
+
     private void updateManualCountLabel() {
         long count = listCollection.stream()
                 .filter(item -> !item.isQualityAuto() && !item.isWeightAuto())
                 .count();
         lblManual.setText(String.valueOf(count));
     }
+
     private void EditableCountLabel() {
         long editedCount = listCollection.stream()
                 .filter(item -> item.getUpdatedBy() != null && item.getUpdatedBy().equals(MainApp.identityDto.getSociety().getCode()))
@@ -2036,7 +2040,8 @@ private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
         });
         new Thread(task2).start();
     }
-// DpuIncentive Load Data comment
+
+    // DpuIncentive Load Data comment
     public void loadRequestData() {
 //        if (MainApp.timingList != null && !MainApp.timingList.isEmpty()) {
 //            if (MainApp.locale.equalsIgnoreCase("en")) {
