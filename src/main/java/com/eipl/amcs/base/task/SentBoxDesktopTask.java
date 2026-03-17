@@ -41,14 +41,17 @@ public class SentBoxDesktopTask extends Task<Map<String, Object>> {
             SubscribedRepository subscribedRepository = EmcsAppContext.getContext().getBean(SubscribedRepository.class);
             RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
             String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.SENT_BOX_DESKTOP_COUNT;
-
+            LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
             IdentityPayload payload = new IdentityPayload();
             RealTimeRequest<IdentityPayload> requestPayload = new RealTimeRequest<>(societyCode, MainApp.identityDto.getIdentity().getToken(), payload);
             requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
             ResponseEntity<RealTimeResponse> response = null;
             try {
                 response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayload), RealTimeResponse.class);
+                LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
             } catch (Exception e) {
+                LOGGER.error("API RPROCESSN , RESPONSE OF : {}", url);
+
                 LOGGER.error(e.toString());
             }
             if (response == null || (response != null && response.getStatusCode() != HttpStatus.OK))

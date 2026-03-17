@@ -74,7 +74,7 @@ public class RouteController implements MyInitialization {
             colRefCode.setCellFactory(TextFieldTableCell.forTableColumn());
             colRefCode.setOnEditCommit(e -> {
                 Route r = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase("")) {
+                if (e.getNewValue() != null) {
                     r.setRefCode(e.getNewValue());
                 }
             });

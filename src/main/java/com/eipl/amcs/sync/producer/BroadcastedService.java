@@ -204,7 +204,10 @@ public class BroadcastedService {
             if (list == null || list.isEmpty())
                 return;
             LOGGER.info("SENDING BROADCAST COUNT : {}", list.size());
-            producer.produce(list);
+            for (List<Broadcasted> part : ListUtils.partition(list, 10)) {
+                LOGGER.info("SENDING BROADCAST IN BATCHES : {}", part.size());
+                producer.produce(part);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

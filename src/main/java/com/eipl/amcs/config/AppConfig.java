@@ -5,7 +5,6 @@ import com.eipl.amcs.network.LoggingRequestInterceptor;
 import com.eipl.amcs.network.SystemParamInterceptor;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.AppConstant;
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +13,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = {"com.eipl.amcs"})
@@ -38,14 +31,23 @@ public class AppConfig {
     @Bean
     public RestTemplate restTemplate() {
         if ("1".equalsIgnoreCase(MainApp.getProperty(AppConstant.Props.APP_REQUEST_DEBUG, "0"))) {
-            RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
+
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(5000);
+            factory.setReadTimeout(15000);
+            RestTemplate restTemplate = new RestTemplate(
+                    new BufferingClientHttpRequestFactory(factory)
+            );
             List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
             interceptors.add(new SystemParamInterceptor());
             interceptors.add(new LoggingRequestInterceptor());
             restTemplate.setInterceptors(interceptors);
             return restTemplate;
         } else {
-            RestTemplate restTemplate = new RestTemplate();
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(5000);
+            factory.setReadTimeout(15000);
+            RestTemplate restTemplate = new RestTemplate(factory);
             List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
             interceptors.add(new SystemParamInterceptor());
             restTemplate.setInterceptors(interceptors);
