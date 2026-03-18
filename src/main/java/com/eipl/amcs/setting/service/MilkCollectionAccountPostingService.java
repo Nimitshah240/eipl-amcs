@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface MilkCollectionAccountPostingService {
 
-    MilkCollectionAccountPosting save(
-            MilkCollectionAccountPosting milkCollectionAccountPosting,
-            List<MilkCollectionAccountPostingDto>
-                    creditMilkCollectionAccountPostingDto, List<MilkCollectionAccountPostingDto>
-                    debitMilkCollectionAccountPostingDto);
+    MilkCollectionAccountPosting save(MilkCollectionAccountPosting milkCollectionAccountPosting, List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList);
 }

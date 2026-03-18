@@ -12,5 +12,5 @@ public interface LedgerMappingEventService {
 
     Optional<LedgerMappingEvent> findById(String ledgerTypeNo);
 
-    LedgerMappingEvent findMilkCollectionLedgerMappingEvent();
+    LedgerMappingEvent findLedgerMappingEventByEventName(String eventName);
 }

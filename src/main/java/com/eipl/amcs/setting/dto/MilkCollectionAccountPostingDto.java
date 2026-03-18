@@ -16,4 +16,5 @@ public class MilkCollectionAccountPostingDto {
     private BigDecimal amount;
     private String narration;
     private LocalDate date;
+    private boolean credit_debit; // true - credit, false - debit
 }

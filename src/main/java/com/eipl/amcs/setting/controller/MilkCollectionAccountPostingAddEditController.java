@@ -38,6 +38,8 @@ public class MilkCollectionAccountPostingAddEditController implements MyInitiali
     @FXML
     TableColumn<MilkCollectionAccountPostingDto, LocalDate> colDate, colDate1;
     @FXML
+    TableColumn<MilkCollectionAccountPostingDto, Boolean> colCreditDebit1, colCreditDebit;
+    @FXML
     DatePicker dpFromDate, dpToDate;
     @FXML
     ComboBox<Shift> cboxToShift, cboxFromShift;
@@ -50,6 +52,7 @@ public class MilkCollectionAccountPostingAddEditController implements MyInitiali
 
 
     List<MilkCollectionAccountPostingDto> creditMilkCollectionAccountPostingDtoList = new ArrayList<>();
+    List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList = new ArrayList<>();
     List<MilkCollectionAccountPostingDto> debitMilkCollectionAccountPostingDtoList = new ArrayList<>();
     MilkCollectionAccountPosting milkCollectionAccountPosting = null;
 
@@ -67,7 +70,6 @@ public class MilkCollectionAccountPostingAddEditController implements MyInitiali
         this.resourceBundle = resourceBundle;
         loadData();
         setupTable();
-
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/MilkCollectionAccountPosting.fxml")));
         });
@@ -90,12 +92,14 @@ public class MilkCollectionAccountPostingAddEditController implements MyInitiali
         colAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
         colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDate()));
         colDate1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDate()));
-        colLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerMappingEvent().getCreditLedger().toString()));
-        colLedger1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerMappingEvent().getDebitLedger().toString()));
+        colLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerMappingEvent() != null ? data.getValue().getLedgerMappingEvent().getCreditLedger().toString() : null));
+        colLedger1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerMappingEvent() != null ? data.getValue().getLedgerMappingEvent().getDebitLedger().toString() : null));
+        colCreditDebit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().isCredit_debit()));
+        colCreditDebit1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().isCredit_debit()));
     }
 
     public void saveData() {
-        var task = new MilkCollectionAccountPostingSaveTask(milkCollectionAccountPosting, creditMilkCollectionAccountPostingDtoList, debitMilkCollectionAccountPostingDtoList);
+        var task = new MilkCollectionAccountPostingSaveTask(milkCollectionAccountPosting, milkCollectionAccountPostingDtoList);
         task.setOnSucceeded(e -> {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("milkcollectionaccountposting"),
                     resourceBundle.getString("milk.collection.account.posting.saved"));
@@ -154,10 +158,8 @@ public class MilkCollectionAccountPostingAddEditController implements MyInitiali
         milkCollectionAccountPosting.setFromShift(cboxFromShift.getSelectionModel().getSelectedItem().getCode());
         milkCollectionAccountPosting.setToShift(cboxToShift.getSelectionModel().getSelectedItem().getCode());
         milkCollectionAccountPosting.setPostingType(cboxPostingType.getSelectionModel().getSelectedIndex() + 1);
-        creditMilkCollectionAccountPostingDtoList.clear();
-        debitMilkCollectionAccountPostingDtoList.clear();
-        creditMilkCollectionAccountPostingDtoList.addAll(new ArrayList<>(tableCredit.getItems()));
-        debitMilkCollectionAccountPostingDtoList.addAll(new ArrayList<>(tableDebit.getItems()));
+        milkCollectionAccountPostingDtoList.clear();
+        milkCollectionAccountPostingDtoList.addAll(new ArrayList<>(tableCredit.getItems()));
     }
 
     private void loadShift() {
