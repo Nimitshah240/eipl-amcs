@@ -55,20 +55,22 @@
                         <E_ComboBox fx:id="cboxSaleLedger" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                         <E_ComboBox fx:id="cboxStockLedger" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
 
-                        <CheckBox fx:id="chkIsMilk" alignment="CENTER" mnemonicParsing="false" text="%ismilk" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <CheckBox fx:id="chkIsMilk" alignment="CENTER" mnemonicParsing="false" text="%ismilk" GridPane.columnIndex="0" GridPane.rowIndex="7">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </CheckBox>
                   <Label text="%otherstatetaxcode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <E_ComboBox fx:id="cboxMilkType" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                  <Label text="%milktype" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <E_ComboBox fx:id="cboxLocalSaleLedger" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                  <E_ComboBox fx:id="cboxMilkType" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label text="%milktype" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <E_ComboBox fx:id="cboxLocalSaleLedger" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                   <Label text="%purchaseledger" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Label text="%saleledger" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                   <Label text="%stockledger" GridPane.rowIndex="4" />
-                  <Label text="%localsaleledger" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <Label text="%localsaleledger" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <E_TextField fx:id="txtReferenceCode" disable="true" editable="false" maxWidth="1.7976931348623157E308" promptText="Ref Code" GridPane.rowIndex="1" />
+                        <Label text="%couponledger" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
+                        <E_ComboBox fx:id="cboxCouponLedger" disable="true" layoutX="10.0" layoutY="143.0" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" GridPane.columnIndex="3" />
                     </children>
                 </GridPane>
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15">

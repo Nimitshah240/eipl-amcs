@@ -56,7 +56,7 @@ public class ProductAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<MilkType> cboxMilkType;
     @FXML
-    private E_ComboBox<Ledger> cboxPurchaseLedger, cboxSaleLedger, cboxStockLedger, cboxLocalSaleLedger;
+    private E_ComboBox<Ledger> cboxPurchaseLedger, cboxSaleLedger, cboxStockLedger, cboxLocalSaleLedger, cboxCouponLedger;
     @FXML
     private CheckBox chkIsMilk;
 
@@ -116,9 +116,11 @@ public class ProductAddEditController implements MyInitialization {
         chkIsMilk.selectedProperty().addListener((obs, oldVal, newVal) -> {
             cboxMilkType.setDisable(!newVal);
             cboxLocalSaleLedger.setDisable(!newVal);
+            cboxCouponLedger.setDisable(!newVal);
             if (!newVal){
                 cboxMilkType.getSelectionModel().select(null);
                 cboxLocalSaleLedger.getSelectionModel().select(null);
+                cboxCouponLedger.getSelectionModel().select(null);
             }
         });
 
@@ -137,6 +139,7 @@ public class ProductAddEditController implements MyInitialization {
         cboxStockLedger.getSelectionModel().select(dto.getStockLedger());
         cboxMilkType.getSelectionModel().select(dto.getMilkType());
         cboxLocalSaleLedger.getSelectionModel().select(dto.getLocalSaleLedger());
+        cboxCouponLedger.getSelectionModel().select(dto.getCouponLedger());
         chkIsMilk.setSelected(dto.isMilk());
     }
 
@@ -199,6 +202,7 @@ public class ProductAddEditController implements MyInitialization {
         dto.setPurchaseLedger(cboxPurchaseLedger.getSelectionModel().getSelectedItem());
         dto.setSaleLedger(cboxSaleLedger.getSelectionModel().getSelectedItem());
         dto.setLocalSaleLedger(cboxLocalSaleLedger.getSelectionModel().getSelectedItem());
+        dto.setCouponLedger(cboxCouponLedger.getSelectionModel().getSelectedItem());
         dto.setStockLedger(cboxStockLedger.getSelectionModel().getSelectedItem());
         dto.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
         dto.setMilk(chkIsMilk.isSelected());
@@ -217,8 +221,8 @@ public class ProductAddEditController implements MyInitialization {
             errorMsg.append(resourceBundle.getString("referencecodenullerror") + "\n");
         if (txtName.getText() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("productnamenullerror") + "\n");
-        if (txtLocalName.getText() == null || txtLocalName.getText().trim().isEmpty())
-            errorMsg.append(resourceBundle.getString("productlocalnamenullerror") + "\n");
+//        if (txtLocalName.getText() == null || txtLocalName.getText().trim().isEmpty())
+//            errorMsg.append(resourceBundle.getString("productlocalnamenullerror") + "\n");
 
         if (cboxOtherTax.getValue() == null) errorMsg.append(resourceBundle.getString("othertaxnullerror") + "\n");
         if (cboxPurchaseLedger.getValue() == null) errorMsg.append(resourceBundle.getString("purhcaseledgernullerror") + "\n");
@@ -227,6 +231,7 @@ public class ProductAddEditController implements MyInitialization {
         if (chkIsMilk.isSelected()) {
             if (cboxMilkType.getValue() == null) errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
             if (cboxLocalSaleLedger.getValue() == null) errorMsg.append(resourceBundle.getString("localsaleledgernullerror") + "\n");
+            if (cboxCouponLedger.getValue() == null) errorMsg.append(resourceBundle.getString("couponledgernullerror") + "\n");
         }
         return errorMsg.length() == 0;
     }
@@ -359,12 +364,11 @@ public class ProductAddEditController implements MyInitialization {
             try {
                 List<Ledger> list = task.get();
                 if (list != null) {
-                    Map<String, List<Ledger>> grouped = list.stream().filter(l -> l.getLedgerGroup() != null && l.getLedgerGroup().getLedgerType() != null && l.getLedgerGroup().getLedgerType().getName() != null).collect(Collectors.groupingBy(l -> l.getLedgerGroup().getLedgerType().getName().toLowerCase()));
-
-                    cboxPurchaseLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("purchase", List.of())));
-                    cboxStockLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("asset", List.of())));
-                    cboxSaleLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("sale", List.of())));
-                    cboxLocalSaleLedger.setItems(FXCollections.observableArrayList(grouped.getOrDefault("sale", List.of())));
+                    cboxPurchaseLedger.setItems(FXCollections.observableArrayList(list));
+                    cboxStockLedger.setItems(FXCollections.observableArrayList(list));
+                    cboxSaleLedger.setItems(FXCollections.observableArrayList(list));
+                    cboxLocalSaleLedger.setItems(FXCollections.observableArrayList(list));
+                    cboxCouponLedger.setItems(FXCollections.observableArrayList(list));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
