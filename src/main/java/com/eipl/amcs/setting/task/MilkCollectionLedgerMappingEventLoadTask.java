@@ -35,7 +35,6 @@ public class MilkCollectionLedgerMappingEventLoadTask extends Task<List<MilkColl
 
             LedgerMappingEventService ledgerMappingEventService = EmcsAppContext.getContext().getBean(LedgerMappingEventService.class);
             MilkCollectionService milkCollectionService = EmcsAppContext.getContext().getBean(MilkCollectionService.class);
-            LedgerMappingEvent ledgerMappingEvent = ledgerMappingEventService.findMilkCollectionLedgerMappingEvent();
             List<MilkCollection> milkCollectionList = milkCollectionService.findAllBetween(fromDateTime, toDateTime);
 
             List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList = new ArrayList<>();
@@ -46,7 +45,6 @@ public class MilkCollectionLedgerMappingEventLoadTask extends Task<List<MilkColl
                 milkCollectionAccountPostingDto = new MilkCollectionAccountPostingDto();
 
                 milkCollectionAccountPostingDto.setDate(LocalDate.now());
-                milkCollectionAccountPostingDto.setLedgerMappingEvent(ledgerMappingEvent);
                 milkCollectionAccountPostingDto.setAmount(milkCollectionList.stream()
                         .map(MilkCollection::getAmount)
                         .filter(Objects::nonNull)
@@ -66,7 +64,7 @@ public class MilkCollectionLedgerMappingEventLoadTask extends Task<List<MilkColl
                 for (LocalDate date : dailyTotals.keySet()) {
                     milkCollectionAccountPostingDto = new MilkCollectionAccountPostingDto();
                     milkCollectionAccountPostingDto.setDate(date);
-                    milkCollectionAccountPostingDto.setLedgerMappingEvent(ledgerMappingEvent);
+//                    milkCollectionAccountPostingDto.setLedgerMappingEvent(ledgerMappingEvent);
                     milkCollectionAccountPostingDto.setAmount(dailyTotals.get(date));
                     milkCollectionAccountPostingDtoList.add(milkCollectionAccountPostingDto);
                 }

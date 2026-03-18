@@ -200,7 +200,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(productSaleDto.getProductSale().getPaymentMode() == (short) 1 ? AppConstant.EventCode.PRODUCT_SALE_CASH : AppConstant.EventCode.PRODUCT_SALE_CREDIT);
             if (eventsList == null || eventsList.isEmpty()) return null;
 
-            if (eventsList.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
+//            if (eventsList.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
 
 
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(productSaleDto.getProductSale().getInvoiceDate());

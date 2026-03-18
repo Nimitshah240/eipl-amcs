@@ -3,17 +3,16 @@ package com.eipl.amcs.setting.service;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.*;
-import com.eipl.amcs.master.account.repository.SubLedgerRepository;
-import com.eipl.amcs.master.account.repository.VoucherRepository;
-import com.eipl.amcs.master.account.repository.VoucherSubLedgerRepository;
-import com.eipl.amcs.master.account.repository.VoucherTransactionRepository;
+import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.global.repository.ShiftRepository;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.service.MilkCollectionService;
 import com.eipl.amcs.setting.dto.MilkCollectionAccountPostingDto;
 import com.eipl.amcs.setting.model.MilkCollectionAccountPosting;
 import com.eipl.amcs.setting.repository.MilkCollectionAccountPostingRepository;
+import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.VoucherUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,19 +44,18 @@ public class MilkCollectionAccountPostingServiceImpl implements MilkCollectionAc
     private SubLedgerRepository subLedgerRepository;
     @Autowired
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private LedgerMappingEventRepository ledgerMappingEventRepository;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MilkCollectionAccountPosting save(MilkCollectionAccountPosting milkCollectionAccountPosting, List<MilkCollectionAccountPostingDto> creditMilkCollectionAccountPostingDto, List<MilkCollectionAccountPostingDto> debitMilkCollectionAccountPostingDto) {
+    public MilkCollectionAccountPosting save(MilkCollectionAccountPosting milkCollectionAccountPosting, List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList) {
 
         try {
-            LedgerMappingEvent ledgerMappingEvent = debitMilkCollectionAccountPostingDto.get(0).getLedgerMappingEvent();
             validate(milkCollectionAccountPosting);
-            List<Voucher> voucherList = createVoucher(ledgerMappingEvent, creditMilkCollectionAccountPostingDto, milkCollectionAccountPosting);
-            List<VoucherTransaction> voucherTransactionList = createVoucherTransaction(voucherList, creditMilkCollectionAccountPostingDto, debitMilkCollectionAccountPostingDto);
-            List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList = ledgerMappingEvent.getCreditSubLedger() ? creditMilkCollectionAccountPostingDto : debitMilkCollectionAccountPostingDto;
-            createVoucherSubLedger(ledgerMappingEvent, milkCollectionAccountPosting, voucherTransactionList, milkCollectionAccountPostingDtoList, voucherList);
-            createMilkCollectionAccountPosting(milkCollectionAccountPosting);
+            createAccountPosting(milkCollectionAccountPosting, milkCollectionAccountPostingDtoList);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new RuntimeException(e);
@@ -70,6 +68,7 @@ public class MilkCollectionAccountPostingServiceImpl implements MilkCollectionAc
             throw new RuntimeException("posting.already.exists");
     }
 
+    @Deprecated
     private List<Voucher> createVoucher(LedgerMappingEvent ledgerMappingEvent, List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList, MilkCollectionAccountPosting milkCollectionAccountPosting) {
         try {
             String code = MainApp.identityDto.getSociety().getCode() + "/" + MainApp.getFinancialYear().getCode() + "/";
@@ -99,6 +98,7 @@ public class MilkCollectionAccountPostingServiceImpl implements MilkCollectionAc
         }
     }
 
+    @Deprecated
     private List<VoucherTransaction> createVoucherTransaction(List<Voucher> voucherList, List<MilkCollectionAccountPostingDto> creditMilkCollectionAccountPostingDto, List<MilkCollectionAccountPostingDto> debitMilkCollectionAccountPostingDto) {
         try {
             List<VoucherTransaction> voucherTransactionList = new ArrayList<>();
@@ -138,6 +138,7 @@ public class MilkCollectionAccountPostingServiceImpl implements MilkCollectionAc
         }
     }
 
+    @Deprecated
     private void createVoucherSubLedger(LedgerMappingEvent ledgerMappingEvent, MilkCollectionAccountPosting milkCollectionAccountPosting, List<VoucherTransaction> voucherTransactionList, List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList, List<Voucher> voucherList) {
         try {
             boolean isCreditSubLedger = ledgerMappingEvent.getCreditSubLedger();
@@ -212,8 +213,118 @@ public class MilkCollectionAccountPostingServiceImpl implements MilkCollectionAc
         }
     }
 
+    @Deprecated
     private void createMilkCollectionAccountPosting(MilkCollectionAccountPosting milkCollectionAccountPosting) {
         try {
+            milkCollectionAccountPosting.setCode(Long.valueOf(nextCodeService.getNextCode("MilkCollectionAccountPosting", "code", MainApp.identityDto.getSociety().getCode(), 0)));
+            milkCollectionAccountPostingRepository.customSave(milkCollectionAccountPosting, CommonUtils.setIdentityHeader());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private void createAccountPosting(MilkCollectionAccountPosting milkCollectionAccountPosting,
+                                      List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList) {
+        try {
+            validate(milkCollectionAccountPosting);
+
+            List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(AppConstant.EventCode.MILK_COLLECTION);
+            if (eventsList == null || eventsList.isEmpty())
+                return;
+
+            for (MilkCollectionAccountPostingDto milkCollectionAccountPostingDto : milkCollectionAccountPostingDtoList) {
+
+                Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(milkCollectionAccountPostingDto.getDate());
+
+
+//                VOUCHER -------------
+                String voucherCode = nextCodeService.getNextCode("Voucher", "code",
+                        MainApp.identityDto.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 0);
+                if (voucherCode == null)
+                    continue;
+
+                Voucher voucher = VoucherUtil.getVoucherInstance(voucherCode, "", milkCollectionAccountPostingDto.getDate(),
+                        milkCollectionAccountPosting.getToDate(), "Milk Collection Manual Posting " + milkCollectionAccountPostingDto.getDate(),
+                        eventsList.get(0).getVoucherType(), financialYear.orElse(null).getCode(),
+                        MainApp.identityDto.getSociety(), MainApp.identityDto.getUnion().getCode(), MainApp.identityDto.getSociety().getCode() + "01");
+                voucher.setAutoPosted(false);
+                voucher.setVoucherTransactions(new ArrayList<>());
+
+//              VOUCHER TRANSACTION ----------
+                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, milkCollectionAccountPostingDto.getAmount(), true, eventsList.get(0).getCreditLedger(),
+                        "Milk Collection Credit " + milkCollectionAccountPostingDto.getAmount(), "1");
+                voucher.getVoucherTransactions().add(creditTxn);
+                creditTxn.setVoucherSubLedgers(new ArrayList<>());
+
+                VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, milkCollectionAccountPostingDto.getAmount(), false, eventsList.get(0).getDebitLedger(),
+                        "Milk Collection Debit " + milkCollectionAccountPostingDto.getAmount(), "2");
+                voucher.getVoucherTransactions().add(debitTxn);
+                debitTxn.setVoucherSubLedgers(new ArrayList<>());
+
+
+//              VOUCHER SUB LEDGER ----------
+                List<MilkCollection> milkCollectionList = new ArrayList<>();
+
+                if (milkCollectionAccountPosting.getPostingType() == 1) { // consolidate
+                    milkCollectionList = milkCollectionService.findAllBetween(CommonUtils.getLocalDateTimeFromDateAndShift(milkCollectionAccountPosting.getFromDate(), shiftRepository.findById(milkCollectionAccountPosting.getFromShift()).get()), CommonUtils.getLocalDateTimeFromDateAndShift(milkCollectionAccountPosting.getToDate(), shiftRepository.findById(milkCollectionAccountPosting.getToShift()).get()));
+                } else { // day wise
+                    milkCollectionList = milkCollectionService.findAllBetween(CommonUtils.getLocalDateTimeFromDateAndShift(milkCollectionAccountPostingDto.getDate(), shiftRepository.findById(1).get()), CommonUtils.getLocalDateTimeFromDateAndShift(milkCollectionAccountPostingDto.getDate(), shiftRepository.findById(2).get())); // Whole day collection
+                }
+
+                Set<String> memberCodes = milkCollectionList.stream()
+                        .map(m -> m.getMember().getCode())
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet());
+
+                List<SubLedger> subLedgerList = subLedgerRepository.findAllByTypeAndReferenceCodeIn((short) 1, new ArrayList<>(memberCodes));
+
+                long voucherSubLedgerCode = Long.valueOf(nextCodeService.getNextCode("VoucherSubLedger", "code", MainApp.identityDto.getSociety().getCode(), 0));
+
+                Map<String, BigDecimal> memberPeriodTotals = milkCollectionList.stream()
+                        .collect(Collectors.groupingBy(
+                                m -> m.getMember().getCode(),
+                                Collectors.reducing(
+                                        BigDecimal.ZERO,
+                                        MilkCollection::getAmount,
+                                        BigDecimal::add
+                                )
+                        ));
+
+                for (String memberCode : memberCodes) {
+                    VoucherSubLedger voucherSubLedger = new VoucherSubLedger();
+                    voucherSubLedger.setCode(String.valueOf(voucherSubLedgerCode));
+                    voucherSubLedger.setVoucher(voucher);
+                    voucherSubLedger.setCreditDebit(eventsList.get(0).getCreditSubLedger());
+                    voucherSubLedger.setVoucherTransaction(eventsList.get(0).getCreditSubLedger() ? creditTxn : debitTxn);
+
+                    voucherSubLedger.setSubLedger(subLedgerList.stream().filter(sb -> sb.getReferenceCode().equals(memberCode))
+                            .findFirst()
+                            .orElse(null));
+                    voucherSubLedger.setAmount(memberPeriodTotals.get(memberCode));
+
+                    if (eventsList.get(0).getCreditSubLedger()) {
+                        creditTxn.getVoucherSubLedgers().add(voucherSubLedger);
+                    } else {
+                        debitTxn.getVoucherSubLedgers().add(voucherSubLedger);
+                    }
+
+                    voucherSubLedgerCode++;
+                }
+
+
+                voucherRepository.customSave(voucher, CommonUtils.setIdentityHeader());
+                if (!voucher.getVoucherTransactions().isEmpty()) {
+                    for (VoucherTransaction voucherTransaction : voucher.getVoucherTransactions()) {
+                        voucherTransactionRepository.customSave(voucherTransaction, CommonUtils.setIdentityHeader());
+                        if (voucherTransaction.getVoucherSubLedgers() != null && !voucherTransaction.getVoucherSubLedgers().isEmpty()) {
+                            for (VoucherSubLedger voucherSubLedger : voucherTransaction.getVoucherSubLedgers()) {
+                                voucherSubLedgerRepository.customSave(voucherSubLedger, CommonUtils.setIdentityHeader());
+                            }
+                        }
+                    }
+                }
+            }
             milkCollectionAccountPosting.setCode(Long.valueOf(nextCodeService.getNextCode("MilkCollectionAccountPosting", "code", MainApp.identityDto.getSociety().getCode(), 0)));
             milkCollectionAccountPostingRepository.customSave(milkCollectionAccountPosting, CommonUtils.setIdentityHeader());
         } catch (Exception e) {
