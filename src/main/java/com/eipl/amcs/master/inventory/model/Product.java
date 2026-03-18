@@ -120,6 +120,11 @@ public class Product extends BaseModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = LedgerSerialize.class)
     @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "coupon_ledger_code", referencedColumnName = "code")
+    private Ledger couponLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
     @JoinColumn(name = "sale_ledger_code", referencedColumnName = "code")
     private Ledger saleLedger;
 

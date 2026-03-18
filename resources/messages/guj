@@ -1496,3 +1496,5 @@ postingtype = પોસ્ટિંગનો પ્રકાર
 milk.collection.account.posting.saved = દૂધ સંગ્રહ ખાતાનું પોસ્ટિંગ સફળતાપૂર્વક સાચવવામાં આવ્યું છે
 milk.collection.account.posting.fail = દૂધ સંગ્રહ ખાતાનું પોસ્ટિંગ સાચવવામાં નિષ્ફળ રહ્યું
 printslipfont = પ્રિન્ટ સ્લિપ ફોન્ટ
+couponledger=કુપન ખાતાવહી
+couponledgernullerror=કુપન ખાતાવહી ખાલી ન હોઈ શકે

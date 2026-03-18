@@ -1495,3 +1495,5 @@ postingtype = पोस्टिंग का प्रकार
 milk.collection.account.posting.saved = दूध संग्रहण खाता पोस्टिंग सफलतापूर्वक सहेजा गया
 milk.collection.account.posting.fail = दूध संग्रहण खाता पोस्टिंग सहेजना विफल रहा
 printslipfont = प्रिंट स्लिप फ़ॉन्ट
+couponledger=कूपन लेजर
+couponledgernullerror=कूपन लेजर रिक्त नहीं हो सकता
