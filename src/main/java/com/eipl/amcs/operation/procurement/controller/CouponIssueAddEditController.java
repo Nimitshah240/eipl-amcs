@@ -55,6 +55,8 @@ public class CouponIssueAddEditController implements MyInitialization {
     @FXML
     private ComboBox<MilkType> cboxMilkType;
     @FXML
+    private ComboBox<String> cboxPaymentType;
+    @FXML
     private E_Button btnClose, btnSaveUpdate;
     @FXML
     private StackPane root;
@@ -89,6 +91,8 @@ public class CouponIssueAddEditController implements MyInitialization {
             txtCode.setText("");
             txtName.setText("");
         });
+        cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
+        cboxPaymentType.getSelectionModel().select(0);
 
         FocusUtils.requestFocus(btnSaveUpdate);
 
@@ -223,6 +227,7 @@ public class CouponIssueAddEditController implements MyInitialization {
                 txtCode.setText(dto.getConsumerCode().substring(MainApp.identityDto.getSociety().getCode().length()));
                 txtAmount.setText(String.valueOf(dto.getAmount()));
                 cboxMilkType.getSelectionModel().select(dto.getMilkType());
+                cboxPaymentType.getSelectionModel().select(dto.getPaymentMode());
             } else {
                 getNextCouponIssue();
             }
@@ -241,6 +246,7 @@ public class CouponIssueAddEditController implements MyInitialization {
         dto.setCode(txtIssueNumber.getText().trim());
         dto.setActive(true);
         dto.setIssueDate(dpDate.getValue());
+        dto.setPaymentMode((short) (cboxPaymentType.getSelectionModel().getSelectedIndex()));
     }
 
     //CHeck usage and remove

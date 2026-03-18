@@ -59,6 +59,7 @@ public class CouponIssue extends BaseModelTxn {
     private Union union;
     private String xCol4;
     private String xCol5;
+    private Short paymentMode; //0-cash 1-bank
 
 
     @Transient
