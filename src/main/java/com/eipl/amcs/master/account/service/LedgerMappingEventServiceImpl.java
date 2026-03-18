@@ -79,9 +79,10 @@ public class LedgerMappingEventServiceImpl implements LedgerMappingEventService 
         return Optional.empty();
     }
 
-    public LedgerMappingEvent findMilkCollectionLedgerMappingEvent() {
+    public LedgerMappingEvent findLedgerMappingEventByEventName(String eventName) {
         try {
-            Events events = eventRepository.findByEventNameContainingIgnoreCase("Milk Collection");
+            // NEED TO CORRECT CONDITION WHEN GET ACTUAL MASTER DATA OF EVENT - NIMIT
+            Events events = eventRepository.findByEventNameContainingIgnoreCase(eventName);
             return ledgerMappingEventRepository.findByEvents(events);
         } catch (Exception e) {
             log.error(e.getMessage());

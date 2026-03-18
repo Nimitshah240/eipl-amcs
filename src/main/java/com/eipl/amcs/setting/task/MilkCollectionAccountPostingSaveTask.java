@@ -11,13 +11,11 @@ import java.util.List;
 public class MilkCollectionAccountPostingSaveTask extends Task<MilkCollectionAccountPosting> {
 
     private final MilkCollectionAccountPosting milkCollectionAccountPosting;
-    private final List<MilkCollectionAccountPostingDto> creditMilkCollectionAccountPostingDto;
-    private final List<MilkCollectionAccountPostingDto> debitMilkCollectionAccountPostingDto;
+    private final List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList;
 
-    public MilkCollectionAccountPostingSaveTask(MilkCollectionAccountPosting milkCollectionAccountPosting, List<MilkCollectionAccountPostingDto> creditMilkCollectionAccountPostingDto, List<MilkCollectionAccountPostingDto> debitMilkCollectionAccountPostingDto) {
+    public MilkCollectionAccountPostingSaveTask(MilkCollectionAccountPosting milkCollectionAccountPosting, List<MilkCollectionAccountPostingDto> milkCollectionAccountPostingDtoList) {
         this.milkCollectionAccountPosting = milkCollectionAccountPosting;
-        this.creditMilkCollectionAccountPostingDto = creditMilkCollectionAccountPostingDto;
-        this.debitMilkCollectionAccountPostingDto = debitMilkCollectionAccountPostingDto;
+        this.milkCollectionAccountPostingDtoList = milkCollectionAccountPostingDtoList;
     }
 
     @Override
@@ -25,7 +23,7 @@ public class MilkCollectionAccountPostingSaveTask extends Task<MilkCollectionAcc
         try {
 
             MilkCollectionAccountPostingService milkCollectionAccountPostingService = EmcsAppContext.getContext().getBean(MilkCollectionAccountPostingService.class);
-            return milkCollectionAccountPostingService.save(milkCollectionAccountPosting, creditMilkCollectionAccountPostingDto, debitMilkCollectionAccountPostingDto);
+            return milkCollectionAccountPostingService.save(milkCollectionAccountPosting, milkCollectionAccountPostingDtoList);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

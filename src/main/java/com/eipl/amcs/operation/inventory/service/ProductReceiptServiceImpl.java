@@ -139,13 +139,13 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             if (eventsList == null || eventsList.isEmpty())
                 return null;
 
-            if (eventsList.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
+//            if (eventsList.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
 
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(dto.getProductReceipt().getGrnDate());
 
             if (voucherCode == null) {
                 voucherCode = nextCodeService.getNextCode("Voucher", "code",
-                        dto.getProductReceipt().getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 6);
+                        dto.getProductReceipt().getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 0);
                 if (voucherCode == null)
                     return null;
 
