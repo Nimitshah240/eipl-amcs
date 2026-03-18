@@ -41,6 +41,12 @@ public class LedgerMappingEvent extends BaseModelTxn {
     @JsonIgnoreProperties(value = {"bank", "branch", "union", "plant", "mcc", "bmc", "route", "state", "district", "subDistrict", "village", "hamlet"})
     private Society society;
     private String unionCode;
+    private String voucherNarration;
+    private String voucherTxnCreditNarration;
+    private String voucherTxnDebitNarration;
+    private String voucherNarrationLocal;
+    private String voucherTxnCreditNarrationLocal;
+    private String voucherTxnDebitNarrationLocal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = EventSerialize.class)
@@ -104,7 +110,12 @@ public class LedgerMappingEvent extends BaseModelTxn {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
-
+        audit.setVoucherNarration(this.getVoucherNarration());
+        audit.setVoucherTxnCreditNarration(this.getVoucherTxnCreditNarration());
+        audit.setVoucherTxnDebitNarration(this.getVoucherTxnDebitNarration());
+        audit.setVoucherNarrationLocal(this.getVoucherNarrationLocal());
+        audit.setVoucherTxnCreditNarrationLocal(this.getVoucherTxnCreditNarrationLocal());
+        audit.setVoucherTxnDebitNarrationLocal(this.getVoucherTxnDebitNarrationLocal());
         return audit;
     }
 

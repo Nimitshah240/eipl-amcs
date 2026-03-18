@@ -110,6 +110,7 @@ public class CouponIssue extends BaseModelTxn {
         audit.setVoucherNo(this.getVoucherNo());
         audit.setMilkType(this.getMilkType());
         audit.setUnion(this.getUnion());
+        audit.setPaymentMode(this.getPaymentMode());
         audit.setSociety(this.getSociety());
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());

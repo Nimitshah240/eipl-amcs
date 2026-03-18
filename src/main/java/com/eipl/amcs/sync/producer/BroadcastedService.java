@@ -625,6 +625,7 @@ public class BroadcastedService {
                         product.setOriginatingType(Integer.valueOf((String.valueOf(jsonText.get("originatingType")))));
                         product.setOriginatingOrgType((String.valueOf(jsonText.get("originatingOrgType"))));
                         product.setMilk("1".equalsIgnoreCase(String.valueOf(jsonText.get("isMilk"))));
+                        product.setCouponLedger(jsonText.get("couponLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("couponLedger"))).orElse(null) : null);
                         product.setSaleLedger(jsonText.get("saleLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("saleLedger"))).orElse(null) : null);
                         product.setPurchaseLedger(jsonText.get("purchaseLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("purchaseLedger"))).orElse(null) : null);
                         product.setStockLedger(jsonText.get("stockLedger") != null ? ledgerRepository.findById(String.valueOf(jsonText.get("stockLedger"))).orElse(null) : null);
@@ -1527,6 +1528,12 @@ public class BroadcastedService {
                                 eventMapping.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
                                 eventMapping.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
                                 eventMapping.setUpdatedBy(jsonText.get("updatedBy") != null ? (String) jsonText.get("updatedBy") : null);
+                                eventMapping.setVoucherNarration(jsonText.get("voucherNarration") != null ? (String) jsonText.get("voucherNarration") : null);
+                                eventMapping.setVoucherNarrationLocal(jsonText.get("voucherNarrationLocal") != null ? (String) jsonText.get("voucherNarrationLocal") : null);
+                                eventMapping.setVoucherTxnCreditNarration(jsonText.get("voucherTxnCreditNarration") != null ? (String) jsonText.get("voucherTxnCreditNarration") : null);
+                                eventMapping.setVoucherTxnCreditNarrationLocal(jsonText.get("voucherTxnCreditNarrationLocal") != null ? (String) jsonText.get("voucherTxnCreditNarrationLocal") : null);
+                                eventMapping.setVoucherTxnDebitNarration(jsonText.get("voucherTxnDebitNarration") != null ? (String) jsonText.get("voucherTxnDebitNarration") : null);
+                                eventMapping.setVoucherTxnDebitNarrationLocal(jsonText.get("voucherTxnDebitNarrationLocal") != null ? (String) jsonText.get("voucherTxnDebitNarrationLocal") : null);
                                 ledgerMappingEventRepository.save(eventMapping);
                                 break;
                         }

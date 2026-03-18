@@ -87,6 +87,9 @@ public class LedgerMappingProductGroup extends BaseModelTxn {
         audit.setProductGroup(this.getProductGroup());
         audit.setUnionCode(this.getUnionCode());
         audit.setSociety(this.getSociety());
+        audit.setPlantCode(this.getPlantCode());
+        audit.setMccCode(this.getMccCode());
+        audit.setBmcCode(this.getBmcCode());
 
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());

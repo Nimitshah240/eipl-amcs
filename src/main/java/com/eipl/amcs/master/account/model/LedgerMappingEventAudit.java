@@ -32,7 +32,12 @@ public class LedgerMappingEventAudit extends BaseModelTxnAudit {
     private Boolean creditSubLedger;
     private Boolean debitSubLedger;
     private int eventcode;
-
+    private String voucherNarration;
+    private String voucherTxnCreditNarration;
+    private String voucherTxnDebitNarration;
+    private String voucherNarrationLocal;
+    private String voucherTxnCreditNarrationLocal;
+    private String voucherTxnDebitNarrationLocal;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)
     @JsonDeserialize(using = SocietyDeserializer.class)

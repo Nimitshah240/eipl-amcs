@@ -95,6 +95,9 @@ public class LedgerMappingBillHead extends BaseModelTxn {
         audit.setBillHead(this.getBillHead());
         audit.setSociety(this.getSociety());
         audit.setUnionCode(this.getUnionCode());
+        audit.setPlantCode(this.getPlantCode());
+        audit.setMccCode(this.getMccCode());
+        audit.setBmcCode(this.getBmcCode());
         audit.setBillCriteria(this.getBillCriteria());
 
         audit.setCreatedAt(this.getCreatedAt());

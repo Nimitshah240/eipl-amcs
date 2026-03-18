@@ -177,6 +177,7 @@ public class Product extends BaseModel {
 
         audit.setMilkType(this.getMilkType());
         audit.setSaleLedger(this.getSaleLedger());
+        audit.setCouponLedger(this.getCouponLedger());
         audit.setLocalSaleLedger(this.getLocalSaleLedger());
         audit.setPurchaseLedger(this.getPurchaseLedger());
         audit.setStockLedger(this.getStockLedger());

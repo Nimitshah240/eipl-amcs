@@ -115,12 +115,17 @@ public class ProductAudit extends BaseModelAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = LedgerSerialize.class)
     @JsonDeserialize(using = LedgerDeserializer.class)
-    @JoinColumn(name = "local_sale_ledger_code",  foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "local_sale_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Ledger localSaleLedger;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = LedgerSerialize.class)
     @JsonDeserialize(using = LedgerDeserializer.class)
-    @JoinColumn(name = "sale_ledger_code",  foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "coupon_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Ledger couponLedger;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "sale_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Ledger saleLedger;
 
     @Override

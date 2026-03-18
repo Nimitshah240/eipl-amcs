@@ -107,7 +107,19 @@ public class BillHead extends BaseModel {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
-
+        audit.setCalculationBasedOn(this.getCalculationBasedOn());
+        audit.setBillHeadFor(this.getBillHeadFor());
+        audit.setDefaultBillHeadCode(this.getDefaultBillHeadCode());
+        audit.setGeneralFormul(this.getGeneralFormul());
+        audit.setGeneralFormulaCode(this.getGeneralFormulaCode());
+        audit.setGeneralFormulaComma(this.getGeneralFormulaComma());
+        audit.setHasSlab(this.getHasSlab());
+        audit.setHold(this.getHold());
+        audit.setReserved(this.getReserved());
+        audit.setPaymentCycleType(this.getPaymentCycleType());
+        audit.setSapSeqNo(this.getSapSeqNo());
+        audit.setSequenceNo(this.getSequenceNo());
+        audit.setMilkType(this.getMilkType());
         return audit;
     }
 }

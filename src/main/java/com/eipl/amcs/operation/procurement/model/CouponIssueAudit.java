@@ -55,4 +55,5 @@ public class CouponIssueAudit extends BaseModelTxnAudit {
     private Union union;
     private String xCol4;
     private String xCol5;
+    private Short paymentMode;
 }
