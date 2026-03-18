@@ -82,12 +82,18 @@ public class RateTask extends Task<Void> {
         RestTemplate restTemplate = EmcsAppContext.getContext().getBean(RestTemplate.class);
 
 
-        LOGGER.info("Initiating startup api");
         String url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.START_UP;
-        LOGGER.info(url);
+        LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
+
         RealTimeRequest<Map<String, Object>> requestPayloadStartup = new RealTimeRequest<>(MainApp.identityDto.getSociety().getCode(), MainApp.identityDto.getIdentity().getToken(), null);
         requestPayloadStartup.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
-        ResponseEntity<RealTimeResponse> responseStartUp = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayloadStartup), RealTimeResponse.class);
+        ResponseEntity<RealTimeResponse> responseStartUp = null;
+        try {
+            responseStartUp = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<RealTimeRequest>(requestPayloadStartup), RealTimeResponse.class);
+            LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
+        } catch (Exception e) {
+            LOGGER.error("API RPROCESSN , RESPONSE OF : {}", url);
+        }
         if (responseStartUp.getStatusCode() != HttpStatus.OK)
             return null;
 
@@ -175,8 +181,10 @@ public class RateTask extends Task<Void> {
                 int a = 1;
                 while (a == 1 || purchaseRate == null) {
                     url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD;
+                    LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
                     response = restTemplate.exchange(url, HttpMethod.POST,
                             new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                    LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
                     if (response.getStatusCode() != HttpStatus.OK)
                         return null;
                     responseRate = response.getBody();
@@ -250,6 +258,7 @@ public class RateTask extends Task<Void> {
                         // Rate detail download
 
                         url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
+                        LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
                         List<String> listRateDetails = new ArrayList<>();
                         for (MilkType milkType : milkTypeList) {
                             try {
@@ -267,6 +276,7 @@ public class RateTask extends Task<Void> {
                                 requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                                 ResponseEntity<RealTimeMultipleResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
                                         new HttpEntity<>(requestPayload), RealTimeMultipleResponse.class);
+                                LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
                                 if (responseRateDtl.getStatusCode() != HttpStatus.OK)
                                     return null;
                                 RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
@@ -291,7 +301,7 @@ public class RateTask extends Task<Void> {
                                     }
                                 }
                             } catch (Exception e) {
-                                LOGGER.error("DETAIL ERROR : "+ e.getMessage());
+                                LOGGER.error("DETAIL ERROR : " + e.getMessage());
                             }
                         }
                         memberRateDto.setListDetail(listRateDetails);
@@ -306,6 +316,7 @@ public class RateTask extends Task<Void> {
                             LOGGER.info("Member milk rate save: {}", responseRateSave);
                             if (responseRateSave.equalsIgnoreCase("Milk Purchase Rate Saved!")) {
                                 url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
+                                LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
                                 Map<String, String> contentRateAck = new HashMap<>();
                                 contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
                                 contentRateAck.put("rateType", "MEMBER");
@@ -315,6 +326,7 @@ public class RateTask extends Task<Void> {
                                 requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                                 ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
                                         new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                                LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
                                 if (responseRateDtl.getStatusCode() != HttpStatus.OK)
                                     return null;
                                 RealTimeResponse respRateDtl = responseRateDtl.getBody();
@@ -327,6 +339,7 @@ public class RateTask extends Task<Void> {
                         } catch (Exception ex) {
                             if (ex.getMessage().contains("wefdate.not.valid")) {
                                 url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DOWNLOAD_ACK;
+                                LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
                                 Map<String, String> contentRateAck = new HashMap<>();
                                 contentRateAck.put("rateAppCode", appCode.substring(0, appCode.toString().length() - 1));
                                 contentRateAck.put("rateType", "MEMBER");
@@ -336,6 +349,7 @@ public class RateTask extends Task<Void> {
                                 requestPayload.setOrganizationCode(MainApp.identityDto.getIdentity().getSocietyRefCode());
                                 ResponseEntity<RealTimeResponse> responseRateDtl = restTemplate.exchange(url, HttpMethod.POST,
                                         new HttpEntity<>(requestPayload), RealTimeResponse.class);
+                                LOGGER.info("API RPROCESSN , RESPONSE OF : {}", url);
                                 if (responseRateDtl.getStatusCode() != HttpStatus.OK)
                                     return null;
                                 RealTimeResponse respRateDtl = responseRateDtl.getBody();

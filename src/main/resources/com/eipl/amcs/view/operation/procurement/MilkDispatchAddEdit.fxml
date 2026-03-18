@@ -61,7 +61,7 @@
                                         <E_DatePicker fx:id="dpChallanDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                                         <E_ComboBox fx:id="cboxDispatchType" maxWidth="1.7976931348623157E308" minWidth="70.0" prefWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                         <E_TextField fx:id="txtChallanNo" disable="true" prefHeight="26.0" prefWidth="90.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                        <E_ComboBox fx:id="cboxRouteNo" editable="true" prefHeight="25.0" prefWidth="192.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <E_TextField fx:id="txtRouteNo" editable="true" prefHeight="25.0" prefWidth="192.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
                                         <TableView fx:id="tableMilkDispatchSummary" focusTraversable="false" prefWidth="346.0" GridPane.columnIndex="4" GridPane.columnSpan="2147483647" GridPane.rowSpan="2147483647">
                                             <columns>

@@ -29,14 +29,22 @@ public class ApplicationConfig {
     @Bean
     public RestTemplate restTemplate() {
         if ("1".equalsIgnoreCase(MainApp.getProperty(AppConstant.Props.APP_REQUEST_DEBUG, "0"))) {
-            RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(5000);
+            factory.setReadTimeout(15000);
+            RestTemplate restTemplate = new RestTemplate(
+                    new BufferingClientHttpRequestFactory(factory)
+            );
             List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
             interceptors.add(new SystemParamInterceptor());
             interceptors.add(new LoggingRequestInterceptor());
             restTemplate.setInterceptors(interceptors);
             return restTemplate;
         } else {
-            RestTemplate restTemplate = new RestTemplate();
+            SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+            factory.setConnectTimeout(5000);
+            factory.setReadTimeout(15000);
+            RestTemplate restTemplate = new RestTemplate(factory);
             List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
             interceptors.add(new SystemParamInterceptor());
             restTemplate.setInterceptors(interceptors);

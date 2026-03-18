@@ -659,6 +659,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         lines.add("payment.option=" + new String(Base64.getEncoder().encode("0".getBytes())));
 
         lines.add("slip.language=" + new String(Base64.getEncoder().encode("English".getBytes())));
+        lines.add("slip.font=" + new String(Base64.getEncoder().encode("Nirmala UI".getBytes())));
         lines.add("application.language=" + new String(Base64.getEncoder().encode("Hindi".getBytes())));
 
         File file = new File("D:");

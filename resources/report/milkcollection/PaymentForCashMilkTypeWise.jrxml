@@ -401,7 +401,7 @@
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Noto" size="10" isBold="false"/>
+						<font fontName="Noto" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{cow_amount}.add($V{buf_amount}).add($V{mix_amount}).subtract($V{Total_Deduction})]]></textFieldExpression>
 				</textField>
