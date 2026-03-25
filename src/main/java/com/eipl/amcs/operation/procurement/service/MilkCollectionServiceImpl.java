@@ -141,6 +141,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
                 + collection.getShift().getCode() + "-" + collection.getSampleNo());
         collection.setVoucherNo(voucherNo);
         collection.setInitData();
+        collection.setxCol5(UUID.randomUUID().toString());
         MilkCollection collNew = milkCollectionRepository.customSave(collection, identityInfo);
         collNew.setSociety(collection.getSociety());
         collNew.setDock(collection.getDock());
