@@ -8,27 +8,43 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.LedgerMappingEventController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.LedgerMappingEventController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%ledgermappingevent" />
-                <TableView fx:id="tableData" editable="true" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                <Label styleClass="header-text" text="%ledgermappingevent"/>
+                <TableView fx:id="tableData" editable="false" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colEvent" prefWidth="100.0" text="%event" />
-                        <TableColumn fx:id="colDescription" prefWidth="200.0" text="%description" />
-                        <TableColumn fx:id="colDebitLedger" prefWidth="200.0" text="%debitledger" />
-                        <TableColumn fx:id="colDebitSubLedger" prefWidth="200.0" styleClass="cell-center-aligned" text="%issubledger" />
-                        <TableColumn fx:id="colCreditLedger" prefWidth="200.0" text="%creditledger" />
-                        <TableColumn fx:id="colCreditSubLedger" prefWidth="200.0" styleClass="cell-center-aligned" text="%issubledger" />
-                        <TableColumn fx:id="colVoucherTypes" prefWidth="200.0" text="%vouchertype" />
-                  <TableColumn fx:id="colAction" prefWidth="200.0" styleClass="cell-center-aligned" text="%action"/>
+                        <TableColumn fx:id="colEvent" prefWidth="100.0" text="%event"/>
+                        <TableColumn fx:id="colDescription" prefWidth="200.0" text="%description"/>
+                        <TableColumn fx:id="colDebitLedger" prefWidth="200.0" text="%debitledger"/>
+                        <TableColumn fx:id="colDebitSubLedger" prefWidth="200.0" styleClass="cell-center-aligned"
+                                     text="%issubledger"/>
+                        <TableColumn fx:id="colCreditLedger" prefWidth="200.0" text="%creditledger"/>
+                        <TableColumn fx:id="colCreditSubLedger" prefWidth="200.0" styleClass="cell-center-aligned"
+                                     text="%issubledger"/>
+                        <TableColumn fx:id="colVoucherTypes" prefWidth="200.0" text="%vouchertype"/>
+                        <TableColumn fx:id="colVoucherNarration" prefWidth="200.0" text="%vouchernarration"/>
+                        <TableColumn fx:id="colVoucherTxnCreditNarration" prefWidth="200.0"
+                                     text="%vouchertxncreditnarration"/>
+                        <TableColumn fx:id="colVoucherTxnDebitNarration" prefWidth="200.0"
+                                     text="%vouchertxndebitnarration"/>
+                        <TableColumn fx:id="colVoucherNarrationLocal" prefWidth="200.0" text="%vouchernarrationlocal"/>
+                        <TableColumn fx:id="colVoucherTxnCreditNarrationLocal" prefWidth="200.0"
+                                     text="%vouchertxncreditnarrationlocal"/>
+                        <TableColumn fx:id="colVoucherTxnDebitNarrationLocal" prefWidth="200.0"
+                                     text="%vouchertxndebitnarrationlocal"/>
+                        <TableColumn fx:id="colAction" prefWidth="200.0" styleClass="cell-center-aligned"
+                                     text="%action"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnSave" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%save" />
-                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <Button fx:id="btnSave" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%save"/>
+                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
+                                text="%close"/>
                     </children>
                 </HBox>
             </children>

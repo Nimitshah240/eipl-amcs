@@ -275,6 +275,7 @@ public class AppConstant {
         int PRODUCT_SALE_CASH = 107;
         int PRODUCT_SALE_CREDIT = 108;
         int PRODUCT_RECEIPT = 106;
+        int COUPON_ISSUE = 105;
     }
 
     public interface SubLedgerType {

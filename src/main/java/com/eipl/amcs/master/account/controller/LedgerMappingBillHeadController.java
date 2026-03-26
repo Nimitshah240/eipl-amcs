@@ -63,7 +63,8 @@ public class LedgerMappingBillHeadController implements MyInitialization {
         loadData();
 
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
-
+//        btnSave.setDisable(true);
+        tableBillHeadData.setEditable(false);
         btnSave.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("SUB_MENU_LEDGER_MAPPING_BILL_HEAD_SAVE"))
                 throw new UnAuthorizedAccessException();
@@ -94,113 +95,113 @@ public class LedgerMappingBillHeadController implements MyInitialization {
         colMemberBillHead.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getBillHead().getName()));
         colLedgerMaster.setCellValueFactory(cell -> new SimpleObjectProperty(cell.getValue().getBillHead().getCode().
                 equalsIgnoreCase("105") ? null : cell.getValue().getLedger()));
-        colLedgerMaster.setCellFactory(
-                cell -> {
-                    return new TableCell<LedgerMappingBillHead, Ledger>() {
-                        @Override
-                        protected void updateItem(Ledger item, boolean empty) {
-                            if (empty) {
-                                setText(null);
-                                setGraphic(null);
-                            } else {
-                                setText(null);
-                                ComboBox<Ledger> cbox = new ComboBox<>(ledgerList);
-                                cbox.setConverter(new LedgerConvertor(cbox));
-                                cbox.setCellFactory(new LedgerCellFactory());
-                                if (item == null)
-                                    cbox.getSelectionModel().select(0);
-                                else
-                                    cbox.getSelectionModel().select(item);
-                                cbox.setOnAction(event -> {
-                                    if (cbox.getValue().getName().equals("None"))
-                                        getTableRow().getItem().setLedger(null);
-                                    else
-                                        getTableRow().getItem().setLedger(cbox.getValue());
-                                });
-                                cbox.setMaxWidth(Double.MAX_VALUE);
-                                if (getTableRow().getItem() != null && getTableRow().getItem().getBillHead() != null) {
-                                    if (getTableRow().getItem().getBillHead().getCode()
-                                            .endsWith("105"))
-                                        setGraphic(null);
-                                    else
-                                        setGraphic(cbox);
-                                }
-                            }
-                        }
-                    };
-                });
+//        colLedgerMaster.setCellFactory(
+//                cell -> {
+//                    return new TableCell<LedgerMappingBillHead, Ledger>() {
+//                        @Override
+//                        protected void updateItem(Ledger item, boolean empty) {
+//                            if (empty) {
+//                                setText(null);
+//                                setGraphic(null);
+//                            } else {
+//                                setText(null);
+//                                ComboBox<Ledger> cbox = new ComboBox<>(ledgerList);
+//                                cbox.setConverter(new LedgerConvertor(cbox));
+//                                cbox.setCellFactory(new LedgerCellFactory());
+//                                if (item == null)
+//                                    cbox.getSelectionModel().select(0);
+//                                else
+//                                    cbox.getSelectionModel().select(item);
+//                                cbox.setOnAction(event -> {
+//                                    if (cbox.getValue().getName().equals("None"))
+//                                        getTableRow().getItem().setLedger(null);
+//                                    else
+//                                        getTableRow().getItem().setLedger(cbox.getValue());
+//                                });
+//                                cbox.setMaxWidth(Double.MAX_VALUE);
+//                                if (getTableRow().getItem() != null && getTableRow().getItem().getBillHead() != null) {
+//                                    if (getTableRow().getItem().getBillHead().getCode()
+//                                            .endsWith("105"))
+//                                        setGraphic(null);
+//                                    else
+//                                        setGraphic(cbox);
+//                                }
+//                            }
+//                        }
+//                    };
+//                });
 
-        colLedgerMaster.setOnEditCommit(event -> {
-            LedgerMappingBillHead obj = event.getRowValue();
-            if (obj.getBillHead().getCode().equalsIgnoreCase("105"))
-                colLedgerMaster.setGraphic(null);
-            obj.setLedger(event.getNewValue());
-        });
+//        colLedgerMaster.setOnEditCommit(event -> {
+//            LedgerMappingBillHead obj = event.getRowValue();
+//            if (obj.getBillHead().getCode().equalsIgnoreCase("105"))
+//                colLedgerMaster.setGraphic(null);
+//            obj.setLedger(event.getNewValue());
+//        });
         colType.setCellValueFactory(cell -> new SimpleObjectProperty(!cell.getValue().getBillHead().getCode().equalsIgnoreCase("105") ?
                 cell.getValue().getBillHead().getHeadType() == 1 ?
                         resourceBundle.getString("credit") : resourceBundle.getString("debit") : ""));
 
         colSubLedger.setCellValueFactory(cell -> new SimpleBooleanProperty(cell.getValue().getHasSubLedger() != null ? cell.getValue().getHasSubLedger() : false));
-        colSubLedger.setCellFactory(cell -> {
-            return new TableCell<LedgerMappingBillHead, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        CheckBox chk = new CheckBox();
-                        chk.setSelected(item);
-                        chk.selectedProperty().addListener(
-                                (ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                    getTableRow().getItem().setHasSubLedger(newValue);
-                                });
-                        if (getTableRow().getItem() != null && getTableRow().getItem().getBillHead() != null) {
-                            if (getTableRow().getItem().getBillHead().getCode()
-                                    .endsWith("105"))
-                                setGraphic(null);
-                            else
-                                setGraphic(chk);
-                        }
-                    }
-                }
-            };
-        });
+//        colSubLedger.setCellFactory(cell -> {
+//            return new TableCell<LedgerMappingBillHead, Boolean>() {
+//                @Override
+//                protected void updateItem(Boolean item, boolean empty) {
+//                    super.updateItem(item, empty);
+//                    if (item == null || empty) {
+//                        setText(null);
+//                        setGraphic(null);
+//                    } else {
+//                        CheckBox chk = new CheckBox();
+//                        chk.setSelected(item);
+//                        chk.selectedProperty().addListener(
+//                                (ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                                    getTableRow().getItem().setHasSubLedger(newValue);
+//                                });
+//                        if (getTableRow().getItem() != null && getTableRow().getItem().getBillHead() != null) {
+//                            if (getTableRow().getItem().getBillHead().getCode()
+//                                    .endsWith("105"))
+//                                setGraphic(null);
+//                            else
+//                                setGraphic(chk);
+//                        }
+//                    }
+//                }
+//            };
+//        });
         colAction.setCellValueFactory(cell -> new SimpleBooleanProperty(cell.getValue().getxCol1()
                 != null && cell.getValue().getxCol1().equalsIgnoreCase("1")));
-        colAction.setCellFactory(cell -> {
-            return new TableCell<LedgerMappingBillHead, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        CheckBox chk = new CheckBox();
-                        chk.setSelected(item);
-                        LedgerMappingBillHead mappingEvent = getTableRow().getItem();
-                        if (mappingEvent != null) {
-                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                if (newValue) {
-                                    mappingEvent.setxCol1("1");
-                                } else {
-                                    mappingEvent.setxCol1("0");
-                                }
-                            });
-                            if (getTableRow().getItem() != null && getTableRow().getItem().getBillHead() != null) {
-                                if (getTableRow().getItem().getBillHead().getCode()
-                                        .endsWith("105"))
-                                    setGraphic(null);
-                                else
-                                    setGraphic(chk);
-                            }
-                        }
-                    }
-                }
-            };
-        });
+//        colAction.setCellFactory(cell -> {
+//            return new TableCell<LedgerMappingBillHead, Boolean>() {
+//                @Override
+//                protected void updateItem(Boolean item, boolean empty) {
+//                    super.updateItem(item, empty);
+//                    if (item == null || empty) {
+//                        setText(null);
+//                        setGraphic(null);
+//                    } else {
+//                        CheckBox chk = new CheckBox();
+//                        chk.setSelected(item);
+//                        LedgerMappingBillHead mappingEvent = getTableRow().getItem();
+//                        if (mappingEvent != null) {
+//                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                                if (newValue) {
+//                                    mappingEvent.setxCol1("1");
+//                                } else {
+//                                    mappingEvent.setxCol1("0");
+//                                }
+//                            });
+//                            if (getTableRow().getItem() != null && getTableRow().getItem().getBillHead() != null) {
+//                                if (getTableRow().getItem().getBillHead().getCode()
+//                                        .endsWith("105"))
+//                                    setGraphic(null);
+//                                else
+//                                    setGraphic(chk);
+//                            }
+//                        }
+//                    }
+//                }
+//            };
+//        });
 
     }
 

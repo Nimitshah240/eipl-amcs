@@ -245,6 +245,7 @@ public class CouponIssueAddEditController implements MyInitialization {
         dto.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
         dto.setCode(txtIssueNumber.getText().trim());
         dto.setActive(true);
+        dto.setIsDelete(false);
         dto.setIssueDate(dpDate.getValue());
         dto.setPaymentMode((short) (cboxPaymentType.getSelectionModel().getSelectedIndex()));
     }

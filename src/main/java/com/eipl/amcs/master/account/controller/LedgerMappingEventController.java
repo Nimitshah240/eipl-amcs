@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.dto.EventMappingDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerMappingEvent;
@@ -13,12 +14,13 @@ import com.eipl.amcs.master.account.task.LedgerMappingEventSaveTask;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.StringConverter;
@@ -34,7 +36,7 @@ public class LedgerMappingEventController implements MyInitialization {
     @FXML
     TableView<LedgerMappingEvent> tableData;
     @FXML
-    TableColumn<LedgerMappingEvent, String> colEvent, colDescription;
+    TableColumn<LedgerMappingEvent, String> colEvent, colDescription, colVoucherNarration, colVoucherTxnCreditNarration, colVoucherTxnDebitNarration, colVoucherNarrationLocal, colVoucherTxnCreditNarrationLocal, colVoucherTxnDebitNarrationLocal;
     @FXML
     TableColumn<LedgerMappingEvent, Ledger> colDebitLedger, colCreditLedger;
     @FXML
@@ -87,8 +89,11 @@ public class LedgerMappingEventController implements MyInitialization {
         loadData();
 
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
-
+//        btnSave.setDisable(true);
+        tableData.setEditable(false);
         btnSave.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("SUB_MENU_LEDGER_MAPPING_EVENT_SAVE"))
+                throw new UnAuthorizedAccessException();
             saveData();
         });
     }
@@ -113,6 +118,12 @@ public class LedgerMappingEventController implements MyInitialization {
     public void setupTable() {
         colEvent.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEvents().getEventName()));
         colDescription.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEvents().getDescription()));
+        colVoucherNarration.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getVoucherNarration()));
+        colVoucherTxnCreditNarration.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getVoucherTxnCreditNarration()));
+        colVoucherTxnDebitNarration.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getVoucherTxnDebitNarration()));
+        colVoucherNarrationLocal.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getVoucherNarrationLocal()));
+        colVoucherTxnCreditNarrationLocal.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getVoucherTxnCreditNarrationLocal()));
+        colVoucherTxnDebitNarrationLocal.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getVoucherTxnDebitNarrationLocal()));
 
         colDebitLedger.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getDebitLedger()));
         colDebitLedger.setCellFactory(ComboBoxTableCell.forTableColumn(converter, ledgerList));
@@ -135,95 +146,95 @@ public class LedgerMappingEventController implements MyInitialization {
         });
         colDebitSubLedger.setCellValueFactory(cell -> new SimpleBooleanProperty(cell.getValue().getDebitSubLedger()
                 != null ? cell.getValue().getDebitSubLedger() : false));
-        colDebitSubLedger.setCellFactory(cell -> {
-            return new TableCell<LedgerMappingEvent, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        CheckBox chk = new CheckBox();
-                        chk.setSelected(item);
-                        LedgerMappingEvent mappingEvent = getTableRow().getItem();
-                        if (mappingEvent != null) {
-                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                mappingEvent.setDebitSubLedger(newValue);
-                            });
-                            if (mappingEvent.getEvents().getSubLedgerDebit())
-                                setGraphic(chk);
-                            else {
-                                setGraphic(null);
-                                mappingEvent.setDebitSubLedger(false);
-                            }
-                        }
-                    }
-                }
-            };
-        });
+//        colDebitSubLedger.setCellFactory(cell -> {
+//            return new TableCell<LedgerMappingEvent, Boolean>() {
+//                @Override
+//                protected void updateItem(Boolean item, boolean empty) {
+//                    super.updateItem(item, empty);
+//                    if (item == null || empty) {
+//                        setText(null);
+//                        setGraphic(null);
+//                    } else {
+//                        CheckBox chk = new CheckBox();
+//                        chk.setSelected(item);
+//                        LedgerMappingEvent mappingEvent = getTableRow().getItem();
+//                        if (mappingEvent != null) {
+//                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                                mappingEvent.setDebitSubLedger(newValue);
+//                            });
+//                            if (mappingEvent.getEvents().getSubLedgerDebit())
+//                                setGraphic(chk);
+//                            else {
+//                                setGraphic(null);
+//                                mappingEvent.setDebitSubLedger(false);
+//                            }
+//                        }
+//                    }
+//                }
+//            };
+//        });
         colCreditSubLedger.setCellValueFactory(cell -> new SimpleBooleanProperty(cell.getValue().getCreditSubLedger()
                 != null ? cell.getValue().getCreditSubLedger() : false));
-        colCreditSubLedger.setCellFactory(cell -> {
-            return new TableCell<LedgerMappingEvent, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        CheckBox chk = new CheckBox();
-                        chk.setSelected(item);
-                        LedgerMappingEvent mappingEvent = getTableRow().getItem();
-                        if (mappingEvent != null) {
-                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                mappingEvent.setCreditSubLedger(newValue);
-                            });
-                            if (mappingEvent.getEvents().getSubLedgerCredit())
-                                setGraphic(chk);
-                            else {
-                                setGraphic(null);
-                                mappingEvent.setCreditSubLedger(false);
-                            }
-                        }
-                    }
-                }
-            };
-        });
+//        colCreditSubLedger.setCellFactory(cell -> {
+//            return new TableCell<LedgerMappingEvent, Boolean>() {
+//                @Override
+//                protected void updateItem(Boolean item, boolean empty) {
+//                    super.updateItem(item, empty);
+//                    if (item == null || empty) {
+//                        setText(null);
+//                        setGraphic(null);
+//                    } else {
+//                        CheckBox chk = new CheckBox();
+//                        chk.setSelected(item);
+//                        LedgerMappingEvent mappingEvent = getTableRow().getItem();
+//                        if (mappingEvent != null) {
+//                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                                mappingEvent.setCreditSubLedger(newValue);
+//                            });
+//                            if (mappingEvent.getEvents().getSubLedgerCredit())
+//                                setGraphic(chk);
+//                            else {
+//                                setGraphic(null);
+//                                mappingEvent.setCreditSubLedger(false);
+//                            }
+//                        }
+//                    }
+//                }
+//            };
+//        });
         colAction.setCellValueFactory(cell -> new SimpleBooleanProperty(cell.getValue().getxCol1()
                 != null && cell.getValue().getxCol1().equalsIgnoreCase("1")));
-        colAction.setCellFactory(cell -> {
-            return new TableCell<LedgerMappingEvent, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        CheckBox chk = new CheckBox();
-                        chk.setSelected(item);
-                        LedgerMappingEvent mappingEvent = getTableRow().getItem();
-                        if (mappingEvent != null) {
-                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                if (newValue) {
-                                    mappingEvent.setxCol1("1");
-                                } else {
-                                    mappingEvent.setxCol1("0");
-                                }
-                            });
-                            if (mappingEvent.getxCol1() != null && mappingEvent.getxCol1().equalsIgnoreCase("1"))
-                                setGraphic(chk);
-                            else {
-                                setGraphic(chk);
-                                mappingEvent.setxCol1("0");
-                            }
-                        }
-                    }
-                }
-            };
-        });
+//        colAction.setCellFactory(cell -> {
+//            return new TableCell<LedgerMappingEvent, Boolean>() {
+//                @Override
+//                protected void updateItem(Boolean item, boolean empty) {
+//                    super.updateItem(item, empty);
+//                    if (item == null || empty) {
+//                        setText(null);
+//                        setGraphic(null);
+//                    } else {
+//                        CheckBox chk = new CheckBox();
+//                        chk.setSelected(item);
+//                        LedgerMappingEvent mappingEvent = getTableRow().getItem();
+//                        if (mappingEvent != null) {
+//                            chk.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                                if (newValue) {
+//                                    mappingEvent.setxCol1("1");
+//                                } else {
+//                                    mappingEvent.setxCol1("0");
+//                                }
+//                            });
+//                            if (mappingEvent.getxCol1() != null && mappingEvent.getxCol1().equalsIgnoreCase("1"))
+//                                setGraphic(chk);
+//                            else {
+//                                setGraphic(chk);
+//                                mappingEvent.setxCol1("0");
+//                            }
+//                        }
+//                    }
+//                }
+//            };
+//        });
     }
 
     @Override

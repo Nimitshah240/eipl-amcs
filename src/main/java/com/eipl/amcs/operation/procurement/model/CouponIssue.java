@@ -105,7 +105,7 @@ public class CouponIssue extends BaseModelTxn {
         audit.setAmount(this.getAmount());
         audit.setConsumerCode(this.getConsumerCode());
         audit.setConsumerType(this.getConsumerType());
-        audit.setIsDelete(this.isDelete);
+        audit.setIsDelete(this.getIsDelete());
         audit.setIssueDate(this.getIssueDate());
         audit.setVoucherNo(this.getVoucherNo());
         audit.setMilkType(this.getMilkType());

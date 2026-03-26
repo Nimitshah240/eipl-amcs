@@ -1471,6 +1471,10 @@ public class BroadcastedService {
                                 mapping.setBillCriteria(billCriteriaRepository.findById(String.valueOf(jsonText.get("billCriteriaCode"))).orElse(null));
                                 mapping.setSociety(MainApp.identityDto.getSociety());
                                 mapping.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                                mapping.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
+                                mapping.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
+                                mapping.setBmcCode(jsonText.get("bmcCode") != null ? String.valueOf(jsonText.get("bmcCode")) : null);
+
                                 if (jsonText.get("billHeadCode") != null) {
                                     String code = String.valueOf(jsonText.get("billHeadCode"));
                                     try {
