@@ -838,9 +838,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private void printToggle() {
         printOnOff = !printOnOff;
-        if (printOnOff)
-            lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete"));
-        else lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete1"));
+//        if (printOnOff)
+//            lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete"));
+//        else lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete1"));
     }
 
     private void RePrint() {
@@ -1464,6 +1464,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             errorMsg.append(resourceBundle.getString("sampleno.cannot.be.null") + "\n");
         if (txtCode.getText() == null || txtCode.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("membercode.cannot.be.null") + "\n");
+        if (memberSocietyInfoDto == null || memberSocietyInfoDto.getMember() == null) {
+            errorMsg.append(resourceBundle.getString("members.not.available") + "\n");
+        }
         if (txtQty.getText() == null || txtQty.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("qty.cannot.be.null") + "\n");
         if (txtFat.getText() == null || txtFat.getText().isEmpty())
