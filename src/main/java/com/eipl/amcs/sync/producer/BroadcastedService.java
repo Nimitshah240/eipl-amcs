@@ -820,8 +820,8 @@ public class BroadcastedService {
                                 schemeRate.setRtpl(jsonText.get("rtpl") != null ? new BigDecimal(String.valueOf(jsonText.get("rtpl"))) : null);
                                 schemeRate.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
                                 schemeRate.setDescription(jsonText.get("description") != null ? (String) jsonText.get("description") : null);
-                                schemeRate.setIsActive(jsonText.get("isMccWiseRate") != null ? String.valueOf(jsonText.get("isMccWiseRate")).equalsIgnoreCase("1") : null);
-                                schemeRate.setIsActive(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
+                                schemeRate.setIsMccWiseRate(jsonText.get("isMccWiseRate") != null ? String.valueOf(jsonText.get("isMccWiseRate")).equalsIgnoreCase("1") : null);
+                                schemeRate.setIsMemberRate(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
                                 schemeRate.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
                                 schemeRate.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
                                 schemeRate.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
@@ -868,7 +868,7 @@ public class BroadcastedService {
                                 schemeRateApplicability.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
                                 schemeRateApplicability.setApplicableFor("DCS"); // NIMIT - KEEP THIS BECAUSE PHP TEAM CHANGE REFCODE TO DCSCODE, WHICH CREATE ISSUE IN REPORT
 //                                schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? MainApp.identityDto.getSociety().getCode() : null); // NIMIT - KEEP THIS BECAUSE PHP TEAM CHANGE REFCODE TO DCSCODE, WHICH CREATE ISSUE IN REPORT
-                                schemeRateApplicability.setApplicableCode(jsonText.get("applicableCode") != null ? (String) jsonText.get("applicableCode") : null);
+                                schemeRateApplicability.setApplicableCode(MainApp.identityDto.getSociety().getCode());
                                 schemeRateApplicability.setIsMemberRate(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
                                 schemeRateApplicability.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
                                 schemeRateApplicability.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
@@ -1017,7 +1017,7 @@ public class BroadcastedService {
                                 route.setCapacity(jsonText.get("capacity") != null ? Integer.valueOf(jsonText.get("capacity").toString()) : null);
                                 route.setLengthKms(jsonText.get("routeLengthKms") != null ? Integer.valueOf(String.valueOf(jsonText.get("routeLengthKms"))) : null);
                                 route.setStartTime(jsonText.get("morningStartTime") != null ? LocalTime.parse((String) jsonText.get("morningStartTime")) : null);
-                                route.setReturnTime(jsonText.get("morningEndTime") != null ? LocalTime.parse((String) jsonText.get("morningEndTime")):null);
+                                route.setReturnTime(jsonText.get("morningEndTime") != null ? LocalTime.parse((String) jsonText.get("morningEndTime")) : null);
                                 route.setUnion(MainApp.identityDto.getUnion());
                                 route.setBmc(bmcRepository.findAll().get(0));
                                 route.setActive(Boolean.parseBoolean(String.valueOf(jsonText.get("isActive"))));
