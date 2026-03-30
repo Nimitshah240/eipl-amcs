@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -18,6 +19,8 @@ import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleDeleteTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleLoadTask;
+import com.eipl.amcs.setting.repository.AccountPostingRepository;
+import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
@@ -59,7 +62,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
     @FXML
     private TableColumn<LocalMilkSale, MilkClass> colClass;
     @FXML
-    private TableColumn<LocalMilkSale, BigDecimal> colQuantity, colRate, colAmount,colCouponBalance;
+    private TableColumn<LocalMilkSale, BigDecimal> colQuantity, colRate, colAmount, colCouponBalance;
     @FXML
     private Button btnAdd, btnClose, btnEdit, btnDelete, btnSearch;
     private ResourceBundle resourceBundle;
@@ -127,7 +130,16 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_DELETE"))
                 throw new UnAuthorizedAccessException();
-            deleteData();
+            AccountPostingRepository accountPostingRepository = EmcsAppContext.getContext().getBean(AccountPostingRepository.class);
+            LocalMilkSale dto = propLocalMilkSaleDto.get();
+            if (dto != null) {
+                if (accountPostingRepository.findValidRange(dto.getSaleDate().toLocalDate(), dto.getShift().getCode(), (short) 2, AppConstant.EventCode.LOCAL_MILK_SALE) > 0) {
+                    MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("localmilksale"), resourceBundle.getString("account.posting.already.done"));
+                    alert.createAlert();
+                    return;
+                }
+                deleteData();
+            }
         });
         FocusUtils.requestFocus(btnAdd);
     }
@@ -196,7 +208,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             colQuantity.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getQuantity()));
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
-   //         colCouponBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCoupon()));
+            //         colCouponBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCoupon()));
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
             propLocalMilkSaleDto.bind(tableLocalMilkSale.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {

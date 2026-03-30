@@ -28,6 +28,7 @@ import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
+import com.eipl.amcs.setting.repository.AccountPostingRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
@@ -507,8 +508,12 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         btnStart.setOnAction(e -> {
             LocalDateTime collectionDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
             MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+            AccountPostingRepository accountPostingRepository = EmcsAppContext.getContext().getBean(AccountPostingRepository.class);
             if (milkDispatchRepository.existsByFromDateAndFromShift(collectionDateTime, cboxShift.getValue())) {
                 MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("milkcollection"), resourceBundle.getString("dispatch.already.done"));
+                alert.createAlert();
+            } else if (accountPostingRepository.findValidRange(dpDate.getValue(), cboxShift.getSelectionModel().getSelectedItem().getCode(), (short) 2, AppConstant.EventCode.MILK_COLLECTION) > 0) {
+                MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("milkcollection"), resourceBundle.getString("account.posting.already.done"));
                 alert.createAlert();
             } else {
                 loadRequestData();

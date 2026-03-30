@@ -288,4 +288,36 @@ public class AppConstant {
         BANAS_AMCS,
         AMCS_QAQCJ;
     }
+
+    public enum PostingType {
+
+        Consolidate(1, "Consolidate"),
+        DayWise(2, "Day wise"),
+        PaymentCycle(3, "Payment cycle");
+
+        private final int value;
+        private final String label;
+
+        PostingType(int value, String label) {
+            this.value = value;
+            this.label = label;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static PostingType fromValue(int value) {
+            for (PostingType type : PostingType.values()) {
+                if (type.getValue() == value) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Invalid PostingType: " + value);
+        }
+    }
 }

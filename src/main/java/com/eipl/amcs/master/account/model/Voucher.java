@@ -39,6 +39,8 @@ public class Voucher extends BaseModelTxn {
     private LocalDate voucherDate;
     private String billNo;
     private String remarks;
+    private String processName;
+    private String processReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)
@@ -54,6 +56,9 @@ public class Voucher extends BaseModelTxn {
     private String unionCode;
     private String dockCode;
     private String financialYearsCode;
+
+    private String xCol4;
+    private String xCol5;
 
     @Transient
     @JsonIgnore
