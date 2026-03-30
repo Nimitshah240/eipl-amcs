@@ -45,6 +45,10 @@ public class Events extends BaseModel {
         return "event";
     }
 
+    @Override
+    public String toString() {
+        return eventName;
+    }
 
     @Override
     public Object getId() {

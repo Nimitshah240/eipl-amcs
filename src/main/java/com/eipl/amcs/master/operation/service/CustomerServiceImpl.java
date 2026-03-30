@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.operation.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
@@ -145,7 +146,8 @@ public class CustomerServiceImpl implements CustomerService {
             try {
                 customer = new Customer();
                 customer.setCode(code);
-                Society society = socRepository.findById(code.substring(0, 7)).orElseThrow(() -> new EntityNotFoundException(Society.class, "code", code.substring(0, 7)));
+//                Society society = socRepository.findById(code.substring(0, 7)).orElseThrow(() -> new EntityNotFoundException(Society.class, "code", code.substring(0, 7)));
+                Society society = MainApp.identityDto.getSociety();
                 customer.setSociety(society);
                 customer.setUnion(society.getUnion());
                 customer.setType(5);

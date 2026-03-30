@@ -127,13 +127,15 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
 //    List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("code") String code);
 
 
+    @Query("SELECT DISTINCT mc FROM MilkCollection mc " +
+            "JOIN FETCH mc.shift " +
+            "JOIN FETCH mc.milkType " +
+            "WHERE mc.member = :member " +
+            "ORDER BY mc.collectionDate DESC")
+    List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("member") Member member);
 
-        @Query("SELECT DISTINCT mc FROM MilkCollection mc " +
-                "JOIN FETCH mc.shift " +
-                "JOIN FETCH mc.milkType " +
-                "WHERE mc.member = :member " +
-                "ORDER BY mc.collectionDate DESC")
-        List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("member") Member member);
-
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
+            "dock"})
+    List<MilkCollection> findBySocietyPaymentCycleInOrderByCollectionDateAsc(List<SocietyPaymentCycle> societyPaymentCycleList);
 
 }

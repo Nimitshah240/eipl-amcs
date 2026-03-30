@@ -33,6 +33,7 @@ import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.CouponBalanceForConsumerFetchTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleGetInvoiceNoTask;
 import com.eipl.amcs.operation.procurement.task.LocalMilkSaleSaveTask;
+import com.eipl.amcs.setting.repository.AccountPostingRepository;
 import com.eipl.amcs.utils.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -149,8 +150,12 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         btnSaveUpdate.setOnAction(e -> {
             LocalDateTime saleDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpSellDate.getValue(), cboxShift.getValue());
             MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+            AccountPostingRepository accountPostingRepository = EmcsAppContext.getContext().getBean(AccountPostingRepository.class);
             if (milkDispatchRepository.existsByFromDateAndFromShift(saleDateTime, cboxShift.getValue())) {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"), resourceBundle.getString("dispatch.already.done"));
+                alert.createAlert();
+            } else if (accountPostingRepository.findValidRange(dpSellDate.getValue(), cboxShift.getSelectionModel().getSelectedItem().getCode(), (short) 2, AppConstant.EventCode.LOCAL_MILK_SALE) > 0) {
+                MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("localmilksale"), resourceBundle.getString("account.posting.already.done"));
                 alert.createAlert();
             } else {
                 validateAndSave();

@@ -28,4 +28,7 @@ public interface SubLedgerRepository extends BaseRepository<SubLedger, String> {
 
     @EntityGraph(attributePaths = {"society"})
     List<SubLedger> findAllByTypeAndReferenceCodeIn(short type, List<String> referenceCodeList);
+
+    @EntityGraph(attributePaths = {"society"})
+    List<SubLedger> findAllByReferenceCodeIn(List<String> referenceCodeList);
 }

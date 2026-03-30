@@ -73,7 +73,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         String code = nextCodeService.getNextCode("LocalMilkSale", "code", localMilkSale.getSociety().getCode(), 2);
         localMilkSale.setCode(code);
         localMilkSale.setInitData();
-        createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
+//        createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
 
         LocalMilkSale newData = localMilkSaleRepository.customSave(localMilkSale, identityInfo);
         newData.setMilkClass(localMilkSale.getMilkClass());
@@ -413,7 +413,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         newData.setShift(localMilkSale.getShift());
         newData.setDock(localMilkSale.getDock());
 
-        createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
+//        createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
         return newData;
     }
 

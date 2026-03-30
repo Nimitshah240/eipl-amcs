@@ -136,10 +136,10 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
             if (collPrev.isPresent())
                 existngVoucherNo = collPrev.get().getVoucherNo();
         }
-        String voucherNo = createVoucher(collection, existngVoucherNo, identityInfo, (short) 1, null);
+//        String voucherNo = createVoucher(collection, existngVoucherNo, identityInfo, (short) 1, null);
         collection.setCode(collection.getDock().getDockNo() + "-" + collection.getCollectionDate().format(CODE_DATE_FMT)
                 + collection.getShift().getCode() + "-" + collection.getSampleNo());
-        collection.setVoucherNo(voucherNo);
+//        collection.setVoucherNo(voucherNo);
         collection.setInitData();
         MilkCollection collNew = milkCollectionRepository.customSave(collection, identityInfo);
         collNew.setSociety(collection.getSociety());
@@ -282,9 +282,9 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     public MilkCollection update(MilkCollection collection, String identityInfo) {
         MilkCollection prevData = milkCollectionRepository.findById(collection.getCode())
                 .orElseThrow(() -> new EntityNotFoundException(MilkCollection.class, "invalid.collectiondata"));
-        String voucherNo = createVoucher(collection, prevData.getVoucherNo(), identityInfo, (short) 2, prevData.getAmount());
+//        String voucherNo = createVoucher(collection, prevData.getVoucherNo(), identityInfo, (short) 2, prevData.getAmount());
         collection.setupdateData();
-        collection.setVoucherNo(voucherNo);
+//        collection.setVoucherNo(voucherNo);
         MilkCollection collNew = milkCollectionRepository.customUpdate(collection, identityInfo);
         collNew.setSociety(collection.getSociety());
         collNew.setDock(collection.getDock());
@@ -300,7 +300,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     public void delete(String code, String identityInfo) {
         MilkCollection data = milkCollectionRepository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(MilkCollection.class, "invalid.collectiondata"));
-        createVoucher(data, data.getVoucherNo(), identityInfo, (short) 3, data.getAmount());
+//        createVoucher(data, data.getVoucherNo(), identityInfo, (short) 3, data.getAmount());
         milkCollectionRepository.customDelete(data, identityInfo);
     }
 
@@ -681,10 +681,10 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
             if (collPrev.isPresent())
                 existngVoucherNo = collPrev.get().getVoucherNo();
         }
-        String voucherNo = createVoucher(collection, existngVoucherNo, identityInfo, (short) 1, null);
+//        String voucherNo = createVoucher(collection, existngVoucherNo, identityInfo, (short) 1, null);
         collection.setCode(collection.getDock().getDockNo() + "-" + collection.getCollectionDate().format(CODE_DATE_FMT)
                 + collection.getShift().getCode() + "-" + collection.getSampleNo());
-        collection.setVoucherNo(voucherNo);
+//        collection.setVoucherNo(voucherNo);
         collection.setInitData();
         MilkCollection collNew = milkCollectionRepository.save(collection);
         collNew.setSociety(collection.getSociety());

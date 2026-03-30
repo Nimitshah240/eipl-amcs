@@ -242,7 +242,7 @@ public class BroadcastedService {
             if (list == null || list.isEmpty())
                 return;
             LOGGER.info("SENDING BROADCAST COUNT : {}", list.size());
-            for (List<Broadcasted> part : ListUtils.partition(list, 10)) {
+            for (List<Broadcasted> part : ListUtils.partition(list, 50)) {
                 LOGGER.info("SENDING BROADCAST IN BATCHES : {}", part.size());
                 producer.produce(part);
             }
