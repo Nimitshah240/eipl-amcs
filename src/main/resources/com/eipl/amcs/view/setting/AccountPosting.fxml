@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.setting.controller.MilkCollectionAccountPostingController">
+<StackPane fx:id="root" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.setting.controller.AccountPostingController">
     <children>
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0">
             <children>
             <HBox fx:id="" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0">
                <children>
-                      <Label styleClass="header-text" text="%milkcollectionaccountposting">
+                      <Label styleClass="header-text" text="%accountposting">
                      <padding>
                         <Insets top="20.0" />
                      </padding>
@@ -45,13 +45,15 @@
                   </GridPane>
                </children>
             </HBox>
-            <TableView fx:id="tblMilkCollectionAccountPosting" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tblAccountPosting" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="pane-white-drop-border" VBox.vgrow="ALWAYS">
               <columns>
+                  <TableColumn fx:id="colEvent" prefWidth="75.0" text="%event" />
+                  <TableColumn fx:id="colPostingType" prefWidth="75.0" text="%postingtype" />
                 <TableColumn fx:id="colFromDate" prefWidth="75.0" text="%fromdate" />
                   <TableColumn fx:id="colFromShift" prefWidth="75.0" text="%fromshift" />
                   <TableColumn fx:id="colToDate" prefWidth="75.0" text="%todate" />
                   <TableColumn fx:id="colToShift" prefWidth="75.0" text="%toshift" />
-                  <TableColumn fx:id="colPostingType" prefWidth="75.0" text="%postingtype" />
+                  <TableColumn fx:id="colStatus" prefWidth="75.0" text="%status" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

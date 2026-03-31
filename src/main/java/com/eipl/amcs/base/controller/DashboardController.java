@@ -213,7 +213,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 task.setOnSucceeded(e1 -> {
                     System.out.println("Done");
                     MainApp.paneDrop.setVisible(false);
-                    if (lblSyncCount != null) lblSyncCount.setText("0");
+                    fetchPendingSync();
                 });
                 new Thread(task).start();
             });
@@ -477,21 +477,26 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
 
     private void fetchPendingSync() {
-        var task = new PendingSyncTask();
-        task.setOnSucceeded(e -> {
-            try {
-                Long count = task.get();
-                MainApp.syncCount = count;
-                if (count == null) {
-                    if (lblSyncCount != null) lblSyncCount.setText("NA");
-                    return;
+        Task<Map<String, Integer>> task2 = new BroadcastedGroupDataTask();
+        task2.setOnSucceeded(e -> {
+            tableDataList.clear();
+            Integer pendingSyncCount = 0;
+            Map<String, Integer> result = task2.getValue();
+            if (result != null) {
+                for (Map.Entry<String, Integer> entry : result.entrySet()) {
+                    tableDataList.add(new TableData(entry.getKey(), entry.getValue()));
+                    pendingSyncCount = pendingSyncCount + entry.getValue();
                 }
-                if (lblSyncCount != null) lblSyncCount.setText(count.toString());
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+                if (lblSyncCount != null) lblSyncCount.setText(pendingSyncCount.toString());
             }
         });
-        new Thread(task).start();
+
+        task2.setOnFailed(e -> {
+            Throwable ex = task2.getException();
+            ex.printStackTrace();
+        });
+
+        new Thread(task2).start();
     }
 
     private void openBilling() {
@@ -669,24 +674,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
         new Thread(task).start();
 
         tableDataList.clear();
-
-        Task<Map<String, Integer>> task2 = new BroadcastedGroupDataTask();
-        task2.setOnSucceeded(e -> {
-            tableDataList.clear();
-            Map<String, Integer> result = task2.getValue();
-            if (result != null) {
-                for (Map.Entry<String, Integer> entry : result.entrySet()) {
-                    tableDataList.add(new TableData(entry.getKey(), entry.getValue()));
-                }
-            }
-        });
-
-        task2.setOnFailed(e -> {
-            Throwable ex = task2.getException();
-            ex.printStackTrace();
-        });
-
-        new Thread(task2).start();
     }
 
     private void loadFarmers() {

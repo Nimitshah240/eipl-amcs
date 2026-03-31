@@ -30,7 +30,7 @@ public class AppConstant {
     public static String DB_LOC = "localhost";
 
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
-    public static final String versionNo = "1.1";
+    public static final String versionNo = "1.2";
 
     public static String baseUrlRealTime;
     public static String syncUrlRealTime;
@@ -288,5 +288,37 @@ public class AppConstant {
         LACTALIS_QA,
         BANAS_AMCS,
         AMCS_QAQCJ;
+    }
+
+    public enum PostingType {
+
+        Consolidate(1, "Consolidate"),
+        DayWise(2, "Day wise"),
+        PaymentCycle(3, "Payment cycle");
+
+        private final int value;
+        private final String label;
+
+        PostingType(int value, String label) {
+            this.value = value;
+            this.label = label;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static PostingType fromValue(int value) {
+            for (PostingType type : PostingType.values()) {
+                if (type.getValue() == value) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Invalid PostingType: " + value);
+        }
     }
 }

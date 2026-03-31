@@ -242,7 +242,7 @@ public class BroadcastedService {
             if (list == null || list.isEmpty())
                 return;
             LOGGER.info("SENDING BROADCAST COUNT : {}", list.size());
-            for (List<Broadcasted> part : ListUtils.partition(list, 10)) {
+            for (List<Broadcasted> part : ListUtils.partition(list, 50)) {
                 LOGGER.info("SENDING BROADCAST IN BATCHES : {}", part.size());
                 producer.produce(part);
             }
@@ -1036,7 +1036,7 @@ public class BroadcastedService {
                                 schemeRateApplicability.setRateClass(jsonText.get("rateClass") != null ? (String) jsonText.get("rateClass") : null);
                                 schemeRateApplicability.setApplicableFor("DCS"); // NIMIT - KEEP THIS BECAUSE PHP TEAM CHANGE REFCODE TO DCSCODE, WHICH CREATE ISSUE IN REPORT
 //                                schemeRateApplicability.setApplicableFor(jsonText.get("applicableFor") != null ? MainApp.identityDto.getSociety().getCode() : null); // NIMIT - KEEP THIS BECAUSE PHP TEAM CHANGE REFCODE TO DCSCODE, WHICH CREATE ISSUE IN REPORT
-                                schemeRateApplicability.setApplicableCode(jsonText.get("applicableCode") != null ? (String) jsonText.get("applicableCode") : null);
+                                schemeRateApplicability.setApplicableCode(MainApp.identityDto.getSociety().getCode());
                                 schemeRateApplicability.setIsMemberRate(jsonText.get("isMemberRate") != null ? String.valueOf(jsonText.get("isMemberRate")).equalsIgnoreCase("1") : null);
                                 schemeRateApplicability.setUnionCode(jsonText.get("unionCode") != null ? (String) jsonText.get("unionCode") : null);
                                 schemeRateApplicability.setIsActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);

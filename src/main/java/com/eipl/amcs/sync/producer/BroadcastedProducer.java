@@ -47,7 +47,7 @@ public class BroadcastedProducer {
                 broadcastedRepository.deleteById(uuid);
             }
         } catch (Exception e) {
-            LOGGER.error("Error while making the API call", e);
+            LOGGER.error("Error while making the API call {}", e.getMessage());
         }
     }
 

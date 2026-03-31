@@ -28,6 +28,7 @@ import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
+import com.eipl.amcs.setting.repository.AccountPostingRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
@@ -507,8 +508,12 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         btnStart.setOnAction(e -> {
             LocalDateTime collectionDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
             MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+            AccountPostingRepository accountPostingRepository = EmcsAppContext.getContext().getBean(AccountPostingRepository.class);
             if (milkDispatchRepository.existsByFromDateAndFromShift(collectionDateTime, cboxShift.getValue())) {
                 MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("milkcollection"), resourceBundle.getString("dispatch.already.done"));
+                alert.createAlert();
+            } else if (accountPostingRepository.findValidRange(dpDate.getValue(), cboxShift.getSelectionModel().getSelectedItem().getCode(), (short) 2, AppConstant.EventCode.MILK_COLLECTION) > 0) {
+                MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("milkcollection"), resourceBundle.getString("account.posting.already.done"));
                 alert.createAlert();
             } else {
                 loadRequestData();
@@ -838,9 +843,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private void printToggle() {
         printOnOff = !printOnOff;
-        if (printOnOff)
-            lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete"));
-        else lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete1"));
+//        if (printOnOff)
+//            lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete"));
+//        else lblShortcut.setText(resourceBundle.getString("F11SwitchCollectionModeF7SettingF3EditDelete1"));
     }
 
     private void RePrint() {
@@ -1464,6 +1469,9 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             errorMsg.append(resourceBundle.getString("sampleno.cannot.be.null") + "\n");
         if (txtCode.getText() == null || txtCode.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("membercode.cannot.be.null") + "\n");
+        if (memberSocietyInfoDto == null || memberSocietyInfoDto.getMember() == null) {
+            errorMsg.append(resourceBundle.getString("members.not.available") + "\n");
+        }
         if (txtQty.getText() == null || txtQty.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("qty.cannot.be.null") + "\n");
         if (txtFat.getText() == null || txtFat.getText().isEmpty())
