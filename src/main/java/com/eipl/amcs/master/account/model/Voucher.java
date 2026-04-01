@@ -57,6 +57,11 @@ public class Voucher extends BaseModelTxn {
     private String dockCode;
     private String financialYearsCode;
 
+    private String mccPlantCode;
+    private String plantCode;
+    private String bmcCode;
+
+
     private String xCol4;
     private String xCol5;
 

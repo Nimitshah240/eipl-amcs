@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.account.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherSubLedger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
 import org.springframework.data.domain.Sort;
@@ -23,4 +24,8 @@ public interface VoucherSubLedgerRepository extends BaseRepository<VoucherSubLed
 
     @EntityGraph(attributePaths = {"subLedger", "voucher", "voucherTransaction"})
     List<VoucherSubLedger> findByVoucherTransaction(VoucherTransaction voucherTransaction);
+
+    List<VoucherSubLedger> findByVoucher(Voucher voucherCode);
+
+
 }

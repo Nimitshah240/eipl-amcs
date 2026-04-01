@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -78,7 +79,9 @@ public class CouponIssueServiceImpl implements CouponIssueService {
             CouponBalance couponBal = couponBalanceService.fetchBalanceForConsumer(
                     couponIssue.getConsumerType(), couponIssue.getConsumerCode(),
                     couponIssue.getMilkType());
-            String voucherNo = createAutoPosting(couponIssue, null, CommonUtils.setIdentityHeader());
+            Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode((short) Integer.parseInt(String.valueOf(couponIssue.getConsumerType())), couponIssue.getConsumerCode());
+
+            String voucherNo = createAutoPosting(couponIssue, null, subLedger.orElse(null), CommonUtils.setIdentityHeader());
             couponIssue.setVoucherNo(voucherNo);
             if (couponBal == null) {
                 couponBal = new CouponBalance();
@@ -102,7 +105,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
         }
     }
 
-    private String createAutoPosting(CouponIssue couponIssue, String voucherCode, String identityInfo) {
+    private String createAutoPosting(CouponIssue couponIssue, String voucherCode, SubLedger subLedger, String identityInfo) {
         try {
             if (voucherCode == null) {
                 List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(AppConstant.EventCode.COUPON_ISSUE);
@@ -118,6 +121,9 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 }
                 if (mappingEvent.getDebitLedger() == null) {
                     throw new RuntimeException("Debit Ledger is not configured in Ledger Mapping for Coupon Issue (Event Code: " + AppConstant.EventCode.COUPON_ISSUE + ")");
+                }
+                if (subLedger == null) {
+                    throw new RuntimeException("Sub Ledger is not mapped with member (Event Code: " + AppConstant.EventCode.COUPON_ISSUE + ")");
                 }
 
                 Optional<FinancialYear> financialYearOpt = financialYearRepository.findCurrentFinancialYear(couponIssue.getIssueDate());
@@ -138,8 +144,8 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                         mappingEvent.getVoucherType(), finYearCode,
                         couponIssue.getSociety(), MainApp.identityDto.getUnion().getCode(), MainApp.identityDto.getSociety().getCode() + "01");
 //   UPDATE in model
-//                voucher.setProcessName("Coupon Issue");
-//                voucher.setProcessReference(couponIssue.getCode());
+                voucher.setProcessName("Coupon Issue");
+                voucher.setProcessReference(couponIssue.getCode());
                 voucher.setVoucherTransactions(new ArrayList<>());
 
                 BigDecimal amount = BigDecimal.valueOf(couponIssue.getAmount());
@@ -149,28 +155,27 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     voucherSubLedgerCode = Long.parseLong(nextCodeService.getNextCode("VoucherSubLedger", "code", couponIssue.getSociety().getCode(), 0));
                 }
 
+
                 // Credit Transaction
                 VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amount, true, mappingEvent.getCreditLedger(),
-                        "Product receipt " + couponIssue.getCode(), "1");
+                        mappingEvent.getVoucherTxnCreditNarration(), "1");
 
-                if (Boolean.TRUE.equals(mappingEvent.getCreditSubLedger())) {
+                if (mappingEvent.getCreditSubLedger()) {
                     List<String> refCodeList = new ArrayList<>();
                     refCodeList.add(couponIssue.getConsumerCode());
-                    List<SubLedger> subLedgerList = subLedgerRepository.findAllByTypeAndReferenceCodeIn((short) 1, refCodeList);
-                    Optional<SubLedger> subLedger = subLedgerList.stream().findFirst();
-                    if (subLedger.isPresent()) {
+
+                    if (subLedger != null) {
                         creditTxn.setVoucherSubLedgers(new ArrayList<>());
                         VoucherSubLedger voucherSubLedger = new VoucherSubLedger();
                         voucherSubLedger.setCode(String.valueOf(voucherSubLedgerCode));
                         voucherSubLedger.setVoucher(voucher);
                         voucherSubLedger.setCreditDebit(true);
                         voucherSubLedger.setVoucherTransaction(creditTxn);
-                        voucherSubLedger.setSubLedger(subLedger.get());
+                        voucherSubLedger.setSubLedger(subLedger);
                         voucherSubLedger.setAmount(amount);
-                        voucherSubLedger.setNarration("Product receipt " + couponIssue.getCode());
+                        voucherSubLedger.setNarration(mappingEvent.getVoucherTxnCreditNarration());
 
-                        voucherSubLedger.setCreatedAt(LocalDateTime.now());
-                        voucherSubLedger.setCreatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
+                        voucherSubLedger.setInitData();
 
                         creditTxn.getVoucherSubLedgers().add(voucherSubLedger);
                         voucherSubLedgerCode++;
@@ -180,29 +185,25 @@ public class CouponIssueServiceImpl implements CouponIssueService {
 
                 // Debit Transaction
                 VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amount, false, mappingEvent.getDebitLedger(),
-                        "Coupon Issue: " + couponIssue.getCode(), "2");
+                        mappingEvent.getVoucherTxnDebitNarration(), "2");
 
-                if (Boolean.TRUE.equals(mappingEvent.getDebitSubLedger())) {
+                if (mappingEvent.getDebitSubLedger()) {
                     List<String> refCodeList = new ArrayList<>();
                     refCodeList.add(couponIssue.getConsumerCode());
-                    List<SubLedger> subLedgerList = subLedgerRepository.findAllByTypeAndReferenceCodeIn((short) 1, refCodeList);
-                    Optional<SubLedger> subLedger = subLedgerList.stream().findFirst();
-                    if (subLedger.isPresent()) {
+
+                    if (subLedger != null) {
                         debitTxn.setVoucherSubLedgers(new ArrayList<>());
                         VoucherSubLedger voucherSubLedger = new VoucherSubLedger();
                         voucherSubLedger.setCode(String.valueOf(voucherSubLedgerCode));
                         voucherSubLedger.setVoucher(voucher);
                         voucherSubLedger.setCreditDebit(false);
                         voucherSubLedger.setVoucherTransaction(debitTxn);
-                        voucherSubLedger.setSubLedger(subLedger.get());
+                        voucherSubLedger.setSubLedger(subLedger);
                         voucherSubLedger.setAmount(amount);
-                        voucherSubLedger.setNarration("Coupon Issue: " + couponIssue.getCode());
+                        voucherSubLedger.setNarration(mappingEvent.getVoucherTxnDebitNarration());
 
-                        voucherSubLedger.setCreatedAt(LocalDateTime.now());
-                        voucherSubLedger.setCreatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
-
+                        voucherSubLedger.setInitData();
                         debitTxn.getVoucherSubLedgers().add(voucherSubLedger);
-                        voucherSubLedgerCode++;
                     }
                 }
                 voucher.getVoucherTransactions().add(debitTxn);
@@ -220,17 +221,6 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     }
                 }
                 return voucher.getCode();
-            } else {
-                Optional<Voucher> voucher = voucherRepository.findById(voucherCode);
-                if (voucher.isPresent()) {
-                    List<VoucherTransaction> voucherTransactionList = voucherTxnRepository.findByVoucher(voucher.get());
-                    for (VoucherTransaction voucherTransaction : voucherTransactionList) {
-                        List<VoucherSubLedger> subLedgers = voucherSubLedgerRepository.findByVoucherTransaction(voucherTransaction);
-                        voucherSubLedgerRepository.deleteAll(subLedgers);
-                        voucherTxnRepository.delete(voucherTransaction);
-                    }
-                    voucherRepository.delete(voucher.get());
-                }
             }
         } catch (Exception e) {
             logger.error("AutoPosting Error for CouponIssue " + couponIssue.getCode(), e);
@@ -239,23 +229,51 @@ public class CouponIssueServiceImpl implements CouponIssueService {
         return null;
     }
 
+    private void deleteVoucher(String voucherCode, String identityInfo) {
+        try {
+            Voucher voucher = voucherRepository.findById(voucherCode).orElse(null);
+
+            if (voucher != null) {
+                List<VoucherTransaction> voucherTransactions = voucherTxnRepository.findByVoucher(voucher);
+
+                if (!voucherTransactions.isEmpty()) {
+                    List<VoucherSubLedger> voucherSubLedgerList = voucherSubLedgerRepository.findByVoucher(voucher);
+
+                    if (voucherSubLedgerList != null && !voucherSubLedgerList.isEmpty()) {
+                        for (VoucherSubLedger voucherSubLedger : voucherSubLedgerList) {
+                            voucherSubLedgerRepository.customDelete(voucherSubLedger.getCode(), identityInfo);
+                        }
+                    }
+
+                    for (VoucherTransaction voucherTransaction : voucherTransactions) {
+                        voucherTxnRepository.customDelete(voucherTransaction.getCode(), identityInfo);
+                    }
+                }
+                voucherRepository.customDelete(voucher.getCode(), identityInfo);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+    }
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean update(CouponIssue updatedCouponIssue) {
         try {
-            CouponIssue couponIssuePrev = fetchByCode(updatedCouponIssue.getCode());
+            CouponIssue couponIssuePrev = couponIssueRepository.findByCode(updatedCouponIssue.getCode());
             CouponBalance couponBalancePrev = couponBalanceService.fetchBalanceForConsumer(couponIssuePrev.getConsumerType(),
                     couponIssuePrev.getConsumerCode(), couponIssuePrev.getMilkType());
 
             CouponBalance couponBalanceNew = couponBalanceService.fetchBalanceForConsumer(updatedCouponIssue.getConsumerType(),
                     updatedCouponIssue.getConsumerCode(), updatedCouponIssue.getMilkType());
+            Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode((short) Integer.parseInt(String.valueOf(updatedCouponIssue.getConsumerType())), updatedCouponIssue.getConsumerCode());
 
             // Delete previous voucher
-            if (couponIssuePrev.getVoucherNo() != null) {
-                createAutoPosting(couponIssuePrev, couponIssuePrev.getVoucherNo(), CommonUtils.setIdentityHeader());
-            }
+            String oldVoucherCode = couponIssuePrev.getVoucherNo();
+
             // Create new voucher
-            String voucherNo = createAutoPosting(updatedCouponIssue, null, CommonUtils.setIdentityHeader());
+            String voucherNo = createAutoPosting(updatedCouponIssue, null, subLedger.orElse(null), CommonUtils.setIdentityHeader());
             updatedCouponIssue.setVoucherNo(voucherNo);
 
             if (!Objects.equals(couponIssuePrev.getMilkType().getCode(), updatedCouponIssue.getMilkType().getCode()) || !Objects.equals(couponIssuePrev.getConsumerCode(), updatedCouponIssue.getConsumerCode())
@@ -289,6 +307,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     throw new RuntimeException("insufficient.balance");
                 }
             }
+            deleteVoucher(oldVoucherCode, CommonUtils.setIdentityHeader());
             couponIssueRepository.customUpdate(updatedCouponIssue, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
@@ -301,7 +320,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
     public boolean delete(CouponIssue couponIssue) {
         try {
 
-            CouponIssue couponIssuePrev = fetchByCode(couponIssue.getCode());
+            CouponIssue couponIssuePrev = couponIssueRepository.findByCode(couponIssue.getCode());
 
             CouponBalance couponBal = couponBalanceService.fetchBalanceForConsumer(couponIssue.getConsumerType(),
                     couponIssue.getConsumerCode(), couponIssue.getMilkType());
@@ -319,7 +338,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
 
             // Delete  voucher
             if (couponIssuePrev.getVoucherNo() != null) {
-                createAutoPosting(couponIssuePrev, couponIssuePrev.getVoucherNo(), CommonUtils.setIdentityHeader());
+                deleteVoucher(couponIssuePrev.getVoucherNo(), CommonUtils.setIdentityHeader());
             }
 
             CouponIssueAudit audit = (CouponIssueAudit) couponIssuePrev.getAuditModel("DELETE", MainApp.getUser() != null ? MainApp.getUser().getCode() : "System");
@@ -375,11 +394,5 @@ public class CouponIssueServiceImpl implements CouponIssueService {
             }
         }
         return listAll;
-    }
-
-
-    public CouponIssue fetchByCode(String strCode) {
-        CouponIssue couponIssue = couponIssueRepository.findByCode(strCode);
-        return couponIssue;
     }
 }

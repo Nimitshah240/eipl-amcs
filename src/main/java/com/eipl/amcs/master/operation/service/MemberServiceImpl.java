@@ -190,7 +190,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public MemberDto update(MemberDto memberDto, String identityInfo) {
         MemberDto dtoNew = new MemberDto();
-        Optional<Member> old = repository.findById(memberDto.getMember().getCode());
+//        Optional<Member> old = repository.findById(memberDto.getMember().getCode());
 
         Member member = memberDto.getMember();
         member.setupdateData();
@@ -224,6 +224,11 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new EntityNotFoundException(Member.class, "invalid.membercode"));
         MemberDetail detail = memberDetailrepository.findByMember(member)
                 .orElseThrow(() -> new EntityNotFoundException(MemberDetail.class, "invalid.membercode"));
+
+        SubLedger subLedger = subLedgerRepository.findByReferenceCodeAndType(member.getCode(), (short) 1).orElse(null);
+        if (subLedger != null)
+            subLedgerRepository.customDelete(subLedger, CommonUtils.setIdentityHeader());
+
         detail.setState(Hibernate.unproxy(detail.getState(), State.class));
         detail.setDistrict(Hibernate.unproxy(detail.getDistrict(), District.class));
         detail.setSubDistrict(Hibernate.unproxy(detail.getSubDistrict(), SubDistrict.class));
@@ -275,7 +280,7 @@ public class MemberServiceImpl implements MemberService {
         Optional<MemberDetail> detailOptional = memberDetailrepository.findByMember(member);
         MemberDetail detail = null;
         if (detailOptional.isPresent()) {
-             detail = detailOptional.get();
+            detail = detailOptional.get();
             detail.setMember(Hibernate.unproxy(detail.getMember(), Member.class));
             detail.setState(Hibernate.unproxy(detail.getState(), State.class));
             detail.setDistrict(Hibernate.unproxy(detail.getDistrict(), District.class));
@@ -299,11 +304,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
 
     public List<MemberDetail> findAllMemberDetails() {
-        List<MemberDetail> list = memberDetailrepository.findAll(Sort.by("code"));
-//        for (MemberDetail memberDetail : list) {
-//            memberDetail.setMember(Hibernate.unproxy(memberDetail.getMember(), Member.class));
-//        }
-        return list;
+        return memberDetailrepository.findAll(Sort.by("code"));
     }
 
     public void createSubLedgerOfMember(Member newMember) {
@@ -315,10 +316,15 @@ public class MemberServiceImpl implements MemberService {
             memberList = List.of(newMember);
         }
 
-        List<SubLedger> subLedgerList = new ArrayList<>();
         for (Member member : memberList) {
-            SubLedger subLedger = new SubLedger();
-            subLedger.setCode(subLedgerList.isEmpty() ? nextCodeRepository.getNextCode("SubLedger", "code", MainApp.identityDto.getSociety().getCode(), 0) : String.valueOf((Long.valueOf(subLedgerList.get(subLedgerList.size() - 1).getCode()) + 1)));
+            boolean newSubLedger = false;
+
+            SubLedger subLedger = subLedgerRepository.findByReferenceCodeAndType(member.getCode(), (short) 1).orElse(null);
+            if (subLedger == null) {
+                subLedger = new SubLedger();
+                subLedger.setCode(nextCodeRepository.getNextCode("SubLedger", "code", MainApp.identityDto.getSociety().getCode(), 0));
+                newSubLedger = true;
+            }
             subLedger.setName(member.getFirstName());
             subLedger.setNameLocal(member.getFirstNameLocal());
             subLedger.setReferenceCode(member.getCode());
@@ -329,8 +335,11 @@ public class MemberServiceImpl implements MemberService {
 
             subLedger.setCreatedAt(LocalDateTime.now());
             subLedger.setCreatedBy(MainApp.identityDto.getSociety().getCode());
-            subLedgerList.add(subLedger);
+            if (newSubLedger)
+                subLedgerRepository.customSave(subLedger, CommonUtils.setIdentityHeader());
+            else
+                subLedgerRepository.customUpdate(subLedger, CommonUtils.setIdentityHeader());
+
         }
-        subLedgerRepository.saveAll(subLedgerList);
     }
 }

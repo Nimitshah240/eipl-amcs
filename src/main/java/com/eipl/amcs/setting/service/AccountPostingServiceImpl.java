@@ -149,6 +149,7 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 
                     voucherSubLedger.setSubLedger(subLedgerList.stream().filter(sb -> sb.getReferenceCode().equals(memberCode)).findFirst().orElse(null));
                     voucherSubLedger.setAmount(memberPeriodTotals.get(memberCode));
+                    voucherSubLedger.setInitData();
 
                     if (eventsList.get(0).getCreditSubLedger()) {
                         creditTxn.getVoucherSubLedgers().add(voucherSubLedger);
@@ -172,6 +173,7 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                 }
             }
             accountPosting.setCode(nextCodeService.getNextCode("AccountPosting", "code", MainApp.identityDto.getSociety().getCode(), 0));
+            accountPosting.setInitData();
             accountPostingRepository.customSave(accountPosting, CommonUtils.setIdentityHeader());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -335,7 +337,6 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                 if (!((event.getCreditSubLedger() && dto.isCredit_debit()) || (event.getDebitSubLedger() && !dto.isCredit_debit())))
                     continue;
                 List<SubLedger> subLedgers = new ArrayList<>();
-                Map<String, BigDecimal> memberTotals = new HashMap<>();
                 List<CustomerTypeWiseTotalDto> result = new ArrayList<>();
                 if (accountPosting.getEventType() == AppConstant.EventCode.MILK_COLLECTION) {
                     List<MilkCollection> milkList = fetchMilkData(accountPosting, dto);
@@ -350,7 +351,8 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                         return memberTypeWiseTotalDto;
                     }).collect(Collectors.toList());
 
-                    subLedgers = subLedgerRepository.findAllByTypeAndReferenceCodeIn((short) 1, new ArrayList<>(memberTotals.keySet()));
+                    List<String> customerCodes = result.stream().map(CustomerTypeWiseTotalDto::getCustomerCode).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+                    subLedgers = subLedgerRepository.findAllByTypeAndReferenceCodeIn((short) 1, customerCodes);
                 } else if (accountPosting.getEventType() == AppConstant.EventCode.LOCAL_MILK_SALE) {
                     List<LocalMilkSale> localMilkSaleList = fetchLocalMilkSaleData(accountPosting, dto);
                     result = localMilkSaleList.stream().collect(Collectors.groupingBy(LocalMilkSale::getConsumerCode, Collectors.groupingBy(LocalMilkSale::getConsumerType, Collectors.reducing(BigDecimal.ZERO, LocalMilkSale::getAmount, BigDecimal::add)))).entrySet().stream().flatMap(consumerEntry -> consumerEntry.getValue().entrySet().stream().map(typeEntry -> {
@@ -516,6 +518,7 @@ public class AccountPostingServiceImpl implements AccountPostingService {
             vsl.setCreditDebit(event.getCreditSubLedger());
             vsl.setSubLedger(subLedger);
             vsl.setAmount(memberTypeWiseTotalDto.getAmount());
+            vsl.setInitData();
 
             if (isDraft) {
                 VoucherSubLedgerRaw raw = objectMapper.convertValue(vsl, VoucherSubLedgerRaw.class);

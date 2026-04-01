@@ -1,5 +1,6 @@
 package com.eipl.amcs.utils;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.org.model.Society;
 
@@ -25,6 +26,9 @@ public class VoucherUtil {
         voucher.setInitData();
         voucher.setFinancialYearsCode(financialYear);
 
+        voucher.setBmcCode(MainApp.identityDto.getSociety().getBmc().getCode());
+        voucher.setMccPlantCode(MainApp.identityDto.getSociety().getMcc().getCode());
+        voucher.setPlantCode(MainApp.identityDto.getSociety().getPlant().getCode());
         return voucher;
     }
 

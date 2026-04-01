@@ -136,7 +136,7 @@ public class AccountPostingAddEditController implements MyInitialization {
                 throw new RuntimeException(ex);
             }
 
-//            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/AccountPosting.fxml")));
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/AccountPosting.fxml")));
         });
         task.setOnFailed(e -> {
             Throwable exception = task.getException();

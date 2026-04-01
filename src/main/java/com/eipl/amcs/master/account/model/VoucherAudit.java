@@ -57,6 +57,10 @@ public class VoucherAudit extends BaseModelTxnAudit {
     private String dockCode;
     private String financialYearsCode;
 
+    private String mccPlantCode;
+    private String plantCode;
+    private String bmcCode;
+
     @Transient
     @JsonIgnore
     private List<VoucherTransaction> voucherTransactions;

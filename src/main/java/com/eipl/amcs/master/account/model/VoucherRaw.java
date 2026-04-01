@@ -61,6 +61,10 @@ public class VoucherRaw extends BaseModelTxn {
     @Column(name = "x_col5")
     private String xCol5;
 
+    private String mccPlantCode;
+    private String plantCode;
+    private String bmcCode;
+
     @OneToMany(mappedBy = "voucherRaw", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<VoucherTransactionRaw> voucherTransactionRawList = new ArrayList<>();

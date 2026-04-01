@@ -2,6 +2,8 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.Events;
 import com.eipl.amcs.master.account.task.EventsLoadTask;
 import com.eipl.amcs.setting.model.AccountPosting;
@@ -84,6 +86,10 @@ public class AccountPostingController implements MyInitialization {
 
             if (!oneDraft)
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/AccountPostingAddEdit.fxml")));
+            else {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("accountposting"), resourceBundle.getString("error.occurred"));
+                alert.createAlert();
+            }
         });
 
         propMilkCollectionAccountPostingDto.addListener((observable, oldValue, newValue) -> {
@@ -121,7 +127,6 @@ public class AccountPostingController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now().withDayOfMonth(1));
         dpToDate.setValue(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()));
         loadEvents();
-        loadMilkCollectionAccountPosting();
     }
 
     @Override
@@ -168,7 +173,7 @@ public class AccountPostingController implements MyInitialization {
                         eventList = task.get();
                         eventMap = eventList.stream()
                                 .collect(Collectors.toMap(Events::getCode, eve -> eve));
-
+                        loadMilkCollectionAccountPosting();
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);
                     }

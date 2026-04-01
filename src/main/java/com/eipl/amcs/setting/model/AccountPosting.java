@@ -6,6 +6,7 @@ import com.eipl.amcs.json.deserialize.ShiftDeserializer;
 import com.eipl.amcs.json.serialize.ShiftSerialize;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.org.model.Society;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
@@ -23,7 +24,9 @@ import java.time.LocalDate;
 public class AccountPosting extends BaseModelTxn {
     @Id
     private String code;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fromDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate toDate;
     //    private Integer fromShift;
 //    private Integer toShift;

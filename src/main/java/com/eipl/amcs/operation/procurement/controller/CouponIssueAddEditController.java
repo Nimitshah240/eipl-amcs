@@ -241,7 +241,7 @@ public class CouponIssueAddEditController implements MyInitialization {
         dto.setSociety(MainApp.identityDto.getSociety());
         dto.setAmount(Double.parseDouble(txtAmount.getText().trim().isEmpty() ? "0" : txtAmount.getText().trim()));
         dto.setConsumerCode(generateCode(txtCode.getText().trim()));
-        dto.setConsumerType(cboxType.getSelectionModel().getSelectedIndex() + 1);
+        dto.setConsumerType((int) cboxType.getSelectionModel().getSelectedItem().getKey());
         dto.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
         dto.setCode(txtIssueNumber.getText().trim());
         dto.setActive(true);
