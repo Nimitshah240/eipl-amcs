@@ -259,6 +259,10 @@ public class AccountPostingAddEditController implements MyInitialization {
                 throw new RuntimeException(ex);
             }
         });
+        task.setOnFailed(e -> {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("accountposting"), resourceBundle.getString("error.occurred"));
+                alert.createAlert();
+        });
         new Thread(task).start();
     }
 

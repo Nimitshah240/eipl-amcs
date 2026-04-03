@@ -91,6 +91,9 @@ public class AccountPostingServiceImpl implements AccountPostingService {
     private void validate(AccountPosting accountPosting) {
         if (!accountPostingRepository.findOverlappingPostings(accountPosting.getFromDate(), accountPosting.getFromShift(), accountPosting.getToDate(), accountPosting.getToShift(), accountPosting.getEventType(), (short) 2).isEmpty())
             throw new RuntimeException("posting.already.exists");
+        if (accountPostingRepository.existsByStatusAndEventType(accountPosting.getStatus(), accountPosting.getEventType())) {
+            throw new RuntimeException("error.occurred");
+        }
     }
 
     private void createAccountPosting(AccountPosting accountPosting, List<AccountPostingDto> accountPostingDtoList) {
@@ -198,8 +201,8 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 
             if (type == 1) { // consolidate
                 milkCollectionList = milkCollectionService.findAllBetween(fromDateTime, toDateTime);
-
-                dateWiseTotal.put(LocalDate.now(), milkCollectionList.stream().map(MilkCollection::getAmount).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
+                if (!milkCollectionList.isEmpty())
+                    dateWiseTotal.put(LocalDate.now(), milkCollectionList.stream().map(MilkCollection::getAmount).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
 
             } else if (type == 2) {// for day wise
                 milkCollectionList = milkCollectionService.findAllBetween(fromDateTime, toDateTime);
@@ -235,8 +238,9 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw e;
         }
-        return null;
+//        return null;
     }
 
     public List<AccountPostingDto> loadLocalMilkSaleAccountPosting(int type, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
@@ -256,7 +260,8 @@ public class AccountPostingServiceImpl implements AccountPostingService {
             Map<LocalDate, BigDecimal> dateWiseTotal = new HashMap<>();
 
             if (type == 1) { // consolidate
-                dateWiseTotal.put(LocalDate.now(), localMilkSaleList.stream().map(LocalMilkSale::getAmount).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
+                if (!localMilkSaleList.isEmpty())
+                    dateWiseTotal.put(LocalDate.now(), localMilkSaleList.stream().map(LocalMilkSale::getAmount).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
 
             } else if (type == 2) {// for day wise
 
@@ -558,6 +563,10 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 //            }
 //        }
     }
+//    @Override
+//    public boolean isAnyDraftPresent() {
+//        return accountPostingRepository.existsByStatus((short) 1);
+//    }
 
     @Getter
     @AllArgsConstructor

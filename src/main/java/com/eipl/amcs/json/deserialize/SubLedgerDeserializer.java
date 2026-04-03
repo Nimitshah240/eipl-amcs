@@ -20,7 +20,7 @@ public class SubLedgerDeserializer extends JsonDeserializer<SubLedger> {
     @Override
     public SubLedger deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
-        return repository.findById(String.valueOf(parser.getValueAsInt())).get();
+        return repository.findById(String.valueOf(parser.getValueAsString())).get();
     }
 
 }

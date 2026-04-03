@@ -36,4 +36,6 @@ public interface AccountPostingRepository extends BaseRepository<AccountPosting,
 
     @Query("SELECT count(*) FROM AccountPosting ap WHERE :eventType=ap.eventType AND :status= ap.status AND (:date > ap.fromDate OR (:date = ap.fromDate AND :shift >= ap.fromShift.code)) AND (:date < ap.toDate OR (:date = ap.toDate AND :shift <= ap.toShift.code))")
     Integer findValidRange(@Param("date") LocalDate date, @Param("shift") Integer shift, @Param("status") short status, @Param("eventType") int eventType);
+
+    boolean existsByStatusAndEventType(short status, int eventType);
 }
