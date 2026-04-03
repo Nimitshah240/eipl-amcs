@@ -240,7 +240,6 @@ public class AccountPostingServiceImpl implements AccountPostingService {
             log.error(e.getMessage());
             throw e;
         }
-//        return null;
     }
 
     public List<AccountPostingDto> loadLocalMilkSaleAccountPosting(int type, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
@@ -563,10 +562,6 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 //            }
 //        }
     }
-//    @Override
-//    public boolean isAnyDraftPresent() {
-//        return accountPostingRepository.existsByStatus((short) 1);
-//    }
 
     @Getter
     @AllArgsConstructor
