@@ -20,7 +20,7 @@ public class SocietyDeserializer extends JsonDeserializer<Society> {
     @Override
     public Society deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
-        return societyRepository.findById(String.valueOf(parser.getValueAsInt())).get();
+        return societyRepository.findById(String.valueOf(parser.getValueAsString())).get();
     }
 
 }

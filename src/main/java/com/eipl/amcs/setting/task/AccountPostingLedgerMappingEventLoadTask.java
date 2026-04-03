@@ -37,6 +37,7 @@ public class AccountPostingLedgerMappingEventLoadTask extends Task<List<AccountP
 
         } catch (Exception e) {
             LOGGER.error("LedgerMappingEvent fetch", e);
+            throw e;
         }
         return null;
     }
