@@ -316,6 +316,7 @@ public class GeneralConfigController implements MyInitialization {
                     Files.deleteIfExists(Path.of("resources/old_app.properties"));
                     System.exit(0);
                 } else {
+                    Files.deleteIfExists(Path.of("resources/old_app.properties"));
                     MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
                 }
             }

@@ -1,6 +1,7 @@
 package com.eipl.amcs.setting.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,5 @@ public interface HardwareDeviceConfigRepository extends BaseRepository<HardwareD
     @EntityGraph(attributePaths = {"society", "hardwareDevice", "dock"})
     Optional<HardwareDeviceConfig> findById(String id);
 
+    List<HardwareDeviceConfig> findByDock(Dock dock);
 }

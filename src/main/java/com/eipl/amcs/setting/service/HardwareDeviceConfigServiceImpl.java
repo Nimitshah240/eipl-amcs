@@ -26,7 +26,9 @@ public class HardwareDeviceConfigServiceImpl implements HardwareDeviceConfigServ
     @Override
     @Transactional
     public String saveUpdate(List<HardwareDeviceConfig> list, String identityInfo) {
-        List<HardwareDeviceConfig> listPrev = hardwareRepository.findAll();
+//        List<HardwareDeviceConfig> listPrev = hardwareRepository.findAll();
+        List<HardwareDeviceConfig> listPrev = hardwareRepository.findByDock(list.get(0).getDock());
+
         String nextCode = nextCodeRepository.getNextCode("HardwareDeviceConfig", "code",
                 list.get(0).getSociety().getCode(), 0);
 
