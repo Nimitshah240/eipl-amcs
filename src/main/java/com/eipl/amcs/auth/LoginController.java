@@ -5,9 +5,14 @@ import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.auth.task.LoginTask;
 import com.eipl.amcs.auth.task.VerifyIdentityTask;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.dto.JarUpdate;
+import com.eipl.amcs.base.task.DownloadFileTask;
+import com.eipl.amcs.base.task.UpdaterCheckTask;
+import com.eipl.amcs.base.task.UpdaterLogTask;
 import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
@@ -69,6 +74,7 @@ public class LoginController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadData();
+        callApi();
         setupComboBox();
         cboxLang.setValue(MainApp.getProperty("application.language", "English"));
         btnLogin.setOnAction(e -> {
@@ -297,6 +303,51 @@ public class LoginController implements MyInitialization {
                 Object obj = task.get();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void callApi() {
+        var task = new UpdaterCheckTask();
+        task.setOnSucceeded(e -> {
+            try {
+                JarUpdate jarUpdate = task.get();
+                if (jarUpdate != null) {
+//                    Map<String, Object> map = (Map<String, Object>) res.get("data");
+                    if (jarUpdate.getResourcePath() != null) {
+                        var task1 = new DownloadFileTask(jarUpdate.getResourcePath());
+                        task1.setOnSucceeded(e1 -> {
+
+                            var task2 = new UpdaterLogTask(jarUpdate);
+                            task2.setOnSucceeded(e2 -> {
+                                MyAlert alert = new InformationAlert(MainApp.getStage(), "Application Update Successful",
+                                        "Please Restart Your Computer");
+                                alert.createAlert();
+                            });
+                            new Thread(task2).start();
+
+
+                            try {
+                                File dir = new File("resources/appupdate");
+                                if (dir.listFiles() != null) {
+                                    for (File file : dir.listFiles()) {
+                                        for (File listFile : file.listFiles()) {
+                                            listFile.delete();
+                                        }
+                                        file.delete();
+                                    }
+                                    dir.delete();
+                                }
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                        new Thread(task1).start();
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         });
         new Thread(task).start();

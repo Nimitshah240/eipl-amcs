@@ -130,7 +130,7 @@ public class NavbarController implements MyInitialization {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/setting/GeneralConfig.fxml")));
         });
         loadNotification();
-        callApi();
+//        callApi();
         ftpBackup();
     }
 
