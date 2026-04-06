@@ -167,7 +167,7 @@
 					<textFieldExpression><![CDATA[$V{qty}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.000" isBlankWhenNull="true">
-					<reportElement key="b" style="noto" mode="Opaque" x="450" y="0" width="92" height="20" backcolor="#E4E4F5" uuid="b367a160-ba1d-4d2c-a4b0-4b59010e939d">
+					<reportElement key="b" style="noto" mode="Opaque" x="410" y="0" width="132" height="20" backcolor="#E4E4F5" uuid="b367a160-ba1d-4d2c-a4b0-4b59010e939d">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -187,24 +187,6 @@
 					<reportElement key="b" style="noto" mode="Opaque" x="270" y="0" width="43" height="20" backcolor="#E4E4F5" uuid="3359cd82-c99d-4727-904e-ce38e2483132">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<box leftPadding="0" rightPadding="0">
-						<pen lineWidth="1.0" lineStyle="Solid"/>
-						<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Noto" size="10" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[""]]></textFieldExpression>
-				</textField>
-				<textField pattern="#,###,###,##0.000" isBlankWhenNull="true">
-					<reportElement key="b" style="noto" mode="Opaque" x="410" y="0" width="40" height="20" backcolor="#E4E4F5" uuid="a1e0d92f-ace2-4562-ae1b-8dded793adbd">
-						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
