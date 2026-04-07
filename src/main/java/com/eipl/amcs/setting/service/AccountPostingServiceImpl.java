@@ -89,9 +89,9 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 //    }
 
     private void validate(AccountPosting accountPosting) {
-        if (!accountPostingRepository.findOverlappingPostings(accountPosting.getFromDate(), accountPosting.getFromShift(), accountPosting.getToDate(), accountPosting.getToShift(), accountPosting.getEventType(), (short) 2).isEmpty())
+        if (!accountPostingRepository.findOverlappingPostings(accountPosting.getFromDate(), accountPosting.getFromShift(), accountPosting.getToDate(), accountPosting.getToShift(), accountPosting.getEventType(),accountPosting.getCode()).isEmpty())
             throw new RuntimeException("posting.already.exists");
-        if (accountPostingRepository.existsByStatusAndEventType(accountPosting.getStatus(), accountPosting.getEventType())) {
+        if (accountPostingRepository.existsByStatusAndEventTypeAndCodeNotExist((short)1, accountPosting.getEventType(),accountPosting.getCode())) {
             throw new RuntimeException("error.occurred");
         }
     }
