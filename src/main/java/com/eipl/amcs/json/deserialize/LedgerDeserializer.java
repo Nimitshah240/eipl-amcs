@@ -20,7 +20,7 @@ public class LedgerDeserializer extends JsonDeserializer<Ledger> {
     @Override
     public Ledger deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
-        return Repository.findById(String.valueOf(parser.getValueAsInt())).get();
+        return Repository.findById(String.valueOf(parser.getValueAsString())).get();
     }
 
 }

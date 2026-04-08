@@ -517,6 +517,8 @@ public class AccountPostingServiceImpl implements AccountPostingService {
             String code = nextCodeService.getNextCode(tableName, "code", MainApp.identityDto.getSociety().getCode(), 0);
             SubLedger subLedger = subLedgers.stream().filter(s -> s.getReferenceCode().equals(memberTypeWiseTotalDto.getCustomerCode()) && String.valueOf(s.getType()).equals(memberTypeWiseTotalDto.getCustomerType())).findFirst().orElse(null);
 
+            if(subLedger == null)
+                throw new RuntimeException("error.occurred"); //todo Write Meaningfull Error
             VoucherSubLedger vsl = new VoucherSubLedger();
             vsl.setCode(code);
             vsl.setCreditDebit(event.getCreditSubLedger());
