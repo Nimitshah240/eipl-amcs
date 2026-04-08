@@ -103,7 +103,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 if (dto.getConsumerType() < (short) 3) {
                     getNameFromMemberCode(dto.getConsumerCode());
                 } else {
-                    getNameFromCustomerCode(dto.getConsumerCode());
+                    getNameFromCustomerCode(dto.getConsumerCode(), Integer.valueOf(dto.getConsumerType()));
                 }
             }
         } catch (Exception e) {
@@ -144,6 +144,8 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
         cboxConsumertype.setOnAction(e -> {
             fetchCouponBalance();
+            txtConsumerCode.clear();
+            txtConsumerName.clear();
         });
 
         btnClose.setOnAction(e -> this.stage.close());
@@ -192,7 +194,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                     getNameFromMemberCode(code);
                 } else {
                     String code = generateCode(txtConsumerCode.getText().trim());
-                    getNameFromCustomerCode(code);
+                    getNameFromCustomerCode(code, Integer.valueOf(cboxConsumertype.getSelectionModel().getSelectedItem().getKey()));
                 }
             }
         });
@@ -293,6 +295,9 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     private boolean validate() {
         try {
+            if (cboxConsumertype.getSelectionModel().getSelectedItem().getKey() > 2 && cboxPaymentType.getSelectionModel().getSelectedItem().equalsIgnoreCase("credit")) {
+                errorMsg.append(resourceBundle.getString("customer.credit.not.allowed") + "\n");
+            }
             if (txtRate.getText() == null || Objects.equals(txtRate.getText(), "0")) {
                 errorMsg.append(resourceBundle.getString("localmilksaleratenotavailable") + "\n");
             }
@@ -393,8 +398,13 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             }
         });
         task.setOnFailed(e -> {
+            Throwable t = task.getException();
+            String message = t.getMessage();
+            if (!message.contains("paymentcyclenotfound"))
+                message = "error.occurred";
+
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"),
-                    resourceBundle.getString("error.occurred"));
+                    resourceBundle.getString(message));
             alert.createAlert();
         });
         new Thread(task).start();
@@ -574,9 +584,9 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
-    private void getNameFromCustomerCode(String code) {
+    private void getNameFromCustomerCode(String code, Integer type) {
         //Code and name from customer code
-        var task = new CustomerByIdLoadTask(code);
+        var task = new CustomerByIdLoadTask(code, type);
         task.setOnSucceeded(e -> {
             try {
                 if (task.get() != null) {

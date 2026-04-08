@@ -167,6 +167,33 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
+    public Customer findByCustomerCodeAndType(String code, Integer type) {
+        //        if (code.endsWith("0001") && customer == null) {
+//            try {
+//                customer = new Customer();
+//                customer.setCode(code);
+////                Society society = socRepository.findById(code.substring(0, 7)).orElseThrow(() -> new EntityNotFoundException(Society.class, "code", code.substring(0, 7)));
+//                Society society = MainApp.identityDto.getSociety();
+//                customer.setSociety(society);
+//                customer.setUnion(society.getUnion());
+//                customer.setType(5);
+//                customer.setCreditLimit(BigDecimal.ZERO);
+//                customer.setRegistrationDate(LocalDate.now());
+//                customer.setMobileNo("0000000000");
+//                customer.setPaymentMode(0);
+//                customer.setName("Retail Sale Consumer");
+//                customer.setNameLocal("Retail Sale Consumer");
+//                customer.setActive(true);
+//                customer = repository.save(customer);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+        return repository.findByCodeAndType(code, type);
+    }
+
+    @Override
     public CustomerDetails findDetailByCustomerCode(String code) {
         Customer customer = repository.findById(code)
                 .orElseThrow(() -> new EntityNotFoundException(Customer.class, "invalid.customercode"));

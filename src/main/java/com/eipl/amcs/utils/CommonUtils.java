@@ -61,7 +61,7 @@ public class CommonUtils {
         customerTypeList = new ArrayList<>();
         customerTypeList.add(new CustomerTypeKeyValDto((short) 1, getResourceString(MainApp.getBundle(), "member"), true, true, false));
         customerTypeList.add(new CustomerTypeKeyValDto((short) 2, getResourceString(MainApp.getBundle(), "nonmember"), true, true, false));
-        customerTypeList.add(new CustomerTypeKeyValDto((short) 3, getResourceString(MainApp.getBundle(), "vendor"), false, true, true));
+        customerTypeList.add(new CustomerTypeKeyValDto((short) 3, getResourceString(MainApp.getBundle(), "vendor"), true, true, true));
         customerTypeList.add(new CustomerTypeKeyValDto((short) 4, getResourceString(MainApp.getBundle(), "institute"), true, true, true));
         customerTypeList.add(new CustomerTypeKeyValDto((short) 5, getResourceString(MainApp.getBundle(), "retailsale"), true, false, true));
         customerTypeList.add(new CustomerTypeKeyValDto((short) 6, getResourceString(MainApp.getBundle(), "consumer"), true, true, true));

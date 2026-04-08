@@ -27,4 +27,7 @@ public interface CustomerRepository extends BaseRepository<Customer, String> {
     @EntityGraph(attributePaths = {"union", "society"})
     List<Customer> findAllBySociety(Society society, Sort sort);
 
+    @EntityGraph(attributePaths = {"union", "society"})
+    Customer findByCodeAndType(String code, Integer type);
+
 }

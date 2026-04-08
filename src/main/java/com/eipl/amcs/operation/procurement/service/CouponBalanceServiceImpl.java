@@ -127,12 +127,12 @@ public class CouponBalanceServiceImpl implements CouponBalanceService {
 
                 } else if (type == 3 || type == 4) {
                     couponBalance.setConsumerTypeString(type == 3 ? "institute" : "retail sale");
-                    Customer c = customerService.findByCustomerCode(couponBalance.getConsumerCode());
+                    Customer c = customerService.findByCustomerCodeAndType(couponBalance.getConsumerCode(),couponBalance.getConsumerType());
                     if (c != null) couponBalance.setConsumerName(c.getName());
 
                 } else {
                     couponBalance.setConsumerTypeString("consumer");
-                    Customer c = customerService.findByCustomerCode(couponBalance.getConsumerCode());
+                    Customer c = customerService.findByCustomerCodeAndType(couponBalance.getConsumerCode(),couponBalance.getConsumerType());
                     if (c != null) {
                         couponBalance.setConsumerName(c.getName());
                     } else {

@@ -221,7 +221,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         cboxProduct.setOnAction(e -> {
             if (cboxProduct.getValue() != null) {
                 Tax tax = cboxTaxCode.getItems().stream()
-                        .filter(p -> p.getCode().equalsIgnoreCase(cboxProduct.getValue().getTax().getCode()))
+                        .filter(p -> p.getCode().equalsIgnoreCase(cboxProduct.getValue().getTax() == null ? null : cboxProduct.getValue().getTax().getCode()))
                         .findFirst().orElse(null);
                 if (tax != null)
                     cboxTaxCode.getSelectionModel().select(tax);
@@ -353,7 +353,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     private void setConsumerName(String text) {
-        if (cboxType.getValue().getKey() == 1) { // Member table
+        if (cboxType.getValue().getKey() < 3) { // Member table
             var task = new MemberByIdLoadTask(text);
             task.setOnSucceeded(e -> {
                 try {
@@ -363,7 +363,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     } else {
                         txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
-                                resourceBundle.getString("localmilk.sale.validation.vendor.empty")
+                                resourceBundle.getString("membernotfound")
                         );
                         alert.createAlert();
                     }
@@ -372,12 +372,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 }
             });
             new Thread(task).start();
-        } else if (cboxType.getValue().getKey() == 4) {
-            var task = new CustomerByIdLoadTask(text);
+        } else if (cboxType.getValue().getKey() > 2) {
+            var task = new CustomerByIdLoadTask(text, Integer.valueOf(cboxType.getValue().getKey()));
             task.setOnSucceeded(e -> {
                 try {
                     Customer list = task.get();
-                    if (list != null && list.getType() == 4) {
+                    if (list != null) {
                         txtConsumerName.setText(list.getName());
                         txtCreditLimit.setText("0");
                         txtCreditLimit.setDisable(true);
@@ -385,7 +385,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     } else {
                         txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
-                                resourceBundle.getString("error.occurred"));
+                                resourceBundle.getString("customernotfound"));
                         alert.createAlert();
                     }
                 } catch (InterruptedException | ExecutionException ex) {
@@ -449,6 +449,17 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         cboxType.setConverter(new CustomerTypeConvertor(cboxType));
         cboxProduct.setConverter(new ProductConvertor(cboxProduct));
         cboxTaxCode.setConverter(new TaxConvertor(cboxTaxCode));
+        cboxType.setOnAction(e -> {
+                    txtConsumerCode.clear();
+                    txtConsumerName.clear();
+                    if (cboxType.getSelectionModel().getSelectedItem().getKey() > 2) {
+                        rbtnCredit.setDisable(true);
+                        rbtnCash.setSelected(true);
+                    } else {
+                        rbtnCredit.setDisable(false);
+                    }
+                }
+        );
     }
 
     public void deleteData() {
@@ -807,8 +818,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
     @Override
     public void loadData() {
-        cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForProductSale().stream().
-                filter(e -> e.getKey() <= (short) 2 || e.getKey() == (short) 4).collect(Collectors.toList())));
+        cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForProductSale()));
+//                .stream().
+//                filter(e -> e.getKey() <= (short) 2 || e.getKey() == (short) 4).collect(Collectors.toList())));
         cboxType.getSelectionModel().select(0);
         if (productSale != null) {
             Optional<CustomerTypeKeyValDto> dd = cboxType.getItems().stream()

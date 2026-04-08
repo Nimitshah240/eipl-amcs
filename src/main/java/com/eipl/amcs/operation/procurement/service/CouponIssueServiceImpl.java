@@ -366,12 +366,12 @@ public class CouponIssueServiceImpl implements CouponIssueService {
 
                 } else if (type == 3 || type == 4) {
                     item.setConsumerTypeString(type == 3 ? "institute" : "retail sale");
-                    Customer c = customerService.findByCustomerCode(item.getConsumerCode());
+                    Customer c = customerService.findByCustomerCodeAndType(item.getConsumerCode(), item.getConsumerType());
                     if (c != null) item.setConsumerName(c.getName());
 
                 } else {
                     item.setConsumerTypeString("consumer");
-                    Customer c = customerService.findByCustomerCode(item.getConsumerCode());
+                    Customer c = customerService.findByCustomerCodeAndType(item.getConsumerCode(), item.getConsumerType());
                     if (c != null) {
                         item.setConsumerName(c.getName());
                     } else {

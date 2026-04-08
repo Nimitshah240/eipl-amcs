@@ -192,7 +192,7 @@ public class CouponIssueAddEditController implements MyInitialization {
     }
 
     private void getNameFromCustomerCode(String code) {
-        var task = new CustomerByIdLoadTask(code);
+        var task = new CustomerByIdLoadTask(code, Integer.valueOf(cboxType.getValue().getKey()));
         task.setOnSucceeded(e -> {
             try {
                 if (task.get() != null) {

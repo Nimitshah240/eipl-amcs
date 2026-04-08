@@ -1506,3 +1506,4 @@ vouchertxndebitnarration=वाउचर लेनदेन डेबिट व�
 vouchernarrationlocal=वाउचर विवरण स्थानीय
 vouchertxncreditnarrationlocal=वाउचर लेनदेन क्रेडिट कथन स्थानीय
 vouchertxndebitnarrationlocal=वाउचर लेनदेन डेबिट विवरण स्थानीय
+customer.credit.not.allowed=ग्राहकों या अन्य लोगों के लिए क्रेडिट की अनुमति नहीं है

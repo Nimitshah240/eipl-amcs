@@ -68,7 +68,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         // validation
         SocietyPaymentCycle paymentCycle = societyPaymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(localMilkSale.getSaleDate(), localMilkSale.getSaleDate());
         if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-            throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("localMilkSale", "SaleDate", localMilkSale.getSaleDate(), "paymentcyclenotfound"));
+            throw new RuntimeException("paymentcyclenotfound");
         // pass
         String code = nextCodeService.getNextCode("LocalMilkSale", "code", localMilkSale.getSociety().getCode(), 2);
         localMilkSale.setCode(code);

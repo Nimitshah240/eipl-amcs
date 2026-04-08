@@ -14,6 +14,8 @@ public interface CustomerService {
 
     Customer findByCustomerCode(String code);
 
+    Customer findByCustomerCodeAndType(String code, Integer type);
+
     CustomerDto update(CustomerDto customer, String identityInfo);
 
     Optional<Customer> findById(String code);
