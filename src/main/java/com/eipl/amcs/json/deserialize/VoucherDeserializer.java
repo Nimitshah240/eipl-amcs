@@ -20,7 +20,7 @@ public class VoucherDeserializer extends JsonDeserializer<Voucher> {
     @Override
     public Voucher deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
-        return repository.findById(String.valueOf(parser.getValueAsInt())).get();
+        return repository.findById(String.valueOf(parser.getValueAsString())).get();
     }
 
 }
