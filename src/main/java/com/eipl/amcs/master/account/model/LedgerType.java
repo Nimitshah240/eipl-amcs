@@ -33,6 +33,7 @@ public class LedgerType extends BaseModel {
     @Column(name = "balance_sheet")
     private boolean balanceSheet;
     private String unionCode;
+    private String refCode;
     @Override
     public String getTableName() {
         return "ledger_types";
@@ -64,6 +65,7 @@ public class LedgerType extends BaseModel {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
+        audit.setRefCode(this.getRefCode());
 
         return audit;
     }

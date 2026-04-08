@@ -49,6 +49,8 @@ public class Ledger extends BaseModel {
     private String plantCode;
     private String mccCode;
     private String bmcCode;
+    private String refCode;
+
     @Transient
     private BooleanProperty selected;
 
@@ -96,6 +98,7 @@ public class Ledger extends BaseModel {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
+        audit.setRefCode(this.getRefCode());
 
         return audit;
     }

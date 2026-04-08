@@ -32,6 +32,7 @@ public class LedgerGroup extends BaseModel {
     @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(name = "fk_ledger_groups_ledger_type_code"))
     private LedgerType ledgerType;
     private String unionCode;
+    private String refCode;
     @Override
     public String getTableName() {
         return "ledger_groups";
@@ -61,6 +62,7 @@ public class LedgerGroup extends BaseModel {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
+        audit.setRefCode(this.getRefCode());
 
         return audit;
     }

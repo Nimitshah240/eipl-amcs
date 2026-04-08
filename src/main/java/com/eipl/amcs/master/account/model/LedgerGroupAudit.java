@@ -34,6 +34,8 @@ public class LedgerGroupAudit extends BaseModelAudit {
     @JoinColumn(name = "ledger_type_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private LedgerType ledgerType;
     private String unionCode;
+    private String refCode;
+
     @Override
     public String getTableName() {
         return "ledger_groups_audit";

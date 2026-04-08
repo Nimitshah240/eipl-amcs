@@ -34,6 +34,7 @@ public class Tax extends BaseModel {
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_tax_union_code"))
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
+    private String refCode;
 
     @Override
     public String getTableName() {

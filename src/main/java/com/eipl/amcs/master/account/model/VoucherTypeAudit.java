@@ -34,6 +34,8 @@ public class VoucherTypeAudit extends BaseModelAudit {
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;
+    private String refCode;
+
     @Override
     public String getTableName() {
         return "voucher_types_audit";

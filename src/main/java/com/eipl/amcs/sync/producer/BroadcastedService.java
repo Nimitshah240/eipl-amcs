@@ -480,6 +480,7 @@ public class BroadcastedService {
                                 : localName);
                         tax.setUnion(MainApp.identityDto.getUnion());
                         tax.setCreatedBy("PORTAL");
+                        tax.setRefCode(jsonText.get("refCode") != null ? String.valueOf(jsonText.get("refCode")) : null);
                         taxRepository.save(tax);
                         break;
                     } catch (Exception e) {
@@ -1229,6 +1230,7 @@ public class BroadcastedService {
                                 ledgerType.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
                                 ledgerType.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
                                 ledgerType.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                ledgerType.setRefCode(jsonText.get("refCode") != null ? String.valueOf(jsonText.get("refCode")) : null);
                                 ledgerTypeRepository.save(ledgerType);
                                 break;
                             case "DELETE":
@@ -1258,6 +1260,7 @@ public class BroadcastedService {
                                 ledgerGroup.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
                                 ledgerGroup.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
                                 ledgerGroup.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                ledgerGroup.setRefCode(jsonText.get("refCode") != null ? String.valueOf(jsonText.get("refCode")) : null);
                                 ledgerGroupRepository.save(ledgerGroup);
                                 break;
                             case "DELETE":
@@ -1292,6 +1295,7 @@ public class BroadcastedService {
                                 ledger.setPlantCode(jsonText.get("plantCode") != null ? String.valueOf(jsonText.get("plantCode")) : null);
                                 ledger.setMccCode(jsonText.get("mccPlantCode") != null ? String.valueOf(jsonText.get("mccPlantCode")) : null);
                                 ledger.setBmcCode(jsonText.get("bmcCode") != null ? String.valueOf(jsonText.get("bmcCode")) : null);
+                                ledger.setRefCode(jsonText.get("refCode") != null ? String.valueOf(jsonText.get("refCode")) : null);
                                 ledgerRepository.save(ledger);
                                 break;
                             case "DELETE":
@@ -1323,6 +1327,7 @@ public class BroadcastedService {
                                 vType.setxCol1(jsonText.get("xCol1") != null ? String.valueOf(jsonText.get("xCol1")) : null);
                                 vType.setxCol2(jsonText.get("xCol2") != null ? String.valueOf(jsonText.get("xCol2")) : null);
                                 vType.setxCol3(jsonText.get("xCol3") != null ? String.valueOf(jsonText.get("xCol3")) : null);
+                                vType.setRefCode(jsonText.get("refCode") != null ? String.valueOf(jsonText.get("refCode")) : null);
                                 voucherTypeRepository.save(vType);
                                 break;
                         }

@@ -37,6 +37,7 @@ public class VoucherType extends BaseModel {
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_types_ledger_code"))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;
+    private String refCode;
     @Override
     public String getTableName() {
         return "voucher_types";
@@ -67,6 +68,7 @@ public class VoucherType extends BaseModel {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
+        audit.setRefCode(this.getRefCode());
 
         return audit;
     }

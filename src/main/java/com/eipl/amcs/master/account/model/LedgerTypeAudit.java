@@ -31,6 +31,8 @@ public class LedgerTypeAudit extends BaseModelAudit {
     @Column(name = "balance_sheet")
     private boolean balanceSheet;
     private String unionCode;
+    private String refCode;
+
     @Override
     public String getTableName() {
         return "ledger_types_audit";

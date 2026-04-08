@@ -47,6 +47,8 @@ public class LedgerAudit extends BaseModelAudit {
     private String plantCode;
     private String mccCode;
     private String bmcCode;
+    private String refCode;
+
     @Override
     public String getTableName() {
         return "ledgers_audit";
