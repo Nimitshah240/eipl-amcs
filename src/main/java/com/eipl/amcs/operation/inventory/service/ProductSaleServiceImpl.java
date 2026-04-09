@@ -44,6 +44,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -124,6 +125,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         productSaleDto.getProductSale().setUnion(unionRepository.findById(unionCode).get());
         productSaleDto.getProductSale().setUnion(Hibernate.unproxy(productSaleDto.getProductSale().getUnion(), Union.class));
         productSaleDto.getProductSale().setVoucherNo(voucherNo);
+        productSaleDto.getProductSale().setxCol1(UUID.randomUUID().toString());
         ProductSale saleNew = productSaleRepository.customSave(productSaleDto.getProductSale(), identityInfo);
         saleNew.setSociety(productSaleDto.getProductSale().getSociety());
         saleNew.setUnion(productSaleDto.getProductSale().getUnion());
@@ -187,6 +189,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             dto.setInitData();
             dto.setBilling(false);
             dto.setType(1);
+            dto.setxCol1(UUID.randomUUID().toString());
             installmentRepository.customSave(dto, identityInfo);
             txnInstallment++;
         }

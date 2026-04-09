@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateService {
@@ -47,6 +48,7 @@ public class ProductPurchaseRateServiceImpl implements ProductPurchaseRateServic
         String code = nextCodeRepository.getNextCode("ProductPurchaseRate", "code",
                 productPurchaseRate.getSociety().getCode(), 0);
         productPurchaseRate.setCode(code);
+        productPurchaseRate.setxCol1(UUID.randomUUID().toString());
         ProductPurchaseRate newData = productPurchaseRateRepository.customSave(productPurchaseRate, identityInfo);
         newData.setProduct(productPurchaseRate.getProduct());
         newData.setUnion(productPurchaseRate.getUnion());

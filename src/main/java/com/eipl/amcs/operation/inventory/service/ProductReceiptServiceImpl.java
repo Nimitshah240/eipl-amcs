@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -78,6 +79,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
         productReceiptDto.getProductReceipt().setInitData();
         String voucherNo = createAutoPosting(productReceiptDto, null, identityInfo);
         productReceiptDto.getProductReceipt().setVoucherNo(voucherNo);
+        productReceiptDto.getProductReceipt().setxCol1(UUID.randomUUID().toString());
         ProductReceipt receiptNew = productReceiptRepository.customSave(productReceiptDto.getProductReceipt(), identityInfo);
         receiptNew.setCustomer(productReceiptDto.getProductReceipt().getCustomer());
         receiptNew.setUnion(productReceiptDto.getProductReceipt().getUnion());
@@ -94,6 +96,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             dto.getTransaction().setProductReceipt(receiptNew);
             dto.getTransaction().setGrnTxnNo(receiptNew.getGrnNo() + "T" + txnCnt);
 
+            dto.getTransaction().setxCol1(UUID.randomUUID().toString());
             ProductReceiptTransaction t = receiptTransRepository.customSave(dto.getTransaction(), identityInfo);
             t.setProductReceipt(receiptNew);
             t.setProduct(dto.getTransaction().getProduct());

@@ -20,6 +20,7 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -56,6 +57,7 @@ public class LocalMilkSaleRateServiceImpl implements LocalMilkSaleRateService {
         localMilkSaleRate.setCode(nextCodeRepository.getNextCode("LocalMilkSaleRate", "code",
                 localMilkSaleRate.getSociety().getCode(), 0));
         localMilkSaleRate.setInitData();
+        localMilkSaleRate.setxCol1(UUID.randomUUID().toString());
         LocalMilkSaleRate rateNew = localMilkSaleRateRepository.customSave(localMilkSaleRate, identityInfo);
         rateNew.setSociety(localMilkSaleRate.getSociety());
         rateNew.setMilkClass(localMilkSaleRate.getMilkClass());

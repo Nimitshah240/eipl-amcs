@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductRequisitionServiceImpl implements ProductRequisitionService {
@@ -31,12 +32,14 @@ public class ProductRequisitionServiceImpl implements ProductRequisitionService 
     @Override
     public ProductRequisitionDto save(ProductRequisitionDto dto, String identityInfo) {
         dto.getProductRequisition().setInitData();
+        dto.getProductRequisition().setxCol1(UUID.randomUUID().toString());
         ProductRequisition requisition = productRequisitionRepository.customSave(dto.getProductRequisition(), identityInfo);
         int i = 1;
         for (ProductRequisitionTransaction transaction : dto.getTransactionList()) {
             transaction.setInitData();
             transaction.setProductRequisition(requisition);
             transaction.setCode(requisition.getCode() + "T" + i++);
+            transaction.setxCol1(UUID.randomUUID().toString());
             productRequisitionTransactionRepository.customSave(transaction, identityInfo);
         }
         return null;

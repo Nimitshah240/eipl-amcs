@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductSaleRateServiceImpl implements ProductSaleRateService {
@@ -49,6 +50,7 @@ public class ProductSaleRateServiceImpl implements ProductSaleRateService {
             throw new BusinessValidationFailException(getClass(), wefDateNotValid);
         }
         productSaleRate.setCode(code);
+        productSaleRate.setxCol1(UUID.randomUUID().toString());
         ProductSaleRate newData = productSaleRateRepository.customSave(productSaleRate, identityInfo);
         newData.setProduct(productSaleRate.getProduct());
         newData.setUnion(productSaleRate.getUnion());
