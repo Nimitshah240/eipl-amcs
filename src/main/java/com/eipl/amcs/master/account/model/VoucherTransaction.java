@@ -47,6 +47,9 @@ public class VoucherTransaction extends BaseModelTxn {
     private Voucher voucher;
 
     @Transient
+    private Events events;
+
+    @Transient
     @JsonIgnore
     private List<VoucherSubLedger> voucherSubLedgers;
 

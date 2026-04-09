@@ -111,8 +111,8 @@ public class AccountPostingController implements MyInitialization {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("view/setting/AccountPostingAddEdit.fxml"));
             loader.setResources(this.resourceBundle);
             Parent root = loader.load();
-            AccountPostingAddEditController controller = loader.getController();
-            controller.setAccountPostingDto(dto);
+            AccountPostingAddEditNewController controller = loader.getController();
+//            controller.setAccountPostingDto(dto);
             MainApp.getContentPane().setCenter(root);
         } catch (Exception ex) {
             log.error(ex.getMessage());
