@@ -27,6 +27,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -74,7 +75,7 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
         localMilkSale.setCode(code);
         localMilkSale.setInitData();
 //        createAutoPosting(localMilkSale, localMilkSale.getVoucherNo());
-
+        localMilkSale.setxCol1(UUID.randomUUID().toString());
         LocalMilkSale newData = localMilkSaleRepository.customSave(localMilkSale, identityInfo);
         newData.setMilkClass(localMilkSale.getMilkClass());
         newData.setMilkType(localMilkSale.getMilkType());

@@ -20,6 +20,7 @@ import org.springframework.validation.FieldError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -66,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
             throw new BusinessValidationFailException(getClass(), nameNotValid);
         }
         product.setInitData();
+        product.setxCol1(UUID.randomUUID().toString());
         Product newData = productRepository.customSave(product, identityInfo);
         newData.setConversionUnit(product.getConversionUnit());
         newData.setPrimaryUom(product.getPrimaryUom());

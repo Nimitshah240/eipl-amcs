@@ -28,10 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -87,6 +84,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 couponBal = new CouponBalance();
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
                         couponIssue.getAmount(), couponIssue.getMilkType());
+                couponBal.setxCol1(UUID.randomUUID().toString());
                 couponBalanceService.insert(couponBal);
             } else {
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
@@ -97,6 +95,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
             }
             couponIssue.setCreatedAt(LocalDateTime.now());
             couponIssue.setCreatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
+            couponIssue.setxCol1(UUID.randomUUID().toString());
             couponIssueRepository.customSave(couponIssue, CommonUtils.setIdentityHeader());
 
             return true;
@@ -283,6 +282,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                         couponBalanceNew = new CouponBalance();
                         couponBalanceNew.setValuesInObject(updatedCouponIssue.getConsumerCode(), updatedCouponIssue.getConsumerType(),
                                 updatedCouponIssue.getAmount(), updatedCouponIssue.getMilkType());
+                        couponBalanceNew.setxCol1(UUID.randomUUID().toString());
                         couponBalanceService.insert(couponBalanceNew);
                     } else {
                         couponBalanceNew.setValuesInObject(updatedCouponIssue.getConsumerCode(), updatedCouponIssue.getConsumerType(),

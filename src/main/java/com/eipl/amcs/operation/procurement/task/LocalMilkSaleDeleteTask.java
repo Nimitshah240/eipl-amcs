@@ -8,6 +8,7 @@ import com.eipl.amcs.operation.procurement.service.LocalMilkSaleService;
 import com.eipl.amcs.utils.CommonUtils;
 import javafx.concurrent.Task;
 
+import java.util.UUID;
 public class LocalMilkSaleDeleteTask extends Task<Boolean> {
     private final LocalMilkSale localMilkSale;
 
@@ -28,6 +29,7 @@ public class LocalMilkSaleDeleteTask extends Task<Boolean> {
                     couponBalance = new CouponBalance();
                     couponBalance.setValuesInObject(localMilkSale.getConsumerCode(), localMilkSale.getConsumerType(),
                             Double.parseDouble(localMilkSale.getAmount().toString()), localMilkSale.getMilkType());
+                    couponBalance.setxCol1(UUID.randomUUID().toString());
                     couponBalanceService.insert(couponBalance);
                 }
             }

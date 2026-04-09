@@ -37,6 +37,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -80,6 +81,7 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
         if (dispatchRepository.existsByFromDateAndFromShift(milkDispatch.getFromDate(), milkDispatch.getFromShift())) {
             throw new BusinessValidationFailException(MilkDispatch.class, new FieldError("MilkDispatch", "fromDate", "Dispatch already exists for this date and shift"));
         }
+        milkDispatch.setxCol1(UUID.randomUUID().toString());
         milkDispatch.setInitData();
         dispatchRepository.customSave(milkDispatch, identityInfo);
         List<MilkDispatchTransaction> listDispatchTransactions = dto.getMilkDispatchTransaction();
@@ -87,6 +89,7 @@ public class MilkDispatchServiceImpl implements MilkDispatchService {
         for (MilkDispatchTransaction list : listDispatchTransactions) {
             list.setMilkDispatch(milkDispatch);
             list.setTxnCode(milkDispatch.getChallanNo() + "T" + txnCnt);
+            list.setxCol1(UUID.randomUUID().toString());
             list.setInitData();
             milkDispatchTransactionRepository.customSave(list, identityInfo);
             txnCnt++;
