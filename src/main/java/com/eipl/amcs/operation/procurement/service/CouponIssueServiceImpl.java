@@ -4,6 +4,9 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
+import com.eipl.amcs.master.global.repository.MilkTypeRepository;
+import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.service.CustomerService;
@@ -21,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -47,6 +49,10 @@ public class CouponIssueServiceImpl implements CouponIssueService {
     private LedgerMappingEventRepository ledgerMappingEventRepository;
     @Autowired
     private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private MilkTypeRepository milkTypeRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private SubLedgerRepository subLedgerRepository;
     @Autowired
@@ -124,13 +130,17 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 if (subLedger == null) {
                     throw new RuntimeException("Sub Ledger is not mapped with member (Event Code: " + AppConstant.EventCode.COUPON_ISSUE + ")");
                 }
+                if (couponIssue.getBank() != null && couponIssue.getBank().getLedger() == null) {
+                    throw new RuntimeException("Ledger is not mapped with member (Event Code: " + AppConstant.EventCode.COUPON_ISSUE + ")");
+                }
 
                 Optional<FinancialYear> financialYearOpt = financialYearRepository.findCurrentFinancialYear(couponIssue.getIssueDate());
                 if (!financialYearOpt.isPresent()) {
                     throw new RuntimeException("Financial Year not found for Issue Date: " + couponIssue.getIssueDate());
                 }
                 String finYearCode = financialYearOpt.get().getCode();
-
+                Product product = productRepository
+                        .findAllByMilkAndMilkType(true, couponIssue.getMilkType()).get(0);
                 voucherCode = nextCodeService.getNextCode("Voucher", "code",
                         couponIssue.getSociety().getCode() + "/" + finYearCode + "/", 0);
                 if (voucherCode == null) {
@@ -156,7 +166,7 @@ public class CouponIssueServiceImpl implements CouponIssueService {
 
 
                 // Credit Transaction
-                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amount, true, mappingEvent.getCreditLedger(),
+                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amount, true, product.getCouponLedger(),
                         mappingEvent.getVoucherTxnCreditNarration(), "1");
 
                 if (mappingEvent.getCreditSubLedger()) {
@@ -183,8 +193,18 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 voucher.getVoucherTransactions().add(creditTxn);
 
                 // Debit Transaction
-                VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amount, false, mappingEvent.getDebitLedger(),
-                        mappingEvent.getVoucherTxnDebitNarration(), "2");
+                Ledger ledger = null;
+                if (couponIssue.getBank() != null) {
+                    ledger = couponIssue.getBank().getLedger();
+                }
+                VoucherTransaction debitTxn;
+                if (ledger != null) {
+                    debitTxn = VoucherUtil.getVoucherTxn(voucher, amount, false, ledger,
+                            mappingEvent.getVoucherTxnDebitNarration(), "2");
+                } else {
+                    debitTxn = VoucherUtil.getVoucherTxn(voucher, amount, false, mappingEvent.getDebitLedger(),
+                            mappingEvent.getVoucherTxnDebitNarration(), "2");
+                }
 
                 if (mappingEvent.getDebitSubLedger()) {
                     List<String> refCodeList = new ArrayList<>();

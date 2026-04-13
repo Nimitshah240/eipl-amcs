@@ -37,6 +37,10 @@ public interface ProductRepository extends BaseRepository<Product, String> {
     List<Product> findAllBySocietyIsNull(Sort by);
 
     @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-            "union", "society", "milkType", "otherStateTax", "purchaseLedger", "stockLedger", "localSaleLedger", "saleLedger"})
+            "union", "society", "milkType", "otherStateTax", "purchaseLedger", "stockLedger", "localSaleLedger", "saleLedger", "couponLedger"})
     List<Product> findAllByMilkAndMilkTypeIn(boolean isMilk, List<MilkType> milkTypeList);
+
+    @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging", "couponLedger",
+            "union", "society", "milkType", "otherStateTax", "purchaseLedger", "stockLedger", "localSaleLedger", "saleLedger"})
+    List<Product> findAllByMilkAndMilkType(boolean isMilk, MilkType milkType);
 }

@@ -112,7 +112,7 @@ public class AccountPostingController implements MyInitialization {
             loader.setResources(this.resourceBundle);
             Parent root = loader.load();
             AccountPostingAddEditNewController controller = loader.getController();
-//            controller.setAccountPostingDto(dto);
+            controller.setTxnData(dto);
             MainApp.getContentPane().setCenter(root);
         } catch (Exception ex) {
             log.error(ex.getMessage());
@@ -140,7 +140,7 @@ public class AccountPostingController implements MyInitialization {
         colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift().toString()));
         colPostingType.setCellValueFactory(data -> new SimpleObjectProperty<>(AppConstant.PostingType.fromValue(data.getValue().getPostingType()).getLabel()));
         colStatus.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStatus() == 1 ? "Draft" : "Posted"));
-        colEvent.setCellValueFactory(data -> new SimpleObjectProperty<>(eventMap.get(data.getValue().getEventType()).toString()));
+//        colEvent.setCellValueFactory(data -> new SimpleObjectProperty<>(eventMap.get(data.getValue().getEventType()).toString()));
         propMilkCollectionAccountPostingDto.bind(tblAccountPosting.getSelectionModel().selectedItemProperty());
     }
 
@@ -169,8 +169,8 @@ public class AccountPostingController implements MyInitialization {
                     List<Events> eventList = null;
                     try {
                         eventList = task.get();
-                        eventMap = eventList.stream()
-                                .collect(Collectors.toMap(Events::getCode, eve -> eve));
+//                        eventMap = eventList.stream()
+//                                .collect(Collectors.toMap(Events::getEventCode, eve -> eve));
                         loadMilkCollectionAccountPosting();
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);

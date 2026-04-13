@@ -1,6 +1,7 @@
 package com.eipl.amcs.setting.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.setting.dto.AccountPostingDtoNew;
 import com.eipl.amcs.setting.model.AccountPosting;
 import com.eipl.amcs.setting.service.AccountPostingServiceNew;
@@ -10,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class AccountPostingTxnDataLoadTask extends Task<List<AccountPostingDtoNew>> {
+public class AccountPostingTxnDataLoadTask extends Task<List<Voucher>> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountPostingTxnDataLoadTask.class);
 
     private AccountPosting draftAccountPosting;
@@ -20,7 +21,7 @@ public class AccountPostingTxnDataLoadTask extends Task<List<AccountPostingDtoNe
     }
 
     @Override
-    protected List<AccountPostingDtoNew> call() throws Exception {
+    protected List<Voucher> call() throws Exception {
         try {
 
             AccountPostingServiceNew accountPostingService = EmcsAppContext.getContext().getBean(AccountPostingServiceNew.class);

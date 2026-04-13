@@ -6,14 +6,14 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.Events;
+import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
 import com.eipl.amcs.master.account.task.EventsLoadTask;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.setting.dto.AccountPostingDto;
-import com.eipl.amcs.setting.dto.AccountPostingDtoNew;
 import com.eipl.amcs.setting.model.AccountPosting;
-import com.eipl.amcs.setting.task.AccountPostingSaveTask;
+import com.eipl.amcs.setting.task.AccountPostingNewSaveTask;
 import com.eipl.amcs.setting.task.AccountPostingTxnDataLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.beans.property.SimpleObjectProperty;
@@ -56,6 +56,8 @@ public class AccountPostingAddEditNewController implements MyInitialization {
     @FXML
     TableView<VoucherTransaction> tableAccountPosting;
 
+    List<Voucher> voucherList = new ArrayList<>();
+
 
     List<AccountPostingDto> accountPostingDtoList = new ArrayList<>();
     AccountPosting accountPosting = null;
@@ -72,6 +74,8 @@ public class AccountPostingAddEditNewController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        colDebit.setStyle("-fx-text-fill: red;");
+        colCredit.setStyle("-fx-text-fill: green;");
         loadData();
         setupTable();
         btnClose.setOnAction(e -> {
@@ -147,21 +151,21 @@ public class AccountPostingAddEditNewController implements MyInitialization {
 
                     List<Events> eventList = list.stream()
                             .filter(eve -> Objects.equals(eve.getEventCode(), AppConstant.EventCode.MILK_COLLECTION)
-                                    || Objects.equals(eve.getEventCode(), AppConstant.EventCode.LOCAL_MILK_SALE))
+                                    || Objects.equals(eve.getEventCode(), AppConstant.EventCode.LOCAL_MILK_SALE_CASH))
                             .collect(Collectors.toList());
 
                     cboxEvent.setItems(FXCollections.observableList(eventList));
 
 
-//                    if (accountPosting != null) {
-//                        Events event = list.stream()
-//                                .filter(eve -> Objects.equals(eve.getEventCode(), accountPosting.getEventType()))
-//                                .findFirst()
-//                                .orElse(null);
-//
-//                        cboxEvent.getSelectionModel().select(event);
-//                        loadAccountPostingLedgerMapping();
-//                    }
+                    if (accountPosting != null) {
+                        Events event = list.stream()
+                                .filter(eve -> Objects.equals(eve.getEventCode(), accountPosting.getEventType()))
+                                .findFirst()
+                                .orElse(null);
+
+                        cboxEvent.getSelectionModel().select(event);
+                        validateAndLoad();
+                    }
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
@@ -226,13 +230,14 @@ public class AccountPostingAddEditNewController implements MyInitialization {
         var task = new AccountPostingTxnDataLoadTask(accountPosting);
         task.setOnSucceeded(e -> {
             try {
-                List<AccountPostingDtoNew> accountPostingDtoNewList = task.get();
+                voucherList = task.get();
+                if (voucherList.isEmpty())
+                    return;
                 List<VoucherTransaction> list =
-                        accountPostingDtoNewList.stream()
-                                .flatMap(dto -> dto.getVoucherTransactionList().stream())
+                        voucherList.stream()
+                                .flatMap(dto -> dto.getVoucherTransactions().stream())
                                 .collect(Collectors.toList());
                 tableAccountPosting.setItems(FXCollections.observableList(list));
-
 
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -240,6 +245,32 @@ public class AccountPostingAddEditNewController implements MyInitialization {
         });
         new Thread(task).start();
     }
+
+    public void setTxnData(AccountPosting accountPosting) {
+        try {
+            this.accountPosting = accountPosting;
+            dpToDate.setValue(accountPosting.getToDate());
+            dpFromDate.setValue(accountPosting.getFromDate());
+            cboxFromShift.setValue(accountPosting.getFromShift());
+            cboxToShift.setValue(accountPosting.getToShift());
+            AppConstant.PostingType type = AppConstant.PostingType.fromValue(accountPosting.getPostingType());
+            cboxPostingType.setValue(type);
+            if (accountPosting.getStatus() == 2) {
+                btnPosting.setDisable(true);
+                cboxEvent.setDisable(true);
+                cboxPostingType.setDisable(true);
+                cboxFromShift.setDisable(true);
+                cboxToShift.setDisable(true);
+                dpFromDate.setDisable(true);
+                dpToDate.setDisable(true);
+                btnSave.setDisable(true);
+                btnSearch.setDisable(true);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 //    ------------------------------
 
     //    Save Data
@@ -251,7 +282,9 @@ public class AccountPostingAddEditNewController implements MyInitialization {
     }
 
     public void savePosting() {
-        var task = new AccountPostingSaveTask(accountPosting, accountPostingDtoList);
+        if (voucherList.isEmpty())
+            return;
+        var task = new AccountPostingNewSaveTask(accountPosting, voucherList);
         task.setOnSucceeded(e -> {
             try {
                 AccountPosting accountPosting1 = task.get();

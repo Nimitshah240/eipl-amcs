@@ -118,12 +118,15 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
         colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
         colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colType.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("debit")));
+        colAmount.setStyle("-fx-text-fill: red;");
         propTransaction1.bind(table1.getSelectionModel().selectedItemProperty());
     }
 
     public void setupTable1() {
         colName1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
         colAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
+        colAmount1.setStyle("-fx-text-fill: green;");
+
         colType1.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("credit")));
         propTransaction2.bind(table2.getSelectionModel().selectedItemProperty());
     }

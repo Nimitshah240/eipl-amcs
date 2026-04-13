@@ -15,4 +15,7 @@ public interface VoucherRawRepository extends BaseRepository<VoucherRaw, String>
     @Query("SELECT v FROM VoucherRaw v WHERE v.xCol5 = :val")
 //    @EntityGraph(attributePaths = {"voucherTransactionRawList", "voucherSubLedgerRawList"})
     List<VoucherRaw> findByXCol5(@Param("val") String val);
+
+//    @Query("SELECT v FROM VoucherRaw v WHERE v.process_reference = :val")
+    List<VoucherRaw> findByProcessReference(@Param("val") String val);
 }

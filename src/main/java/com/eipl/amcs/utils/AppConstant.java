@@ -97,12 +97,12 @@ public class AppConstant {
         String SENT_BOX_DESKTOP = "androiddpu/v5/master-data/sentbox-desktop";
         String SENT_BOX_DESKTOP_COUNT = "androiddpu/v5/master-data/sentbox-count-desktop";
         String SENT_BOX_DESKTOP_ACK = "androiddpu/v5/master-data/acknowledgement-desktop";
-//        String LIVE_URL = "http://qaqc.emilkpro.in/";
+        //        String LIVE_URL = "http://qaqc.emilkpro.in/";
 //        String LIVE_URL = "http://amulamcsuat.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://qaqc.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "http://jaipurduss.emilkpro.in/webservice/amcs/v1/";
 //        String LIVE_URL = "https://amulamcs.yamatech.app/webservice/amcs/v1/";
-          String MEMBER_DOWNLOAD = "androiddpu/v5/realtime-services/member-download";
+        String MEMBER_DOWNLOAD = "androiddpu/v5/realtime-services/member-download";
     }
 
     public interface CollectionType {
@@ -269,13 +269,16 @@ public class AppConstant {
 
     public interface EventCode {
         int LOCAL_MILK_SALE = 103;
+        int LOCAL_MILK_SALE_CASH = 1031;
+        int LOCAL_MILK_SALE_CREDIT = 1032;
+        int LOCAL_MILK_SALE_COUPON = 1033;
         int MILK_COLLECTION = 101;
         int MEMBER_BILL = 109;
         int CASH_ADVANCE = 104;
-        int PRODUCT_SALE_CASH = 107;
-        int PRODUCT_SALE_CREDIT = 108;
+        int PRODUCT_SALE_CASH = 1071;
+        int PRODUCT_SALE_CREDIT = 1072;
         int PRODUCT_RECEIPT = 106;
-        int COUPON_ISSUE = 105;
+        int COUPON_ISSUE = 102;
     }
 
     public interface SubLedgerType {

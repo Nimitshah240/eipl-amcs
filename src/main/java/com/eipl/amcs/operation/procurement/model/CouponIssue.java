@@ -2,13 +2,16 @@ package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.BankDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnitDeserializer;
+import com.eipl.amcs.json.serialize.BankSerialize;
 import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -57,8 +60,16 @@ public class CouponIssue extends BaseModelTxn {
     @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(name = "fk_coupon_issue_union_code"))
     private Union union;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BankSerialize.class)
+    @JsonDeserialize(using = BankDeserializer.class)
+    @JoinColumn(name = "bank_code", foreignKey = @ForeignKey(name = "fk_coupon_issue_bank_code"))
+    private Bank bank;
     private String xCol4;
     private String xCol5;
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
     private Short paymentMode; //0-cash 1-bank
 
 
@@ -110,6 +121,7 @@ public class CouponIssue extends BaseModelTxn {
         audit.setVoucherNo(this.getVoucherNo());
         audit.setMilkType(this.getMilkType());
         audit.setUnion(this.getUnion());
+        audit.setBank(this.getBank());
         audit.setPaymentMode(this.getPaymentMode());
         audit.setSociety(this.getSociety());
         audit.setCreatedAt(this.getCreatedAt());
@@ -119,6 +131,11 @@ public class CouponIssue extends BaseModelTxn {
         audit.setXCol1(this.getXCol1());
         audit.setXCol2(this.getXCol2());
         audit.setXCol3(this.getXCol3());
+        audit.setXCol4(this.getXCol4());
+        audit.setXCol5(this.getXCol5());
+        audit.setPlantCode(this.getPlantCode());
+        audit.setMccCode(this.getMccCode());
+        audit.setBmcCode(this.getBmcCode());
 
         return audit;
     }
