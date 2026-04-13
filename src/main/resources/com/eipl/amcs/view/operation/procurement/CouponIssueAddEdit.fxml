@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.*?>
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_NumericField?>
+<?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<StackPane fx:id="root" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.eipl.amcs.operation.procurement.controller.CouponIssueAddEditController">
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.CouponIssueAddEditController">
 
     <children>
 
@@ -18,55 +27,54 @@
                </VBox.margin></Label>
                 <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints vgrow="ALWAYS"/>
-                        <RowConstraints vgrow="ALWAYS"/>
-                        <RowConstraints vgrow="ALWAYS"/>
-                        <RowConstraints vgrow="ALWAYS"/>
-                        <RowConstraints vgrow="ALWAYS"/>
-                        <RowConstraints vgrow="ALWAYS"/>
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                  <RowConstraints />
                     </rowConstraints>
                     <children>
-                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
-                        <E_ComboBox fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
-                                  GridPane.rowIndex="1"/>
-                        <ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
-                                  GridPane.rowIndex="1"/>
-                        <Label text="%couponissue.create.milktype" GridPane.columnIndex="2"/>
-                        <Label text="%couponissue.create.date"/>
+                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <E_ComboBox fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="%couponissue.create.milktype" GridPane.columnIndex="2" />
+                        <Label text="%couponissue.create.date" />
                         <!--                                <ComboBox fx:id="cboxSubCenter" editable="true" layoutX="10.0" layoutY="43.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
-                        <Label text="%couponissue.create.type" GridPane.columnIndex="1"/>
-                        <E_NumericField fx:id="txtCode" maxLength="11" GridPane.rowIndex="3"/>
-                        <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0"
-                                     GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
-                        <Label text="%couponissue.create.issuenumber" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-                        <Label text="%couponissue.create.couponamount" GridPane.rowIndex="4"/>
-                        <Label text="%consumer.name" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <Label text="%couponissue.create.consumercode" GridPane.rowIndex="2"/>
-                        <E_NumericField fx:id="txtAmount" maxLength="7" real="true" GridPane.rowIndex="5"/>
-                        <E_NumericField fx:id="txtIssueNumber" maxLength="15" GridPane.columnIndex="2"
-                                        GridPane.rowIndex="5"/>
+                        <Label text="%couponissue.create.type" GridPane.columnIndex="1" />
+                        <E_NumericField fx:id="txtCode" maxLength="11" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                        <Label text="%couponissue.create.issuenumber" GridPane.rowIndex="6" />
+                        <Label text="%couponissue.create.couponamount" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label text="%consumer.name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="%couponissue.create.consumercode" GridPane.rowIndex="2" />
+                        <E_NumericField fx:id="txtAmount" maxLength="7" real="true" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtIssueNumber" maxLength="15" GridPane.rowIndex="7" />
 
                         <!-- 4. Footer Buttons -->
-                        <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="10.0" GridPane.columnIndex="2"
-                              GridPane.rowIndex="6">
+                        <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="7">
                             <padding>
-                                <Insets bottom="10.0" right="10.0"/>
+                                <Insets bottom="10.0" right="10.0" />
                             </padding>
                             <children>
-                                <E_Button fx:id="btnSaveUpdate" minWidth="75.0" text="%add"/>
-                                <E_Button fx:id="btnClose" minWidth="75.0" text="%close"/>
+                                <E_Button fx:id="btnSaveUpdate" minWidth="75.0" text="%add" />
+                                <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
                             </children>
                         </HBox>
-                  <Label text="%paymenttype" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="%paymenttype" GridPane.rowIndex="4" />
+                  <E_ComboBox fx:id="cboxBankName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label text="%bank" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     </children>
                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
                     </padding>
                 </GridPane>
             </children>

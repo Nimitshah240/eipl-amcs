@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.inventory.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.org.model.Society;
 import org.springframework.data.domain.Sort;
@@ -34,4 +35,8 @@ public interface ProductRepository extends BaseRepository<Product, String> {
     @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
             "union"})
     List<Product> findAllBySocietyIsNull(Sort by);
+
+    @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
+            "union", "society", "milkType", "otherStateTax", "purchaseLedger", "stockLedger", "localSaleLedger", "saleLedger"})
+    List<Product> findAllByMilkAndMilkType(boolean isMilk, MilkType milkType);
 }

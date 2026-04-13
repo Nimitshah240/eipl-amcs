@@ -1,13 +1,16 @@
 package com.eipl.amcs.operation.procurement.model;
 
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.BankDeserializer;
 import com.eipl.amcs.json.deserialize.MilkTypeDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnitDeserializer;
+import com.eipl.amcs.json.serialize.BankSerialize;
 import com.eipl.amcs.json.serialize.MilkTypeSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -53,7 +56,15 @@ public class CouponIssueAudit extends BaseModelTxnAudit {
     @JsonDeserialize(using = UnitDeserializer.class)
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Union union;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = BankSerialize.class)
+    @JsonDeserialize(using = BankDeserializer.class)
+    @JoinColumn(name = "bank_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Bank bank;
     private String xCol4;
     private String xCol5;
     private Short paymentMode;
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
 }

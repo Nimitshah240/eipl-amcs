@@ -225,14 +225,14 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                     ProductGroup group = product.getProductGroup();
                     if (group == null) continue;
 
-                    LedgerMappingProductGroup lmpg = listLmpg.stream().filter(p -> p.getProductGroup().getCode().intValue() == group.getCode().intValue()).findFirst().orElse(null);
-                    if (lmpg == null) continue;
+//                    LedgerMappingProductGroup lmpg = listLmpg.stream().filter(p -> p.getProductGroup().getCode().intValue() == group.getCode().intValue()).findFirst().orElse(null);
+//                    if (lmpg == null) continue;
 
-                    ProductSaleAcUtil obj = list.stream().filter(p -> p.getLedger().getCode().equalsIgnoreCase(lmpg.getLedgerSaleCode().getCode())).findFirst().orElse(null);
+                    ProductSaleAcUtil obj = list.stream().filter(p -> p.getLedger().getCode().equalsIgnoreCase(product.getSaleLedger().getCode())).findFirst().orElse(null);
                     if (obj == null) {
                         obj = new ProductSaleAcUtil();
                         obj.setAmount(saleTxnTaxDto.getTransaction().getAmount().subtract(saleTxnTaxDto.getTransaction().getDiscount()));
-                        obj.setLedger(lmpg.getLedgerSaleCode());
+                        obj.setLedger(saleTxnTaxDto.getTransaction().getProduct().getSaleLedger());
                         obj.setNarration("Product sale: " + saleTxnTaxDto.getTransaction().getProduct().getCode());
                         list.add(obj);
                     } else {
@@ -254,7 +254,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                                 obj1.setNarration("Tax : " + productSaleTax.getTaxDetail().getCode());
                                 list.add(obj1);
                             } else {
-                                obj1.setAmount(obj.getAmount().add(productSaleTax.getValue()));
+                                obj1.setAmount(obj1.getAmount().add(productSaleTax.getValue()));
                             }
                         }
                     }
@@ -280,6 +280,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                 // Credit txn
                 int sr = 2;
                 for (ProductSaleAcUtil a : list) {
+
                     VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, a.getAmount(), true, a.getLedger(), a.getNarration(), String.valueOf(sr));
                     sr++;
                     voucher.getVoucherTransactions().add(creditTxn);

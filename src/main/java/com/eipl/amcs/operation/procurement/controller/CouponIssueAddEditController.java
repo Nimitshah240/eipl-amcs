@@ -18,6 +18,8 @@ import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.CustomerByIdLoadTask;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
+import com.eipl.amcs.master.org.model.Bank;
+import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.task.CouponIssueGetNextCodeLoadTask;
 import com.eipl.amcs.operation.procurement.task.CouponIssueSaveTask;
@@ -50,6 +52,8 @@ public class CouponIssueAddEditController implements MyInitialization {
     private E_DatePicker dpDate;
     @FXML
     private ComboBox<CustomerTypeKeyValDto> cboxType;
+    @FXML
+    private ComboBox<Bank> cboxBankName;
     @FXML
     private VBox vbox;
     @FXML
@@ -86,12 +90,21 @@ public class CouponIssueAddEditController implements MyInitialization {
         setupTable();
         loadData();
         setupComboBox();
-
+        loadBank();
         cboxType.setOnAction(event -> {
             txtCode.setText("");
             txtName.setText("");
         });
+        cboxBankName.setDisable(true);
         cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
+        cboxPaymentType.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            if (cboxPaymentType.getSelectionModel().getSelectedIndex() == 1) {
+                cboxBankName.setDisable(false);
+            } else {
+                cboxBankName.setDisable(true);
+                cboxBankName.setValue(null);
+            }
+        });
         cboxPaymentType.getSelectionModel().select(0);
 
         FocusUtils.requestFocus(btnSaveUpdate);
@@ -228,6 +241,7 @@ public class CouponIssueAddEditController implements MyInitialization {
                 txtAmount.setText(String.valueOf(dto.getAmount()));
                 cboxMilkType.getSelectionModel().select(dto.getMilkType());
                 cboxPaymentType.getSelectionModel().select(dto.getPaymentMode());
+                cboxBankName.getSelectionModel().select(Integer.parseInt(dto.getBank().getCode()));
             } else {
                 getNextCouponIssue();
             }
@@ -248,6 +262,7 @@ public class CouponIssueAddEditController implements MyInitialization {
         dto.setIsDelete(false);
         dto.setIssueDate(dpDate.getValue());
         dto.setPaymentMode((short) (cboxPaymentType.getSelectionModel().getSelectedIndex()));
+        dto.setBank(cboxBankName.getSelectionModel().getSelectedItem());
     }
 
     //CHeck usage and remove
@@ -269,6 +284,21 @@ public class CouponIssueAddEditController implements MyInitialization {
     public void loadData() {
         loadMilkType();
         loadCustomerType();
+    }
+
+    public void loadBank() {
+        var task = new BankLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Bank> list = task.get();
+                if (list != null) {
+                    cboxBankName.setItems(FXCollections.observableList(list));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     @Override

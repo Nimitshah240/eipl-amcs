@@ -272,10 +272,10 @@ public class AppConstant {
         int MILK_COLLECTION = 101;
         int MEMBER_BILL = 109;
         int CASH_ADVANCE = 104;
-        int PRODUCT_SALE_CASH = 107;
-        int PRODUCT_SALE_CREDIT = 108;
+        int PRODUCT_SALE_CASH = 1071;
+        int PRODUCT_SALE_CREDIT = 1072;
         int PRODUCT_RECEIPT = 106;
-        int COUPON_ISSUE = 105;
+        int COUPON_ISSUE = 102;
     }
 
     public interface SubLedgerType {
