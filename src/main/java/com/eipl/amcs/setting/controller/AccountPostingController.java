@@ -111,7 +111,7 @@ public class AccountPostingController implements MyInitialization {
             FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("view/setting/AccountPostingAddEdit.fxml"));
             loader.setResources(this.resourceBundle);
             Parent root = loader.load();
-            AccountPostingAddEditNewController controller = loader.getController();
+            AccountPostingAddEditController controller = loader.getController();
             controller.setTxnData(dto);
             MainApp.getContentPane().setCenter(root);
         } catch (Exception ex) {
@@ -140,7 +140,17 @@ public class AccountPostingController implements MyInitialization {
         colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift().toString()));
         colPostingType.setCellValueFactory(data -> new SimpleObjectProperty<>(AppConstant.PostingType.fromValue(data.getValue().getPostingType()).getLabel()));
         colStatus.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getStatus() == 1 ? "Draft" : "Posted"));
-//        colEvent.setCellValueFactory(data -> new SimpleObjectProperty<>(eventMap.get(data.getValue().getEventType()).toString()));
+        colEvent.setCellValueFactory(data -> {
+            Events event = eventMap.get(data.getValue().getEventType());
+
+            String name = event != null ? event.toString() : "";
+
+            if ("Local Milk Sale Cash".equalsIgnoreCase(name)) {
+                name = "Local Milk Sale";
+            }
+
+            return new SimpleObjectProperty<>(name);
+        });
         propMilkCollectionAccountPostingDto.bind(tblAccountPosting.getSelectionModel().selectedItemProperty());
     }
 
@@ -169,8 +179,12 @@ public class AccountPostingController implements MyInitialization {
                     List<Events> eventList = null;
                     try {
                         eventList = task.get();
-//                        eventMap = eventList.stream()
-//                                .collect(Collectors.toMap(Events::getEventCode, eve -> eve));
+                        eventMap = eventList.stream()
+                                .collect(Collectors.toMap(
+                                        Events::getEventCode,
+                                        eve -> eve,
+                                        (existing, duplicate) -> existing
+                                ));
                         loadMilkCollectionAccountPosting();
                     } catch (Exception ex) {
                         throw new RuntimeException(ex);

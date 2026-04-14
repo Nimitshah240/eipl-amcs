@@ -1,16 +1,15 @@
 package com.eipl.amcs.setting.service;
 
-import com.eipl.amcs.setting.dto.AccountPostingDto;
+import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.setting.model.AccountPosting;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AccountPostingService {
 
-    AccountPosting save(AccountPosting accountPosting, List<AccountPostingDto> accountPostingDtoList);
 
-    List<AccountPostingDto> loadMilkCollectionAccountPosting(int type, LocalDateTime fromDateTime, LocalDateTime toDateTime);
+    List<Voucher> loadAccountPostingData(AccountPosting accountPosting);
 
-    List<AccountPostingDto> loadLocalMilkSaleAccountPosting(int type, LocalDateTime fromDateTime, LocalDateTime toDateTime);
+    AccountPosting saveAccountPosting(AccountPosting accountPosting, List<Voucher> voucherList);
+
 }

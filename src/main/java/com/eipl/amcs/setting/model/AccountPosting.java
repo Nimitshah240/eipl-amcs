@@ -28,8 +28,6 @@ public class AccountPosting extends BaseModelTxn {
     private LocalDate fromDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate toDate;
-    //    private Integer fromShift;
-//    private Integer toShift;
     private Integer postingType; // 1 - Consolidate, 2 - Day Wise, 3 - Payment Cycle wise
     private Short status; // 1-Draft, 2-Posted
     private Integer eventType; // DATA FROM EVENT MASTER TABLE

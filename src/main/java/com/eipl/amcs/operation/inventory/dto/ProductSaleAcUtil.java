@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductSaleAcUtil {
     private Ledger ledger;
-    private Ledger creditLedger;
     private BigDecimal amount;
     private String narration;
 }

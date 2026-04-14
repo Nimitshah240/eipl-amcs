@@ -2,9 +2,8 @@ package com.eipl.amcs.setting.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.Voucher;
-import com.eipl.amcs.setting.dto.AccountPostingDtoNew;
 import com.eipl.amcs.setting.model.AccountPosting;
-import com.eipl.amcs.setting.service.AccountPostingServiceNew;
+import com.eipl.amcs.setting.service.AccountPostingService;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ public class AccountPostingTxnDataLoadTask extends Task<List<Voucher>> {
     protected List<Voucher> call() throws Exception {
         try {
 
-            AccountPostingServiceNew accountPostingService = EmcsAppContext.getContext().getBean(AccountPostingServiceNew.class);
+            AccountPostingService accountPostingService = EmcsAppContext.getContext().getBean(AccountPostingService.class);
             return accountPostingService.loadAccountPostingData(draftAccountPosting);
 
         } catch (Exception e) {
