@@ -363,7 +363,10 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     cboxParty.setItems(FXCollections.observableArrayList(list));
                     new AutoCompleteComboBoxListener<>(cboxParty);
                     if (cboxParty.getItems() != null) {
-                        cboxParty.getSelectionModel().select(0);
+                        if (productReceipt == null)
+                            cboxParty.getSelectionModel().select(0);
+                        else
+                            cboxParty.getSelectionModel().select(productReceipt.getCustomer());
                     }
                 }
             } catch (InterruptedException | ExecutionException e) {
