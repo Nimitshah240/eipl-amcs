@@ -6,7 +6,6 @@ import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.inventory.model.Product;
-import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.master.inventory.repository.ProductRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
@@ -164,24 +163,26 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                 List<LedgerMappingTaxDetail> listTaxMapping = ledgerMappingTaxDetailRepository.findAll(Sort.by("code"));
                 List<ProductSaleAcUtil> list = new ArrayList<>();
                 for (ReceiptTxnTaxDto receiptTxnTaxDto : dto.getReceiptTxnTaxDtoList()) {
-                    Product product = productRepository.findById(receiptTxnTaxDto.getTransaction().getProduct().getCode()).get();
-                    ProductGroup group = product.getProductGroup();
-                    if (group == null)
-                        continue;
-
-                    LedgerMappingProductGroup lmpg = listLmpg.stream()
-                            .filter(p -> p.getProductGroup().getCode().intValue() == group.getCode().intValue())
-                            .findFirst().orElse(null);
+                    Product product = productRepository.findById(receiptTxnTaxDto.getTransaction().getProduct().getCode()).orElse(null);
+                    if (product == null)
+                        return null;
+//                    ProductGroup group = product.getProductGroup();
+//                    if (group == null)
+//                        continue;
+//
+//                    LedgerMappingProductGroup lmpg = listLmpg.stream()
+//                            .filter(p -> p.getProductGroup().getCode().intValue() == group.getCode().intValue())
+//                            .findFirst().orElse(null);
 
                     ProductSaleAcUtil obj = list.stream()
-                            .filter(p -> p.getLedger().getCode().equalsIgnoreCase(lmpg.getLedgerPurchaseCode().getCode()))
+                            .filter(p -> p.getLedger().getCode().equalsIgnoreCase(product.getPurchaseLedger().getCode()))
                             .findFirst().orElse(null);
                     if (obj == null) {
                         obj = new ProductSaleAcUtil();
                         obj.setAmount(receiptTxnTaxDto.getTransaction().getAmount()
                                 .subtract(receiptTxnTaxDto.getTransaction().getDiscount()));
-                        if (lmpg != null && lmpg.getLedgerSaleCode() != null) {
-                            obj.setLedger(lmpg.getLedgerSaleCode());
+                        if (product.getPurchaseLedger() != null) {
+                            obj.setLedger(product.getPurchaseLedger());
                         }
                         obj.setNarration("Product receipt: " + receiptTxnTaxDto.getTransaction().getProduct().getCode());
                         list.add(obj);
@@ -226,7 +227,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                 voucher.getVoucherTransactions().add(creditTxn);
                 if (eventsList.get(0).getCreditSubLedger()) {
                     VoucherSubLedger voucherSubLedger = null;
-                    Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode((short) 4, dto.getProductReceipt().getCustomer().getCode());
+                    Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode(Short.valueOf(String.valueOf(dto.getProductReceipt().getCustomer().getType())), dto.getProductReceipt().getCustomer().getCode());
                     if (subLedger.isPresent()) {
                         creditTxn.setVoucherSubLedgers(new ArrayList<>());
                         voucherSubLedger = VoucherUtil.getVoucherSubLedger(voucher, creditTxn, "1", amt, true,
@@ -432,7 +433,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             if (transactionList != null && !transactionList.isEmpty()) {
                 for (VoucherTransaction voucherTransaction : transactionList) {
                     List<VoucherSubLedger> voucherSubLedgerList = voucherSubLedgerRepository.findByVoucherTransaction(voucherTransaction);
-                    if (voucherSubLedgerList != null && voucherSubLedgerList.isEmpty()) {
+                    if (voucherSubLedgerList != null && !voucherSubLedgerList.isEmpty()) {
                         for (VoucherSubLedger voucherSubLedger : voucherSubLedgerList) {
                             voucherSubLedgerRepository.delete(voucherSubLedger);
                         }
