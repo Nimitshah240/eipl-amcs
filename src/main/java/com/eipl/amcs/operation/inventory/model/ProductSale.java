@@ -52,6 +52,9 @@ public class ProductSale extends BaseModelTxn {
     private Short consumerType;
     private Short transactionType;
     private String consumerCode;
+    private String bmcCode;
+    private String mccPlantCode;
+    private String plantCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = DockSerialize.class)
@@ -107,7 +110,9 @@ public class ProductSale extends BaseModelTxn {
         audit.setDock(this.getDock());
         audit.setUnion(this.getUnion());
         audit.setSociety(this.getSociety());
-
+        audit.setBmcCode(this.getBmcCode());
+        audit.setMccPlantCode(this.getMccPlantCode());
+        audit.setPlantCode(this.getPlantCode());
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());
         audit.setUpdatedAt(this.getUpdatedAt());

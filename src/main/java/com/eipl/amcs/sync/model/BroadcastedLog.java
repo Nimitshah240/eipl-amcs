@@ -35,4 +35,5 @@ public class BroadcastedLog {
     private String language;
     private String sourceSystemId;
     private String version;
+//    private String versionCode;
 }

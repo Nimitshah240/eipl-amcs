@@ -55,7 +55,9 @@ public class CouponBalance extends BaseModelTxn {
     private Society society;
     private String xCol4;
     private String xCol5;
-
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
     @Transient
     private String consumerName;
     @Transient
@@ -100,7 +102,9 @@ public class CouponBalance extends BaseModelTxn {
         audit.setSociety(this.getSociety());
         audit.setXCol4(this.getXCol4());
         audit.setXCol5(this.getXCol5());
-
+        audit.setPlantCode(this.getPlantCode());
+        audit.setMccCode(this.getMccCode());
+        audit.setBmcCode(this.getBmcCode());
         return audit;
     }
 }

@@ -53,6 +53,9 @@ public class ProductSaleAudit extends BaseModelTxnAudit {
     private Short consumerType;
     private Short transactionType;
     private String consumerCode;
+    private String bmcCode;
+    private String mccPlantCode;
+    private String plantCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = DockSerialize.class)

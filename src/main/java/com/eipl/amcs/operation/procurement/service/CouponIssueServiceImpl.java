@@ -90,11 +90,17 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 couponBal = new CouponBalance();
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
                         couponIssue.getAmount(), couponIssue.getMilkType());
+                couponBal.setBmcCode(MainApp.identityDto.getSociety().getBmc().getCode());
+                couponBal.setMccCode(MainApp.identityDto.getSociety().getMcc().getCode());
+                couponBal.setPlantCode(MainApp.identityDto.getSociety().getPlant().getCode());
                 couponBal.setxCol1(UUID.randomUUID().toString());
                 couponBalanceService.insert(couponBal);
             } else {
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
                         couponIssue.getAmount() + couponBal.getBalance(), couponIssue.getMilkType());
+                couponBal.setBmcCode(MainApp.identityDto.getSociety().getBmc().getCode());
+                couponBal.setMccCode(MainApp.identityDto.getSociety().getMcc().getCode());
+                couponBal.setPlantCode(MainApp.identityDto.getSociety().getPlant().getCode());
                 couponBal.setUpdatedAt(LocalDateTime.now());
                 couponBal.setUpdatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
                 couponBalanceService.update(couponBal);
@@ -102,6 +108,9 @@ public class CouponIssueServiceImpl implements CouponIssueService {
             couponIssue.setCreatedAt(LocalDateTime.now());
             couponIssue.setCreatedBy(MainApp.getUser() != null ? MainApp.getUser().getCode() : null);
             couponIssue.setxCol1(UUID.randomUUID().toString());
+            couponIssue.setBmcCode(MainApp.identityDto.getSociety().getBmc().getCode());
+            couponIssue.setMccCode(MainApp.identityDto.getSociety().getMcc().getCode());
+            couponIssue.setPlantCode(MainApp.identityDto.getSociety().getPlant().getCode());
             couponIssueRepository.customSave(couponIssue, CommonUtils.setIdentityHeader());
 
             return true;
