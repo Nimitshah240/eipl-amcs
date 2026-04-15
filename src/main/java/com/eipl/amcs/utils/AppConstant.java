@@ -31,6 +31,7 @@ public class AppConstant {
 
     public static final String client = "JAIPURDUSS"; // OR JAIPURDUSS OR AMUL
     public static final String versionNo = "1.3";
+    public static final String versionCode = "d_101";
 
     public static String baseUrlRealTime;
     public static String syncUrlRealTime;

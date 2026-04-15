@@ -31,6 +31,7 @@ public class Inbox {
     private LocalDateTime syncTimestamp;
     private String sourceDeviceMac;
     private String versionNo;
+//    private String versionCode;
     private String deviceId;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime errorTimestamp;

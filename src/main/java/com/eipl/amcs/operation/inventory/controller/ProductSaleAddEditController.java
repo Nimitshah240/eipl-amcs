@@ -128,12 +128,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         btnSaveUpdate.setOnAction(e -> {
 
             if (rbtnCredit.isSelected()) {
-                productSale.setPaymentMode((short) 0);
+                productSale.setPaymentMode((short) 1);
                 productSale.setNoOfInstallments(Short.valueOf(txtNoOfInstallment.getText()));
                 productSale.setDeductionStartDate(dpDeductionStartDate.getValue());
             } else {
                 if (rbtnCash.isSelected()) {
-                    productSale.setPaymentMode((short) 1);
+                    productSale.setPaymentMode((short) 0);
                     productSale.setNoOfInstallments((short) 0);
                     productSale.setDeductionStartDate(null);
                 }
@@ -645,12 +645,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         productSale.setTransactionType((short) 1);
         productSale.setConsumerType(cboxType.getValue().getKey());
         if (rbtnCredit.isSelected()) {
-            productSale.setPaymentMode((short) 0);
+            productSale.setPaymentMode((short) 1);
             productSale.setNoOfInstallments(Short.valueOf(txtNoOfInstallment.getText()));
             productSale.setDeductionStartDate(dpDeductionStartDate.getValue());
         } else {
             if (rbtnCash.isSelected()) {
-                productSale.setPaymentMode((short) 1);
+                productSale.setPaymentMode((short) 0);
                 productSale.setNoOfInstallments((short) 0);
                 productSale.setDeductionStartDate(null);
             }
@@ -668,6 +668,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             productSale.setDiscount(new BigDecimal(txtTotalDiscount.getText()));
             productSale.setTaxAmount(new BigDecimal(txtTotalAmountTax.getText()));
             productSale.setNetAmount(new BigDecimal(txtNetPayable.getText()));
+            productSale.setBmcCode(MainApp.identityDto.getSociety().getBmc().getCode());
+            productSale.setMccPlantCode(MainApp.identityDto.getSociety().getMcc().getCode());
+            productSale.setPlantCode(MainApp.identityDto.getSociety().getPlant().getCode());
             productSale.setxCol3("productsale");
             productSale.setNoOfInstallments(Short.parseShort(txtNoOfInstallment.getText()));
             if (rbtnCredit.isSelected()) {
@@ -677,12 +680,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             productSale.setUnion(MainApp.identityDto.getUnion());
             productSale.setDock(MainApp.identityDto.getDock());
             if (rbtnCredit.isSelected()) {
-                productSale.setPaymentMode((short) 0);
+                productSale.setPaymentMode((short) 1);
                 productSale.setNoOfInstallments(Short.valueOf(txtNoOfInstallment.getText()));
                 productSale.setDeductionStartDate(dpDeductionStartDate.getValue());
             } else {
                 if (rbtnCash.isSelected()) {
-                    productSale.setPaymentMode((short) 1);
+                    productSale.setPaymentMode((short) 0);
                     productSale.setNoOfInstallments((short) 0);
                     productSale.setDeductionStartDate(null);
                 }
@@ -748,12 +751,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         productSale.setTaxAmount(new BigDecimal(txtTotalAmountTax.getText()));
         productSale.setNetAmount(new BigDecimal(txtNetPayable.getText()));
         if (rbtnCredit.isSelected()) {
-            productSale.setPaymentMode((short) 0);
+            productSale.setPaymentMode((short) 1);
             productSale.setNoOfInstallments(Short.valueOf(txtNoOfInstallment.getText()));
             productSale.setDeductionStartDate(dpDeductionStartDate.getValue());
         } else {
             if (rbtnCash.isSelected()) {
-                productSale.setPaymentMode((short) 1);
+                productSale.setPaymentMode((short) 0);
                 productSale.setNoOfInstallments((short) 0);
                 productSale.setDeductionStartDate(null);
             }
