@@ -17,10 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
@@ -91,6 +88,20 @@ public class VoucherController implements MyInitialization, PopupCallback {
                 controller.setVoucher(propVoucherDto.get());
                 MainApp.getContentPane().setCenter((controller).getRoot());
             }
+        });
+
+        tableVoucher.setRowFactory(tv -> {
+            TableRow<VoucherDto> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    VoucherDto data = row.getItem();
+                    VoucherLedgerController controller = (VoucherLedgerController) MainApp.getFxmlLoaderUtil()
+                            .loadAndSet(MainApp.class.getResource("view/master/account/VoucherLedger.fxml"));
+                    controller.setVoucher(data);
+                    MainApp.getContentPane().setCenter((controller).getRoot());
+                }
+            });
+            return row;
         });
     }
 

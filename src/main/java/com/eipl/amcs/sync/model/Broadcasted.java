@@ -2,6 +2,7 @@ package com.eipl.amcs.sync.model;
 
 import com.eipl.amcs.EiplAmcsAppRunner;
 import com.eipl.amcs.MainApp;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,7 +56,7 @@ public class Broadcasted {
         obj.setCreatedAt(LocalDateTime.now());
         obj.setProcessed((short) 0);
         obj.setSequence((short) 0);
-        obj.setSourceSystemId(systemId);
+        obj.setSourceSystemId(CommonUtils.getDeviceId(MainApp.identityDto.getSociety().getCode()));
         obj.setVersion(version);
         obj.setLanguage(language);
         obj.setDestCode(MainApp.identityDto.getUnion().getCode());
@@ -80,7 +81,7 @@ public class Broadcasted {
         log.setProcessedAt(LocalDateTime.now());
         log.setLanguage(this.getLanguage());
         log.setSourceSystemId(this.getSourceSystemId());
-        log.setVersion(this.getVersion());
+        log.setVersion("d_101");
         return log;
     }
 
@@ -102,8 +103,9 @@ public class Broadcasted {
         inbox.setOriginatingOrgType("VLC");
         inbox.setPostingTimestamp(LocalDateTime.now());
         inbox.setSourceDeviceMac(this.getSourceSystemId());
-        inbox.setVersionNo(this.getVersion());
-        inbox.setDeviceId(EiplAmcsAppRunner.identityDto.getIdentity().getToken());
+        inbox.setVersionNo("d_101");
+//        inbox.setDeviceId(EiplAmcsAppRunner.identityDto.getIdentity().getToken());
+        inbox.setDeviceId("AMUL" + EiplAmcsAppRunner.identityDto.getIdentity().getSocietyCode() + "AMCS");
         return inbox;
     }
 }

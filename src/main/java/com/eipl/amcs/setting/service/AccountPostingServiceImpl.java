@@ -211,6 +211,7 @@ public class AccountPostingServiceImpl implements AccountPostingService {
     private List<Voucher> buildLocalMilkSaleVoucher(AccountPosting draftAccountPosting, Map<MilkType, Product> productMap, Map<LocalDate, Map<Short, Map<MilkType, List<LocalMilkSale>>>> localSaleDateMap) {
         try {
             List<Voucher> voucherList = new ArrayList<>();
+
             for (LocalDate date : localSaleDateMap.keySet()) {
                 FinancialYear fy = financialYearRepository.findCurrentFinancialYear(date).orElse(null);
 
@@ -237,28 +238,33 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                     voucher.setAutoPosted(false);
                     voucher.setVoucherTransactions(new ArrayList<>());
 //          ------------------------------ VOUCHER ----------------------------------------------------
-                    Product product = null;
                     List<VoucherTransaction> voucherTransactionList = new ArrayList<>();
+                    List<VoucherSubLedger> voucherSubLedgerList = new ArrayList<>();
+
                     Map<Short, Map<String, BigDecimal>> typeCodeAmountMap = new HashMap<>();
                     Map<MilkType, List<LocalMilkSale>> mapOfMilkTypeSale = mapOfPaymentTypeSale.get(paymentType);
                     int txnCode = 1;
                     for (MilkType milkType : mapOfMilkTypeSale.keySet()) {
-                        product = productMap.get(milkType);
-                        BigDecimal milkTypeAmt = BigDecimal.ZERO;
                         List<LocalMilkSale> localMilkSaleList = mapOfMilkTypeSale.get(milkType);
-                        log.info("CREATE CREDIT TXN.");
-                        for (LocalMilkSale localMilkSale : localMilkSaleList) {
-                            log.info("CODE {} , PAYMENT TYPE : {} , MILK TYPE : {} , CONSUMER TYPE : {} , CONSUMER CODE : {}, AMOUNT : {}", localMilkSale.getCode(), localMilkSale.getPaymentMode(), localMilkSale.getMilkType(), localMilkSale.getConsumerType(), localMilkSale.getConsumerCode(), localMilkSale.getAmount());
-                            Short type = localMilkSale.getConsumerType();   // align with subledger
-                            String code = localMilkSale.getConsumerCode();
-                            BigDecimal amount = localMilkSale.getAmount();
-                            typeCodeAmountMap.computeIfAbsent(type, k -> new HashMap<>()).merge(code, amount, BigDecimal::add);
-                            totalAmount = totalAmount.add(amount);
-                            milkTypeAmt = milkTypeAmt.add(amount);
-//                            CALCULATE TOTAL - DONE
-//                            CREATE CR. VOUCHER TXN - TAKE LEDGER FROM PRODUCT TABLE
+
+                        if (paymentType == 2) {
+                            typeCodeAmountMap.clear();
+                            totalAmount = BigDecimal.ZERO;
+                            voucherSubLedgerList = new ArrayList<>();
                         }
 
+                        totalAmount = totalAmount.add(localMilkSaleList.stream()
+                                .map(LocalMilkSale::getAmount)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add));
+                        BigDecimal milkTypeAmt = localMilkSaleList.stream().
+                                filter(localMilkSale -> localMilkSale.getMilkType().getCode() == milkType.getCode())
+                                .map(LocalMilkSale::getAmount)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                        localMilkSaleList.forEach(localMilkSale ->
+                                typeCodeAmountMap.computeIfAbsent(localMilkSale.getConsumerType(), k -> new HashMap<>()).merge(localMilkSale.getConsumerCode(), localMilkSale.getAmount(), BigDecimal::add)
+                        );
+
+                        Product product = productMap.get(milkType);
                         VoucherTransaction crTxn = VoucherUtil.getVoucherTxn(
                                 voucher, milkTypeAmt, true,
                                 product.getLocalSaleLedger(),
@@ -268,56 +274,81 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                         crTxn.setEvents(event);
                         crTxn.setVoucherSubLedgers(new ArrayList<>());
                         voucherTransactionList.add(crTxn);
-                    }
-                    log.info("CREATE DEBIT TXN. WITH AMT {}", totalAmount);
-                    Ledger ledger = new Ledger();
-                    if (product != null && paymentType == 2)
-                        ledger = product.getCouponLedger();
-                    else
-                        ledger = ledgerMappingEvent.getDebitLedger();
 
-                    VoucherTransaction drTxn = VoucherUtil.getVoucherTxn(
-                            voucher, totalAmount, false,
-                            ledger,
-                            ledgerMappingEvent.getVoucherTxnDebitNarration(),
-                            String.valueOf(txnCode));
-                    drTxn.setEvents(event);
-                    drTxn.setVoucherSubLedgers(new ArrayList<>());
+                        if (paymentType == 2) {
+                            VoucherTransaction drTxn = VoucherUtil.getVoucherTxn(
+                                    voucher, totalAmount, false,
+                                    product.getCouponLedger(),
+                                    ledgerMappingEvent.getVoucherTxnDebitNarration(),
+                                    String.valueOf(txnCode));
+                            drTxn.setEvents(event);
+                            drTxn.setVoucherSubLedgers(new ArrayList<>());
 
+                            if (ledgerMappingEvent.getDebitSubLedger()) {
+                                for (short type : typeCodeAmountMap.keySet()) {
+                                    Map<String, BigDecimal> mapOfConsumerCodeAndAmt = typeCodeAmountMap.get(type);
+                                    for (String consumerCode : mapOfConsumerCodeAndAmt.keySet()) {
+                                        SubLedger subLedger = subLedgerRepository.findByReferenceCodeAndType(consumerCode, type).orElse(null);
+                                        if (subLedger == null)
+                                            throw new RuntimeException("Sub Ledger Not Found");
+                                        BigDecimal amt = mapOfConsumerCodeAndAmt.get(consumerCode);
 
-                    List<VoucherSubLedger> voucherSubLedgerList = new ArrayList<>();
-                    if (ledgerMappingEvent.getDebitSubLedger() || ledgerMappingEvent.getCreditSubLedger()) {
-                        for (short type : typeCodeAmountMap.keySet()) {
-                            Map<String, BigDecimal> mapOfConsumerCodeAndAmt = typeCodeAmountMap.get(type);
-                            for (String consumerCode : mapOfConsumerCodeAndAmt.keySet()) {
-//                            GET SUB LEDGER IF FOUND EMPTY THROW ERROR.
-                                SubLedger subLedger = subLedgerRepository.findByReferenceCodeAndType(consumerCode, type).orElse(null);
-                                if (subLedger == null)
-                                    throw new RuntimeException("Sub Ledger Not Found");
-                                BigDecimal amt = mapOfConsumerCodeAndAmt.get(consumerCode);
-
-                                VoucherSubLedger vsl = new VoucherSubLedger();
-                                vsl.setCreditDebit(false);
-                                vsl.setSubLedger(subLedger);
-                                vsl.setAmount(amt);
-                                vsl.setInitData();
-                                vsl.setNarration(ledgerMappingEvent.getVoucherNarration());
-                                vsl.setVoucher(voucher);
-                                voucherSubLedgerList.add(vsl);
-                                log.info("Consumer Type : {} , Consumer Code : {}, Amt : {}", type, consumerCode, amt);
+                                        VoucherSubLedger vsl = new VoucherSubLedger();
+                                        vsl.setCreditDebit(false);
+                                        vsl.setSubLedger(subLedger);
+                                        vsl.setAmount(amt);
+                                        vsl.setInitData();
+                                        vsl.setNarration(ledgerMappingEvent.getVoucherNarration());
+                                        vsl.setVoucher(voucher);
+                                        voucherSubLedgerList.add(vsl);
+                                        log.info("Consumer Type : {} , Consumer Code : {}, Amt : {}", type, consumerCode, amt);
+                                    }
+                                }
+                                drTxn.setVoucherSubLedgers(voucherSubLedgerList);
+                                voucherTransactionList.add(drTxn);
                             }
+                            voucher.setVoucherTransactions(voucherTransactionList);
                         }
                     }
-                    drTxn.setVoucherSubLedgers(voucherSubLedgerList);
-                    voucherTransactionList.add(drTxn);
-                    voucher.setVoucherTransactions(voucherTransactionList);
-                    voucherList.add(voucher);
-//                USE Map<Short, Map<String, BigDecimal>> to get subledger here
-//                CREATE DB. TXN OF TOTAL AMOUNT
-//                TAKE LEDGER FROM LME AND FOR COUPON TAKE FROM PRODUCT
-//                CREATE VOUCHER SUB LEDGER OF DEBIT TXN BEFORE THAT CHECK FOR LEDGER MAPPING EVENT
-                }
+                    log.info("CREATE DEBIT TXN. WITH AMT {}", totalAmount);
+                    Ledger ledger = ledgerMappingEvent.getDebitLedger();
+                    if (paymentType != 2) {
+                        VoucherTransaction drTxn = VoucherUtil.getVoucherTxn(
+                                voucher, totalAmount, false,
+                                ledger,
+                                ledgerMappingEvent.getVoucherTxnDebitNarration(),
+                                String.valueOf(txnCode));
+                        drTxn.setEvents(event);
+                        drTxn.setVoucherSubLedgers(new ArrayList<>());
 
+                        if (ledgerMappingEvent.getDebitSubLedger()) {
+                            for (short type : typeCodeAmountMap.keySet()) {
+                                Map<String, BigDecimal> mapOfConsumerCodeAndAmt = typeCodeAmountMap.get(type);
+                                for (String consumerCode : mapOfConsumerCodeAndAmt.keySet()) {
+                                    SubLedger subLedger = subLedgerRepository.findByReferenceCodeAndType(consumerCode, type).orElse(null);
+                                    if (subLedger == null)
+                                        throw new RuntimeException("Sub Ledger Not Found");
+                                    BigDecimal amt = mapOfConsumerCodeAndAmt.get(consumerCode);
+
+                                    VoucherSubLedger vsl = new VoucherSubLedger();
+                                    vsl.setCreditDebit(false);
+                                    vsl.setSubLedger(subLedger);
+                                    vsl.setAmount(amt);
+                                    vsl.setInitData();
+                                    vsl.setNarration(ledgerMappingEvent.getVoucherNarration());
+                                    vsl.setVoucher(voucher);
+                                    voucherSubLedgerList.add(vsl);
+                                    log.info("Consumer Type : {} , Consumer Code : {}, Amt : {}", type, consumerCode, amt);
+                                }
+                            }
+                        }
+
+                        drTxn.setVoucherSubLedgers(voucherSubLedgerList);
+                        voucherTransactionList.add(drTxn);
+                        voucher.setVoucherTransactions(voucherTransactionList);
+                    }
+                    voucherList.add(voucher);
+                }
             }
             return voucherList;
         } catch (Exception e) {

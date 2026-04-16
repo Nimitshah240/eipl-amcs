@@ -130,7 +130,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         saleNew.setSociety(productSaleDto.getProductSale().getSociety());
         saleNew.setUnion(productSaleDto.getProductSale().getUnion());
         saleNew.setDock(productSaleDto.getProductSale().getDock());
-
+        saleNew.setxCol1(UUID.randomUUID().toString());
         List<SaleTxnTaxDto> listNew = new ArrayList<>();
         dtoNew.setProductSale(saleNew);
         dtoNew.setSaleTxnTaxDtoList(listNew);
@@ -147,7 +147,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             t.setProduct(dto.getTransaction().getProduct());
             t.setUnitCode(dto.getTransaction().getUnitCode());
             t.setTaxCode(dto.getTransaction().getTaxCode());
-
+            t.setxCol1(UUID.randomUUID().toString());
             temp.setTransaction(t);
             txnCnt++;
 
@@ -166,6 +166,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                     tt.setProductSale(saleNew);
                     tt.setProductSaleTransaction(t);
                     tt.setTaxDetail(recTax.getTaxDetail());
+                    tt.setxCol1(UUID.randomUUID().toString());
 
                     saleTaxListNew.add(tt);
                     taxCnt++;
@@ -200,7 +201,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
     private String createAutoPosting(ProductSaleDto productSaleDto, String voucherCode, String identityInfo) {
         try {
-            List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(productSaleDto.getProductSale().getPaymentMode() == (short) 1 ? AppConstant.EventCode.PRODUCT_SALE_CASH : AppConstant.EventCode.PRODUCT_SALE_CREDIT);
+            List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(productSaleDto.getProductSale().getPaymentMode() == (short) 0 ? AppConstant.EventCode.PRODUCT_SALE_CASH : AppConstant.EventCode.PRODUCT_SALE_CREDIT);
             if (eventsList == null || eventsList.isEmpty()) return null;
 
 //            if (eventsList.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
@@ -214,8 +215,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
                 // Voucher
                 Voucher voucher = VoucherUtil.getVoucherInstance(voucherCode, productSaleDto.getProductSale().getInvoiceNo(), productSaleDto.getProductSale().getInvoiceDate(), productSaleDto.getProductSale().getInvoiceDate(), "Product Sale Auto Posting " + productSaleDto.getProductSale().getInvoiceDate(), eventsList.get(0).getVoucherType(), financialYear.isPresent() ? financialYear.get().getCode() : null, productSaleDto.getProductSale().getSociety(), productSaleDto.getProductSale().getUnion().getCode(), productSaleDto.getProductSale().getDock().getDockNo());
+                voucher.setProcessName("tbl_product_sale");
+                voucher.setProcessReference(voucher.getCode());
                 voucher.setVoucherTransactions(new ArrayList<>());
-
+                voucher.setxCol1(UUID.randomUUID().toString());
                 // Calculate amount of txns
                 List<LedgerMappingProductGroup> listLmpg = ledgerMappingProductGroupRepository.findAll(Sort.by("code"));
                 List<LedgerMappingTaxDetail> listTaxMapping = ledgerMappingTaxDetailRepository.findAll(Sort.by("code"));
@@ -266,7 +269,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                     amt = amt.add(a.getAmount());
                 }
                 VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amt, false, eventsList.get(0).getDebitLedger(), "Product Sale On Credit To " + productSaleDto.getProductSale().getConsumerType() + ": " + productSaleDto.getProductSale().getConsumerCode(), "1");
+                voucher.setProcessName("tbl_product_sale");
+                voucher.setProcessReference(voucher.getCode());
                 voucher.getVoucherTransactions().add(debitTxn);
+                debitTxn.setxCol1(UUID.randomUUID().toString());
                 if (eventsList.get(0).getDebitSubLedger()) {
                     VoucherSubLedger voucherSubLedger = null;
                     Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode(productSaleDto.getProductSale().getConsumerType(), productSaleDto.getProductSale().getConsumerCode());
@@ -283,6 +289,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
                     VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, a.getAmount(), true, a.getLedger(), a.getNarration(), String.valueOf(sr));
                     sr++;
+                    creditTxn.setxCol1(UUID.randomUUID().toString());
                     voucher.getVoucherTransactions().add(creditTxn);
                 }
 
@@ -292,6 +299,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                         voucherTxnRepository.customSave(voucherTransaction, identityInfo);
                         if (voucherTransaction.getVoucherSubLedgers() != null && !voucherTransaction.getVoucherSubLedgers().isEmpty()) {
                             for (VoucherSubLedger voucherSubLedger : voucherTransaction.getVoucherSubLedgers()) {
+                                voucherSubLedger.setxCol1(UUID.randomUUID().toString());
                                 voucherSubLedgerRepository.customSave(voucherSubLedger, identityInfo);
                             }
                         }
@@ -382,6 +390,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             stock.setProduct(transaction.getProduct());
             stock.setSociety(society);
             stock.setInitData();
+            stock.setxCol1(UUID.randomUUID().toString());
             stockRepository.customSave(stock, identityInfo);
         }
 
@@ -402,6 +411,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         txn.setSociety(society);
         txn.setUnionCode(transaction.getUnionCode());
         txn.setInitData();
+        txn.setxCol1(UUID.randomUUID().toString());
         stockTxnRepository.customSave(txn, identityInfo);
     }
 

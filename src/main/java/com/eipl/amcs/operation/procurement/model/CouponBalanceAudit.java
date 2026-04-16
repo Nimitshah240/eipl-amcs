@@ -51,7 +51,9 @@ public class CouponBalanceAudit extends BaseModelAudit {
     @JsonDeserialize(using = SocietyDeserializer.class)
     @JoinColumn(name = "society_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Society society;
-
+    private String plantCode;
+    private String mccCode;
+    private String bmcCode;
     private String xCol4;
     private String xCol5;
 }

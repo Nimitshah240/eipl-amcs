@@ -668,7 +668,7 @@ public class MemberBillServiceImpl implements MemberBillService {
         try {
             if (ledgerMappingBillHeads == null || ledgerMappingBillHeads.isEmpty())
                 return null;
-            if (ledgerMappingBillHeads.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
+//            if (ledgerMappingBillHeads.stream().anyMatch(e -> e.getXCol1().equalsIgnoreCase("0"))) return null;
 
             List<LedgerMappingEvent> eventsList = ledgerMappingEventRepository.findByEventcode(AppConstant.EventCode.MEMBER_BILL);
             if (eventsList == null || eventsList.isEmpty())
@@ -696,14 +696,15 @@ public class MemberBillServiceImpl implements MemberBillService {
                 ledgerMapping = eventsList.stream().filter(p -> p.getEvents().getCode() == 21)
                         .findFirst().orElse(null);
             }
-            VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, memberBill.getNetAmount(), false,
+//         TODO   CHECK BANK
+            VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, memberBill.getNetAmount(), true,
                     ledgerMapping.getCreditLedger(),
                     "Net Payable Amount of Rs: " + memberBill.getNetAmount(), String.valueOf(cc));
             if (debitTxn != null)
                 voucher.getVoucherTransactions().add(debitTxn);
 
             // Credit/debit Txn from event ledger mapping
-            List<MemberBillTransaction> txn = transactionRepository.findByMemberBill(memberBill);
+            List<MemberBillTransaction> txn = transactionRepository.findByMemberBillAndBillHead_CodeNot(memberBill, "105");
             for (MemberBillTransaction memberBillTransaction : txn) {
                 BigDecimal amt = null;
                 if ("101".equals(memberBillTransaction.getBillHead().getCode())) {

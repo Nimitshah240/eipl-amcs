@@ -18,6 +18,9 @@ public interface MemberBillTransactionRepository extends BaseRepository<MemberBi
     @EntityGraph(attributePaths = {"memberBill", "billHead"})
     List<MemberBillTransaction> findByMemberBill(MemberBill memberBill);
 
+    @EntityGraph(attributePaths = {"memberBill", "billHead"})
+    List<MemberBillTransaction> findByMemberBillAndBillHead_CodeNot(MemberBill memberBill, String billHeadCode);
+
     @Query(value = "CALL process_member_billing(:p_society_payment_cycle_code, :p_prev_society_payment_cycle_code,:p_from_date,:p_to_date,:p_processed,:p_society_code,:p_user_code);", nativeQuery = true)
     List<Map<String, Object>> findBillTransaction(@Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
                                                   @Param("p_prev_society_payment_cycle_code") String prevSocietyPaymentCycleCode,

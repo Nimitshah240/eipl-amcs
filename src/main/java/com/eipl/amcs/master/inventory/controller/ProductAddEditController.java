@@ -217,8 +217,8 @@ public class ProductAddEditController implements MyInitialization {
         if (cboxProductGroup.getValue() == null)
             errorMsg.append(resourceBundle.getString("productgroupnullerror") + "\n");
         if (cboxTaxName.getValue() == null) errorMsg.append(resourceBundle.getString("taxnullerror") + "\n");
-        if (txtReferenceCode.getText() == null || txtReferenceCode.getText().trim().isEmpty())
-            errorMsg.append(resourceBundle.getString("referencecodenullerror") + "\n");
+//        if (txtReferenceCode.getText() == null || txtReferenceCode.getText().trim().isEmpty())
+//            errorMsg.append(resourceBundle.getString("referencecodenullerror") + "\n");
         if (txtName.getText() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("productnamenullerror") + "\n");
 //        if (txtLocalName.getText() == null || txtLocalName.getText().trim().isEmpty())
