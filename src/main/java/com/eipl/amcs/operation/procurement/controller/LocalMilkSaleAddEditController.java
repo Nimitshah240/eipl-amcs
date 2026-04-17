@@ -153,10 +153,13 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
             LocalDateTime saleDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpSellDate.getValue(), cboxShift.getValue());
             MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
             AccountPostingRepository accountPostingRepository = EmcsAppContext.getContext().getBean(AccountPostingRepository.class);
+
+            int eventCode = Integer.parseInt(String.valueOf(AppConstant.EventCode.LOCAL_MILK_SALE).concat(String.valueOf(cboxPaymentType.getSelectionModel().getSelectedIndex() + 1)));
+
             if (milkDispatchRepository.existsByFromDateAndFromShift(saleDateTime, cboxShift.getValue())) {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("localmilksale"), resourceBundle.getString("dispatch.already.done"));
                 alert.createAlert();
-            } else if (accountPostingRepository.findValidRange(dpSellDate.getValue(), cboxShift.getSelectionModel().getSelectedItem().getCode(), (short) 2, AppConstant.EventCode.LOCAL_MILK_SALE) > 0) {
+            } else if (accountPostingRepository.findValidRange(dpSellDate.getValue(), cboxShift.getSelectionModel().getSelectedItem().getCode(), (short) 2, eventCode) > 0) {
                 MyAlert alert = new ErrorAlert(MainApp.stage, resourceBundle.getString("localmilksale"), resourceBundle.getString("account.posting.already.done"));
                 alert.createAlert();
             } else {

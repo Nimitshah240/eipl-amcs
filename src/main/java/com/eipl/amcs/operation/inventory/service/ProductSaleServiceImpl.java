@@ -210,7 +210,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(productSaleDto.getProductSale().getInvoiceDate());
             String societyCode = productSaleDto.getProductSale().getSociety().getCode();
             if (voucherCode == null) {
-                voucherCode = nextCodeService.getNextCode("Voucher", "code", societyCode + "/" + financialYear.get().getCode() + "/", 6);
+                voucherCode = nextCodeService.getNextCode("Voucher", "code", societyCode + "/" + financialYear.get().getCode() + "/", 0);
                 if (voucherCode == null) return null;
 
                 // Voucher

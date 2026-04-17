@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,21 @@ public class VoucherServiceImpl implements VoucherService {
             dto.add(dto1);
         }
         log.info("Voucher findAll {} items fetched", list.size());
+        return dto;
+    }
+
+    @Override
+    public List<VoucherDto> findAllBetweenDates(LocalDate fromDate, LocalDate toDate) {
+        List<Voucher> list = voucherRepository.findByCancelledFalseAndVoucherDateBetween(fromDate, toDate, Sort.by("voucherDate").ascending());
+
+
+        List<VoucherDto> dto = new ArrayList<>();
+        for (Voucher voucher : list) {
+            VoucherDto dto1 = new VoucherDto();
+            dto1.setVoucher(voucher);
+            dto.add(dto1);
+        }
+        log.info("Voucher findAllBetweenDates {} items fetched", list.size());
         return dto;
     }
 

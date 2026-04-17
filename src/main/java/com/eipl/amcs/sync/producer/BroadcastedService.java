@@ -521,8 +521,8 @@ public class BroadcastedService {
                         if (jsonText.get("taxCode") != null) {
                             taxDetail.setTax(taxRepository.findById(String.valueOf(jsonText.get("taxCode"))).orElse(null));
                         }
-                        taxDetail.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
-                        taxDetail.setUnionCode(MainApp.identityDto.getUnion().getCode());
+                        taxDetail.setActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
+//                        taxDetail.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));                        taxDetail.setUnionCode(MainApp.identityDto.getUnion().getCode());
                         taxDetail.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         taxDetail.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : "PORTAL");
                         taxDetail.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);
@@ -543,8 +543,11 @@ public class BroadcastedService {
                             taxDepends.setTaxDetail(taxDetailRepository.findById(String.valueOf(jsonText.get("taxDetailCode"))).orElse(null));
                         }
                         taxDepends.setSteps(jsonText.get("steps") != null ? (short) Integer.parseInt(String.valueOf(jsonText.get("steps"))) : 0);
-                        taxDepends.setActive("1".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))) || "true".equalsIgnoreCase(String.valueOf(jsonText.get("isActive"))));
-//                        taxDepends.setUnionCode(MainApp.identityDto.getUnion().getCode());
+//  taxDepends.setActive("1".equals(String.valueOf(jsonText.get("isActive"))));
+                        //                       taxDepends.setActive(jsonText.get("isActive") != null ? String.valueOf(jsonText.get("isActive")).equalsIgnoreCase("1") : null);
+                        Object val = jsonText.get("isActive");
+                        taxDepends.setActive(val != null && ((Number) val).intValue() == 1);
+                        //                        taxDepends.setUnionCode(MainApp.identityDto.getUnion().getCode());
                         taxDepends.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                         taxDepends.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : "PORTAL");
                         taxDepends.setUpdatedAt(jsonText.get("updatedAt") != null ? LocalDateTime.parse((String) jsonText.get("updatedAt"), CommonUtils.Formatter4) : null);

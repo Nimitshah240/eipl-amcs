@@ -35,7 +35,7 @@ public class VoucherController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<VoucherDto, String> colType, colVoucherDate, colVoucherNo, colRefNo, colRemarks;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnLedger, btnDaybook;
+    Button btnClose, btnAdd, btnDelete, btnLedger, btnDayBook;
     private ResourceBundle resourceBundle;
 
     public VoucherController() {
@@ -90,6 +90,10 @@ public class VoucherController implements MyInitialization, PopupCallback {
             }
         });
 
+        btnDayBook.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/DayBook.fxml")));
+        });
+
         tableVoucher.setRowFactory(tv -> {
             TableRow<VoucherDto> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -102,10 +106,6 @@ public class VoucherController implements MyInitialization, PopupCallback {
                 }
             });
             return row;
-        });
-
-        btnDaybook.setOnAction(e -> {
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/DayBook.fxml")));
         });
     }
 
