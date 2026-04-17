@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,5 +27,8 @@ public interface VoucherRepository extends BaseRepository<Voucher, String> {
 
     @Query("SELECT v FROM Voucher v WHERE v.xCol5 = :val")
     List<Voucher> findByXCol5(@Param("val") String val);
+
+    @EntityGraph(attributePaths = {"society", "voucherType"})
+    List<Voucher> findByCancelledFalseAndVoucherDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
 
 }
