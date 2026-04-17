@@ -656,7 +656,7 @@ public class MemberBillServiceImpl implements MemberBillService {
             Optional<FinancialYear> financialYear = financialYearRepository.findCurrentFinancialYear(memberBill.getDisbursedDate());
 
             voucherNo = nextCodeService.getNextCode("Voucher", "code",
-                    memberBill.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 6);
+                    memberBill.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 0);
             memberBill.setVoucherNo(voucherNo);
             createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo, bank);
             disburseAmount = disburseAmount.add(memberBill.getNetAmount());

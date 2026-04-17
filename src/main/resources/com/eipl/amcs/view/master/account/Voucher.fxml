@@ -28,6 +28,7 @@
                         <Button fx:id="btnDelete" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
                         <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="btnDayBook" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%daybook" />
                   <Button fx:id="btnLedger" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%ledger" />
                     </children>
                 </HBox>
