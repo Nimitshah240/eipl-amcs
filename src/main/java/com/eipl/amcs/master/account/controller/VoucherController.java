@@ -35,7 +35,7 @@ public class VoucherController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<VoucherDto, String> colType, colVoucherDate, colVoucherNo, colRefNo, colRemarks;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnLedger;
+    Button btnClose, btnAdd, btnDelete, btnLedger, btnDaybook;
     private ResourceBundle resourceBundle;
 
     public VoucherController() {
@@ -102,6 +102,10 @@ public class VoucherController implements MyInitialization, PopupCallback {
                 }
             });
             return row;
+        });
+
+        btnDaybook.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/DayBook.fxml")));
         });
     }
 

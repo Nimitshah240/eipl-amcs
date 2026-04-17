@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.DayBookController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
@@ -28,7 +28,7 @@
                         <Button fx:id="btnDelete" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
                         <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
                   <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnDaybook" layoutX="530.0" layoutY="10.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%dayBook" />
+                        <Button fx:id="btnDayBook" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%daybook" />
                   <Button fx:id="btnLedger" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%ledger" />
                     </children>
                 </HBox>
