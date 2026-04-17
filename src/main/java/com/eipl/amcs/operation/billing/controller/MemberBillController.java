@@ -3,10 +3,13 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
 import com.eipl.amcs.master.procurement.converter.SocietyPaymentCycleConvertor;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
@@ -51,6 +54,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     private StackPane root;
     @FXML
     private ComboBox<SocietyPaymentCycle> cboxPaymentCycle;
+    @FXML
+    private E_ComboBox<Bank> cboxBank;
     @FXML
     private Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport, btnReport;
     @FXML
@@ -106,32 +111,23 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 return;
             }
 
-            var task = new CheckMemberBillLoadTask(cboxPaymentCycle.getValue());
-            task.setOnSucceeded(exs -> {
-                try {
-                    short generate = 0;
-                    MemberBillSummary memberBillSummary = task.get();
-                    billSummary = memberBillSummary;
-                    if (memberBillSummary == null) {
-                        btnReport.setDisable(true);
-                        generate = 1;
-                    } else {
-                        btnReport.setDisable(false);
-                        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
-                                CommonUtils.getResourceString(resourceBundle, "member.bill.generated.confirmation"));
-                        Optional<ButtonType> resp = alert.createConfirmationAlert();
-                        if (resp.isPresent() && resp.get() == ButtonType.OK) {
-                            generate = 1;
-                        }
-                    }
-
-                    loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), generate);
-
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
+            short generate = 0;
+            if (billSummary == null) {
+                btnReport.setDisable(true);
+                generate = 1;
+            } else {
+                btnReport.setDisable(false);
+                MyAlert alert = new ConfirmationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                        CommonUtils.getResourceString(resourceBundle, "member.bill.generated.confirmation"));
+                Optional<ButtonType> resp = alert.createConfirmationAlert();
+                if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                    generate = 1;
                 }
-            });
-            new Thread(task).start();
+            }
+            loadBillSummary();
+
+            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), generate);
+
 
         });
         btnEdit.setOnAction(e -> {
@@ -327,7 +323,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
         finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
         saveLockData(finalizeDto, 0);
-        loadData();
     }
 
     private void saveLockData(FinalizeDto finalizeDto, Integer integer) {
@@ -336,6 +331,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             task.setOnSucceeded(e -> {
                 try {
                     reloadData(true);
+                    loadData();
+
                     Object list = task.get();
                     if (list != null) {
                         MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
@@ -350,7 +347,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             });
             new Thread(task).start();
         } else {
-            var task = new MemberBillDisburseLoadTask(finalizeDto);
+            var task = new MemberBillDisburseLoadTask(finalizeDto, cboxBank.getSelectionModel().getSelectedItem());
             task.setOnSucceeded(e -> {
                 try {
                     Object list = task.get();
@@ -374,6 +371,13 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 if (zeroAmountCount > 0) {
                     MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
                             CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
+                    alert.createAlert();
+                    return;
+                }
+                boolean hasPaymentModeOne = memberBillList.stream().anyMatch(p -> p.getPaymentMode() == 1);
+                if (hasPaymentModeOne && cboxBank.getSelectionModel().getSelectedItem() == null) {
+                    MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
+                            CommonUtils.getResourceString(resourceBundle, "banknullerror"));
                     alert.createAlert();
                     return;
                 }
@@ -402,8 +406,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 List<SocietyPaymentCycle> paymentCycleList = new ArrayList<>();
                 if (list != null) {
                     for (SocietyPaymentCycle societyPaymentCycle : list) {
-                        if (!societyPaymentCycle.getBilling())
-                            paymentCycleList.add(societyPaymentCycle);
+//                        if (!societyPaymentCycle.getBilling())
+                        paymentCycleList.add(societyPaymentCycle);
                     }
 
                     cboxPaymentCycle.setItems(FXCollections.observableList(paymentCycleList));
@@ -422,7 +426,33 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             }
         });
         new Thread(task).start();
+        loadBank();
     }
+
+    private void loadBank() {
+        try {
+            var task = new BankLoadTask();
+            task.setOnSucceeded(e -> {
+                try {
+                    List<Bank> bankList = task.get();
+                    cboxBank.setItems(FXCollections.observableList(bankList));
+
+                    if (this.billSummary != null) {
+                        Bank bank = cboxBank.getItems().stream()
+                                .filter(p -> p.getCode().equals(this.billSummary.getBank().getCode()))
+                                .findFirst().orElse(null);
+                        cboxBank.getSelectionModel().select(bank);
+                    }
+                } catch (Exception exp) {
+
+                }
+            });
+            new Thread(task).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public void setupComboBox() {
@@ -465,6 +495,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 memberBillList = task.get();
                 if (memberBillList == null)
                     return;
+
+                loadBillSummary();
                 tableBill.setItems(FXCollections.observableList(memberBillList));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -477,5 +509,21 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     public void reloadData(boolean flag) {
         if (flag)
             loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), (short) 0);
+    }
+
+    private void loadBillSummary() {
+        var task = new CheckMemberBillLoadTask(cboxPaymentCycle.getValue());
+        task.setOnSucceeded(exs -> {
+            try {
+                short generate = 0;
+                MemberBillSummary memberBillSummary = task.get();
+                billSummary = memberBillSummary;
+                if (billSummary != null)
+                    btnReport.setDisable(false);
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

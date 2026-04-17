@@ -32,7 +32,7 @@ public class LedgerMappingTaxDetailServiceImpl implements LedgerMappingTaxDetail
 
         String societyCode = new String(Base64.getDecoder().decode(identityInfo)).split("#")[1];
         for (LedgerMappingTaxDetail mappingTaxDetail : ledgerMappingTaxDetail) {
-            if (mappingTaxDetail.getLedger() != null) {
+            if (mappingTaxDetail.getPurchaseLedger() != null) {
                 Optional<LedgerMappingTaxDetail> obj = list.stream().filter(p -> p.getTaxDetail().getCode().equalsIgnoreCase(mappingTaxDetail.getTaxDetail().getCode()))
                         .findFirst();
                 if (obj.isPresent()) {
@@ -40,14 +40,16 @@ public class LedgerMappingTaxDetailServiceImpl implements LedgerMappingTaxDetail
                     ooo.setupdateData();
 
                     ooo.setTaxDetail(mappingTaxDetail.getTaxDetail());
-                    ooo.setLedger(mappingTaxDetail.getLedger());
+                    ooo.setPurchaseLedger(mappingTaxDetail.getPurchaseLedger());
+                    ooo.setSaleLedger(mappingTaxDetail.getSaleLedger());
                     ooo.setSociety(mappingTaxDetail.getSociety());
                     ooo.setUnionCode(mappingTaxDetail.getUnionCode());
                     ledgerMappingTaxDetailRepository.customUpdate(ooo, identityInfo);
                 } else {
                     mappingTaxDetail.setInitData();
-                    mappingTaxDetail.setCode(societyCode + "-" + mappingTaxDetail.getTaxDetail().getCode() + "-" + mappingTaxDetail.getLedger().getCode());
-                    mappingTaxDetail.setLedger(mappingTaxDetail.getLedger().getCode().equalsIgnoreCase("0") ? null : mappingTaxDetail.getLedger());
+                    mappingTaxDetail.setCode(societyCode + "-" + mappingTaxDetail.getTaxDetail().getCode() + "-" + mappingTaxDetail.getPurchaseLedger().getCode());
+                    mappingTaxDetail.setPurchaseLedger(mappingTaxDetail.getPurchaseLedger().getCode().equalsIgnoreCase("0") ? null : mappingTaxDetail.getPurchaseLedger());
+                    mappingTaxDetail.setSaleLedger(mappingTaxDetail.getSaleLedger().getCode().equalsIgnoreCase("0") ? null : mappingTaxDetail.getSaleLedger());
                     ledgerMappingTaxDetailRepository.customSave(mappingTaxDetail, identityInfo);
                 }
             } else {

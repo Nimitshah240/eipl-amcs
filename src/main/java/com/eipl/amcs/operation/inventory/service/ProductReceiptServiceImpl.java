@@ -202,12 +202,12 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                                 continue;
 
                             ProductSaleAcUtil obj1 = list.stream()
-                                    .filter(p -> p.getLedger().getCode().equalsIgnoreCase(taxMap.getLedger().getCode()))
+                                    .filter(p -> p.getLedger().getCode().equalsIgnoreCase(taxMap.getPurchaseLedger().getCode()))
                                     .findFirst().orElse(null);
                             if (obj1 == null) {
                                 obj1 = new ProductSaleAcUtil();
                                 obj1.setAmount(productSaleTax.getValue());
-                                obj1.setLedger(taxMap.getLedger());
+                                obj1.setLedger(taxMap.getPurchaseLedger());
                                 obj1.setNarration("Tax : " + productSaleTax.getTaxDetail().getCode());
                                 list.add(obj1);
                             } else {

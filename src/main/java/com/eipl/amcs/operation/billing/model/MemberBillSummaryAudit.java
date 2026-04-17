@@ -1,8 +1,11 @@
 package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
+import com.eipl.amcs.json.deserialize.BankDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.json.serialize.BankSerialize;
 import com.eipl.amcs.json.serialize.SocietyPaymentCycleSerialize;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -40,6 +43,12 @@ public class MemberBillSummaryAudit extends BaseModelTxnAudit {
     @JsonDeserialize(using = SocietyPaymentCycleDeserializer.class)
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private SocietyPaymentCycle paymentCycle;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonSerialize(using = BankSerialize.class)
+    @JsonDeserialize(using = BankDeserializer.class)
+    @JoinColumn(name = "bank_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Bank bank;
 
     @Override
     public String getTableName() {

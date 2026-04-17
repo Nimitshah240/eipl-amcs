@@ -249,11 +249,11 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                             LedgerMappingTaxDetail taxMap = listTaxMapping.stream().filter(p -> p.getTaxDetail().getCode().equalsIgnoreCase(productSaleTax.getTaxDetail().getCode())).findFirst().orElse(null);
                             if (taxMap == null) continue;
 
-                            ProductSaleAcUtil obj1 = list.stream().filter(p -> p.getLedger().getCode().equalsIgnoreCase(taxMap.getLedger().getCode())).findFirst().orElse(null);
+                            ProductSaleAcUtil obj1 = list.stream().filter(p -> p.getLedger().getCode().equalsIgnoreCase(taxMap.getSaleLedger().getCode())).findFirst().orElse(null);
                             if (obj1 == null) {
                                 obj1 = new ProductSaleAcUtil();
                                 obj1.setAmount(productSaleTax.getValue());
-                                obj1.setLedger(taxMap.getLedger());
+                                obj1.setLedger(taxMap.getSaleLedger());
                                 obj1.setNarration("Tax : " + productSaleTax.getTaxDetail().getCode());
                                 list.add(obj1);
                             } else {

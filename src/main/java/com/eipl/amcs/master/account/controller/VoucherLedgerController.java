@@ -19,27 +19,28 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class VoucherLedgerController implements MyInitialization, PopupCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(VoucherLedgerController.class);
-    private final ObjectProperty<VoucherTransaction> propTransaction1;
-    private final ObjectProperty<VoucherTransaction> propTransaction2;
+    private final ObjectProperty<VoucherTransaction> propTransaction;
+
     @FXML
     private StackPane root;
     @FXML
     private Button btnClose, btnSubLedger;
     @FXML
-    private TableView<VoucherTransaction> table1, table2;
+    private TableView<VoucherTransaction> tblVoucherLedger;
     @FXML
-    private TableColumn<VoucherTransaction, String> colName, colAmount, colType;
+    private TableColumn<VoucherTransaction, String> colName, colType, colLedgerName, colLedgerCode, colNarration;
     @FXML
-    private TableColumn<VoucherTransaction, String> colName1, colAmount1, colType1;
+    private TableColumn<VoucherTransaction, BigDecimal> colAmountCredit, colAmountDebit;
+
     private Stage stage;
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
@@ -47,8 +48,7 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
     private VoucherDto voucherDto;
 
     public VoucherLedgerController() {
-        propTransaction1 = new SimpleObjectProperty<>();
-        propTransaction2 = new SimpleObjectProperty<>();
+        propTransaction = new SimpleObjectProperty<>();
     }
 
     public void setCallback(PopupCallback callback) {
@@ -72,30 +72,18 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        setupComboBox();
+        colAmountDebit.setStyle("-fx-text-fill: red;");
+        colAmountCredit.setStyle("-fx-text-fill: green;");
         setupTable();
-        setupTable1();
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.
                 getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Voucher.fxml"))));
         btnSubLedger.setOnAction(e -> {
-            if (propTransaction1.get() != null) {
+            if (propTransaction.get() != null) {
                 MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"),
-                        "VoucherSubLedgerPopup", propTransaction1.get(), this);
-            } else if (propTransaction2.get() != null) {
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"),
-                        "VoucherSubLedgerPopup", propTransaction2.get(), this);
+                        "VoucherSubLedgerPopup", propTransaction.get(), this);
             }
         });
-
-        table2.setOnMouseClicked(e -> {
-            table1.getSelectionModel().clearSelection();
-        });
-        table1.setOnMouseClicked(e -> {
-            table2.getSelectionModel().clearSelection();
-        });
-
     }
-
 
     @Override
     public void loadData() {
@@ -103,10 +91,7 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
         task.setOnSucceeded(e -> {
             try {
                 listVoucherTransaction = new ArrayList<>(task.get());
-                table1.setItems(FXCollections.observableList(listVoucherTransaction.stream().filter
-                        (e1 -> !e1.getCreditDebit()).collect(Collectors.toList())));
-                table2.setItems(FXCollections.observableList(listVoucherTransaction.stream().filter
-                        (VoucherTransaction::getCreditDebit).collect(Collectors.toList())));
+                tblVoucherLedger.setItems(FXCollections.observableList(listVoucherTransaction));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -114,27 +99,21 @@ public class VoucherLedgerController implements MyInitialization, PopupCallback 
         new Thread(task).start();
     }
 
+    @Override
     public void setupTable() {
-        colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
-        colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
-        colType.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("debit")));
-        colAmount.setStyle("-fx-text-fill: red;");
-        propTransaction1.bind(table1.getSelectionModel().selectedItemProperty());
-    }
+        colAmountCredit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit() ? data.getValue().getAmount() : BigDecimal.ZERO));
+        colAmountDebit.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit() ? BigDecimal.ZERO : data.getValue().getAmount()));
+        colLedgerCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getCode()));
+        colLedgerName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getName()));
+//        colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
+        colNarration.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNarration()));
+        colType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit() ? resourceBundle.getString("credit") : resourceBundle.getString("debit")));
 
-    public void setupTable1() {
-        colName1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
-        colAmount1.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
-        colAmount1.setStyle("-fx-text-fill: green;");
-
-        colType1.setCellValueFactory(data -> new SimpleObjectProperty<>(resourceBundle.getString("credit")));
-        propTransaction2.bind(table2.getSelectionModel().selectedItemProperty());
+        propTransaction.bind(tblVoucherLedger.getSelectionModel().selectedItemProperty());
     }
 
     @Override
     public void reloadData(boolean flag) {
-        table1.getSelectionModel().clearSelection();
-        table2.getSelectionModel().clearSelection();
+        tblVoucherLedger.getSelectionModel().clearSelection();
     }
 }
-

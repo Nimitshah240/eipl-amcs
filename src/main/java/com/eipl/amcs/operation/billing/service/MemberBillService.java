@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.billing.service;
 
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.model.MemberBill;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
@@ -32,7 +33,7 @@ public interface MemberBillService {
 
     Boolean finalize(SocietyPaymentCycle paymentCycle, List<String> memberList);
 
-    Boolean disburse(SocietyPaymentCycle paymentCycle, List<String> memberList, String identityHeader);
+    Boolean disburse(SocietyPaymentCycle paymentCycle, List<String> memberList, Bank bank, String identityHeader);
 
     List<MemberBillTransaction> saveTrans(List<MemberBillTransaction> list);
 

@@ -80,8 +80,10 @@ public class LedgerMappingTaxDetailController implements MyInitialization {
     @Override
     public void saveData() {
         for (LedgerMappingTaxDetail item : tableTaxDetailData.getItems()) {
-            if (item.getLedger() != null && item.getLedger().getName().equalsIgnoreCase("None"))
-                item.setLedger(null);
+            if (item.getPurchaseLedger() != null && item.getPurchaseLedger().getName().equalsIgnoreCase("None"))
+                item.setPurchaseLedger(null);
+            if (item.getSaleLedger() != null && item.getSaleLedger().getName().equalsIgnoreCase("None"))
+                item.setSaleLedger(null);
             item.setUnionCode(MainApp.identityDto.getUnion().getCode());
             item.setSociety(MainApp.identityDto.getSociety());
         }
@@ -99,11 +101,11 @@ public class LedgerMappingTaxDetailController implements MyInitialization {
     public void setupTable() {
         colTax.setCellValueFactory(cell -> new SimpleObjectProperty(cell.getValue().getTaxDetail().getTax()));
         colTaxDetail.setCellValueFactory(cell -> new SimpleObjectProperty(cell.getValue().getTaxDetail() != null ? cell.getValue().getTaxDetail().getBasicTax() : ""));
-        colLedger.setCellValueFactory(cell -> new SimpleObjectProperty(cell.getValue().getLedger()));
+        colLedger.setCellValueFactory(cell -> new SimpleObjectProperty(cell.getValue().getPurchaseLedger()));
         colLedger.setCellFactory(ComboBoxTableCell.forTableColumn(converter, ledgerList));
         colLedger.setOnEditCommit(event -> {
             LedgerMappingTaxDetail obj = event.getRowValue();
-            obj.setLedger(event.getNewValue());
+            obj.setPurchaseLedger(event.getNewValue());
         });
     }
 

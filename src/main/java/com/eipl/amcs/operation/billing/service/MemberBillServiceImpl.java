@@ -13,6 +13,7 @@ import com.eipl.amcs.master.operation.model.MemberDetail;
 import com.eipl.amcs.master.operation.repository.BillHeadRepository;
 import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
 import com.eipl.amcs.master.operation.repository.MemberRepository;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
@@ -627,11 +628,14 @@ public class MemberBillServiceImpl implements MemberBillService {
     }
 
     @Override
-    public Boolean disburse(SocietyPaymentCycle paymentCycle, List<String> memberList, String identityHeader) {
+    public Boolean disburse(SocietyPaymentCycle paymentCycle, List<String> memberList, Bank bank, String identityHeader) {
         paymentCycle.setBilling(true);
         paymentCycleRepository.customUpdate(paymentCycle, "");
         List<MemberBill> memberBillList = billRepository.findByPaymentCycle(paymentCycle);
         MemberBillSummary memberBillSummary = summaryRepository.findByPaymentCycle(paymentCycle).get();
+        if (bank != null)
+            memberBillSummary.setBank(bank);
+
         String voucherNo = nextCodeRepository.getNextCode("Voucher", "code", memberBillList.get(0).getSociety().getCode(), 1);
         BigDecimal disburseAmount = BigDecimal.ZERO;
         for (MemberBill memberBill : memberBillList) {
@@ -654,7 +658,7 @@ public class MemberBillServiceImpl implements MemberBillService {
             voucherNo = nextCodeService.getNextCode("Voucher", "code",
                     memberBill.getSociety().getCode() + "/" + financialYear.get().getCode() + "/", 6);
             memberBill.setVoucherNo(voucherNo);
-            createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo);
+            createVoucher(memberBill, ledgerMappingBillHeadRepository.findAll(Sort.by("code")), identityHeader, voucherNo, bank);
             disburseAmount = disburseAmount.add(memberBill.getNetAmount());
             billRepository.save(memberBill);
         }
@@ -664,7 +668,7 @@ public class MemberBillServiceImpl implements MemberBillService {
         return true;
     }
 
-    private String createVoucher(MemberBill memberBill, List<LedgerMappingBillHead> ledgerMappingBillHeads, String identityInfo, String voucherNo) {
+    private String createVoucher(MemberBill memberBill, List<LedgerMappingBillHead> ledgerMappingBillHeads, String identityInfo, String voucherNo, Bank bank) {
         try {
             if (ledgerMappingBillHeads == null || ledgerMappingBillHeads.isEmpty())
                 return null;
@@ -696,9 +700,18 @@ public class MemberBillServiceImpl implements MemberBillService {
                 ledgerMapping = eventsList.stream().filter(p -> p.getEvents().getCode() == 21)
                         .findFirst().orElse(null);
             }
-//         TODO   CHECK BANK
+
+            Ledger creditLedger = new Ledger();
+            if (memberBill.getPaymentMode() == (short) 1 && bank != null) {
+                creditLedger = bank.getLedger();
+            } else {
+                if (ledgerMapping != null) {
+                    creditLedger = ledgerMapping.getCreditLedger();
+                }
+            }
+
             VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, memberBill.getNetAmount(), true,
-                    ledgerMapping.getCreditLedger(),
+                    creditLedger,
                     "Net Payable Amount of Rs: " + memberBill.getNetAmount(), String.valueOf(cc));
             if (debitTxn != null)
                 voucher.getVoucherTransactions().add(debitTxn);

@@ -1508,3 +1508,4 @@ vouchernarrationlocal=વાઉચર વર્ણન સ્થાનિક
 vouchertxncreditnarrationlocal=વાઉચર વ્યવહાર ક્રેડિટ નેરેશન સ્થાનિક
 vouchertxndebitnarrationlocal=વાઉચર વ્યવહાર ડેબિટ વર્ણન સ્થાનિક
 customer.credit.not.allowed=ગ્રાહકો અથવા અન્ય લોકો માટે ક્રેડિટ માન્ય નથી
+one.draft.posting.exist=આ ઇવેન્ટ માટે એક ડ્રાફ્ટ પોસ્ટિંગ પહેલેથી જ અસ્તિત્વમાં છે.

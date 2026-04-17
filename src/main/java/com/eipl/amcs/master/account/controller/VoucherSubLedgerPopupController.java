@@ -6,6 +6,7 @@ import com.eipl.amcs.master.account.model.VoucherSubLedger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
 import com.eipl.amcs.master.account.task.VoucherSubLedgerLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -32,7 +33,7 @@ public class VoucherSubLedgerPopupController implements MyInitialization {
     @FXML
     private TableView<VoucherSubLedger> tableData;
     @FXML
-    private TableColumn<VoucherSubLedger, String> colCode, colSubLedger, colAmount;
+    private TableColumn<VoucherSubLedger, String> colCode, colSubLedger, colType, colAmount;
     private Stage stage;
     private ResourceBundle resourceBundle;
     private PopupCallback callback;
@@ -93,6 +94,11 @@ public class VoucherSubLedgerPopupController implements MyInitialization {
         colSubLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSubLedger().getName()));
         colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount().toString()));
         colCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSubLedger().getCode()));
+        colType.setCellValueFactory(data -> {
+            if (data.getValue().getCreditDebit() != null) {
+                return new SimpleStringProperty(data.getValue().getCreditDebit() ? "Credit" : "Debit");
+            }
+            return new SimpleStringProperty("");
+        });
     }
 }
-

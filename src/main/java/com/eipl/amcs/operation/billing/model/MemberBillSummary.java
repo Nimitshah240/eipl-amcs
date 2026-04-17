@@ -2,8 +2,11 @@ package com.eipl.amcs.operation.billing.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.BankDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyPaymentCycleDeserializer;
+import com.eipl.amcs.json.serialize.BankSerialize;
 import com.eipl.amcs.json.serialize.SocietyPaymentCycleSerialize;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -41,6 +44,12 @@ public class MemberBillSummary extends BaseModelTxn {
     @JoinColumn(name = "society_payment_cycle_code", foreignKey = @ForeignKey(name = "fk_member_bill_summary_payment_cycle_code"))
     @JsonIgnoreProperties(value = {"society", "fromShift", "toShift"})
     private SocietyPaymentCycle paymentCycle;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonSerialize(using = BankSerialize.class)
+    @JsonDeserialize(using = BankDeserializer.class)
+    @JoinColumn(name = "bank_code", foreignKey = @ForeignKey(name = "fk_member_bill_summary_bank_code"))
+    private Bank bank;
 
     @Override
     public String getTableName() {

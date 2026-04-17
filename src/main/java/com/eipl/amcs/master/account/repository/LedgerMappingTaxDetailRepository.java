@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface LedgerMappingTaxDetailRepository extends BaseRepository<LedgerMappingTaxDetail, String> {
 
     @Override
-    @EntityGraph(attributePaths = {"taxDetail", "ledger", "society"})
+    @EntityGraph(attributePaths = {"taxDetail", "purchaseLedger", "saleLedger", "society"})
     List<LedgerMappingTaxDetail> findAll(Sort sort);
 
     @Override

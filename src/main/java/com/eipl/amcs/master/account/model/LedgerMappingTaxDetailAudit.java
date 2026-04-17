@@ -44,9 +44,16 @@ public class LedgerMappingTaxDetailAudit extends BaseModelTxnAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = LedgerSerialize.class)
     @JsonDeserialize(using = LedgerDeserializer.class)
-    @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "purhcase_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
-    private Ledger ledger;
+    private Ledger purchaseLedger;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "sale_ledger_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger saleLedger;
 
     private String unionCode;
 

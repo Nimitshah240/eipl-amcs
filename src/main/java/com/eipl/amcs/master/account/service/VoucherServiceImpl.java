@@ -44,20 +44,11 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public List<VoucherDto> findAll() {
-
         List<Voucher> list = voucherRepository.findAll(Sort.by("code").descending());
-        List<VoucherTransaction> voucherTransactionList = new ArrayList<>();
-        List<VoucherSubLedger> voucherSubLedgerList = new ArrayList<>();
         List<VoucherDto> dto = new ArrayList<>();
         for (Voucher voucher : list) {
             VoucherDto dto1 = new VoucherDto();
-            voucherTransactionList.addAll(voucherTxnRepository.findByVoucher(voucher));
-            for (VoucherTransaction voucherTransaction : voucherTransactionList) {
-                voucherSubLedgerList.addAll(voucherSubLedgerRepository.findByVoucherTransaction(voucherTransaction));
-            }
             dto1.setVoucher(voucher);
-            dto1.setVoucherTransactions(voucherTransactionList);
-            dto1.setVoucherSubLedgers(voucherSubLedgerList);
             dto.add(dto1);
         }
         log.info("Voucher findAll {} items fetched", list.size());

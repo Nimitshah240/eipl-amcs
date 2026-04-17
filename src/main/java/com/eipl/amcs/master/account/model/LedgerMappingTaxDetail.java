@@ -45,9 +45,16 @@ public class LedgerMappingTaxDetail extends BaseModelTxn {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = LedgerSerialize.class)
     @JsonDeserialize(using = LedgerDeserializer.class)
-    @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_tax_detail_ledger_mapping_ledger_code"))
+    @JoinColumn(name = "purchase_ledger_code", foreignKey = @ForeignKey(name = "fk_tax_detail_mapping_purchase_ledger"))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
-    private Ledger ledger;
+    private Ledger purchaseLedger;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "sale_ledger_code", foreignKey = @ForeignKey(name = "fk_tax_detail_mapping_sale_ledger"))
+    @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
+    private Ledger saleLedger;
 
     private String unionCode;
 
@@ -70,7 +77,8 @@ public class LedgerMappingTaxDetail extends BaseModelTxn {
 
         audit.setCode(this.getCode());
         audit.setTaxDetail(this.getTaxDetail());
-        audit.setLedger(this.getLedger());
+        audit.setPurchaseLedger(this.getPurchaseLedger());
+        audit.setSaleLedger(this.getSaleLedger());
         audit.setUnionCode(this.getUnionCode());
         audit.setSociety(this.getSociety());
 

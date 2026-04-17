@@ -18,6 +18,7 @@
                     <columns>
                         <TableColumn fx:id="colCode" minWidth="100.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%code" />
                         <TableColumn fx:id="colSubLedger" minWidth="100.0" prefWidth="100.0" styleClass="cell-center-aligned" text="%subledger" />
+                        <TableColumn fx:id="colType" prefWidth="75.0" styleClass="cell-center-aligned" text="%type" />
                         <TableColumn fx:id="colAmount" minWidth="100.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%amount" />
                     </columns>
                     <VBox.margin>

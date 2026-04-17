@@ -1563,8 +1563,11 @@ public class BroadcastedService {
                                 if (jsonText.get("taxDetailCode") != null) {
                                     mapping.setTaxDetail(taxDetailRepository.findById(String.valueOf(jsonText.get("taxDetailCode"))).orElse(null));
                                 }
-                                if (jsonText.get("ledgerCode") != null) {
-                                    mapping.setLedger(ledgerRepository.findById(String.valueOf(jsonText.get("ledgerCode"))).orElse(null));
+                                if (jsonText.get("purchaseLedgerCode") != null) {
+                                    mapping.setPurchaseLedger(ledgerRepository.findById(String.valueOf(jsonText.get("purchaseLedgerCode"))).orElse(null));
+                                }
+                                if (jsonText.get("saleLedgerCode") != null) {
+                                    mapping.setSaleLedger(ledgerRepository.findById(String.valueOf(jsonText.get("saleLedgerCode"))).orElse(null));
                                 }
                                 mapping.setCreatedAt(jsonText.get("createdAt") != null ? LocalDateTime.parse((String) jsonText.get("createdAt"), CommonUtils.Formatter4) : null);
                                 mapping.setCreatedBy(jsonText.get("createdBy") != null ? (String) jsonText.get("createdBy") : null);
