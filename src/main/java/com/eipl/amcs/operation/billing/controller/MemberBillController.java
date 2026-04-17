@@ -442,9 +442,11 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                                 .filter(p -> p.getCode().equals(this.billSummary.getBank().getCode()))
                                 .findFirst().orElse(null);
                         cboxBank.getSelectionModel().select(bank);
+                    } else {
+                        cboxBank.getSelectionModel().select(0);
                     }
                 } catch (Exception exp) {
-
+                    exp.printStackTrace();
                 }
             });
             new Thread(task).start();

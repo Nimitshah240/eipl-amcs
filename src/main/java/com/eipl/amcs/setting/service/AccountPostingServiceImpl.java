@@ -34,8 +34,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.eipl.amcs.utils.AppConstant.EventCode.LOCAL_MILK_SALE;
-
 
 @Slf4j
 @Service
@@ -150,7 +148,7 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                     }
 
                     for (SocietyPaymentCycle cycle : cycles) {
-                        List<LocalMilkSale> localMilkSaleLists = localMilkSaleRepository.findBySaleDateBetween(cycle.getFromDate(), cycle.getToDate(), Sort.by("saleDate"));
+                        List<LocalMilkSale> localMilkSaleLists = localMilkSaleRepository.findBySaleDateBetweenAndPaymentMode(cycle.getFromDate(), cycle.getToDate(), (short) 0, Sort.by("saleDate"));
                         if (localMilkSaleLists == null)
                             continue;
                         localMilkSaleList.addAll(localMilkSaleLists);
@@ -159,9 +157,134 @@ public class AccountPostingServiceImpl implements AccountPostingService {
                                 localMilkSaleLists);
                     }
                 } else {
-                    localMilkSaleList = localMilkSaleRepository.findBySaleDateBetween(
+                    localMilkSaleList = localMilkSaleRepository.findBySaleDateBetweenAndPaymentMode(
                             fromDateTime,
                             toDateTime,
+                            (short) 0,
+                            Sort.by("saleDate")
+                    );
+                }
+
+
+                if (type == 1) { // Consolidated
+                    groupedSale = Map.of(
+                            draftAccountPosting.getToDate(),
+                            localMilkSaleList
+                    );
+
+                } else if (type == 2) { // type == 2 OR type == 3 → day-wise
+                    groupedSale = localMilkSaleList.stream()
+                            .collect(Collectors.groupingBy(
+                                    mc -> mc.getSaleDate().toLocalDate(),
+                                    TreeMap::new, // keeps dates sorted (optional but useful)
+                                    Collectors.toList()
+                            ));
+                }
+
+                if (groupedSale == null)
+                    return null;
+
+                Map<LocalDate, Map<Short, Map<MilkType, List<LocalMilkSale>>>> finalResult =
+                        groupedSale.entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        Map.Entry::getKey,
+                                        entry -> entry.getValue().stream()
+                                                .collect(Collectors.groupingBy(
+                                                        LocalMilkSale::getPaymentMode,
+                                                        Collectors.groupingBy(
+                                                                LocalMilkSale::getMilkType
+                                                        )
+                                                ))
+                                ));
+
+                return buildLocalMilkSaleVoucher(draftAccountPosting, productMap, finalResult);
+            } else if (draftAccountPosting.getEventType() == AppConstant.EventCode.LOCAL_MILK_SALE_CREDIT) {
+                Map<LocalDate, List<LocalMilkSale>> groupedSale = new HashMap<>();
+                List<LocalMilkSale> localMilkSaleList = new ArrayList<>();
+
+                if (type == 3) {
+                    List<SocietyPaymentCycle> cycles = societyPaymentCycleRepository.findCycles(fromDateTime, toDateTime);
+
+                    if (cycles == null || cycles.isEmpty()) {
+                        return Collections.emptyList();
+                    }
+
+                    for (SocietyPaymentCycle cycle : cycles) {
+                        List<LocalMilkSale> localMilkSaleLists = localMilkSaleRepository.findBySaleDateBetweenAndPaymentMode(cycle.getFromDate(), cycle.getToDate(), (short) 1, Sort.by("saleDate"));
+                        if (localMilkSaleLists == null)
+                            continue;
+                        localMilkSaleList.addAll(localMilkSaleLists);
+                        groupedSale.put(
+                                LocalDate.from(cycle.getToDate()),
+                                localMilkSaleLists);
+                    }
+                } else {
+                    localMilkSaleList = localMilkSaleRepository.findBySaleDateBetweenAndPaymentMode(
+                            fromDateTime,
+                            toDateTime,
+                            (short) 1,
+                            Sort.by("saleDate")
+                    );
+                }
+
+
+                if (type == 1) { // Consolidated
+                    groupedSale = Map.of(
+                            draftAccountPosting.getToDate(),
+                            localMilkSaleList
+                    );
+
+                } else if (type == 2) { // type == 2 OR type == 3 → day-wise
+                    groupedSale = localMilkSaleList.stream()
+                            .collect(Collectors.groupingBy(
+                                    mc -> mc.getSaleDate().toLocalDate(),
+                                    TreeMap::new, // keeps dates sorted (optional but useful)
+                                    Collectors.toList()
+                            ));
+                }
+
+                if (groupedSale == null)
+                    return null;
+
+                Map<LocalDate, Map<Short, Map<MilkType, List<LocalMilkSale>>>> finalResult =
+                        groupedSale.entrySet().stream()
+                                .collect(Collectors.toMap(
+                                        Map.Entry::getKey,
+                                        entry -> entry.getValue().stream()
+                                                .collect(Collectors.groupingBy(
+                                                        LocalMilkSale::getPaymentMode,
+                                                        Collectors.groupingBy(
+                                                                LocalMilkSale::getMilkType
+                                                        )
+                                                ))
+                                ));
+
+                return buildLocalMilkSaleVoucher(draftAccountPosting, productMap, finalResult);
+            } else if (draftAccountPosting.getEventType() == AppConstant.EventCode.LOCAL_MILK_SALE_COUPON) {
+                Map<LocalDate, List<LocalMilkSale>> groupedSale = new HashMap<>();
+                List<LocalMilkSale> localMilkSaleList = new ArrayList<>();
+
+                if (type == 3) {
+                    List<SocietyPaymentCycle> cycles = societyPaymentCycleRepository.findCycles(fromDateTime, toDateTime);
+
+                    if (cycles == null || cycles.isEmpty()) {
+                        return Collections.emptyList();
+                    }
+
+                    for (SocietyPaymentCycle cycle : cycles) {
+                        List<LocalMilkSale> localMilkSaleLists = localMilkSaleRepository.findBySaleDateBetweenAndPaymentMode(cycle.getFromDate(), cycle.getToDate(), (short) 2, Sort.by("saleDate"));
+                        if (localMilkSaleLists == null)
+                            continue;
+                        localMilkSaleList.addAll(localMilkSaleLists);
+                        groupedSale.put(
+                                LocalDate.from(cycle.getToDate()),
+                                localMilkSaleLists);
+                    }
+                } else {
+                    localMilkSaleList = localMilkSaleRepository.findBySaleDateBetweenAndPaymentMode(
+                            fromDateTime,
+                            toDateTime,
+                            (short) 2,
                             Sort.by("saleDate")
                     );
                 }
@@ -221,7 +344,7 @@ public class AccountPostingServiceImpl implements AccountPostingService {
 //          ------------------------------ VOUCHER ----------------------------------------------------
                     BigDecimal totalAmount = BigDecimal.ZERO;
 //                  GET LEDGER MAPPING EVENT OF THE TYPE -
-                    int eventCode = Integer.valueOf(String.valueOf(LOCAL_MILK_SALE).concat(String.valueOf(paymentType + 1)));
+                    int eventCode = draftAccountPosting.getEventType();
                     LedgerMappingEvent ledgerMappingEvent = ledgerMappingEventRepository.findByEventcode(eventCode).get(0);
                     Events event = eventRepository.findByEventCode(eventCode).get(0);
 //

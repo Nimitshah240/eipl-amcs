@@ -126,6 +126,7 @@ public class AccountPostingAddEditController implements MyInitialization {
             task.setOnSucceeded(e -> {
                 try {
                     List<Shift> list = task.get();
+                    list = list.stream().filter(s -> s.getCode() != 3).collect(Collectors.toList());
                     cboxFromShift.setItems(FXCollections.observableList(list));
                     cboxToShift.setItems(FXCollections.observableList(list));
 //                    if (accountPosting != null) {
@@ -151,14 +152,16 @@ public class AccountPostingAddEditController implements MyInitialization {
 
                     List<Events> eventList = list.stream()
                             .filter(eve -> Objects.equals(eve.getEventCode(), AppConstant.EventCode.MILK_COLLECTION)
-                                    || Objects.equals(eve.getEventCode(), AppConstant.EventCode.LOCAL_MILK_SALE_CASH))
+                                    || Objects.equals(eve.getEventCode(), AppConstant.EventCode.LOCAL_MILK_SALE_CASH)
+                                    || Objects.equals(eve.getEventCode(), AppConstant.EventCode.LOCAL_MILK_SALE_CREDIT)
+                                    || Objects.equals(eve.getEventCode(), AppConstant.EventCode.LOCAL_MILK_SALE_COUPON))
                             .collect(Collectors.toList());
-
-                    for (Events events : eventList) {
-                        if (events.getEventName().contains("Local Milk Sale")) {
-                            events.setEventName("Local Milk Sale");
-                        }
-                    }
+//
+//                    for (Events events : eventList) {
+//                        if (events.getEventName().contains("Local Milk Sale")) {
+//                            events.setEventName("Local Milk Sale");
+//                        }
+//                    }
                     cboxEvent.setItems(FXCollections.observableList(eventList));
 
 

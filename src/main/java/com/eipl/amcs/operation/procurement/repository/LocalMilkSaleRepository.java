@@ -23,6 +23,9 @@ public interface LocalMilkSaleRepository extends BaseRepository<LocalMilkSale, S
     @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
     List<LocalMilkSale> findBySaleDateBetween(LocalDateTime startDate, LocalDateTime endDate, Sort sort);
 
+    @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
+    List<LocalMilkSale> findBySaleDateBetweenAndPaymentMode(LocalDateTime startDate, LocalDateTime endDate, Short paymentMode, Sort sort);
+
     @Override
     @EntityGraph(attributePaths = {"shift", "milkType", "milkClass", "society", "dock"})
     Optional<LocalMilkSale> findById(String id);

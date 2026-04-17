@@ -28,7 +28,7 @@
                             <HBox alignment="CENTER_LEFT" spacing="10.0">
                                 <children>
                                     <DatePicker fx:id="dpDisburseDate" disable="true" prefWidth="125.0" />
-                              <E_ComboBox fx:id="cboxBank" promptText="Bank" />
+                              <E_ComboBox fx:id="cboxBank" prefWidth="230.0"  />
                                     <Button fx:id="btnDisburse" mnemonicParsing="false" text="%disburse" />
                                 </children>
                             </HBox>
