@@ -41,7 +41,7 @@ public class BillHead extends BaseModel {
     private String calculationBasedOn;
     private String billHeadFor;
     private Integer defaultBillHeadCode;
-    private String generalFormul;
+    private String generalFormula;
     private String generalFormulaCode;
     private String generalFormulaComma;
     @Column(name = "has_slab")
@@ -110,7 +110,7 @@ public class BillHead extends BaseModel {
         audit.setCalculationBasedOn(this.getCalculationBasedOn());
         audit.setBillHeadFor(this.getBillHeadFor());
         audit.setDefaultBillHeadCode(this.getDefaultBillHeadCode());
-        audit.setGeneralFormul(this.getGeneralFormul());
+        audit.setGeneralFormula(this.getGeneralFormula());
         audit.setGeneralFormulaCode(this.getGeneralFormulaCode());
         audit.setGeneralFormulaComma(this.getGeneralFormulaComma());
         audit.setHasSlab(this.getHasSlab());
