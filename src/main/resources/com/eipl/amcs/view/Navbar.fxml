@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" style="-fx-background-color: #ebebeb; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.NavbarController">
+<AnchorPane fx:id="root" style="-fx-background-color: #ebebeb; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.NavbarController">
     <children>
-        <VBox fx:id="menuVbox" alignment="CENTER" spacing="3.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+        <VBox fx:id="menuVbox" alignment="CENTER" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
                 <E_Button fx:id="btnDashboard" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                     <graphic>
@@ -39,7 +39,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
                             <image>
-                                <Image url="@images/Milk-Collection.png" />
+                                <Image url="@images/milkcollection.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -51,7 +51,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
                             <image>
-                                <Image url="@images/Milk_Sale.png" />
+                                <Image url="@images/localsale.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -63,7 +63,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Milk-Dispatch.png" />
+                                <Image url="@images/trucksheet.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -83,40 +83,16 @@
                         <Tooltip text="%milkreceipt" />
                     </tooltip>
                 </E_Button>
-                <E_Button fx:id="btnShiftReport" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                    <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@images/Shift-report.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="%shiftreport" />
-                    </tooltip>
-                </E_Button>
                 <E_Button fx:id="btnProductSale" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Sale-Product.png" />
+                                <Image url="@images/productsale.png" />
                             </image>
                         </ImageView>
                     </graphic>
                     <tooltip>
                         <Tooltip text="%productsale" />
-                    </tooltip>
-                </E_Button>
-                <E_Button fx:id="btnKapaat" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                    <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@images/Sale.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="%kapaat" />
                     </tooltip>
                 </E_Button>
                 <E_Button fx:id="btnBilling" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
@@ -131,23 +107,11 @@
                         <Tooltip text="%billing" />
                     </tooltip>
                 </E_Button>
-                <E_Button fx:id="btnSetting" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                    <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@images/Setting.png" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="%hardwaredevice" />
-                    </tooltip>
-                </E_Button>
                 <E_Button fx:id="btnGeneralConfig" maxHeight="Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Configuration.png" />
+                                <Image url="@images/Setting.png" />
                             </image>
                         </ImageView>
                     </graphic>

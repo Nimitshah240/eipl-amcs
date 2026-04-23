@@ -13,12 +13,12 @@
 .root {
     -fx-primary-color: #00A3DE;
     -fx-background-color-offwhite: #fefefe;
-    -fx-background-color-white: #fcfcfc;
+    -fx-background-color-white: #f8f8f8;
     -fx-navbar-color: #eaecf0;
     -fx-text-color: #132233;
     -fx-text-light-color: #476677;
-
-    -fx-base: #e6ebf2;
+    -fx-orange-color: #f26b0a;
+    -fx-base: #f8f8f8;
 
     -fx-font-family: 'Source Sans Pro SemiBold';
     -fx-font-size: 14.0px;
@@ -270,4 +270,15 @@
     -fx-text-fill:black;
     -fx-font-size: 28px;
     -fx-font-style:bold;
+}
+
+.sub-header-text-primary {
+    -fx-font-family: 'Source Sans Pro SemiBold';
+    -fx-font-size: 16.0px;
+    -fx-text-fill: -fx-primary-color;
+}
+.sub-header-text-orange {
+    -fx-font-family: 'Source Sans Pro SemiBold';
+    -fx-font-size: 16.0px;
+    -fx-text-fill: -fx-orange-color;
 }

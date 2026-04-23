@@ -192,7 +192,7 @@ public class Product extends BaseModel {
 
     @Override
     public String toString() {
-        return CommonUtils.getLocalString(this.name, this.nameLocal);
+        return this.referenceCode + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 
 }

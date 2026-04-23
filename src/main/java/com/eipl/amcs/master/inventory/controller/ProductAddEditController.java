@@ -8,13 +8,16 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
+import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
+import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -298,6 +301,12 @@ public class ProductAddEditController implements MyInitialization {
     public void setupComboBox() {
         cboxProductGroup.setConverter(new ProductGroupConvertor(cboxProductGroup));
         cboxTaxName.setConverter(new TaxConvertor(cboxTaxName));
+        cboxPurchaseLedger.setConverter(new LedgerConvertor(cboxPurchaseLedger));
+        cboxSaleLedger.setConverter(new LedgerConvertor(cboxSaleLedger));
+        cboxStockLedger.setConverter(new LedgerConvertor(cboxStockLedger));
+        cboxCouponLedger.setConverter(new LedgerConvertor(cboxCouponLedger));
+        cboxLocalSaleLedger.setConverter(new LedgerConvertor(cboxLocalSaleLedger));
+        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
     }
 
     private void loadProductGroup() {
@@ -305,7 +314,11 @@ public class ProductAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<ProductGroup> list = task.get();
-                if (list != null) cboxProductGroup.setItems(FXCollections.observableList(list));
+                if (list != null){
+                    cboxProductGroup.setItems(FXCollections.observableList(list));
+                    new AutoCompleteComboBoxListener<>(cboxProductGroup);
+
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -350,7 +363,10 @@ public class ProductAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<MilkType> list = task.get();
-                if (list != null) cboxMilkType.setItems(FXCollections.observableList(list));
+                if (list != null) {
+                    cboxMilkType.setItems(FXCollections.observableList(list));
+                    new AutoCompleteComboBoxListener<>(cboxMilkType);
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -365,10 +381,15 @@ public class ProductAddEditController implements MyInitialization {
                 List<Ledger> list = task.get();
                 if (list != null) {
                     cboxPurchaseLedger.setItems(FXCollections.observableArrayList(list));
+                    new AutoCompleteComboBoxListener<>(cboxPurchaseLedger);
                     cboxStockLedger.setItems(FXCollections.observableArrayList(list));
+                    new AutoCompleteComboBoxListener<>(cboxStockLedger);
                     cboxSaleLedger.setItems(FXCollections.observableArrayList(list));
+                    new AutoCompleteComboBoxListener<>(cboxSaleLedger);
                     cboxLocalSaleLedger.setItems(FXCollections.observableArrayList(list));
+                    new AutoCompleteComboBoxListener<>(cboxLocalSaleLedger);
                     cboxCouponLedger.setItems(FXCollections.observableArrayList(list));
+                    new AutoCompleteComboBoxListener<>(cboxCouponLedger);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

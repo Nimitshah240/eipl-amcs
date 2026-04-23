@@ -99,7 +99,7 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
             "dock"})
-    List<MilkCollection> findByCollectionDateBetweenAndDock(LocalDateTime fromDt, LocalDateTime toDt, Dock dock);
+    List<MilkCollection> findByCollectionDateBetweenAndDock(LocalDateTime fromDt, LocalDateTime toDt, Dock dock, Sort sort);
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
             "dock"})
@@ -131,7 +131,7 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
             "JOIN FETCH mc.shift " +
             "JOIN FETCH mc.milkType " +
             "WHERE mc.member = :member " +
-            "ORDER BY mc.collectionDate DESC")
+            "ORDER BY mc.collectionDate DESC, mc.sampleNo ASC")
     List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("member") Member member);
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",

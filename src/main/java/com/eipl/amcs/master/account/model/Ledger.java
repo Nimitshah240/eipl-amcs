@@ -117,6 +117,6 @@ public class Ledger extends BaseModel {
 
     @Override
     public String toString() {
-        return CommonUtils.getLocalString(this.name, this.nameLocal);
+        return this.refCode + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }
