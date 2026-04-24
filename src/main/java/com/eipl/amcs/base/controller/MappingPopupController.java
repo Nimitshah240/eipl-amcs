@@ -534,7 +534,13 @@ public class MappingPopupController implements MyInitialization {
                     controller65.setSociety(object != null ? (Society) object : null);
                     root.setCenter(controller65.getRoot());
                     break;
-
+                case "StaffMemberAddEdit":
+                    var controller66 = (StaffMemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/StaffMemberAddEdit.fxml"));
+                    controller66.setStaffMember(object != null ? (StaffMember) object : null);
+                    controller66.setStage(stage);
+                    controller66.setCallback(callback);
+                    root.setCenter(controller66.getRoot());
+                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
