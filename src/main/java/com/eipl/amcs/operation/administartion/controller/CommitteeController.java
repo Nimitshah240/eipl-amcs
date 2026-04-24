@@ -6,9 +6,9 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.master.account.model.CommitteeMembers;
-import com.eipl.amcs.operation.administartion.task.CommitteeMembersDeleteTask;
-import com.eipl.amcs.operation.administartion.task.CommitteeMembersLoadTask;
+import com.eipl.amcs.master.account.model.Committee;
+import com.eipl.amcs.operation.administartion.task.CommitteeDeleteTask;
+import com.eipl.amcs.operation.administartion.task.CommitteeLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.beans.property.ObjectProperty;
@@ -23,18 +23,17 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-public class CommitteeMembersController implements MyInitialization, PopupCallback {
-    private final ObjectProperty<CommitteeMembers> propCommitteMembertDto;
+public class CommitteeController implements MyInitialization, PopupCallback {
+    private final ObjectProperty<Committee> propCommitteeDto;
     @FXML
     AnchorPane root;
     @FXML
-    TableView<CommitteeMembers> tableCommitteeMembers;
+    TableView<Committee> tableCommittee;
     @FXML
-    TableColumn<CommitteeMembers, String> colDesignation, colMembername;
+    TableColumn<Committee, String> colName, colNameLocal, colElectionDate, colFormationDate, colCommitteeMembmers;
     @FXML
     DatePicker dpDate;
     @FXML
@@ -42,8 +41,8 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
     private ResourceBundle resourceBundle;
 
 
-    public CommitteeMembersController() {
-        propCommitteMembertDto = new SimpleObjectProperty<>();
+    public CommitteeController() {
+        propCommitteeDto = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -55,8 +54,8 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        dpDate.setValue(LocalDate.now());
-        propCommitteMembertDto.addListener((observable, oldValue, newValue) -> {
+//        dpDate.setValue(LocalDate.now());
+        propCommitteeDto.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 btnEdit.setDisable(false);
                 btnDelete.setDisable(false);
@@ -68,7 +67,7 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
         setupTable();
         loadData();
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeMembersAddEdit", null, this, "Committee Member");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeAddEdit", null, this, "Committee Member");
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -77,14 +76,46 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
             deleteData();
         });
         btnEdit.setOnAction(e -> {
-            CommitteeMembers dto = propCommitteMembertDto.get();
+            Committee dto = propCommitteeDto.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeMembersAddEdit", dto, this);
+                editCommittee(dto);
         });
 
-        btnRegister.setOnAction(e -> {
-            validateAndGenerateReport();
+        tableCommittee.setRowFactory(tv -> {
+            TableRow<Committee> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Committee data = row.getItem();
+                    editCommittee(data);
+                }
+            });
+            return row;
         });
+
+        tableCommittee.setOnKeyPressed(event -> {
+            Committee dto = tableCommittee.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propCommitteeDto.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editCommittee(dto);
+                    break;
+            }
+        });
+//
+//        btnRegister.setOnAction(e -> {
+//            validateAndGenerateReport();
+//        });
+    }
+
+    private void editCommittee(Committee committee) {
+        if (committee != null)
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeAddEdit", committee, this);
     }
 
     private void validateAndGenerateReport() {
@@ -99,9 +130,12 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
     @Override
     public void setupTable() {
         try {
-            colMembername.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMemberName()));
-            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
-            propCommitteMembertDto.bind(tableCommitteeMembers.getSelectionModel().selectedItemProperty());
+            colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
+            colNameLocal.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+            colElectionDate.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getElectionDate().toString()));
+            colFormationDate.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFormationDate().toString()));
+            colCommitteeMembmers.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getMembers().size())));
+            propCommitteeDto.bind(tableCommittee.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("CommiteMembers setuptable Exception");
             e.printStackTrace();
@@ -110,12 +144,13 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
 
     @Override
     public void loadData() {
-        CommitteeMembersLoadTask task = new CommitteeMembersLoadTask();
+        CommitteeLoadTask task = new CommitteeLoadTask();
         task.setOnSucceeded(e -> {
             try {
-                List<CommitteeMembers> list = task.get();
-                if (list != null)
-                    tableCommitteeMembers.setItems(FXCollections.observableList(list));
+                List<Committee> list = task.get();
+
+                tableCommittee.setItems(FXCollections.observableList(list));
+
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -125,23 +160,23 @@ public class CommitteeMembersController implements MyInitialization, PopupCallba
 
     @Override
     public void deleteData() {
-        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("committee"),
                 resourceBundle.getString("alert.delete"));
         Optional<ButtonType> resp = alert.createConfirmationAlert();
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
-            CommitteeMembers dto = propCommitteMembertDto.get();
+            Committee dto = propCommitteeDto.get();
             if (dto != null) {
-                var task = new CommitteeMembersDeleteTask(dto.getCode());
+                var task = new CommitteeDeleteTask(dto.getCode());
                 task.setOnSucceeded(e -> {
                     try {
                         Boolean respDelete = task.get();
                         if (respDelete == null || !respDelete.booleanValue()) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committee"),
                                     resourceBundle.getString("error.occurred"));
                             alert1.createAlert();
                             return;
                         }
-                        loadData();
+                        reloadData(true);
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
                     }
