@@ -6,6 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.operation.administartion.task.StaffMembersDeleteTask;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
@@ -67,18 +68,12 @@ public class StaffController implements MyInitialization, PopupCallback {
         loadData();
 
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+
         btnAdd.setOnAction(e -> {
-            StaffMemberAddEditController controller = (StaffMemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/StaffMemberAddEdit.fxml"));
-            controller.setStaffMember(null);
-            MainApp.getContentPane().setCenter(controller.getRoot());
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", null, this, "StaffMember");
         });
         btnEdit.setOnAction(e -> {
-            if (propStaffMembertDto.get() != null) {
-                StaffMemberAddEditController controller = (StaffMemberAddEditController) MainApp.getFxmlLoaderUtil()
-                        .loadAndSet(MainApp.class.getResource("view/operation/administration/StaffMemberAddEdit.fxml"));
-                controller.setStaffMember(propStaffMembertDto.get());
-                MainApp.getContentPane().setCenter((controller).getRoot());
-            }
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", null, this, "StaffMember");
         });
         btnDelete.setOnAction(e -> {
             deleteData();

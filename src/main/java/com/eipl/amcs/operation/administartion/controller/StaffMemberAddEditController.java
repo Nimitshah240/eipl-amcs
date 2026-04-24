@@ -3,7 +3,6 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
@@ -12,8 +11,6 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.model.Designation;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
@@ -32,7 +29,9 @@ import com.eipl.amcs.operation.administartion.task.StaffMemberSaveTask;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -47,7 +46,7 @@ public class StaffMemberAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private E_DatePicker dptenureFromDate, dptenureToDate;
+    private E_DatePicker dpBirthDate, dpJoiningDate, dpApprovedDate, dpResignationDate;
     @FXML
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
@@ -61,12 +60,11 @@ public class StaffMemberAddEditController implements MyInitialization {
     private E_ComboBox<Gender> cboxGender;
 
     @FXML
-    private E_TextField txtCode, txtMobileNo, txtPincode, txtName,
-            txtEmailId, txtIfsc, txtAcNo, txtPanNo;
+    private E_TextField txtCode, txtNameLocal, txtMobileNo, txtBloodGroup, txtName, txtQualification, txtSalary, txtFarmerCode, txtAddress, txtIfsc, txtAcNo;
     @FXML
     private GridPane gridBankDetail;
     @FXML
-    private E_Button btnSaveUpdate, btnClose;
+    Button btnSaveUpdate, btnClose;
     private Stage stage;
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
@@ -119,14 +117,17 @@ public class StaffMemberAddEditController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupComboBox();
-        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter
-                (MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/administration/StaffMember.fxml"))));
+        btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         loadDesignation();
         loadBank();
         loadBranch();
         loadData();
         gridBankDetail.setDisable(true);
+
+        ToggleGroup paymentGroup = new ToggleGroup();
+        rbtnCash.setToggleGroup(paymentGroup);
+        rbtnBank.setToggleGroup(paymentGroup);
 
         cboxBank.setOnAction(event -> {
             if (cboxBank.getValue() != null) {
@@ -136,19 +137,16 @@ public class StaffMemberAddEditController implements MyInitialization {
             }
         });
 
-        rbtnCash.selectedProperty().addListener((observablevalue, oldvalue, newvalue) -> {
-            if (newvalue) {
-                gridBankDetail.setDisable(true);
-                cboxBank.valueProperty().set(null);
-                cboxBranch.valueProperty().set(null);
+        paymentGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            boolean isBankSelected = (newVal == rbtnBank);
+            gridBankDetail.setDisable(!isBankSelected);
+            if (!isBankSelected) {
+                cboxBank.setValue(null);
+                cboxBranch.setValue(null);
                 txtAcNo.clear();
                 txtIfsc.clear();
-            } else {
-                gridBankDetail.setDisable(false);
             }
         });
-
-
     }
 
     private void loadDesignation() {
@@ -235,18 +233,23 @@ public class StaffMemberAddEditController implements MyInitialization {
         dto.setSociety(MainApp.identityDto.getSociety());
         dto.setMobileNo(txtMobileNo.getText());
         dto.setName(txtName.getText());
+        dto.setNameLocal(txtNameLocal.getText());
+        dto.setBloodGroup(txtBloodGroup.getText());
+        dto.setSalary(txtSalary.getText());
+        dto.setAddress(txtAddress.getText());
+        dto.setMemberCode(txtFarmerCode.getText());
+        dto.setQualification(txtQualification.getText());
         dto.setDesignation(cboxDesignation.getValue());
         dto.setPaymentMode((rbtnBank.isSelected() ? 1 : 0));
         dto.setGender(cboxGender.getValue());
-        dto.setPinCode(txtPincode.getText());
-        dto.setEmailId(txtEmailId.getText());
-        dto.setPanNo(txtPanNo.getText());
         dto.setBank(cboxBank.getValue());
         dto.setBranch(cboxBranch.getValue());
         dto.setBankAccountNo(txtAcNo.getText());
         dto.setIfsc(txtIfsc.getText());
-        dto.setTenureFromDate(dptenureFromDate.getValue());
-        dto.setTenureToDate(dptenureToDate.getValue());
+        dto.setBirthDate(dpBirthDate.getValue());
+        dto.setApprovedDate(dpApprovedDate.getValue());
+        dto.setTenureFromDate(dpJoiningDate.getValue());
+        dto.setTenureToDate(dpResignationDate.getValue());
         dto.setCode(dto.getCode());
         dto.setUnionCode(MainApp.identityDto.getUnion().getCode());
     }
@@ -266,8 +269,8 @@ public class StaffMemberAddEditController implements MyInitialization {
         if (rbtnBank.isSelected()) {
             if (cboxBank.getValue() == null)
                 errorMsg.append(resourceBundle.getString("banknullerror") + "\n");
-            if (cboxBranch.getValue() == null)
-                errorMsg.append(resourceBundle.getString("branchnullerror") + "\n");
+//            if (cboxBranch.getValue() == null)
+//                errorMsg.append(resourceBundle.getString("branchnullerror") + "\n");
             if (txtAcNo.getText() == null || txtAcNo.getText().trim().isEmpty())
                 errorMsg.append(resourceBundle.getString("acnonullerror") + "\n");
             if (txtIfsc.getText() == null || txtIfsc.getText().trim().isEmpty())
@@ -283,16 +286,16 @@ public class StaffMemberAddEditController implements MyInitialization {
         cboxBank.setConverter(new BankConvertor(cboxBank));
         cboxBranch.setConverter(new BranchConvertor(cboxBranch));
         cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
-        dptenureFromDate.setConverter(new LocalDateConvertor());
-        dptenureFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        dpJoiningDate.setConverter(new LocalDateConvertor());
+        dpJoiningDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                dptenureFromDate.setValue(dptenureFromDate.getConverter().fromString(dptenureFromDate.getEditor().getText()));
+                dpJoiningDate.setValue(dpJoiningDate.getConverter().fromString(dpJoiningDate.getEditor().getText()));
             }
         });
-        dptenureToDate.setConverter(new LocalDateConvertor());
-        dptenureToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        dpResignationDate.setConverter(new LocalDateConvertor());
+        dpResignationDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                dptenureToDate.setValue(dptenureToDate.getConverter().fromString(dptenureToDate.getEditor().getText()));
+                dpResignationDate.setValue(dpResignationDate.getConverter().fromString(dpResignationDate.getEditor().getText()));
             }
         });
 
@@ -355,14 +358,19 @@ public class StaffMemberAddEditController implements MyInitialization {
         if (dto != null) {
             txtCode.setText(dto.getCode());
             txtName.setText(dto.getName());
+            txtQualification.setText(dto.getQualification());
+            txtNameLocal.setText(dto.getNameLocal());
+            txtAddress.setText(dto.getAddress());
+            txtBloodGroup.setText(dto.getBloodGroup());
+            txtSalary.setText(dto.getSalary());
+            txtFarmerCode.setText(dto.getMemberCode());
             txtMobileNo.setText(dto.getMobileNo());
-            txtEmailId.setText(dto.getEmailId());
-            txtPanNo.setText(dto.getPanNo());
             cboxGender.setValue(dto.getGender());
-            txtPincode.setText(dto.getPinCode());
             cboxDesignation.setValue(dto.getDesignation());
-            dptenureToDate.setValue(dto.getTenureToDate());
-            dptenureFromDate.setValue(dto.getTenureFromDate());
+            dpResignationDate.setValue(dto.getTenureToDate());
+            dpJoiningDate.setValue(dto.getTenureFromDate());
+            dpBirthDate.setValue(dto.getBirthDate());
+            dpApprovedDate.setValue(dto.getApprovedDate());
             if (dto.getPaymentMode() == (short) 0) {
                 rbtnCash.setSelected(true);
             } else {
@@ -375,13 +383,6 @@ public class StaffMemberAddEditController implements MyInitialization {
                     cboxBranch.setValue(dto.getBranch());
                 }
             }
-            if (dto.getPaymentMode() != null)
-                rbtnCash.setSelected(dto.getPaymentMode() == (short) 0);
-            if (dto.getPaymentMode() != null)
-                rbtnBank.setSelected(dto.getPaymentMode() == (short) 1);
         }
     }
 }
-
-
-
