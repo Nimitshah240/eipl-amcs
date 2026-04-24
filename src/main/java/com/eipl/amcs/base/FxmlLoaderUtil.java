@@ -1,6 +1,5 @@
 package com.eipl.amcs.base;
 
-import com.eipl.amcs.EiplAmcsAppRunner;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.controller.MappingPopupController;
 import javafx.fxml.FXMLLoader;
@@ -9,8 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.jboss.jandex.Main;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,7 +44,10 @@ public class FxmlLoaderUtil {
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setResizable(false);
             stage.initOwner(MainApp.getStage());
-            stage.setTitle(params != null ? params[0] : "");
+            if (params != null && params.length != 0)
+                stage.setTitle(params[0]);
+            else
+                stage.setTitle("");
             Scene scene = new Scene(loader.load());
             stage.getIcons().add(new Image(MainApp.class.getResource("view/images/logo-small.png").toExternalForm()));
 

@@ -1,0 +1,358 @@
+package com.eipl.amcs.operation.administartion.controller;
+
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_ComboBox;
+import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.InformationAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.master.account.model.Committee;
+import com.eipl.amcs.master.account.model.CommitteeMembers;
+import com.eipl.amcs.master.account.model.Designation;
+import com.eipl.amcs.operation.administartion.converter.DesignationConvertor;
+import com.eipl.amcs.operation.administartion.task.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+
+public class CommitteeAddEditController implements MyInitialization {
+
+    private final ObjectProperty<CommitteeMembers> propCommitteMembertDto;
+
+    @FXML
+    private StackPane root;
+    @FXML
+    private E_Button btnClose, btnSave, btnAdd, btnDelete;
+    @FXML
+    private E_ComboBox<Designation> cboxDesignation;
+    @FXML
+    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtYear, txtMemberName, txtCode;
+    @FXML
+    private E_DatePicker dpElectionDate, dpFormation, dpJoiningDate, dpRegistrationdate;
+
+    private Committee committee;
+    private List<CommitteeMembers> members = new ArrayList<>();
+
+    @FXML
+    TableView<CommitteeMembers> tableCommitteeMembers;
+    @FXML
+    TableColumn<CommitteeMembers, String> colCode, colJoiningDate, colRegistrationDate, colDesignation, colMemberName;
+
+    private Stage stage;
+    private PopupCallback callback;
+    private ResourceBundle resourceBundle;
+    private StringBuilder errorMsg = null;
+    private CommitteeMembers dto = null;
+
+    public void setCallback(PopupCallback callback) {
+        this.callback = callback;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    public CommitteeAddEditController() {
+        propCommitteMembertDto = new SimpleObjectProperty<>();
+    }
+
+
+    public void setCommittee(Committee dto) {
+        if (dto != null) {
+            this.committee = dto;
+            btnSave.setText(resourceBundle.getString("update"));
+            this.members = committee.getMembers();
+            loadControls();
+        } else {
+            committeeNextCode();
+        }
+        loadDesignation();
+
+    }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+        loadDesignation();
+        setupComboBox();
+        setupTable();
+//        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
+//        cboxDesignation.getSelectionModel().select(0);
+        dpElectionDate.setValue(LocalDate.now());
+        dpFormation.setValue(LocalDate.now());
+        dpJoiningDate.setValue(LocalDate.now());
+        dpRegistrationdate.setValue(LocalDate.now());
+        btnClose.setOnAction(e -> this.stage.close());
+        btnSave.setOnAction(e -> validateAndSave());
+        btnAdd.setOnAction(e -> addCommitteeMembers());
+        btnDelete.setOnAction(e -> {
+            CommitteeMembers dto = propCommitteMembertDto.get();
+            if (dto != null)
+                deleteCommitteeMembers(dto);
+        });
+
+        tableCommitteeMembers.setOnKeyPressed(event -> {
+            CommitteeMembers dto = tableCommitteeMembers.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propCommitteMembertDto.get();
+                    if (dto != null)
+                        deleteCommitteeMembers(dto);
+                    break;
+            }
+        });
+
+    }
+
+    public void setupTable() {
+        try {
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
+            colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMemberName()));
+            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
+            colJoiningDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getJoiningDate()));
+            colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getRegistrationDate()));
+            propCommitteMembertDto.bind(tableCommitteeMembers.getSelectionModel().selectedItemProperty());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadControls() {
+        tableCommitteeMembers.setItems(FXCollections.observableList(committee.getMembers()));
+        txtCommitteeCode.setText(committee.getCode());
+        dpElectionDate.setValue(committee.getElectionDate());
+        dpFormation.setValue(committee.getFormationDate());
+        txtYear.setText(committee.getYear());
+        txtName.setText(committee.getName());
+        txtNameLocal.setText(committee.getNameLocal());
+    }
+
+    private void validateAndSave() {
+        errorMsg = new StringBuilder();
+        if (!validate()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committee"),
+                    errorMsg.toString());
+            alert.createAlert();
+            return;
+        }
+
+        if (btnSave.getText().equals(resourceBundle.getString("update"))) {
+            if (this.committee != null) {
+                committee = setValuesInObject();
+                saveData();
+            }
+        } else {
+            committee = new Committee();
+            committee = setValuesInObject();
+            saveData();
+        }
+    }
+
+    private Committee setValuesInObject() {
+        committee.setCode(txtCommitteeCode.getText());
+        committee.setElectionDate(dpElectionDate.getValue());
+        committee.setFormationDate(dpFormation.getValue());
+        committee.setYear(txtYear.getText());
+        committee.setName(txtName.getText());
+        committee.setNameLocal(txtNameLocal.getText());
+        committee.setMembers(members);
+
+        return committee;
+    }
+
+    private void addCommitteeMembers() {
+        try {
+            errorMsg = new StringBuilder();
+            if (!validateCommitteeMember()) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                        errorMsg.toString());
+                alert.createAlert();
+                return;
+            }
+
+            CommitteeMembers member = new CommitteeMembers();
+            member.setMemberName(txtMemberName.getText());
+            member.setMemberCode(txtCommMemberCode.getText());
+            member.setDesignation(cboxDesignation.getSelectionModel().getSelectedItem());
+            member.setRegistrationDate(dpRegistrationdate.getValue());
+            member.setJoiningDate(dpJoiningDate.getValue());
+
+            members.add(member);
+            tableCommitteeMembers.setItems(FXCollections.observableList(members));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteCommitteeMembers(CommitteeMembers committeeMembers) {
+        try {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                    resourceBundle.getString("alert.delete"));
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isPresent() && resp.get() == ButtonType.OK) {
+
+                if (committeeMembers.getCode() != null && !committeeMembers.getCode().isBlank()) {
+                    var task = new CommitteeMembersDeleteTask(committeeMembers.getCode());
+                    task.setOnSucceeded(e -> {
+                        try {
+                            Boolean respDelete = task.get();
+                            if (respDelete == null || !respDelete.booleanValue()) {
+                                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                                        resourceBundle.getString("error.occurred"));
+                                alert1.createAlert();
+                                return;
+                            }
+                            members.remove(committeeMembers);
+                            this.callback.reloadData(true);
+
+                            tableCommitteeMembers.setItems(FXCollections.observableList(members));
+                        } catch (InterruptedException | ExecutionException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                    new Thread(task).start();
+                } else {
+                    members.remove(committeeMembers);
+                    tableCommitteeMembers.setItems(FXCollections.observableList(members));
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean validate() {
+        if (txtName.getText() == null)
+            errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
+        if (dpElectionDate.getValue() == null)
+            errorMsg.append(resourceBundle.getString("electiondateullerror") + "\n");
+        if (dpFormation.getValue() == null)
+            errorMsg.append(resourceBundle.getString("formationdateullerror") + "\n");
+        return errorMsg.length() == 0;
+    }
+
+    private boolean validateCommitteeMember() {
+        if (txtMemberName.getText() == null)
+            errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
+        if (cboxDesignation.getValue() == null)
+            errorMsg.append(resourceBundle.getString("designationnullerror") + "\n");
+        if (dpJoiningDate.getValue() == null)
+            errorMsg.append(resourceBundle.getString("joiningdateullerror") + "\n");
+
+        return errorMsg.length() == 0;
+
+    }
+
+    @Override
+    public void saveData() {
+
+        var task = new CommitteeSaveTask(committee, (short) 0);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                        resourceBundle.getString("committeemembers.insert.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        task.setOnFailed(event -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
+        new Thread(task).start();
+    }
+
+    @Override
+    public void updateData() {
+        var task = new CommitteeMembersSaveTask(dto, (short) 1);
+        task.setOnSucceeded(e -> {
+            try {
+                Object obj = task.get();
+                MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                        resourceBundle.getString("committeemembers.update.successful"));
+                alert.createAlert();
+                this.callback.reloadData(true);
+                this.stage.close();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        task.setOnFailed(event -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"),
+                    resourceBundle.getString("error.occurred"));
+            alert.createAlert();
+        });
+        new Thread(task).start();
+    }
+
+    @Override
+    public void setupComboBox() {
+        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
+        cboxDesignation.getSelectionModel().select(0);
+    }
+
+    private void loadDesignation() {
+        var task = new DesignationLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Designation> list = task.get();
+                if (list != null)
+                    cboxDesignation.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void committeeNextCode() {
+        var task = new CommitteeGetNextCodeLoadTask(MainApp.identityDto.getSociety());
+        task.setOnSucceeded(e -> {
+            try {
+                String code = task.get();
+                txtCommitteeCode.setText(code);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
+    }
+}
