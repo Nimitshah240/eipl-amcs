@@ -1,8 +1,10 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.json.deserialize.CommitteeDeserializer;
 import com.eipl.amcs.json.deserialize.DesignationDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
+import com.eipl.amcs.json.serialize.CommitteeSerialize;
 import com.eipl.amcs.json.serialize.DesignationSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.master.org.model.Society;
@@ -33,6 +35,10 @@ public class CommitteeMembers extends BaseModelTxn {
     private LocalDate electionDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureToDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate joiningDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate registrationDate;
     private String unionCode;
     private String memberCode;
     private String memberName;
@@ -47,6 +53,11 @@ public class CommitteeMembers extends BaseModelTxn {
     @JsonDeserialize(using = DesignationDeserializer.class)
     @JoinColumn(name = "designation_code", foreignKey = @ForeignKey(name = "fk_committee_members_designation_code"))
     private Designation designation;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = CommitteeSerialize.class)
+    @JsonDeserialize(using = CommitteeDeserializer.class)
+    @JoinColumn(name = "committee_code")
+    private Committee committee;
 
     @Override
     public String getTableName() {

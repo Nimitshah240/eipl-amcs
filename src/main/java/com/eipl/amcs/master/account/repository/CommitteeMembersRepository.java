@@ -20,4 +20,6 @@ public interface CommitteeMembersRepository extends BaseRepository<CommitteeMemb
     @Override
     @EntityGraph(attributePaths = {"society", "designation"})
     Optional<CommitteeMembers> findById(String s);
+
+    void deleteByCommittee_Code(String code);
 }
