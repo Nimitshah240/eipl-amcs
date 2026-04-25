@@ -2,6 +2,7 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -13,6 +14,7 @@ import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.master.org.task.SocietyLoadTask;
 import com.eipl.amcs.master.org.task.SocietySaveTask;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,9 +23,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.StackPane;
 import javafx.util.StringConverter;
 
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-public class SocietyController implements MyInitialization {
+public class SocietyController implements MyInitialization, PopupCallback {
 
     private final ObservableList<Bank> bankList = FXCollections.observableArrayList();
     private final StringConverter<Bank> bankConverter = new StringConverter<Bank>() {
@@ -81,15 +82,20 @@ public class SocietyController implements MyInitialization {
     @FXML
     TableColumn<Society, LocalDate> colRegistrationDate;
     @FXML
-    Button btnClose, btnSave;
+    Button btnClose, btnEdit;
     @FXML
     private StackPane root;
     private Society dto;
     private ResourceBundle resourceBundle;
+    private final ObjectProperty<Society> propSociety;
 
     @Override
     public Node getRoot() {
         return root;
+    }
+
+    public SocietyController() {
+        propSociety = new SimpleObjectProperty<>();
     }
 
     @Override
@@ -103,9 +109,39 @@ public class SocietyController implements MyInitialization {
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
-        btnSave.setOnAction(e -> {
-            saveData();
+
+        btnEdit.setOnAction(e -> {
+            Society dto = propSociety.get();
+            editSociety(dto);
         });
+
+        tableSociety.setRowFactory(tv -> {
+            TableRow<Society> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Society data = row.getItem();
+                    editSociety(data);
+                }
+            });
+            return row;
+        });
+
+        tableSociety.setOnKeyPressed(event -> {
+            Society dto = tableSociety.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editSociety(dto);
+                    break;
+            }
+        });
+
+    }
+
+    private void editSociety(Society society) {
+        if (society != null)
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyAddEdit", dto, this, "Society");
     }
 
     @Override
@@ -116,101 +152,26 @@ public class SocietyController implements MyInitialization {
     @Override
     public void setupTable() {
         try {
-            tableSociety.setEditable(true);
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-            colName.setCellFactory(TextFieldTableCell.forTableColumn());
-            colName.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setName(e.getNewValue());
-            });
             colShortName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getShortName()));
-            colShortName.setCellFactory(TextFieldTableCell.forTableColumn());
-            colShortName.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setShortName(e.getNewValue());
-            });
             colShortNameLocal.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getShortNameLocal()));
-            colShortNameLocal.setCellFactory(TextFieldTableCell.forTableColumn());
-            colShortNameLocal.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setShortNameLocal(e.getNewValue());
-            });
             colRegistrationCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colEmail.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
-            colEmail.setCellFactory(TextFieldTableCell.forTableColumn());
-            colEmail.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setEmail(e.getNewValue());
-            });
             colPhoneNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPhoneNo()));
-            colPhoneNo.setCellFactory(TextFieldTableCell.forTableColumn());
-            colPhoneNo.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setPhoneNo(e.getNewValue());
-            });
             colContactPerson.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPerson()));
-            colContactPerson.setCellFactory(TextFieldTableCell.forTableColumn());
-            colContactPerson.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setContactPerson(e.getNewValue());
-            });
             colContactPersonMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getContactPersonMobileNo()));
-            colContactPersonMobileNo.setCellFactory(TextFieldTableCell.forTableColumn());
-            colContactPersonMobileNo.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setContactPersonMobileNo(e.getNewValue());
-            });
             colPinCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPincode()));
-            colPinCode.setCellFactory(TextFieldTableCell.forTableColumn());
-            colPinCode.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setPincode(e.getNewValue());
-            });
             colAcNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBankAccountNo()));
-            colAcNo.setCellFactory(TextFieldTableCell.forTableColumn());
-            colAcNo.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setBankAccountNo(e.getNewValue());
-            });
             colIfsc.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getIfsc()));
-            colIfsc.setCellFactory(TextFieldTableCell.forTableColumn());
-            colIfsc.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setIfsc(e.getNewValue());
-            });
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
-            colLocalName.setCellFactory(TextFieldTableCell.forTableColumn());
-            colLocalName.setOnEditCommit(e -> {
-                Society s = e.getRowValue();
-                if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase(""))
-                    s.setNameLocal(e.getNewValue());
-            });
             colBank.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBank()));
-            colBank.setCellFactory(ComboBoxTableCell.forTableColumn(bankConverter, bankList));
-            colBank.setOnEditCommit(event -> {
-                Society obj = event.getRowValue();
-                obj.setBank(event.getNewValue());
-            });
             colBranch.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBranch()));
-            colBranch.setCellFactory(ComboBoxTableCell.forTableColumn(branchConverter, branchList));
-            colBranch.setOnEditCommit(event -> {
-                Society obj = event.getRowValue();
-                obj.setBranch(event.getNewValue());
-            });
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
             colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
+            propSociety.bind(tableSociety.getSelectionModel().selectedItemProperty());
+
         } catch (Exception e) {
             System.out.println("Society setuptable Exception");
             e.printStackTrace();

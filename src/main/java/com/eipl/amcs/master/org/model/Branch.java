@@ -68,6 +68,6 @@ public class Branch extends BaseModel {
 
     @Override
     public String toString() {
-        return CommonUtils.getLocalString(this.name, this.nameLocal);
+        return this.code + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }
