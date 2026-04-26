@@ -324,4 +324,204 @@ public class AppConstant {
             throw new IllegalArgumentException("Invalid PostingType: " + value);
         }
     }
+
+    public enum LandType {
+
+        NONE("None"),
+        ACRE("Acre"),
+        GUTHA("Gutha"),
+        HECTOR("Hector"),
+        VIGHA("Vigha");
+
+        private final String label;
+
+        LandType(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static LandType fromLabel(String label) {
+            for (LandType type : values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return null; // or throw exception if you prefer strict handling
+        }
+
+        @Override
+        public String toString() {
+            return label; // 🔥 this removes need for custom cell factory
+        }
+    }
+
+    public enum FarmerType {
+
+        BIGFARMER("Big Farmer"),
+        MEDIUMFARMER("Medium Farmer"),
+        SMALLFARMER("Small Farmer"),
+        SHRIMANFARMER("Shriman Farmer"),
+        LANDEMPLOYEE("Land Employee"),
+        OTHER("Other"),
+        SIDEAGENCY("Side Agency"),
+        BMCFACILITATOR("BMC Facilitator");
+
+        private final String label;
+
+        FarmerType(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static FarmerType fromLabel(String label) {
+            for (FarmerType type : values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return null; // or throw exception if you prefer strict handling
+        }
+
+        @Override
+        public String toString() {
+            return label; // 🔥 this removes need for custom cell factory
+        }
+    }
+
+    public enum CattleDetail {
+
+        BUFF("Buff"),
+        COWHF("Cow HF"),
+        DESICOW("Desi Cow"),
+        GIRCOW("Gir Cow");
+
+        private final String label;
+
+        CattleDetail(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static CattleDetail fromLabel(String label) {
+            for (CattleDetail type : values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return null; // or throw exception if you prefer strict handling
+        }
+
+        @Override
+        public String toString() {
+            return label; // 🔥 this removes need for custom cell factory
+        }
+    }
+
+    public enum MaritalStatus {
+
+        NONE("None"),
+        SINGLE("Single"),
+        MARRIED("Married"),
+        WIDOW("Widow"),
+        WIDOWER("Widower"),
+        DIVORCED("Divorced");
+
+        private final String label;
+
+        MaritalStatus(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static MaritalStatus fromLabel(String label) {
+            for (MaritalStatus type : values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return null; // or throw exception if you prefer strict handling
+        }
+
+        @Override
+        public String toString() {
+            return label; // 🔥 this removes need for custom cell factory
+        }
+    }
+
+    public enum Occupation {
+
+        NONE("None"),
+        FARMER("Farmer"),
+        TRADER("Trader"),
+        STUDENT("Student"),
+        CATTLEKEEPER("Cattle Keeper"),
+        OTHER("Other");
+
+        private final String label;
+
+        Occupation(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static Occupation fromLabel(String label) {
+            for (Occupation type : values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return null; // or throw exception if you prefer strict handling
+        }
+
+        @Override
+        public String toString() {
+            return label; // 🔥 this removes need for custom cell factory
+        }
+    }
+
+    public enum RationCardType {
+
+        NONE("None"),
+        BPL("Below Poverty Limit"),
+        APL("Above Poverty Limit");
+
+        private final String label;
+
+        RationCardType(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public static RationCardType fromLabel(String label) {
+            for (RationCardType type : values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return null; // or throw exception if you prefer strict handling
+        }
+
+        @Override
+        public String toString() {
+            return label; // 🔥 this removes need for custom cell factory
+        }
+    }
 }

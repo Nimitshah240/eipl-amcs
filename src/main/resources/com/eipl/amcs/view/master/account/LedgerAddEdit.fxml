@@ -52,7 +52,7 @@
                 </GridPane>
             <HBox fx:id="hboxMaster" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="25.0" spacing="15">
                <children>
-                  <E_Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" styleClass="button-primary" text="%save">
+                  <E_Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%save">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>

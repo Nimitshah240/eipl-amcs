@@ -40,6 +40,14 @@ public class Member extends BaseModel {
     private String middleNameLocal;
     private String lastNameLocal;
     private String mobileNo;
+    private String sapFarmerCode;
+
+    @Column(name = "is_dcs_member")
+    private boolean dcsMember;
+    @ManyToOne
+    @JoinColumn(name = "caste_category_code")
+    private CasteCategory casteCategory;
+
     @Digits(integer = 8, fraction = 2)
     private BigDecimal creditLimit;
 

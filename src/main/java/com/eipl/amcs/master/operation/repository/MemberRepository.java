@@ -17,7 +17,7 @@ public interface MemberRepository extends BaseRepository<Member, String> {
     @EntityGraph(attributePaths = {"milkType", "memberType", "society"})
     List<Member> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"milkType", "memberType", "society"})
+    @EntityGraph(attributePaths = {"milkType", "memberType", "society", "casteCategory"})
     List<Member> findAllBySociety(Society society, Sort sort);
 
     @Override

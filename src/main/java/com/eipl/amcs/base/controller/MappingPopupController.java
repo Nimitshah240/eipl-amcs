@@ -16,6 +16,7 @@ import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.operation.controller.BillCriteriaAddEditController;
 import com.eipl.amcs.master.operation.controller.BillHeadAddEditController;
+import com.eipl.amcs.master.operation.controller.MemberAddEditController;
 import com.eipl.amcs.master.operation.controller.MemberEditPasswordController;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.model.BillHead;
@@ -540,6 +541,20 @@ public class MappingPopupController implements MyInitialization {
                     controller66.setStage(stage);
                     controller66.setCallback(callback);
                     root.setCenter(controller66.getRoot());
+                    break;
+                case "MemberAddEdit":
+                    var controller67 = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+                    controller67.setMember(object != null ? (Member) object : null);
+                    controller67.setStage(stage);
+                    controller67.setCallback(callback);
+                    root.setCenter(controller67.getRoot());
+                    break;
+                case "LedgerAddEdit":
+                    var controller68 = (LedgerAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
+                    controller68.setLedger(object != null ? (Ledger) object : null);
+                    controller68.setStage(stage);
+                    controller68.setCallback(callback);
+                    root.setCenter(controller68.getRoot());
                     break;
             }
         } catch (Exception e) {

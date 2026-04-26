@@ -45,6 +45,20 @@ public class MemberDetail extends BaseModelTxn {
     private Short numberOfCow;
     private Short numberOfBuffalo;
     private String unionCode;
+    private String occupation;
+    private String maritalStatus;
+    private String registrationNo;
+    private String farmerType;
+    private String memberTypeCode;
+    private String land;
+    private String landType;
+    private String nomineeName;
+    private String nomineeRelation;
+    private String localNomineeName;
+    @Column(name = "is_educated")
+    private boolean educated;
+    @Column(name = "is_cooking_gas")
+    private boolean cookingGas;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = GenderSerialize.class)

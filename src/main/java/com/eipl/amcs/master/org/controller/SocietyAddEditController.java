@@ -45,9 +45,9 @@ public class SocietyAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<Route> cboxRoute;
     @FXML
-    private TableView<BmcChillerInfo> tableBmcChillerInfo;
+    private TableView<DcsChillerInfo> tableBmcChillerInfo;
     @FXML
-    private TableColumn<BmcChillerInfo, String> colBmcFacilator, colBcuCapacity, colOwnerName, colAgreementPeriod, colAgreementFromDate, colAgreementToDate;
+    private TableColumn<DcsChillerInfo, String> colBmcFacilator, colBcuCapacity, colOwnerName, colAgreementPeriod, colAgreementFromDate, colAgreementToDate;
     @FXML
     private Tab tabSocietyDetail, tabContactDetail, tabOtherDetail;
     @FXML
@@ -74,10 +74,10 @@ public class SocietyAddEditController implements MyInitialization {
     List<ContactDetails> contactDetailsList = new ArrayList<>();
     private Society society;
 
-    private BmcChillerInfo chillerInfo;
-    private List<BmcChillerInfo> chillerInfoList = new ArrayList<>();
+    private DcsChillerInfo chillerInfo;
+    private List<DcsChillerInfo> chillerInfoList = new ArrayList<>();
 
-    private final ObjectProperty<BmcChillerInfo> propBmcChiller;
+    private final ObjectProperty<DcsChillerInfo> propBmcChiller;
 
 
     public SocietyAddEditController() {
@@ -122,13 +122,13 @@ public class SocietyAddEditController implements MyInitialization {
         btnSave.setOnAction(e -> validateAndSave());
         btnAdd.setOnAction(e -> addBmcChillerInfo());
         btnDelete.setOnAction(e -> {
-            BmcChillerInfo dto = propBmcChiller.get();
+            DcsChillerInfo dto = propBmcChiller.get();
             if (dto != null)
                 deleteBmcChillerInfo(dto);
         });
 
         tableBmcChillerInfo.setOnKeyPressed(event -> {
-            BmcChillerInfo dto = tableBmcChillerInfo.getSelectionModel().getSelectedItem();
+            DcsChillerInfo dto = tableBmcChillerInfo.getSelectionModel().getSelectedItem();
             if (dto == null)
                 return;
             switch (event.getCode()) {
@@ -368,10 +368,10 @@ public class SocietyAddEditController implements MyInitialization {
     }
 
     private void loadBmcChillerInfo() {
-        var task = new BmcChillerInfoLoadTask();
+        var task = new DcsChillerInfoLoadTask();
         task.setOnSucceeded(e -> {
             try {
-                List<BmcChillerInfo> list = task.get();
+                List<DcsChillerInfo> list = task.get();
                 if (list != null && !list.isEmpty()) {
                     chillerInfoList.addAll(list);
                     tableBmcChillerInfo.setItems(FXCollections.observableList(list));
@@ -388,16 +388,16 @@ public class SocietyAddEditController implements MyInitialization {
     private void addBmcChillerInfo() {
         try {
 
-            BmcChillerInfo bmcChillerInfo = new BmcChillerInfo();
-            bmcChillerInfo.setSociety(MainApp.identityDto.getSociety());
-            bmcChillerInfo.setChillerName(txtBmcFacilator.getText());
-            bmcChillerInfo.setChillingCapacity(Integer.valueOf(txtBcuCapacity.getText()));
-            bmcChillerInfo.setOwnerName(txtOwnerName.getText());
-            bmcChillerInfo.setAgreementFromDate(dpAgreementFromDate.getValue());
-            bmcChillerInfo.setAgreementToDate(dpAgreementToDate.getValue());
+            DcsChillerInfo dcsChillerInfo = new DcsChillerInfo();
+            dcsChillerInfo.setSociety(MainApp.identityDto.getSociety());
+            dcsChillerInfo.setChillerName(txtBmcFacilator.getText());
+            dcsChillerInfo.setChillingCapacity(Integer.valueOf(txtBcuCapacity.getText()));
+            dcsChillerInfo.setOwnerName(txtOwnerName.getText());
+            dcsChillerInfo.setAgreementFromDate(dpAgreementFromDate.getValue());
+            dcsChillerInfo.setAgreementToDate(dpAgreementToDate.getValue());
 //            bmcChillerInfo.setAgreementPeriod(Integer.valueOf(dpAgreementFromDate.getValue().until(dpAgreementToDate.getValue())));
 
-            chillerInfoList.add(bmcChillerInfo);
+            chillerInfoList.add(dcsChillerInfo);
             tableBmcChillerInfo.setItems(FXCollections.observableList(chillerInfoList));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -436,7 +436,7 @@ public class SocietyAddEditController implements MyInitialization {
 
     private void saveBmcChillerInfo() {
         try {
-            var task = new BmcChillerInfoSaveTask(chillerInfoList);
+            var task = new DcsChillerInfoSaveTask(chillerInfoList);
             task.setOnSucceeded(e -> {
                 this.callback.reloadData(true);
             });
@@ -446,15 +446,15 @@ public class SocietyAddEditController implements MyInitialization {
         }
     }
 
-    private void deleteBmcChillerInfo(BmcChillerInfo bmcChillerInfo) {
+    private void deleteBmcChillerInfo(DcsChillerInfo dcsChillerInfo) {
         try {
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("society"),
                     resourceBundle.getString("alert.delete"));
             Optional<ButtonType> resp = alert.createConfirmationAlert();
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
 
-                if (bmcChillerInfo.getChillerInfoCode() != null && bmcChillerInfo.getChillerInfoCode() != 0) {
-                    var task = new BmcChillerInfoDeleteTask(bmcChillerInfo.getChillerInfoCode());
+                if (dcsChillerInfo.getChillerInfoCode() != null && dcsChillerInfo.getChillerInfoCode() != 0) {
+                    var task = new DcsChillerInfoDeleteTask(dcsChillerInfo.getChillerInfoCode());
                     task.setOnSucceeded(e -> {
                         try {
                             Boolean respDelete = task.get();
@@ -464,7 +464,7 @@ public class SocietyAddEditController implements MyInitialization {
                                 alert1.createAlert();
                                 return;
                             }
-                            chillerInfoList.remove(bmcChillerInfo);
+                            chillerInfoList.remove(dcsChillerInfo);
                             this.callback.reloadData(true);
 
                             tableBmcChillerInfo.setItems(FXCollections.observableList(chillerInfoList));
@@ -474,7 +474,7 @@ public class SocietyAddEditController implements MyInitialization {
                     });
                     new Thread(task).start();
                 } else {
-                    chillerInfoList.remove(bmcChillerInfo);
+                    chillerInfoList.remove(dcsChillerInfo);
                     tableBmcChillerInfo.setItems(FXCollections.observableList(chillerInfoList));
                 }
             }

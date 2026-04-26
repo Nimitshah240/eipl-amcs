@@ -14,10 +14,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tbl_bmc_chiller_info")
+@Table(name = "tbl_dcs_chiller_info")
 @Getter
 @Setter
-public class BmcChillerInfo extends BaseModel {
+public class DcsChillerInfo extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

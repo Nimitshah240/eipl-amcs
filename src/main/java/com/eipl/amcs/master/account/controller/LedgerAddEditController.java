@@ -2,6 +2,7 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -19,9 +20,12 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,16 +43,17 @@ public class LedgerAddEditController implements MyInitialization {
     private ComboBox<LedgerGroup> cboxLedgerGroup;
     @FXML
     private ComboBox<LedgerType> cboxLedgerType;
-    @FXML
-    private CheckBox chkBoxSubLedger, chkBoxSelectAll;
+    //    @FXML
+//    private CheckBox chkBoxSubLedger;
+//    chkBoxSelectAll;
     @FXML
     private E_TextField txtCode, txtName, txtLocalName;
     @FXML
     private TableColumn<SubLedger, Boolean> colSelect;
     @FXML
     private TableColumn<SubLedger, String> colSubLedger, colCode, colName, colLocalName;
-    @FXML
-    private TableView<SubLedger> tableSubLedgerData;
+    //    @FXML
+//    private TableView<SubLedger> tableSubLedgerData;
     private List<SubLedger> listSubLedger;
     private List<LedgerSubLedgerMapping> ledgerSubLedgerMappingList;
     private ResourceBundle resourceBundle;
@@ -56,6 +61,8 @@ public class LedgerAddEditController implements MyInitialization {
     private Ledger ledger = null;
     private List<LedgerGroup> ledgerGroupList;
 
+    private Stage stage;
+    private PopupCallback callback;
 
     public LedgerAddEditController() {
         propDto = new SimpleObjectProperty<>();
@@ -64,6 +71,15 @@ public class LedgerAddEditController implements MyInitialization {
     @Override
     public Node getRoot() {
         return root;
+    }
+
+
+    public void setCallback(PopupCallback callback) {
+        this.callback = callback;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
 
@@ -86,7 +102,7 @@ public class LedgerAddEditController implements MyInitialization {
             try {
                 LedgerSubLedgerDto dto = task1.get();
                 if (dto.getSubLedgerList() != null) {
-                    tableSubLedgerData.setItems(FXCollections.observableList(dto.getSubLedgerList()));
+//                    tableSubLedgerData.setItems(FXCollections.observableList(dto.getSubLedgerList()));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -102,7 +118,7 @@ public class LedgerAddEditController implements MyInitialization {
             try {
                 listSubLedger = task.get();
                 if (listSubLedger != null) {
-                    tableSubLedgerData.setItems(FXCollections.observableList(listSubLedger));
+//                    tableSubLedgerData.setItems(FXCollections.observableList(listSubLedger));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -116,17 +132,17 @@ public class LedgerAddEditController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         setupComboBox();
         loadLedgerType();
-        setupSubLedgerTable();
+//        setupSubLedgerTable();
         loadSubLedger();
         FocusUtils.requestFocus(cboxLedgerType);
         ledgerSubLedgerMappingList = new ArrayList<>();
-        chkBoxSelectAll.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                listSubLedger.forEach(e -> e.selectedProperty().set(true));
-            } else {
-                listSubLedger.forEach(e -> e.selectedProperty().set(false));
-            }
-        });
+//        chkBoxSelectAll.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue) {
+//                listSubLedger.forEach(e -> e.selectedProperty().set(true));
+//            } else {
+//                listSubLedger.forEach(e -> e.selectedProperty().set(false));
+//            }
+//        });
 
         cboxLedgerType.selectionModelProperty().addListener(e -> {
             if (cboxLedgerType.getValue() != null)
@@ -137,18 +153,19 @@ public class LedgerAddEditController implements MyInitialization {
                 loadLedgerGroupByType();
         });
         btnClose.setOnAction(e -> {
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
+            this.stage.close();
+//            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
         });
         btnSaveUpdate.setOnAction(e -> validateAndSave());
-        chkBoxSubLedger.setOnAction(e -> {
-            if (chkBoxSubLedger.isSelected()) {
-                tableSubLedgerData.setDisable(false);
-                chkBoxSelectAll.setDisable(false);
-            } else {
-                tableSubLedgerData.setDisable(true);
-                chkBoxSelectAll.setDisable(true);
-            }
-        });
+//        chkBoxSubLedger.setOnAction(e -> {
+//            if (chkBoxSubLedger.isSelected()) {
+//                tableSubLedgerData.setDisable(false);
+//                chkBoxSelectAll.setDisable(false);
+//            } else {
+//                tableSubLedgerData.setDisable(true);
+//                chkBoxSelectAll.setDisable(true);
+//            }
+//        });
     }
 
     public void loadControls() {
@@ -159,9 +176,9 @@ public class LedgerAddEditController implements MyInitialization {
                 ledger.getLedgerGroup().getCode()).findAny().get().getLedgerType();
         cboxLedgerType.getSelectionModel().select(ledgerType);
         cboxLedgerGroup.getSelectionModel().select(ledger.getLedgerGroup());
-        chkBoxSubLedger.setSelected(ledger.getHasSubLedger());
-        if (ledger.getHasSubLedger())
-            tableSubLedgerData.setDisable(false);
+//        chkBoxSubLedger.setSelected(ledger.getHasSubLedger());
+//        if (ledger.getHasSubLedger())
+//            tableSubLedgerData.setDisable(false);
     }
 
     private void validateAndSave() {
@@ -188,7 +205,7 @@ public class LedgerAddEditController implements MyInitialization {
 
     private void setupSubLedgerTable() {
 
-        tableSubLedgerData.setEditable(true);
+//        tableSubLedgerData.setEditable(true);
         colSelect.setEditable(true);
         colSelect.setCellValueFactory(data -> data.getValue().selectedProperty());
         colSelect.setCellFactory(CheckBoxTableCell.forTableColumn(colSelect));
@@ -196,7 +213,7 @@ public class LedgerAddEditController implements MyInitialization {
         colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNameLocal()));
         colCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode()));
-        propDto.bind(tableSubLedgerData.getSelectionModel().selectedItemProperty());
+//        propDto.bind(tableSubLedgerData.getSelectionModel().selectedItemProperty());
 
     }
 
@@ -222,7 +239,7 @@ public class LedgerAddEditController implements MyInitialization {
         ledger.setLedgerGroup(cboxLedgerGroup.getValue());
         ledger.setSociety(MainApp.identityDto.getSociety());
         ledger.setUnionCode(MainApp.identityDto.getUnion().getCode());
-        ledger.setHasSubLedger(chkBoxSubLedger.isSelected());
+//        ledger.setHasSubLedger(chkBoxSubLedger.isSelected());
         ledger.setActive(true);
         return ledger;
     }

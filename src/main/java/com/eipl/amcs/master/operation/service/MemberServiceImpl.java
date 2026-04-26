@@ -10,10 +10,7 @@ import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.operation.dto.MemberImportDto;
 import com.eipl.amcs.master.operation.model.*;
-import com.eipl.amcs.master.operation.repository.MemberCreditLimitRepository;
-import com.eipl.amcs.master.operation.repository.MemberCreditLimitTransactionRepository;
-import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
-import com.eipl.amcs.master.operation.repository.MemberRepository;
+import com.eipl.amcs.master.operation.repository.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Society;
@@ -61,6 +58,10 @@ public class MemberServiceImpl implements MemberService {
     private SocietyPaymentCycleRepository paymentCycleRepository;
     @Autowired
     private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private MemberCattleDetailRepository memberCattleDetailRepository;
+    @Autowired
+    private MemberFamilyDetailRepository memberFamilyDetailRepository;
 
     @Override
     public List<Member> findAll() {
@@ -71,6 +72,7 @@ public class MemberServiceImpl implements MemberService {
     public List<Member> findAllBySociety(String societyCode) {
         Society society = socRepository.findById(societyCode)
                 .orElseThrow(() -> new EntityNotFoundException(Society.class, "societycode", "invalid.society"));
+
         return repository.findAllBySociety(society, Sort.by("code"));
     }
 
@@ -100,6 +102,23 @@ public class MemberServiceImpl implements MemberService {
         // Credit limit
         if (memberDtoNew.getMember().getMemberType().getCode() == 1)
             setMemberCreditLimit(memberDtoNew.getMember(), memberDtoNew.getMemberDetail());
+
+        for (MemberCattleDetail memberCattleDetail : memberDto.getMemberCattleDetailList()) {
+            if (memberCattleDetail.getMemberCattleDetailCode() == null || memberCattleDetail.getMemberCattleDetailCode().isBlank()) {
+                String memberCattleDetailCode = nextCodeRepository.getNextCode("MemberCattleDetail", "memberCattleDetailCode", member.getSociety().getCode(), 0);
+                memberCattleDetail.setMemberCattleDetailCode(memberCattleDetailCode);
+            }
+            memberCattleDetail.setMember(memberDtoNew.getMember());
+            memberCattleDetailRepository.save(memberCattleDetail);
+        }
+        for (MemberFamilyDetail memberFamilyDetail : memberDto.getMemberFamilyDetailList()) {
+            if (memberFamilyDetail.getMemberFamilyDetailCode() == null || memberFamilyDetail.getMemberFamilyDetailCode().isBlank()) {
+                String code = nextCodeRepository.getNextCode("MemberFamilyDetail", "memberFamilyDetailCode", member.getSociety().getCode(), 0);
+                memberFamilyDetail.setMemberFamilyDetailCode(code);
+            }
+            memberFamilyDetail.setMember(memberDtoNew.getMember());
+            memberFamilyDetailRepository.save(memberFamilyDetail);
+        }
         return memberDtoNew;
     }
 
@@ -200,6 +219,26 @@ public class MemberServiceImpl implements MemberService {
         memberDetail.setupdateData();
         dtoNew.setMemberDetail(memberDetailrepository.customUpdate(memberDetail, identityInfo));
         createSubLedgerOfMember(dtoNew.getMember());
+
+
+        for (MemberCattleDetail memberCattleDetail : memberDto.getMemberCattleDetailList()) {
+            if (memberCattleDetail.getMemberCattleDetailCode() == null || memberCattleDetail.getMemberCattleDetailCode().isBlank()) {
+                String memberCattleDetailCode = nextCodeRepository.getNextCode("MemberCattleDetail", "memberCattleDetailCode", member.getSociety().getCode(), 0);
+                memberCattleDetail.setMemberCattleDetailCode(memberCattleDetailCode);
+            }
+            memberCattleDetail.setMember(dtoNew.getMember());
+            memberCattleDetailRepository.save(memberCattleDetail);
+        }
+        for (MemberFamilyDetail memberFamilyDetail : memberDto.getMemberFamilyDetailList()) {
+            if (memberFamilyDetail.getMemberFamilyDetailCode() == null || memberFamilyDetail.getMemberFamilyDetailCode().isBlank()) {
+                String code = nextCodeRepository.getNextCode("MemberFamilyDetail", "memberFamilyDetailCode", member.getSociety().getCode(), 0);
+                memberFamilyDetail.setMemberFamilyDetailCode(code);
+            }
+            memberFamilyDetail.setMember(dtoNew.getMember());
+            memberFamilyDetailRepository.save(memberFamilyDetail);
+        }
+
+
         return dtoNew;
     }
 

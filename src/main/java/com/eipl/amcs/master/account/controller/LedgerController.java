@@ -2,6 +2,7 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -36,7 +37,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class LedgerController implements MyInitialization {
+public class LedgerController implements MyInitialization, PopupCallback {
 
     private final ObjectProperty<Ledger> propLedger;
     @FXML
@@ -84,9 +85,11 @@ public class LedgerController implements MyInitialization {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_ADD"))
                 throw new UnAuthorizedAccessException();
-            LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
-            controller.setLedger(null);
-            MainApp.getContentPane().setCenter(controller.getRoot());
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", null, this, "Ledger");
+
+//            LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
+//            controller.setLedger(null);
+//            MainApp.getContentPane().setCenter(controller.getRoot());
         });
         btnExport.setOnAction(e -> {
             loadExcel();
@@ -96,10 +99,13 @@ public class LedgerController implements MyInitialization {
             if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_EDIT"))
                 throw new UnAuthorizedAccessException();
             if (propLedger.get() != null) {
-                LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil()
-                        .loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
-                controller.setLedger(propLedger.get());
-                MainApp.getContentPane().setCenter((controller).getRoot());
+//                LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil()
+//                        .loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
+//                controller.setLedger(propLedger.get());
+//                MainApp.getContentPane().setCenter((controller).getRoot());
+
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", propLedger.get(), this, "Ledger");
+
             }
         });
         propLedger.addListener((observable, oldValue, newValue) -> {
@@ -130,6 +136,42 @@ public class LedgerController implements MyInitialization {
                                 e1 -> e1.getLedgerGroup() != null && e1.getLedgerGroup().getCode() == cboxLedgerGroup.getValue().getCode()).
                         collect(Collectors.toList())));
         });
+
+
+        tableLedger.setRowFactory(tv -> {
+            TableRow<Ledger> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Ledger data = row.getItem();
+                    editLedger(data);
+                }
+            });
+            return row;
+        });
+
+        tableLedger.setOnKeyPressed(event -> {
+            Ledger dto = tableLedger.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editLedger(dto);
+                    break;
+                case DELETE:
+                    deleteData();
+                    break;
+            }
+        });
+    }
+
+    private void editLedger(Ledger ledger) {
+        try {
+            if (ledger != null) {
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", ledger, this, "Ledger");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void loadExcel() {

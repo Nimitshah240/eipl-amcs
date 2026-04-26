@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @SuppressWarnings("serial")
 @Entity
@@ -77,9 +76,6 @@ public class Bmc extends BaseModel {
     @JsonIgnoreProperties(value = {"village"})
     private Hamlet hamlet;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bmc_code", referencedColumnName = "code")
-    private List<BmcChillerInfo> chillerInfoList;
 
     @Override
     public String getTableName() {
@@ -88,5 +84,6 @@ public class Bmc extends BaseModel {
 
     @Override
     public String toString() {
-        return CommonUtils.getLocalString(this.name, this.nameLocal);}
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
 }

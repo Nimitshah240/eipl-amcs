@@ -110,10 +110,11 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_ADD"))
                 throw new UnAuthorizedAccessException();
-
-            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-            controller.setMember(null);
-            MainApp.getContentPane().setCenter(controller.getRoot());
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", null, this, "Member");
+//
+//            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
+//            controller.setMember(null);
+//            MainApp.getContentPane().setCenter(controller.getRoot());
 
 //            TODO - FOR PASSWORD SYSTEM, DO NOT REMOVE COMMENT BELOW
 //            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", null, this);
@@ -121,14 +122,8 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_EDIT"))
                 throw new UnAuthorizedAccessException();
-
-            if (propMember.get() != null) {
-                MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil()
-                        .loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
-                controller.setMember(propMember.get());
-                MainApp.getContentPane().setCenter((controller).getRoot());
-            }
-
+            Member dto = propMember.get();
+            editMember(dto);
 //            TODO - FOR PASSWORD SYSTEM, DO NOT REMOVE COMMENT BELOW
 //            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberEditPopup", propMember.get(), this);
         });
@@ -158,6 +153,41 @@ public class MemberController implements MyInitialization, PopupCallback {
             }
         });
 
+
+        tableMember.setRowFactory(tv -> {
+            TableRow<Member> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Member data = row.getItem();
+                    editMember(data);
+                }
+            });
+            return row;
+        });
+
+        tableMember.setOnKeyPressed(event -> {
+            Member dto = tableMember.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editMember(dto);
+                    break;
+                case DELETE:
+                    deleteData();
+                    break;
+            }
+        });
+    }
+
+    private void editMember(Member member) {
+        try {
+            if (member != null) {
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", member, this, "Member");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void search(String oldVal, String newVal) {
@@ -460,11 +490,11 @@ public class MemberController implements MyInitialization, PopupCallback {
         try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(getMemberShortCode(data.getValue().getCode())));
             colFirstName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() + " " +
-                    data.getValue().getMiddleName() + " " + data.getValue().getLastName()));
+                    (data.getValue().getMiddleName() == null ? " " : data.getValue().getMiddleName()) + " " + (data.getValue().getLastName() == null ? " " : data.getValue().getLastName())));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstNameLocal() != null ?
                     data.getValue().getFirstNameLocal() : " " +
-                    data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : " " + data.getValue().getLastNameLocal()
-                    != null ? data.getValue().getLastNameLocal() : ""
+                    (data.getValue().getMiddleNameLocal() != null ? data.getValue().getMiddleNameLocal() : " ") + (data.getValue().getLastNameLocal()
+                    != null ? data.getValue().getLastNameLocal() : "")
             ));
             colAccountNo.setCellValueFactory(data -> new SimpleStringProperty(
                     mapDetails.get(data.getValue().getCode()) != null ?
