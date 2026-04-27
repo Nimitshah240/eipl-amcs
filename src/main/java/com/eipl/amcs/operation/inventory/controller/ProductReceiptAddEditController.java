@@ -3,26 +3,36 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_ComboBox;
+import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
+import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.dto.TaxDto;
+import com.eipl.amcs.master.account.model.Tax;
+import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
+import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.master.operation.convertor.CustomerConvertor;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
-import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTax;
 import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptGetNextCodeTask;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptSaveTask;
@@ -38,31 +48,37 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class ProductReceiptAddEditController implements MyInitialization, PopupCallback {
     private final ObjectProperty<ProductReceiptTransaction> propReceiptTxn;
     private final List<ReceiptTxnTaxDto> receiptTxnTaxDtoList = new ArrayList<>();
     private final ObservableList<ProductReceiptTransaction> listProductReceiptTransaction;
+    private final int SCALE = 2;
+    private final RoundingMode RATE_ROUND = RoundingMode.HALF_UP;
     @FXML
     private StackPane root;
     @FXML
     private DatePicker dpChallanDate;
     @FXML
-    private TextField txtGrnNo, txtChallanNo, txtDescription, txtTotalAmount, txtDiscount, txtTotalTax, txtNetAmount;
+    private TextField txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount;
     @FXML
-    private ComboBox<Customer> cboxParty;
+    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity;
     @FXML
-    private Button btnAddProduct, btnDelete, btnSaveUpdate, btnClose;
+    private E_ComboBox<Customer> cboxParty;
+    @FXML
+    private E_ComboBox<Product> cboxProduct;
+    @FXML
+    private Button btnAddProduct, btnSaveUpdate, btnClose;
+    @FXML
+    private E_Button btnDeleteProduct;
     @FXML
     private TableView<ProductReceiptTransaction> tableProductReceiptTransaction;
     @FXML
@@ -71,7 +87,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private TableColumn<ProductReceiptTransaction, Product> colProductName;
     @FXML
     private TableColumn<ProductReceiptTransaction, Number> colTotalAmount,
-            colQuantity, colAmount, colRate;
+            colQuantity, colAmount, colRate, colTax;
     @FXML
     private List<ProductReceiptTransaction> listTransactions;
     private ProductReceipt productReceipt;
@@ -81,10 +97,25 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private List<Unit> unitList;
     private List<TaxDto> taxDtoList;
     private ProductReceiptTransaction r;
+    private PopupCallback callback;
+    private Stage stage;
+
+    @FXML
+    private ComboBox<Tax> cboxTax;
+    private Map<TaxDetail, BigDecimal> taxBifurcation = null;
+
 
     public ProductReceiptAddEditController() {
         propReceiptTxn = new SimpleObjectProperty<>();
         listProductReceiptTransaction = FXCollections.observableArrayList();
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void setCallback(PopupCallback callback) {
+        this.callback = callback;
     }
 
     @Override
@@ -100,30 +131,45 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         setupComboBox();
         setupTable();
-        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductReceipt.fxml"))));
+        btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         FocusUtils.requestFocus(txtChallanNo);
-        btnAddProduct.setOnAction(e -> {
-            if (!validate()) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
-                        errorMsg.toString());
-                alert.createAlert();
-                return;
-            }
-            ReceiptTxnDto receiptTxnDto = new ReceiptTxnDto();
-            receiptTxnDto.setProductList(productList);
-            receiptTxnDto.setTaxDtoList(taxDtoList);
-            receiptTxnDto.setUnitList(unitList);
-            receiptTxnDto.setDate(LocalDate.now());
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptTransaction", receiptTxnDto, this);
+
+        cboxProduct.setOnAction(e -> {
+            Tax tax = cboxTax.getItems().stream()
+                    .filter(p -> p.getCode().equalsIgnoreCase(cboxProduct.getValue().getTax().getCode()))
+                    .findFirst().orElse(null);
+            if (tax != null)
+                cboxTax.getSelectionModel().select(tax);
+            else
+                cboxTax.getSelectionModel().select(cboxTax.getItems().stream()
+                        .filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
+
+            if (cboxProduct.getValue() != null)
+                fetchPurchaseRate();
         });
-        btnDelete.setOnAction(e -> deleteData());
+
+        cboxTax.setOnAction(e -> calculateTaxAmount());
+
+        txtQuantity.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            calculateAmount();
+        });
+        txtRate.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            calculateAmount();
+        });
+
+        btnAddProduct.setOnAction(e -> {
+            validateAndSaveProduct();
+        });
+        btnDeleteProduct.setOnAction(e -> deleteData());
 
         propReceiptTxn.addListener((observable, oldValue, newValue) -> {
-            btnDelete.setDisable(newValue == null);
+            btnDeleteProduct.setDisable(newValue == null);
             r = newValue;
         });
 
+        txtTaxAmount.setText("0");
+        txtTotalAmount.setText("0");
 
     }
 
@@ -133,10 +179,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             txtChallanNo.setText(productReceipt.getChallanNo());
             txtGrnNo.setText(productReceipt.getGrnNo());
             dpChallanDate.setValue(productReceipt.getChallanDate());
-            txtDescription.setText(productReceipt.getDescription());
             txtTotalTax.setText(productReceipt.getTaxAmount().toString());
             txtNetAmount.setText(productReceipt.getNetAmount().toString());
-            txtDiscount.setText(productReceipt.getDiscount().toString());
+            txtBillNo.setText(productReceipt.getBillNo());
             txtTotalAmount.setText(productReceipt.getAmount().toString());
             btnSaveUpdate.setText(CommonUtils.getResourceString(resourceBundle, "update"));
             loadReceiptTransaction();
@@ -200,6 +245,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
     @Override
     public void setupComboBox() {
+        new AutoCompleteComboBoxListener<>(cboxTax);
+        cboxTax.setConverter(new TaxConvertor(cboxTax));
         cboxParty.setConverter(new CustomerConvertor(cboxParty));
         dpChallanDate.setConverter(new LocalDateConvertor());
         dpChallanDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -207,6 +254,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 dpChallanDate.setValue(dpChallanDate.getConverter().fromString(dpChallanDate.getEditor().getText()));
             }
         });
+
+        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
     }
 
     public void setupTable() {
@@ -219,8 +268,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colTotalAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
-            propReceiptTxn
-                    .bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
+            colTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));
+            propReceiptTxn.bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -229,11 +278,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private void setValuesInObject() {
         productReceipt.setSociety(MainApp.identityDto.getSociety());
         productReceipt.setUnion(MainApp.identityDto.getUnion());
-        productReceipt.setDescription(txtDescription.getText());
         productReceipt.setGrnDate(LocalDate.now());
         productReceipt.setGrnNo(txtGrnNo.getText());
         productReceipt.setChallanNo(txtChallanNo.getText());
         productReceipt.setChallanDate(dpChallanDate.getValue());
+        productReceipt.setBillNo(txtBillNo.getText());
         productReceipt.setCustomer(cboxParty.getValue());
     }
 
@@ -245,7 +294,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             alert.createAlert();
         } else {
             productReceipt.setAmount(new BigDecimal(txtTotalAmount.getText()));
-            productReceipt.setDiscount(new BigDecimal(txtDiscount.getText()));
             productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getText()));
             productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getText()));
 
@@ -272,7 +320,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
                             CommonUtils.getResourceString(resourceBundle, "product.receipt.insert.successful"));
                     alert.createAlert();
-                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductReceipt.fxml")));
+                    this.callback.reloadData(true);
+                    this.stage.close();
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
@@ -284,7 +333,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @Override
     public void updateData() {
         productReceipt.setAmount(new BigDecimal(txtTotalAmount.getText()));
-        productReceipt.setDiscount(new BigDecimal(txtDiscount.getText()));
         productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getText()));
         productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getText()));
         ProductReceiptDto productReceiptDto = new ProductReceiptDto();
@@ -316,7 +364,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
                         CommonUtils.getResourceString(resourceBundle, "product.receipt.update.successful"));
                 alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductReceipt.fxml")));
+                this.callback.reloadData(true);
+                this.stage.close();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -325,17 +374,23 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     public void deleteData() {
-        ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
-        for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
-            if (receiptTxnTaxDto.getTransaction() == r) {
-                removeReceiptTxnTaxDto = receiptTxnTaxDto;
-                break;
+        if (propReceiptTxn.get().getGrnTxnNo() == null || propReceiptTxn.get().getGrnTxnNo().isBlank()) {
+            ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
+            for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
+                if (receiptTxnTaxDto.getTransaction() == r) {
+                    removeReceiptTxnTaxDto = receiptTxnTaxDto;
+                    break;
+                }
             }
+            receiptTxnTaxDtoList.remove(removeReceiptTxnTaxDto);
+            listProductReceiptTransaction.remove(propReceiptTxn.get());
+            tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
+            calculateSummary();
+        } else {
+            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("productreceipt"),
+                    resourceBundle.getString("cannot.delete.saved.txn"));
+            alert.createAlert();
         }
-        receiptTxnTaxDtoList.remove(removeReceiptTxnTaxDto);
-        listProductReceiptTransaction.remove(propReceiptTxn.get());
-        tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
-        calculateSummary();
     }
 
     private boolean validate() {
@@ -378,8 +433,12 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         var task1 = new ProductLoadTask();
         task1.setOnSucceeded(e -> {
             try {
-                productList = task1.get().stream().filter(ee -> ee.getCreatedBy() == null ||
-                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList());
+                productList = task1.get();
+                if (!productList.isEmpty()) {
+                    cboxProduct.setItems(FXCollections.observableList(productList));
+                    new AutoCompleteComboBoxListener<>(cboxProduct);
+                }
+
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -390,6 +449,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         task2.setOnSucceeded(e -> {
             try {
                 taxDtoList = task2.get();
+                cboxTax.setItems(FXCollections.observableList(CommonUtils.getTaxFromDto(taxDtoList)));
+
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -435,13 +496,134 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         for (ProductReceiptTransaction transaction : listProductReceiptTransaction) {
             totalAmt = totalAmt.add(transaction.getAmount());
-            totalDis = totalDis.add(transaction.getDiscount());
             totalTaxAmt = totalTaxAmt.add(transaction.getTaxAmount());
             netAmt = netAmt.add(transaction.getNetAmount());
         }
         txtTotalAmount.setText(CommonUtils.scale2RoundUp(totalAmt).toString());
-        txtDiscount.setText(CommonUtils.scale2RoundUp(totalDis).toString());
         txtTotalTax.setText(CommonUtils.scale2RoundUp(totalTaxAmt).toString());
         txtNetAmount.setText(CommonUtils.scale2RoundUp(netAmt).toString());
+    }
+
+    private void validateAndSaveProduct() {
+        errorMsg = new StringBuilder();
+        if (!validateProduct()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
+                    errorMsg.toString());
+            alert.createAlert();
+            return;
+        }
+
+        ReceiptTxnTaxDto receiptTxnTaxDto = new ReceiptTxnTaxDto();
+        receiptTxnTaxDto.setTransaction(setValuesInReceiptTransaction());
+        receiptTxnTaxDto.setReceiptTaxList(setValuesInReceiptTax());
+        returnProductReceiptTxnTaxDto(receiptTxnTaxDto);
+//        stage.close();
+    }
+
+    private boolean validateProduct() {
+        if (cboxProduct.getValue() == null)
+            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.product.empty") + "\n");
+        if (txtRate.getText() == null || txtRate.getText().isEmpty() || !CommonUtils.isNumeric(txtRate.getText()))
+            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.rate.empty") + "\n");
+        else {
+            BigDecimal rate = new BigDecimal(txtRate.getText());
+            if (rate.doubleValue() <= 0)
+                errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.rate.empty") + "\n");
+        }
+        if (txtQuantity.getText() == null || txtQuantity.getText().isEmpty() || !CommonUtils.isNumeric(txtQuantity.getText()))
+            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
+        else {
+            BigDecimal qty = new BigDecimal(txtQuantity.getText());
+            if (qty.doubleValue() <= 0)
+                errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
+        }
+        return errorMsg.length() == 0;
+    }
+
+    private List<ProductReceiptTax> setValuesInReceiptTax() {
+        if (taxBifurcation == null) {
+            return null;
+        }
+        List<ProductReceiptTax> list = new ArrayList<>();
+        for (TaxDetail taxDetail : taxBifurcation.keySet()) {
+            ProductReceiptTax tax = new ProductReceiptTax();
+            tax.setTaxDetail(taxDetail);
+            tax.setUnionCode(MainApp.identityDto.getUnion().getCode());
+            tax.setValue(taxBifurcation.get(taxDetail));
+            tax.setSocietyCode(MainApp.identityDto.getSociety().getCode());
+            list.add(tax);
+        }
+        return list;
+    }
+
+    private ProductReceiptTransaction setValuesInReceiptTransaction() {
+        ProductReceiptTransaction txn = new ProductReceiptTransaction();
+        txn.setProduct(cboxProduct.getValue());
+        txn.setUnit(txn.getProduct().getPrimaryUom());
+        txn.setRate(new BigDecimal(txtRate.getText()));
+        txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getText()))));
+        txn.setAmount(new BigDecimal(txtAmount.getText()));
+        txn.setTax(cboxTax.getValue());
+        txn.setTaxAmount(new BigDecimal(txtTaxAmount.getText()));
+        txn.setNetAmount(new BigDecimal(txtProductTotalAmount.getText()));
+        txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
+
+        return txn;
+    }
+
+    private void calculateTaxAmount() {
+        if (!txtAmount.getText().isEmpty()) {
+            taxBifurcation = null;
+            BigDecimal discount = BigDecimal.ZERO;
+            BigDecimal taxableAmt = new BigDecimal(txtAmount.getText()).subtract(discount).setScale(SCALE, RATE_ROUND);
+
+            BigDecimal taxAmount = BigDecimal.ZERO;
+            if (!(cboxTax.getValue() == null) && !cboxTax.getValue().getName().equalsIgnoreCase("NIL")) {
+                taxBifurcation = CommonUtils.calculateAndFetchTaxBifurcation(taxDtoList.stream()
+                        .filter(p -> p.getTax().getCode().equalsIgnoreCase(cboxTax.getValue().getCode())).findFirst().orElse(null), taxableAmt);
+                if (taxBifurcation != null) {
+                    for (TaxDetail taxDtl : taxBifurcation.keySet()) {
+                        taxAmount = taxAmount.add(taxBifurcation.get(taxDtl)).setScale(SCALE, RATE_ROUND);
+                    }
+                }
+            }
+            txtTaxAmount.setText(taxAmount.toString());
+            BigDecimal totalAmt = taxableAmt.add(taxAmount).setScale(SCALE, RATE_ROUND);
+            txtProductTotalAmount.setText(totalAmt.toString());
+        }
+    }
+
+    private void calculateAmount() {
+        if (!txtQuantity.getText().isEmpty() && !txtRate.getText().isEmpty()) {
+            BigDecimal qty = new BigDecimal(txtQuantity.getText());
+            BigDecimal rate = new BigDecimal(txtRate.getText());
+            BigDecimal amt = qty.multiply(rate).setScale(SCALE, RATE_ROUND);
+            txtAmount.setText(amt.toString());
+            if (cboxTax.getSelectionModel().getSelectedItem() != null) {
+                calculateTaxAmount();
+            } else {
+                txtProductTotalAmount.setText(amt.toString());
+            }
+        }
+    }
+
+    private void fetchPurchaseRate() {
+        var task = new ProductPurchaseRateByProductTask(cboxProduct.getValue().getCode(), dpChallanDate.getValue());
+        task.setOnSucceeded(e -> {
+            try {
+                ProductPurchaseRate rate = task.get();
+                if (rate == null) {
+                    txtRate.setText("0");
+                } else {
+                    txtRate.setText(rate.getRate().toString());
+                }
+                calculateAmount();
+                calculateTaxAmount();
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }

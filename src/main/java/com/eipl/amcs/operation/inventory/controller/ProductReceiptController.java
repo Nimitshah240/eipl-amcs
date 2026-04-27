@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.inventory.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -28,7 +29,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
-public class ProductReceiptController implements MyInitialization {
+public class ProductReceiptController implements MyInitialization, PopupCallback {
     private final ObjectProperty<ProductReceipt> propProductReceiptDto;
     @FXML
     StackPane root;
@@ -83,10 +84,13 @@ public class ProductReceiptController implements MyInitialization {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_RECEIPT_ADD"))
                 throw new UnAuthorizedAccessException();
-            var controller = (ProductReceiptAddEditController) MainApp.getFxmlLoaderUtil()
-                    .loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductReceiptAddEdit.fxml"));
-            controller.setProductReceipt(null);
-            MainApp.contentPane.setCenter(controller.getRoot());
+//            var controller = (ProductReceiptAddEditController) MainApp.getFxmlLoaderUtil()
+//                    .loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductReceiptAddEdit.fxml"));
+//            controller.setProductReceipt(null);
+//            MainApp.contentPane.setCenter(controller.getRoot());
+
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", null, this, "Product Receipt");
+
         });
         btnEdit.setDisable(true);
         btnDelete.setDisable(true);
@@ -102,10 +106,11 @@ public class ProductReceiptController implements MyInitialization {
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_RECEIPT_EDIT"))
                 throw new UnAuthorizedAccessException();
-            var controller = (ProductReceiptAddEditController) MainApp.getFxmlLoaderUtil()
-                    .loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductReceiptAddEdit.fxml"));
-            controller.setProductReceipt(propProductReceiptDto.get());
-            MainApp.contentPane.setCenter(controller.getRoot());
+            editProductReceipt(propProductReceiptDto.get());
+//            var controller = (ProductReceiptAddEditController) MainApp.getFxmlLoaderUtil()
+//                    .loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductReceiptAddEdit.fxml"));
+//            controller.setProductReceipt(propProductReceiptDto.get());
+//            MainApp.contentPane.setCenter(controller.getRoot());
         });
         btnDelete.setOnAction(actionEvent -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_RECEIPT_DELETE"))
@@ -113,6 +118,38 @@ public class ProductReceiptController implements MyInitialization {
             deleteData();
         });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+
+        tableProductReceipt.setRowFactory(tv -> {
+            TableRow<ProductReceipt> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    ProductReceipt data = row.getItem();
+                    editProductReceipt(data);
+                }
+            });
+            return row;
+        });
+
+        tableProductReceipt.setOnKeyPressed(event -> {
+            ProductReceipt dto = tableProductReceipt.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propProductReceiptDto.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editProductReceipt(dto);
+                    break;
+            }
+        });
+    }
+
+    private void editProductReceipt(ProductReceipt productReceipt) {
+        if (productReceipt != null)
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", propProductReceiptDto.get(), this, "Product Receipt");
     }
 
     @Override
@@ -189,5 +226,11 @@ public class ProductReceiptController implements MyInitialization {
                 new Thread(task).start();
             }
         }
+    }
+
+    @Override
+    public void reloadData(boolean flag) {
+        if (flag)
+            loadData();
     }
 }

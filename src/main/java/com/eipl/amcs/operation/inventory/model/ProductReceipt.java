@@ -43,6 +43,7 @@ public class ProductReceipt extends BaseModelTxn {
     private BigDecimal discount;
     private BigDecimal taxAmount;
     private BigDecimal netAmount;
+    private String billNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = CustomerSerialize.class)
