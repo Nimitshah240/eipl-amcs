@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @SuppressWarnings("serial")
 @Entity
@@ -75,6 +76,10 @@ public class Bmc extends BaseModel {
     @JoinColumn(name = "hamlet_code", foreignKey = @ForeignKey(name = "fk_bmc_hamlet_code"))
     @JsonIgnoreProperties(value = {"village"})
     private Hamlet hamlet;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bmc_code", referencedColumnName = "code")
+    private List<BmcChillerInfo> chillerInfoList;
 
     @Override
     public String getTableName() {

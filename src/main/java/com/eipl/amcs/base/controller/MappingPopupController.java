@@ -21,8 +21,10 @@ import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.org.controller.DockAddEditController;
+import com.eipl.amcs.master.org.controller.SocietyAddEditController;
 import com.eipl.amcs.master.org.controller.UsersAddEditController;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
+import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.procurement.controller.LocalMilkSaleRateAddEditController;
 import com.eipl.amcs.master.procurement.controller.MilkRateViewController;
 import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
@@ -72,6 +74,7 @@ public class MappingPopupController implements MyInitialization {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
+
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
     }
@@ -281,11 +284,11 @@ public class MappingPopupController implements MyInitialization {
                     controller32.setStage(stage);
                     root.setCenter(controller32.getRoot());
                     break;
-                case "CommitteeMembersAddEdit":
-                    var controller33 = (CommitteeMembersAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/CommitteeMembersAddEdit.fxml"));
+                case "CommitteeAddEdit":
+                    var controller33 = (CommitteeAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/CommitteeAddEdit.fxml"));
                     controller33.setStage(stage);
                     controller33.setCallback(callback);
-                    controller33.setCommitteeMembers(object != null ? (CommitteeMembers) object : null);
+                    controller33.setCommittee(object != null ? (Committee) object : null);
                     root.setCenter(controller33.getRoot());
                     break;
                 case "MeetingAddEdit":
@@ -524,7 +527,20 @@ public class MappingPopupController implements MyInitialization {
                     controller64.setUser(object != null ? (User) object : null);
                     root.setCenter(controller64.getRoot());
                     break;
-
+                case "SocietyAddEdit":
+                    var controller65 = (SocietyAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/org/SocietyAddEdit.fxml"));
+                    controller65.setStage(stage);
+                    controller65.setCallback(callback);
+                    controller65.setSociety(object != null ? (Society) object : null);
+                    root.setCenter(controller65.getRoot());
+                    break;
+                case "StaffMemberAddEdit":
+                    var controller66 = (StaffMemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/StaffMemberAddEdit.fxml"));
+                    controller66.setStaffMember(object != null ? (StaffMember) object : null);
+                    controller66.setStage(stage);
+                    controller66.setCallback(callback);
+                    root.setCenter(controller66.getRoot());
+                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -1364,7 +1364,7 @@ public class BroadcastedService {
                                 billHead.setBillHeadFor(jsonText.get("billHeadFor") != null ? String.valueOf(jsonText.get("billHeadFor")) : null);
                                 billHead.setDefaultBillHeadCode(jsonText.get("defaultBillHeadCode") != null ? Integer.parseInt(String.valueOf(jsonText.get("defaultBillHeadCode"))) : null);
                                 billHead.setDisburseAllowed(Boolean.parseBoolean(String.valueOf(jsonText.get("isDisburseAllowed"))));
-                                billHead.setGeneralFormul(jsonText.get("generalFormula") != null ? String.valueOf(jsonText.get("generalFormula")) : null);
+                                billHead.setGeneralFormula(jsonText.get("generalFormula") != null ? String.valueOf(jsonText.get("generalFormula")) : null);
                                 billHead.setGeneralFormulaCode(jsonText.get("generalFormulaCode") != null ? String.valueOf(jsonText.get("generalFormulaCode")) : null);
                                 billHead.setGeneralFormulaComma(jsonText.get("generalFormulaComma") != null ? String.valueOf(jsonText.get("generalFormulaComma")) : null);
                                 billHead.setHasSlab(Boolean.parseBoolean(String.valueOf(jsonText.get("hasSlab"))));

@@ -33,13 +33,23 @@ public class StaffMember extends BaseModelTxn {
     private String emailId;
     private String ifsc;
     private String mobileNo;
+    private String bloodGroup;
+    private String salary;
+    private String memberCode;
+    private String address;
     private String panNo;
     private String pinCode;
+    private String qualification;
+    private String nameLocal;
     private Integer paymentMode;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureFromDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate tenureToDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate approvedDate;
     private String unionCode;
 
     @ManyToOne(fetch = FetchType.LAZY)

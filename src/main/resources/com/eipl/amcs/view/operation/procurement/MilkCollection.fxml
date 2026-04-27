@@ -28,11 +28,11 @@
                 </HBox>
                 <TableView fx:id="tableCollection" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
+                        <TableColumn fx:id="colDate" prefWidth="120.0" styleClass="cell-center-aligned" text="%date" />
+                        <TableColumn fx:id="colShift" prefWidth="100.0" styleClass="cell-center-aligned" text="%shift" />
                         <TableColumn fx:id="colSampleNo" prefWidth="125.0" styleClass="cell-center-aligned" text="%sampleno" />
                         <TableColumn fx:id="colMemberCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%membercode" />
                         <TableColumn fx:id="colMemberName" prefWidth="200.0" text="%name" />
-                        <TableColumn fx:id="colDate" prefWidth="120.0" styleClass="cell-center-aligned" text="%date" />
-                        <TableColumn fx:id="colShift" prefWidth="100.0" styleClass="cell-center-aligned" text="%shift" />
                         <TableColumn fx:id="colMilkType" prefWidth="100.0" styleClass="cell-center-aligned" text="%milktype" />
                         <TableColumn fx:id="colQty" prefWidth="100.0" styleClass="cell-right-aligned" text="%qty" />
                         <TableColumn fx:id="colFat" prefWidth="100.0" styleClass="cell-right-aligned" text="%fat" />

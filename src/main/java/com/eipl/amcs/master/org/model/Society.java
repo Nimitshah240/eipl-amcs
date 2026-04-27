@@ -36,7 +36,6 @@ public class Society extends BaseModel {
     private String destinationCode;
     private Short destinationType;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate effectiveDate;
     private Short isBmc;
     private String email;
     private String panNo;
@@ -52,6 +51,12 @@ public class Society extends BaseModel {
     private String tinNo;
     private String serviceTax;
     private String upiNo;
+    private String fssaiCode;
+    private LocalDate effectiveDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fssaiExpiryDate;
+
+    private String sapCenterCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = BankSerialize.class)
@@ -134,5 +139,5 @@ public class Society extends BaseModel {
     public String toString() {
         return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
-    }
+}
 

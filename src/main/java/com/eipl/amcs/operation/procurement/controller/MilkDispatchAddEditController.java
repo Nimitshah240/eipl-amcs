@@ -391,7 +391,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             try {
                 challanNo = task.get();
                 if (challanNo != null) {
-                    txtChallanNo.setText(challanNo.substring(8));
+                    txtChallanNo.setText(challanNo);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -1086,7 +1086,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     }
 
     private void setValuesInControls() {
-        txtChallanNo.setText(dto.getChallanNo().substring(8));
+        txtChallanNo.setText(dto.getChallanNo());
         int dispatch = dto.getDispatchType().intValue();
         cboxDispatchType.setValue(cboxDispatchType.getItems().get(dispatch));
         if (!txtDipStickReadingOpening.getText().isEmpty() && dto != null && dto.getDipStickReadingOpening() != null) {

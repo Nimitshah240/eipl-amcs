@@ -42,7 +42,7 @@ public class BillHeadAudit extends BaseModelAudit {
     private String calculationBasedOn;
     private String billHeadFor;
     private Integer defaultBillHeadCode;
-    private String generalFormul;
+    private String generalFormula;
     private String generalFormulaCode;
     private String generalFormulaComma;
     @Column(name = "has_slab")

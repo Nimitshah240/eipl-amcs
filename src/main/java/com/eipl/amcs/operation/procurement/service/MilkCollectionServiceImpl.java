@@ -6,6 +6,7 @@ import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.global.model.MilkQualityType;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.repository.MilkQualityTypeRepository;
 import com.eipl.amcs.master.global.repository.MilkTypeRepository;
@@ -635,7 +636,9 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
     public List<MilkCollection> findAllCollectionByDockNo(LocalDateTime fromDt, LocalDateTime toDt, String dockNo) {
         Dock dock = dockRepository.findById(dockNo)
                 .orElseThrow(() -> new EntityNotFoundException(Dock.class, "dock", dockNo));
-        return milkCollectionRepository.findByCollectionDateBetweenAndDock(fromDt, toDt, dock);
+        Sort sort = Sort.by("collectionDate").descending()
+                .and(Sort.by("sampleNo").ascending());
+        return milkCollectionRepository.findByCollectionDateBetweenAndDock(fromDt, toDt, dock, sort);
     }
 
     @Override

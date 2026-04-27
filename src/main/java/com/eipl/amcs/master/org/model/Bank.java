@@ -34,6 +34,7 @@ public class Bank extends BaseModel {
     @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_banks_ledger_code"))
     @JsonIgnoreProperties(value = {"ledgerGroup", "society", "union"})
     private Ledger ledger;
+
     @Override
     public String getTableName() {
         return "banks";
@@ -49,6 +50,6 @@ public class Bank extends BaseModel {
 
     @Override
     public String toString() {
-        return CommonUtils.getLocalString(this.name, this.nameLocal);
+        return this.code + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }
