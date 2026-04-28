@@ -15,7 +15,7 @@
 
 <StackPane fx:id="root" maxHeight="1.7976931348623157E308" prefWidth="450.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.share.controller.ShareTransferAddEditController">
     <children>
-        <VBox maxHeight="1.7976931348623157E308" spacing="10.0" styleClass="pane-white-drop-border">
+        <VBox maxHeight="1.7976931348623157E308" spacing="10.0" styleClass="">
             <children>
                 <HBox>
                     <children>

@@ -18,7 +18,7 @@
 
 <StackPane fx:id="root" maxWidth="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherSubLedgerController">
     <children>
-        <VBox fx:id="vbox" spacing="10.0" styleClass="pane-white-drop-border">
+        <VBox fx:id="vbox" spacing="10.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%vouchersubledger" />
             <GridPane fx:id="gridMaster" hgap="5.0" maxWidth="1.7976931348623157E308">

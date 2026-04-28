@@ -14,7 +14,7 @@
 <StackPane fx:id="root" prefHeight="250.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.setting.controller.ProductSaleDataMigrationNishaController">
 
     <children>
-        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" styleClass="pane-white-drop-border">
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%localmilksale" />
                 <GridPane fx:id="grid" hgap="10.0">

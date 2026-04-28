@@ -13,7 +13,7 @@
 
 <StackPane fx:id="root" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherSubLedgerPopupController">
     <children>
-        <VBox spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox spacing="20.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%subledger" />
                 <TableView fx:id="tableData" focusTraversable="false" prefHeight="200.0" VBox.vgrow="ALWAYS">

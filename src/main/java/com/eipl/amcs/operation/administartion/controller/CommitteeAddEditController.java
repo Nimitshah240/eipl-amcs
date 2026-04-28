@@ -3,10 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -47,7 +44,10 @@ public class CommitteeAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
-    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtYear, txtMemberName, txtCode;
+    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtMemberName, txtCode;
+
+    @FXML
+    private E_NumericField txtYear;
     @FXML
     private E_DatePicker dpElectionDate, dpFormation, dpJoiningDate, dpRegistrationdate;
 
@@ -109,7 +109,10 @@ public class CommitteeAddEditController implements MyInitialization {
         dpFormation.setValue(LocalDate.now());
         dpJoiningDate.setValue(LocalDate.now());
         dpRegistrationdate.setValue(LocalDate.now());
-        btnClose.setOnAction(e -> this.stage.close());
+        btnClose.setOnAction(e -> {
+            this.callback.reloadData(true);
+            this.stage.close();
+        });
         btnSave.setOnAction(e -> validateAndSave());
         btnAdd.setOnAction(e -> addCommitteeMembers());
         btnDelete.setOnAction(e -> {
@@ -209,6 +212,10 @@ public class CommitteeAddEditController implements MyInitialization {
             members.add(member);
             tableCommitteeMembers.setItems(FXCollections.observableList(members));
 
+            txtCommMemberCode.setText("");
+            txtMemberName.setText("");
+            cboxDesignation.getSelectionModel().clearSelection();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -252,7 +259,7 @@ public class CommitteeAddEditController implements MyInitialization {
     }
 
     private boolean validate() {
-        if (txtName.getText() == null)
+        if (txtName.getText() == null || txtName.getText().isBlank())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
         if (dpElectionDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("electiondateullerror") + "\n");
@@ -262,7 +269,7 @@ public class CommitteeAddEditController implements MyInitialization {
     }
 
     private boolean validateCommitteeMember() {
-        if (txtMemberName.getText() == null)
+        if (txtMemberName.getText() == null || txtMemberName.getText().isBlank())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
         if (cboxDesignation.getValue() == null)
             errorMsg.append(resourceBundle.getString("designationnullerror") + "\n");

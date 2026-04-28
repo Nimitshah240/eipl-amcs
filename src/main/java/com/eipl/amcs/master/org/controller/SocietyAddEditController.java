@@ -6,6 +6,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -54,8 +55,11 @@ public class SocietyAddEditController implements MyInitialization {
     private TextField txtSocietyCode, txtSocietyName, txtShortName,
             txtSocietyNameLocal, txtShortNameLocal, txtFssaiCode, txtIfscCode,
             txtSapNo, txtBankAccNo, txtAdharCard, txtRegistrationCode,
-            txtAddress, txtPhoneNo, txtEmail, txtChairmanMobileNo, txtChairmanName, txtGstNo, txtPan,
-            txtSecretaryName, txtSecretaryMobileNo, txtBmcFacilator, txtBcuCapacity, txtOwnerName, txtAgreementPeriod;
+            txtAddress, txtPhoneNo, txtEmail, txtChairmanName, txtGstNo, txtPan,
+            txtSecretaryName, txtBmcFacilator, txtOwnerName, txtAgreementPeriod;
+
+    @FXML
+    private E_NumericField txtChairmanMobileNo, txtSecretaryMobileNo, txtBcuCapacity;
     @FXML
     private DatePicker dpStartYear, dpFssaiExpiryDate, dpRegistrationDate, dpAgreementFromDate, dpAgreementToDate;
     @FXML
@@ -399,6 +403,13 @@ public class SocietyAddEditController implements MyInitialization {
 
             chillerInfoList.add(dcsChillerInfo);
             tableBmcChillerInfo.setItems(FXCollections.observableList(chillerInfoList));
+
+            txtBcuCapacity.setText("");
+            txtBmcFacilator.setText("");
+            txtOwnerName.setText("");
+            txtAgreementPeriod.setText("");
+            dpAgreementFromDate.setValue(null);
+            dpAgreementToDate.setValue(null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

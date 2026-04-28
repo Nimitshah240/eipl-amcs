@@ -11,7 +11,7 @@
 
 <StackPane fx:id="root" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleInstallmentController">
     <children>
-        <VBox spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox spacing="20.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%installmenttitle" />
                 <TableView fx:id="tableProductInstallment" focusTraversable="false" prefHeight="200.0" VBox.vgrow="ALWAYS">

@@ -15,7 +15,7 @@
 
 <StackPane fx:id="root" maxWidth="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.billing.controller.MemberBillTransactionController">
     <children>
-        <VBox fillWidth="false" spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox fillWidth="false" spacing="20.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%memberbilldetail" />
                 <GridPane fx:id="grid" maxWidth="1.7976931348623157E308">
