@@ -33,4 +33,11 @@ public interface LocalMilkSaleRepository extends BaseRepository<LocalMilkSale, S
     @Query(value = "SELECT COALESCE(SUM(l.amount), 0) FROM LocalMilkSale l WHERE l.saleDate BETWEEN :startDate AND :endDate")
     BigDecimal findLocalSaleAmountBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    List<LocalMilkSale> findByConsumerCodeAndConsumerTypeAndPaymentModeAndSaleDateBetween(
+            String consumerCode,
+            short consumerType,
+            short paymentMode,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    );
 }

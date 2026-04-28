@@ -23,4 +23,5 @@ public interface ProductSaleService {
 
     List<ProductSaleMigrateDto> migrateCollections(List<ProductSaleMigrateDto> dtoList, String header);
 
+    List<ProductSale> findByMemberCodeAndDate(String memberCode, LocalDate saleFromDate, LocalDate saleToDate);
 }

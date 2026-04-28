@@ -6,11 +6,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
@@ -39,10 +41,17 @@
                                 <Insets />
                             </HBox.margin>
                         </DatePicker>
-                        <Button fx:id="btnSearch" mnemonicParsing="false" text="%search">
+                        <Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%search">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                         </Button>
                     </children>
                 </HBox>
@@ -60,16 +69,58 @@
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
-                        <Button fx:id="btnEdit" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
-                        <Button fx:id="btnDelete" disable="true" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
-                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                  <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/delete.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                         <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                             <children>
-                                <Button fx:id="btnInstallments" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="true" styleClass="button-primary" text="%installments" />
+                                <Button fx:id="btnInstallments" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%installments">
+                           <graphic>
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/salary.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
                             </children>
                         </HBox>
                     </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
                 </HBox>
             </children>
         </VBox>

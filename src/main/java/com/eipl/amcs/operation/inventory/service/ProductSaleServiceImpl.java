@@ -577,4 +577,13 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         return dtoList;
     }
 
+    @Override
+    public List<ProductSale> findByMemberCodeAndDate(String memberCode, LocalDate fromDate, LocalDate toDate) {
+        try {
+            return productSaleRepository.findByConsumerCodeAndConsumerTypeAndPaymentModeAndInvoiceDateBetween(memberCode, (short) 1, (short) 1, fromDate, toDate);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

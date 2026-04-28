@@ -24,4 +24,12 @@ public interface ProductSaleRepository extends BaseRepository<ProductSale, Strin
     @EntityGraph(attributePaths = {"dock", "union", "society"})
     List<ProductSale> findByInvoiceDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
 
+    @EntityGraph(attributePaths = {"dock", "union", "society"})
+    List<ProductSale> findByConsumerCodeAndConsumerTypeAndPaymentModeAndInvoiceDateBetween(
+            String consumerCode,
+            short consumerType,
+            short paymentMode,
+            LocalDate startDate,
+            LocalDate endDate
+    );
 }

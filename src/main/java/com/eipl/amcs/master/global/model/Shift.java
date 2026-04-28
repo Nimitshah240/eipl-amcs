@@ -2,6 +2,7 @@ package com.eipl.amcs.master.global.model;
 
 import com.eipl.amcs.base.model.BaseModel;
 import com.eipl.amcs.utils.CommonUtils;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Table(name = "shifts")
+@AllArgsConstructor
 public class Shift extends BaseModel {
 
     @Id

@@ -86,13 +86,13 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
             loadInstallments();
 
         });
-        btnAdd.setOnAction(e -> {
-            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_ADD"))
-                throw new UnAuthorizedAccessException();
-            var controller = (ProductSaleAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml"));
-            controller.setProductSale(null);
-            MainApp.contentPane.setCenter(controller.getRoot());
-        });
+//        btnAdd.setOnAction(e -> {
+//            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_ADD"))
+//                throw new UnAuthorizedAccessException();
+//            var controller = (ProductSaleAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml"));
+//            controller.setProductSale(null);
+//            MainApp.contentPane.setCenter(controller.getRoot());
+//        });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
         propProductSaleDto.addListener((observable, oldValue, newValue) -> {
@@ -104,18 +104,61 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
                 btnDelete.setDisable(true);
             }
         });
-        btnEdit.setOnAction(e -> {
-            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_EDIT"))
-                throw new UnAuthorizedAccessException();
-            var controller = (ProductSaleAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml"));
-            controller.setProductSale(propProductSaleDto.get());
-            MainApp.contentPane.setCenter(controller.getRoot());
-        });
+//        btnEdit.setOnAction(e -> {
+//            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_EDIT"))
+//                throw new UnAuthorizedAccessException();
+//            var controller = (ProductSaleAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml"));
+//            controller.setProductSale(propProductSaleDto.get());
+//            MainApp.contentPane.setCenter(controller.getRoot());
+//        });
         btnDelete.setOnAction(actionEvent -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_DELETE"))
                 throw new UnAuthorizedAccessException();
             deleteData();
         });
+
+        btnAdd.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_ADD"))
+                throw new UnAuthorizedAccessException();
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", null, this, "ProductSale");
+        });
+        btnEdit.setOnAction(e -> {
+            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_EDIT"))
+                throw new UnAuthorizedAccessException();
+            editProductSale(propProductSaleDto.get());
+        });
+
+        tableProductSaleToMember.setRowFactory(tv -> {
+            TableRow<ProductSale> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    ProductSale data = row.getItem();
+                    editProductSale(data);
+                }
+            });
+            return row;
+        });
+
+        tableProductSaleToMember.setOnKeyPressed(event -> {
+            ProductSale dto = tableProductSaleToMember.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propProductSaleDto.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editProductSale(dto);
+                    break;
+            }
+        });
+    }
+
+    private void editProductSale(ProductSale productSale) {
+        if (productSale != null)
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", productSale, this, "ProductSale");
     }
 
     @Override

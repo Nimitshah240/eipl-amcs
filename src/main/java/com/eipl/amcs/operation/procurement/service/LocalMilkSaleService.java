@@ -1,11 +1,9 @@
 package com.eipl.amcs.operation.procurement.service;
 
-import com.eipl.amcs.MainApp;
 import com.eipl.amcs.exception.BusinessValidationFailException;
-import com.eipl.amcs.operation.procurement.model.CouponBalance;
-import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +24,6 @@ public interface LocalMilkSaleService {
     void delete(LocalMilkSale localMilkSale, String identityInfo);
 
     List<LocalMilkSale> migrateCollections(List<LocalMilkSale> dtoList, String header);
+
+    List<LocalMilkSale> findByMemberAndDate(String memberCode, LocalDate fromDate, LocalDate toDate);
 }

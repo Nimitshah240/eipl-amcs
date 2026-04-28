@@ -24,7 +24,9 @@ import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -493,5 +495,14 @@ public class LocalMilkSaleServiceImpl implements LocalMilkSaleService {
             localMilkSaleRepository.save(localMilkSale);
         }
         return dtoList;
+    }
+
+    @Override
+    public List<LocalMilkSale> findByMemberAndDate(String memberCode, LocalDate fromDate, LocalDate toDate) {
+        try {
+            return localMilkSaleRepository.findByConsumerCodeAndConsumerTypeAndPaymentModeAndSaleDateBetween(memberCode, (short) 1, (short) 1, LocalDateTime.of((fromDate), LocalTime.MIN), LocalDateTime.of((toDate), LocalTime.MAX));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
