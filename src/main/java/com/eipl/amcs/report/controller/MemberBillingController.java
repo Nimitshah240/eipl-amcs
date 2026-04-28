@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import net.sf.jasperreports.engine.JRParameter;
 
 public class MemberBillingController implements MyInitialization {
 
@@ -45,6 +46,8 @@ public class MemberBillingController implements MyInitialization {
     @FXML
     private ComboBox<String> cboxType;
     private ResourceBundle resourceBundle;
+    @FXML
+    private ComboBox<String> cboxLanguage, cboxLanguage1;
 
     @Override
     public Node getRoot() {
@@ -91,6 +94,28 @@ public class MemberBillingController implements MyInitialization {
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnSummary.setOnAction(e -> validateAndGenerateReport1());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+            cboxLanguage1.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+            cboxLanguage1.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+            cboxLanguage1.setValue("English");
+        }
+    }
+
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getLocaleString1() {
+        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     @Override
@@ -107,12 +132,14 @@ public class MemberBillingController implements MyInitialization {
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_report_type", cboxType.getSelectionModel().getSelectedIndex() + 1);
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
         switch (cboxType.getSelectionModel().getSelectedIndex() + 1) {
             case 1:
@@ -130,13 +157,15 @@ public class MemberBillingController implements MyInitialization {
 
     private void validateAndGenerateReport1() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString1();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_member_code", cboxMemberCodeSummary.getValue().getCode());
         params.put("from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "- M" : "- E"));
         params.put("to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-YY")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "- M" : "- E"));
         params.put("p_from_date", dpFromDateSummary.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftFrom.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDateSummary.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShiftTo.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SUMMARY_2, params);
         JasperViewer.viewReport(print, false);
     }

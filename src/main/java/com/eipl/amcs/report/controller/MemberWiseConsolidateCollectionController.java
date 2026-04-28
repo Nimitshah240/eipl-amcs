@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -48,6 +49,8 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
     private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private ComboBox<MilkType> cboxMilkType, cboxMilkType1;
+    @FXML
+    private ComboBox<String> cboxLanguage, cboxLanguage1;
     private List<MilkType> listMilkType;
     private ResourceBundle resourceBundle;
 
@@ -79,6 +82,20 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+            cboxLanguage1.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+            cboxLanguage1.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+            cboxLanguage1.setValue("English");
+        }
     }
 
     @Override
@@ -99,8 +116,19 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
         cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
     }
 
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getLocaleString1() {
+        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        params.put("p_locale", localeStr);
         JasperPrint print = null;
         switch (cboxType.getSelectionModel().getSelectedIndex() + 1) {
             case 1:
@@ -108,7 +136,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 params.put("p_member_code", cboxMemberCode.getValue().getCode());
                 params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_CONSOLIDATE_COLLECTION, params);
                 break;
             case 2:
@@ -117,7 +144,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_milk_type_code", cboxMilkType.getValue().getCode());
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_MILK_TYPE_WISE_CONSOLIDATE_COLLECTION, params);
                 break;
             case 3:
@@ -125,7 +151,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 params.put("p_member_code", cboxMemberCode.getValue().getCode());
                 params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_CONSOLIDATE_COLLECTION2, params);
                 break;
         }
@@ -134,6 +159,9 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
 
     private void validateAndGenerateReport1() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString1();
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        params.put("p_locale", localeStr);
         JasperPrint print = null;
         switch (cboxType1.getSelectionModel().getSelectedIndex() + 1) {
             case 1:
@@ -141,7 +169,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 params.put("p_member_code", cboxMemberCode1.getValue().getCode());
                 params.put("p_from_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_to_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_CONSOLIDATE_COLLECTION_WITH_DEDUCTION, params);
                 break;
             case 2:
@@ -150,7 +177,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 params.put("p_from_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_to_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_milk_type_code", cboxMilkType1.getValue().getCode());
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_MILK_TYPE_WISE_CONSOLIDATE_COLLECTION_WITH_DEDUCTION, params);
                 break;
             case 3:
@@ -158,7 +184,6 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                 params.put("p_member_code", cboxMemberCode1.getValue().getCode());
                 params.put("p_from_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
                 params.put("p_to_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_CONSOLIDATE_COLLECTION2_WITH_DEDUCTION, params);
                 break;
         }

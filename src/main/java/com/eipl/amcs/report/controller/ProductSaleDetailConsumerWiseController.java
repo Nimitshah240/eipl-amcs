@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import net.sf.jasperreports.engine.JRParameter;
 
 public class ProductSaleDetailConsumerWiseController implements MyInitialization {
 
@@ -39,7 +40,7 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
     @FXML
     private ComboBox<Product> cboxProductCode;
     @FXML
-    private ComboBox<String> cboxFormat;
+    private ComboBox<String> cboxFormat,cboxLanguage;
 
     private ResourceBundle resourceBundle;
     private List<Product> listProduct;
@@ -75,6 +76,16 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
         setupComboBox();
 
         btnGenerate.setOnAction(e -> validateAndGenerate());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
     }
 
     private void validateAndGenerate() {
@@ -101,35 +112,44 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
         }
         new AutoCompleteComboBoxListener<>(cboxProductCode);
     }
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_product_code", cboxProductCode.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRODUCT_SALE_DETAIL_CONSUMER_WISE, params);
         JasperViewer.viewReport(print, false);
     }
 
     private void validateAndGenerateReportTwo() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_product_code", cboxProductCode.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRODUCT_SALE_DETAILS, params);
         JasperViewer.viewReport(print, false);
     }
 
     private void validateAndGenerateReportThree() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.CODE_WISE_PRODUCT_SALE_DETAIL, params);
         JasperViewer.viewReport(print, false);
     }

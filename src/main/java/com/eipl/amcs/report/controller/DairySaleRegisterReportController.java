@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import net.sf.jasperreports.engine.JRParameter;
 
 public class DairySaleRegisterReportController implements MyInitialization {
 
@@ -35,6 +36,8 @@ public class DairySaleRegisterReportController implements MyInitialization {
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private ComboBox cboxmilkType;
+    @FXML
+    private ComboBox<String> cboxLanguage;
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
 
@@ -75,15 +78,30 @@ public class DairySaleRegisterReportController implements MyInitialization {
         cboxmilkType.setItems(FXCollections.observableList(list));
         cboxmilkType.getSelectionModel().select(0);
 
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
+    }
+
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_milk_type", cboxmilkType.getSelectionModel().getSelectedIndex() + 1);
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.DAIRY_SALE_REGISTER, params);
         JasperViewer.viewReport(print, false);
     }
