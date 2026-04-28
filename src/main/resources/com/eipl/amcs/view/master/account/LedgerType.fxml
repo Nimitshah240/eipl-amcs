@@ -7,28 +7,72 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.LedgerTypeController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/16"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.LedgerTypeController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%ledgertype" />
+                <Label styleClass="header-text" text="%ledgertype"/>
                 <TableView fx:id="tableLedgerType" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="125.0" styleClass="cell-center-aligned" text="%code" />
-                        <TableColumn fx:id="colName" prefWidth="200.0" text="%name" />
-                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname" />
-                        <TableColumn fx:id="colProfitAndLoss" prefWidth="125.0" styleClass="cell-center-aligned" text="%profitandloss" />
-                        <TableColumn fx:id="colBalanceSheet" prefWidth="125.0" styleClass="cell-center-aligned" text="%balancesheet" />
-                        <TableColumn fx:id="colStatus" prefWidth="100.0" styleClass="cell-center-aligned" text="%status" />
+                        <TableColumn fx:id="colCode" prefWidth="125.0" styleClass="cell-center-aligned" text="%code"/>
+                        <TableColumn fx:id="colName" prefWidth="200.0" text="%name"/>
+                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname"/>
+                        <TableColumn fx:id="colProfitAndLoss" prefWidth="125.0" styleClass="cell-center-aligned"
+                                     text="%profitandloss"/>
+                        <TableColumn fx:id="colBalanceSheet" prefWidth="125.0" styleClass="cell-center-aligned"
+                                     text="%balancesheet"/>
+                        <TableColumn fx:id="colStatus" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%status"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnAdd" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%add" />
-                  <Button fx:id="btnEdit" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
-                  <Button fx:id="btnDelete" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
-                  <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/edit.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
             </children>

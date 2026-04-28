@@ -8,6 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.CouponIssueController">
     <children>
@@ -38,10 +41,51 @@
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnAddSave" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
-                        <Button fx:id="btnEditUpdate" disable="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />
-                        <Button fx:id="btnDelete" disable="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />
-                        <Button fx:id="btnCancel" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <Button fx:id="btnAddSave" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnEditUpdate" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/edit.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnCancel" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+
+<!--                        <Button fx:id="btnAddSave" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />-->
+<!--                        <Button fx:id="btnEditUpdate" disable="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />-->
+<!--                        <Button fx:id="btnDelete" disable="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />-->
+<!--                        <Button fx:id="btnCancel" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />-->
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnView" prefHeight="30.0" prefWidth="80.0" text="%view" />
                     </children>

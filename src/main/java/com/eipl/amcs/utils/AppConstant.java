@@ -263,6 +263,7 @@ public class AppConstant {
         String PURCHASE_REGISTER_MONTH_WISE = "PurchaseRegisterMonthWise";
         String PAYMENT_REGISTER_WITH_DEDUCTION = "PaymentRegisterWithDeduction";
         String MILK_DISPATCH_CHALLAN_FORMAT_THREE = "DispatchFormatThree";
+        String EDIT_COLLECTION_REPORT = "EditCollectionData";
 
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }

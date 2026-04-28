@@ -306,6 +306,9 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/PaymentRegisterWithDeduction.jasper";
             case AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_THREE:
                 return "resources/report/milkcollection/DispatchFormatThree.jasper";
+            case AppConstant.ReportPath.EDIT_COLLECTION_REPORT:
+                return "resources/report/milkcollection/EditCollectionReport.jasper";
+
         }
         return null;
     }
