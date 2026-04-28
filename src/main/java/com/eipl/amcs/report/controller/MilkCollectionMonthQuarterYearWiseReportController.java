@@ -20,6 +20,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -44,6 +45,8 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     private ComboBox<String> cboxType;
     @FXML
     private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    @FXML
+    private ComboBox<String> cboxLanguage, cboxLanguage1;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -89,6 +92,20 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
         btnClose1.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+            cboxLanguage1.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+            cboxLanguage1.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+            cboxLanguage1.setValue("English");
+        }
     }
 
     @Override
@@ -98,9 +115,19 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         cboxStaff.getSelectionModel().select(0);
         new AutoCompleteComboBoxListener<>(cboxStaff);
     }
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getLocaleString1() {
+        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        params.put("p_locale", localeStr);
         JasperPrint print = null;
 
         switch (cboxType.getSelectionModel().getSelectedIndex()) {
@@ -115,7 +142,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
                 params.put("p_member_code", cboxStaff.getValue().getCode());
                 params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
                 params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.Milk_Collection_Month_Wise, params);
                 JasperViewer.viewReport(print, false);
                 break;
@@ -131,7 +157,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
 
                 params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
                 params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.Milk_Collection_Quarter_Wise, params);
                 JasperViewer.viewReport(print, false);
                 break;
@@ -146,7 +171,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
                 params.put("p_member_code", cboxStaff.getValue().getCode());
                 params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
                 params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-                params.put("p_locale", MainApp.locale);
                 print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.Milk_Collection_Year_Wise, params);
                 JasperViewer.viewReport(print, false);
                 break;
@@ -182,11 +206,13 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     private void validateAndGenerateReport1() {
         try {
             Map<String, Object> params = new HashMap<>();
+            String localeStr = getLocaleString1();
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+            params.put("p_locale", localeStr);
             JasperPrint print = null;
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
             params.put("p_from_collection_date", java.sql.Date.valueOf(dpFromDate1.getValue()) + " 06:00:00");
             params.put("p_to_collection_date", java.sql.Date.valueOf(dpToDate1.getValue()) + " 18:00:00");
-            params.put("p_locale", MainApp.locale);
             print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE, params);
             JasperViewer.viewReport(print, false);
         } catch (Exception e) {

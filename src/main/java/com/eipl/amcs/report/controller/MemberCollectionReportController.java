@@ -22,6 +22,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -47,6 +48,8 @@ public class MemberCollectionReportController implements MyInitialization {
     private ComboBox<Shift> cboxfromshift, cboxtoshift, cboxfromshift1, cboxtoshift1;
     @FXML
     private ComboBox cboxqty, cboxqty1;
+    @FXML
+    private ComboBox<String> cboxLanguage, cboxLanguage1;
 
     private ResourceBundle resourceBundle;
 
@@ -79,6 +82,19 @@ public class MemberCollectionReportController implements MyInitialization {
         txtsocietyCode.setText(MainApp.identityDto.getSociety().getCode());
         txtsocietyCode.setDisable(true);
 
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+            cboxLanguage1.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+            cboxLanguage1.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+            cboxLanguage1.setValue("English");
+        }
     }
 
     @Override
@@ -91,25 +107,37 @@ public class MemberCollectionReportController implements MyInitialization {
         cboxMemberCode.setCellFactory(new MemberCellFactory());
     }
 
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getLocaleString1() {
+        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_collection_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxfromshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_collection_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxtoshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_ltr_kg", cboxqty.getSelectionModel().getSelectedIndex());
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_COLLECTION_SUMMARY, params);
         JasperViewer.viewReport(print, false);
     }
 
     private void validateAndGenerateReport1() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString1();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_collection_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxfromshift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_collection_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxtoshift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_ltr_kg", cboxqty1.getSelectionModel().getSelectedIndex());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_COLLECTION_SUMMARY1, params);
         JasperViewer.viewReport(print, false);
     }

@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -35,6 +36,8 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
     private DatePicker dpToDate, dpFromDate;
     @FXML
     private ComboBox<Member> cboxMemberCode;
+    @FXML
+    private ComboBox<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -66,6 +69,19 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
         setupComboBox();
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
+    }
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     @Override
@@ -77,11 +93,13 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.CONSUMER_WISE_PRODUCT_SALE_DETAIL, params);
         JasperViewer.viewReport(print, false);
     }

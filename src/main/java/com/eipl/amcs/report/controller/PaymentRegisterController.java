@@ -26,11 +26,9 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import net.sf.jasperreports.engine.JRParameter;
 
 public class PaymentRegisterController implements MyInitialization {
 
@@ -44,6 +42,8 @@ public class PaymentRegisterController implements MyInitialization {
     private DatePicker dpFromDate, dpToDate;
     @FXML
     private E_TextField txtSampleNo;
+    @FXML
+    private ComboBox<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -72,8 +72,21 @@ public class PaymentRegisterController implements MyInitialization {
         dpToDate.setValue(LocalDate.now());
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
     }
 
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
     private void validateAndGenerateReport() {
         try {
             if (txtSampleNo.getText() == null || txtSampleNo.getText().trim().equals("")) {
@@ -92,12 +105,14 @@ public class PaymentRegisterController implements MyInitialization {
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             Map<String, Object> params = new HashMap<>();
+            String localeStr = getLocaleString();
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+            params.put("p_locale", localeStr);
             JasperPrint print = null;
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
             params.put("p_member_code", MainApp.identityDto.getSociety().getCode() + String.format("%04d", Integer.parseInt(txtSampleNo.getText().trim())));
             params.put("p_from_date", dpFromDate.getValue().format(formatter) + " " + (cboxfromshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
             params.put("p_to_date", dpToDate.getValue().format(formatter) + " " + (cboxtoshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-            params.put("p_locale", MainApp.locale);
             print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_WITH_DEDUCTION, params);
             JasperViewer.viewReport(print, false);
         } catch (Exception e) {

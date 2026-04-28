@@ -28,6 +28,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import net.sf.jasperreports.engine.JRParameter;
 
 public class MemberBillHeadController implements MyInitialization {
 
@@ -42,7 +43,7 @@ public class MemberBillHeadController implements MyInitialization {
     @FXML
     private ComboBox<BillHead> cboxHeadType;
     @FXML
-    private ComboBox<String> cboxReportType;
+    private ComboBox<String> cboxReportType, cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -74,6 +75,20 @@ public class MemberBillHeadController implements MyInitialization {
         setupComboBox();
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
+    }
+
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     @Override
@@ -92,13 +107,15 @@ public class MemberBillHeadController implements MyInitialization {
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
         params.put("p_head_code", cboxHeadType.getValue().getCode());
         params.put("p_report_type", cboxReportType.getSelectionModel().getSelectedIndex() + 1);
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
         switch (cboxReportType.getSelectionModel().getSelectedIndex() + 1) {
             case 1:

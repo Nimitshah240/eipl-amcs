@@ -18,11 +18,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import net.sf.jasperreports.engine.JRParameter;
 
 public class MemberBillingBankDetailController implements MyInitialization {
 
@@ -32,6 +30,8 @@ public class MemberBillingBankDetailController implements MyInitialization {
     private Button btnGenerate;
     @FXML
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
+    @FXML
+    private ComboBox<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -47,6 +47,16 @@ public class MemberBillingBankDetailController implements MyInitialization {
         setupComboBox();
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
     }
 
     @Override
@@ -55,11 +65,17 @@ public class MemberBillingBankDetailController implements MyInitialization {
         cboxSocietyPaymentCycleCode.getSelectionModel().select(0);
     }
 
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_society_payment_cycle_code", cboxSocietyPaymentCycleCode.getValue().getCode());
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_BILL_BANK_DETAIL, params);
         JasperViewer.viewReport(print, false);
     }

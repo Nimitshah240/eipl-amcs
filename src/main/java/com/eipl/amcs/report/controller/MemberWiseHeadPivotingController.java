@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -35,6 +36,8 @@ public class MemberWiseHeadPivotingController implements MyInitialization {
     private ComboBox<Member> cboxMemberCode;
     @FXML
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
+    @FXML
+    private ComboBox<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -50,6 +53,16 @@ public class MemberWiseHeadPivotingController implements MyInitialization {
         setupComboBox();
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
     }
 
     @Override
@@ -60,12 +73,18 @@ public class MemberWiseHeadPivotingController implements MyInitialization {
         cboxSocietyPaymentCycleCode.getSelectionModel().select(0);
     }
 
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_member_code", cboxMemberCode.getValue().getCode());
         params.put("p_society_payment_cycle_code", cboxSocietyPaymentCycleCode.getValue().getCode());
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MEMBER_WISE_HEAD_PIVOTING, params);
         JasperViewer.viewReport(print, false);
     }

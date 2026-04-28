@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.ConsumerWiseProductSaleDetailController">
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.ConsumerWiseProductSaleDetailController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
             <children>
@@ -36,6 +29,8 @@
                         <Label text="%todate" GridPane.columnIndex="2" />
                         <DatePicker fx:id="dpToDate" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                         <Button fx:id="btnGenerate" mnemonicParsing="true" styleClass="button-primary" text="%generate" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <Label text="%language" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+                  <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
 
 
                     </children>
