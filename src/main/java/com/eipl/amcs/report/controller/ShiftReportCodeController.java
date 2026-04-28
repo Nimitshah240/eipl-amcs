@@ -43,15 +43,15 @@ public class ShiftReportCodeController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
+    private Button btnGenerate, btnClose, btnGenerate1, btnGenerate2, btnClose1, btnClose2;
     @FXML
-    private DatePicker dpDate, dpToDate, dpFromDate;
+    private DatePicker dpDate, dpToDate, dpFromDate, dpToDate1, dpFromDate1;
     @FXML
-    private ComboBox<Shift> cboxShift, cboxFromShift, cboxToShift;
+    private ComboBox<Shift> cboxShift, cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
     @FXML
-    private ComboBox<Member> cboxMember;
+    private ComboBox<Member> cboxMember,cboxMember1;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private ComboBox<MilkType> cboxMilkType,cboxMilkType1;
 
     @FXML
     private ComboBox<String> cboxReportType;
@@ -90,12 +90,28 @@ public class ShiftReportCodeController implements MyInitialization {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
+        dpFromDate1.setValue(LocalDate.now());
+        dpToDate1.setValue(LocalDate.now());
+        dpFromDate1.setConverter(new LocalDateConvertor());
+        dpFromDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate1.setValue(dpFromDate1.getConverter().fromString(dpFromDate1.getEditor().getText()));
+            }
+        });
+        dpToDate1.setConverter(new LocalDateConvertor());
+        dpToDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate1.setValue(dpToDate1.getConverter().fromString(dpToDate1.getEditor().getText()));
+            }
+        });
         loadData();
         setupComboBox();
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnClose1.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnClose2.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
+        btnGenerate2.setOnAction(e -> validateAndGenerateReport2());
         cboxReportType.getItems().addAll(resourceBundle.getString("codewise"), resourceBundle.getString("memberwise"));
         cboxReportType.getSelectionModel().select(0);
         dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -113,6 +129,11 @@ public class ShiftReportCodeController implements MyInitialization {
         cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
         cboxMember.setConverter(new MemberReportConvertor(cboxMember));
         cboxMember.setCellFactory(new MemberCellFactory());
+        cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+        cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
+        cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+        cboxMember1.setConverter(new MemberReportConvertor(cboxMember1));
+        cboxMember1.setCellFactory(new MemberCellFactory());
     }
 
 
@@ -144,6 +165,16 @@ public class ShiftReportCodeController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRICE_DIFFERENCE, params);
         JasperViewer.viewReport(print, false);
     }
+    private void validateAndGenerateReport2() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("p_member_code", cboxMember1.getValue().getCode());
+        params.put("p_from_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_milk_type_code", cboxMilkType1.getValue().getCode());
+        params.put("p_locale", MainApp.locale);
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.EDIT_COLLECTION_REPORT, params);
+        JasperViewer.viewReport(print, false);
+    }
 
     @Override
     public void loadData() {
@@ -160,6 +191,12 @@ public class ShiftReportCodeController implements MyInitialization {
                     cboxToShift.getSelectionModel().select(1);
                     cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
                     cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+                    cboxFromShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxFromShift1.getSelectionModel().select(0);
+                    cboxToShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxToShift1.getSelectionModel().select(1);
+                    cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+                    cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -205,6 +242,9 @@ public class ShiftReportCodeController implements MyInitialization {
                     cboxMilkType.setItems(FXCollections.observableList(temp));
                     cboxMilkType.getSelectionModel().select(0);
                     cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+                    cboxMilkType1.setItems(FXCollections.observableList(temp));
+                    cboxMilkType1.getSelectionModel().select(0);
+                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
                     loadData1();
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -230,6 +270,9 @@ public class ShiftReportCodeController implements MyInitialization {
                     cboxMember.setItems(FXCollections.observableList(list2));
                     new AutoCompleteComboBoxListener<>(cboxMember);
                     cboxMember.getSelectionModel().select(0);
+                    cboxMember1.setItems(FXCollections.observableList(list2));
+                    new AutoCompleteComboBoxListener<>(cboxMember1);
+                    cboxMember1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
