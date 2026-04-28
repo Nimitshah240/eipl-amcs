@@ -15,7 +15,7 @@
 
 <StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.inventory.controller.ProductPurchaseRateAddEditController">
     <children>
-        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%productpurchaserate" />
                 <GridPane fx:id="grid" hgap="15.0">

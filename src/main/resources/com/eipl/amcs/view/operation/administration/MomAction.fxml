@@ -17,7 +17,7 @@
 
 <StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.MomActionController">
     <children>
-        <VBox focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0" styleClass="pane-white-drop-border">
+        <VBox focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0" styleClass="">
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>

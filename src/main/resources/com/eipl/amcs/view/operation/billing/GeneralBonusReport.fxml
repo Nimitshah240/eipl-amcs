@@ -14,7 +14,7 @@
 
 <StackPane fx:id="root" prefHeight="300.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.billing.controller.GeneralBonusReportController">
     <children>
-        <VBox maxHeight="300.0" maxWidth="722.0" minHeight="300.0" minWidth="722.0" prefHeight="300.0" prefWidth="722.0" spacing="15.0" styleClass="pane-white-drop-border">
+        <VBox maxHeight="300.0" maxWidth="722.0" minHeight="300.0" minWidth="722.0" prefHeight="300.0" prefWidth="722.0" spacing="15.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%bonus" />
                 <GridPane hgap="8.0" vgap="5.0">

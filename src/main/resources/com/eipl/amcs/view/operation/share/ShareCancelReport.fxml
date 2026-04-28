@@ -13,7 +13,7 @@
 
 <StackPane fx:id="root" prefHeight="150.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.share.controller.ShareCancelReportController">
     <children>
-        <VBox maxHeight="150.0" minHeight="150.0" prefHeight="150.0" prefWidth="622.0" spacing="15.0" styleClass="pane-white-drop-border">
+        <VBox maxHeight="150.0" minHeight="150.0" prefHeight="150.0" prefWidth="622.0" spacing="15.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%sharecancel" />
                 <GridPane hgap="8.0" vgap="5.0">

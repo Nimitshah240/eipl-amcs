@@ -6,7 +6,7 @@
 
 <StackPane fx:id="root" prefWidth="450.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.org.controller.UsersAddEditController">
     <children>
-        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%credentials" />
                 <GridPane fx:id="grid" hgap="15.0" vgap="15.0">

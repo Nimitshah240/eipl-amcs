@@ -4,6 +4,7 @@
 <?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -50,7 +51,7 @@
                         <E_TextField fx:id="txtNameLocal" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                         <E_DatePicker fx:id="dpElectionDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                         <E_DatePicker fx:id="dpFormation" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <E_TextField fx:id="txtYear" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <E_NumericField fx:id="txtYear" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <E_TextField fx:id="txtMemberName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                         <E_ComboBox fx:id="cboxDesignation" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         <E_DatePicker fx:id="dpJoiningDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="8" />

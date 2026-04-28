@@ -19,7 +19,7 @@
 <StackPane fx:id="root" prefWidth="700.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleGenerateController">
     <children>
-        <VBox spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox spacing="20.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="%societypaymentcycle"/>
                 <GridPane fx:id="grid" hgap="15.0">

@@ -16,7 +16,7 @@
 
 <StackPane fx:id="root" prefWidth="700.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.setting.controller.MilkCollectionDataMigrationPromptController">
     <children>
-        <VBox spacing="15.0" styleClass="pane-white-drop-border">
+        <VBox spacing="15.0" styleClass="">
             <children>
                 <Label styleClass="header-text" text="Milk Collection DataMigration" />
                 <GridPane fx:id="grid" hgap="10.0">

@@ -15,7 +15,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
                             <image>
-                                <Image url="@images/Dashboard.png" />
+                                <Image url="@images/dashboard.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -27,7 +27,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="button-primary">
                             <image>
-                                <Image url="@images/Farmer.png" />
+                                <Image url="@images/farmer.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -75,7 +75,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Receipt.png" />
+                                <Image url="@images/receipt.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -99,7 +99,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Bill.png" />
+                                <Image url="@images/bill.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -111,7 +111,7 @@
                     <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@images/Setting.png" />
+                                <Image url="@images/setting.png" />
                             </image>
                         </ImageView>
                     </graphic>

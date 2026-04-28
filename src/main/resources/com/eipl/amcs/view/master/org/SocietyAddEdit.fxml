@@ -38,10 +38,10 @@
                                     <children>
                                         <GridPane fx:id="gridSocietyDetail" hgap="10.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="ALWAYS" />
-                                                <ColumnConstraints hgrow="ALWAYS" />
-                                                <ColumnConstraints hgrow="ALWAYS" />
-                                                <ColumnConstraints hgrow="ALWAYS" />
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
                                                 <ColumnConstraints />
                                                 <ColumnConstraints hgrow="SOMETIMES" />
                                                 <ColumnConstraints hgrow="SOMETIMES" />
@@ -62,8 +62,6 @@
                                             <children>
                                                 <E_TextField fx:id="txtSocietyCode" disable="true" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                                                 <E_TextField fx:id="txtSocietyName" disable="true" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                                <E_TextField fx:id="txtShortName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                                                <E_DatePicker fx:id="dpStartYear" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%societycode">
                                                     <padding>
                                                         <Insets left="5.0" />
@@ -90,7 +88,17 @@
                                                     </padding>
                                                 </Label>
                                                 <E_TextField fx:id="txtSocietyNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                <E_TextField fx:id="txtShortName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+
                                                 <E_TextField fx:id="txtShortNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+
+                                                <E_DatePicker fx:id="dpStartYear" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                                                <E_TextField fx:id="txtRegistrationCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <E_DatePicker fx:id="dpRegistrationDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                <E_TextField fx:id="txtSapNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                <E_ComboBox fx:id="cboxRoute" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" />
+                                                <E_TextField fx:id="txtFssaiCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                <E_DatePicker fx:id="dpFssaiExpiryDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%shortnamelocal" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                                     <padding>
                                                         <Insets left="5.0" />
@@ -106,8 +114,6 @@
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_TextField fx:id="txtFssaiCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                                                <E_DatePicker fx:id="dpFssaiExpiryDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%bankname" GridPane.rowIndex="8">
                                                     <padding>
                                                         <Insets left="5.0" />
@@ -128,9 +134,10 @@
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_TextField fx:id="txtIfscCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="9" />
+                                                <E_ComboBox fx:id="cboxBank" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="9" />
+                                                <E_ComboBox fx:id="cboxBranch" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                                 <E_TextField fx:id="txtBankAccNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                                                <E_TextField fx:id="txtSapNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                <E_TextField fx:id="txtIfscCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="9" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%sapno" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                                     <padding>
                                                         <Insets left="5.0" />
@@ -146,16 +153,12 @@
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_DatePicker fx:id="dpRegistrationDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                                <E_TextField fx:id="txtRegistrationCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%societynamelocal" GridPane.columnIndex="3">
                                                     <padding>
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_ComboBox fx:id="cboxBranch" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                                                <E_ComboBox fx:id="cboxBank" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="9" />
-                                                <E_ComboBox fx:id="cboxRoute" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" />
+
                                             </children>
                                         </GridPane>
                                     </children>
@@ -214,8 +217,8 @@
                                                 <E_TextField fx:id="txtAddress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                 <E_TextField fx:id="txtPhoneNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                 <E_TextField fx:id="txtEmail" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                <E_TextField fx:id="txtChairmanMobileNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                 <E_TextField fx:id="txtChairmanName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                                                <E_NumericField fx:id="txtChairmanMobileNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                 <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%contactdetail">
                                                     <padding>
@@ -239,6 +242,8 @@
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
+                                                <E_TextField fx:id="txtSecretaryName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                <E_NumericField fx:id="txtSecretaryMobileNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                                                 <E_TextField fx:id="txtGstNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="8" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%panno" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                                     <padding>
@@ -257,13 +262,11 @@
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_TextField fx:id="txtSecretaryName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%secretarymobileno" GridPane.columnIndex="3" GridPane.rowIndex="4">
                                                     <padding>
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_TextField fx:id="txtSecretaryMobileNo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                                             </children>
                                         </GridPane>
                                     </children>
@@ -316,9 +319,11 @@
                                                             </padding>
                                                         </Label>
                                                         <E_TextField fx:id="txtBmcFacilator" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                        <E_NumericField fx:id="txtBcuCapacity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                         <E_TextField fx:id="txtOwnerName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                                                         <E_TextField fx:id="txtAgreementPeriod" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="6" />
-                                                        <E_TextField fx:id="txtBcuCapacity" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                        <E_DatePicker fx:id="dpAgreementFromDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                        <E_DatePicker fx:id="dpAgreementToDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%bcucapacity" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                             <padding>
                                                                 <Insets left="5.0" />
@@ -334,8 +339,6 @@
                                                                 <Insets left="5.0" />
                                                             </padding>
                                                         </Label>
-                                                        <E_DatePicker fx:id="dpAgreementFromDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                                        <E_DatePicker fx:id="dpAgreementToDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                                                         <HBox spacing="15.0" GridPane.columnIndex="3" GridPane.rowIndex="6" GridPane.rowSpan="2">
                                                             <children>
                                                                 <E_Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">

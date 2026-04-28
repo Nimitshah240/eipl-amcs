@@ -45,7 +45,7 @@
                   </GridPane>
                </children>
             </HBox>
-            <TableView fx:id="tblAccountPosting" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="pane-white-drop-border" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tblAccountPosting" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="" VBox.vgrow="ALWAYS">
               <columns>
                   <TableColumn fx:id="colEvent" prefWidth="75.0" text="%event" />
                   <TableColumn fx:id="colPostingType" prefWidth="75.0" text="%postingtype" />
