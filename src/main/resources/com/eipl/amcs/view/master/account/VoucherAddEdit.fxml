@@ -9,6 +9,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -16,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherAddEditController">
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherAddEditController">
    <children>
       <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" spacing="5.0">
          <children>
@@ -88,8 +90,24 @@
             </GridPane>
             <HBox fx:id="hboxMaster" alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <E_Button fx:id="btnAdd" minWidth="75.0" text="%add" />
-                  <E_Button fx:id="btnDelete" minWidth="75.0" text="%delete" />
+                  <E_Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/plus.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </E_Button>
+                  <E_Button fx:id="btnDelete" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%delete">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </E_Button>
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -153,9 +171,25 @@
             </HBox>
             <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
                <children>
-                  <E_Button fx:id="btnSave" minWidth="75.0" styleClass="btn-primary" text="%save" />
-                  <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
                   <Label maxWidth="-Infinity" HBox.hgrow="ALWAYS" />
+                  <E_Button fx:id="btnSave" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%add">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/save.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </E_Button>
+                  <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </E_Button>
                </children>
                <VBox.margin>
                   <Insets top="5.0" />

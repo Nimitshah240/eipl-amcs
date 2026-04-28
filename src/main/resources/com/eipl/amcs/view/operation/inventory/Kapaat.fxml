@@ -6,34 +6,36 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
-<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.eipl.amcs.operation.inventory.controller.KapaatController">
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.KapaatController">
     <children>
-        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0"
-              prefWidth="550.0" spacing="5.0">
+        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0">
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
-                               styleClass="header-text" text="%kapaat">
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%kapaat" HBox.hgrow="ALWAYS">
                             <HBox.margin>
-                                <Insets left="5.0"/>
+                                <Insets left="5.0" />
                             </HBox.margin>
                         </Label>
-                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308"
-                               minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS"/>
+                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" spacing="5.0">
                             <children>
-                                <E_DatePicker fx:id="dpFromDate"/>
-                                <E_DatePicker fx:id="dpToDate"/>
-                                <E_Button fx:id="btnSearch" prefWidth="80.0" text="%search"/>
+                                <E_DatePicker fx:id="dpFromDate" />
+                                <E_DatePicker fx:id="dpToDate" />
+                                <E_Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" text="%search">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/search.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></E_Button>
                             </children>
                         </HBox>
                     </children>
@@ -41,53 +43,50 @@
                 <TableView fx:id="tableData" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <!--                  <TableColumn fx:id="colInvoiceNo" prefWidth="150.0" text="%invoiceno" />-->
-                        <TableColumn fx:id="colDate" prefWidth="125.0" text="%date"/>
-                        <TableColumn fx:id="colConsumerType" prefWidth="150.0" text="%consumertype"/>
-                        <TableColumn fx:id="colConsumerName" prefWidth="150.0" text="%consumername"/>
-                        <TableColumn fx:id="colAmount" prefWidth="150.0" text="%amount"/>
-                        <TableColumn fx:id="colNetPayable" prefWidth="125.0" text="%netpayable"/>
+                        <TableColumn fx:id="colDate" prefWidth="125.0" text="%date" />
+                        <TableColumn fx:id="colConsumerType" prefWidth="150.0" text="%consumertype" />
+                        <TableColumn fx:id="colConsumerName" prefWidth="150.0" text="%consumername" />
+                        <TableColumn fx:id="colAmount" prefWidth="150.0" text="%amount" />
+                        <TableColumn fx:id="colNetPayable" prefWidth="125.0" text="%netpayable" />
                         <!--                  <TableColumn fx:id="colNoOfInstallment" prefWidth="150.0" text="%noofinstallment" />-->
-                        <TableColumn fx:id="colDeductionStartDate" prefWidth="150.0" text="%deductionstartdate"/>
+                        <TableColumn fx:id="colDeductionStartDate" prefWidth="150.0" text="%deductionstartdate" />
                     </columns>
                 </TableView>
                 <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
                     <children>
-                        <E_Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
-                                  prefWidth="70.0" text="%add">
+                        <E_Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/add.png"/>
+                                        <Image url="@../../images/add.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <E_Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
-                                  mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                        <E_Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/delete.png"/>
+                                        <Image url="@../../images/delete.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
-                                  prefWidth="70.0" text="%close">
+                        <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/close.png"/>
+                                        <Image url="@../../images/close.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
             </children>
             <padding>
-                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
         </VBox>
     </children>

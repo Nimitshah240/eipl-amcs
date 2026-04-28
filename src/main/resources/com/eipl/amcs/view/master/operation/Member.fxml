@@ -11,9 +11,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
 <StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.operation.controller.MemberController">
     <children>
@@ -21,19 +18,29 @@
             <children>
             <HBox alignment="TOP_RIGHT">
                <children>
-                      <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%member" />
+                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%member" HBox.hgrow="ALWAYS" />
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
-                  <E_TextField fx:id="txtCode">
+                  <E_TextField fx:id="txtCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </E_TextField>
-                  <Button fx:id="btnClear" mnemonicParsing="false" text="Clear">
+                  <Button fx:id="btnClear" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="Clear">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/clean.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
             </HBox>
                 <TableView fx:id="tableMember" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
@@ -105,6 +112,9 @@
                         </ImageView>
                      </graphic></Button>
                     </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
                 </HBox>
             </children>
         </VBox>

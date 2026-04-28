@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -37,12 +39,33 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
-                <HBox prefWidth="200.0" spacing="15">
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="80.0" spacing="15">
                     <children>
-                        <E_Button fx:id="btnView" prefHeight="30.0" prefWidth="120.0" styleClass="button-primary" text="%viewinsurance" />
+                        <E_Button fx:id="btnView" contentDisplay="TOP" styleClass="button-primary" text="%viewinsurance">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></E_Button>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
-                        <E_Button fx:id="btnExport" prefHeight="30.0" prefWidth="80.0" styleClass="button" text="%export" />
-                        <E_Button fx:id="btnFinalize" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%finalize" />
+                        <E_Button fx:id="btnExport" contentDisplay="TOP" minHeight="35.0" minWidth="100.0" styleClass="button" text="%export">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/excel.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></E_Button>
+                        <E_Button fx:id="btnFinalize" contentDisplay="TOP" styleClass="button-primary" text="%finalize">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/approve.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></E_Button>
                     </children>
                 </HBox>
             </children>
