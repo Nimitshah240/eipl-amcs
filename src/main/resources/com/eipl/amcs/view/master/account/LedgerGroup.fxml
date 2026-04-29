@@ -2,90 +2,86 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.LedgerGroupController">
+
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.LedgerGroupController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
             <children>
                 <HBox spacing="10.0">
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%ledgergroup" />
-                        <Label maxWidth="1.7976931348623157E308" styleClass="header-text" HBox.hgrow="ALWAYS" />
-                        <E_TextField fx:id="txtSearch" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-                        <E_Button fx:id="btnClear" minHeight="35.0" minWidth="100.0" text="%clear">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/clean.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></E_Button>
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                               styleClass="header-text" text="%ledgergroup"/>
+                        <Label maxWidth="1.7976931348623157E308" styleClass="header-text" HBox.hgrow="ALWAYS"/>
+                        <E_TextField fx:id="txtSearch"/>
+                        <E_Button fx:id="btnClear" text="%clear"/>
                     </children>
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
                 </HBox>
                 <TableView fx:id="tableLedgerGroup" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="125.0" styleClass="cell-center-aligned" text="%code" />
-                        <TableColumn fx:id="colName" prefWidth="200.0" text="%name" />
-                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname" />
-                        <TableColumn fx:id="colLedgerType" prefWidth="200.0" text="%ledgertype" />
-                        <TableColumn fx:id="colStatus" prefWidth="100.0" styleClass="cell-center-aligned" text="%status" />
+                        <TableColumn fx:id="colCode" prefWidth="125.0" styleClass="cell-center-aligned" text="%code"/>
+                        <TableColumn fx:id="colName" prefWidth="200.0" text="%name"/>
+                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname"/>
+                        <TableColumn fx:id="colLedgerType" prefWidth="200.0" text="%ledgertype"/>
+                        <TableColumn fx:id="colStatus" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%status"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
+                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%add">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/add.png" />
+                                        <Image url="@../../images/add.png"/>
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                        <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/edit.png" />
+                                        <Image url="@../../images/edit.png"/>
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/delete.png" />
+                                        <Image url="@../../images/delete.png"/>
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/close.png" />
+                                        <Image url="@../../images/close.png"/>
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
                     </children>
-               <padding>
-                  <Insets bottom="5.0" />
-               </padding>
                 </HBox>
             </children>
         </VBox>

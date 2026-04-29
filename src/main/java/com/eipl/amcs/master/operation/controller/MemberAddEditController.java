@@ -455,19 +455,19 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setBirthDate(dpBirthDate.getValue());
         memberDetail.setAddress(txtAddress.getText());
         memberDetail.setPincode(txtPinCode.getText());
-        
-        memberDetail.setOccupation(cboxOccupation.getValue() != null ? cboxOccupation.getValue().toString() : null);
+
+        memberDetail.setOccupation(cboxOccupation.getSelectionModel().getSelectedItem().toString());
         memberDetail.setNomineeName(txtNomineeName.getText());
-        memberDetail.setNomineeRelation(cboxRelation.getValue() != null ? cboxRelation.getValue().getRelationship() : null);
+        memberDetail.setNomineeRelation(cboxRelation.getSelectionModel().getSelectedItem().getRelationship());
         memberDetail.setLocalNomineeName(txtNomineeNameLocal.getText());
         memberDetail.setEducated(chkIsEducated.isSelected());
         memberDetail.setCookingGas(chkIsCookingGas.isSelected());
         memberDetail.setLand(txtLand.getText());
-        memberDetail.setLandType(cboxLandType.getValue() != null ? cboxLandType.getValue().toString() : null);
-        memberDetail.setFarmerType(cboxFarmerType.getValue() != null ? cboxFarmerType.getValue().toString() : null);
-        memberDetail.setMaritalStatus(cboxMaritalStatus.getValue() != null ? cboxMaritalStatus.getValue().toString() : null);
+        memberDetail.setLandType(cboxLandType.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setFarmerType(cboxFarmerType.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setMaritalStatus(cboxMaritalStatus.getSelectionModel().getSelectedItem().toString());
         memberDetail.setRegistrationNo(txtRegistrationNo.getText());
-        memberDetail.setMemberTypeCode(cboxMemberType.getValue() != null ? String.valueOf(cboxMemberType.getValue().getCode()) : null);
+        memberDetail.setMemberTypeCode(String.valueOf(cboxMemberType.getSelectionModel().getSelectedItem().getCode()));
         //  memberDetail.setState(cboxState.getValue() == null ? MainApp.identityDto.getSociety().getState() : cboxState.getValue());
         // memberDetail.setDistrict(cboxDistrict.getValue() == null ? MainApp.identityDto.getSociety().getDistrict() : cboxDistrict.getValue());
         //memberDetail.setSubDistrict(cboxSubDistrict.getValue() == null ? MainApp.identityDto.getSociety().getSubDistrict() : cboxSubDistrict.getValue());
@@ -776,9 +776,7 @@ public class MemberAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<CasteCategory> list = task.get();
-                if (list != null) {
-                    cboxCaste.setItems(FXCollections.observableList(list));
-                }
+                cboxCaste.setItems(FXCollections.observableList(list));
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
