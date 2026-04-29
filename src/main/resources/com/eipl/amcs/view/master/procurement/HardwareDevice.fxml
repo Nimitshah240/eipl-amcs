@@ -4,12 +4,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center"
-           xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.procurement.controller.HardwareDeviceController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
@@ -17,17 +19,16 @@
                 <Label styleClass="header-text" text="%hardwaredevice"/>
                 <TableView fx:id="tableHardwareDevices" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned"
-                                     text="%code"/>
+                        <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%code"/>
                         <TableColumn fx:id="colDeviceName" prefWidth="200.0" text="%devicename"/>
-                        <TableColumn fx:id="colDeviceType" prefWidth="100.0" text="%devicetype"
-                                     styleClass="cell-center-aligned"/>
-                        <TableColumn fx:id="colBaudRate" prefWidth="100.0" text="%baudrate"
-                                     styleClass="cell-center-aligned"/>
-                        <TableColumn fx:id="colBitRate" prefWidth="100.0" text="%bitrate"
-                                     styleClass="cell-center-aligned"/>
-                        <TableColumn fx:id="colParity" prefWidth="100.0" text="%parity"
-                                     styleClass="cell-center-aligned"/>
+                        <TableColumn fx:id="colDeviceType" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%devicetype"/>
+                        <TableColumn fx:id="colBaudRate" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%baudrate"/>
+                        <TableColumn fx:id="colBitRate" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%bitrate"/>
+                        <TableColumn fx:id="colParity" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%parity"/>
                         <TableColumn fx:id="colStartChar" prefWidth="100.0" text="%startchar"/>
                         <TableColumn fx:id="colEndChar" prefWidth="100.0" text="%endchar"/>
                         <TableColumn fx:id="colTareChar" prefWidth="100.0" text="%tarechar"/>
@@ -35,8 +36,16 @@
                 </TableView>
                 <HBox prefWidth="200.0">
                     <children>
-                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                text="%close"/>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
             </children>

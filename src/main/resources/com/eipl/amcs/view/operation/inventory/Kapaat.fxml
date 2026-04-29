@@ -6,14 +6,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
-<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.operation.inventory.controller.KapaatController">
     <children>
         <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0"
@@ -21,8 +21,8 @@
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
-                               styleClass="header-text" text="%kapaat">
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                               styleClass="header-text" text="%kapaat" HBox.hgrow="ALWAYS">
                             <HBox.margin>
                                 <Insets left="5.0"/>
                             </HBox.margin>
@@ -33,7 +33,16 @@
                             <children>
                                 <E_DatePicker fx:id="dpFromDate"/>
                                 <E_DatePicker fx:id="dpToDate"/>
-                                <E_Button fx:id="btnSearch" prefWidth="80.0" text="%search"/>
+                                <E_Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" text="%search">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/search.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </E_Button>
                             </children>
                         </HBox>
                     </children>

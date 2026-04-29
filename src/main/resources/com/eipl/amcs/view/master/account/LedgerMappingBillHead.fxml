@@ -1,33 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.eipl.amcs.controls.E_Button?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.LedgerMappingBillHeadController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.LedgerMappingBillHeadController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%ledgermappingbillhead" />
+                <Label styleClass="header-text" text="%ledgermappingbillhead"/>
                 <TableView fx:id="tableBillHeadData" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMemberBillHead" prefWidth="180.0" styleClass="cell-center-aligned" text="%memberbillhead" />
-                        <TableColumn fx:id="colLedgerMaster" minWidth="250.0" prefWidth="250.0" text="%ledgermaster" />
-                        <TableColumn fx:id="colType" editable="false" prefWidth="160.0" styleClass="cell-center-aligned" text="%type" />
-                        <TableColumn fx:id="colSubLedger" prefWidth="120.0" styleClass="cell-center-aligned" text="%hassubledger" />
-                        <TableColumn fx:id="colCreditDebit" prefWidth="120.0" styleClass="cell-center-aligned" text="%creditdebit" />
-                  <TableColumn fx:id="colAction" prefWidth="120.0" styleClass="cell-center-aligned" text="%action" />
+                        <TableColumn fx:id="colMemberBillHead" prefWidth="180.0" styleClass="cell-center-aligned"
+                                     text="%memberbillhead"/>
+                        <TableColumn fx:id="colLedgerMaster" minWidth="250.0" prefWidth="250.0" text="%ledgermaster"/>
+                        <TableColumn fx:id="colType" editable="false" prefWidth="160.0" styleClass="cell-center-aligned"
+                                     text="%type"/>
+                        <TableColumn fx:id="colSubLedger" prefWidth="120.0" styleClass="cell-center-aligned"
+                                     text="%hassubledger"/>
+                        <TableColumn fx:id="colCreditDebit" prefWidth="120.0" styleClass="cell-center-aligned"
+                                     text="%creditdebit"/>
+                        <TableColumn fx:id="colAction" prefWidth="120.0" styleClass="cell-center-aligned"
+                                     text="%action"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnSave" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%save" />
-                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                        <E_Button fx:id="btnSave" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                  prefHeight="25.0" prefWidth="76.0" text="%save">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/save.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                  prefHeight="30.0" prefWidth="80.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
                     </children>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
                 </HBox>
             </children>
         </VBox>

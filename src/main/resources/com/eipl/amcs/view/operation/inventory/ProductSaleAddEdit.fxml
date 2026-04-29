@@ -47,7 +47,7 @@
                   <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%consumername" GridPane.rowIndex="6" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%customer.name" GridPane.rowIndex="6" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%consumertype" GridPane.rowIndex="4" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%date" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <E_TextField fx:id="txtInvoiceNo" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="7" />
@@ -56,13 +56,13 @@
                         <E_NumericField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <E_TextField fx:id="txtConsumerName" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="7" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%consumercode" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%invoiceno" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milkfromdate" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%billno" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milk.date" />
                         <E_DatePicker fx:id="dpMilkFromDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
                         <E_DatePicker fx:id="dpMilkToDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milkamount" GridPane.columnIndex="3" />
                         <E_NumericField fx:id="txtMilkAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%deductionfromdate" GridPane.rowIndex="2" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%deduction.date" GridPane.rowIndex="2" />
                         <E_DatePicker fx:id="dpDeductionFromDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <E_DatePicker fx:id="dpDeductionToDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <E_NumericField fx:id="txtDeductionAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
@@ -89,7 +89,7 @@
                         <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%product" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%item" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%quantity" GridPane.columnIndex="2" />
                         <E_NumericField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate" GridPane.columnIndex="3" />
@@ -118,19 +118,19 @@
                                 </E_Button>
                             </children>
                         </HBox>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%taxcode" GridPane.columnIndex="1" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax" GridPane.columnIndex="1" />
                         <ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <ComboBox fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
                 <TableView fx:id="tableProductSaleTransaction" focusTraversable="false" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colProduct" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="300.0" text="%product" />
+                        <TableColumn fx:id="colProduct" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="300.0" text="%item" />
                         <TableColumn fx:id="colTaxAmount" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="%taxamount" />
                         <TableColumn fx:id="colQuantity" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%quantity" />
                         <TableColumn fx:id="colRate" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%rate" />
                         <TableColumn fx:id="colAmount" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%amount" />
-                        <TableColumn fx:id="colActualAmount" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="%actualamount" />
+                        <TableColumn fx:id="colActualAmount" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="100.0" text="%total.amount" />
                     </columns>
                     <VBox.margin>
                         <Insets />
@@ -150,15 +150,15 @@
                         <RowConstraints minHeight="28.0" percentHeight="0.0" />
                     </rowConstraints>
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%paymenttype" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%sales.type" />
                         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2">
                             <children>
-                                <RadioButton fx:id="rbtnCash" mnemonicParsing="false" text="%cash">
+                                <RadioButton fx:id="rbtnCash" mnemonicParsing="false" text="%cash.sale">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="transactionMode" />
                                     </toggleGroup>
                                 </RadioButton>
-                                <RadioButton fx:id="rbtnCredit" mnemonicParsing="false" text="%credit" toggleGroup="$transactionMode" />
+                                <RadioButton fx:id="rbtnCredit" mnemonicParsing="false" text="%credit.sale" toggleGroup="$transactionMode" />
                             </children>
                         </HBox>
                         <Label contentDisplay="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%noofinstallment" GridPane.rowIndex="2" />
