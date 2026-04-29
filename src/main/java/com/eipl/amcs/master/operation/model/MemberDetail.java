@@ -53,7 +53,7 @@ public class MemberDetail extends BaseModelTxn {
     private String land;
     private String landType;
     private String nomineeName;
-    private String nomineeRelation;
+//    private String nomineeRelation;  // TODO
     private String localNomineeName;
     @Column(name = "is_educated")
     private boolean educated;
@@ -119,6 +119,12 @@ public class MemberDetail extends BaseModelTxn {
     @JoinColumn(name = "member_code", foreignKey = @ForeignKey(name = "fk_member_details_member_code"))
     @JsonIgnoreProperties(value = {"milkType", "memberType", "society"})
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nominee_relation")
+    @JsonSerialize(using = RelationshipSerialize.class)
+    @JsonDeserialize(using = RelationshipDeserializer.class)
+    private Relationship relationship;
 
     @Override
     public String getTableName() {

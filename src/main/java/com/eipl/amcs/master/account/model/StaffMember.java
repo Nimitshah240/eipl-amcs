@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
@@ -51,6 +52,33 @@ public class StaffMember extends BaseModelTxn {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate approvedDate;
     private String unionCode;
+
+    @Column(name = "is_committee")
+    private Boolean isCommittee = false;
+
+    @Column(name = "is_disabled")
+    private Boolean isDisabled = false;
+
+    @Column(name = "is_trained")
+    private Boolean isTrained = false;
+
+    @Column(name = "nominee_name")
+    private String nomineeName;
+
+    @Column(name = "nominee_relation")
+    private String nomineeRelation;
+
+    @Column(name = "guarantor_name")
+    private String guarantorName;
+
+    @Column(name = "guarantor_mobile")
+    private String guarantorMobile;
+
+    @Column(name = "pf_loan_amount")
+    private BigDecimal pfLoanAmount;
+
+    @Column(name = "pf_amount")
+    private BigDecimal pfAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = BankSerialize.class)

@@ -30,12 +30,14 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,6 +50,8 @@ public class StaffMemberAddEditController implements MyInitialization {
     @FXML
     private E_DatePicker dpBirthDate, dpJoiningDate, dpApprovedDate, dpResignationDate;
     @FXML
+    private CheckBox chkCommittee, chkDisabled, chkTrained;
+    @FXML
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
     private E_ComboBox<Branch> cboxBranch;
@@ -59,8 +63,9 @@ public class StaffMemberAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<Gender> cboxGender;
 
+
     @FXML
-    private E_TextField txtCode, txtNameLocal, txtMobileNo, txtBloodGroup, txtName, txtQualification, txtSalary, txtFarmerCode, txtAddress, txtIfsc, txtAcNo;
+    private E_TextField txtCode, txtNomineeName, txtRelation, txtGuarantorName, txtGuarantorMobileNo, txtPfLoanAmount, txtPfAmount, txtNameLocal, txtMobileNo, txtBloodGroup, txtName, txtQualification, txtSalary, txtFarmerCode, txtAddress, txtIfsc, txtAcNo;
     @FXML
     private GridPane gridBankDetail;
     @FXML
@@ -252,6 +257,16 @@ public class StaffMemberAddEditController implements MyInitialization {
         dto.setTenureToDate(dpResignationDate.getValue());
         dto.setCode(dto.getCode());
         dto.setUnionCode(MainApp.identityDto.getUnion().getCode());
+        dto.setIsCommittee(chkCommittee.isSelected());
+        dto.setIsDisabled(chkDisabled.isSelected());
+        dto.setIsTrained(chkTrained.isSelected());
+        dto.setNomineeName(txtNomineeName.getText());
+        dto.setNomineeRelation(txtRelation.getText());
+        dto.setGuarantorName(txtGuarantorName.getText());
+        dto.setGuarantorMobile(txtGuarantorMobileNo.getText());
+        dto.setPfLoanAmount(new BigDecimal(txtPfLoanAmount.getText()));
+        dto.setPfAmount(new BigDecimal(txtPfAmount.getText()));
+
     }
 
     private boolean validate() {
@@ -371,6 +386,16 @@ public class StaffMemberAddEditController implements MyInitialization {
             dpJoiningDate.setValue(dto.getTenureFromDate());
             dpBirthDate.setValue(dto.getBirthDate());
             dpApprovedDate.setValue(dto.getApprovedDate());
+            chkCommittee.setSelected(dto.getIsCommittee());
+            chkDisabled.setSelected(dto.getIsDisabled());
+            chkTrained.setSelected(dto.getIsTrained());
+            txtNomineeName.setText(dto.getNomineeName());
+            txtRelation.setText(dto.getNomineeRelation());
+            txtGuarantorName.setText(dto.getGuarantorName());
+            txtGuarantorMobileNo.setText(dto.getGuarantorMobile());
+            txtPfLoanAmount.setText(dto.getPfLoanAmount() == null ? "" : String.valueOf(dto.getPfLoanAmount()));
+            txtPfAmount.setText(dto.getPfAmount() == null ? "" : String.valueOf(dto.getPfAmount()));
+
             if (dto.getPaymentMode() == (short) 0) {
                 rbtnCash.setSelected(true);
             } else {

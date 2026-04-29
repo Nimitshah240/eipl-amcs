@@ -73,7 +73,9 @@ public class StaffController implements MyInitialization, PopupCallback {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", null, this, "Staff");
         });
         btnEdit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", null, this, "Staff");
+            StaffMember staffMember = propStaffMembertDto.get();
+            if (staffMember != null)
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", staffMember, this, "Staff");
         });
         btnDelete.setOnAction(e -> {
             deleteData();
