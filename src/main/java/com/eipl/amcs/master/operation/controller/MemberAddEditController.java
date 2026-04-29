@@ -458,7 +458,7 @@ public class MemberAddEditController implements MyInitialization {
 
         memberDetail.setOccupation(cboxOccupation.getSelectionModel().getSelectedItem().toString());
         memberDetail.setNomineeName(txtNomineeName.getText());
-        memberDetail.setNomineeRelation(cboxRelation.getSelectionModel().getSelectedItem().getRelationship());
+        memberDetail.setRelationship(cboxRelation.getSelectionModel().getSelectedItem());
         memberDetail.setLocalNomineeName(txtNomineeNameLocal.getText());
         memberDetail.setEducated(chkIsEducated.isSelected());
         memberDetail.setCookingGas(chkIsCookingGas.isSelected());
@@ -776,7 +776,9 @@ public class MemberAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<CasteCategory> list = task.get();
-                cboxCaste.setItems(FXCollections.observableList(list));
+                if (list != null) {
+                    cboxCaste.setItems(FXCollections.observableList(list));
+                }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -799,6 +801,7 @@ public class MemberAddEditController implements MyInitialization {
                     txtAcNo.setText(memberDetail.getAccountNo());
                     txtIfsc.setText(memberDetail.getIfsc());
                 }
+                cboxRelation.setValue(memberDetail.getRelationship());
             }
             dpBirthDate.setValue(memberDetail.getBirthDate());
             txtPinCode.setText(memberDetail.getPincode());
