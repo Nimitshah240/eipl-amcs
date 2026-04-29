@@ -81,7 +81,7 @@ public class StaffController implements MyInitialization, PopupCallback {
             deleteData();
         });
         btnSalary.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffSalary", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffSalary", null, this, "Saff Salary");
         });
     }
 

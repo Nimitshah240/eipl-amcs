@@ -117,14 +117,14 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleAddEdit", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleAddEdit", null, this, "LocalMilkSale");
         });
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_EDIT"))
                 throw new UnAuthorizedAccessException();
             LocalMilkSale dto = propLocalMilkSaleDto.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleAddEdit", dto, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleAddEdit", dto, this, "LocalMilkSale");
         });
         btnSearch.setOnAction(e -> loadData());
         btnDelete.setOnAction(e -> {

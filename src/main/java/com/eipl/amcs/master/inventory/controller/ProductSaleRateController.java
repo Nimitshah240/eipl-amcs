@@ -81,12 +81,12 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
                 throw new UnAuthorizedAccessException();
             ProductSaleRate dto = propSaleRateDto.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleRateAddEdit", dto, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleRateAddEdit", dto, this, "Product Sale Rate");
         });
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_RATE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleRateAddEdit", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleRateAddEdit", null, this, "Product Sale Rate");
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
