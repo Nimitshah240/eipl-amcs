@@ -59,7 +59,7 @@ public class ShiftReportCodeController implements MyInitialization {
     @FXML
     private ComboBox<Dock> cboxDock, cboxDock1;
     @FXML
-    private ComboBox<String> cboxLanguage2, cboxLanguage3;
+    private ComboBox<String>  cboxLanguage, cboxLanguage1,cboxLanguage2, cboxLanguage3;
 
 
     private ResourceBundle resourceBundle;
@@ -145,15 +145,23 @@ public class ShiftReportCodeController implements MyInitialization {
         });
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
         cboxLanguage2.setItems(FXCollections.observableList(Arrays.asList(arr)));
         cboxLanguage3.setItems(FXCollections.observableList(Arrays.asList(arr)));
         if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+            cboxLanguage1.setValue("Gujarati");
             cboxLanguage2.setValue("Gujarati");
             cboxLanguage3.setValue("Gujarati");
         } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+            cboxLanguage1.setValue("Hindi");
             cboxLanguage2.setValue("Hindi");
             cboxLanguage3.setValue("Hindi");
         } else {
+            cboxLanguage.setValue("English");
+            cboxLanguage1.setValue("English");
             cboxLanguage2.setValue("English");
             cboxLanguage3.setValue("English");
         }
@@ -178,13 +186,15 @@ public class ShiftReportCodeController implements MyInitialization {
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_collection_date", dpDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         if (cboxDock.getValue().getDockNo().equals("All"))
             params.put("p_dock_no", "0");
         else
             params.put("p_dock_no", cboxDock.getValue().getDockNo());
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
         switch (cboxReportType.getSelectionModel().getSelectedIndex() + 1) {
             case 1:
@@ -199,11 +209,13 @@ public class ShiftReportCodeController implements MyInitialization {
 
     private void validateAndGenerateReport1() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString1();
         params.put("p_member_code", cboxMember.getValue().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_milk_type_code", cboxMilkType.getValue().getCode());
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRICE_DIFFERENCE, params);
         JasperViewer.viewReport(print, false);
     }
@@ -236,7 +248,13 @@ public class ShiftReportCodeController implements MyInitialization {
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MANUAL_COLLECTION_REPORT, params);
         JasperViewer.viewReport(print, false);
     }
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
 
+    private String getLocaleString1() {
+        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
     private String getLocaleString2() {
        return cboxLanguage2.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
