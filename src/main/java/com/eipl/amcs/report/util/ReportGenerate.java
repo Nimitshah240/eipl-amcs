@@ -308,6 +308,8 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/DispatchFormatThree.jasper";
             case AppConstant.ReportPath.EDIT_COLLECTION_REPORT:
                 return "resources/report/milkcollection/EditCollectionReport.jasper";
+            case AppConstant.ReportPath.MANUAL_COLLECTION_REPORT:
+                return "resources/report/milkcollection/ManualCollnData.jasper";
 
         }
         return null;

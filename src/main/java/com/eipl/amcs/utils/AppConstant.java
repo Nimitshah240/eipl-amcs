@@ -264,6 +264,7 @@ public class AppConstant {
         String PAYMENT_REGISTER_WITH_DEDUCTION = "PaymentRegisterWithDeduction";
         String MILK_DISPATCH_CHALLAN_FORMAT_THREE = "DispatchFormatThree";
         String EDIT_COLLECTION_REPORT = "EditCollectionData";
+        String MANUAL_COLLECTION_REPORT = "ManualCollnData";
 
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
