@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -30,11 +32,11 @@
                 <TableView fx:id="tableSchemeRateApplicability" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="317.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                   <TableColumn fx:id="colRateAppCode" minWidth="-1.0" prefWidth="100.0" styleClass="cell-center-aligned" text="%code" />
-                        <TableColumn fx:id="colFromDate" minWidth="-1.0" prefWidth="100.0"  text="%fromdate" />
+                        <TableColumn fx:id="colFromDate" minWidth="-1.0" prefWidth="100.0" text="%fromdate" />
                         <TableColumn fx:id="colFromShift" minWidth="-1.0" prefWidth="100.0" text="%fromshift" />
                         <TableColumn fx:id="colToDate" minWidth="-1.0" prefWidth="100.0" text="%todate" />
-                        <TableColumn fx:id="colToShift" minWidth="-1.0" prefWidth="100.0"  text="%toshift" />
-                        <TableColumn fx:id="colRtpl" minWidth="-1.0" prefWidth="100.0"  text="%rate" />
+                        <TableColumn fx:id="colToShift" minWidth="-1.0" prefWidth="100.0" text="%toshift" />
+                        <TableColumn fx:id="colRtpl" minWidth="-1.0" prefWidth="100.0" text="%rate" />
                         <TableColumn fx:id="colDescription" minWidth="-1.0" prefWidth="150.0" text="%description" />
 <!--                        <TableColumn fx:id="colStatus" prefWidth="75.0" styleClass="cell-right-aligned" text="%status" />-->
                     </columns>
@@ -44,10 +46,21 @@
                 </TableView>
                 <HBox prefWidth="600.0" spacing="15">
                     <children>
-                        <Button fx:id="btnClose" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />
+                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
 <!--                  <E_Button fx:id="btnReport" layoutX="530.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%report" />-->
                     </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" />
+               </padding>
                 </HBox>
             </children>
         </VBox>
