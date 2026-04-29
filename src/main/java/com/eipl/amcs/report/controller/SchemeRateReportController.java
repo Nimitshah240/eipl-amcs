@@ -29,6 +29,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -58,6 +59,8 @@ public class SchemeRateReportController implements MyInitialization {
     @FXML
     private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
     private List<SocietyPaymentCycle> paymentCycleList = new ArrayList<>();
+    @FXML
+    private ComboBox<String> cboxLanguage, cboxLanguage1, cboxLanguage2;
 
     @Override
     public Node getRoot() {
@@ -122,9 +125,42 @@ public class SchemeRateReportController implements MyInitialization {
                     }
                 }
             });
+
+            String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+            List<String> languages = Arrays.asList(arr);
+            cboxLanguage.setItems(FXCollections.observableList(languages));
+            cboxLanguage1.setItems(FXCollections.observableList(languages));
+            cboxLanguage2.setItems(FXCollections.observableList(languages));
+
+            if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+                cboxLanguage.setValue("Gujarati");
+                cboxLanguage1.setValue("Gujarati");
+                cboxLanguage2.setValue("Gujarati");
+            } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+                cboxLanguage.setValue("Hindi");
+                cboxLanguage1.setValue("Hindi");
+                cboxLanguage2.setValue("Hindi");
+            } else {
+                cboxLanguage.setValue("English");
+                cboxLanguage1.setValue("English");
+                cboxLanguage2.setValue("English");
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getLocaleString1() {
+        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getLocaleString2() {
+        return cboxLanguage2.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     /**
@@ -260,10 +296,12 @@ public class SchemeRateReportController implements MyInitialization {
     private void validateAndGenerateReport() {
         try {
             Map<String, Object> params = new HashMap<>();
+            String localeStr = getLocaleString1();
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
             params.put("p_from_collection_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
             params.put("p_to_collection_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-            params.put("p_locale", MainApp.locale);
+            params.put("p_locale", localeStr);
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
             params.put("p_milk_type_code", cboxMilkType.getValue().getCode());
             params.put("p_member_code", cboxMember.getValue().getCode());
             System.out.println(MainApp.locale);
@@ -283,10 +321,12 @@ public class SchemeRateReportController implements MyInitialization {
     private void validateAndGenerateReport1() {
         try {
             Map<String, Object> params = new HashMap<>();
+            String localeStr = getLocaleString();
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
             params.put("p_from_collection_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
             params.put("p_to_collection_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-            params.put("p_locale", MainApp.locale);
+            params.put("p_locale", localeStr);
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
             params.put("p_milk_type_code", cboxMilkType1.getValue().getCode());
             JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SCHEME_RATE_SOCIETY_PURCHASE, params);
             JasperViewer.viewReport(print, false);
@@ -304,10 +344,12 @@ public class SchemeRateReportController implements MyInitialization {
     private void validateAndGenerateReport2() {
         try {
             Map<String, Object> params = new HashMap<>();
+            String localeStr = getLocaleString2();
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
             params.put("p_member_code", cboxMemberCode.getValue().getCode());
             params.put("p_society_payment_cycle_code", cboxSocietyPaymentCycleCode.getValue().getCode());
-            params.put("p_locale", MainApp.locale);
+            params.put("p_locale", localeStr);
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
             JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SCHEME_RATE_MEMBER_MILK_COLLECTION_SLIP, params);
             JasperViewer.viewReport(print, false);
         } catch (Exception e) {
@@ -325,10 +367,12 @@ public class SchemeRateReportController implements MyInitialization {
     private void validateAndGenerateReport2(String code) {
         try {
             Map<String, Object> params = new HashMap<>();
+            String localeStr = getLocaleString2();
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
             params.put("p_member_code", code);
             params.put("p_society_payment_cycle_code", cboxSocietyPaymentCycleCode.getValue().getCode());
-            params.put("p_locale", MainApp.locale);
+            params.put("p_locale", localeStr);
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
             JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SCHEME_RATE_MEMBER_MILK_COLLECTION_SLIP, params);
             JasperViewer.viewReport(print, false);
         } catch (Exception e) {

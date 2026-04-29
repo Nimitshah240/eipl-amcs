@@ -24,6 +24,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
@@ -50,7 +51,7 @@ public class RptStockValuationController implements MyInitialization {
     @FXML
     private ComboBox<Product> cboxProduct;
     @FXML
-    private ComboBox<String> cboxFormat;
+    private ComboBox<String> cboxFormat, cboxLanguage;
     private List<Product> listProductList;
 
     @FXML
@@ -87,6 +88,15 @@ public class RptStockValuationController implements MyInitialization {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
 
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
     }
 
     private void validateAndGenerate() {
@@ -111,21 +121,27 @@ public class RptStockValuationController implements MyInitialization {
         new AutoCompleteComboBoxListener<>(cboxProduct);
     }
 
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
     @Override
     public void loadData() {
-        StockValuationTaskWithProduct task = new StockValuationTaskWithProduct(MainApp.identityDto.getSociety().getCode(), dpAsOnDate.getValue(), MainApp.locale, cboxProduct.getValue().getCode());
+        String localeStr = getLocaleString();
+        StockValuationTaskWithProduct task = new StockValuationTaskWithProduct(MainApp.identityDto.getSociety().getCode(), dpAsOnDate.getValue(), localeStr, cboxProduct.getValue().getCode());
         task.setOnSucceeded(e -> {
             try {
                 List<ProductStockValuation> list = task.get();
                 Map<String, Object> params = new HashMap<>();
                 params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-                if (MainApp.locale.equals("en")) {
+                if (localeStr.equals("en")) {
                     params.put("p_society_name", MainApp.identityDto.getSociety().getName());
                 } else {
                     params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
                 params.put("p_as_on_date", dpAsOnDate.getValue());
-                params.put("p_locale", MainApp.locale);
+                params.put("p_locale", localeStr);
+                params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 params.put("p_product_code", cboxProduct.getValue().getCode());
                 JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_STOCK_VALUATION, params, new JRBeanCollectionDataSource(list));
                 JasperViewer.viewReport(print, false);
@@ -156,20 +172,22 @@ public class RptStockValuationController implements MyInitialization {
     }
 
     public void loadData1() {
-        StockValuationTaskWithSaleAndPurchase task = new StockValuationTaskWithSaleAndPurchase(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), dpToDate.getValue(), MainApp.locale, cboxProduct.getValue().getCode());
+        String localeStr = getLocaleString();
+        StockValuationTaskWithSaleAndPurchase task = new StockValuationTaskWithSaleAndPurchase(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), dpToDate.getValue(), localeStr, cboxProduct.getValue().getCode());
         task.setOnSucceeded(e -> {
             try {
                 List<ProductStockValuationWithSaleAndPurchase> list = task.get();
                 Map<String, Object> params = new HashMap<>();
                 params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-                if (MainApp.locale.equals("en")) {
+                if (localeStr.equals("en")) {
                     params.put("p_society_name", MainApp.identityDto.getSociety().getName());
                 } else {
                     params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
                 params.put("p_from_date", dpFromDate.getValue().toString());
                 params.put("p_to_date", dpToDate.getValue().toString());
-                params.put("p_locale", MainApp.locale);
+                params.put("p_locale", localeStr);
+                params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 params.put("p_product_code", cboxProduct.getValue().getCode());
                 JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_STOCK_VALUATION_WITH_SALE_PURCHASE, params, new JRBeanCollectionDataSource(list));
                 JasperViewer.viewReport(print, false);

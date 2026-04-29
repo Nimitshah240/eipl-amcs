@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.accounting.RptStockValuationController">
 	<padding>
@@ -21,12 +14,13 @@
 				<Label maxWidth="1.7976931348623157E308" minHeight="35.0" styleClass="header-text" text="%stockvaluation" />
 				<GridPane focusTraversable="true" hgap="10.0">
 					<columnConstraints>
-						<ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-						<ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+						<ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+						<ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" />
 					</columnConstraints>
 					<rowConstraints>
 						<RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
@@ -34,7 +28,7 @@
 					</rowConstraints>
 					<children>
 						<DatePicker fx:id="dpAsOnDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-						<Button fx:id="btnGenerate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="button-primary" text="%generate" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+						<Button fx:id="btnGenerate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="button-primary" text="%generate" GridPane.columnIndex="5" GridPane.rowIndex="1" />
 						<Label fx:id="lblAsOnDate" text="%asondate" GridPane.columnIndex="2" />
                   <ComboBox fx:id="cboxFormat" editable="true" GridPane.rowIndex="1" />
                   <DatePicker fx:id="dpToDate" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -43,7 +37,9 @@
                   <ComboBox fx:id="cboxProduct" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="%format" />
                   <Label disable="true" text="%product" GridPane.columnIndex="1" />
-                  <Button fx:id="btnClose" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%close" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <Button fx:id="btnClose" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%close" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                  <Label text="Label" GridPane.columnIndex="4" />
+                  <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
 					</children>
 					<VBox.margin>

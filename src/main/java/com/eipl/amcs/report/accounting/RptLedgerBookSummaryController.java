@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -41,6 +42,8 @@ public class RptLedgerBookSummaryController implements MyInitialization {
 
     @FXML
     private AnchorPane root;
+    @FXML
+    private ComboBox<String> cboxLanguage;
 
 
     @Override
@@ -60,12 +63,27 @@ public class RptLedgerBookSummaryController implements MyInitialization {
         });
 
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
+    }
+
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        if (MainApp.locale.equals("en")) {
+        if (localeStr.equals("en")) {
             params.put("p_society_name", MainApp.identityDto.getSociety().getName());
         } else {
             params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
@@ -73,7 +91,8 @@ public class RptLedgerBookSummaryController implements MyInitialization {
         params.put("p_ledger_code", cboxLedgerName.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-        params.put("p_locale", MainApp.locale);
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK_SUMMARY, params);
         JasperViewer.viewReport(print, false);
     }

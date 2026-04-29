@@ -6,13 +6,16 @@ import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.task.ProfitLossTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -40,6 +43,8 @@ public class RptProfitLossController implements MyInitialization {
 
     @FXML
     private AnchorPane root;
+    @FXML
+    private ComboBox<String> cboxLanguage;
 
     private List<LedgerBalance> listPLExpense, listPLIncome;
 
@@ -58,12 +63,27 @@ public class RptProfitLossController implements MyInitialization {
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
+        } else {
+            cboxLanguage.setValue("English");
+        }
+    }
+
+    private String getLocaleString() {
+        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     @Override
     public void loadData() {
+        String localeStr = getLocaleString();
         ProfitLossTask profitLossTask = new ProfitLossTask(MainApp.identityDto.getSociety().getCode(),
-                dpFromDate.getValue(), dpToDate.getValue(), MainApp.locale);
+                dpFromDate.getValue(), dpToDate.getValue(), localeStr);
         profitLossTask.setOnSucceeded(ee -> {
             try {
                 List<LedgerBalance> list = profitLossTask.get();
@@ -72,14 +92,15 @@ public class RptProfitLossController implements MyInitialization {
                 }
                 Map<String, Object> param = new HashMap<>();
                 param.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-                if (MainApp.locale.equals("en")) {
+                if (localeStr.equals("en")) {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getName());
                 } else {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
                 param.put("p_from_date", dpFromDate.getValue());
                 param.put("p_to_date", dpToDate.getValue());
-                param.put("p_locale", MainApp.locale);
+                param.put("p_locale", localeStr);
+                param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
                 param.put("p_imcome_side", listPLIncome);
                 listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
