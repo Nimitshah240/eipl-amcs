@@ -455,7 +455,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Date Period:-"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{date_period}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement style="noto" x="245" y="6" width="220" height="15" uuid="65e5a5da-4bc8-461c-9828-7f7e001bda6d">
@@ -470,7 +470,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["old_data"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{old_data}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement style="noto" x="465" y="6" width="215" height="15" uuid="725c6aba-538e-4359-bfe4-bc24ae6cdefb">
@@ -485,7 +485,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["edit_data"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{edit_data}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement style="noto" x="680" y="6" width="130" height="15" uuid="aca68a0d-4837-4fbd-b47f-e981c04c50e0">

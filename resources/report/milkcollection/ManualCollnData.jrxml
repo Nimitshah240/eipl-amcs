@@ -551,7 +551,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{shift_report}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{manual_collection_report}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
