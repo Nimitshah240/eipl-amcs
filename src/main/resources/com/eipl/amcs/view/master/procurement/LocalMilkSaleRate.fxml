@@ -11,52 +11,59 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.procurement.controller.LocalMilkSaleRateController">
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center"
+           xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.procurement.controller.LocalMilkSaleRateController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%localmilksalerate" />
+                <Label styleClass="header-text" text="%localmilksalerate"/>
                 <TableView fx:id="tableLocalMilkSaleRates" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colWefDate" prefWidth="100.0" styleClass="cell-center-aligned" text="%wefdate" />
-                        <TableColumn fx:id="colMilkType" prefWidth="125.0" text="%milktype" />
-                        <TableColumn fx:id="colMilkClass" prefWidth="125.0" styleClass="cell-center-aligned" text="%milkclass" />
-                        <TableColumn fx:id="colRate" prefWidth="100.0" styleClass="cell-right-aligned" text="%rate" />
+                        <TableColumn fx:id="colWefDate" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%wefdate"/>
+                        <TableColumn fx:id="colMilkType" prefWidth="125.0" text="%milktype"/>
+                        <TableColumn fx:id="colMilkClass" prefWidth="125.0" styleClass="cell-center-aligned"
+                                     text="%milkclass"/>
+                        <TableColumn fx:id="colRate" prefWidth="100.0" styleClass="cell-right-aligned" text="%rate"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                  <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/add.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnDelete" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/delete.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/close.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
+                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnDelete" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
-               <padding>
-                  <Insets bottom="5.0" />
-               </padding>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
                 </HBox>
             </children>
         </VBox>

@@ -11,45 +11,50 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherSubLedgerPopupController">
+<StackPane fx:id="root" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.VoucherSubLedgerPopupController">
     <children>
         <VBox spacing="20.0" styleClass="pane-white-drop-border">
             <children>
-                <Label styleClass="header-text" text="%subledger" />
+                <Label styleClass="header-text" text="%subledger"/>
                 <TableView fx:id="tableData" focusTraversable="false" prefHeight="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" minWidth="100.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%code" />
-                        <TableColumn fx:id="colSubLedger" minWidth="100.0" prefWidth="100.0" styleClass="cell-center-aligned" text="%subledger" />
-                        <TableColumn fx:id="colType" prefWidth="75.0" styleClass="cell-center-aligned" text="%type" />
-                        <TableColumn fx:id="colAmount" minWidth="100.0" prefWidth="120.0" styleClass="cell-center-aligned" text="%amount" />
+                        <TableColumn fx:id="colCode" minWidth="100.0" prefWidth="120.0" styleClass="cell-center-aligned"
+                                     text="%code"/>
+                        <TableColumn fx:id="colSubLedger" minWidth="100.0" prefWidth="100.0"
+                                     styleClass="cell-center-aligned" text="%subledger"/>
+                        <TableColumn fx:id="colType" prefWidth="75.0" styleClass="cell-center-aligned" text="%type"/>
+                        <TableColumn fx:id="colAmount" minWidth="100.0" prefWidth="120.0"
+                                     styleClass="cell-center-aligned" text="%amount"/>
                     </columns>
                     <VBox.margin>
-                        <Insets />
+                        <Insets/>
                     </VBox.margin>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15">
                     <children>
-                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/close.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
             </children>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </padding>
         </VBox>
     </children>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
 </StackPane>

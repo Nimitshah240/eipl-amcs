@@ -455,7 +455,7 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setBirthDate(dpBirthDate.getValue());
         memberDetail.setAddress(txtAddress.getText());
         memberDetail.setPincode(txtPinCode.getText());
-        
+
         memberDetail.setOccupation(cboxOccupation.getValue() != null ? cboxOccupation.getValue().toString() : null);
         memberDetail.setNomineeName(txtNomineeName.getText());
         memberDetail.setNomineeRelation(cboxRelation.getValue() != null ? cboxRelation.getValue().getRelationship() : null);

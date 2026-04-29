@@ -19,292 +19,376 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.FinancialYearClosingController">
-	<padding>
-		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-	</padding>
-	<children>
-		<VBox prefHeight="600.0" prefWidth="800.0" styleClass="pane-border" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-			<children>
-				<Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="sub-header-btm-border" text="%yearend.title" />
-				<TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-					<tabs>
-						<Tab fx:id="tabStockValuation" text="%stockvaluation">
-							<content>
-								<VBox>
-									<children>
-										<TableView fx:id="tableStockValuation" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-											<columns>
-												<TableColumn fx:id="colStockValProductCode" prefWidth="150.0" text="%productcode" />
-												<TableColumn fx:id="colStockValProductName" prefWidth="350.0" text="%productname" />
-												<TableColumn fx:id="colStockValProductUnit" prefWidth="100.0" text="%unit" />
-												<TableColumn fx:id="colStockValProductStock" prefWidth="100.0" text="%stock" />
-												<TableColumn fx:id="colStockValAmount" prefWidth="150.0" text="%value" />
-											</columns>
-										</TableView>
-										<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-											<columnConstraints>
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
-												<ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
-											</columnConstraints>
-											<rowConstraints>
-												<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-											</rowConstraints>
-											<children>
-												<HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1">
-													<children>
-														<Label styleClass="label-bold" text="%total" />
-														<Label fx:id="lblStockValuation" styleClass="label-bold" text="0.0" GridPane.columnIndex="1" />
-													</children>
-													<padding>
-														<Insets right="10.0" />
-													</padding>
-												</HBox>
-												<HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" prefWidth="200.0" spacing="10.0">
-													<children>
-														<Button fx:id="btnExportValuation" contentDisplay="TOP" prefHeight="30.0" prefWidth="80.0" text="%export">
-                                             <graphic>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../images/excel.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic></Button>
-														<Button fx:id="btnPrintValuation" contentDisplay="TOP" prefHeight="30.0" prefWidth="80.0" text="%print">
-                                             <graphic>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../images/excel.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic></Button>
-													</children>
-													<GridPane.margin>
-														<Insets left="10.0" />
-													</GridPane.margin>
-												</HBox>
-											</children>
-										</GridPane>
-									</children>
-								</VBox>
-							</content>
-						</Tab>
-						<Tab fx:id="tabTrading" text="%tradingreport">
-							<content>
-								<VBox prefHeight="200.0" prefWidth="100.0">
-									<children>
-										<TableView fx:id="tableTrading" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-											<columns>
-												<TableColumn fx:id="colTradingLedgerCode" prefWidth="125.0" text="%ledgercode" />
-												<TableColumn fx:id="colTradingLedgerName" prefWidth="300.0" text="%ledgername" />
-												<TableColumn fx:id="colTradingDebit" prefWidth="125.0" text="%debit" />
-												<TableColumn fx:id="colTradingCredit" prefWidth="125.0" text="%credit" />
-												<TableColumn fx:id="colTradingBalance" prefWidth="125.0" text="%balance" />
-											</columns>
-										</TableView>
-										<GridPane>
-											<columnConstraints>
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-											</columnConstraints>
-											<rowConstraints>
-												<RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-											</rowConstraints>
-											<children>
-												<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-													<children>
-														<Button fx:id="btnExportTrading" prefHeight="30.0" prefWidth="80.0" text="%export" />
-														<Button fx:id="btnPrintTrading" prefHeight="30.0" prefWidth="80.0" text="%print" />
-													</children>
-													<GridPane.margin>
-														<Insets left="10.0" />
-													</GridPane.margin>
-												</HBox>
-												<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1">
-													<GridPane.margin>
-														<Insets right="10.0" />
-													</GridPane.margin>
-													<children>
-														<Label fx:id="lblTrading" styleClass="label-bold" text="%total" />
-														<Label fx:id="lblTotalTrading" styleClass="label-bold" text="0" />
-													</children>
-												</HBox>
-											</children>
-										</GridPane>
-									</children>
-								</VBox>
-							</content>
-						</Tab>
-						<Tab fx:id="tabPL" text="%profitloss">
-							<content>
-								<AnchorPane prefHeight="200.0" prefWidth="200.0">
-									<children>
-										<GridPane hgap="25.0" prefHeight="516.0" prefWidth="780.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-											<columnConstraints>
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-											</columnConstraints>
-											<rowConstraints>
-												<RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-											</rowConstraints>
-											<children>
-												<Label styleClass="label-bold" text="%yearend.incomeside">
-													<padding>
-														<Insets left="10.0" />
-													</padding>
-												</Label>
-												<Label styleClass="label-bold" text="%yearend.expenseside" GridPane.columnIndex="1" />
-												<TableView fx:id="tablePLIncome" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-													<columns>
-														<TableColumn fx:id="colPLLedgerIncome" prefWidth="250.0" text="%ledgername" />
-														<TableColumn fx:id="colPLAmountIncome" prefWidth="125.0" text="%amount" />
-													</columns>
-												</TableView>
-												<TableView fx:id="tablePLExpense" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-													<columns>
-														<TableColumn fx:id="colPLLedgerExpense" prefWidth="250.0" text="%ledgername" />
-														<TableColumn fx:id="colPLAmountExpense" prefWidth="125.0" text="%amount" />
-													</columns>
-												</TableView>
-												<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="2">
-													<padding>
-														<Insets left="10.0" />
-													</padding>
-													<children>
-														<Button fx:id="btnExportPL" prefHeight="30.0" prefWidth="80.0" text="%export">
-															<contextMenu>
-																<ContextMenu fx:id="contextMenuPLExport">
-																	<items>
-																		<MenuItem fx:id="menuItemPLIncome" mnemonicParsing="false" text="%yearend.incomeside" />
-																		<MenuItem fx:id="menuItemPLExpense" mnemonicParsing="false" text="%yearend.expenseside" />
-																	</items>
-																</ContextMenu>
-															</contextMenu>
-														</Button>
-														<Button fx:id="btnPrintPL" prefHeight="30.0" prefWidth="80.0" text="%print" />
-													</children>
-												</HBox>
-												<HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-													<padding>
-														<Insets right="10.0" />
-													</padding>
-													<children>
-														<Label fx:id="lblPl" styleClass="label-bold" />
-														<Label fx:id="lblPlBalance" styleClass="label-bold" text="0" />
-													</children>
-												</HBox>
-											</children>
-										</GridPane>
-									</children>
-								</AnchorPane>
-							</content>
-						</Tab>
-						<Tab fx:id="tabBS" text="%balancesheet">
-							<content>
-								<AnchorPane prefHeight="200.0" prefWidth="200.0">
-									<children>
-										<GridPane hgap="25.0" prefHeight="516.0" prefWidth="780.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-											<columnConstraints>
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-												<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-											</columnConstraints>
-											<rowConstraints>
-												<RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-												<RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-											</rowConstraints>
-											<children>
-												<Label styleClass="label-bold" text="%yearend.bsliabilityside">
-													<padding>
-														<Insets left="10.0" />
-													</padding>
-												</Label>
-												<Label styleClass="label-bold" text="%yearend.bsassetside" GridPane.columnIndex="1" />
-												<TableView fx:id="tableBSLiability" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-													<columns>
-														<TableColumn fx:id="colBSLiabilityLedgerName" prefWidth="250.0" text="%ledgername" />
-														<TableColumn fx:id="colBSLiabilityAmount" prefWidth="125.0" text="%amount" />
-													</columns>
-												</TableView>
-												<TableView fx:id="tableBSAsset" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-													<columns>
-														<TableColumn fx:id="colBSAssetLedgerName" prefWidth="250.0" text="%ledgername" />
-														<TableColumn fx:id="colBSAssetAmount" prefWidth="125.0" text="%amount" />
-													</columns>
-												</TableView>
-												<HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.rowIndex="2">
-													<padding>
-														<Insets left="10.0" />
-													</padding>
-													<children>
-														<Button fx:id="btnExportBS" prefHeight="30.0" prefWidth="80.0" text="%export">
-															<contextMenu>
-																<ContextMenu fx:id="contextMenuBSExport">
-																	<items>
-																		<MenuItem fx:id="menuItemBSLiability" mnemonicParsing="false" text="%yearend.incomeside" />
-																		<MenuItem fx:id="menuItemBSAsset" mnemonicParsing="false" text="%yearend.expenseside" />
-																	</items>
-																</ContextMenu>
-															</contextMenu>
-														</Button>
-														<Button fx:id="btnPrintBS" prefHeight="30.0" prefWidth="80.0" text="%print" />
-													</children>
-												</HBox>
-											</children>
-										</GridPane>
-									</children>
-								</AnchorPane>
-							</content>
-						</Tab>
-						<Tab fx:id="tabReview" text="%review">
-							<content>
-								<VBox prefHeight="200.0" prefWidth="100.0">
-									<children>
-                              <HBox AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" VBox.vgrow="ALWAYS">
-                                 <children>
-      										<TableView fx:id="tableReview" prefHeight="463.0" prefWidth="760.0">
-      											<columns>
-      												<TableColumn fx:id="colReviewLedgerName" prefWidth="300.0" text="%ledgername" />
-      												<TableColumn fx:id="colReviewLedgerType" prefWidth="100.0" text="%type" />
-      												<TableColumn fx:id="colReviewLedgerBalance" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%balance" />
-      											</columns>
-      										</TableView>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                    <TableView fx:id="tableReview1" prefHeight="463.0" prefWidth="760.0">
-                                       <columns>
-                                          <TableColumn fx:id="colReviewLedgerName1" prefWidth="300.0" text="%ledgername" />
-                                          <TableColumn fx:id="colReviewLedgerType1" prefWidth="100.0" text="%type" />
-                                          <TableColumn fx:id="colReviewLedgerBalance1" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="100.0" text="%balance" />
-                                       </columns>
-                                    </TableView>
-                                 </children>
-                              </HBox>
-										<AnchorPane>
-											<children>
-												<HBox spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
-													<children>
-														<Button fx:id="btnReviewSave" prefHeight="30.0" prefWidth="80.0" text="%finalize" />
-														<Button fx:id="btnReviewClose" prefHeight="30.0" prefWidth="80.0" text="%close" />
-													</children>
-												</HBox>
-												<HBox spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-													<children>
-                                          <Button fx:id="btnFilter" prefHeight="30.0" prefWidth="80.0" text="%filter" />
-														<Button fx:id="btnSubLeder" prefHeight="30.0" prefWidth="80.0" text="%subledger" />
-														<Button fx:id="btnExportReview" prefHeight="30.0" prefWidth="80.0" text="%export" />
-													</children>
-												</HBox>
-											</children>
-										</AnchorPane>
-									</children>
-								</VBox>
-							</content>
-						</Tab>
-					</tabs>
-				</TabPane>
-			</children>
-		</VBox>
-	</children>
+<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.eipl.amcs.master.account.controller.FinancialYearClosingController">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <children>
+        <VBox prefHeight="600.0" prefWidth="800.0" styleClass="pane-border" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
+                       styleClass="sub-header-btm-border" text="%yearend.title"/>
+                <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE"
+                         VBox.vgrow="ALWAYS">
+                    <tabs>
+                        <Tab fx:id="tabStockValuation" text="%stockvaluation">
+                            <content>
+                                <VBox>
+                                    <children>
+                                        <TableView fx:id="tableStockValuation" prefHeight="200.0" prefWidth="200.0"
+                                                   VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="colStockValProductCode" prefWidth="150.0"
+                                                             text="%productcode"/>
+                                                <TableColumn fx:id="colStockValProductName" prefWidth="350.0"
+                                                             text="%productname"/>
+                                                <TableColumn fx:id="colStockValProductUnit" prefWidth="100.0"
+                                                             text="%unit"/>
+                                                <TableColumn fx:id="colStockValProductStock" prefWidth="100.0"
+                                                             text="%stock"/>
+                                                <TableColumn fx:id="colStockValAmount" prefWidth="150.0" text="%value"/>
+                                            </columns>
+                                        </TableView>
+                                        <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0"
+                                                                   prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0"
+                                                                   prefWidth="100.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1">
+                                                    <children>
+                                                        <Label styleClass="label-bold" text="%total"/>
+                                                        <Label fx:id="lblStockValuation" styleClass="label-bold"
+                                                               text="0.0" GridPane.columnIndex="1"/>
+                                                    </children>
+                                                    <padding>
+                                                        <Insets right="10.0"/>
+                                                    </padding>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308"
+                                                      prefWidth="200.0" spacing="10.0">
+                                                    <children>
+                                                        <Button fx:id="btnExportValuation" contentDisplay="TOP"
+                                                                prefHeight="30.0" prefWidth="80.0" text="%export">
+                                                            <graphic>
+                                                                <ImageView fitHeight="40.0" fitWidth="40.0"
+                                                                           pickOnBounds="true" preserveRatio="true">
+                                                                    <image>
+                                                                        <Image url="@../../images/excel.png"/>
+                                                                    </image>
+                                                                </ImageView>
+                                                            </graphic>
+                                                        </Button>
+                                                        <Button fx:id="btnPrintValuation" contentDisplay="TOP"
+                                                                prefHeight="30.0" prefWidth="80.0" text="%print">
+                                                            <graphic>
+                                                                <ImageView fitHeight="40.0" fitWidth="40.0"
+                                                                           pickOnBounds="true" preserveRatio="true">
+                                                                    <image>
+                                                                        <Image url="@../../images/excel.png"/>
+                                                                    </image>
+                                                                </ImageView>
+                                                            </graphic>
+                                                        </Button>
+                                                    </children>
+                                                    <GridPane.margin>
+                                                        <Insets left="10.0"/>
+                                                    </GridPane.margin>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="tabTrading" text="%tradingreport">
+                            <content>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <TableView fx:id="tableTrading" prefHeight="200.0" prefWidth="200.0"
+                                                   VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="colTradingLedgerCode" prefWidth="125.0"
+                                                             text="%ledgercode"/>
+                                                <TableColumn fx:id="colTradingLedgerName" prefWidth="300.0"
+                                                             text="%ledgername"/>
+                                                <TableColumn fx:id="colTradingDebit" prefWidth="125.0" text="%debit"/>
+                                                <TableColumn fx:id="colTradingCredit" prefWidth="125.0" text="%credit"/>
+                                                <TableColumn fx:id="colTradingBalance" prefWidth="125.0"
+                                                             text="%balance"/>
+                                            </columns>
+                                        </TableView>
+                                        <GridPane>
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                                                      spacing="10.0">
+                                                    <children>
+                                                        <Button fx:id="btnExportTrading" prefHeight="30.0"
+                                                                prefWidth="80.0" text="%export"/>
+                                                        <Button fx:id="btnPrintTrading" prefHeight="30.0"
+                                                                prefWidth="80.0" text="%print"/>
+                                                    </children>
+                                                    <GridPane.margin>
+                                                        <Insets left="10.0"/>
+                                                    </GridPane.margin>
+                                                </HBox>
+                                                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0"
+                                                      spacing="10.0" GridPane.columnIndex="1">
+                                                    <GridPane.margin>
+                                                        <Insets right="10.0"/>
+                                                    </GridPane.margin>
+                                                    <children>
+                                                        <Label fx:id="lblTrading" styleClass="label-bold"
+                                                               text="%total"/>
+                                                        <Label fx:id="lblTotalTrading" styleClass="label-bold"
+                                                               text="0"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="tabPL" text="%profitloss">
+                            <content>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <GridPane hgap="25.0" prefHeight="516.0" prefWidth="780.0"
+                                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0"
+                                                                vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <Label styleClass="label-bold" text="%yearend.incomeside">
+                                                    <padding>
+                                                        <Insets left="10.0"/>
+                                                    </padding>
+                                                </Label>
+                                                <Label styleClass="label-bold" text="%yearend.expenseside"
+                                                       GridPane.columnIndex="1"/>
+                                                <TableView fx:id="tablePLIncome" prefHeight="200.0" prefWidth="200.0"
+                                                           GridPane.rowIndex="1">
+                                                    <columns>
+                                                        <TableColumn fx:id="colPLLedgerIncome" prefWidth="250.0"
+                                                                     text="%ledgername"/>
+                                                        <TableColumn fx:id="colPLAmountIncome" prefWidth="125.0"
+                                                                     text="%amount"/>
+                                                    </columns>
+                                                </TableView>
+                                                <TableView fx:id="tablePLExpense" prefHeight="200.0" prefWidth="200.0"
+                                                           GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                    <columns>
+                                                        <TableColumn fx:id="colPLLedgerExpense" prefWidth="250.0"
+                                                                     text="%ledgername"/>
+                                                        <TableColumn fx:id="colPLAmountExpense" prefWidth="125.0"
+                                                                     text="%amount"/>
+                                                    </columns>
+                                                </TableView>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                                                      spacing="10.0" GridPane.rowIndex="2">
+                                                    <padding>
+                                                        <Insets left="10.0"/>
+                                                    </padding>
+                                                    <children>
+                                                        <Button fx:id="btnExportPL" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%export">
+                                                            <contextMenu>
+                                                                <ContextMenu fx:id="contextMenuPLExport">
+                                                                    <items>
+                                                                        <MenuItem fx:id="menuItemPLIncome"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%yearend.incomeside"/>
+                                                                        <MenuItem fx:id="menuItemPLExpense"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%yearend.expenseside"/>
+                                                                    </items>
+                                                                </ContextMenu>
+                                                            </contextMenu>
+                                                        </Button>
+                                                        <Button fx:id="btnPrintPL" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%print"/>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0"
+                                                      spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                    <padding>
+                                                        <Insets right="10.0"/>
+                                                    </padding>
+                                                    <children>
+                                                        <Label fx:id="lblPl" styleClass="label-bold"/>
+                                                        <Label fx:id="lblPlBalance" styleClass="label-bold" text="0"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="tabBS" text="%balancesheet">
+                            <content>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <GridPane hgap="25.0" prefHeight="516.0" prefWidth="780.0"
+                                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0"
+                                                                vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <Label styleClass="label-bold" text="%yearend.bsliabilityside">
+                                                    <padding>
+                                                        <Insets left="10.0"/>
+                                                    </padding>
+                                                </Label>
+                                                <Label styleClass="label-bold" text="%yearend.bsassetside"
+                                                       GridPane.columnIndex="1"/>
+                                                <TableView fx:id="tableBSLiability" prefHeight="200.0" prefWidth="200.0"
+                                                           GridPane.rowIndex="1">
+                                                    <columns>
+                                                        <TableColumn fx:id="colBSLiabilityLedgerName" prefWidth="250.0"
+                                                                     text="%ledgername"/>
+                                                        <TableColumn fx:id="colBSLiabilityAmount" prefWidth="125.0"
+                                                                     text="%amount"/>
+                                                    </columns>
+                                                </TableView>
+                                                <TableView fx:id="tableBSAsset" prefHeight="200.0" prefWidth="200.0"
+                                                           GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                    <columns>
+                                                        <TableColumn fx:id="colBSAssetLedgerName" prefWidth="250.0"
+                                                                     text="%ledgername"/>
+                                                        <TableColumn fx:id="colBSAssetAmount" prefWidth="125.0"
+                                                                     text="%amount"/>
+                                                    </columns>
+                                                </TableView>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                                                      spacing="10.0" GridPane.rowIndex="2">
+                                                    <padding>
+                                                        <Insets left="10.0"/>
+                                                    </padding>
+                                                    <children>
+                                                        <Button fx:id="btnExportBS" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%export">
+                                                            <contextMenu>
+                                                                <ContextMenu fx:id="contextMenuBSExport">
+                                                                    <items>
+                                                                        <MenuItem fx:id="menuItemBSLiability"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%yearend.incomeside"/>
+                                                                        <MenuItem fx:id="menuItemBSAsset"
+                                                                                  mnemonicParsing="false"
+                                                                                  text="%yearend.expenseside"/>
+                                                                    </items>
+                                                                </ContextMenu>
+                                                            </contextMenu>
+                                                        </Button>
+                                                        <Button fx:id="btnPrintBS" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%print"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="tabReview" text="%review">
+                            <content>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                    <children>
+                                        <HBox AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="10.0"
+                                              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"
+                                              VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <TableView fx:id="tableReview" prefHeight="463.0" prefWidth="760.0">
+                                                    <columns>
+                                                        <TableColumn fx:id="colReviewLedgerName" prefWidth="300.0"
+                                                                     text="%ledgername"/>
+                                                        <TableColumn fx:id="colReviewLedgerType" prefWidth="100.0"
+                                                                     text="%type"/>
+                                                        <TableColumn fx:id="colReviewLedgerBalance"
+                                                                     maxWidth="1.7976931348623157E308" minWidth="100.0"
+                                                                     prefWidth="100.0" text="%balance"/>
+                                                    </columns>
+                                                </TableView>
+                                                <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                                                <TableView fx:id="tableReview1" prefHeight="463.0" prefWidth="760.0">
+                                                    <columns>
+                                                        <TableColumn fx:id="colReviewLedgerName1" prefWidth="300.0"
+                                                                     text="%ledgername"/>
+                                                        <TableColumn fx:id="colReviewLedgerType1" prefWidth="100.0"
+                                                                     text="%type"/>
+                                                        <TableColumn fx:id="colReviewLedgerBalance1"
+                                                                     maxWidth="1.7976931348623157E308" minWidth="100.0"
+                                                                     prefWidth="100.0" text="%balance"/>
+                                                    </columns>
+                                                </TableView>
+                                            </children>
+                                        </HBox>
+                                        <AnchorPane>
+                                            <children>
+                                                <HBox spacing="10.0" AnchorPane.bottomAnchor="10.0"
+                                                      AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                    <children>
+                                                        <Button fx:id="btnReviewSave" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%finalize"/>
+                                                        <Button fx:id="btnReviewClose" prefHeight="30.0"
+                                                                prefWidth="80.0" text="%close"/>
+                                                    </children>
+                                                </HBox>
+                                                <HBox spacing="5.0" AnchorPane.bottomAnchor="10.0"
+                                                      AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                    <children>
+                                                        <Button fx:id="btnFilter" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%filter"/>
+                                                        <Button fx:id="btnSubLeder" prefHeight="30.0" prefWidth="80.0"
+                                                                text="%subledger"/>
+                                                        <Button fx:id="btnExportReview" prefHeight="30.0"
+                                                                prefWidth="80.0" text="%export"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </AnchorPane>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
