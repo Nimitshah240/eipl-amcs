@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.VoucherTypeController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.VoucherTypeController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%vouchertype" />
+                <Label styleClass="header-text" text="%vouchertype"/>
                 <TableView fx:id="tableVoucherType" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="125.0" styleClass="cell-center-aligned" text="%code" />
-                        <TableColumn fx:id="colName" prefWidth="200.0" text="%name" />
-                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname" />
-                        <TableColumn fx:id="colVoucherType" prefWidth="100.0" styleClass="cell-center-aligned" text="%vouchertype" />
-                        <TableColumn fx:id="colCreditDebit" prefWidth="100.0" styleClass="cell-center-aligned" text="%creditdebit" />
-                        <TableColumn fx:id="colStatus" prefWidth="100.0" styleClass="cell-center-aligned" text="%status" />
+                        <TableColumn fx:id="colCode" prefWidth="125.0" styleClass="cell-center-aligned" text="%code"/>
+                        <TableColumn fx:id="colName" prefWidth="200.0" text="%name"/>
+                        <TableColumn fx:id="colLocalName" prefWidth="200.0" text="%localname"/>
+                        <TableColumn fx:id="colVoucherType" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%vouchertype"/>
+                        <TableColumn fx:id="colCreditDebit" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%creditdebit"/>
+                        <TableColumn fx:id="colStatus" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%status"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
@@ -69,6 +74,9 @@
                             </graphic>
                         </Button>
                     </children>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
                 </HBox>
             </children>
         </VBox>

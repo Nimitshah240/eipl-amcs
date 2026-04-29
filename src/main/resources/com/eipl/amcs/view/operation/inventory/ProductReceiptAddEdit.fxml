@@ -44,9 +44,9 @@
                     </rowConstraints>
                     <children>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%grnno" />
-                        <Label text="%party" GridPane.rowIndex="2" />
+                        <Label text="%vendor.name" GridPane.rowIndex="2" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%challanno" GridPane.columnIndex="3" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%challandate" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%date" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <E_TextField fx:id="txtGrnNo" disable="true" GridPane.rowIndex="1" />
 
                         <E_TextField fx:id="txtBillNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -87,8 +87,8 @@
                         </HBox>
 
 
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%productname" GridPane.rowIndex="5" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%Quantity" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%item" GridPane.rowIndex="5" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%quantity" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%amount" GridPane.rowIndex="7" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%billno" GridPane.columnIndex="1" />
@@ -103,7 +103,7 @@
                 <TableView fx:id="tableProductReceiptTransaction" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colProductCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%productcode" visible="false" />
-                        <TableColumn fx:id="colProductName" minWidth="150.0" prefWidth="158.0" text="%productname" />
+                        <TableColumn fx:id="colProductName" minWidth="150.0" prefWidth="158.0" text="%item.name" />
                         <TableColumn fx:id="colQuantity" minWidth="78.0" prefWidth="95.0" styleClass="cell-right-aligned" text="%quantity" />
                         <TableColumn fx:id="colRate" minWidth="79.0" prefWidth="90.0" styleClass="cell-center-aligned" text="%rate" />
                         <TableColumn fx:id="colAmount" minWidth="88.0" prefWidth="106.0" styleClass="cell-right-aligned" text="%amount" />

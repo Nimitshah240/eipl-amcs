@@ -11,100 +11,128 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.operation.controller.MemberController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.operation.controller.MemberController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-            <HBox alignment="TOP_RIGHT">
-               <children>
-                      <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%member" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" " HBox.hgrow="ALWAYS" />
-                  <E_TextField fx:id="txtCode">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                  </E_TextField>
-                  <Button fx:id="btnClear" mnemonicParsing="false" text="Clear">
-                     <HBox.margin>
-                        <Insets right="5.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+                <HBox alignment="TOP_RIGHT">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                               styleClass="header-text" text="%member" HBox.hgrow="ALWAYS"/>
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" "
+                               HBox.hgrow="ALWAYS"/>
+                        <E_TextField fx:id="txtCode" maxHeight="1.7976931348623157E308"
+                                     maxWidth="1.7976931348623157E308">
+                            <HBox.margin>
+                                <Insets right="10.0"/>
+                            </HBox.margin>
+                        </E_TextField>
+                        <Button fx:id="btnClear" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="Clear">
+                            <HBox.margin>
+                                <Insets right="5.0"/>
+                            </HBox.margin>
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/clean.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                    <padding>
+                        <Insets top="5.0"/>
+                    </padding>
+                </HBox>
                 <TableView fx:id="tableMember" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%code" />
-                        <TableColumn fx:id="colFirstName" prefWidth="300.0" text="%name" />
-                  <TableColumn fx:id="colLocalName" prefWidth="250.0" text="%localname" />
-<!--                        <TableColumn fx:id="colMiddleName" prefWidth="150.0" text="%middlename" />-->
-<!--                        <TableColumn fx:id="colLastName" prefWidth="150.0" text="%lastname" />-->
-                  <TableColumn fx:id="colAccountNo" prefWidth="200.0" text="%accountno" />
-                        <TableColumn fx:id="colMilkType" prefWidth="100.0" text="%milktype" />
-                        <TableColumn fx:id="colMobileNo" prefWidth="125.0" styleClass="cell-center-aligned" text="%mobileno" />
-                        <TableColumn fx:id="colMemberType" prefWidth="125.0" styleClass="cell-center-aligned" text="%membertype" />
-                        <TableColumn fx:id="colIsActive" prefWidth="100.0" styleClass="cell-center-aligned" text="%isactive" />
+                        <TableColumn fx:id="colCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%code"/>
+                        <TableColumn fx:id="colFirstName" prefWidth="300.0" text="%name"/>
+                        <TableColumn fx:id="colLocalName" prefWidth="250.0" text="%localname"/>
+                        <!--                        <TableColumn fx:id="colMiddleName" prefWidth="150.0" text="%middlename" />-->
+                        <!--                        <TableColumn fx:id="colLastName" prefWidth="150.0" text="%lastname" />-->
+                        <TableColumn fx:id="colAccountNo" prefWidth="200.0" text="%accountno"/>
+                        <TableColumn fx:id="colMilkType" prefWidth="100.0" text="%milktype"/>
+                        <TableColumn fx:id="colMobileNo" prefWidth="125.0" styleClass="cell-center-aligned"
+                                     text="%mobileno"/>
+                        <TableColumn fx:id="colMemberType" prefWidth="125.0" styleClass="cell-center-aligned"
+                                     text="%membertype"/>
+                        <TableColumn fx:id="colIsActive" prefWidth="100.0" styleClass="cell-center-aligned"
+                                     text="%isactive"/>
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
                     <children>
-                  <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/add.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/edit.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/delete.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/close.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnImport" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%import">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/import.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></Button>
-                  <Button fx:id="btnExport" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%export">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/excel.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></Button>
+                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/edit.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER"
+                               maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                               HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnImport" contentDisplay="TOP" maxHeight="1.7976931348623157E308"
+                                maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%import">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/import.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnExport" contentDisplay="TOP" maxHeight="1.7976931348623157E308"
+                                maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%export">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/excel.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
                 </HBox>
             </children>
         </VBox>

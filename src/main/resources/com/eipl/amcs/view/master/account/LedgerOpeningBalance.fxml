@@ -8,6 +8,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,67 +17,109 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.LedgerOpeningBalanceController">
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.account.controller.LedgerOpeningBalanceController">
     <children>
-        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0">
+        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0"
+              prefWidth="550.0" spacing="5.0">
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%ledgeropeningbalance">
+                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
+                               styleClass="header-text" text="%ledgeropeningbalance">
                             <HBox.margin>
-                                <Insets left="5.0" />
+                                <Insets left="5.0"/>
                             </HBox.margin>
                         </Label>
-                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
-                        <HBox alignment="CENTER_RIGHT" spacing="5.0" />
+                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308"
+                               minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS"/>
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0"/>
                     </children>
                 </HBox>
-                    <GridPane fx:id="gridMaster" hgap="10.0">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER" />
-                            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                        </rowConstraints>
-                        <children>
-                            <Label text="%ledger" GridPane.columnIndex="1" />
-                  <Label text="%financialyear" />
-                  <Label text="%type" GridPane.columnIndex="2" />
-                  <Label text="%balance" GridPane.columnIndex="3" />
-                            <E_ComboBox fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                  <E_ComboBox fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                            <E_ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                            <E_TextField fx:id="txtBalance" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        </children>
-                    </GridPane>
+                <GridPane fx:id="gridMaster" hgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="%ledger" GridPane.columnIndex="1"/>
+                        <Label text="%financialyear"/>
+                        <Label text="%type" GridPane.columnIndex="2"/>
+                        <Label text="%balance" GridPane.columnIndex="3"/>
+                        <E_ComboBox fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
+                        <E_ComboBox fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308"
+                                    GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <E_ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
+                                    GridPane.rowIndex="1"/>
+                        <E_TextField fx:id="txtBalance" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    </children>
+                </GridPane>
                 <TableView fx:id="tableData" focusTraversable="false" prefHeight="100.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colFinancialYear" prefWidth="120.0" text="%financialyear" />
-                        <TableColumn fx:id="colLedger" prefWidth="120.0" text="%ledger" />
-                        <TableColumn fx:id="colType" prefWidth="120.0" text="%type" />
-                  <TableColumn fx:id="colBalance" prefWidth="120.0" text="%balance" />
+                        <TableColumn fx:id="colFinancialYear" prefWidth="120.0" text="%financialyear"/>
+                        <TableColumn fx:id="colLedger" prefWidth="120.0" text="%ledger"/>
+                        <TableColumn fx:id="colType" prefWidth="120.0" text="%type"/>
+                        <TableColumn fx:id="colBalance" prefWidth="120.0" text="%balance"/>
                     </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
                 <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
                     <children>
-                  <E_Button fx:id="btnSave" minWidth="75.0" text="%add" />
-                  <E_Button fx:id="btnDelete" minWidth="75.0" text="%delete" />
-                  <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
-                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnImport" minWidth="75.0" mnemonicParsing="true" text="%import" />
+                        <E_Button fx:id="btnSave" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                  prefHeight="25.0" prefWidth="76.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/save.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <E_Button fx:id="btnDelete" contentDisplay="TOP" minWidth="75.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                  prefHeight="30.0" prefWidth="80.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnImport" contentDisplay="TOP" minWidth="75.0" mnemonicParsing="true"
+                                text="%import">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/excel.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
             </children>
-         <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </padding>
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+            </padding>
         </VBox>
     </children>
 </StackPane>

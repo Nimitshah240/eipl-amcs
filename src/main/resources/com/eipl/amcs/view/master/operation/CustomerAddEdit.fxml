@@ -9,6 +9,8 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -17,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11"
+<AnchorPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.eipl.amcs.master.operation.controller.CustomerAddEditController">
     <padding>
@@ -180,10 +182,28 @@
                         </GridPane>
                         <HBox prefWidth="540.0" spacing="5.0">
                             <children>
-                                <Button fx:id="btnSaveUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                        styleClass="button-primary" text="%save"/>
-                                <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                        text="%close"/>
+                                <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0"
+                                        prefHeight="50.0" prefWidth="70.0" text="%save">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/save.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                        prefWidth="70.0" text="%close">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/close.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
                             </children>
                         </HBox>
                     </children>

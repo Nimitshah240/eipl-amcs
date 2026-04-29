@@ -2,17 +2,16 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-
 
 <StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -25,9 +24,21 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                styleClass="header-text" text="%ledgergroup"/>
                         <Label maxWidth="1.7976931348623157E308" styleClass="header-text" HBox.hgrow="ALWAYS"/>
-                        <E_TextField fx:id="txtSearch"/>
-                        <E_Button fx:id="btnClear" text="%clear"/>
+                        <E_TextField fx:id="txtSearch" maxHeight="1.7976931348623157E308"
+                                     maxWidth="1.7976931348623157E308"/>
+                        <E_Button fx:id="btnClear" minHeight="35.0" minWidth="100.0" text="%clear">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/clean.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
                     </children>
+                    <padding>
+                        <Insets top="5.0"/>
+                    </padding>
                 </HBox>
                 <TableView fx:id="tableLedgerGroup" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
@@ -82,6 +93,9 @@
                             </graphic>
                         </Button>
                     </children>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
                 </HBox>
             </children>
         </VBox>
