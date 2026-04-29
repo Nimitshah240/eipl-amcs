@@ -66,7 +66,7 @@
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15.0">
                     <children>
-                  <Button fx:id="btnClose1" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close">
+                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>

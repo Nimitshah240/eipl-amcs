@@ -145,8 +145,8 @@
                                 </GridPane>
                                 <HBox fx:id="btnPanel" alignment="BOTTOM_RIGHT" focusTraversable="true" spacing="10.0" GridPane.columnIndex="4" GridPane.columnSpan="3" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
                                     <children>
-                                        <E_Button fx:id="btnEdit" disable="true" layoutX="100.0" layoutY="10.0" minWidth="75.0" text="%edit" visible="false" />
-                              <E_Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
+                                        <Button fx:id="btnEdit" disable="true" layoutX="100.0" layoutY="10.0" minWidth="75.0" text="%edit" visible="false" />
+                              <Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
                                  <graphic>
                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -154,8 +154,8 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
-                              </E_Button>
-                              <E_Button fx:id="btnDelete" disable="true" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%delete">
+                              </Button>
+                              <Button fx:id="btnDelete" disable="true" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%delete">
                                  <graphic>
                                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -163,13 +163,13 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
-                              </E_Button>
+                              </Button>
                                     </children>
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin>
                                 </HBox>
-                        <E_Button fx:id="btnCopy" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%copy" GridPane.rowIndex="5">
+                        <Button fx:id="btnCopy" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%copy" GridPane.rowIndex="5">
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -177,7 +177,7 @@
                                  </image>
                               </ImageView>
                            </graphic>
-                        </E_Button>
+                        </Button>
                             </children>
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="17.0" prefWidth="100.0" />
@@ -241,7 +241,7 @@
             </GridPane>
                 <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" spacing="10.0">
                     <children>
-                  <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
+                  <E_Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -249,8 +249,8 @@
                            </image>
                         </ImageView>
                      </graphic>
-                  </Button>
-                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                  </E_Button>
+                  <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -258,7 +258,7 @@
                            </image>
                         </ImageView>
                      </graphic>
-                  </Button>
+                  </E_Button>
                     </children>
                <padding>
                   <Insets bottom="5.0" left="10.0" top="5.0" />

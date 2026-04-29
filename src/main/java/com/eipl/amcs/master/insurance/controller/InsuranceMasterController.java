@@ -58,7 +58,7 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
     @FXML
     private TableColumn<InsuranceMaster, Integer> colMinAge, colMaxAge;
     @FXML
-    private E_Button btnView, btnFinalize, btnExport;
+    private E_Button btnView, btnFinalize, btnExport,btnClose;
     private ResourceBundle resourceBundle;
     private List<InsuranceMaster> insuranceMasterList;
     private List<InsuranceDetail> insuranceDetailList;
@@ -109,7 +109,9 @@ public class InsuranceMasterController implements MyInitialization, PopupCallbac
                     finalizeInsurance();
                 }
             });
-
+            btnClose.setOnAction(e -> {
+                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+            });
             btnExport.setOnAction(event -> {
                 if (propInsuranceMasterDto.get() != null) {
                     insuranceMaster = propInsuranceMasterDto.get();
