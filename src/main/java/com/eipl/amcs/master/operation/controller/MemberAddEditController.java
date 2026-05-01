@@ -378,7 +378,9 @@ public class MemberAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("member"),
                         resourceBundle.getString("member.insert.successful"));
                 alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Member.fxml")));
+                this.callback.reloadData(true);
+                this.stage.close();
+//                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Member.fxml")));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -400,7 +402,9 @@ public class MemberAddEditController implements MyInitialization {
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("member"),
                         resourceBundle.getString("member.update.successful"));
                 alert.createAlert();
-                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Member.fxml")));
+                this.callback.reloadData(true);
+                this.stage.close();
+//                MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Member.fxml")));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -463,11 +467,11 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setEducated(chkIsEducated.isSelected());
         memberDetail.setCookingGas(chkIsCookingGas.isSelected());
         memberDetail.setLand(txtLand.getText());
-        memberDetail.setLandType(cboxLandType.getSelectionModel().getSelectedItem().toString());
-        memberDetail.setFarmerType(cboxFarmerType.getSelectionModel().getSelectedItem().toString());
-        memberDetail.setMaritalStatus(cboxMaritalStatus.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setLandType(cboxLandType.getSelectionModel().getSelectedItem() == null ? null : cboxLandType.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setFarmerType(cboxFarmerType.getSelectionModel().getSelectedItem() == null ? null : cboxFarmerType.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setMaritalStatus(cboxMaritalStatus.getSelectionModel().getSelectedItem() == null ? null : cboxMaritalStatus.getSelectionModel().getSelectedItem().toString());
         memberDetail.setRegistrationNo(txtRegistrationNo.getText());
-        memberDetail.setMemberTypeCode(String.valueOf(cboxMemberType.getSelectionModel().getSelectedItem().getCode()));
+        memberDetail.setMemberTypeCode(cboxMemberType.getSelectionModel().getSelectedItem() == null ? null : String.valueOf(cboxMemberType.getSelectionModel().getSelectedItem().getCode()));
         //  memberDetail.setState(cboxState.getValue() == null ? MainApp.identityDto.getSociety().getState() : cboxState.getValue());
         // memberDetail.setDistrict(cboxDistrict.getValue() == null ? MainApp.identityDto.getSociety().getDistrict() : cboxDistrict.getValue());
         //memberDetail.setSubDistrict(cboxSubDistrict.getValue() == null ? MainApp.identityDto.getSociety().getSubDistrict() : cboxSubDistrict.getValue());
@@ -817,7 +821,7 @@ public class MemberAddEditController implements MyInitialization {
 //        txtMiddleLocalName.setText(member.getMiddleNameLocal());
 //        txtLocalLastName.setText(member.getLastNameLocal());
         txtMobileNo.setText(member.getMobileNo());
-//        txtGroupCode.setText(member.getxCol1().replace(MainApp.identityDto.getSociety().getCode(), ""));
+        txtGroupCode.setText(member.getxCol1().replace(MainApp.identityDto.getSociety().getCode(), ""));
         if (member.getCreditLimit() != null)
             txtCreditLimit.setText(member.getCreditLimit().toString());
 

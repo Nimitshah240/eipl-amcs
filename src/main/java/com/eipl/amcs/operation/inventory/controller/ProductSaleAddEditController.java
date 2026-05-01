@@ -227,25 +227,36 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     }
                 });
 
-        txtQuantity.focusedProperty().
-
-                addListener((ob, oldVal, newVal) ->
-
-                {
-                    if (!newVal) {
-                        if (!txtQuantity.getText().isEmpty()) {
-                            if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
-                                txtQuantity.setText("");
-                                txtAmount.setText("");
-                                txtNetAmount.setText("");
-                                FocusUtils.requestFocus(txtQuantity);
-                                return;
-                            }
-                        }
-                        calculateAmount();
-                        calculateTaxAmount();
+        txtRate.focusedProperty().addListener((ob, oldVal, newVal) -> {
+            if (!newVal) {
+                if (!txtQuantity.getText().isEmpty()) {
+                    if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
+                        txtQuantity.setText("");
+                        txtAmount.setText("");
+                        txtNetAmount.setText("");
+                        FocusUtils.requestFocus(txtQuantity);
+                        return;
                     }
-                });
+                }
+                calculateAmount();
+                calculateTaxAmount();
+            }
+        });
+        txtQuantity.focusedProperty().addListener((ob, oldVal, newVal) -> {
+            if (!newVal) {
+                if (!txtQuantity.getText().isEmpty()) {
+                    if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
+                        txtQuantity.setText("");
+                        txtAmount.setText("");
+                        txtNetAmount.setText("");
+                        FocusUtils.requestFocus(txtQuantity);
+                        return;
+                    }
+                }
+                calculateAmount();
+                calculateTaxAmount();
+            }
+        });
 
         rbtnCredit.setOnAction(event ->
 
@@ -336,10 +347,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
     @Override
     public void clearControls() {
-        txtRate.setText("");
-        txtAmount.setText("");
-        txtQuantity.setText("");
-        txtNetAmount.setText("");
+        txtRate.setText("0");
+        txtAmount.setText("0");
+        txtQuantity.setText("0");
+        txtNetAmount.setText("0");
         cboxProduct.setValue(null);
         FocusUtils.requestFocus(cboxProduct);
     }

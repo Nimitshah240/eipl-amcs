@@ -17,12 +17,12 @@
     <children>
         <VBox spacing="10.0" styleClass="">
             <children>
-                <HBox>
-                    <children>
-                        <Label styleClass="header-text" text="%shareissue" />
-                        <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS" />
-                    </children>
-                </HBox>
+<!--                <HBox>-->
+<!--                    <children>-->
+<!--                        <Label styleClass="header-text" text="%shareissue" />-->
+<!--                        <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS" />-->
+<!--                    </children>-->
+<!--                </HBox>-->
                 <GridPane hgap="10.0" vgap="5.0" VBox.vgrow="ALWAYS">
                     <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS" percentWidth="49.0" />

@@ -17,7 +17,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -100,7 +99,7 @@
                                                                text="%contactdetail" GridPane.rowIndex="10"
                                                                GridPane.valignment="BOTTOM"/>
                                                         <Label maxHeight="1.7976931348623157E308"
-                                                               maxWidth="1.7976931348623157E308" text="%defaultmilktype"
+                                                               maxWidth="1.7976931348623157E308" text="%milk"
                                                                GridPane.rowIndex="4"/>
                                                         <Label maxHeight="1.7976931348623157E308"
                                                                maxWidth="1.7976931348623157E308" text="%gender"
@@ -409,10 +408,10 @@
                                                                maxWidth="1.7976931348623157E308" text="%land"
                                                                GridPane.rowIndex="8"/>
                                                         <Label maxHeight="1.7976931348623157E308"
-                                                               maxWidth="1.7976931348623157E308" text="%landtype"
+                                                               maxWidth="1.7976931348623157E308" text="%type"
                                                                GridPane.columnIndex="1" GridPane.rowIndex="8"/>
                                                         <Label maxHeight="1.7976931348623157E308"
-                                                               maxWidth="1.7976931348623157E308" text="%farmertype"
+                                                               maxWidth="1.7976931348623157E308" text="%farmer.type"
                                                                GridPane.columnIndex="2" GridPane.rowIndex="8"/>
                                                         <ComboBox fx:id="cboxLandType" maxWidth="1.7976931348623157E308"
                                                                   GridPane.columnIndex="1" GridPane.rowIndex="9"/>
@@ -561,7 +560,7 @@
                                                         <RadioButton fx:id="rbtnIsFarmer"
                                                                      maxHeight="1.7976931348623157E308"
                                                                      maxWidth="1.7976931348623157E308"
-                                                                     mnemonicParsing="false" text="%isfarmer"
+                                                                     mnemonicParsing="false" text="%is.farmer"
                                                                      GridPane.columnIndex="3" GridPane.rowIndex="2"/>
                                                         <TextField fx:id="txtFarmerCode"
                                                                    maxWidth="1.7976931348623157E308"
@@ -628,10 +627,10 @@
                                                                maxWidth="1.7976931348623157E308" text="%membername"
                                                                GridPane.rowIndex="5"/>
                                                         <Label maxHeight="1.7976931348623157E308"
-                                                               maxWidth="1.7976931348623157E308" text="%farmercode"
+                                                               maxWidth="1.7976931348623157E308" text="%farmer.code"
                                                                GridPane.rowIndex="3"/>
                                                         <Label maxHeight="1.7976931348623157E308"
-                                                               maxWidth="1.7976931348623157E308" text="%farmername"
+                                                               maxWidth="1.7976931348623157E308" text="%farmer.name"
                                                                GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                                                         <Label maxHeight="1.7976931348623157E308"
                                                                maxWidth="1.7976931348623157E308" text="%relation"
@@ -653,7 +652,7 @@
                                                 <TableView fx:id="tblFamilyDetail">
                                                     <columns>
                                                         <TableColumn fx:id="colMemberName" prefWidth="200.0"
-                                                                     text="%membername"/>
+                                                                     text="%member.name.english"/>
                                                         <TableColumn fx:id="colRelation" prefWidth="100.0"
                                                                      text="%relation"/>
                                                         <TableColumn fx:id="colBirthDate" prefWidth="75.0"

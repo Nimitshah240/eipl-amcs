@@ -227,7 +227,7 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("syncUrl.realtime=" + new String(Base64.getEncoder().encode(AppConstant.syncUrlRealTime.getBytes())));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
-        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
+        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati".getBytes(StandardCharsets.UTF_8))));
         lines.add("#Identity details");
         lines.add("identity.union=" + new String(Base64.getEncoder().encode(MainApp.identityDto.getUnion().getCode().getBytes())));
         lines.add("identity.society=" + new String(Base64.getEncoder().encode(MainApp.identityDto.getSociety().getCode().getBytes())));
