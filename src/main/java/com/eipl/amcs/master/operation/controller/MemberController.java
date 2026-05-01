@@ -354,6 +354,7 @@ public class MemberController implements MyInitialization, PopupCallback {
         task.setOnSucceeded(e -> {
             try {
                 List<MemberDetail> list = task.get();
+                if (list == null) return;
                 for (MemberDetail memberDetail : list) {
                     mapDetails.put(memberDetail.getCode(), memberDetail);
                 }

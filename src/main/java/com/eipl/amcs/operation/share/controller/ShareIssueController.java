@@ -84,7 +84,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareIssueAddEdit", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareIssueAddEdit", null, this, "Share Issue");
         });
         btnDelete.setOnAction(e -> {
             deleteData();
@@ -94,7 +94,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
         });
 
         btnReport.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "IssueReportPopup", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "IssueReportPopup", null, this, "Share Issue");
         });
     }
 

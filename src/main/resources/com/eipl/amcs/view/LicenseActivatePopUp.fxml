@@ -7,10 +7,10 @@
 <StackPane fx:id="root" prefHeight="265.0" prefWidth="340.0" xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.LicenseActivateController">
     <children>
-        <VBox prefHeight="256.0" prefWidth="310.0" spacing="20.0" styleClass="pane-white-drop-border">
+        <VBox prefHeight="256.0" prefWidth="310.0" spacing="20.0" styleClass="">
             <children>
                 <!-- Header using project style class -->
-                <Label styleClass="header-text" text="AMCS Activation"/>
+<!--                <Label styleClass="header-text" text="AMCS Activation"/>-->
 
                 <GridPane fx:id="grid" hgap="15.0" vgap="10.0">
                     <columnConstraints>

@@ -66,7 +66,7 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_RATE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleRateAddEdit", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleRateAddEdit", null, this, "Local Milk Sale Rate");
         });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnDelete.setOnAction(e -> {

@@ -14,22 +14,22 @@ import java.util.Optional;
 public interface MemberDetailRepository extends BaseRepository<MemberDetail, String> {
 
     @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
-            "hamlet"})
+            "hamlet", "relationship"})
     Optional<MemberDetail> findByMember(Member member);
 
     @Override
     @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
-            "hamlet"})
+            "hamlet", "relationship"})
     Optional<MemberDetail> findById(String id);
 
 
     @Override
     @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
-            "hamlet"})
+            "hamlet", "relationship"})
     List<MemberDetail> findAll();
 
     @Override
     @EntityGraph(attributePaths = {"state", "gender", "bank", "branch", "district", "subDistrict", "village",
-            "hamlet"})
+            "hamlet", "relationship"})
     List<MemberDetail> findAll(Sort sort);
 }

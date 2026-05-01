@@ -135,7 +135,7 @@
                                              </font>
                                           </E_NumericField>
                                                       <E_NumericField fx:id="txtClr" disable="true" maxHeight="1.7976931348623157E308" visible="false" GridPane.columnIndex="3" />
-                                          <E_NumericField fx:id="txtWater" disable="true" maxHeight="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                                          <E_NumericField fx:id="txtWater" disable="false" maxHeight="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                                           <HBox spacing="15.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                              <children>
                                                             <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%avgfat">
@@ -251,7 +251,7 @@
                                                    <graphic>
                                                       <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
-                                                            <Image url="@../../images/Milk-Dispatch.png" />
+                                                            <Image url="@../../images/trucksheet.png" />
                                                          </image>
                                                       </ImageView>
                                                    </graphic>
@@ -263,7 +263,7 @@
                                                    <graphic>
                                                       <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
-                                                            <Image url="@../../images/Local-Sale.png" />
+                                                            <Image url="@../../images/localsale.png" />
                                                          </image>
                                                       </ImageView>
                                                    </graphic>

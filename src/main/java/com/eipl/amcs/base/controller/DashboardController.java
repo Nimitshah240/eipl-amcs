@@ -83,7 +83,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     private AnchorPane root;
     @FXML
-    private Label lblCode, lblName, lblDock, lblFinancialYear, lblLanguage, lblUserName, lblSyncCount,lbltollfree,lbltiming,lblemail;
+    private Label lblCode, lblName, lblDock, lblFinancialYear, lblLanguage, lblUserName, lblSyncCount, lbltollfree, lbltiming, lblemail;
     @FXML
     private TableView<RowData> tableCollection;
     @FXML
@@ -112,7 +112,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     private TableView<TableData> tablePendingSync;
     @FXML
     private TableColumn<TableData, String> colTableName;
-//    @FXML
+    //    @FXML
 //    private E_Button btnClose;
     @FXML
     private TableColumn<TableData, Integer> colPendingData;
@@ -255,8 +255,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
                     case L:
                         if (cboxLang.getSelectionModel().getSelectedIndex() == 0)
                             cboxLang.getSelectionModel().select(1);
-                        else if (cboxLang.getSelectionModel().getSelectedIndex() == 1)
-                            cboxLang.getSelectionModel().select(2);
+//                        else if (cboxLang.getSelectionModel().getSelectedIndex() == 1)
+//                            cboxLang.getSelectionModel().select(2);
                         else
                             cboxLang.getSelectionModel().select(0);
                         break;

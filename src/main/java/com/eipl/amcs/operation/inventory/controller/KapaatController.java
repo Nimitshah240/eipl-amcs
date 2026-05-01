@@ -72,7 +72,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
             btnDelete.setDisable(newValue == null);
         });
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "KapaatAddEdit", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "KapaatAddEdit", null, this, "Kapaat");
         });
         setupTable();
 

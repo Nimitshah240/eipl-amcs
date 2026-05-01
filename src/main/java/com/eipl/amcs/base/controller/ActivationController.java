@@ -493,7 +493,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
     private void openLicenseActivatePopup() {
         try {
             MainApp.paneDrop.setVisible(false);
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this, "Activation");
         } catch (Exception e) {
             e.printStackTrace();
             MyAlert alert = new ErrorAlert(MainApp.getStage(), "Error", "Could not open License Activation window.");
@@ -611,7 +611,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         lines.add("syncUrl.realtime=" + new String(Base64.getEncoder().encode(syncUrlRealTime.getBytes(StandardCharsets.UTF_8))));
         lines.add("app.request.debug=" + new String(Base64.getEncoder().encode("0".getBytes())));
         lines.add("#Languages");
-        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati,Hindi".getBytes(StandardCharsets.UTF_8))));
+        lines.add("app.languages=" + new String(Base64.getEncoder().encode("English,Gujarati".getBytes(StandardCharsets.UTF_8))));
         lines.add("#Identity details");
         lines.add("identity.union=" + new String(Base64.getEncoder().encode(union.getBytes())));
         lines.add("identity.society=" + new String(Base64.getEncoder().encode(society.getBytes())));

@@ -205,7 +205,7 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                 menu = new TreeMap<>(new PermissionComparator());
 
                 permissions.forEach(r -> {
-                    if (r.getType() != null && r.getType().equals("MENU")) {
+                    if (r.getType() != null && r.getType().equals("MENU") && r.isActive()) {
                         if (r.getParentCode() == null || r.getParentCode() == 0) {
                             menu.put(r, new TreeMap<>(new PermissionComparator()));
                         }
@@ -215,12 +215,12 @@ public class HeaderBarController implements MyInitialization, PopupCallback {
                 });
 
                 for (Permission permission : permissions) {
-                    if ("SUB_MENU".equalsIgnoreCase(permission.getType())) {
+                    if ("SUB_MENU".equalsIgnoreCase(permission.getType()) && permission.isActive()) {
                         menu.forEach((k, v) -> {
                             if (k.getCode().intValue() == permission.getParentCode().intValue())
                                 v.put(permission, new ArrayList<>());
                         });
-                    } else if ("SUB_MENU_1".equalsIgnoreCase(permission.getType())) {
+                    } else if ("SUB_MENU_1".equalsIgnoreCase(permission.getType()) && permission.isActive()) {
                         menu.forEach((k, v) -> {
                             v.forEach((k1, v1) -> {
                                 if (k1.getCode().intValue() == permission.getParentCode().intValue()) {
