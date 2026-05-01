@@ -202,8 +202,20 @@ public class MemberAddEditController implements MyInitialization {
             this.stage.close();
         });
 
-        rbtnCash.setToggleGroup(paymentType);
-        rbtnBank.setToggleGroup(paymentType);
+        ToggleGroup paymentGroup = new ToggleGroup();
+        rbtnCash.setToggleGroup(paymentGroup);
+        rbtnBank.setToggleGroup(paymentGroup);
+
+        paymentGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            boolean isBankSelected = (newVal == rbtnBank);
+            gridBankDetail.setDisable(!isBankSelected);
+            if (!isBankSelected) {
+                cboxBank.setValue(null);
+                cboxBranch.setValue(null);
+                txtAcNo.clear();
+                txtIfsc.clear();
+            }
+        });
 
         btnSaveUpdate.setOnAction(e -> validateAndSave());
 //        cboxState.setOnAction(e -> {
