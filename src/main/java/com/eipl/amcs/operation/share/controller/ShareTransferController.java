@@ -70,14 +70,14 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareTransferAddEdit", null, this, "Share Transfer");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareTransferAddEdit", null, this, resourceBundle.getString("sharetransfer"));
         });
 
         btnRevert.setOnAction(e -> {
             revertData();
         });
         btnReport.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareTransferReportPopup", null, this, "Share Transfer");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareTransferReportPopup", null, this, resourceBundle.getString("sharetransfer"));
         });
     }
 

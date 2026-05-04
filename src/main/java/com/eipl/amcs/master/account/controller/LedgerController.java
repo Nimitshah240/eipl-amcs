@@ -85,7 +85,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", null, this, "Ledger");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", null, this, resourceBundle.getString("ledger"));
 
 //            LedgerAddEditController controller = (LedgerAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/LedgerAddEdit.fxml"));
 //            controller.setLedger(null);
@@ -104,7 +104,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
 //                controller.setLedger(propLedger.get());
 //                MainApp.getContentPane().setCenter((controller).getRoot());
 
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", propLedger.get(), this, "Ledger");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", propLedger.get(), this, resourceBundle.getString("ledger"));
 
             }
         });
@@ -167,7 +167,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
     private void editLedger(Ledger ledger) {
         try {
             if (ledger != null) {
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", ledger, this, "Ledger");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", ledger, this, resourceBundle.getString("ledger"));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -70,15 +70,15 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnAddSave.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", null, this, "Coupon Issue");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", null, this, resourceBundle.getString("couponissue"));
         });
         btnView.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponBalance", null, this, "Coupon Balance");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponBalance", null, this, resourceBundle.getString("couponissue.transaction"));
         });
         btnEditUpdate.setOnAction(e -> {
             CouponIssue dto = propertyCouponIssue.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this, "Coupon Issue");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this, resourceBundle.getString("couponissue"));
         });
 
         btnDelete.setOnAction(e -> {

@@ -120,7 +120,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", null, this, "ProductSale");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", null, this, resourceBundle.getString("productsale"));
         });
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_SALE_EDIT"))
@@ -158,7 +158,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
 
     private void editProductSale(ProductSale productSale) {
         if (productSale != null)
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", productSale, this, "ProductSale");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", productSale, this, resourceBundle.getString("productsale"));
     }
 
     @Override

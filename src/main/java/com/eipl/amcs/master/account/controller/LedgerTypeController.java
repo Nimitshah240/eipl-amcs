@@ -71,7 +71,7 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_TYPE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerTypeAddEdit", null, this, "Ledger Type");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerTypeAddEdit", null, this, resourceBundle.getString("ledgerType"));
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -86,7 +86,7 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
                 throw new UnAuthorizedAccessException();
             LedgerType dto = propLedgerType.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerTypeAddEdit", dto, this, "Ledger Type");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerTypeAddEdit", dto, this, resourceBundle.getString("ledgerType"));
         });
     }
 

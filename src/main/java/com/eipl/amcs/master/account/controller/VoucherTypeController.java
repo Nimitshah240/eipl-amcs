@@ -69,7 +69,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_VOUCHER_TYPE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherTypeAddEdit", null, this, "Voucher Type");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherTypeAddEdit", null, this, resourceBundle.getString("vouchertype"));
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -84,7 +84,7 @@ public class VoucherTypeController implements MyInitialization, PopupCallback {
                 throw new UnAuthorizedAccessException();
             VoucherType dto = propVoucherType.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherTypeAddEdit", dto, this, "Voucher Type");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherTypeAddEdit", dto, this, resourceBundle.getString("vouchertype"));
         });
     }
 

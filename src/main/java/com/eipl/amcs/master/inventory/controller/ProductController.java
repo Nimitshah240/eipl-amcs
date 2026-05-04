@@ -65,7 +65,7 @@ public class ProductController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", null, this, "Product");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", null, this, resourceBundle.getString("product"));
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -86,7 +86,7 @@ public class ProductController implements MyInitialization, PopupCallback {
                     throw new UnAuthorizedAccessException();
                 Product dto = propProductDto.get();
                 if (dto != null)
-                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", dto, this, "Product");
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", dto, this, resourceBundle.getString("product"));
             } else {
                 MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.update.fail"));
                 errorAlert.createAlert();

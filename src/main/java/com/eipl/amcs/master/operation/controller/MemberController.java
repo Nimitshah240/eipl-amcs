@@ -110,7 +110,7 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", null, this, "Member");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", null, this, resourceBundle.getString("member"));
 //
 //            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
 //            controller.setMember(null);
@@ -183,7 +183,7 @@ public class MemberController implements MyInitialization, PopupCallback {
     private void editMember(Member member) {
         try {
             if (member != null) {
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", member, this, "Member");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", member, this, resourceBundle.getString("member"));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

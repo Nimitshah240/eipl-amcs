@@ -76,7 +76,7 @@ public class BillHeadController implements MyInitialization, PopupCallback {
                 }
             });
 
-            btnAdd.setOnAction(e -> MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillHeadAddEdit", null, this, "Bill Head"));
+            btnAdd.setOnAction(e -> MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillHeadAddEdit", null, this, resourceBundle.getString("billhead")));
 
             btnEdit.setOnAction(e -> {
                 if (propBillHeadDto.get().getCreatedBy() == null || propBillHeadDto.get().getCreatedBy().equalsIgnoreCase("SYSTEM")) {
@@ -84,7 +84,7 @@ public class BillHeadController implements MyInitialization, PopupCallback {
                         throw new UnAuthorizedAccessException();
                     BillHead dto = propBillHeadDto.get();
                     if (dto != null)
-                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillHeadAddEdit", dto, this, "Bill Head");
+                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillHeadAddEdit", dto, this, resourceBundle.getString("billhead"));
                 }
             });
 

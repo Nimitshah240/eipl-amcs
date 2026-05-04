@@ -82,12 +82,12 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
                 throw new UnAuthorizedAccessException();
             ProductPurchaseRate dto = propPurchaseRateDto.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductPurchaseRateAddEdit", dto, this, "Product Purchase Rate");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductPurchaseRateAddEdit", dto, this, resourceBundle.getString("productpurchaserate"));
         });
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_PURCHASE_RATE_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductPurchaseRateAddEdit", null, this, "Product Purchase Rate");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductPurchaseRateAddEdit", null, this, resourceBundle.getString("productpurchaserate"));
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));

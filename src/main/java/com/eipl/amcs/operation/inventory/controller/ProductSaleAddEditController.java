@@ -447,7 +447,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 try {
                     Member member = task.get();
                     if (member != null) {
-                        txtConsumerName.setText(member.getFirstName());
+                        txtConsumerName.setText(member.toMemberName());
                     } else {
                         txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
@@ -487,7 +487,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 try {
                     Member list = task.get();
                     if (list != null && list.getMemberType().getCode() == 2) {
-                        txtConsumerName.setText(list.getFirstName());
+                        txtConsumerName.setText(list.toMemberName());
                         rbtnCredit.setDisable(true);
                     } else {
                         txtConsumerCode.setText("");
