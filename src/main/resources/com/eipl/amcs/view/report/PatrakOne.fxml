@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.PatrakOneController">
+<StackPane fx:id="root" prefHeight="402.0" prefWidth="686.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.PatrakOneController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
@@ -15,8 +16,8 @@
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.6" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.6" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.6" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.6" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="16.6" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="14.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="19.200000000000003" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -28,10 +29,26 @@
                   <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                   <ComboBox fx:id="cboxFromShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       
-                      <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                      <HBox alignment="CENTER_RIGHT" prefHeight="35.0" prefWidth="44.0" spacing="10.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
                           <children>
-                              <Button fx:id="btnGenerate" mnemonicParsing="true" prefWidth="80.0" styleClass="button-primary" text="%generate" />
-                              <Button fx:id="btnClose" mnemonicParsing="true" prefWidth="80.0" text="%close" />
+                              <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%generate">
+                                  <graphic>
+                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                          <image>
+                                              <Image url="@../images/generate.png" />
+                                          </image>
+                                      </ImageView>
+                                  </graphic>
+                              </Button>
+                              <Button fx:id="btnClose" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%close">
+                                  <graphic>
+                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                          <image>
+                                              <Image url="@../images/close.png" />
+                                          </image>
+                                      </ImageView>
+                                  </graphic>
+                              </Button>
                           </children>
                       </HBox>
                   <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />

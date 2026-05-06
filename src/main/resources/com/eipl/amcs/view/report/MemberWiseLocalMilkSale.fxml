@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MemberWiseLocalMilkSaleController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -30,7 +32,17 @@
                         <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                         <Label text="%todate" GridPane.columnIndex="2" />
                         <DatePicker fx:id="dpToDate" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
-                        <Button fx:id="btnGenerate" mnemonicParsing="true" styleClass="button-primary" text="%generate" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%generate" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/generate.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                   <Label text="%fromshift" GridPane.columnIndex="1" />
                   <ComboBox fx:id="cboxFromShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                   <Label text="%toshift" GridPane.columnIndex="3" />

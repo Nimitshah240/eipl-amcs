@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MemberBillingBankDetailController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -22,7 +24,17 @@
 
                         <Label text="%societypaymentcyclecode" />
                         <ComboBox fx:id="cboxSocietyPaymentCycleCode" editable="true" maxWidth="-Infinity" GridPane.rowIndex="1" />
-                        <Button fx:id="btnGenerate" mnemonicParsing="true" styleClass="button-primary" text="%generate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%generate" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/generate.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                   <Label text="%language" GridPane.columnIndex="1" />
                   <ComboBox fx:id="cboxLanguage" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
