@@ -45,9 +45,6 @@ public class CommitteeAddEditController implements MyInitialization {
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
     private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtMemberName, txtCode;
-
-    @FXML
-    private E_NumericField txtYear;
     @FXML
     private E_DatePicker dpElectionDate, dpFormation, dpJoiningDate, dpRegistrationdate;
 
@@ -154,7 +151,6 @@ public class CommitteeAddEditController implements MyInitialization {
         txtCommitteeCode.setText(committee.getCode());
         dpElectionDate.setValue(committee.getElectionDate());
         dpFormation.setValue(committee.getFormationDate());
-        txtYear.setText(committee.getYear());
         txtName.setText(committee.getName());
         txtNameLocal.setText(committee.getNameLocal());
     }
@@ -184,7 +180,6 @@ public class CommitteeAddEditController implements MyInitialization {
         committee.setCode(txtCommitteeCode.getText());
         committee.setElectionDate(dpElectionDate.getValue());
         committee.setFormationDate(dpFormation.getValue());
-        committee.setYear(txtYear.getText());
         committee.setName(txtName.getText());
         committee.setNameLocal(txtNameLocal.getText());
         committee.setMembers(members);

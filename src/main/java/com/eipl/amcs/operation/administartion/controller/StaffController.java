@@ -70,18 +70,18 @@ public class StaffController implements MyInitialization, PopupCallback {
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", null, this, "Staff");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", null, this, resourceBundle.getString("staff"));
         });
         btnEdit.setOnAction(e -> {
             StaffMember staffMember = propStaffMembertDto.get();
             if (staffMember != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", staffMember, this, "Staff");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", staffMember, this, resourceBundle.getString("staff"));
         });
         btnDelete.setOnAction(e -> {
             deleteData();
         });
         btnSalary.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffSalary", null, this, "Saff Salary");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffSalary", null, this, resourceBundle.getString("staffsalary"));
         });
     }
 

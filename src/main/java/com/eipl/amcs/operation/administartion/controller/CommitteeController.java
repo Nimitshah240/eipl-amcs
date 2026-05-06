@@ -67,7 +67,7 @@ public class CommitteeController implements MyInitialization, PopupCallback {
         setupTable();
         loadData();
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeAddEdit", null, this, "Committee");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeAddEdit", null, this, resourceBundle.getString("committee"));
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -115,7 +115,7 @@ public class CommitteeController implements MyInitialization, PopupCallback {
 
     private void editCommittee(Committee committee) {
         if (committee != null)
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeAddEdit", committee, this, "Committee");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CommitteeAddEdit", committee, this, resourceBundle.getString("committee"));
     }
 
     private void validateAndGenerateReport() {

@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.accounting.RptStockValuationController">
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -28,7 +30,17 @@
 					</rowConstraints>
 					<children>
 						<DatePicker fx:id="dpAsOnDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-						<Button fx:id="btnGenerate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="button-primary" text="%generate" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%generate" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/generate.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
 						<Label fx:id="lblAsOnDate" text="%asondate" GridPane.columnIndex="2" />
                   <ComboBox fx:id="cboxFormat" editable="true" GridPane.rowIndex="1" />
                   <DatePicker fx:id="dpToDate" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -37,7 +49,17 @@
                   <ComboBox fx:id="cboxProduct" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="%format" />
                   <Label disable="true" text="%product" GridPane.columnIndex="1" />
-                  <Button fx:id="btnClose" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%close" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Button fx:id="btnClose" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%close" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                   <Label text="Label" GridPane.columnIndex="4" />
                   <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 

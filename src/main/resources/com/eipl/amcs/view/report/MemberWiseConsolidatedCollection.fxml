@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MemberWiseConsolidateCollectionController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -27,7 +29,17 @@
 
                         <Label text="%member" />
                         <ComboBox fx:id="cboxMemberCode" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <Button fx:id="btnGenerate" mnemonicParsing="true" styleClass="button-primary" text="%generate" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%generate" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../images/generate.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                   <Label text="%milktype" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <ComboBox fx:id="cboxMilkType" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="127.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -66,7 +78,17 @@
                <children>
                   <Label text="%member" />
                   <ComboBox fx:id="cboxMemberCode1" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                  <Button fx:id="btnGenerate1" mnemonicParsing="true" styleClass="button-primary" text="%generate" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                   <Button fx:id="btnGenerate1" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                           text="%generate" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                       <graphic>
+                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                      preserveRatio="true">
+                               <image>
+                                   <Image url="@../images/generate.png"/>
+                               </image>
+                           </ImageView>
+                       </graphic>
+                   </Button>
                   <Label text="%milktype" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <ComboBox fx:id="cboxMilkType1" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="127.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <DatePicker fx:id="dpFromDate1" maxHeight="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />

@@ -58,7 +58,7 @@ public class ShareRateController implements MyInitialization, PopupCallback {
         loadData();
         btnDelete.setDisable(true);
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareRateAddEdit", null, this,"Share Rate");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ShareRateAddEdit", null, this,resourceBundle.getString("sharerate"));
         });
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnDelete.setOnAction(e -> {

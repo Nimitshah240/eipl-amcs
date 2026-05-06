@@ -70,7 +70,7 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
             }
         });
 
-        btnAdd.setOnAction(e -> MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillCriteriaAddEdit", null, this, "Bill Criteria"));
+        btnAdd.setOnAction(e -> MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillCriteriaAddEdit", null, this, resourceBundle.getString("billcriteria")));
 
         btnEdit.setOnAction(e -> {
             if (propBillCriteriaDto.get().getCreatedBy() == null || propBillCriteriaDto.get().getCreatedBy().equalsIgnoreCase("SYSTEM")) {
@@ -78,7 +78,7 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
                     throw new UnAuthorizedAccessException();
                 BillCriteria dto = propBillCriteriaDto.get();
                 if (dto != null)
-                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillCriteriaAddEdit", dto, this, "Bill Criteria");
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BillCriteriaAddEdit", dto, this, resourceBundle.getString("billcriteria"));
             }
         });
 

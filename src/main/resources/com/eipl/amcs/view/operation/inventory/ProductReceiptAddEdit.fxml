@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_Button?>
-<?import com.eipl.amcs.controls.E_ComboBox?>
-<?import com.eipl.amcs.controls.E_DatePicker?>
-<?import com.eipl.amcs.controls.E_TextField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import com.eipl.amcs.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" prefHeight="700.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductReceiptAddEditController">
+<StackPane fx:id="root" prefHeight="700.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductReceiptAddEditController">
     <children>
         <VBox spacing="20.0">
             <children>
@@ -87,8 +74,8 @@
                         </HBox>
 
 
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%item" GridPane.rowIndex="5" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%quantity" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%productname" GridPane.rowIndex="5" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%quantityy" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%amount" GridPane.rowIndex="7" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%billno" GridPane.columnIndex="1" />
@@ -104,7 +91,7 @@
                     <columns>
                         <TableColumn fx:id="colProductCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%productcode" visible="false" />
                         <TableColumn fx:id="colProductName" minWidth="150.0" prefWidth="158.0" text="%item.name" />
-                        <TableColumn fx:id="colQuantity" minWidth="78.0" prefWidth="95.0" styleClass="cell-right-aligned" text="%quantity" />
+                        <TableColumn fx:id="colQuantity" minWidth="78.0" prefWidth="95.0" styleClass="cell-right-aligned" text="%quantityy" />
                         <TableColumn fx:id="colRate" minWidth="79.0" prefWidth="90.0" styleClass="cell-center-aligned" text="%rate" />
                         <TableColumn fx:id="colAmount" minWidth="88.0" prefWidth="106.0" styleClass="cell-right-aligned" text="%amount" />
                         <TableColumn fx:id="colTax" minWidth="64.0" prefWidth="81.0" styleClass="cell-right-aligned" text="%tax" />
@@ -149,9 +136,9 @@
                             <children>
                                 <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%netamount" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                                 <E_TextField fx:id="txtNetAmount" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totaltax" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                 <E_TextField fx:id="txtTotalTax" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totalamount" GridPane.halignment="RIGHT" />
+                                <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%amount" GridPane.halignment="RIGHT" />
                                 <E_TextField fx:id="txtTotalAmount" disable="true" GridPane.columnIndex="1" />
                             </children>
                         </GridPane>

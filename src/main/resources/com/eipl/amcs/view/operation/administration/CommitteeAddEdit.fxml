@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_Button?>
-<?import com.eipl.amcs.controls.E_ComboBox?>
-<?import com.eipl.amcs.controls.E_DatePicker?>
-<?import com.eipl.amcs.controls.E_TextField?>
-<?import com.eipl.amcs.controls.E_NumericField?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import com.eipl.amcs.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane fx:id="root" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.CommitteeAddEditController">
+<StackPane fx:id="root" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.CommitteeAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white">
             <children>
@@ -44,25 +31,23 @@
                     <children>
                         <Label maxWidth="1.7976931348623157E308" text="%electiondate" GridPane.rowIndex="2" />
                         <Label text="%registrationdate" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <Label text="%name" />
+                        <Label text="%committeename" />
 
                         <Label text="%joiningdate" GridPane.rowIndex="7" />
                         <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtNameLocal" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                         <E_DatePicker fx:id="dpElectionDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                         <E_DatePicker fx:id="dpFormation" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <E_NumericField fx:id="txtYear" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <E_TextField fx:id="txtMemberName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                         <E_ComboBox fx:id="cboxDesignation" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         <E_DatePicker fx:id="dpJoiningDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="8" />
                         <E_DatePicker fx:id="dpRegistrationdate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                         <Label text="%designation" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <Label text="%localname" GridPane.columnIndex="2" />
+                        <Label text="%committeename.local" GridPane.columnIndex="2" />
                         <Label maxWidth="1.7976931348623157E308" text="%formationdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="%year" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Label text="%committeemembers" GridPane.rowIndex="4" />
                         <Separator maxHeight="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                        <Label text="%name" GridPane.rowIndex="5" />
+                        <Label text="%member.name" GridPane.rowIndex="5" />
                         <HBox spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
                             <children>
                                 <E_Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
@@ -98,7 +83,7 @@
                 </HBox>
                 <TableView fx:id="tableCommitteeMembers" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="150.0">
                     <columns>
-                        <TableColumn fx:id="colMemberName" prefWidth="75.0" text="%name" />
+                        <TableColumn fx:id="colMemberName" prefWidth="75.0" text="%member.name" />
                         <TableColumn fx:id="colDesignation" prefWidth="75.0" text="%designation" />
                         <TableColumn fx:id="colJoiningDate" prefWidth="75.0" text="%joiningdate" />
                         <TableColumn fx:id="colRegistrationDate" prefWidth="75.0" text="%registrationdate" />

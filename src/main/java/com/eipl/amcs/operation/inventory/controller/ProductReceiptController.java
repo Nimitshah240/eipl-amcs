@@ -89,8 +89,7 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
 //            controller.setProductReceipt(null);
 //            MainApp.contentPane.setCenter(controller.getRoot());
 
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", null, this, "Product Receipt");
-
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", null, this, resourceBundle.getString("productreceipt"));
         });
         btnEdit.setDisable(true);
         btnDelete.setDisable(true);
@@ -149,7 +148,7 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
 
     private void editProductReceipt(ProductReceipt productReceipt) {
         if (productReceipt != null)
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", propProductReceiptDto.get(), this, "Product Receipt");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", propProductReceiptDto.get(), this, resourceBundle.getString("productreceipt"));
     }
 
     @Override

@@ -141,7 +141,7 @@ public class SocietyController implements MyInitialization, PopupCallback {
 
     private void editSociety(Society society) {
         if (society != null)
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyAddEdit", dto, this, "Society");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyAddEdit", dto, this, resourceBundle.getString("society"));
     }
 
     @Override

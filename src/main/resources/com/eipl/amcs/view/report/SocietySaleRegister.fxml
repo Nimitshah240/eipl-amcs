@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.DairySaleRegisterReportController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -41,8 +43,28 @@
                   <ComboBox fx:id="cboxmilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                   <HBox spacing="5.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
                      <children>
-                              <Button fx:id="btnGenerate" mnemonicParsing="true" prefWidth="80.0" styleClass="button-primary" text="%generate" />
-                              <Button fx:id="btnClose" contentDisplay="RIGHT" mnemonicParsing="true" prefWidth="80.0" text="%close" />
+                         <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                 text="%generate">
+                             <graphic>
+                                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                            preserveRatio="true">
+                                     <image>
+                                         <Image url="@../images/generate.png"/>
+                                     </image>
+                                 </ImageView>
+                             </graphic>
+                         </Button>
+                         <Button fx:id="btnClose" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                 text="%close">
+                             <graphic>
+                                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                            preserveRatio="true">
+                                     <image>
+                                         <Image url="@../images/close.png"/>
+                                     </image>
+                                 </ImageView>
+                             </graphic>
+                         </Button>
                      </children>
                      <GridPane.margin>
                         <Insets />

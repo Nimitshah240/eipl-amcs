@@ -74,7 +74,7 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_GROUP_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerGroupAddEdit", null, this, "Ledger Group");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerGroupAddEdit", null, this, resourceBundle.getString("ledgergroup"));
         });
 
         btnClose.setOnAction(e -> {
@@ -85,7 +85,7 @@ public class LedgerGroupController implements MyInitialization, PopupCallback {
                 throw new UnAuthorizedAccessException();
             LedgerGroup dto = propLedgerGroup.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerGroupAddEdit", dto, this, "Ledger Group");
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerGroupAddEdit", dto, this, resourceBundle.getString("ledgergroup"));
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_LEDGER_GROUP_DELETE"))

@@ -5,6 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.accounting.RptProfitLossController">
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -27,7 +29,17 @@
 					<children>
 						<DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
 						<DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-						<Button fx:id="btnGenerate" text="%generate" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%generate" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/generate.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
 						<Label text="%todate" GridPane.columnIndex="1" />
 						<Label text="%fromdate" />
                   <Label text="%language" GridPane.columnIndex="2" />
@@ -50,8 +62,17 @@
 				<Separator prefWidth="200.0" />
 				<HBox>
 					<children>
-						<Button fx:id="btnClose" prefHeight="30.0" prefWidth="80.0" text="%close">
-						</Button>
+                        <Button fx:id="btnClose" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
+                                text="%close">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
 					</children>
 					<padding>
 						<Insets bottom="10.0" left="10.0" />

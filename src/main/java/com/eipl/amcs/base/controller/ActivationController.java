@@ -493,7 +493,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
     private void openLicenseActivatePopup() {
         try {
             MainApp.paneDrop.setVisible(false);
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this, "Activation");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LicenseActivatePopUp", null, this, resourceBundle.getString("activation"));
         } catch (Exception e) {
             e.printStackTrace();
             MyAlert alert = new ErrorAlert(MainApp.getStage(), "Error", "Could not open License Activation window.");
