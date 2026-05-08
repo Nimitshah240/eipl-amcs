@@ -31,4 +31,6 @@ public interface VoucherRepository extends BaseRepository<Voucher, String> {
     @EntityGraph(attributePaths = {"society", "voucherType"})
     List<Voucher> findByCancelledFalseAndVoucherDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
 
+    List<Voucher> findByVoucherDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
+
 }

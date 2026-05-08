@@ -569,6 +569,44 @@ public class MappingPopupController implements MyInitialization {
                     controller70.setCallback(callback);
                     root.setCenter(controller70.getRoot());
                     break;
+                case "VoucherEntryCredit":
+                    var controller71 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
+                    controller71.setVoucher(object != null ? (Voucher) object : null, true);
+                    controller71.setStage(stage);
+                    controller71.setCallback(callback);
+                    root.setCenter(controller71.getRoot());
+                    break;
+                case "VoucherEntryDebit":
+                    var controller72 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
+                    controller72.setVoucher(object != null ? (Voucher) object : null, false);
+                    controller72.setStage(stage);
+                    controller72.setCallback(callback);
+                    root.setCenter(controller72.getRoot());
+                    break;
+                case "Havalo":
+                    var controller73 = (HavaloController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/Havalo.fxml"));
+//                    controller73.setVoucher(object != null ? (Voucher) object : null, false);
+                    controller73.setStage(stage);
+                    controller73.setCallback(callback);
+                    root.setCenter(controller73.getRoot());
+                    break;
+                case "HavaloVoucherEntryCredit":
+                    var controller74 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
+                    controller74.setVoucher(object != null ? (Voucher) object : null, true);
+                    controller74.setStage(stage);
+                    controller74.setHavaloDetails();
+                    controller74.setCallback(callback);
+                    root.setCenter(controller74.getRoot());
+                    break;
+                case "HavaloVoucherEntryDebit":
+                    var controller75 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
+                    controller75.setVoucher(object != null ? (Voucher) object : null, false);
+                    controller75.setHavaloDetails();
+                    controller75.setVoucher(object != null ? (Voucher) object : null, false);
+                    controller75.setStage(stage);
+                    controller75.setCallback(callback);
+                    root.setCenter(controller75.getRoot());
+                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

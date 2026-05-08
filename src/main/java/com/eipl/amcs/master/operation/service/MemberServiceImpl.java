@@ -119,6 +119,13 @@ public class MemberServiceImpl implements MemberService {
             memberFamilyDetail.setMember(memberDtoNew.getMember());
             memberFamilyDetailRepository.save(memberFamilyDetail);
         }
+
+        if (memberDto.getMappedMembers() != null) {
+            for (Member member1 : memberDto.getMappedMembers()) {
+                member1.setxCol1(member.getCode());
+                repository.customUpdate(member1, identityInfo);
+            }
+        }
         return memberDtoNew;
     }
 
@@ -238,6 +245,12 @@ public class MemberServiceImpl implements MemberService {
             memberFamilyDetailRepository.save(memberFamilyDetail);
         }
 
+        if (memberDto.getMappedMembers() != null) {
+            for (Member member1 : memberDto.getMappedMembers()) {
+                member1.setxCol1(member.getCode());
+                repository.customUpdate(member1, identityInfo);
+            }
+        }
 
         return dtoNew;
     }

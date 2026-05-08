@@ -1,9 +1,13 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
+import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
+import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.repository.FinancialYearRepository;
 import com.eipl.amcs.master.account.repository.LedgerOpeningBalanceRepository;
+import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.master.org.model.Society;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -12,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,6 +30,12 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
     private LedgerOpeningBalanceRepository ledgerOpeningBalanceRepository;
     @Autowired
     private NextCodeService nextCodeService;
+    @Autowired
+    private LedgerRepository ledgerRepository;
+    @Autowired
+    private VoucherService voucherServiceImpl;
+    @Autowired
+    private FinancialYearRepository financialYearRepository;
 
     @Override
     public List<LedgerOpeningBalance> findAll() {
@@ -111,5 +124,39 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
         return null;
     }
 
+    @Override
+    public BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate toDate) {
+
+        FinancialYear financialYear = financialYearRepository.findCurrentFinancialYear(toDate).orElse(null);
+        if (financialYear == null)
+            return BigDecimal.ZERO;
+
+        LocalDate fromDate = financialYear.getStartDate();
+        String fyCode = financialYear.getCode();
+
+        List<Ledger> ledgers = ledgerRepository.findByLedgerGroup_LedgerType_Code("9"); // Just For Cash Ledger Type
+        List<LedgerOpeningBalance> ledgerOpeningBalanceList = ledgerOpeningBalanceRepository.findByLedgerInAndFinancialYearsCode(ledgers, fyCode);
+        List<VoucherTransaction> voucherTransactionList = voucherServiceImpl.loadVoucherByVoucherDateBetween(fromDate, toDate);
+
+        BigDecimal crLedgerOpeningBalance = ledgerOpeningBalanceList.stream().filter(ocl -> ocl.getCreditDebit() == true).map(LedgerOpeningBalance::getBalance)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal drLedgerOpeningBalance = ledgerOpeningBalanceList.stream().filter(ocl -> ocl.getCreditDebit() == false).map(LedgerOpeningBalance::getBalance)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal drVoucherTransaction = voucherTransactionList.stream().filter(ocl -> ocl.getCreditDebit() == false).map(VoucherTransaction::getAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal crVoucherTransaction = voucherTransactionList.stream().filter(ocl -> ocl.getCreditDebit() == true).map(VoucherTransaction::getAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        crVoucherTransaction = crVoucherTransaction.add(crLedgerOpeningBalance);
+        drVoucherTransaction = drVoucherTransaction.add(drLedgerOpeningBalance);
+        return crVoucherTransaction.subtract(drVoucherTransaction);
+    }
 
 }

@@ -2,6 +2,7 @@ package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.dto.VoucherDto;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherSubLedger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
@@ -42,6 +43,8 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherTransactionRepository voucherTxnRepository;
     @Autowired
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
+    @Autowired
+    private LedgerRepository ledgerRepository;
 
     @Override
     public List<VoucherDto> findAll() {
@@ -86,24 +89,55 @@ public class VoucherServiceImpl implements VoucherService {
     public Voucher save(VoucherDto dto, String identityInfo) {
 
         dto.getVoucher().setInitData();
-        voucherRepository.customSave(dto.getVoucher(), identityInfo);
+        Voucher voucher = dto.getVoucher();
+        voucher.setFinancialYearsCode(financialYearRepository.findCurrentFinancialYear(voucher.getVoucherDate()).get().getCode());
+        voucher = voucherRepository.customSave(dto.getVoucher(), identityInfo);
+        int txnCode = 1;
         for (VoucherTransaction voucherTransaction : dto.getVoucherTransactions()) {
+            if (voucherTransaction.getCode() == null || voucherTransaction.getCode().isBlank())
+                voucherTransaction.setCode(voucher.getCode() + "T" + txnCode++);
+
             voucherTransaction.setInitData();
+            voucherTransaction.setVoucher(voucher);
             voucherTxnRepository.customSave(voucherTransaction, identityInfo);
         }
         for (VoucherSubLedger voucherSubLedger : dto.getVoucherSubLedgers()) {
             voucherSubLedger.setInitData();
+            voucherSubLedger.setVoucher(voucher);
             voucherSubLedgerRepository.customSave(voucherSubLedger, identityInfo);
         }
 
-        return null;
+        return voucher;
     }
 
 
     @Override
     public Voucher update(VoucherDto dto, String identityInfo) {
         dto.getVoucher().setupdateData();
-        return voucherRepository.customUpdate(dto.getVoucher(), identityInfo);
+        Voucher voucher = dto.getVoucher();
+        voucher.setFinancialYearsCode(financialYearRepository.findCurrentFinancialYear(voucher.getVoucherDate()).get().getCode());
+        voucher = voucherRepository.customUpdate(dto.getVoucher(), identityInfo);
+        int txnCode = 1;
+        for (VoucherTransaction voucherTransaction : dto.getVoucherTransactions()) {
+            voucherTransaction.setVoucher(voucher);
+
+            if (voucherTransaction.getCode() == null || voucherTransaction.getCode().isBlank()) {
+                voucherTransaction.setCode(voucher.getCode() + "T" + txnCode);
+                voucherTransaction.setInitData();
+                voucherTxnRepository.customSave(voucherTransaction, identityInfo);
+                continue;
+            }
+
+            voucherTransaction.setupdateData();
+            voucherTxnRepository.customUpdate(voucherTransaction, identityInfo);
+            txnCode++;
+        }
+        for (VoucherSubLedger voucherSubLedger : dto.getVoucherSubLedgers()) {
+            voucherSubLedger.setupdateData();
+            voucherSubLedger.setVoucher(voucher);
+            voucherSubLedgerRepository.customUpdate(voucherSubLedger, identityInfo);
+        }
+        return voucher;
     }
 
 
@@ -136,6 +170,16 @@ public class VoucherServiceImpl implements VoucherService {
             for (VoucherSubLedger voucherSubLedger : voucherSubLedgerList) {
                 voucherSubLedgerRepository.customDelete(voucherSubLedger, identityInfo);
             }
+        }
+    }
+
+    public List<VoucherTransaction> loadVoucherByVoucherDateBetween(LocalDate fromDate, LocalDate toDate) {
+        try {
+            List<Ledger> ledgers = ledgerRepository.findByLedgerGroup_LedgerType_Code("9"); // Just For Cash Ledger Type
+            List<Voucher> voucherList = voucherRepository.findByVoucherDateBetween(fromDate, toDate, Sort.by("voucherDate").descending());
+            return voucherTxnRepository.findByVoucherInAndLedgerIn(voucherList, ledgers);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

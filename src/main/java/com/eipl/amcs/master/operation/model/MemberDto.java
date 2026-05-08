@@ -15,6 +15,7 @@ public class MemberDto implements Serializable {
     private MemberDetail memberDetail;
     private List<MemberFamilyDetail> memberFamilyDetailList;
     private List<MemberCattleDetail> memberCattleDetailList;
+    private List<Member> mappedMembers;
 
     public MemberDto() {
 
@@ -26,12 +27,13 @@ public class MemberDto implements Serializable {
         this.memberDetail = memberDetail;
     }
 
-    public MemberDto(Member member, MemberDetail memberDetail, List<MemberFamilyDetail> memberFamilyDetailList, List<MemberCattleDetail> memberCattleDetailList) {
+    public MemberDto(Member member, MemberDetail memberDetail, List<MemberFamilyDetail> memberFamilyDetailList, List<MemberCattleDetail> memberCattleDetailList, List<Member> mappedMembers) {
         super();
         this.member = member;
         this.memberDetail = memberDetail;
         this.memberCattleDetailList = memberCattleDetailList;
         this.memberFamilyDetailList = memberFamilyDetailList;
+        this.mappedMembers = mappedMembers;
     }
 
     public Member getMember() {
