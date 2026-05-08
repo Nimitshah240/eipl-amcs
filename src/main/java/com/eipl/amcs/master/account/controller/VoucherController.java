@@ -112,10 +112,20 @@ public class VoucherController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colType.setCellValueFactory(data -> new SimpleStringProperty(
-                MainApp.locale.equalsIgnoreCase("en") ?
-                        data.getValue().getVoucher().getVoucherType().getName() :
-                        data.getValue().getVoucher().getVoucherType().getNameLocal()));
+        colType.setCellValueFactory(data -> {
+            var voucher = data.getValue().getVoucher();
+
+            // Check if voucher and its type are not null
+            if (voucher != null && voucher.getVoucherType() != null) {
+                String name = MainApp.locale.equalsIgnoreCase("en") ?
+                        voucher.getVoucherType().getName() :
+                        voucher.getVoucherType().getNameLocal();
+
+                return new SimpleStringProperty(name);
+            }
+
+            return new SimpleStringProperty(""); // Return empty string if null
+        });
         colVoucherNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getCode()));
         colVoucherDate.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getVoucherDate().toString()));
         colRefNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getBillNo()));

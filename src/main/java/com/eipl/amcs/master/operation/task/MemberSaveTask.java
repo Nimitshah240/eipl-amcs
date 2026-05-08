@@ -2,6 +2,7 @@ package com.eipl.amcs.master.operation.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.operation.model.MemberDto;
+import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.master.operation.service.MemberService;
 import com.eipl.amcs.utils.ApiJsonUtil;
 import com.eipl.amcs.utils.CommonUtils;
@@ -21,11 +22,15 @@ public class MemberSaveTask extends Task<Object> {
     protected Object call() throws Exception {
         try {
             MemberService service = EmcsAppContext.getContext().getBean(MemberService.class);
+            MemberRepository repository = EmcsAppContext.getContext().getBean(MemberRepository.class);
             MemberDto dtoNew = null;
             if (this.update == 0) {
                 dtoNew = service.save(dto, CommonUtils.setIdentityHeader());
-            } else {
+            } else if (this.update == 1) {
                 dtoNew = service.update(dto, CommonUtils.setIdentityHeader());
+            } else if (this.update == 2) { // to remove farmer mapping
+                repository.customUpdate(dto.getMember(), CommonUtils.setIdentityHeader());
+                return true;
             }
             if (dtoNew == null) {
                 dtoNew.getMember().setSociety(dto.getMember().getSociety());

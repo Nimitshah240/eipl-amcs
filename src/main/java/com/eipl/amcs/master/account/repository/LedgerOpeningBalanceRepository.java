@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.account.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -19,4 +20,7 @@ public interface LedgerOpeningBalanceRepository extends BaseRepository<LedgerOpe
     @Override
     @EntityGraph(attributePaths = {"society", "ledger"})
     Optional<LedgerOpeningBalance> findById(String s);
+
+    @EntityGraph(attributePaths = {"society", "ledger"})
+    List<LedgerOpeningBalance> findByLedgerInAndFinancialYearsCode(List<Ledger> ledgers, String fyCode);
 }

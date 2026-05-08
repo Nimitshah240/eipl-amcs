@@ -97,4 +97,6 @@ public interface LedgerRepository extends BaseRepository<Ledger, String> {
                                                       @Param("p_locale") String p_locale
     );
 
+    List<Ledger> findByLedgerGroup_LedgerType_Code(String code);
+
 }

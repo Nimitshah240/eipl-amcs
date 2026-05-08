@@ -2,6 +2,8 @@ package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +22,5 @@ public interface LedgerOpeningBalanceService {
 
     List<LedgerOpeningBalance> importLedgerBalance(List<LedgerOpeningBalance> dtoList, String header);
 
+    BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate toDate);
 }

@@ -28,4 +28,6 @@ public interface VoucherService {
     void delete(String voucherNo, String identityInfo);
 
     void delete(Voucher voucher, String identityInfo);
+
+    List<VoucherTransaction> loadVoucherByVoucherDateBetween(LocalDate fromDate, LocalDate toDate);
 }

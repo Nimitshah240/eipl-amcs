@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -101,13 +102,13 @@ public class MemberAddEditController implements MyInitialization {
     @FXML
     private TextField txtCodeEx, txtSapNo, txtCode, txtMobileNo, txtPinCode, txtMiddleName,
             txtName, txtLastName, txtLocalName, txtMiddleLocalName, txtLocalLastName,
-            txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit, txtGroupCode,
+            txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit,
             txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtNomineeNameLocal,
             txtLand, txtRegistrationNo;
     @FXML
     private Button btnSaveUpdate, btnClose;
     @FXML
-    private E_Button btnAddCattleDetail, btnDeleteCattleDetail, btnAdd1, btnDelete1;
+    private E_Button btnAddCattleDetail, btnDeleteCattleDetail, btnAdd1, btnDelete1, btnAddChild, btnDeleteChild;
     @FXML
     private GridPane gridBankDetail;
     @FXML
@@ -116,6 +117,8 @@ public class MemberAddEditController implements MyInitialization {
     private TableView<MemberCattleDetail> tblCattleDetail;
     @FXML
     private TableView<MemberFamilyDetail> tblFamilyDetail;
+    @FXML
+    private TableView<Member> tblFarmerMapping;
 
     @FXML
     private TableColumn<MemberFamilyDetail, String> colRationCard, colRationType, colMemberName, colFarmerCode,
@@ -123,18 +126,25 @@ public class MemberAddEditController implements MyInitialization {
 
     @FXML
     private TableColumn<MemberCattleDetail, String> colCattleDetail, colMilky, colDry, colCalf, colTotal;
+    @FXML
+    private TableColumn<Member, String> colChildFarmerCode, colChildFarmerName;
 
     @FXML
-    private TextField txtMilky, txtDry, txtCalf;
+    private TextField txtMilky, txtDry, txtCalf, txtChildFarmerName;
+    @FXML
+    private E_TextField txtChildFarmerCode;
 
     @FXML
     private CheckBox chkIsEducated, chkIsCookingGas, chkIsMember;
 
     private final ObjectProperty<MemberCattleDetail> propMemberCattleDetail;
     private final ObjectProperty<MemberFamilyDetail> propMembmerFamiliyDetail;
+    private final ObjectProperty<Member> propFarmerMapping;
 
     private List<MemberCattleDetail> memberCattleDetailList = new ArrayList<>();
     private List<MemberFamilyDetail> memberFamilyDetailList = new ArrayList<>();
+    private List<Member> farmerMapping = new ArrayList<>();
+    private Member mappingFarmer = new Member();
 
 
     private Stage stage;
@@ -148,6 +158,7 @@ public class MemberAddEditController implements MyInitialization {
     public MemberAddEditController() {
         propMembmerFamiliyDetail = new SimpleObjectProperty<>();
         propMemberCattleDetail = new SimpleObjectProperty<>();
+        propFarmerMapping = new SimpleObjectProperty<>();
     }
 
 
@@ -170,6 +181,7 @@ public class MemberAddEditController implements MyInitialization {
             loadMemberCattleDetail();
             btnSaveUpdate.setText(resourceBundle.getString("update"));
             loadMemberDetail(member.getCode());
+            loadMappedFarmer(member.getCode());
             if (member.getCreditLimit() != null)
                 txtCreditLimit.setText(member.getCreditLimit().toString());
         } else {
@@ -218,6 +230,16 @@ public class MemberAddEditController implements MyInitialization {
         });
 
         btnSaveUpdate.setOnAction(e -> validateAndSave());
+
+        btnAddChild.setOnAction(e -> {
+            addFarmerMapping();
+            mappingFarmer = null;
+        });
+        btnDeleteChild.setOnAction(e -> {
+            Member member = propFarmerMapping.get();
+            if (member != null)
+                deleteFarmerMapping(member);
+        });
 //        cboxState.setOnAction(e -> {
 //            if (cboxState.getValue() != null) {
 //                cboxDistrict.getItems().clear();
@@ -325,6 +347,12 @@ public class MemberAddEditController implements MyInitialization {
                 deleteMemberFamilyDetail(memberFamilyDetail);
         });
 
+        txtChildFarmerCode.setOnAction(e -> {
+            if (txtChildFarmerCode.getText() == null || txtChildFarmerCode.getText().trim().isBlank())
+                return;
+            loadMember(MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtChildFarmerCode.getText())));
+        });
+
 
 //        txtCodeEx.focusedProperty().addListener((observableValue, oldVal, newVal) -> {
 //            if (!newVal) {
@@ -376,8 +404,11 @@ public class MemberAddEditController implements MyInitialization {
         colDry.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDry() != null ? String.valueOf(data.getValue().getDry()) : ""));
         colCalf.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCalf() != null ? String.valueOf(data.getValue().getCalf()) : ""));
         colTotal.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTotal() != null ? String.valueOf(data.getValue().getTotal()) : ""));
+        colChildFarmerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx() != null ? String.valueOf(data.getValue().getCodeEx()) : ""));
+        colChildFarmerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() != null ? String.valueOf(data.getValue().getFirstName()) : ""));
         propMemberCattleDetail.bind(tblCattleDetail.getSelectionModel().selectedItemProperty());
         propMembmerFamiliyDetail.bind(tblFamilyDetail.getSelectionModel().selectedItemProperty());
+        propFarmerMapping.bind(tblFarmerMapping.getSelectionModel().selectedItemProperty());
 
     }
 
@@ -458,7 +489,7 @@ public class MemberAddEditController implements MyInitialization {
         member.setDcsMember(chkIsMember.isSelected());
         member.setCasteCategory(cboxCaste.getSelectionModel().getSelectedItem());
         member.setSapFarmerCode(txtSapNo.getText());
-        member.setxCol1(MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtGroupCode.getText()));
+//        member.setxCol1(MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtGroupCode.getText()));
         //member.setMiddleName(txtMiddleName.getText() == null ? "" : txtMiddleName.getText());
         // member.setLastName(txtLastName.getText() == null ? "" : txtLastName.getText());
         member.setFirstNameLocal(txtLocalName.getText() == null ? "" : txtLocalName.getText());
@@ -472,7 +503,7 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setAddress(txtAddress.getText());
         memberDetail.setPincode(txtPinCode.getText());
 
-        memberDetail.setOccupation(cboxOccupation.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setOccupation(cboxOccupation.getSelectionModel().getSelectedItem() == null ? null : cboxOccupation.getSelectionModel().getSelectedItem().toString());
         memberDetail.setNomineeName(txtNomineeName.getText());
         memberDetail.setRelationship(cboxRelation.getSelectionModel().getSelectedItem());
         memberDetail.setLocalNomineeName(txtNomineeNameLocal.getText());
@@ -503,7 +534,7 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setMember(member);
         memberDetail.setCode(member.getCode());
 
-        dto = new MemberDto(member, memberDetail, memberFamilyDetailList, memberCattleDetailList);
+        dto = new MemberDto(member, memberDetail, memberFamilyDetailList, memberCattleDetailList, farmerMapping);
     }
 
     private boolean validate() {
@@ -772,6 +803,38 @@ public class MemberAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
+    private void loadMappedFarmer(String code) {
+        var task = new MappedFarmerLoadTask(code);
+        task.setOnSucceeded(e -> {
+            try {
+                farmerMapping = task.get();
+                if (farmerMapping != null) {
+                    tblFarmerMapping.setItems(FXCollections.observableList(farmerMapping));
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadMember(String code) {
+        var task = new MemberByIdLoadTask(code);
+        task.setOnSucceeded(e -> {
+            try {
+                mappingFarmer = task.get();
+                if (mappingFarmer != null) {
+                    txtChildFarmerCode.setText(mappingFarmer.getCodeEx());
+                    txtChildFarmerName.setText(mappingFarmer.getFirstName());
+                }
+
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
+    }
+
     private void loadRelation() {
         var task = new RelationLoadTask();
         task.setOnSucceeded(e -> {
@@ -833,7 +896,7 @@ public class MemberAddEditController implements MyInitialization {
 //        txtMiddleLocalName.setText(member.getMiddleNameLocal());
 //        txtLocalLastName.setText(member.getLastNameLocal());
         txtMobileNo.setText(member.getMobileNo());
-        txtGroupCode.setText(member.getxCol1().replace(MainApp.identityDto.getSociety().getCode(), ""));
+//        txtGroupCode.setText(member.getxCol1().replace(MainApp.identityDto.getSociety().getCode(), ""));
         if (member.getCreditLimit() != null)
             txtCreditLimit.setText(member.getCreditLimit().toString());
 
@@ -900,7 +963,7 @@ public class MemberAddEditController implements MyInitialization {
 
     private void deleteMemberCattleDetail(MemberCattleDetail memberCattleDetail) {
         try {
-            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("society"),
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("member"),
                     resourceBundle.getString("alert.delete"));
             Optional<ButtonType> resp = alert.createConfirmationAlert();
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
@@ -911,7 +974,7 @@ public class MemberAddEditController implements MyInitialization {
                         try {
                             Boolean respDelete = task.get();
                             if (respDelete == null || !respDelete.booleanValue()) {
-                                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("society"),
+                                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
                                         resourceBundle.getString("error.occurred"));
                                 alert1.createAlert();
                                 return;
@@ -983,7 +1046,7 @@ public class MemberAddEditController implements MyInitialization {
 
     private void deleteMemberFamilyDetail(MemberFamilyDetail memberFamilyDetail) {
         try {
-            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("society"),
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("member"),
                     resourceBundle.getString("alert.delete"));
             Optional<ButtonType> resp = alert.createConfirmationAlert();
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
@@ -994,7 +1057,7 @@ public class MemberAddEditController implements MyInitialization {
                         try {
                             Boolean respDelete = task.get();
                             if (respDelete == null || !respDelete.booleanValue()) {
-                                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("society"),
+                                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
                                         resourceBundle.getString("error.occurred"));
                                 alert1.createAlert();
                                 return;
@@ -1051,6 +1114,54 @@ public class MemberAddEditController implements MyInitialization {
                 }
             });
             new Thread(task).start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private void addFarmerMapping() {
+        try {
+            if (mappingFarmer != null) {
+                farmerMapping.add(mappingFarmer);
+                tblFarmerMapping.setItems(FXCollections.observableList(farmerMapping));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteFarmerMapping(Member member) {
+        try {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString("alert.delete"));
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isPresent() && resp.get() == ButtonType.OK) {
+
+                MemberDto memberDto = new MemberDto();
+                member.setxCol1(null);
+                memberDto.setMember(member);
+                var task = new MemberSaveTask(memberDto, (short) 2);
+                task.setOnSucceeded(e -> {
+                    try {
+                        Boolean respDelete = (Boolean) task.get();
+                        if (respDelete == null || !respDelete.booleanValue()) {
+                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                                    resourceBundle.getString("error.occurred"));
+                            alert1.createAlert();
+                            return;
+                        }
+                        farmerMapping.remove(member);
+                        tblFarmerMapping.setItems(FXCollections.observableList(farmerMapping));
+
+                        this.callback.reloadData(true);
+                    } catch (InterruptedException | ExecutionException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                new Thread(task).start();
+
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

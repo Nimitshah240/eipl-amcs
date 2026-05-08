@@ -26,6 +26,9 @@ public interface MemberRepository extends BaseRepository<Member, String> {
 
     @EntityGraph(attributePaths = {"milkType", "memberType"})
     Member findByCode(String Code);
+
+    @EntityGraph(attributePaths = {"milkType", "memberType"})
+    List<Member> findByxCol1(String Code);
 }
 
 
