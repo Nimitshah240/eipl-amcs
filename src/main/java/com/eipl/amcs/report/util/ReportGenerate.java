@@ -310,6 +310,16 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/EditCollectionReport.jasper";
             case AppConstant.ReportPath.MANUAL_COLLECTION_REPORT:
                 return "resources/report/milkcollection/ManualCollnData.jasper";
+            case AppConstant.ReportPath.ITEM_PURCHASE_REGISTER:
+                return "resources/report/milkcollection/ItemPurReg.jasper";
+            case AppConstant.ReportPath.ITEM_SALE_REGISTER:
+                return "resources/report/milkcollection/ItemSaleReg.jasper";
+            case AppConstant.ReportPath.PRODUCT_STOCK_STATEMENT:
+                return "resources/report/milkcollection/StockStatementReport.jasper";
+            case AppConstant.ReportPath.PRODUCT_STOCK_LEDGER:
+                return "resources/report/milkcollection/ProductStockLedger.jasper";
+            case AppConstant.ReportPath.LEDGER_SUMMARY:
+                return "resources/report/milkcollection/TBReport.jasper";
 
         }
         return null;

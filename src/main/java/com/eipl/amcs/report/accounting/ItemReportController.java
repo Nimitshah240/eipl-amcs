@@ -6,7 +6,10 @@ import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
+import com.eipl.amcs.master.operation.convertor.CustomerConvertor;
 import com.eipl.amcs.master.operation.convertor.LedgerCellFactory;
+import com.eipl.amcs.master.operation.model.Customer;
+import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -26,12 +29,16 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-public class RptLedgerBookController implements MyInitialization {
+public class ItemReportController implements MyInitialization {
 
     @FXML
     private Button btnGenerate, btnGenerate1, btnClose;
     @FXML
-    private ComboBox<Ledger> cboxLedgerName;
+    private ComboBox<Ledger> cboxLedgerName, cboxLedgerName1;
+    @FXML
+    private ComboBox<Customer> cboxCustomer;
+    @FXML
+    private ComboBox<String> cboxSaleType;
     @FXML
     private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
@@ -60,61 +67,65 @@ public class RptLedgerBookController implements MyInitialization {
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
+        List<String> saleType = new ArrayList<>();
+        saleType.add("All");
+        saleType.add("Cash");
+        saleType.add("Credit");
+        cboxSaleType.setItems(FXCollections.observableList(saleType));
+        cboxSaleType.getSelectionModel().select(0);
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
         cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
-        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
-            cboxLanguage.setValue("Gujarati");
-        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
-            cboxLanguage.setValue("Hindi");
-        } else {
-            cboxLanguage.setValue("English");
-        }
         cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
         if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage.setValue("Gujarati");
             cboxLanguage1.setValue("Gujarati");
         } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage.setValue("Hindi");
             cboxLanguage1.setValue("Hindi");
         } else {
+            cboxLanguage.setValue("English");
             cboxLanguage1.setValue("English");
         }
+
+        cboxLedgerName1.setConverter(new LedgerConvertor(cboxLedgerName1));
+        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
+        cboxCustomer.setConverter(new CustomerConvertor(cboxCustomer));
+
     }
 
-    private String getLocaleString() {
-        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
-    }
 
+    //    FOR PURCHASE
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
-        String localeStr = getLocaleString();
+        String localeStr = cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        if (localeStr.equals("en")) {
-            params.put("p_society_name", MainApp.identityDto.getSociety().getName());
-        } else {
-            params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
-        }
+        params.put("p_from_date", String.valueOf(dpFromDate.getValue()));
+        params.put("p_to_date", String.valueOf(dpToDate.getValue()));
+        params.put("p_customer_code", cboxCustomer.getValue().getCode());
         params.put("p_ledger_code", cboxLedgerName.getValue().getCode());
-        params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
-        params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
         params.put("p_locale", localeStr);
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
 
-        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER, params);
+        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ITEM_PURCHASE_REGISTER, params);
         JasperViewer.viewReport(print, false);
     }
 
+    //    FOR SALE
     private void validateAndGenerateReport1() {
         Map<String, Object> params = new HashMap<>();
         String localeStr = cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", String.valueOf(dpFromDate1.getValue()));
         params.put("p_to_date", String.valueOf(dpToDate1.getValue()));
+        params.put("p_sales_type", (cboxSaleType.getSelectionModel().getSelectedIndex()));
+        params.put("p_ledger_code", cboxLedgerName1.getValue().getCode());
         params.put("p_locale", localeStr);
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
 
-        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.LEDGER_SUMMARY, params);
+        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ITEM_SALE_REGISTER, params);
         JasperViewer.viewReport(print, false);
     }
 
@@ -141,11 +152,35 @@ public class RptLedgerBookController implements MyInitialization {
                     cboxLedgerName.setItems(FXCollections.observableList(list2));
                     new AutoCompleteComboBoxListener<>(cboxLedgerName);
                     cboxLedgerName.getSelectionModel().select(0);
+                    cboxLedgerName1.setItems(FXCollections.observableList(list2));
+                    new AutoCompleteComboBoxListener<>(cboxLedgerName1);
+                    cboxLedgerName1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
         });
         new Thread(task).start();
+
+        CustomerLoadTask task1 = new CustomerLoadTask();
+        task1.setOnSucceeded(e -> {
+            try {
+                List<Customer> list = task1.get();
+                if (list != null) {
+                    List<Customer> list2 = new ArrayList<>();
+                    Customer m = new Customer();
+                    m.setCode("0");
+                    m.setName("All");
+                    list2.add(m);
+                    list2.addAll(list);
+                    cboxCustomer.setItems(FXCollections.observableList(list2));
+                    new AutoCompleteComboBoxListener<>(cboxCustomer);
+                    cboxCustomer.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task1).start();
     }
 }

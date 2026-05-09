@@ -265,7 +265,11 @@ public class AppConstant {
         String MILK_DISPATCH_CHALLAN_FORMAT_THREE = "DispatchFormatThree";
         String EDIT_COLLECTION_REPORT = "EditCollectionData";
         String MANUAL_COLLECTION_REPORT = "ManualCollnData";
-
+        String ITEM_PURCHASE_REGISTER = "ItemPurchaseRegister";
+        String ITEM_SALE_REGISTER = "ItemSaleRegister";
+        String PRODUCT_STOCK_STATEMENT = "ProductStockStatement";
+        String PRODUCT_STOCK_LEDGER = "ProductStockLedger";
+        String LEDGER_SUMMARY = "LedgerSummary";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
 
