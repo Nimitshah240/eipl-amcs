@@ -20,7 +20,8 @@ public class MemberDeleteTask extends Task<Boolean> {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
+//        return null;
     }
 }

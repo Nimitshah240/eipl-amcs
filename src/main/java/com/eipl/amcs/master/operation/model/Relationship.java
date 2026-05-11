@@ -1,5 +1,6 @@
 package com.eipl.amcs.master.operation.model;
 
+import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,12 +18,13 @@ public class Relationship {
     @Id
     private Integer relationshipCode;
     private String relationship;
+    private String relationship_local;
     @Column(name = "is_active")
     private boolean active;
 
     @Override
     public String toString() {
-        return this.relationship;
+        return CommonUtils.getLocalString(this.relationship, this.relationship_local);
     }
 
 }

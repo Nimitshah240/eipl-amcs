@@ -45,7 +45,7 @@
                         <Label text="%designation" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <Label text="%committeename.local" GridPane.columnIndex="2" />
                         <Label maxWidth="1.7976931348623157E308" text="%formationdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="%committeemembers" GridPane.rowIndex="4" />
+                        <Label text="%committeemembers" GridPane.rowIndex="4"  styleClass="sub-header-text-primary" />
                         <Separator maxHeight="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
                         <Label text="%member.name" GridPane.rowIndex="5" />
                         <HBox spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
@@ -77,7 +77,7 @@
                 </GridPane>
                 <HBox>
                     <children>
-                        <Label text="%committeememberlist" />
+                        <Label text="%committeememberlist" styleClass="sub-header-text-primary" />
                         <Separator maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>

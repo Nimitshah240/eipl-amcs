@@ -35,9 +35,9 @@
                         <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="%voucherdate" />
+                        <Label text="%date" />
                         <DatePicker fx:id="dpVoucherDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <Label text="%billrefno" GridPane.columnIndex="1" />
+                        <Label text="%billno" GridPane.columnIndex="1" />
                         <E_TextField fx:id="txtBillRefNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="%voucherno" GridPane.columnIndex="2" />
                         <E_TextField fx:id="txtVoucherNo" disable="true" editable="false" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
@@ -72,7 +72,7 @@
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                     <children>
                                                         <Label minWidth="40.0" prefHeight="17.0" prefWidth="92.0" text="%totalcredit" />
-                                                        <Label fx:id="lblCredit" contentDisplay="CENTER" minWidth="80.0" text="S" />
+                                                        <Label fx:id="lblCredit" contentDisplay="CENTER" minWidth="80.0" text="0" />
                                                     </children>
                                                 </HBox>
                                             </children>

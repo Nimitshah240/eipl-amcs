@@ -113,10 +113,10 @@ public class HavaloController implements MyInitialization, PopupCallback {
         this.resourceBundle = resourceBundle;
         setupTable();
         btnCredit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryCredit", null, this, "Voucher");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryCredit", null, this, resourceBundle.getString("receipt.credit"));
         });
         btnDebit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryDebit", null, this, "Voucher");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryDebit", null, this,  resourceBundle.getString("receipt.debit"));
         });
         dpVoucherDate.setValue(LocalDate.now());
         getNextVoucherCode();

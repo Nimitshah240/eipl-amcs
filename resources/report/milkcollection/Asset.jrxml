@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Asset" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="585" leftMargin="10" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="i18n" uuid="e39b1d73-7c36-46cd-a34e-2151168988c9">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -40,12 +40,11 @@
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="35" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="100" height="15" backcolor="#FFFFFF" uuid="947b8239-ece6-4118-90f6-4b30c34c8d3d">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="150" height="15" backcolor="#EDEDFA" uuid="d38405d8-091b-4ef2-a13c-b20544269d7e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
@@ -59,22 +58,7 @@
 				<textFieldExpression><![CDATA[$R{accounting.asset}+":-"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="20" width="150" height="15" backcolor="#EDEDFA" uuid="d38405d8-091b-4ef2-a13c-b20544269d7e">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<box leftPadding="5" rightPadding="5">
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{accounting.ledger.name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="20" width="100" height="15" backcolor="#EDEDFA" uuid="d4995eb0-089a-4d73-a61d-397f4c8c98ae">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="0" width="100" height="15" backcolor="#EDEDFA" uuid="d4995eb0-089a-4d73-a61d-397f4c8c98ae">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -102,7 +86,9 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{ledgerName}]]></textFieldExpression>
 			</textField>
 			<textField>

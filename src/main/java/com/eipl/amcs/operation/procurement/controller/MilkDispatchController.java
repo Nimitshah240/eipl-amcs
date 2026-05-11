@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
@@ -20,10 +20,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
@@ -98,18 +95,51 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MILK_DISPATCH_EDIT"))
                 throw new UnAuthorizedAccessException();
-            if (propMilkDispatch.get() != null) {
-                MilkDispatchAddEditController controller = (MilkDispatchAddEditController) MainApp.getFxmlLoaderUtil()
-                        .loadAndSet(MainApp.class.getResource("view/operation/procurement/MilkDispatchAddEdit.fxml"));
-                controller.setMilkDispatch(propMilkDispatch.get());
-                MainApp.getContentPane().setCenter((controller).getRoot());
-            }
+            editMilkDispatch(propMilkDispatch.get());
         });
 
         btnDispatchNote.setOnAction(e -> {
                     MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MilkDispatchReportPopup", propMilkDispatch.get(), this);
                 }
         );
+
+        tableMilkDispatch.setRowFactory(tv -> {
+            TableRow<MilkDispatch> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    MilkDispatch data = row.getItem();
+                    editMilkDispatch(data);
+                }
+            });
+            return row;
+        });
+
+        tableMilkDispatch.setOnKeyPressed(event -> {
+            MilkDispatch dto = tableMilkDispatch.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editMilkDispatch(dto);
+                    break;
+                case DELETE:
+                    deleteData();
+                    break;
+            }
+        });
+    }
+
+    private void editMilkDispatch(MilkDispatch dto) {
+        try {
+            if (dto != null) {
+                MilkDispatchAddEditController controller = (MilkDispatchAddEditController) MainApp.getFxmlLoaderUtil()
+                        .loadAndSet(MainApp.class.getResource("view/operation/procurement/MilkDispatchAddEdit.fxml"));
+                controller.setMilkDispatch(dto);
+                MainApp.getContentPane().setCenter((controller).getRoot());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

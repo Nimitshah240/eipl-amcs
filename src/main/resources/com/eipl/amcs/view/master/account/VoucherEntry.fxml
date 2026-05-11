@@ -44,11 +44,11 @@
                         <E_TextField fx:id="txtVoucherNo" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_DatePicker fx:id="dpVoucherDate" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtBillNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <E_ComboBox fx:id="cboxLedger" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
+                        <E_ComboBox fx:id="cboxLedger" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
                         <E_TextField fx:id="txtNarration" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <E_TextField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <Label text="%ledger" GridPane.rowIndex="3" />
-                        <Label text="%voucherdate" />
+                        <Label text="%date" />
                         <Label text="%narration" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="%voucherno" GridPane.columnIndex="1" />
                         <Label text="%billno" GridPane.columnIndex="2" />

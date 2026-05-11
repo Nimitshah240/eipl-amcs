@@ -84,13 +84,13 @@ public class RojmedController implements MyInitialization, PopupCallback {
         });
         dpDate.setValue(LocalDate.now());
         btnCredit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", null, this, "Voucher");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", null, this, resourceBundle.getString("credit.entry"));
         });
         btnDebit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", null, this, "Voucher");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", null, this, resourceBundle.getString("debit.entry"));
         });
         btnJournal.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "Havalo", null, this, "Havalo");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "Havalo", null, this, resourceBundle.getString("journal.entry"));
         });
         btnSale.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml")));
@@ -190,7 +190,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
             lblTotalDebit.setText("0");
             crTotal = BigDecimal.ZERO;
             drTotal = BigDecimal.ZERO;
-            List<String> columnNames = Arrays.asList("Ledger", "Amount");
+            List<String> columnNames = Arrays.asList(resourceBundle.getString("ledger"), resourceBundle.getString("amount"));
 
             for (String name : columnNames) {
                 // Create Column for Table 1
@@ -310,19 +310,19 @@ public class RojmedController implements MyInitialization, PopupCallback {
 
         for (Ledger ledger : ledgerTransactionMap.keySet()) {
             SummaryRow sum1 = new SummaryRow();
-            sum1.setColumnValue("Ledger", ledger.getName());
+            sum1.setColumnValue(resourceBundle.getString("ledger"), ledger.toString());
             BigDecimal totalAmt = BigDecimal.ZERO;
 
             List<DataEntryRow> dataEntryRowList = new ArrayList<>();
             for (VoucherTransaction voucherTransaction : ledgerTransactionMap.get(ledger)) {
                 totalAmt = totalAmt.add(voucherTransaction.getAmount());
                 DataEntryRow row1 = new DataEntryRow();
-                row1.setColumnValue("Ledger", " - " + voucherTransaction.getNarration());
-                row1.setColumnValue("Amount", voucherTransaction.getAmount().toString());
+                row1.setColumnValue(resourceBundle.getString("ledger"), " - " + voucherTransaction.getNarration());
+                row1.setColumnValue(resourceBundle.getString("amount"), voucherTransaction.getAmount().toString());
                 row1.setId(voucherTransaction.getCode());
                 dataEntryRowList.add(row1);
             }
-            sum1.setColumnValue("Amount", totalAmt.toString());
+            sum1.setColumnValue(resourceBundle.getString("amount"), totalAmt.toString());
             data.add(sum1);
             data.addAll(dataEntryRowList);
         }
@@ -332,12 +332,12 @@ public class RojmedController implements MyInitialization, PopupCallback {
 
     private void handleCreditDoubleClick(String id) {
         VoucherTransaction vt = voucherTransactionMap.get(id);
-        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", vt.getVoucher(), this, "Voucher");
+        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", vt.getVoucher(), this, resourceBundle.getString("credit.entry"));
     }
 
     private void handleDebitDoubleClick(String id) {
         VoucherTransaction vt = voucherTransactionMap.get(id);
-        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", vt.getVoucher(), this, "Voucher");
+        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", vt.getVoucher(), this, resourceBundle.getString("debit.entry"));
     }
 
     private void getOpeningLedgerBalance() {

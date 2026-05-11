@@ -269,8 +269,8 @@
 	</style>
 	<parameter name="p_society_code" class="java.lang.String"/>
 	<parameter name="p_from_date" class="java.lang.String"/>
-	<parameter name="p_locale" class="java.lang.String"/>
 	<parameter name="p_to_date" class="java.lang.String"/>
+	<parameter name="p_locale" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[CALL rpt_ledger_summary($P{p_society_code}, $P{p_from_date}, $P{p_to_date}, $P{p_locale});]]>
 	</queryString>
@@ -325,9 +325,9 @@
 					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{trial_date_heading} + " " + 
-new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_from_date})) + 
+new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_from_date})) + 
 " " + $R{to} + " " + 
-new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_to_date}))]]></textFieldExpression>
+new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_to_date}))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="1" width="555" height="19" uuid="4258b174-b006-416a-b697-99017425161f">

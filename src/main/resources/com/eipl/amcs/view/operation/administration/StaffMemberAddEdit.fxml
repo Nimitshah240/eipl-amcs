@@ -73,9 +73,9 @@
                                                 <Label text="%resigndate" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                                                 <Label text="%salary" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                                                 <Label text="%address" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                <Label text="%farmercode" GridPane.rowIndex="8" />
+                                                <Label text="%membercode" GridPane.rowIndex="8" />
                                                 <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="10"/>
-                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%bankdetail" GridPane.rowIndex="10"/>
+                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%bankdetail" styleClass="sub-header-text-primary" GridPane.rowIndex="10"/>
                                                 <RadioButton fx:id="rbtnCash" mnemonicParsing="false" selected="true" text="%cash" GridPane.rowIndex="11">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="paymentType1" />
@@ -137,8 +137,8 @@
                                             <children>
                                                 <Separator prefWidth="200.0" GridPane.columnIndex="1" />
                                                 <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%nomineedetail"/>
-                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%guarantordetail" GridPane.rowIndex="3"/>
+                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%nomineedetail" styleClass="sub-header-text-primary"/>
+                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%guarantordetail" styleClass="sub-header-text-primary" GridPane.rowIndex="3"/>
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%name" GridPane.rowIndex="1"/>
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%relation" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                                                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%name" GridPane.rowIndex="4"/>
@@ -147,7 +147,7 @@
                                                 <E_TextField fx:id="txtRelation" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                                                 <E_TextField fx:id="txtGuarantorName" GridPane.rowIndex="5" />
                                                 <E_TextField fx:id="txtGuarantorMobileNo" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%otherdetail" GridPane.rowIndex="6"/>
+                                                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%otherdetail" styleClass="sub-header-text-primary" GridPane.rowIndex="6"/>
                                                 <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                                                 <E_TextField fx:id="txtPfLoanAmount" GridPane.rowIndex="8" />
                                                 <E_TextField fx:id="txtPfAmount" GridPane.columnIndex="1" GridPane.rowIndex="8"/>

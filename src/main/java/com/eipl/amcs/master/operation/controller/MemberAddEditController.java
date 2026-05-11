@@ -405,7 +405,7 @@ public class MemberAddEditController implements MyInitialization {
         colCalf.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCalf() != null ? String.valueOf(data.getValue().getCalf()) : ""));
         colTotal.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTotal() != null ? String.valueOf(data.getValue().getTotal()) : ""));
         colChildFarmerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx() != null ? String.valueOf(data.getValue().getCodeEx()) : ""));
-        colChildFarmerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() != null ? String.valueOf(data.getValue().getFirstName()) : ""));
+        colChildFarmerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFirstName() != null ? String.valueOf(data.getValue().toMemberName()) : ""));
         propMemberCattleDetail.bind(tblCattleDetail.getSelectionModel().selectedItemProperty());
         propMembmerFamiliyDetail.bind(tblFamilyDetail.getSelectionModel().selectedItemProperty());
         propFarmerMapping.bind(tblFarmerMapping.getSelectionModel().selectedItemProperty());

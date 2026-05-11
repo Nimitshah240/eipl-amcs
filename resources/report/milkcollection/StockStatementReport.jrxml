@@ -72,7 +72,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[ $F{society_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{society_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -101,14 +101,18 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{date}+" :"+ $P{p_from_date}+"  "+$R{to}+"  "+$P{p_to_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{date} + " :" + 
+new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_from_date})) + 
+"  " + 
+$R{to} + " " + 
+new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_to_date}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="25" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="70" height="20" uuid="21886e24-badb-4276-9992-7880aedd67e4">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="70" height="20" backcolor="#EDEDFA" uuid="21886e24-badb-4276-9992-7880aedd67e4">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -126,7 +130,7 @@
 				<textFieldExpression><![CDATA[$R{sr_no}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="70" y="0" width="120" height="20" uuid="33e69b31-1124-4827-876c-9a0146432bf2">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="70" y="0" width="120" height="20" backcolor="#EDEDFA" uuid="33e69b31-1124-4827-876c-9a0146432bf2">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -144,7 +148,7 @@
 				<textFieldExpression><![CDATA[$R{item_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="190" y="0" width="90" height="20" uuid="4cc33720-9b5f-4990-886d-a0a7c11c59f7">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="190" y="0" width="90" height="20" backcolor="#EDEDFA" uuid="4cc33720-9b5f-4990-886d-a0a7c11c59f7">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
@@ -161,7 +165,7 @@
 				<textFieldExpression><![CDATA[$R{opening_stock}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="280" y="0" width="79" height="20" uuid="3f58cd72-5572-4248-b6b0-c034d37a7927">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="280" y="0" width="79" height="20" backcolor="#EDEDFA" uuid="3f58cd72-5572-4248-b6b0-c034d37a7927">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -179,7 +183,7 @@
 				<textFieldExpression><![CDATA[$R{purchase}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="359" y="0" width="81" height="20" uuid="c209a791-5306-4d99-ba2c-4048ef86374b">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="359" y="0" width="81" height="20" backcolor="#EDEDFA" uuid="c209a791-5306-4d99-ba2c-4048ef86374b">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -197,7 +201,7 @@
 				<textFieldExpression><![CDATA[$R{sales}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="440" y="0" width="115" height="20" uuid="6001ec20-a5e0-4fbd-be85-0b8397387837">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="440" y="0" width="115" height="20" backcolor="#EDEDFA" uuid="6001ec20-a5e0-4fbd-be85-0b8397387837">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

@@ -18,7 +18,7 @@
                 <Label styleClass="header-text" text="%staff" />
                 <TableView fx:id="tableStaffMember" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colMembername" minWidth="200.0" prefWidth="180.0" text="%membername" />
+                        <TableColumn fx:id="colMembername" minWidth="200.0" prefWidth="180.0" text="%staffname" />
                         <TableColumn fx:id="colDesignation" prefWidth="150.0" text="%designation" />
                   <TableColumn fx:id="colTenureFromDate" minWidth="150.0" prefWidth="120.0" text="%tenurefromdate" />
                   <TableColumn fx:id="colTenureToDate" minWidth="120.0" prefWidth="100.0" text="%tenuretodate" />

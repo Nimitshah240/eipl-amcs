@@ -123,8 +123,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             if (!MainApp.user.getPermissions().contains("ACTION_LOCAL_MILK_SALE_EDIT"))
                 throw new UnAuthorizedAccessException();
             LocalMilkSale dto = propLocalMilkSaleDto.get();
-            if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleAddEdit", dto, this, resourceBundle.getString("localmilksale"));
+            editLocalMilkSale(dto);
         });
         btnSearch.setOnAction(e -> loadData());
         btnDelete.setOnAction(e -> {
@@ -142,6 +141,41 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             }
         });
         FocusUtils.requestFocus(btnAdd);
+
+        tableLocalMilkSale.setRowFactory(tv -> {
+            TableRow<LocalMilkSale> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    LocalMilkSale data = row.getItem();
+                    editLocalMilkSale(data);
+                }
+            });
+            return row;
+        });
+
+        tableLocalMilkSale.setOnKeyPressed(event -> {
+            LocalMilkSale dto = tableLocalMilkSale.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editLocalMilkSale(dto);
+                    break;
+                case DELETE:
+                    deleteData();
+                    break;
+            }
+        });
+    }
+
+    private void editLocalMilkSale(LocalMilkSale localMilkSale) {
+        try {
+            if (localMilkSale != null) {
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LocalMilkSaleAddEdit", localMilkSale, this, resourceBundle.getString("localmilksale"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.operation.administartion.task.StaffMembersDeleteTask;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
@@ -16,10 +15,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
@@ -74,8 +70,7 @@ public class StaffController implements MyInitialization, PopupCallback {
         });
         btnEdit.setOnAction(e -> {
             StaffMember staffMember = propStaffMembertDto.get();
-            if (staffMember != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", staffMember, this, resourceBundle.getString("staff"));
+            editStaff(staffMember);
         });
         btnDelete.setOnAction(e -> {
             deleteData();
@@ -83,6 +78,41 @@ public class StaffController implements MyInitialization, PopupCallback {
         btnSalary.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffSalary", null, this, resourceBundle.getString("staffsalary"));
         });
+
+        tableStaffMember.setRowFactory(tv -> {
+            TableRow<StaffMember> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    StaffMember data = row.getItem();
+                    editStaff(data);
+                }
+            });
+            return row;
+        });
+
+        tableStaffMember.setOnKeyPressed(event -> {
+            StaffMember dto = tableStaffMember.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editStaff(dto);
+                    break;
+                case DELETE:
+                    deleteData();
+                    break;
+            }
+        });
+    }
+
+    private void editStaff(StaffMember staffMember) {
+        try {
+            if (staffMember != null) {
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "StaffMemberAddEdit", staffMember, this, resourceBundle.getString("staff"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -110,7 +110,7 @@ public class MemberController implements MyInitialization, PopupCallback {
         btnAdd.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_ADD"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", null, this, resourceBundle.getString("member"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", null, this, resourceBundle.getString("members"));
 //
 //            MemberAddEditController controller = (MemberAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/operation/MemberAddEdit.fxml"));
 //            controller.setMember(null);
@@ -183,7 +183,7 @@ public class MemberController implements MyInitialization, PopupCallback {
     private void editMember(Member member) {
         try {
             if (member != null) {
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", member, this, resourceBundle.getString("member"));
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "MemberAddEdit", member, this, resourceBundle.getString("members"));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -551,6 +551,16 @@ public class MemberController implements MyInitialization, PopupCallback {
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
                     }
+                });
+                task.setOnFailed(e -> {
+                    Throwable t = task.getException();
+                    String errorMessage = "error.occurred";
+                    if (t.getMessage().contains("ConstraintViolationException")) {
+                        errorMessage = "foreign.key.fails";
+                    }
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                            resourceBundle.getString(errorMessage));
+                    alert1.createAlert();
                 });
                 new Thread(task).start();
             }
