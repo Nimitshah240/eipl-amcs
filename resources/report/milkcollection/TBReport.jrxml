@@ -274,10 +274,6 @@
 	<queryString>
 		<![CDATA[CALL rpt_ledger_summary($P{p_society_code}, $P{p_from_date}, $P{p_to_date}, $P{p_locale});]]>
 	</queryString>
-	<field name="credit_ledger_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="credit_ledger_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ledgers"/>
-	</field>
 	<field name="society_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="society_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="society"/>
@@ -287,6 +283,10 @@
 		<property name="com.jaspersoft.studio.field.label" value="society_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="society"/>
 		<property name="com.jaspersoft.studio.field.name" value="society_code"/>
+	</field>
+	<field name="credit_ledger_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="credit_ledger_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ledgers"/>
 	</field>
 	<field name="credit_amt" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="credit_amt"/>
@@ -311,42 +311,45 @@
 		<band height="14" splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="18" splitType="Stretch"/>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement style="Table_CH" mode="Transparent" x="0" y="0" width="554" height="28" uuid="90c202f2-4af2-4363-b7ca-16dadc21c545">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Noto" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{trial_report}]]></textFieldExpression>
+			</textField>
+		</band>
 	</title>
 	<pageHeader>
-		<band height="61" splitType="Stretch">
+		<band height="38" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement stretchType="RelativeToTallestObject" x="3" y="38" width="555" height="17" uuid="1d9571de-162e-480e-ab1e-1601631fc97a">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="21" width="380" height="17" uuid="1d9571de-162e-480e-ab1e-1601631fc97a">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Noto" size="10" isBold="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{trial_date_heading} + " " + 
+				<textFieldExpression><![CDATA["  "+ $R{trial_date_heading} + " " + 
 new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_from_date})) + 
 " " + $R{to} + " " + 
 new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_to_date}))]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="1" width="555" height="19" uuid="4258b174-b006-416a-b697-99017425161f">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="380" height="21" uuid="4258b174-b006-416a-b697-99017425161f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Noto" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{society_name}+" - "+$F{society_code}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Table_CH" mode="Transparent" x="0" y="21" width="555" height="17" uuid="90c202f2-4af2-4363-b7ca-16dadc21c545">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -354,10 +357,29 @@ new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateForm
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{trial_report}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["  "+ $F{society_name}+" - "+$F{society_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="411" y="23" width="78" height="15" uuid="84912c98-7e98-492b-8ce7-b4a1150a426e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Noto" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{print_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+				<reportElement stretchType="RelativeToTallestObject" x="489" y="23" width="66" height="15" uuid="024a7e9d-669b-45fa-b2bf-e0dfc32b66f8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -511,17 +533,15 @@ new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateForm
 		</band>
 	</columnFooter>
 	<summary>
-		<band height="21" splitType="Stretch">
-			<line>
-				<reportElement x="0" y="1" width="555" height="1" uuid="88753396-ac83-4598-8054-49511fc5ea1c"/>
-				<graphicElement>
-					<pen lineStyle="Dashed"/>
-				</graphicElement>
-			</line>
+		<band height="18" splitType="Stretch">
 			<textField>
-				<reportElement mode="Opaque" x="98" y="2" width="133" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="ab4cd445-a785-47ba-a2ae-de437174929a"/>
+				<reportElement mode="Opaque" x="98" y="0" width="133" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="ab4cd445-a785-47ba-a2ae-de437174929a"/>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
@@ -529,11 +549,15 @@ new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateForm
 				<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="231" y="2" width="100" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="a5714814-0daa-421a-880c-09818ecfd055">
+				<reportElement mode="Opaque" x="231" y="0" width="100" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="a5714814-0daa-421a-880c-09818ecfd055">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
@@ -541,11 +565,15 @@ new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateForm
 				<textFieldExpression><![CDATA[$V{total_credit_amt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="430" y="2" width="125" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="39e80438-ccd7-4b5f-982e-377ed86b088d">
+				<reportElement mode="Opaque" x="430" y="0" width="125" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="39e80438-ccd7-4b5f-982e-377ed86b088d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
@@ -553,9 +581,13 @@ new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateForm
 				<textFieldExpression><![CDATA[$V{total_debit_amt}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="331" y="2" width="99" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="58b073f2-cac2-49bb-8de4-89242b0dd4fe"/>
+				<reportElement mode="Opaque" x="331" y="0" width="99" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="58b073f2-cac2-49bb-8de4-89242b0dd4fe"/>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
@@ -563,11 +595,15 @@ new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateForm
 				<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="2" width="98" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="5c9aa32e-723c-4b52-af35-5b02374e130e">
+				<reportElement mode="Opaque" x="0" y="0" width="98" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="5c9aa32e-723c-4b52-af35-5b02374e130e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<pen lineWidth="1.0" lineStyle="Dashed"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>

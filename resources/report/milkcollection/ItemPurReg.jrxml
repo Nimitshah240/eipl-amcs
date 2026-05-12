@@ -111,7 +111,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto" size="11" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{total}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00">
 					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="284" y="0" width="112" height="22" backcolor="#EDEDFA" uuid="2e31cbc7-0de6-495d-87b5-513907f536a8">
@@ -308,26 +308,26 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="49" splitType="Stretch">
+		<band height="34" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="18" width="555" height="16" uuid="61ab32eb-a80f-4a3e-bdf8-cb12bb080915">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="18" width="410" height="16" uuid="61ab32eb-a80f-4a3e-bdf8-cb12bb080915">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{date} + " :" + 
+				<textFieldExpression><![CDATA["  "+ $R{date} + " :" + 
 new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_from_date})) + 
 "  " + 
 $R{to} + " " + 
 new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_to_date}))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="411" y="34" width="78" height="15" uuid="b853a31f-5e4e-4e87-ab64-8c9cca0c40db">
+				<reportElement stretchType="RelativeToTallestObject" x="410" y="19" width="78" height="15" uuid="b853a31f-5e4e-4e87-ab64-8c9cca0c40db">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
@@ -339,14 +339,14 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 				<textFieldExpression><![CDATA[$R{print_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement stretchType="RelativeToTallestObject" x="489" y="34" width="66" height="15" uuid="ddf5ec86-0bd8-4f92-ad7a-0ac4334498af">
+				<reportElement stretchType="RelativeToTallestObject" x="488" y="19" width="66" height="15" uuid="ddf5ec86-0bd8-4f92-ad7a-0ac4334498af">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="555" height="18" uuid="c4acb1c7-d784-474f-81c7-f304b0f26e72">
+				<reportElement x="0" y="0" width="410" height="18" uuid="c4acb1c7-d784-474f-81c7-f304b0f26e72">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
@@ -357,10 +357,10 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{society_name}+" - " + $F{society_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["  "+ $F{society_name}+" - " + $F{society_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
