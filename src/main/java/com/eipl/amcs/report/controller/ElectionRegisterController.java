@@ -4,9 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.global.convertor.GenderConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
+import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
@@ -19,15 +22,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
+import java.sql.Timestamp;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import net.sf.jasperreports.engine.JRParameter;
 
 public class ElectionRegisterController implements MyInitialization {
 
@@ -39,7 +43,9 @@ public class ElectionRegisterController implements MyInitialization {
     private DatePicker dpToDate, dpFromDate;
     @FXML
     private ComboBox<MilkType> cboxReportType;
-
+    @FXML
+    private ComboBox<Gender> cboxGender;
+    private List<Gender> genderList;
     @FXML
     private ComboBox<String> cboxQtyAmount, cboxLanguage;
     @FXML
@@ -94,6 +100,7 @@ public class ElectionRegisterController implements MyInitialization {
     @Override
     public void setupComboBox() {
         cboxReportType.setConverter(new MilkTypeConvertor(cboxReportType));
+        cboxGender.setConverter(new GenderConvertor(cboxGender));
     }
 
     private String getLocaleString() {
@@ -103,10 +110,11 @@ public class ElectionRegisterController implements MyInitialization {
     private void validateAndGenerateReport() {
         Map<String, Object> params = new HashMap<>();
         String localeStr = getLocaleString();
-        params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-        params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_from_date", Timestamp.valueOf(dpFromDate.getValue().atTime(cboxFromShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
+        params.put("p_to_date", Timestamp.valueOf(dpToDate.getValue().atTime(cboxToShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_animal_type", cboxReportType.getValue().getCode());
+        params.put("p_gender_code", cboxGender.getValue().getCode());
         params.put("p_limit", Integer.parseInt(txtLimit.getText()));
         params.put("p_qty_amount", cboxQtyAmount.getSelectionModel().getSelectedIndex() == 0 ? 1 : 2);
         params.put("p_locale", localeStr);
@@ -154,5 +162,25 @@ public class ElectionRegisterController implements MyInitialization {
             }
         });
         new Thread(task2).start();
+
+        GenderLoadTask task = new GenderLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Gender> list = task.get();
+                if (list != null) {
+                    genderList = new ArrayList<>();
+                    Gender allGender = new Gender();
+                    allGender.setCode(0);
+                    allGender.setName(MainApp.bundle.getString("all"));
+                    genderList.add(allGender);
+                    genderList.addAll(list);
+                    cboxGender.setItems(FXCollections.observableList(genderList));
+                    cboxGender.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 }
