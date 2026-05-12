@@ -342,7 +342,7 @@ public class VoucherEntryController implements MyInitialization {
                     cboxLedger.setItems(FXCollections.observableList(list));
 
                     Ledger cashLedger = list.stream()
-                            .filter(t -> t.getName().equalsIgnoreCase("CASH-ON-HAND"))
+                            .filter(t -> t.getName().equalsIgnoreCase("CASH ON HAND AC"))
                             .findFirst()
                             .orElse(new Ledger());
 

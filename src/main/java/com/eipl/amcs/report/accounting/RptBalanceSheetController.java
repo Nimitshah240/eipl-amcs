@@ -58,7 +58,7 @@ public class RptBalanceSheetController implements MyInitialization {
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         btnGenerate.setOnAction(e -> {
-            loadData();
+            loadPL();
         });
 
         btnClose.setOnAction(e -> {
@@ -89,7 +89,7 @@ public class RptBalanceSheetController implements MyInitialization {
             try {
                 List<LedgerBalance> list = balanceSheetTask.get();
                 if (list == null) {
-                    return;
+                    list = new ArrayList<>();
                 }
                 Map<String, Object> param = new HashMap<>();
                 param.put("p_society_code", MainApp.identityDto.getSociety().getCode());
@@ -104,8 +104,8 @@ public class RptBalanceSheetController implements MyInitialization {
                 param.put("p_locale", localeStr);
 
 //                Change made by manoj - (12.05.2022)
-                if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty())
-                    loadPL();
+//                if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty())
+//                    loadPL();
                 double diff = 0;
                 if (listPLExpense != null && listPLIncome != null) {
                     diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
@@ -157,9 +157,13 @@ public class RptBalanceSheetController implements MyInitialization {
                 listPLExpense = profitLossTask.get();
                 listPLIncome = listPLIncome.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
                 listPLExpense = listPLExpense.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+                loadData();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        profitLossTask.setOnFailed(e -> {
+            loadData();
         });
         new Thread(profitLossTask).start();
     }

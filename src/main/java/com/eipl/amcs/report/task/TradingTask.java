@@ -32,8 +32,8 @@ public class TradingTask extends Task<List<LedgerBalance>> {
         try {
             ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
             List<LedgerBalance> list = fetchTrading(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), locale);
-            if (list == null || list.isEmpty())
-                return null;
+            if (list == null)
+                list = new ArrayList<>();
             return list;
         } catch (Exception e) {
             e.printStackTrace();

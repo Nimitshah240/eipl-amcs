@@ -296,6 +296,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             productReceipt.setAmount(new BigDecimal(txtTotalAmount.getText()));
             productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getText()));
             productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getText()));
+            productReceipt.setDiscount(BigDecimal.ZERO);
 
             ProductReceiptDto productReceiptDto = new ProductReceiptDto();
             productReceiptDto.setProductReceipt(productReceipt);
@@ -335,12 +336,16 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         productReceipt.setAmount(new BigDecimal(txtTotalAmount.getText()));
         productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getText()));
         productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getText()));
+        productReceipt.setDiscount(BigDecimal.ZERO);
+
         ProductReceiptDto productReceiptDto = new ProductReceiptDto();
         List<ReceiptTxnTaxDto> list2 = new ArrayList<>();
         for (ReceiptTxnTaxDto txnTaxDto : receiptTxnTaxDtoList) {
+            txnTaxDto.getTransaction().setDiscount(BigDecimal.ZERO);
             for (ProductReceiptTransaction productSaleTransaction : listProductReceiptTransaction) {
-                if (txnTaxDto.getTransaction() == productSaleTransaction)
+                if (txnTaxDto.getTransaction() == productSaleTransaction) {
                     list2.add(txnTaxDto);
+                }
             }
         }
         productReceiptDto.setProductReceipt(productReceipt);
@@ -568,7 +573,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txn.setNetAmount(new BigDecimal(txtProductTotalAmount.getText()));
         txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
-
+        txn.setDiscount(BigDecimal.ZERO);
         return txn;
     }
 

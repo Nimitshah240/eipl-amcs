@@ -32,8 +32,9 @@ public class BalanceSheetTask extends Task<List<LedgerBalance>> {
 
             List<Object[]> listObject = ledgerRepository.fetchBalanceSheet(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 0, locale);
             List<LedgerBalance> listResp = new ArrayList<>();
-            if (listObject == null || listObject.isEmpty())
-                return null;
+            if (listObject == null)
+                listObject = new ArrayList<>();
+
             listObject.forEach(item -> {
                 listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
             });
@@ -43,8 +44,9 @@ public class BalanceSheetTask extends Task<List<LedgerBalance>> {
 
             listResp.clear();
             List<Object[]> listObject1 = ledgerRepository.fetchBalanceSheet(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 1, locale);
-            if (listObject1 == null || listObject1.isEmpty())
-                return null;
+            if (listObject1 == null)
+                listObject1 = new ArrayList<>();
+
             listObject1.forEach(item -> {
                 listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
             });

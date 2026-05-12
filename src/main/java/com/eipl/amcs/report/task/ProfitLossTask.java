@@ -34,14 +34,16 @@ public class ProfitLossTask extends Task<List<LedgerBalance>> {
             List<LedgerBalance> list = new ArrayList<>();
             ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
             List<LedgerBalance> listExpense = fetchProfitLoss(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 0, locale);
-            if (listExpense == null || listExpense.isEmpty())
-                return null;
+            if (listExpense == null)
+                listExpense = new ArrayList<>();
+//                return null;
             listExpense.forEach(item -> item.setIncomeExpense(0));
             list.addAll(listExpense);
 
             List<LedgerBalance> listIncome = fetchProfitLoss(societyCode, CommonUtils.convertToSqlDate(fromDate), CommonUtils.convertToSqlDate(toDate), 1, locale);
-            if (listIncome == null || listIncome.isEmpty())
-                return null;
+            if (listIncome == null )
+                listIncome = new ArrayList<>();
+//                return null;
             listIncome.forEach(item -> item.setIncomeExpense(1));
             list.addAll(listIncome);
 
