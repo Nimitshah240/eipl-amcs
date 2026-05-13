@@ -53,7 +53,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="Noto" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{accounting.liability}+":-"]]></textFieldExpression>
 			</textField>
@@ -88,7 +88,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="Noto" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ledgerName}]]></textFieldExpression>
 			</textField>
@@ -103,7 +103,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="SansSerif" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
 			</textField>

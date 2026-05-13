@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IncomeSide" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="i18n" uuid="fdb87072-be63-46ef-a4a0-0616fe18ab13">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.leftMargin" value="inch"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,6 +10,8 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="EiplAmcsDb"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="noto" fontName="Noto" fontSize="10"/>
 	<subDataset name="Dataset1" uuid="5afaafc6-49f3-4743-af3d-114ff84df43b">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -51,7 +52,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{accounting.incomeside}+":-"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{account.credit}+":-"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="0" width="100" height="15" backcolor="#EDEDFA" uuid="c5483643-4b6f-46fd-bc91-7e84bea3d132">
@@ -66,7 +67,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{account.amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{credit}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>

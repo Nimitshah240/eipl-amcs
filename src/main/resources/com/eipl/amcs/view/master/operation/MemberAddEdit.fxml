@@ -28,7 +28,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefHeight="750.0" prefWidth="900.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.operation.controller.MemberAddEditController">
+<StackPane fx:id="root" prefHeight="750.0" prefWidth="900.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.operation.controller.MemberAddEditController">
     <children>
         <VBox fx:id="vbox" spacing="15.0">
             <children>
@@ -77,12 +77,12 @@
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%panno" GridPane.columnIndex="1" GridPane.rowIndex="13" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%aadharcardno" GridPane.columnIndex="2" GridPane.rowIndex="13" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%membertype" GridPane.columnIndex="1" />
-                                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%code" />
+                                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%membercode" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%name" GridPane.rowIndex="2" />
                                                         <Label fx:id="lblLocalName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%localname" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%occupation" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%mobileno" GridPane.columnIndex="3" GridPane.rowIndex="11" />
-                                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%registrationdate" GridPane.columnIndex="2" />
+                                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%joiningdate" GridPane.columnIndex="2" />
                                                         <TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                                                         <ComboBox fx:id="cboxMemberType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                         <DatePicker fx:id="dpRegistrationDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -116,7 +116,7 @@
 
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%pincode" GridPane.columnIndex="2" GridPane.rowIndex="11" />
 
-                                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%registrationno" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%sabhasadno" GridPane.columnIndex="3" GridPane.rowIndex="8" />
                                                     </children>
                                                 </GridPane>
                                             </children>

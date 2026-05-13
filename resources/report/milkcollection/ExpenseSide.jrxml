@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ExpenseSide" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="585" leftMargin="10" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="i18n" uuid="722bb717-fbf4-4c98-9892-7634d204c945">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="EiplAmcsDb"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -11,6 +11,9 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="495"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="491"/>
 	<style name="noto" fontName="Noto" fontSize="10"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -76,7 +79,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{account.amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{account.debit}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="" style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="150" height="15" backcolor="#EDEDFA" uuid="6ba3859e-417e-4704-bf44-bf200830ed66">
@@ -91,7 +94,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{accounting.expenseside}+":-"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{account.debit}+":-"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
