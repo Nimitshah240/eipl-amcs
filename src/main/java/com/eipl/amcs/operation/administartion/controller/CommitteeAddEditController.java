@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 
 public class CommitteeAddEditController implements MyInitialization {
 
+
     private final ObjectProperty<CommitteeMembers> propCommitteMembertDto;
 
     @FXML

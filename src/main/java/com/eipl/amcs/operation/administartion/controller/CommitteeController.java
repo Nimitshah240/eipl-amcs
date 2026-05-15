@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class CommitteeController implements MyInitialization, PopupCallback {
+
     private final ObjectProperty<Committee> propCommitteeDto;
     @FXML
     AnchorPane root;
