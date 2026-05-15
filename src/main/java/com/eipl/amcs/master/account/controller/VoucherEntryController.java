@@ -10,6 +10,7 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.converter.LedgerConvertor;
@@ -347,7 +348,7 @@ public class VoucherEntryController implements MyInitialization {
                             .orElse(new Ledger());
 
                     anotherSideTxn.setLedger(cashLedger);
-
+                    new AutoCompleteComboBoxListener<>(cboxLedger);
                 }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);

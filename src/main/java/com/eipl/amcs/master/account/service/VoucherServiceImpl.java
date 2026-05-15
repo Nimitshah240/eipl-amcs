@@ -2,7 +2,6 @@ package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.dto.VoucherDto;
-import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherSubLedger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
@@ -175,9 +174,9 @@ public class VoucherServiceImpl implements VoucherService {
 
     public List<VoucherTransaction> loadVoucherByVoucherDateBetween(LocalDate fromDate, LocalDate toDate) {
         try {
-            List<Ledger> ledgers = ledgerRepository.findByLedgerGroup_LedgerType_Code("9"); // Just For Cash Ledger Type
+//            List<Ledger> ledgers = ledgerRepository.findAll(); // Just For Cash Ledger Type
             List<Voucher> voucherList = voucherRepository.findByVoucherDateBetween(fromDate, toDate, Sort.by("voucherDate").descending());
-            return voucherTxnRepository.findByVoucherInAndLedgerIn(voucherList, ledgers);
+            return voucherTxnRepository.findByVoucherIn(voucherList);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

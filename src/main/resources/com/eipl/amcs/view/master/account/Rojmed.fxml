@@ -82,7 +82,7 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                  <Button fx:id="btnPrint" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%print">
+                  <Button fx:id="btnPrint" visible="false" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%print">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>

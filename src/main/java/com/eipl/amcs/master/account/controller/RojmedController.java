@@ -361,4 +361,10 @@ public class RojmedController implements MyInitialization, PopupCallback {
         });
         new Thread(task).start();
     }
+
+    @Override
+    public void reloadData(boolean flag) {
+        if (flag)
+            loadData();
+    }
 }

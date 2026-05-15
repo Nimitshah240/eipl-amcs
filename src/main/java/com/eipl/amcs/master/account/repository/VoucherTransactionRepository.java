@@ -27,4 +27,7 @@ public interface VoucherTransactionRepository extends BaseRepository<VoucherTran
 
     @EntityGraph(attributePaths = {"ledger", "voucher"})
     List<VoucherTransaction> findByVoucherInAndLedgerIn(List<Voucher> voucherList, List<Ledger> ledgers);
+
+    @EntityGraph(attributePaths = {"ledger", "voucher"})
+    List<VoucherTransaction> findByVoucherIn(List<Voucher> voucherList);
 }

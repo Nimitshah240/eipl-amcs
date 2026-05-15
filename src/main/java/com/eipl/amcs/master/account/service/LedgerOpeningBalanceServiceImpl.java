@@ -134,7 +134,7 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
         LocalDate fromDate = financialYear.getStartDate();
         String fyCode = financialYear.getCode();
 
-        List<Ledger> ledgers = ledgerRepository.findByLedgerGroup_LedgerType_Code("9"); // Just For Cash Ledger Type
+        List<Ledger> ledgers = ledgerRepository.findAll(); // Just For Cash Ledger Type
         List<LedgerOpeningBalance> ledgerOpeningBalanceList = ledgerOpeningBalanceRepository.findByLedgerInAndFinancialYearsCode(ledgers, fyCode);
         List<VoucherTransaction> voucherTransactionList = voucherServiceImpl.loadVoucherByVoucherDateBetween(fromDate, toDate);
 
