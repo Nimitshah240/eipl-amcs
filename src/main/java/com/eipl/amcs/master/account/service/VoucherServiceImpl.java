@@ -176,7 +176,7 @@ public class VoucherServiceImpl implements VoucherService {
         try {
 //            List<Ledger> ledgers = ledgerRepository.findAll(); // Just For Cash Ledger Type
             List<Voucher> voucherList = voucherRepository.findByVoucherDateBetween(fromDate, toDate, Sort.by("voucherDate").descending());
-            return voucherTxnRepository.findByVoucherIn(voucherList);
+            return voucherTxnRepository.findByVoucherInAndAutoPostedScreen(voucherList, false);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

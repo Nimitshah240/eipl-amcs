@@ -13,8 +13,10 @@ import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.task.VoucherNumberLoadTask;
 import com.eipl.amcs.master.account.task.VoucherSaveTask;
+import com.eipl.amcs.master.account.task.VoucherTypeLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -71,6 +73,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
     private List<VoucherTransaction> debitVoucherTransactionList = new ArrayList<>();
     private List<VoucherTransaction> creditVoucherTransactionList = new ArrayList<>();
     private List<VoucherTransaction> voucherTransactionList = new ArrayList<>();
+    private VoucherType voucherType;
 
 
     public HavaloController() {
@@ -112,11 +115,12 @@ public class HavaloController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupTable();
+        loadVoucherType();
         btnCredit.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryCredit", null, this, resourceBundle.getString("receipt.credit"));
         });
         btnDebit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryDebit", null, this,  resourceBundle.getString("receipt.debit"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryDebit", null, this, resourceBundle.getString("receipt.debit"));
         });
         dpVoucherDate.setValue(LocalDate.now());
         getNextVoucherCode();
@@ -212,6 +216,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
         voucher.setBillDate(dpVoucherDate.getValue());
         voucher.setAutoPosted(false);
         voucher.setCancelled(false);
+        voucher.setVoucherType(voucherType);
         voucher.setSociety(MainApp.identityDto.getSociety());
         voucher.setUnionCode(MainApp.identityDto.getUnion().getCode());
         voucher.setDockCode(MainApp.identityDto.getDock().getDockNo());
@@ -354,4 +359,21 @@ public class HavaloController implements MyInitialization, PopupCallback {
         }
 
     }
+
+    private void loadVoucherType() {
+        var task = new VoucherTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<VoucherType> voucherTypeList = task.get();
+                for (VoucherType vt : voucherTypeList) {
+                    if (vt.getCode() == 8) // JOURNAL
+                        voucherType = vt;
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
+    }
+
 }

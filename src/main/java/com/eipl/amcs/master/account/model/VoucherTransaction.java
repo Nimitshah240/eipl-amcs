@@ -52,6 +52,7 @@ public class VoucherTransaction extends BaseModelTxn {
     @Transient
     @JsonIgnore
     private List<VoucherSubLedger> voucherSubLedgers;
+    private Boolean autoPostedScreen;
 
     @Override
     public String getTableName() {
