@@ -114,6 +114,16 @@
                                 </ImageView>
                             </graphic>
                         </E_Button>
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <E_Button fx:id="btnExport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%export">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/excel.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
                     </children>
                 </HBox>
             </children>

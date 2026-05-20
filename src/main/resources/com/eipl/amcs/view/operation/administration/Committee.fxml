@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.geometry.Insets?>
 
-
-
-<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.eipl.amcs.operation.administartion.controller.CommitteeController">
+<StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.CommitteeController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%committee"/>
+                <Label styleClass="header-text" text="%committee" />
                 <TableView fx:id="tableCommittee" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colName" prefWidth="250.0" text="%name"/>
-                        <TableColumn fx:id="colNameLocal" prefWidth="250.0" text="%localname"/>
-                        <TableColumn fx:id="colElectionDate" prefWidth="150.0" text="%electiondate"/>
-                        <TableColumn fx:id="colFormationDate" prefWidth="150.0" text="%formationdate"/>
-                        <TableColumn fx:id="colCommitteeMembmers" minWidth="150.0" prefWidth="200.0"
-                                     text="%committeemembers"/>
+                        <TableColumn fx:id="colName" prefWidth="250.0" text="%name" />
+                        <TableColumn fx:id="colNameLocal" prefWidth="250.0" text="%localname" />
+                        <TableColumn fx:id="colElectionDate" prefWidth="150.0" text="%electiondate" />
+                        <TableColumn fx:id="colFormationDate" prefWidth="150.0" text="%formationdate" />
+                        <TableColumn fx:id="colCommitteeMembmers" minWidth="150.0" prefWidth="200.0" text="%committeemembers" />
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
@@ -67,6 +61,16 @@
                                 </ImageView>
                             </graphic>
                         </Button>
+                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnExport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%export">
+                      <graphic>
+                          <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="@../../images/excel.png" />
+                              </image>
+                          </ImageView>
+                      </graphic>
+                  </Button>
                     </children>
                     <padding>
                         <Insets bottom="5.0" />

@@ -23,14 +23,19 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class CommitteeAddEditController implements MyInitialization {
@@ -41,7 +46,7 @@ public class CommitteeAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private E_Button btnClose, btnSave, btnAdd, btnDelete;
+    private E_Button btnClose, btnSave, btnAdd, btnDelete,btnExport;
     @FXML
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
@@ -113,6 +118,9 @@ public class CommitteeAddEditController implements MyInitialization {
         });
         btnSave.setOnAction(e -> validateAndSave());
         btnAdd.setOnAction(e -> addCommitteeMembers());
+        btnExport.setOnAction(e -> {
+            exportExcel(tableCommitteeMembers.getItems());
+        });
         btnDelete.setOnAction(e -> {
             CommitteeMembers dto = propCommitteMembertDto.get();
             if (dto != null)
@@ -357,5 +365,100 @@ public class CommitteeAddEditController implements MyInitialization {
             }
         });
         new Thread(task).start();
+    }
+
+    private void exportExcel(List<CommitteeMembers> list) {
+        if (list == null || list.isEmpty()) {
+            new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committeemembers"), "No data available to export").createAlert();
+            return;
+        }
+
+        boolean exported = true;
+        boolean cancelled = false;
+        try {
+            FileChooser fileDialog = new FileChooser();
+            fileDialog.setTitle("Export Committee Members");
+            fileDialog.setInitialFileName("Committee_Members_List.xls");
+            fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
+            File file = fileDialog.showSaveDialog(MainApp.getStage());
+
+            if (file != null) {
+                HSSFWorkbook wb = new HSSFWorkbook();
+                HSSFSheet sheet = wb.createSheet("Members");
+
+                List<String> headers = Arrays.asList("Code", "Member Name", "Designation", "Joining Date", "Registration Date");
+
+                // Create header row
+                HSSFRow headerRow = sheet.createRow(0);
+                for (int i = 0; i < headers.size(); i++) {
+                    HSSFCell cell = headerRow.createCell(i);
+                    cell.setCellValue(headers.get(i));
+                }
+
+                // Fill data rows
+                int rowCnt = 1;
+                for (CommitteeMembers item : list) {
+                    HSSFRow row = sheet.createRow(rowCnt++);
+                    for (int i = 0; i < headers.size(); i++) {
+                        HSSFCell cell = row.createCell(i);
+                        switch (headers.get(i)) {
+                            case "Code":
+                                cell.setCellValue(item.getCode() != null ? item.getCode() : "");
+                                break;
+                            case "Member Name":
+                                cell.setCellValue(item.getMemberName() != null ? item.getMemberName() : "");
+                                break;
+                            case "Designation":
+                                cell.setCellValue(item.getDesignation() != null ? item.getDesignation().getName() : "");
+                                break;
+                            case "Joining Date":
+                                cell.setCellValue(item.getJoiningDate() != null ? item.getJoiningDate().toString() : "");
+                                break;
+                            case "Registration Date":
+                                cell.setCellValue(item.getRegistrationDate() != null ? item.getRegistrationDate().toString() : "");
+                                break;
+                        }
+                    }
+                }
+
+                // Write to file
+                try (FileOutputStream out = new FileOutputStream(file)) {
+                    wb.write(out);
+                    out.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    exported = false;
+                } finally {
+                    try {
+                        wb.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            } else {
+                cancelled = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            exported = false;
+        }
+
+        showExportStatus(exported, cancelled);
+    }
+
+    private void showExportStatus(boolean exported, boolean cancelled) {
+        MyAlert alert;
+        String title = resourceBundle.getString("committeemembers");
+        if (cancelled) {
+            alert = new InformationAlert(MainApp.getStage(), title,
+                    resourceBundle.containsKey("export.cancelled") ? resourceBundle.getString("export.cancelled") : "Export Cancelled");
+        } else if (exported) {
+            alert = new InformationAlert(MainApp.getStage(), title,
+                    resourceBundle.containsKey("successful") ? resourceBundle.getString("successful") : "Export Successful");
+        } else {
+            alert = new ErrorAlert(MainApp.getStage(), title,
+                    resourceBundle.containsKey("error.occurred") ? resourceBundle.getString("error.occurred") : "Error occurred during export");
+        }
+        alert.createAlert();
     }
 }
