@@ -21,13 +21,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
-import java.sql.Timestamp;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -52,6 +53,18 @@ public class ElectionRegisterController implements MyInitialization {
     private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
     private E_NumericField txtLimit;
+
+    @FXML
+    private DatePicker dpFromDate2, dpToDate2;
+    @FXML
+    private E_NumericField txtLimit2;
+    @FXML
+    private TextField txtqty;
+    @FXML
+    private ComboBox<String> cboxLanguage2;
+    @FXML
+    private Button btnGenerate2, btnClose2;
+
 
     private ResourceBundle resourceBundle;
     private List<MilkType> listMilkType;
@@ -95,6 +108,35 @@ public class ElectionRegisterController implements MyInitialization {
         } else {
             cboxLanguage.setValue("English");
         }
+
+
+        dpFromDate2.setValue(LocalDate.now());
+        dpFromDate2.setConverter(new LocalDateConvertor());
+        dpFromDate2.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate2.setValue(dpFromDate2.getConverter().fromString(dpFromDate2.getEditor().getText()));
+            }
+        });
+        dpToDate2.setValue(LocalDate.now());
+        dpToDate2.setConverter(new LocalDateConvertor());
+        dpToDate2.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate2.setValue(dpToDate2.getConverter().fromString(dpToDate2.getEditor().getText()));
+            }
+        });
+        txtLimit2.setText("0");
+        txtqty.setText("0");
+        cboxLanguage2.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage2.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage2.setValue("Hindi");
+        } else {
+            cboxLanguage2.setValue("English");
+        }
+
+        btnGenerate2.setOnAction(e -> validateAndGenerateReport1());
+        btnClose2.setOnAction(e -> onCloseElectionRegister1ReportClicked());
     }
 
     @Override
@@ -105,6 +147,10 @@ public class ElectionRegisterController implements MyInitialization {
 
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    private String getElectionRegister1LocaleString() {
+        return cboxLanguage2.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     private void validateAndGenerateReport() {
@@ -128,6 +174,28 @@ public class ElectionRegisterController implements MyInitialization {
 
         JasperViewer.viewReport(print, false);
     }
+
+    public void validateAndGenerateReport1() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Map<String, Object> params = new HashMap<>();
+        String localeStr = getElectionRegister1LocaleString();
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        params.put("p_locale", localeStr);
+
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_from_date", dpFromDate2.getValue().format(formatter));
+        params.put("p_to_date", dpToDate2.getValue().format(formatter));
+        params.put("p_no_of_days", Integer.parseInt(txtLimit2.getText().trim()));
+        params.put("p_qty", Integer.parseInt(txtqty.getText().trim()));
+
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER_ONE, params);
+        JasperViewer.viewReport(print, false);
+    }
+
+    public void onCloseElectionRegister1ReportClicked() {
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+    }
+
 
     public void loadData() {
         var task1 = new MilkTypeLoadTask();

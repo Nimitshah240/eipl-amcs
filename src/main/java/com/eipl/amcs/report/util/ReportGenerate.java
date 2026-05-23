@@ -320,6 +320,14 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/ProductStockLedger.jasper";
             case AppConstant.ReportPath.LEDGER_SUMMARY:
                 return "resources/report/milkcollection/TBReport.jasper";
+            case AppConstant.ReportPath.FARMER_REGISTER:
+                return "resources/report/milkcollection/FarmerRegister.jasper";
+            case AppConstant.ReportPath.FARMER_PENDING_LIST:
+                return "resources/report/milkcollection/FarmerPendingList.jasper";
+            case AppConstant.ReportPath.Farmer_MAPPING:
+                return "resources/report/milkcollection/MemberRegisterFarmerMapping.jasper";
+            case AppConstant.ReportPath.ELECTION_REGISTER_ONE:
+                return "resources/report/milkcollection/ElectionRegister1.jasper";
 
         }
         return null;
