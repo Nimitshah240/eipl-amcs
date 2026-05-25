@@ -16,13 +16,13 @@ public class DesignationConvertor extends StringConverter<Designation> {
     public String toString(Designation designation) {
         if (designation == null)
             return null;
-        return designation.getName();
+        return designation.toString();
     }
 
     @Override
     public Designation fromString(String s) {
         if (s == null || s.isEmpty())
             return null;
-        return cbox.getItems().stream().filter(p -> s.equals(p.getName())).findAny().orElse(null);
+        return cbox.getItems().stream().filter(p -> s.equals(p.toString())).findAny().orElse(null);
     }
 }

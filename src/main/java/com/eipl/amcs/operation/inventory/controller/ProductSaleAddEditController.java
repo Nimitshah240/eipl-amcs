@@ -65,6 +65,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -667,6 +668,15 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             if (resp.isPresent() && resp.get() == ButtonType.CANCEL)
                 return;
         }
+        if (rbtnCredit.isSelected()) {
+            String formattedDate = dpDeductionStartDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String msg = "Do you want to save data? Deduction will start from " + formattedDate;
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsale"), msg);
+            alert.createAlert();
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isPresent() && resp.get() == ButtonType.CANCEL)
+                return;
+        }
         if (btnSaveUpdate.getText().equalsIgnoreCase(resourceBundle.getString("save"))) {
             saveData();
         } else {
@@ -724,7 +734,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 } else {
                     psi.setInstallmentAmount(num);
                 }
-                psi.setDeductionDate(paymentCycleList.get(i - 1).getToDate().toLocalDate());
+//                psi.setDeductionDate(paymentCycleList.get(i - 1).getToDate().toLocalDate());
+                psi.setDeductionDate(dpDeductionStartDate.getValue());
                 psi.setSocietyPaymentCycle(paymentCycleList.get(i - 1));
                 psi.setSocietyCode(MainApp.identityDto.getSociety().getCode());
                 psi.setUnionCode(MainApp.identityDto.getUnion().getCode());

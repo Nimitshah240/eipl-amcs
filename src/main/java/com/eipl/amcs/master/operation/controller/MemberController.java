@@ -566,4 +566,10 @@ public class MemberController implements MyInitialization, PopupCallback {
             }
         }
     }
+
+    @Override
+    public void reloadData(boolean flag) {
+        if (flag)
+            loadData();
+    }
 }

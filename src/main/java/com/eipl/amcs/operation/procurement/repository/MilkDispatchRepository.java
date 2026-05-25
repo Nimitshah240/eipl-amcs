@@ -38,4 +38,6 @@ public interface MilkDispatchRepository extends BaseRepository<MilkDispatch, Str
     boolean existsByFromDateAndFromShift(LocalDateTime fromDate, Shift fromShift);
 
     boolean existsByFromDateAndFromShiftAndChallanNoNot(LocalDateTime fromDate, Shift fromShift, String challanNo);
+
+    MilkDispatch findFirstByOrderByCreatedAtDesc();
 }

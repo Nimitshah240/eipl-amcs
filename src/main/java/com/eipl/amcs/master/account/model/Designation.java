@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.account.model;
 
 import com.eipl.amcs.base.model.BaseModelTxn;
+import com.eipl.amcs.utils.CommonUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +23,16 @@ public class Designation extends BaseModelTxn {
     // 0 - Staff, 1 - Commitee(from nddb)
     private Integer type;
 
+    @JoinColumn(name = "name_local")
+    private String nameLocal;
+
     @Override
     public String getTableName() {
         return "designation";
+    }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(name, nameLocal);
     }
 }

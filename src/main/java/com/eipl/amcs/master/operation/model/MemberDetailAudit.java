@@ -44,6 +44,19 @@ public class MemberDetailAudit extends BaseModelTxnAudit {
     private Short numberOfCow;
     private Short numberOfBuffalo;
     private String unionCode;
+    private String qualification;
+    @Column(name = "is_educated")
+    private boolean educated;
+    @Column(name = "is_cooking_gas")
+    private boolean cookingGas;
+    @Column(name = "is_milk_machine")
+    private boolean milkMachine;
+    @Column(name = "is_piyet_land")
+    private boolean piyetLand;
+    @Column(name = "is_chaf_cutter")
+    private boolean chafCutter;
+    @Column(name = "is_toilet")
+    private boolean toilet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = GenderSerialize.class)

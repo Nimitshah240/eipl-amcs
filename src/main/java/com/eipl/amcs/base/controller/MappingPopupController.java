@@ -21,6 +21,7 @@ import com.eipl.amcs.master.operation.controller.MemberEditPasswordController;
 import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.model.Message;
 import com.eipl.amcs.master.org.controller.DockAddEditController;
 import com.eipl.amcs.master.org.controller.SocietyAddEditController;
 import com.eipl.amcs.master.org.controller.UsersAddEditController;
@@ -606,6 +607,13 @@ public class MappingPopupController implements MyInitialization {
                     controller75.setStage(stage);
                     controller75.setCallback(callback);
                     root.setCenter(controller75.getRoot());
+                    break;
+                case "MessageAddEdit":
+                    var controller76 = (MessageAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/administration/MessageAddEdit.fxml"));
+                    controller76.setMessage(object != null ? (Message) object : null);
+                    controller76.setStage(stage);
+                    controller76.setCallback(callback);
+                    root.setCenter(controller76.getRoot());
                     break;
             }
         } catch (Exception e) {

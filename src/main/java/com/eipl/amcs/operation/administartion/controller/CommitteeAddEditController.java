@@ -11,8 +11,11 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.Committee;
 import com.eipl.amcs.master.account.model.CommitteeMembers;
 import com.eipl.amcs.master.account.model.Designation;
+import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.operation.administartion.converter.DesignationConvertor;
 import com.eipl.amcs.operation.administartion.task.*;
+import com.eipl.amcs.utils.CommonUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,10 +31,12 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class CommitteeAddEditController implements MyInitialization {
 
@@ -45,7 +50,7 @@ public class CommitteeAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
-    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtMemberName, txtCode;
+    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtMemberName, txtCode, txtMemberCode;
     @FXML
     private E_DatePicker dpElectionDate, dpFormation, dpJoiningDate, dpRegistrationdate;
 
@@ -129,6 +134,19 @@ public class CommitteeAddEditController implements MyInitialization {
                     if (dto != null)
                         deleteCommitteeMembers(dto);
                     break;
+            }
+        });
+        txtMemberCode.setOnAction(event -> {
+            if (txtMemberCode.getText().length() > 0) {
+                String code = generateCode(txtMemberCode.getText().trim());
+                getNameFromMemberCode(code);
+            }
+        });
+
+        txtMemberCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
+            if (!newValue && txtMemberCode.getText().length() > 0) {
+                String code = generateCode(txtMemberCode.getText().trim());
+                getNameFromMemberCode(code);
             }
         });
 
@@ -337,8 +355,14 @@ public class CommitteeAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<Designation> list = task.get();
-                if (list != null)
-                    cboxDesignation.setItems(FXCollections.observableList(list));
+                if (list != null) {
+
+                    List<String> filter = Arrays.asList("President", "Vice President", "Committee Member", "Local Auditor", "Fat Machine Operator", "Milk Collector");
+                    List<Designation> filteredList = list.stream()
+                            .filter(designation -> filter.contains(designation.getName()))
+                            .collect(Collectors.toList());
+                    cboxDesignation.setItems(FXCollections.observableList(filteredList));
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -357,5 +381,31 @@ public class CommitteeAddEditController implements MyInitialization {
             }
         });
         new Thread(task).start();
+    }
+
+    private void getNameFromMemberCode(String code) {
+        var task = new MemberByIdLoadTask(code);
+        task.setOnSucceeded(e -> {
+            try {
+                if (task.get() != null) {
+                    Member member = task.get();
+                    txtMemberName.setText(member.toMemberName());
+                } else {
+                    txtMemberName.clear();
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("committee"),
+                            resourceBundle.getString("membernotfound"));
+                    alert.createAlert();
+                    txtMemberCode.setText("");
+                    //FocusUtils.requestFocus(txtMemberCode);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private String generateCode(String code) {
+        return MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(code));
     }
 }

@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.procurement.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
@@ -35,6 +36,7 @@ import com.eipl.amcs.operation.procurement.dto.MilkDispatchRateAndDetailsDto;
 import com.eipl.amcs.operation.procurement.dto.MilkDispatchSummaryDto;
 import com.eipl.amcs.operation.procurement.model.MilkDispatch;
 import com.eipl.amcs.operation.procurement.model.MilkDispatchTransaction;
+import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
@@ -177,6 +179,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         dpToDate.setValue(LocalDate.now());
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("save"))) {
             nextChallanNo();
+			loadLastRecord();
         }
         cboxMilkType.setOnAction(e -> {
             fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
@@ -613,6 +616,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             dto.setDispatchType(cboxDispatchType.getSelectionModel().getSelectedIndex());
             dto.setDestinationType(0);
             dto.setRouteNo(txtRouteNo.getText().trim());
+            dto.setVehicleNo(txtVehicleNo.getText().trim());
             dto.setFromDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
             dto.setToDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()));
             dto.setFromShift(cboxFromShift.getValue());
@@ -1114,6 +1118,28 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         if (dto.getRouteNo() != null)
             txtRouteNo.setText(dto.getRouteNo());
 
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 23/05/2026    Chintan             1.0.0     Load last record of dispatch to get route no and vehicle no
+     */
+    private void loadLastRecord() {
+        MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
+        MilkDispatch lastDispatch = milkDispatchRepository.findFirstByOrderByCreatedAtDesc();
+
+        if (lastDispatch != null) {
+            String route = (lastDispatch.getRouteNo() == null) ? "" : lastDispatch.getRouteNo();
+            String vehicle = (lastDispatch.getVehicleNo() == null) ? "" : lastDispatch.getVehicleNo();
+
+            txtRouteNo.setText(route);
+            txtVehicleNo.setText(vehicle);
+        } else {
+            txtRouteNo.setText("");
+            txtVehicleNo.setText("");
+        }
     }
 
     private void deleteTransaction(MilkDispatchTransaction transaction) {

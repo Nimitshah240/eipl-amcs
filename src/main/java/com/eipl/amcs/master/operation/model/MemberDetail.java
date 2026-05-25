@@ -59,6 +59,15 @@ public class MemberDetail extends BaseModelTxn {
     private boolean educated;
     @Column(name = "is_cooking_gas")
     private boolean cookingGas;
+    @Column(name = "is_milk_machine")
+    private boolean milkMachine;
+    @Column(name = "is_piyet_land")
+    private boolean piyetLand;
+    @Column(name = "is_chaf_cutter")
+    private boolean chafCutter;
+    @Column(name = "is_toilet")
+    private boolean toilet;
+    private String qualification;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = GenderSerialize.class)
@@ -165,6 +174,13 @@ public class MemberDetail extends BaseModelTxn {
         audit.setVillage(this.getVillage());
         audit.setHamlet(this.getHamlet());
         audit.setMember(this.getMember());
+        audit.setQualification(this.getQualification());
+        audit.setEducated(this.isEducated());
+        audit.setCookingGas(this.isCookingGas());
+        audit.setMilkMachine(this.isMilkMachine());
+        audit.setPiyetLand(this.isPiyetLand());
+        audit.setChafCutter(this.isChafCutter());
+        audit.setToilet(this.isToilet());
 
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());
