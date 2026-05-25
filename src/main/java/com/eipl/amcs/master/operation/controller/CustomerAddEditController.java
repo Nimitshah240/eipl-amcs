@@ -2,6 +2,7 @@ package com.eipl.amcs.master.operation.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -83,8 +84,10 @@ public class CustomerAddEditController implements MyInitialization {
     private ComboBox<Ledger> cboxLedger;
     @FXML
     private TextField txtCst, txtCode, txtMobileNo, txtPincode,
-            txtName, txtLocalName,
+            txtName,
             txtEmail, txtPanNo, txtAadharCardNo, txtAcNo, txtIfsc, txtRegistrationNo;
+    @FXML
+    private E_TextFieldLocal txtLocalName;
     @FXML
     private Button btnSaveUpdate, btnClose;
     @FXML

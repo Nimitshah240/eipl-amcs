@@ -6,14 +6,14 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Message;
-import com.eipl.amcs.operation.administartion.task.*;
+import com.eipl.amcs.operation.administartion.task.MessageSaveTask;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -35,7 +35,9 @@ public class MessageAddEditController implements MyInitialization {
     @FXML
     private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private E_TextField txtMessage, txtMessageGuj;
+    private E_TextField txtMessage;
+    @FXML
+    private E_TextFieldLocal txtMessageGuj;
     @FXML
     private Button btnSaveUpdate, btnClose;
 
@@ -154,7 +156,8 @@ public class MessageAddEditController implements MyInitialization {
     }
 
     @Override
-    public void setupTable() {}
+    public void setupTable() {
+    }
 
     @Override
     public void saveData() {

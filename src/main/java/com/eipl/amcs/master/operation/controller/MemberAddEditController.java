@@ -101,10 +101,11 @@ public class MemberAddEditController implements MyInitialization {
     private ComboBox<AppConstant.RationCardType> cboxRationCardType;
     @FXML
     private TextField txtCodeEx, txtSapNo, txtCode, txtMobileNo, txtPinCode, txtMiddleName,
-            txtName, txtLastName, txtLocalName, txtMiddleLocalName, txtLocalLastName,
+            txtName, txtLastName, txtMiddleLocalName, txtLocalLastName,
             txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit,
-            txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtNomineeNameLocal,
-            txtLand, txtRegistrationNo, txtQualification;
+            txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtLand, txtRegistrationNo, txtQualification;
+    @FXML
+    private TextField txtLocalName, txtNomineeNameLocal;
     @FXML
     private Button btnSaveUpdate, btnClose;
     @FXML
@@ -524,7 +525,7 @@ public class MemberAddEditController implements MyInitialization {
             memberDetail.setQualification(null);
         }
         memberDetail.setCookingGas(chkIsCookingGas.isSelected());
-		memberDetail.setMilkMachine(chkIsMilkMachine.isSelected());
+        memberDetail.setMilkMachine(chkIsMilkMachine.isSelected());
         memberDetail.setPiyetLand(chkIsPiyetLand.isSelected());
         memberDetail.setChafCutter(chkIsChafCutter.isSelected());
         memberDetail.setToilet(IsToilet.isSelected());
@@ -921,7 +922,7 @@ public class MemberAddEditController implements MyInitialization {
 
         chkIsCookingGas.setSelected(memberDetail.isCookingGas());
         chkIsEducated.setSelected(memberDetail.isEducated());
-		chkIsMilkMachine.setSelected(memberDetail.isMilkMachine());
+        chkIsMilkMachine.setSelected(memberDetail.isMilkMachine());
         chkIsPiyetLand.setSelected(memberDetail.isPiyetLand());
         chkIsChafCutter.setSelected(memberDetail.isChafCutter());
         IsToilet.setSelected(memberDetail.isToilet());

@@ -30,11 +30,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -50,7 +46,9 @@ public class CommitteeAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<Designation> cboxDesignation;
     @FXML
-    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtNameLocal, txtMemberName, txtCode, txtMemberCode;
+    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtMemberName, txtCode, txtMemberCode;
+    @FXML
+    private E_TextFieldLocal txtNameLocal;
     @FXML
     private E_DatePicker dpElectionDate, dpFormation, dpJoiningDate, dpRegistrationdate;
 

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import com.eipl.amcs.controls.E_TextFieldLocal?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -91,7 +92,7 @@
                                 <TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                 <TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                 <TextField fx:id="txtMobileNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                 <TextField fx:id="txtCst" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                 <DatePicker fx:id="dpRegistrationDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                 <TextField fx:id="txtRegistrationNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="3" />
