@@ -226,7 +226,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
             tableData1.getColumns().clear();
             tableData.getItems().clear();
             tableData1.getItems().clear();
-            List<String> columnNames = Arrays.asList(resourceBundle.getString("ledger"), "", resourceBundle.getString("amount"));
+            List<String> columnNames = Arrays.asList(resourceBundle.getString("ledger"), resourceBundle.getString("sub.amount"), resourceBundle.getString("amount"));
 
             for (String name : columnNames) {
                 // Create Column for Table 1
@@ -345,7 +345,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 totalAmt = totalAmt.add(voucherTransaction.getAmount());
                 DataEntryRow row1 = new DataEntryRow();
                 row1.setColumnValue(resourceBundle.getString("ledger"), " - " + voucherTransaction.getNarration());
-                row1.setColumnValue("", voucherTransaction.getAmount().toString());
+                row1.setColumnValue(resourceBundle.getString("sub.amount"), voucherTransaction.getAmount().toString());
                 row1.setId(voucherTransaction.getCode());
                 dataEntryRowList.add(row1);
             }

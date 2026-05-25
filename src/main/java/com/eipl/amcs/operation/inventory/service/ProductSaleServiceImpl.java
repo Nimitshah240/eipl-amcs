@@ -415,7 +415,11 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             txn.setFinalValue(oldVal.add(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
         else if (operation.equals("DELETE"))
             txn.setFinalValue(oldVal.subtract(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
-        txn.setReferenceCode(code);
+        // FIXME(NIMIT | 25.05.2026): In product receipt reference code in txn code because this indicate stock transaction is of which txn.
+//        txn.setReferenceCode(code);
+        txn.setReferenceCode(transaction.getInvoiceTxnNo());
+
+
         txn.setTransactionDate(transaction.getProductSale().getInvoiceDate());
         txn.setTransactionType(trnsType);
         txn.setProduct(transaction.getProduct());

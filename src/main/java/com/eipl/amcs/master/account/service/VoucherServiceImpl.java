@@ -1,7 +1,6 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
-import com.eipl.amcs.master.account.dto.ProductSaleTransactionDto;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;

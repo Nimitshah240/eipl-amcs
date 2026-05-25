@@ -224,7 +224,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                 for (ProductSaleAcUtil a : list) {
                     amt = amt.add(a.getAmount());
                 }
-                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, eventsList.get(0).getCreditLedger(),
+                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, dto.getProductReceipt().getCustomer().getLedger() == null ? eventsList.get(0).getCreditLedger() : dto.getProductReceipt().getCustomer().getLedger(),
                         "Product receipt " + dto.getProductReceipt().getGrnNo(), "1");
                 creditTxn.setAutoPostedScreen(false);
                 voucher.getVoucherTransactions().add(creditTxn);
