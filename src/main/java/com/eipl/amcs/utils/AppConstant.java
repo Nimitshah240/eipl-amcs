@@ -195,6 +195,9 @@ public class AppConstant {
         String MEMBER_COLLECTION_SUMMARY1 = "MemberCollectionSummary1";
         String MEMBER_REGISTER = "MemberRegister";
         String MEMBER_REGISTER_ONE = "MemberRegister1";
+        String FARMER_REGISTER = "FarmerRegister";
+        String FARMER_PENDING_LIST = "FarmerPendingList";
+        String Farmer_MAPPING="FarmerMapping";
         String DAIRY_SALE_REGISTER = "DairySaleRegister";
         String SUMMARY_2 = "Summary";
         String SOCIETY_PURCHASE = "SocietyPurchase";
@@ -233,6 +236,7 @@ public class AppConstant {
 
         String ELECTION_REGISTER = "ElectionRegister";
         String ELECTION_REGISTER_MILK_TYPE = "ElectionRegisterMilkType";
+        String ELECTION_REGISTER_ONE = "ElectionRegister1";
         String RPT_LEDGER_BOOK = "LedgerBook";
         String RPT_LEDGER_BOOK_SUB_LEDGER = "LedgerBookSubLedger";
         String RPT_LEDGER_BOOK_SUMMARY = "LedgerBookSummary";
