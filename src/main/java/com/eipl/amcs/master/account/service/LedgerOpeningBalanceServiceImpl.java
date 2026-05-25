@@ -1,13 +1,8 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
-import com.eipl.amcs.master.account.model.FinancialYear;
-import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
-import com.eipl.amcs.master.account.model.VoucherTransaction;
-import com.eipl.amcs.master.account.repository.FinancialYearRepository;
-import com.eipl.amcs.master.account.repository.LedgerOpeningBalanceRepository;
-import com.eipl.amcs.master.account.repository.LedgerRepository;
+import com.eipl.amcs.master.account.model.*;
+import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.org.model.Society;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -33,13 +28,19 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
     @Autowired
     private LedgerRepository ledgerRepository;
     @Autowired
-    private VoucherService voucherServiceImpl;
+    private VoucherService voucherService;
     @Autowired
     private FinancialYearRepository financialYearRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
+    @Autowired
+    private LedgerGroupRepository ledgerGroupRepository;
+    @Autowired
+    private VoucherTransactionRepository voucherTxnRepository;
 
     @Override
     public List<LedgerOpeningBalance> findAll() {
-        List<LedgerOpeningBalance> list = ledgerOpeningBalanceRepository.findAll(Sort.by("code"));
+        List<LedgerOpeningBalance> list = ledgerOpeningBalanceRepository.findAll(Sort.by("createdAt").descending());
 //        for (LedgerOpeningBalance ledgerOpeningBalance : list) {
 //            ledgerOpeningBalance.setLedger(Hibernate.unproxy(ledgerOpeningBalance.getLedger(), Ledger.class));
 //            ledgerOpeningBalance.setSociety(Hibernate.unproxy(ledgerOpeningBalance.getSociety(), Society.class));
@@ -124,20 +125,36 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
         return null;
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 23/05/2026    Nimit             1.0.0       Get opening balance for ledger group which are cash for particular
+     * financial year till the date -1 for which user is finding rojmed data
+     */
     @Override
     public BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate toDate) {
 
+
+        // NIMIT | 23.05.2026 : Get Ledger of ledger group which have is_cash column true.
+        List<LedgerGroup> ledgerGroupsOfIsCash = ledgerGroupRepository.findByIsCash(true);
+        List<Ledger> ledgers = ledgerRepository.findByLedgerGroupIn(ledgerGroupsOfIsCash);
+
+
+        // NIMIT | 23.05.2026 : Get Opening Balance of Fetch Cash Type Ledger for particular financial year.
         FinancialYear financialYear = financialYearRepository.findCurrentFinancialYear(toDate).orElse(null);
         if (financialYear == null)
             return BigDecimal.ZERO;
-
-        LocalDate fromDate = financialYear.getStartDate();
         String fyCode = financialYear.getCode();
-
-        List<Ledger> ledgers = ledgerRepository.findAll(); // Just For Cash Ledger Type
         List<LedgerOpeningBalance> ledgerOpeningBalanceList = ledgerOpeningBalanceRepository.findByLedgerInAndFinancialYearsCode(ledgers, fyCode);
-        List<VoucherTransaction> voucherTransactionList = voucherServiceImpl.loadVoucherByVoucherDateBetween(fromDate, toDate);
 
+
+        // NIMIT | 23.05.2026 : Get all voucher transaction from financial year start to the day-1 from where user is standing.
+        LocalDate fromDate = financialYear.getStartDate();
+        List<VoucherTransaction> voucherTransactionList = voucherService.loadVoucherTransactionByCashTypeAndDateBetween(fromDate, toDate.minusDays(1), false);
+
+
+        // NIMIT | 23.05.2026 : Get credit and debit opening balance of ledger is cash type.
         BigDecimal crLedgerOpeningBalance = ledgerOpeningBalanceList.stream().filter(ocl -> ocl.getCreditDebit() == true).map(LedgerOpeningBalance::getBalance)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -146,6 +163,7 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        // NIMIT | 23.05.2026 : Get credit and debit amount of voucher transaction.
         BigDecimal drVoucherTransaction = voucherTransactionList.stream().filter(ocl -> ocl.getCreditDebit() == false).map(VoucherTransaction::getAmount)
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -154,9 +172,9 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
                 .filter(Objects::nonNull)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        crVoucherTransaction = crVoucherTransaction.add(crLedgerOpeningBalance);
-        drVoucherTransaction = drVoucherTransaction.add(drLedgerOpeningBalance);
-        return crVoucherTransaction.subtract(drVoucherTransaction);
+
+        BigDecimal finalOpeningBalance = crLedgerOpeningBalance.subtract(drLedgerOpeningBalance);
+        return finalOpeningBalance.add(drVoucherTransaction).subtract(crVoucherTransaction);
     }
 
 }

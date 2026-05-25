@@ -30,4 +30,7 @@ public interface LedgerGroupRepository extends BaseRepository<LedgerGroup, Strin
 
     @EntityGraph(attributePaths = {"ledgerType"})
     List<LedgerGroup> findByLedgerTypeAndActive(LedgerType ledgerType, boolean b);
+
+    @EntityGraph(attributePaths = {"ledgerType"})
+    List<LedgerGroup> findByIsCash(boolean b);
 }

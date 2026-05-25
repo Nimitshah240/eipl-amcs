@@ -11,6 +11,7 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.converter.LedgerConvertor;
@@ -18,6 +19,7 @@ import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.task.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -78,6 +80,7 @@ public class VoucherEntryController implements MyInitialization {
 
     private Voucher voucher;
     private List<VoucherTransaction> voucherTransactionList;
+    private VoucherType voucherType;
 
     private boolean isHavalo = false;
 
@@ -123,7 +126,7 @@ public class VoucherEntryController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         setupComboBox();
         setupTable();
-
+        loadVoucherType();
         dpVoucherDate.setValue(LocalDate.now());
 
         btnClose.setOnAction(e -> {
@@ -142,6 +145,13 @@ public class VoucherEntryController implements MyInitialization {
         });
 
         btnSaveUpdate.setOnAction(e -> validateAndSave());
+        dpVoucherDate.setConverter(new LocalDateConvertor());
+        txtAmount.setOnAction(e -> {
+            addVoucherTransaction();
+            txtNarration.setText("");
+            cboxLedger.getSelectionModel().clearSelection();
+            txtAmount.setText("0");
+        });
     }
 
     public void loadControls() {
@@ -216,6 +226,7 @@ public class VoucherEntryController implements MyInitialization {
         voucher.setDockCode(MainApp.identityDto.getDock().getDockNo());
         voucher.setMccPlantCode(MainApp.identityDto.getSociety().getMcc().getCode());
         voucher.setPlantCode(MainApp.identityDto.getSociety().getPlant().getCode());
+        voucher.setVoucherType(voucherType);
 
         for (VoucherTransaction voucherTransaction : voucherTransactionList) {
             anotherSideAmt = anotherSideAmt.add(voucherTransaction.getAmount());
@@ -223,6 +234,7 @@ public class VoucherEntryController implements MyInitialization {
         anotherSideTxn.setAmount(anotherSideAmt);
         anotherSideTxn.setNarration(txtNarration.getText());
         anotherSideTxn.setCreditDebit(!credit_debit);
+        anotherSideTxn.setAutoPostedScreen(true);
         voucherTransactionList.add(anotherSideTxn);
 
         voucher.setVoucherTransactions(voucherTransactionList);
@@ -378,6 +390,7 @@ public class VoucherEntryController implements MyInitialization {
         voucherTransaction.setLedger(cboxLedger.getValue());
         voucherTransaction.setNarration(txtNarration.getText());
         voucherTransaction.setAmount(new BigDecimal(txtAmount.getText()));
+        voucherTransaction.setAutoPostedScreen(false);
         voucherTransaction.setCreditDebit(credit_debit);
         voucherTransactionList.add(voucherTransaction);
         tableVoucherTransaction.setItems(FXCollections.observableList(voucherTransactionList));
@@ -442,6 +455,25 @@ public class VoucherEntryController implements MyInitialization {
         });
         isHavalo = true;
 
+    }
+
+    private void loadVoucherType() {
+        var task = new VoucherTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<VoucherType> voucherTypeList = task.get();
+                for (VoucherType vt : voucherTypeList) {
+                    if (credit_debit && vt.getCode() == 6) { // CASH PAYMENT
+                        voucherType = vt;
+                    } else if (!credit_debit && vt.getCode() == 5) { // CASH RECEIPT
+                        voucherType = vt;
+                    }
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
     }
 
 }

@@ -157,6 +157,8 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                         eventsList.get(0).getVoucherType(), financialYear.isPresent() ? financialYear.get().getCode() : null,
                         dto.getProductReceipt().getSociety(), dto.getProductReceipt().getUnion().getCode(), dto.getProductReceipt().getSociety().getCode() + "01");
                 voucher.setVoucherTransactions(new ArrayList<>());
+                voucher.setProcessReference(dto.getProductReceipt().getGrnNo());
+                voucher.setProcessName("product_receipt");
 
                 // calculate amt
                 List<LedgerMappingProductGroup> listLmpg = ledgerMappingProductGroupRepository.findAll(Sort.by("code"));
@@ -222,8 +224,9 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                 for (ProductSaleAcUtil a : list) {
                     amt = amt.add(a.getAmount());
                 }
-                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, eventsList.get(0).getCreditLedger(),
+                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, dto.getProductReceipt().getCustomer().getLedger() == null ? eventsList.get(0).getCreditLedger() : dto.getProductReceipt().getCustomer().getLedger(),
                         "Product receipt " + dto.getProductReceipt().getGrnNo(), "1");
+                creditTxn.setAutoPostedScreen(false);
                 voucher.getVoucherTransactions().add(creditTxn);
                 if (eventsList.get(0).getCreditSubLedger()) {
                     VoucherSubLedger voucherSubLedger = null;
@@ -242,6 +245,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                 for (ProductSaleAcUtil a : list) {
                     VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, a.getAmount(), false, a.getLedger(),
                             a.getNarration(), String.valueOf(sr));
+                    debitTxn.setAutoPostedScreen(false);
                     sr++;
                     voucher.getVoucherTransactions().add(debitTxn);
                 }

@@ -68,7 +68,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class ProductSaleAddEditController implements MyInitialization, PopupCallback {
 
@@ -142,7 +141,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         cboxTaxCode.setEditable(false);
         this.resourceBundle = resourceBundle;
         FocusUtils.requestFocus(txtConsumerCode);
+        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
         dpDate.setValue(LocalDate.now());
+        dpDate.setConverter(new LocalDateConvertor());
+        dpDeductionFromDate.setConverter(new LocalDateConvertor());
         rbtnCash.setSelected(true);
         setupComboBox();
         setupTable();
@@ -268,7 +270,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             dpDeductionToDate.setDisable(false);
             dpDeductionStartDate.setDisable(false);
             dpDeductionStartDate.setValue(LocalDate.now());
-            txtNoOfInstallment.setDisable(false);
+            txtNoOfInstallment.setDisable(true);
             txtNoOfInstallment.setText("1");
             btnInstallments.setDisable(false);
         });
@@ -343,6 +345,43 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
         {
             getDeductionAndPurchaseData();
+        });
+
+        txtRate.setOnAction(e -> {
+
+            if (!txtQuantity.getText().isEmpty()) {
+                if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
+                    txtQuantity.setText("");
+                    txtAmount.setText("");
+                    txtNetAmount.setText("");
+                    FocusUtils.requestFocus(txtQuantity);
+                    return;
+                }
+            }
+            calculateAmount();
+            calculateTaxAmount();
+
+
+            if (!validateProductSave()) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                        errorMsg.toString());
+                alert.createAlert();
+                return;
+            }
+            if (productSale == null) {
+                productSale = new ProductSale();
+                setValuesInObject();
+            }
+            saleTxnTaxDto = new SaleTxnTaxDto();
+            saleTxnTaxDto.setSaleTaxList(setValuesInSaleTax());
+            ProductSaleTransaction txn = setValuesInSaleTransaction();
+            saleTxnTaxDto.setTransaction(txn);
+            saleTxnTaxDtoList.add(saleTxnTaxDto);
+            listProductSaleTransaction.add(txn);
+            tableProductSaleTransaction.setItems(listProductSaleTransaction);
+            calculateSummary();
+            clearControls();
+            FocusUtils.requestFocus(cboxProduct);
         });
     }
 
@@ -785,7 +824,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             alert.createAlert();
         } else {
             productSale.setAmount(new BigDecimal(txtTotalAmount.getText()));
-//            productSale.setDiscount(new BigDecimal(txtTotalDiscount.getText()));
+            productSale.setInvoiceDate(dpDate.getValue());
             productSale.setTaxAmount(new BigDecimal(txtTotalAmountTax.getText()));
             productSale.setNetAmount(new BigDecimal(txtNetPayable.getText()));
             productSale.setBmcCode(MainApp.identityDto.getSociety().getBmc().getCode());
@@ -842,6 +881,16 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
+            });
+            task.setOnFailed(e -> {
+                Throwable t = task.getException();
+                String errorMessage = "error.occurred";
+                if (t.getMessage().contains("billing.already.completed")) {
+                    errorMessage = "billing.already.done";
+                }
+                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                        resourceBundle.getString(errorMessage));
+                alert1.createAlert();
             });
             new Thread(task).start();
         }
@@ -919,6 +968,16 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 ex.printStackTrace();
             }
         });
+        task.setOnFailed(e -> {
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("billing.already.completed")) {
+                errorMessage = "billing.already.done";
+            }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
+        });
         new Thread(task).start();
     }
 
@@ -958,8 +1017,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         var task1 = new ProductLoadTask();
         task1.setOnSucceeded(e -> {
             try {
-                cboxProduct.setItems(FXCollections.observableList(task1.get().stream().filter(ee -> ee.getCreatedBy() == null ||
-                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList())));
+                cboxProduct.setItems(FXCollections.observableList(task1.get()));
+//                        .stream().filter(ee -> ee.getCreatedBy() == null ||
+//                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList())));
                 new AutoCompleteComboBoxListener<>(cboxProduct);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

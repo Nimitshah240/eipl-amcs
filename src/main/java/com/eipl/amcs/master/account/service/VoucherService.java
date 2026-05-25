@@ -29,5 +29,5 @@ public interface VoucherService {
 
     void delete(Voucher voucher, String identityInfo);
 
-    List<VoucherTransaction> loadVoucherByVoucherDateBetween(LocalDate fromDate, LocalDate toDate);
+    List<VoucherTransaction> loadVoucherTransactionByCashTypeAndDateBetween(LocalDate fromDate, LocalDate toDate, Boolean cashType);
 }

@@ -4,17 +4,22 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.task.VoucherNumberLoadTask;
 import com.eipl.amcs.master.account.task.VoucherSaveTask;
+import com.eipl.amcs.master.account.task.VoucherTypeLoadTask;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,7 +47,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
     @FXML
     private E_Button btnCredit, btnDebit;
     @FXML
-    private DatePicker dpVoucherDate;
+    private E_DatePicker dpVoucherDate;
     @FXML
     private E_TextField txtBillRefNo, txtVoucherNo;
     @FXML
@@ -71,6 +76,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
     private List<VoucherTransaction> debitVoucherTransactionList = new ArrayList<>();
     private List<VoucherTransaction> creditVoucherTransactionList = new ArrayList<>();
     private List<VoucherTransaction> voucherTransactionList = new ArrayList<>();
+    private VoucherType voucherType;
 
 
     public HavaloController() {
@@ -112,11 +118,12 @@ public class HavaloController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupTable();
+        loadVoucherType();
         btnCredit.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryCredit", null, this, resourceBundle.getString("receipt.credit"));
         });
         btnDebit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryDebit", null, this,  resourceBundle.getString("receipt.debit"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "HavaloVoucherEntryDebit", null, this, resourceBundle.getString("receipt.debit"));
         });
         dpVoucherDate.setValue(LocalDate.now());
         getNextVoucherCode();
@@ -127,6 +134,8 @@ public class HavaloController implements MyInitialization, PopupCallback {
             this.callback.reloadData(true);
             this.stage.close();
         });
+        dpVoucherDate.setConverter(new LocalDateConvertor());
+        FocusUtils.requestFocus(dpVoucherDate);
     }
 
     public void loadControls() {
@@ -212,6 +221,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
         voucher.setBillDate(dpVoucherDate.getValue());
         voucher.setAutoPosted(false);
         voucher.setCancelled(false);
+        voucher.setVoucherType(voucherType);
         voucher.setSociety(MainApp.identityDto.getSociety());
         voucher.setUnionCode(MainApp.identityDto.getUnion().getCode());
         voucher.setDockCode(MainApp.identityDto.getDock().getDockNo());
@@ -354,4 +364,21 @@ public class HavaloController implements MyInitialization, PopupCallback {
         }
 
     }
+
+    private void loadVoucherType() {
+        var task = new VoucherTypeLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<VoucherType> voucherTypeList = task.get();
+                for (VoucherType vt : voucherTypeList) {
+                    if (vt.getCode() == 8) // JOURNAL
+                        voucherType = vt;
+                }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
+    }
+
 }

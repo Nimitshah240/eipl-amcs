@@ -7,8 +7,9 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.exception.error.ApiValidationError;
+import com.eipl.amcs.master.account.converter.LedgerConvertor;
+import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.master.geo.converter.DistrictConvertor;
 import com.eipl.amcs.master.geo.converter.StateConvertor;
 import com.eipl.amcs.master.geo.converter.SubDistrictConvertor;
@@ -79,6 +80,8 @@ public class CustomerAddEditController implements MyInitialization {
     @FXML
     private ComboBox<Branch> cboxBranchName;
     @FXML
+    private ComboBox<Ledger> cboxLedger;
+    @FXML
     private TextField txtCst, txtCode, txtMobileNo, txtPincode,
             txtName, txtLocalName,
             txtEmail, txtPanNo, txtAadharCardNo, txtAcNo, txtIfsc, txtRegistrationNo;
@@ -118,6 +121,7 @@ public class CustomerAddEditController implements MyInitialization {
         loadState();
         loadCustomerType();
         loadBank();
+        loadLedger();
 
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Customer.fxml")));
@@ -210,6 +214,7 @@ public class CustomerAddEditController implements MyInitialization {
         txtAadharCardNo.setText(customerDetail.getAadharCardNo());
         cboxBankName.getSelectionModel().select(customerDetail.getBank());
         cboxBranchName.getSelectionModel().select(customerDetail.getBranch());
+        cboxLedger.getSelectionModel().select(customer.getLedger());
         txtAcNo.setText(customerDetail.getAccountNo());
         txtIfsc.setText(customerDetail.getIfsc());
     }
@@ -302,6 +307,7 @@ public class CustomerAddEditController implements MyInitialization {
         customer.setRegistrationDate(dpRegistrationDate.getValue());
         customer.setMobileNo(txtMobileNo.getText());
         customer.setPaymentMode((rbtnBank.isSelected() ? 1 : 0));
+        customer.setLedger(cboxLedger.getSelectionModel().getSelectedItem());
         customerDetail.setBank(cboxBankName.getValue());
         customerDetail.setBranch(cboxBranchName.getValue());
         customerDetail.setAccountNo(txtAcNo.getText());
@@ -343,6 +349,7 @@ public class CustomerAddEditController implements MyInitialization {
         cboxVillage.setConverter(new VillageConvertor(cboxVillage));
         cboxBankName.setConverter(new BankConvertor(cboxBankName));
         cboxBranchName.setConverter(new BranchConvertor(cboxBranchName));
+        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
         dpRegistrationDate.setConverter(new LocalDateConvertor());
         dpRegistrationDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -464,6 +471,24 @@ public class CustomerAddEditController implements MyInitialization {
                     new AutoCompleteComboBoxListener<>(cboxBranchName);
                     if (customerDetail != null)
                         cboxBranchName.setValue(customerDetail.getBranch());
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadLedger() {
+        var task = new LedgerLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Ledger> list = task.get();
+                if (list != null) {
+                    cboxLedger.setItems(FXCollections.observableList(list));
+                    new AutoCompleteComboBoxListener<>(cboxLedger);
+                    if (customer != null)
+                        cboxLedger.setValue(customer.getLedger());
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

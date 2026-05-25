@@ -4,6 +4,7 @@
 <?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_TextFieldLocal?>
 <?import com.eipl.amcs.controls.E_NumericField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -91,7 +92,7 @@
                                                 <E_TextField fx:id="txtSocietyNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                 <E_TextField fx:id="txtShortName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
 
-                                                <E_TextField fx:id="txtShortNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                <E_TextFieldLocal fx:id="txtShortNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
 
                                                 <E_DatePicker fx:id="dpStartYear" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
                                                 <E_TextField fx:id="txtRegistrationCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
