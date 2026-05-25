@@ -71,7 +71,7 @@ public class StockValuationTaskWithSaleAndPurchase extends Task<List<ProductStoc
                         break;
                     }
                     if (Double.parseDouble(arrReceipt[1].toString()) >= stock) {
-                        stockValue = stockValue + (stock * Double.parseDouble(arrReceipt[1].toString()));
+                        stockValue = stockValue + (stock * Double.parseDouble(arrReceipt[0].toString()));
                         break;
                     } else {
                         stockValue = Double.parseDouble(arrReceipt[1].toString()) * Double.parseDouble(arrReceipt[0].toString());

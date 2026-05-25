@@ -19,9 +19,11 @@ import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkQualityTypeLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.operation.model.Message;
 import com.eipl.amcs.master.operation.model.SchemeRateApplicability;
 import com.eipl.amcs.master.operation.task.SchemeRateApplicabilityLoadTask;
 import com.eipl.amcs.master.procurement.model.MemberMilkPurchaseRateBased;
+import com.eipl.amcs.operation.administartion.task.MessagesForDateAndShiftLoadTask;
 import com.eipl.amcs.operation.procurement.dto.*;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
@@ -157,6 +159,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     Boolean doubleDock = false;
 
     private SchemeRateApplicability schemeRateApplicability;
+
+    private List<Message> messageList = new ArrayList<>();
 
     private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
@@ -506,6 +510,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         tableCollection.setItems(listCollection);
         tableSummary.setItems(listCollectionSummary);
         btnStart.setOnAction(e -> {
+            loadMessages();
             LocalDateTime collectionDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
             MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
             AccountPostingRepository accountPostingRepository = EmcsAppContext.getContext().getBean(AccountPostingRepository.class);
@@ -2320,7 +2325,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 }
 
 
-
                 if (resp != null) {
                     if (s.contains("{totalQty}")) {
                         s = s.replace("{totalQty}", String.valueOf(NumberUtil.round((double) resp[0], 2)));
@@ -2336,6 +2340,18 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 masterLines.add(s);
                 s = null;
             }
+
+            // CHINTAN | 23.05.2026 : To get message on print slip.
+            if (messageList != null && !messageList.isEmpty()) {
+                for (Message message : messageList) {
+                    if (slipLanguage.equalsIgnoreCase("English")) {
+                        masterLines.add(message.getMessage());
+                    } else {
+                        masterLines.add(message.getMessageLocal());
+                    }
+                }
+            }
+
             if (removepdline >= 0) {
                 lines.remove(removepdline);
                 masterLines.remove(removepdline);
@@ -2344,6 +2360,27 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 23/05/2026    Chintan             1.0.0     To load messages of print slip for the day and shift
+     */
+    private void loadMessages() {
+        var task = new MessagesForDateAndShiftLoadTask(dpDate.getValue(), cboxShift.getValue().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                messageList = task.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                LOGGER.error("Failed to load messages", ex);
+            }
+        });
+        task.setOnFailed(e -> {
+            LOGGER.error("Failed to load messages", task.getException());
+        });
+        new Thread(task).start();
     }
 
     private void print(List<String> masterLines) {

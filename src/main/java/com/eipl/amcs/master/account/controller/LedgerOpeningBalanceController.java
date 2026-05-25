@@ -109,6 +109,18 @@ public class LedgerOpeningBalanceController implements MyInitialization {
             deleteData();
         });
 
+        txtBalance.setOnAction(e -> {
+            if (btnSave.getText().equalsIgnoreCase(resourceBundle.getString("add"))) {
+                vbox.getChildren().add(1, gridMaster);
+                FocusUtils.requestFocus(cboxFinancialYear);
+                btnSave.setText(resourceBundle.getString("save"));
+            } else {
+                saveData();
+//                btnSave.setText(resourceBundle.getString("add"));
+//                vbox.getChildren().remove(gridMaster);
+            }
+        });
+
     }
 
     private void loadImportPreReq() {
@@ -231,7 +243,7 @@ public class LedgerOpeningBalanceController implements MyInitialization {
         try {
             colFinancialYear.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFinancialYearsCode()));
             colBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBalance()));
-            colLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().getName()));
+            colLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedger().toString()));
             colType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit() ?
                     resourceBundle.getString("credit") : resourceBundle.getString("debit")));
 
@@ -265,7 +277,7 @@ public class LedgerOpeningBalanceController implements MyInitialization {
                 List<FinancialYear> list = task.get();
                 if (list != null) {
                     cboxFinancialYear.getItems().addAll(FXCollections.observableList(list));
-                    cboxFinancialYear.getSelectionModel().select(0);
+                    cboxFinancialYear.getSelectionModel().select(MainApp.getFinancialYear());
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -322,9 +334,13 @@ public class LedgerOpeningBalanceController implements MyInitialization {
     @Override
     public void clearControls() {
         txtBalance.setText("");
-        cboxFinancialYear.setValue(MainApp.getFinancialYear());
-        cboxFinancialYear.getSelectionModel().select(0);
+//        cboxFinancialYear.setValue(MainApp.getFinancialYear());
+//        cboxFinancialYear.getSelectionModel().select(0);
+        FocusUtils.requestFocus(cboxLedger);
+        cboxLedger.getSelectionModel().clearSelection();
+        cboxLedger.getEditor().clear();
+        cboxLedger.setValue(null);
         cboxLedger.getSelectionModel().select(0);
-        cboxType.getSelectionModel().select(0);
+//        cboxType.getSelectionModel().select(0);
     }
 }

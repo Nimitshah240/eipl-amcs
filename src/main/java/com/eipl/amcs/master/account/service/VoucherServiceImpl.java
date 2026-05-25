@@ -2,9 +2,7 @@ package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.account.dto.VoucherDto;
-import com.eipl.amcs.master.account.model.Voucher;
-import com.eipl.amcs.master.account.model.VoucherSubLedger;
-import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentRepository;
@@ -44,6 +42,8 @@ public class VoucherServiceImpl implements VoucherService {
     private VoucherSubLedgerRepository voucherSubLedgerRepository;
     @Autowired
     private LedgerRepository ledgerRepository;
+    @Autowired
+    private LedgerGroupRepository ledgerGroupRepository;
 
     @Override
     public List<VoucherDto> findAll() {
@@ -172,11 +172,20 @@ public class VoucherServiceImpl implements VoucherService {
         }
     }
 
-    public List<VoucherTransaction> loadVoucherByVoucherDateBetween(LocalDate fromDate, LocalDate toDate) {
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 23/05/2026    Nimit             1.0.0       Get Voucher txn of voucher date between
+     * and also ledger's ledger groups cash type
+     */
+    public List<VoucherTransaction> loadVoucherTransactionByCashTypeAndDateBetween(LocalDate fromDate, LocalDate toDate, Boolean cashType) {
         try {
-//            List<Ledger> ledgers = ledgerRepository.findAll(); // Just For Cash Ledger Type
+
+            List<LedgerGroup> ledgerGroupsCashType = ledgerGroupRepository.findByIsCash(cashType);
+            List<Ledger> ledgerList = ledgerRepository.findByLedgerGroupIn(ledgerGroupsCashType);
             List<Voucher> voucherList = voucherRepository.findByVoucherDateBetween(fromDate, toDate, Sort.by("voucherDate").descending());
-            return voucherTxnRepository.findByVoucherIn(voucherList);
+            return voucherTxnRepository.findByVoucherInAndLedgerIn(voucherList, ledgerList);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

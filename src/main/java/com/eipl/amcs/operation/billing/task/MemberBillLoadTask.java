@@ -11,7 +11,7 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class MemberBillLoadTask extends Task<List<MemberBill>> {
@@ -19,14 +19,14 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
     private final SocietyPaymentCycle paymentCycle;
     private final short generate;
     private final Society society;
-    private final LocalDateTime fromDate;
-    private final LocalDateTime toDate;
+    private final LocalDate deductionFromDate;
+    private final LocalDate deductionToDate;
 
-    public MemberBillLoadTask(SocietyPaymentCycle paymentCycle, Society society, LocalDateTime fromDate, LocalDateTime toDate, short generate) {
+    public MemberBillLoadTask(SocietyPaymentCycle paymentCycle, Society society, LocalDate fromDate, LocalDate toDate, short generate) {
         this.paymentCycle = paymentCycle;
         this.generate = generate;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+        this.deductionFromDate = fromDate;
+        this.deductionToDate = toDate;
         this.society = society;
     }
 
@@ -47,12 +47,14 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
                 paymentCycle1 = paymentCycleService.findById(paymentCycle.getCode())
                         .orElseThrow(() -> new EntityNotFoundException(SocietyPaymentCycle.class, "code", "invalid.paymentcycle"));
                 SocietyPaymentCycle prevPaymentCycle = paymentCycleService.fetchCurrentPaymentCycle(paymentCycle1.getFromDate().minusDays(3), null);
-                memberListResult = service.findMemberBill(society.getCode(), paymentCycle1, prevPaymentCycle);
+                memberListResult = service.findMemberBill(society.getCode(), paymentCycle1, prevPaymentCycle, deductionFromDate, deductionToDate);
             }
             if (memberListResult == null || memberListResult.isEmpty()) return null;
             return memberListResult;
         } catch (Exception e) {
             LOGGER.error("Memberbill fetch", e);
+            if (e.getMessage().contains("overlapping"))
+                throw new RuntimeException(e.getMessage());
         }
         return null;
     }

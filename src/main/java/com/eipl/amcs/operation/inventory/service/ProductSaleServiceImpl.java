@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.inventory.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.BusinessValidationFailException;
@@ -21,6 +22,8 @@ import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.org.repository.UnionRepository;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.repository.SocietyPaymentCycleRepository;
+import com.eipl.amcs.operation.billing.model.MemberBillSummary;
+import com.eipl.amcs.operation.billing.repository.MemberBillSummaryRepository;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleAcUtil;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleMigrateDto;
@@ -95,6 +98,8 @@ public class ProductSaleServiceImpl implements ProductSaleService {
     private FinancialYearRepository financialYearRepository;
     @Autowired
     private SubLedgerRepository subLedgerRepository;
+    @Autowired
+    private MemberBillSummaryRepository summaryRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -114,6 +119,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             SocietyPaymentCycle paymentCycle = paymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5), productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5));
             if (paymentCycle == null || paymentCycle.getLockBillingProcess())
                 throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
+
+            MemberBillSummary memberBillSummary = summaryRepository.findTop1ByDeductionFromDateLessThanEqualAndDeductionToDateGreaterThanEqual(productSaleDto.getProductSale().getDeductionStartDate(), productSaleDto.getProductSale().getDeductionStartDate());
+            if (memberBillSummary != null)
+                throw new BusinessValidationFailException(ProductSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "billing.already.completed"));
         }
 
 
@@ -184,7 +193,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             dto.setSocietyPaymentCycle(dto.getSocietyPaymentCycle());
             dto.setInvoiceNo(saleNew.getInvoiceNo());
             dto.setSocietyCode(dto.getSocietyCode());
-            dto.setUnionCode("101");
+            dto.setUnionCode(MainApp.identityDto.getUnion().getCode());
 
             dto.setPreviousPendingAmount(BigDecimal.ZERO);
             dto.setInitData();
@@ -216,7 +225,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                 // Voucher
                 Voucher voucher = VoucherUtil.getVoucherInstance(voucherCode, productSaleDto.getProductSale().getInvoiceNo(), productSaleDto.getProductSale().getInvoiceDate(), productSaleDto.getProductSale().getInvoiceDate(), "Product Sale Auto Posting " + productSaleDto.getProductSale().getInvoiceDate(), eventsList.get(0).getVoucherType(), financialYear.isPresent() ? financialYear.get().getCode() : null, productSaleDto.getProductSale().getSociety(), productSaleDto.getProductSale().getUnion().getCode(), productSaleDto.getProductSale().getDock().getDockNo());
                 voucher.setProcessName("tbl_product_sale");
-                voucher.setProcessReference(voucher.getCode());
+                voucher.setProcessReference(productSaleDto.getProductSale().getInvoiceNo());
                 voucher.setVoucherTransactions(new ArrayList<>());
                 voucher.setxCol1(UUID.randomUUID().toString());
                 // Calculate amount of txns
@@ -270,9 +279,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                 }
                 VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amt, false, eventsList.get(0).getDebitLedger(), "Product Sale On Credit To " + productSaleDto.getProductSale().getConsumerType() + ": " + productSaleDto.getProductSale().getConsumerCode(), "1");
                 voucher.setProcessName("tbl_product_sale");
-                voucher.setProcessReference(voucher.getCode());
+                voucher.setProcessReference(productSaleDto.getProductSale().getInvoiceNo());
                 voucher.getVoucherTransactions().add(debitTxn);
                 debitTxn.setxCol1(UUID.randomUUID().toString());
+                debitTxn.setAutoPostedScreen(false);
                 if (eventsList.get(0).getDebitSubLedger()) {
                     VoucherSubLedger voucherSubLedger = null;
                     Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode(productSaleDto.getProductSale().getConsumerType(), productSaleDto.getProductSale().getConsumerCode());
@@ -291,6 +301,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                     sr++;
                     creditTxn.setxCol1(UUID.randomUUID().toString());
                     voucher.getVoucherTransactions().add(creditTxn);
+                    creditTxn.setAutoPostedScreen(false);
                 }
 
                 voucherRepository.customSave(voucher, identityInfo);
@@ -404,7 +415,11 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             txn.setFinalValue(oldVal.add(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
         else if (operation.equals("DELETE"))
             txn.setFinalValue(oldVal.subtract(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
-        txn.setReferenceCode(code);
+        // FIXME(NIMIT | 25.05.2026): In product receipt reference code in txn code because this indicate stock transaction is of which txn.
+//        txn.setReferenceCode(code);
+        txn.setReferenceCode(transaction.getInvoiceTxnNo());
+
+
         txn.setTransactionDate(transaction.getProductSale().getInvoiceDate());
         txn.setTransactionType(trnsType);
         txn.setProduct(transaction.getProduct());
@@ -420,6 +435,11 @@ public class ProductSaleServiceImpl implements ProductSaleService {
     public ProductSaleDto update(ProductSaleDto productSaleDto, String identityInfo) {
         ProductSale productSale = productSaleRepository.findById(productSaleDto.getProductSale().getInvoiceNo()).orElseThrow(() -> new EntityNotFoundException(ProductSale.class, "Invalid"));
         // Existing product receipt transactions
+        if (productSaleDto.getProductSale() != null && productSaleDto.getProductSale().getDeductionStartDate() != null) {
+            MemberBillSummary memberBillSummary = summaryRepository.findTop1ByDeductionFromDateLessThanEqualAndDeductionToDateGreaterThanEqual(productSale.getDeductionStartDate(), productSale.getDeductionStartDate());
+            if (memberBillSummary != null)
+                throw new BusinessValidationFailException(ProductSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSale.getInvoiceDate(), "billing.already.completed"));
+        }
         List<ProductSaleTransaction> listTxn = saleTransRepository.findByProductSale(productSale);
         List<ProductSaleTax> listTax = saleTaxRepository.findByProductSale(productSale);
         List<ProductSaleInstallment> listInstallment = installmentRepository.findByInvoiceNo(productSale.getInvoiceNo());
@@ -518,6 +538,11 @@ public class ProductSaleServiceImpl implements ProductSaleService {
     public void delete(String code, String identityInfo) {
         ProductSale productSale = productSaleRepository.findById(code).orElseThrow(() -> new EntityNotFoundException(ProductReceipt.class, "Invalid"));
 
+        if (productSale.getDeductionStartDate() != null) {
+            MemberBillSummary memberBillSummary = summaryRepository.findTop1ByDeductionFromDateLessThanEqualAndDeductionToDateGreaterThanEqual(productSale.getDeductionStartDate(), productSale.getDeductionStartDate());
+            if (memberBillSummary != null)
+                throw new BusinessValidationFailException(ProductSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSale.getInvoiceDate(), "billing.already.completed"));
+        }
         List<ProductSaleInstallment> listIns = installmentRepository.findByInvoiceNo(productSale.getInvoiceNo());
         for (ProductSaleInstallment txn : listIns) {
             if (txn.getSocietyPaymentCycle().getLockBillingProcess()) {

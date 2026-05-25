@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.billing.task;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.dto.FinalizeDto;
@@ -24,8 +25,11 @@ public class MemberBillFinalizeLoadTask extends Task<Object> {
             MemberBillService service = EmcsAppContext.getContext().getBean(MemberBillService.class);
             SocietyPaymentCycle paymentCycle = dto.getPaymentCycle();
             List<String> memberList = dto.getMemberCodeList();
-
-            return service.finalize(paymentCycle, memberList);
+            if (MainApp.getProperty("client.code", "").equals("BANAS_AMCS")) {
+                return service.finalize(paymentCycle, memberList, dto.getDeductionFromDate(), dto.getDeductionToDate());
+            } else {
+                return service.finalize(paymentCycle, memberList);
+            }
         } catch (HttpStatusCodeException e) {
             return EmcsAppContext.getContext().getBean(ApiJsonUtil.class).parseJsonString(e.getResponseBodyAsString());
         } catch (Exception e) {

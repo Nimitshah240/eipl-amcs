@@ -2,10 +2,13 @@ package com.eipl.amcs.master.operation.model;
 
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.eipl.amcs.base.model.BaseModel;
+import com.eipl.amcs.json.deserialize.LedgerDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
+import com.eipl.amcs.json.serialize.LedgerSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
+import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.eipl.amcs.utils.CommonUtils;
@@ -57,6 +60,13 @@ public class Customer extends BaseModel {
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = LedgerSerialize.class)
+    @JsonDeserialize(using = LedgerDeserializer.class)
+    @JoinColumn(name = "ledger_code", foreignKey = @ForeignKey(name = "fk_voucher_transaction_ledger_code"))
+    @JsonIgnoreProperties(value = {"society", "ledgerGroup"})
+    private Ledger ledger;
+
     @Override
     public String getTableName() {
         return "customers";
@@ -69,7 +79,9 @@ public class Customer extends BaseModel {
 
     @Override
     public String toString() {
-        return CommonUtils.getLocalString(this.name, this.nameLocal);
+        return (this.getXCol3() == null ? "" : this.getXCol3()) + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal);
+
+//        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 
     @Override

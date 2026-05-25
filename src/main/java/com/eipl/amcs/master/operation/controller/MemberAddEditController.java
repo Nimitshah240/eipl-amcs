@@ -104,7 +104,7 @@ public class MemberAddEditController implements MyInitialization {
             txtName, txtLastName, txtLocalName, txtMiddleLocalName, txtLocalLastName,
             txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit,
             txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtNomineeNameLocal,
-            txtLand, txtRegistrationNo;
+            txtLand, txtRegistrationNo, txtQualification;
     @FXML
     private Button btnSaveUpdate, btnClose;
     @FXML
@@ -135,7 +135,7 @@ public class MemberAddEditController implements MyInitialization {
     private E_TextField txtChildFarmerCode;
 
     @FXML
-    private CheckBox chkIsEducated, chkIsCookingGas, chkIsMember;
+    private CheckBox chkIsEducated, chkIsCookingGas, chkIsMember, chkIsMilkMachine, chkIsPiyetLand, chkIsChafCutter, IsToilet;
 
     private final ObjectProperty<MemberCattleDetail> propMemberCattleDetail;
     private final ObjectProperty<MemberFamilyDetail> propMembmerFamiliyDetail;
@@ -310,6 +310,16 @@ public class MemberAddEditController implements MyInitialization {
                 txtRegistrationNo.setDisable(false);
             } else {
                 txtRegistrationNo.setDisable(true);
+            }
+        });
+
+        chkIsEducated.selectedProperty().addListener((observablevalue, oldvalue, newvalue) -> {
+            if (newvalue) {
+                txtQualification.setDisable(false);
+                txtQualification.setEditable(true);
+            } else {
+                txtQualification.setDisable(true);
+                txtQualification.setEditable(false);
             }
         });
         cboxBank.setOnAction(event -> {
@@ -508,7 +518,16 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setRelationship(cboxRelation.getSelectionModel().getSelectedItem());
         memberDetail.setLocalNomineeName(txtNomineeNameLocal.getText());
         memberDetail.setEducated(chkIsEducated.isSelected());
+        if (chkIsEducated.isSelected()) {
+            memberDetail.setQualification(txtQualification.getText());
+        } else {
+            memberDetail.setQualification(null);
+        }
         memberDetail.setCookingGas(chkIsCookingGas.isSelected());
+		memberDetail.setMilkMachine(chkIsMilkMachine.isSelected());
+        memberDetail.setPiyetLand(chkIsPiyetLand.isSelected());
+        memberDetail.setChafCutter(chkIsChafCutter.isSelected());
+        memberDetail.setToilet(IsToilet.isSelected());
         memberDetail.setLand(txtLand.getText());
         memberDetail.setLandType(cboxLandType.getSelectionModel().getSelectedItem() == null ? null : cboxLandType.getSelectionModel().getSelectedItem().toString());
         memberDetail.setFarmerType(cboxFarmerType.getSelectionModel().getSelectedItem() == null ? null : cboxFarmerType.getSelectionModel().getSelectedItem().toString());
@@ -902,6 +921,10 @@ public class MemberAddEditController implements MyInitialization {
 
         chkIsCookingGas.setSelected(memberDetail.isCookingGas());
         chkIsEducated.setSelected(memberDetail.isEducated());
+		chkIsMilkMachine.setSelected(memberDetail.isMilkMachine());
+        chkIsPiyetLand.setSelected(memberDetail.isPiyetLand());
+        chkIsChafCutter.setSelected(memberDetail.isChafCutter());
+        IsToilet.setSelected(memberDetail.isToilet());
         chkIsMember.setSelected(member.isDcsMember());
         cboxCaste.getSelectionModel().select(member.getCasteCategory());
         txtSapNo.setText(member.getSapFarmerCode());
@@ -914,6 +937,9 @@ public class MemberAddEditController implements MyInitialization {
 //        cboxRelation.getSelectionModel().select(AppConstant.MaritalStatus.fromLabel(memberDetail.getMaritalStatus()));
         cboxLandType.getSelectionModel().select(AppConstant.LandType.fromLabel(memberDetail.getLandType()));
         cboxFarmerType.getSelectionModel().select(AppConstant.FarmerType.fromLabel(memberDetail.getFarmerType()));
+        txtQualification.setText(memberDetail.getQualification());
+        txtQualification.setDisable(!memberDetail.isEducated());
+        txtQualification.setEditable(memberDetail.isEducated());
     }
 
     private boolean validateMemberCattleDetail() {

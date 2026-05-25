@@ -43,6 +43,7 @@ public class VoucherTransactionAudit extends BaseModelTxnAudit {
     @JsonDeserialize(using = VoucherDeserializer.class)
     @JoinColumn(name = "voucher_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Voucher voucher;
+    private Boolean autoPostedScreen;
 
     @Transient
     @JsonIgnore

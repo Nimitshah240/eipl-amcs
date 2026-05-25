@@ -33,6 +33,8 @@ public class LedgerGroup extends BaseModel {
     private LedgerType ledgerType;
     private String unionCode;
     private String refCode;
+    private Boolean isCash;
+
     @Override
     public String getTableName() {
         return "ledger_groups";

@@ -231,7 +231,13 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
                     }
                 });
                 task.setOnFailed(e -> {
-                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"), resourceBundle.getString("error.occurred"));
+                    Throwable t = task.getException();
+                    String errorMessage = "error.occurred";
+                    if (t.getMessage().contains("billing.already.completed")) {
+                        errorMessage = "billing.already.done";
+                    }
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                            resourceBundle.getString(errorMessage));
                     alert1.createAlert();
                 });
                 new Thread(task).start();

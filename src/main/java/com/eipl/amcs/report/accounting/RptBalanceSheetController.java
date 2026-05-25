@@ -2,12 +2,12 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.report.dto.BalanceSheetRow;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.task.BalanceSheetTask;
 import com.eipl.amcs.report.task.ProfitLossTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.NumberUtil;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -16,9 +16,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
-import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
@@ -121,8 +121,8 @@ public class RptBalanceSheetController implements MyInitialization {
                     if (diff > 0) {
                         listBSLiability.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 1));
                     }
-                    listBSLiability.add(new LedgerBalance("", "Total", 0, 0,
-                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
+//                    listBSLiability.add(new LedgerBalance("", "Total", 0, 0,
+//                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
 
                 }
                 listBSAsset = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
@@ -130,17 +130,35 @@ public class RptBalanceSheetController implements MyInitialization {
                     if (diff < 0) {
                         listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 0));
                     }
-                    listBSAsset.add(new LedgerBalance("", "Total", 0, 0,
-                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
+//                    listBSAsset.add(new LedgerBalance("", "Total", 0, 0,
+//                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
 
                 }
 
 
-                param.put("p_liability_side", listBSLiability);
+//                param.put("p_liability_side", listBSLiability);
+//
+//                param.put("p_asset_side", listBSAsset);
 
-                param.put("p_asset_side", listBSAsset);
 
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JREmptyDataSource());
+                int maxRows = Math.max(
+                        listBSLiability != null ? listBSLiability.size() : 0,
+                        listBSAsset != null ? listBSAsset.size() : 0
+                );
+
+                List<BalanceSheetRow> listBSRows = new ArrayList<>();
+                for (int i = 0; i < maxRows; i++) {
+                    LedgerBalance liability = (listBSLiability != null && i < listBSLiability.size())
+                            ? listBSLiability.get(i) : null;
+                    LedgerBalance asset = (listBSAsset != null && i < listBSAsset.size())
+                            ? listBSAsset.get(i) : null;
+                    listBSRows.add(new BalanceSheetRow(liability, asset));
+                }
+
+//                param.put("p_balance_sheet_rows", listBSRows);
+
+
+                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(listBSRows));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

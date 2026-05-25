@@ -2,6 +2,7 @@ package com.eipl.amcs.master.account.repository;
 
 import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.model.LedgerGroup;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
@@ -97,6 +98,6 @@ public interface LedgerRepository extends BaseRepository<Ledger, String> {
                                                       @Param("p_locale") String p_locale
     );
 
-    List<Ledger> findByLedgerGroup_LedgerType_Code(String code);
+    List<Ledger> findByLedgerGroupIn(List<LedgerGroup> ledgerGroups);
 
 }

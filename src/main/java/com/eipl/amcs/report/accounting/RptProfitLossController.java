@@ -2,6 +2,7 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.report.dto.BalanceSheetRow;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.task.ProfitLossTask;
 import com.eipl.amcs.report.util.ReportGenerate;
@@ -14,9 +15,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
-import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.net.URL;
@@ -106,19 +107,50 @@ public class RptProfitLossController implements MyInitialization {
                 listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
                 param.put("p_expense_side", listPLExpense);
 
-                if (listPLExpense != null && listPLIncome != null) {
-                    param.put("p_balance", listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()
+//                if (listPLExpense != null && listPLIncome != null) {
+//                    param.put("p_balance", listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()
+//
+//                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()));
+//                } else if (listPLIncome != null) {
+//                    param.put("p_balance",
+//                            listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() - 0);
+//                } else if (listPLExpense != null) {
+//                    param.put("p_balance",
+//                            0 - listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
+//                }
 
-                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()));
-                } else if (listPLIncome != null) {
-                    param.put("p_balance",
-                            listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() - 0);
-                } else if (listPLExpense != null) {
-                    param.put("p_balance",
-                            0 - listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
+                double incomeTotal = listPLIncome != null
+                        ? listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() : 0;
+                double expenseTotal = listPLExpense != null
+                        ? Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()) : 0;
+
+                param.put("p_balance", incomeTotal - expenseTotal);
+
+                listPLIncome = list.stream()
+                        .filter(p -> p != null && p.getIncomeExpense() == 1)
+                        .collect(Collectors.toList());
+
+                listPLExpense = list.stream()
+                        .filter(p -> p != null && p.getIncomeExpense() == 0)
+                        .collect(Collectors.toList());
+
+                int maxRows = Math.max(
+                        listPLIncome != null ? listPLIncome.size() : 0,
+                        listPLExpense != null ? listPLExpense.size() : 0
+                );
+
+                List<BalanceSheetRow> listPLRows = new ArrayList<>();
+                for (int i = 0; i < maxRows; i++) {
+                    LedgerBalance income = (listPLIncome != null && i < listPLIncome.size())
+                            ? listPLIncome.get(i) : null;
+                    LedgerBalance expense = (listPLExpense != null && i < listPLExpense.size())
+                            ? listPLExpense.get(i) : null;
+                    listPLRows.add(new BalanceSheetRow(income, expense));
                 }
 
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_PROFIT_LOSS_REPORT, param, new JREmptyDataSource());
+                param.put("p_pl_rows", listPLRows);
+
+                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_PROFIT_LOSS_REPORT, param, new JRBeanCollectionDataSource(listPLRows));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

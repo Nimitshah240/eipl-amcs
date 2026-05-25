@@ -128,6 +128,16 @@ public class KapaatController implements MyInitialization, PopupCallback {
                             ex.printStackTrace();
                         }
                     });
+                    task.setOnFailed(e -> {
+                        Throwable t = task.getException();
+                        String errorMessage = "error.occurred";
+                        if (t.getMessage().contains("billing.already.completed")) {
+                            errorMessage = "billing.already.done";
+                        }
+                        MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                                resourceBundle.getString(errorMessage));
+                        alert1.createAlert();
+                    });
                     new Thread(task).start();
                 }
             }

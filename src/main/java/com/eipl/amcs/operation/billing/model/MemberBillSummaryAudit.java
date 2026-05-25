@@ -15,6 +15,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @SuppressWarnings("serial")
 @Entity
@@ -37,6 +38,8 @@ public class MemberBillSummaryAudit extends BaseModelTxnAudit {
     private BigDecimal netAmount;
     private BigDecimal disbursedAmount;
     private short status; //1-PENDING
+    private LocalDate deductionFromDate;
+    private LocalDate deductionToDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietyPaymentCycleSerialize.class)

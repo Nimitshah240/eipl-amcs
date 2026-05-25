@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane  prefHeight="600.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.MessageController">
+    <children>
+        <VBox spacing="15.0">
+            <children>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%message" HBox.hgrow="ALWAYS" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <Label text="%to" />
+                        <DatePicker fx:id="dpToDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%search">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/search.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                    <padding>
+                        <Insets top="5.0" />
+                    </padding>
+                </HBox>
+            <TableView fx:id="tableMessage" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colFromDate" prefWidth="100.0" styleClass="cell-center-aligned" text="%fromdate" />
+                  <TableColumn fx:id="colFromShift" minWidth="78.0" prefWidth="95.0" styleClass="cell-center-aligned" text="%fromshift" />
+                  <TableColumn fx:id="colToDate" minWidth="150.0" prefWidth="158.0" text="%todate" />
+                  <TableColumn fx:id="colToShift" minWidth="79.0" prefWidth="90.0" styleClass="cell-center-aligned" text="%toshift" />
+                  <TableColumn fx:id="colMessage" minWidth="64.0" prefWidth="81.0" styleClass="cell-left-aligned" text="%message" />
+                  <TableColumn fx:id="colMessageLocal" prefWidth="184.0" styleClass="cell-left-aligned" text="%messagelocal" />
+               </columns>
+            </TableView>
+                <HBox prefWidth="200.0" spacing="15.0">
+                    <children>
+                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/edit.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                    </children>
+                    <padding>
+                        <Insets bottom="5.0" />
+                    </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

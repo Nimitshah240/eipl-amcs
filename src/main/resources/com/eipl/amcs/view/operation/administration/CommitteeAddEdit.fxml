@@ -6,7 +6,6 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-
 <StackPane fx:id="root" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.CommitteeAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="pane-white">
@@ -39,16 +38,18 @@
                         <E_TextField fx:id="txtNameLocal" maxWidth="1.7976931348623157E308" prefWidth="250.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                         <E_DatePicker fx:id="dpElectionDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                         <E_DatePicker fx:id="dpFormation" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <E_TextField fx:id="txtMemberName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+                        <E_TextField fx:id="txtMemberCode" GridPane.rowIndex="6" />
+                        <E_TextField fx:id="txtMemberName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <E_ComboBox fx:id="cboxDesignation" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         <E_DatePicker fx:id="dpJoiningDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="8" />
                         <E_DatePicker fx:id="dpRegistrationdate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                         <Label text="%designation" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <Label text="%committeename.local" GridPane.columnIndex="2" />
                         <Label maxWidth="1.7976931348623157E308" text="%formationdate" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="%committeemembers" GridPane.rowIndex="4"  styleClass="sub-header-text-primary" />
+                        <Label text="%member.code" GridPane.rowIndex="5" />
+                        <Label styleClass="sub-header-text-primary" text="%committeemembers" GridPane.rowIndex="4" />
                         <Separator maxHeight="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                        <Label text="%member.name" GridPane.rowIndex="5" />
+                        <Label text="%member.name" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <HBox spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="8">
                             <children>
                                 <E_Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
@@ -78,7 +79,7 @@
                 </GridPane>
                 <HBox>
                     <children>
-                        <Label text="%committeememberlist" styleClass="sub-header-text-primary" />
+                        <Label styleClass="sub-header-text-primary" text="%committeememberlist" />
                         <Separator maxHeight="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,4 +16,6 @@ import java.util.List;
 public class FinalizeDto {
     private SocietyPaymentCycle paymentCycle;
     private List<String> memberCodeList;
+    private LocalDate deductionFromDate;
+    private LocalDate deductionToDate;
 }

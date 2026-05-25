@@ -40,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,7 +60,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     @FXML
     private Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport, btnReport;
     @FXML
-    private DatePicker dpDisburseDate;
+    private DatePicker dpDisburseDate, dpDeductionFromDate, dpDeductionToDate;
     @FXML
     private TableView<MemberBill> tableBill;
     @FXML
@@ -70,6 +71,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     private MemberBillSummary billSummary;
     private List<MemberBill> memberBillList;
     private ResourceBundle resourceBundle;
+    List<String> negativeAmountList = new ArrayList<>();
 
     public MemberBillController() {
         propMemberBill = new SimpleObjectProperty<>();
@@ -95,6 +97,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         this.resourceBundle = resourceBundle;
 
         dpDisburseDate.setValue(LocalDate.now());
+        dpDeductionFromDate.setValue(LocalDate.now());
+        dpDeductionToDate.setValue(LocalDate.now());
         memberBillList = FXCollections.emptyObservableList();
 
         setupTable();
@@ -126,7 +130,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             }
             loadBillSummary();
 
-            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), generate);
+            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), dpDeductionFromDate.getValue(), dpDeductionToDate.getValue(), generate);
 
 
         });
@@ -309,7 +313,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
                     CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
             alert.createAlert();
-            return;
+//            return;
         }
 
         zeroAmountCount = memberBillList.stream().filter(p -> p.getNetAmount().doubleValue() < 0).count();
@@ -317,11 +321,13 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             MyAlert alert = new WarningAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "member.bill"),
                     CommonUtils.getResourceString(resourceBundle, "member.bill.negativeamountdisburse.notallowed"));
             alert.createAlert();
-            return;
+//            return;
         }
         FinalizeDto finalizeDto = new FinalizeDto();
         finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
         finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
+        finalizeDto.setDeductionFromDate(dpDeductionFromDate.getValue());
+        finalizeDto.setDeductionToDate(dpDeductionToDate.getValue());
         saveLockData(finalizeDto, 0);
     }
 
@@ -384,6 +390,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 FinalizeDto finalizeDto = new FinalizeDto();
                 finalizeDto.setPaymentCycle(cboxPaymentCycle.getValue());
                 finalizeDto.setMemberCodeList(memberBillList.stream().map(m -> m.getMember().getCode()).collect(Collectors.toList()));
+                finalizeDto.setDeductionFromDate(dpDeductionFromDate.getValue());
+                finalizeDto.setDeductionToDate(dpDeductionToDate.getValue());
                 saveLockData(finalizeDto, 1);
             } else {
                 MyAlert alert = new InformationAlert(MainApp.stage, resourceBundle.getString("member.bill"),
@@ -417,8 +425,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                                 .filter(p -> p.getCode().equals(this.billSummary.getPaymentCycle().getCode()))
                                 .findFirst().orElse(null);
                         cboxPaymentCycle.getSelectionModel().select(cycle);
-                        loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(),
-                                cboxPaymentCycle.getValue().getToDate(), (short) 0);
+                        loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), dpDeductionFromDate.getValue(), dpDeductionToDate.getValue(), (short) 0);
                     }
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -489,14 +496,19 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         }
     }
 
-    public void loadData(SocietyPaymentCycle paymentCycle, Society society, LocalDateTime fromDate, LocalDateTime toDate, short generate) {
+    public void loadData(SocietyPaymentCycle paymentCycle, Society society, LocalDate deductionFromDate, LocalDate deductionToDate, short generate) {
         tableBill.setItems(null);
-        var task = new MemberBillLoadTask(paymentCycle, society, fromDate, toDate, generate);
+        var task = new MemberBillLoadTask(paymentCycle, society, deductionFromDate, deductionToDate, generate);
         task.setOnSucceeded(e -> {
             try {
                 memberBillList = task.get();
                 if (memberBillList == null)
                     return;
+
+                negativeAmountList = memberBillList.stream()
+                        .filter(item -> item.getNetAmount() != null && item.getNetAmount().compareTo(BigDecimal.ZERO) < 0)
+                        .map(item -> item.getMember().getCodeEx() + " - " + item.getNetAmount())
+                        .collect(Collectors.toList());
 
                 loadBillSummary();
                 tableBill.setItems(FXCollections.observableList(memberBillList));
@@ -504,13 +516,23 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 ex.printStackTrace();
             }
         });
+        task.setOnFailed(e -> {
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("overlapping")) {
+                errorMessage = "overlapping.deduction.date";
+            }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
+        });
         new Thread(task).start();
     }
 
     @Override
     public void reloadData(boolean flag) {
         if (flag)
-            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), cboxPaymentCycle.getValue().getFromDate(), cboxPaymentCycle.getValue().getToDate(), (short) 0);
+            loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), dpDeductionFromDate.getValue(), dpDeductionToDate.getValue(), (short) 0);
     }
 
     private void loadBillSummary() {
@@ -520,8 +542,11 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                 short generate = 0;
                 MemberBillSummary memberBillSummary = task.get();
                 billSummary = memberBillSummary;
-                if (billSummary != null)
+                if (billSummary != null) {
                     btnReport.setDisable(false);
+                    dpDeductionFromDate.setValue(memberBillSummary.getDeductionFromDate());
+                    dpDeductionToDate.setValue(memberBillSummary.getDeductionToDate());
+                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }

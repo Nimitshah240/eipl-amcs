@@ -17,7 +17,7 @@ public interface MemberBillService {
 
     MemberBillSummary findMemberBillSummary(SocietyPaymentCycle paymentCycle);
 
-    List<MemberBill> findMemberBill(String societyCode, SocietyPaymentCycle paymentCycle, SocietyPaymentCycle prevPaymentCycle);
+    List<MemberBill> findMemberBill(String societyCode, SocietyPaymentCycle paymentCycle, SocietyPaymentCycle prevPaymentCycle, LocalDate deductionFromDate, LocalDate deductionToDate);
 
     List<MemberBillTransaction> findMemberBillTransaction(MemberBill memberBill);
 
@@ -32,6 +32,8 @@ public interface MemberBillService {
     List<MemberBill> fetchTableData(SocietyPaymentCycle paymentCycle);
 
     Boolean finalize(SocietyPaymentCycle paymentCycle, List<String> memberList);
+
+    Boolean finalize(SocietyPaymentCycle paymentCycle, List<String> memberList, LocalDate deductionFromDate, LocalDate deductionToDate);
 
     Boolean disburse(SocietyPaymentCycle paymentCycle, List<String> memberList, Bank bank, String identityHeader);
 

@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
@@ -36,7 +37,7 @@
                     </rowConstraints>
                     <children>
                         <Label text="%date" />
-                        <DatePicker fx:id="dpVoucherDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpVoucherDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <Label text="%billno" GridPane.columnIndex="1" />
                         <E_TextField fx:id="txtBillRefNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="%voucherno" GridPane.columnIndex="2" />
