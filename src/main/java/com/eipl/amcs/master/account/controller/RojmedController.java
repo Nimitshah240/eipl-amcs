@@ -7,11 +7,11 @@ import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.controls.table.DataEntryRow;
 import com.eipl.amcs.controls.table.SummaryRow;
 import com.eipl.amcs.controls.table.TableRowModel;
 import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
 import com.eipl.amcs.master.account.task.LedgerDeleteTask;
 import com.eipl.amcs.master.account.task.RojmedOpeningBalanceLoadTask;
@@ -28,6 +28,7 @@ import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
@@ -59,8 +60,9 @@ public class RojmedController implements MyInitialization, PopupCallback {
     BigDecimal openingBalance = BigDecimal.ZERO;
     BigDecimal closingBalance = BigDecimal.ZERO;
     private ResourceBundle resourceBundle;
-    private List<Voucher> voucherList = new ArrayList<>();
     private List<VoucherTransaction> voucherTransactionList = new ArrayList<>();
+    private List<VoucherTransaction> crVoucherTransactionList = new ArrayList<>();
+    private List<VoucherTransaction> drVoucherTransactionList = new ArrayList<>();
     private Map<String, VoucherTransaction> voucherTransactionMap = new HashMap<>();
 
     public RojmedController() {
@@ -109,6 +111,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
             dpDate.setValue(dpDate.getValue().minusDays(1));
         });
         loadData();
+        dpDate.setConverter(new LocalDateConvertor());
     }
 
 
@@ -123,32 +126,69 @@ public class RojmedController implements MyInitialization, PopupCallback {
             task.setOnSucceeded(e -> {
                 try {
                     voucherTransactionList = task.get();
-                    if (voucherTransactionList != null) {
-                        voucherTransactionMap = voucherTransactionList.stream()
-                                .collect(Collectors.toMap(
-                                        vt -> vt.getCode(),
-                                        vt -> vt
-                                ));
+                    if (voucherTransactionList == null)
+                        voucherTransactionList = new ArrayList<>();
 
-                    }
+                    voucherTransactionMap = voucherTransactionList.stream()
+                            .collect(Collectors.toMap(
+                                    vt -> vt.getCode(),
+                                    vt -> vt
+                            ));
+
+                    crVoucherTransactionList = voucherTransactionList.stream()
+                            .filter(vt -> vt.getCreditDebit() == true)
+                            .collect(Collectors.toList());
+
+                    drVoucherTransactionList = voucherTransactionList.stream()
+                            .filter(vt -> vt.getCreditDebit() == false)
+                            .collect(Collectors.toList());
+
+                    calculateCrDrTotal();
                     generateTable();
-                    closingBalance = openingBalance.add(crTotal.subtract(drTotal));
-
-                    if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
-                        lblClosingBalance.setText(Math.abs(closingBalance.doubleValue()) + " Debit");
-                        lblClosingBalance.setTextFill(Color.RED);
-                    } else {
-                        lblClosingBalance.setText(closingBalance + " Credit");
-                        lblClosingBalance.setTextFill(Color.GREEN);
-                    }
 
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             });
             new Thread(task).start();
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void calculateCrDrTotal() {
+        crTotal = BigDecimal.ZERO;
+        drTotal = BigDecimal.ZERO;
+        if (openingBalance.compareTo(BigDecimal.ZERO) < 0)
+            crTotal = crTotal.add(new BigDecimal(Math.abs(openingBalance.doubleValue())).setScale(2, RoundingMode.HALF_DOWN));
+        else
+            drTotal = drTotal.add(new BigDecimal(Math.abs(openingBalance.doubleValue())).setScale(2, RoundingMode.HALF_DOWN));
+
+        crTotal = crTotal.add(crVoucherTransactionList.stream()
+                .filter(vt -> vt.getCode() != null)
+                .map(VoucherTransaction::getAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+        drTotal = drTotal.add(drVoucherTransactionList.stream()
+                .filter(vt -> vt.getCode() != null)
+                .map(VoucherTransaction::getAmount)
+                .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        lblTotalCredit.setText(crTotal.toString());
+        lblTotalDebit.setText(drTotal.toString());
+        calculateClosingBalance();
+    }
+
+    private void calculateClosingBalance() {
+        closingBalance = crTotal.subtract(drTotal);
+
+        if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
+            lblClosingBalance.setText(Math.abs(closingBalance.doubleValue()) + " Debit");
+            lblClosingBalance.setTextFill(Color.RED);
+        } else {
+            lblClosingBalance.setText(closingBalance + " Credit");
+            lblClosingBalance.setTextFill(Color.GREEN);
         }
     }
 
@@ -186,11 +226,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
             tableData1.getColumns().clear();
             tableData.getItems().clear();
             tableData1.getItems().clear();
-            lblTotalCredit.setText("0");
-            lblTotalDebit.setText("0");
-            crTotal = BigDecimal.ZERO;
-            drTotal = BigDecimal.ZERO;
-            List<String> columnNames = Arrays.asList(resourceBundle.getString("ledger"),"", resourceBundle.getString("amount"));
+            List<String> columnNames = Arrays.asList(resourceBundle.getString("ledger"), "", resourceBundle.getString("amount"));
 
             for (String name : columnNames) {
                 // Create Column for Table 1
@@ -205,32 +241,22 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 col2.setPrefWidth(120);
                 tableData1.getColumns().add(col2);
             }
-            if (voucherTransactionList == null || voucherTransactionList.isEmpty())
-                return;
+            if (voucherTransactionList == null)
+                voucherTransactionList = new ArrayList<>();
 
             // Filter data
             List<VoucherTransaction> creditVoucherTransaction = voucherTransactionList.stream()
-                    .filter(vt -> vt.getCreditDebit() == true)
+                    .filter(vt -> vt.getCreditDebit() == true && vt.getCode() != null)
                     .collect(Collectors.toList());
 
             List<VoucherTransaction> debitVoucherTransaction = voucherTransactionList.stream()
-                    .filter(vt -> vt.getCreditDebit() == false)
+                    .filter(vt -> vt.getCreditDebit() == false && vt.getCode() != null)
                     .collect(Collectors.toList());
 
             // Assign items - these will now remain independent
-            tableData.setItems(generateData(creditVoucherTransaction));
-            tableData1.setItems(generateData(debitVoucherTransaction));
+            tableData.setItems(generateData(creditVoucherTransaction, true));
+            tableData1.setItems(generateData(debitVoucherTransaction, false));
 
-            crTotal = creditVoucherTransaction.stream()
-                    .map(VoucherTransaction::getAmount)
-                    .filter(Objects::nonNull)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            drTotal = debitVoucherTransaction.stream()
-                    .map(VoucherTransaction::getAmount)
-                    .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            lblTotalCredit.setText(crTotal.toString());
-            lblTotalDebit.setText(drTotal.toString());
 
             tableData.setRowFactory(tv -> {
                 TableRow<TableRowModel> row = new TableRow<TableRowModel>() {
@@ -293,8 +319,8 @@ public class RojmedController implements MyInitialization, PopupCallback {
     }
 
 
-    private ObservableList<TableRowModel> generateData(List<VoucherTransaction> voucherTransactionList) {
-        ObservableList<TableRowModel> data = FXCollections.observableArrayList();
+    private ObservableList<TableRowModel> generateData(List<VoucherTransaction> voucherTransactionList, boolean credit_debit) {
+        ObservableList<TableRowModel> finaldata = FXCollections.observableArrayList();
 
         Map<Ledger, List<VoucherTransaction>> ledgerTransactionMap = new HashMap<>();
 
@@ -308,6 +334,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
             ledgerTransactionMap.put(voucherTransaction.getLedger(), tempTxnList);
         }
 
+        ObservableList<TableRowModel> data = FXCollections.observableArrayList();
         for (Ledger ledger : ledgerTransactionMap.keySet()) {
             SummaryRow sum1 = new SummaryRow();
             sum1.setColumnValue(resourceBundle.getString("ledger"), ledger.toString());
@@ -326,22 +353,59 @@ public class RojmedController implements MyInitialization, PopupCallback {
             data.add(sum1);
             data.addAll(dataEntryRowList);
         }
+        if (credit_debit) {
+            if (openingBalance.compareTo(BigDecimal.ZERO) < 0) {
+                SummaryRow sum1 = new SummaryRow();
+                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
+                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
+                finaldata.add(sum1);
+                finaldata.addAll(data);
+            }
+            if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
+                SummaryRow sum1 = new SummaryRow();
+                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
+                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
+                finaldata.addAll(data);
+                finaldata.add(sum1);
+            }
+        } else {
+            if (openingBalance.compareTo(BigDecimal.ZERO) > 0) {
+                SummaryRow sum1 = new SummaryRow();
+                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
+                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
+                finaldata.add(sum1);
+                finaldata.addAll(data);
+            }
+            if (closingBalance.compareTo(BigDecimal.ZERO) > 0) {
+                SummaryRow sum1 = new SummaryRow();
+                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
+                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
+                finaldata.addAll(data);
+                finaldata.add(sum1);
+            }
+        }
 
-        return data;
+        return finaldata;
     }
 
     private void handleCreditDoubleClick(String id) {
+        if (id == null)
+            return;
+
         VoucherTransaction vt = voucherTransactionMap.get(id);
         MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", vt.getVoucher(), this, resourceBundle.getString("credit.entry"));
     }
 
     private void handleDebitDoubleClick(String id) {
+        if (id == null)
+            return;
+
         VoucherTransaction vt = voucherTransactionMap.get(id);
         MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", vt.getVoucher(), this, resourceBundle.getString("debit.entry"));
     }
 
     private void getOpeningLedgerBalance() {
-        var task = new RojmedOpeningBalanceLoadTask(dpDate.getValue().minusDays(1));
+        var task = new RojmedOpeningBalanceLoadTask(dpDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 openingBalance = task.get();

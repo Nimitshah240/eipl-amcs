@@ -30,4 +30,26 @@ public interface VoucherTransactionRepository extends BaseRepository<VoucherTran
 
     @EntityGraph(attributePaths = {"ledger", "voucher"})
     List<VoucherTransaction> findByVoucherInAndAutoPostedScreen(List<Voucher> voucherList, Boolean autoPostedScreen);
+//
+//    @Query(
+//            "SELECT new com.eipl.amcs.master.account.dto.ProductSaleTransactionDto( " +
+//                    "vt, " +
+//                    "p, " +
+//                    "vt.ledger.code, " +
+//                    "vt.ledger.name, " +
+//                    "pt.rate, " +
+//                    "pt.quantity, " +
+//                    "p.code, " +
+//                    "p.name ) " +
+//                    "FROM Voucher v " +
+//                    "JOIN VoucherTransaction vt ON vt.voucher = v " +
+//                    "JOIN ProductSale s ON s.invoiceNo = v.billNo " +
+//                    "JOIN ProductSaleTransaction pt ON pt.productSale = s " +
+//                    "JOIN pt.product p " +
+//                    "WHERE v.processName = 'tbl_product_sale' " +
+//                    "AND v.voucherDate = :voucherDate"
+//    )
+//    List<ProductSaleTransactionDto> findProductSaleTransactions(
+//            @Param("voucherDate") LocalDate voucherDate
+//    );
 }

@@ -59,6 +59,8 @@ public class KapaatAddEditController implements MyInitialization {
     @FXML
     private TableView<Product> tableData;
     @FXML
+    private DatePicker dpDeductionDate;
+    @FXML
     private TableColumn<Product, String> colName, colAmount;
     private Stage stage;
     @FXML
@@ -74,6 +76,7 @@ public class KapaatAddEditController implements MyInitialization {
     private String memberCode;
     private ProductSaleDto productSaleDto;
     private String invoiceNo;
+    private StringBuilder errorMsg = null;
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -96,6 +99,7 @@ public class KapaatAddEditController implements MyInitialization {
         loadPaymentCycle();
         setupComboBox();
         getNextCode();
+        dpDeductionDate.setValue(LocalDate.now());
         btnClose.setOnAction(e -> {
             this.callback.reloadData(true);
             this.stage.close();
@@ -310,6 +314,16 @@ public class KapaatAddEditController implements MyInitialization {
                         ex.printStackTrace();
                     }
                 });
+                task.setOnFailed(e -> {
+                    Throwable t = task.getException();
+                    String errorMessage = "error.occurred";
+                    if (t.getMessage().contains("billing.already.completed")) {
+                        errorMessage = "billing.already.done";
+                    }
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                            resourceBundle.getString(errorMessage));
+                    alert1.createAlert();
+                });
                 new Thread(task).start();
             } else {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
@@ -355,7 +369,7 @@ public class KapaatAddEditController implements MyInitialization {
         installment.setInstallmentAmount(productSaleAmount);
         installment.setActualInstallment(productSaleAmount);
         installment.setBilling(false);
-        installment.setDeductionDate(cboxPaymentCycle.getValue().getToDate().toLocalDate().minusDays(1));
+        installment.setDeductionDate(dpDeductionDate.getValue());
         installment.setType(1);
         installment.setPreviousPendingAmount(BigDecimal.ZERO);
         installment.setMember(member);
@@ -371,10 +385,10 @@ public class KapaatAddEditController implements MyInitialization {
         productSale.setConsumerType((short) 1);
         productSale.setSociety(MainApp.identityDto.getSociety());
         productSale.setUnion(MainApp.identityDto.getUnion());
-        productSale.setDeductionStartDate(cboxPaymentCycle.getValue().getToDate().toLocalDate().minusDays(1));
+        productSale.setDeductionStartDate(dpDeductionDate.getValue());
         productSale.setDiscount(BigDecimal.ZERO);
         productSale.setDock(MainApp.identityDto.getDock());
-        productSale.setInvoiceDate(cboxPaymentCycle.getValue().getToDate().toLocalDate().minusDays(1));
+        productSale.setInvoiceDate(dpDeductionDate.getValue());
         productSale.setxCol3(LocalDate.now().toString());
         productSale.setNetAmount(productSaleAmount);
         productSale.setNoOfInstallments((short) 1);

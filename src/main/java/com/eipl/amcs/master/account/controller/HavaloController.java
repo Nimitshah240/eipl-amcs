@@ -4,10 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.VoucherDto;
@@ -17,6 +19,7 @@ import com.eipl.amcs.master.account.model.VoucherType;
 import com.eipl.amcs.master.account.task.VoucherNumberLoadTask;
 import com.eipl.amcs.master.account.task.VoucherSaveTask;
 import com.eipl.amcs.master.account.task.VoucherTypeLoadTask;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -44,7 +47,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
     @FXML
     private E_Button btnCredit, btnDebit;
     @FXML
-    private DatePicker dpVoucherDate;
+    private E_DatePicker dpVoucherDate;
     @FXML
     private E_TextField txtBillRefNo, txtVoucherNo;
     @FXML
@@ -131,6 +134,8 @@ public class HavaloController implements MyInitialization, PopupCallback {
             this.callback.reloadData(true);
             this.stage.close();
         });
+        dpVoucherDate.setConverter(new LocalDateConvertor());
+        FocusUtils.requestFocus(dpVoucherDate);
     }
 
     public void loadControls() {

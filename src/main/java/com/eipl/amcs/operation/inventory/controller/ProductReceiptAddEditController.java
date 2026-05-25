@@ -406,7 +406,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         if (cboxParty.getSelectionModel().getSelectedItem() == null) {
             errorMsg.append(CommonUtils.getResourceString(resourceBundle, "product.receipt.validation.member.empty") + "\n");
         }
-        if (txtChallanNo.getText().trim().equals("")) {
+        if (txtBillNo.getText().trim().equals("")) {
             errorMsg.append(CommonUtils.getResourceString(resourceBundle, "product.receipt.validation.challan.no.empty") + "\n");
         }
 
@@ -603,7 +603,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         if (!txtQuantity.getText().isEmpty() && !txtRate.getText().isEmpty()) {
             BigDecimal qty = new BigDecimal(txtQuantity.getText());
             BigDecimal rate = new BigDecimal(txtRate.getText());
-            BigDecimal amt = qty.multiply(rate).setScale(SCALE, RATE_ROUND);
+            BigDecimal amt = qty.multiply(rate).setScale(0, RoundingMode.HALF_DOWN);
             txtAmount.setText(amt.toString());
             if (cboxTax.getSelectionModel().getSelectedItem() != null) {
                 calculateTaxAmount();

@@ -1,7 +1,6 @@
 package com.eipl.amcs.master.account.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
 import com.eipl.amcs.master.account.service.VoucherService;
 import javafx.concurrent.Task;
@@ -26,7 +25,7 @@ public class VoucherTransactionByDateLoadTask extends Task<List<VoucherTransacti
     protected List<VoucherTransaction> call() throws Exception {
         try {
             VoucherService service = EmcsAppContext.getContext().getBean(VoucherService.class);
-            List<VoucherTransaction> list = service.loadVoucherByVoucherDateBetween(fromDate, toDate);
+            List<VoucherTransaction> list = service.loadVoucherTransactionByCashTypeAndDateBetween(fromDate, toDate, false);
             if (list == null || list.isEmpty())
                 return null;
             return list;

@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.billing.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.EntityNotFoundException;
@@ -41,10 +42,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -147,10 +145,15 @@ public class MemberBillServiceImpl implements MemberBillService {
     @Override
     @Transactional
     public List<MemberBill> findMemberBill(String societyCode, SocietyPaymentCycle paymentCycle,
-                                           SocietyPaymentCycle prevPaymentCycle) {
+                                           SocietyPaymentCycle prevPaymentCycle, LocalDate deductionFromDate, LocalDate deductionToDate) {
+
+        long overLappingSummaryCount = summaryRepository.countByDeductionDateOverlap(deductionFromDate, deductionToDate, paymentCycle.getCode());
+        if (overLappingSummaryCount > 0)
+            throw new RuntimeException("overlapping.deduction.date");
+
         List<String> duplicate = new ArrayList<>();
         List<Map<String, Object>> spResult = transactionRepository.findBillTransaction(paymentCycle.getCode(),
-                paymentCycle.getCode(), paymentCycle.getFromDate(), paymentCycle.getToDate(), 1, societyCode, "SYS");
+                paymentCycle.getCode(), paymentCycle.getFromDate(), paymentCycle.getToDate(), 1, societyCode, "SYS", deductionFromDate, deductionToDate);
 
         if (spResult == null || spResult.isEmpty())
             return null;
@@ -338,6 +341,8 @@ public class MemberBillServiceImpl implements MemberBillService {
         mbs.setPaymentCycle(paymentCycle);
         mbs.setOtherAddAmount(otherAdd);
         mbs.setOtherDedAmount(otherDed);
+        mbs.setDeductionFromDate(deductionFromDate);
+        mbs.setDeductionToDate(deductionToDate);
         mbs.setInitData();
 
         // save data
@@ -359,7 +364,7 @@ public class MemberBillServiceImpl implements MemberBillService {
         txn.setCode(bill.getCode() + "-" + billhead.getCode());
         txn.setAmount(amount);
         txn.setType(type);
-        txn.setUnionCode("101");
+        txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(societyCode);
         txn.setAdjustment(amount);
         txn.setBillHead(billhead);
@@ -772,6 +777,245 @@ public class MemberBillServiceImpl implements MemberBillService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    @Transactional
+    public Boolean finalize(SocietyPaymentCycle paymentCycle, List<String> memberList, LocalDate deductionFromDate, LocalDate deductionToDate) {
+
+        List<MemberBill> memberBillList = billRepository.findByPaymentCycle(paymentCycle);
+        for (MemberBill memberBill : memberBillList) {
+            if (!memberList.contains(memberBill.getMember().getCode()))
+                continue;
+            if (memberBill.getNetAmount().compareTo(BigDecimal.ZERO) < 0)
+                memberBill = autoAdjustment(transactionRepository.findByMemberBill(memberBill), paymentCycle);
+
+            memberBill.setStatus((short) 2);
+
+            // Product sale installment adjustment
+            if (memberBill.getProductSaleAmount().compareTo(BigDecimal.ZERO) >= 0) {
+                List<MemberBillTransaction> txns = transactionRepository.findByMemberBill(memberBill);
+                MemberBillTransaction txnPs = txns.stream().filter(p -> p.getBillHead().getCode().equals("102"))
+                        .findFirst().orElse(null);
+                if (txnPs != null && !txnPs.getAmount().equals(txnPs.getAdjustment())) {
+                    List<ProductSaleInstallment> unpaidInstallments = installmentRepository
+                            .findByMemberAndBillingFalseAndType(memberBill.getMember(), 1);
+//                    List<ProductSaleInstallment> currentInstallments = unpaidInstallments.stream()
+//                            .filter(p -> p.getSocietyPaymentCycle().getCode().equals(paymentCycle.getCode()))
+//                            .collect(Collectors.toList());
+
+                    List<ProductSaleInstallment> currentInstallments = unpaidInstallments.stream()
+                            .filter(p -> p.getDeductionDate() != null
+                                    && !p.getDeductionDate().isBefore(deductionFromDate)
+                                    && !p.getDeductionDate().isAfter(deductionToDate))
+                            .collect(Collectors.toList());
+
+                    BigDecimal totalAmt = BigDecimal.ZERO;
+                    for (ProductSaleInstallment inst : currentInstallments)
+                        totalAmt = totalAmt.add(inst.getInstallmentAmount()).add(inst.getPreviousPendingAmount());
+                    totalAmt = totalAmt.setScale(2, RoundingMode.HALF_UP);
+                    if (txnPs.getAdjustment().compareTo(totalAmt) > 0) {
+                        // TODO Paid more than inst amount will cover later
+                    } else {
+                        BigDecimal temp = BigDecimal.valueOf(txnPs.getAdjustment().doubleValue());
+                        for (int i = 0; i < currentInstallments.size(); i++) {
+                            ProductSaleInstallment inst = currentInstallments.get(i);
+                            BigDecimal bg = inst.getInstallmentAmount().add(inst.getPreviousPendingAmount());
+                            BigDecimal ps_amount = txnPs.getAdjustment().multiply(bg).divide(totalAmt, RoundingMode.HALF_UP)
+                                    .setScale(2, RoundingMode.HALF_UP);
+                            if (i > 0 && i == currentInstallments.size() - 1)
+                                ps_amount = temp;
+                            if (ps_amount.compareTo(bg) < 0) {
+                                BigDecimal dueForNext = inst.getInstallmentAmount().subtract(ps_amount).setScale(2, RoundingMode.HALF_UP);
+                                if (!dueForNext.equals(BigDecimal.valueOf(0))) {
+//                                    ProductSaleInstallment nextInst = unpaidInstallments.stream()
+//                                            .filter(p -> p.getInvoiceNo().equals(inst.getInvoiceNo())
+//                                                    && !p.getSocietyPaymentCycle().getCode()
+//                                                    .equals(inst.getSocietyPaymentCycle().getCode()))
+//                                            .findFirst().orElse(null);
+
+                                    ProductSaleInstallment nextInst = unpaidInstallments.stream()
+                                            .filter(p -> p.getInvoiceNo().equals(inst.getInvoiceNo())
+                                                    && p.getDeductionDate() != null
+                                                    && p.getDeductionDate().isAfter(deductionToDate))
+                                            .findFirst().orElse(null);
+                                    if (nextInst == null) {
+                                        LocalDateTime dt = LocalDateTime
+                                                .of(paymentCycle.getToDate().toLocalDate().plusDays(3), LocalTime.NOON);
+//                                        SocietyPaymentCycle nextPaymentCycle = paymentCycleRepository
+//                                                .findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(dt, dt);
+                                        long cnt = unpaidInstallments.stream()
+                                                .filter(p -> p.getInvoiceNo().equals(inst.getInvoiceNo())).count();
+                                        nextInst = new ProductSaleInstallment();
+                                        nextInst.setActualInstallment(dueForNext);
+                                        nextInst.setType(1);
+                                        nextInst.setBilling(false);
+                                        nextInst.setxCol1(UUID.randomUUID().toString());
+                                        nextInst.setPreviousPendingAmount(BigDecimal.ZERO);
+                                        nextInst.setInstallmentAmount(dueForNext);
+                                        nextInst.setInvoiceNo(inst.getInvoiceNo());
+                                        nextInst.setDeductionDate(deductionToDate.plusDays(1));
+                                        nextInst.setUnionCode(inst.getUnionCode());
+                                        nextInst.setSocietyCode(inst.getSocietyCode());
+//                                        nextInst.setSocietyPaymentCycle(nextPaymentCycle);
+                                        nextInst.setMember(inst.getMember());
+                                        nextInst.setCode(inst.getInvoiceNo() + "-" + (Integer.parseInt(inst.getCode().split("-")[3]) + 1));
+                                        nextInst.setInitData();
+                                        installmentRepository.save(nextInst);
+                                    } else {
+                                        nextInst.setPreviousPendingAmount(dueForNext);
+                                        nextInst.setupdateData();
+                                        installmentRepository.save(nextInst);
+                                    }
+                                }
+                            }
+                            inst.setBilling(true);
+                            inst.setupdateData();
+                            installmentRepository.save(inst);
+                            temp = temp.subtract(ps_amount).setScale(2, RoundingMode.HALF_UP);
+                        }
+                    }
+                }
+            }
+
+
+            // cash ad
+            if (memberBill.getLoanAmount().compareTo(BigDecimal.ZERO) >= 0) {
+                List<MemberBillTransaction> txns = transactionRepository.findByMemberBill(memberBill);
+                MemberBillTransaction txnPs = txns.stream().filter(p -> p.getBillHead().getCode().equals("104"))
+                        .findFirst().orElse(null);
+                if (txnPs != null && !txnPs.getAmount().equals(txnPs.getAdjustment())) {
+                    List<ProductSaleInstallment> unpaidInstallments = installmentRepository
+                            .findByMemberAndBillingFalseAndType(memberBill.getMember(), 3);
+                    List<ProductSaleInstallment> currentInstallments = unpaidInstallments.stream()
+                            .filter(p -> p.getSocietyPaymentCycle().getCode().equals(paymentCycle.getCode()))
+                            .collect(Collectors.toList());
+                    BigDecimal totalAmt = BigDecimal.ZERO;
+                    for (ProductSaleInstallment inst : currentInstallments)
+                        totalAmt = totalAmt.add(inst.getInstallmentAmount()).add(inst.getPreviousPendingAmount());
+                    totalAmt = totalAmt.setScale(2, RoundingMode.HALF_UP);
+                    if (txnPs.getAdjustment().compareTo(totalAmt) > 0) {
+                        // TODO Paid more than inst amount will cover later
+                    } else {
+                        BigDecimal temp = BigDecimal.valueOf(txnPs.getAdjustment().doubleValue());
+                        for (int i = 0; i < currentInstallments.size(); i++) {
+                            ProductSaleInstallment inst = currentInstallments.get(i);
+                            BigDecimal bg = inst.getInstallmentAmount().add(inst.getPreviousPendingAmount());
+                            BigDecimal cs_amount = txnPs.getAdjustment().multiply(bg).divide(totalAmt, RoundingMode.HALF_UP)
+                                    .setScale(2, RoundingMode.HALF_UP);
+                            if (i > 0 && i == currentInstallments.size() - 1)
+                                cs_amount = temp;
+                            if (cs_amount.compareTo(bg) < 0) {
+                                BigDecimal dueForNext = inst.getInstallmentAmount().subtract(cs_amount).setScale(2, RoundingMode.HALF_UP);
+                                if (!dueForNext.equals(BigDecimal.valueOf(0))) {
+                                    ProductSaleInstallment nextInst = unpaidInstallments.stream()
+                                            .filter(p -> p.getInvoiceNo().equals(inst.getInvoiceNo())
+                                                    && !p.getSocietyPaymentCycle().getCode()
+                                                    .equals(inst.getSocietyPaymentCycle().getCode()))
+                                            .findFirst().orElse(null);
+                                    if (nextInst == null) {
+                                        LocalDateTime dt = LocalDateTime
+                                                .of(paymentCycle.getToDate().toLocalDate().plusDays(3), LocalTime.NOON);
+                                        SocietyPaymentCycle nextPaymentCycle = paymentCycleRepository
+                                                .findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(dt, dt);
+                                        long cnt = unpaidInstallments.stream()
+                                                .filter(p -> p.getInvoiceNo().equals(inst.getInvoiceNo())).count();
+                                        nextInst = new ProductSaleInstallment();
+                                        nextInst.setActualInstallment(dueForNext);
+                                        nextInst.setType(3);
+                                        nextInst.setBilling(false);
+                                        nextInst.setPreviousPendingAmount(BigDecimal.ZERO);
+                                        nextInst.setInstallmentAmount(dueForNext);
+                                        nextInst.setInvoiceNo(inst.getInvoiceNo());
+                                        nextInst.setDeductionDate(nextPaymentCycle.getToDate().toLocalDate());
+                                        nextInst.setUnionCode(inst.getUnionCode());
+                                        nextInst.setSocietyCode(inst.getSocietyCode());
+                                        nextInst.setSocietyPaymentCycle(nextPaymentCycle);
+                                        nextInst.setMember(inst.getMember());
+                                        nextInst.setCode(inst.getInvoiceNo() + "-" + (Integer.parseInt(inst.getCode().split("-")[1]) + 1));
+                                        nextInst.setInitData();
+                                        installmentRepository.save(nextInst);
+                                    } else {
+                                        nextInst.setPreviousPendingAmount(dueForNext);
+                                        nextInst.setupdateData();
+                                        installmentRepository.save(nextInst);
+                                    }
+                                }
+                            }
+                            inst.setBilling(true);
+                            inst.setupdateData();
+                            installmentRepository.save(inst);
+                            temp = temp.subtract(cs_amount).setScale(2, RoundingMode.HALF_UP);
+                        }
+                    }
+                }
+            }
+        }
+        billRepository.saveAll(memberBillList);
+
+        paymentCycle.setLockBillingProcess(true);
+        paymentCycleRepository.customUpdate(paymentCycle, "");
+        List<MemberBill> mb = billRepository.findByPaymentCycle(paymentCycle);
+        for (MemberBill memberBill : mb) {
+            memberBill.setStatus((short) 2);
+        }
+        List<ProductSaleInstallment> list = installmentRepository.findBySocietyPaymentCycle(paymentCycle);
+        for (ProductSaleInstallment productSaleInstallment : list) {
+            productSaleInstallment.setBilling(true);
+            installmentRepository.customUpdate(productSaleInstallment, "");
+        }
+        return true;
+    }
+
+    private MemberBill autoAdjustment(List<MemberBillTransaction> memberBillTransactionList, SocietyPaymentCycle societyPaymentCycle) {
+        try {
+            MemberBill memberBill = billRepository.findById(memberBillTransactionList.get(0).getMemberBill().getCode()).orElse(null);
+
+            BigDecimal totalAmt = BigDecimal.ZERO;
+            BigDecimal milkAmt = BigDecimal.ZERO;
+            for (MemberBillTransaction mbt : memberBillTransactionList) {
+                if (mbt.getBillHead().getCode().equals("101") || mbt.getBillHead().getCode().equals("105")) {
+                    if (mbt.getBillHead().getCode().equals("101")) {
+                        milkAmt = mbt.getAmount();
+                    }
+//                    if (mbt.getBillHead().getCode().equals("105") && mbt.getAmount().compareTo(BigDecimal.ZERO) >= 0)
+//                        return;
+                    continue;
+                }
+                totalAmt = totalAmt.add(mbt.getAmount());
+            }
+            totalAmt = totalAmt.setScale(2, RoundingMode.HALF_UP);
+            BigDecimal remainingAmt = totalAmt.subtract(milkAmt);
+
+//          There is nothing to adjust.
+            if (remainingAmt.compareTo(BigDecimal.ZERO) <= 0)
+                return memberBill;
+            MemberBillSummary memberBillSummary = summaryRepository.findByPaymentCycle(societyPaymentCycle).orElse(null);
+            if (memberBill == null) return null;
+            if (memberBillSummary == null) return memberBill;
+
+
+            for (MemberBillTransaction mbt : memberBillTransactionList) {
+                if (mbt.getBillHead().getCode().equals("101") || mbt.getBillHead().getCode().equals("105")) {
+                    if (mbt.getBillHead().getCode().equals("105"))
+                        mbt.setAdjustment(mbt.getAmount().add(remainingAmt));
+                    continue;
+                }
+                BigDecimal dueAmt = mbt.getAmount().divide(totalAmt, 2, RoundingMode.HALF_UP).multiply(remainingAmt).setScale(2, RoundingMode.HALF_UP);
+                mbt.setAdjustment(mbt.getAmount().subtract(dueAmt));
+                mbt.setDue(dueAmt);
+                transactionRepository.save(mbt);
+                memberBill.setNetAmount(memberBill.getNetAmount().add(dueAmt));
+                memberBillSummary.setNetAmount(memberBillSummary.getNetAmount().add(dueAmt));
+                // Adjust in member bill as well as summary.
+            }
+
+            summaryRepository.save(memberBillSummary);
+            return billRepository.save(memberBill);
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
     }
 }
