@@ -41,6 +41,7 @@ import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.operation.inventory.controller.*;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnDto;
 import com.eipl.amcs.operation.inventory.dto.SaleTxnDto;
+import com.eipl.amcs.operation.inventory.model.DeadStock;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
@@ -614,6 +615,13 @@ public class MappingPopupController implements MyInitialization {
                     controller76.setStage(stage);
                     controller76.setCallback(callback);
                     root.setCenter(controller76.getRoot());
+                    break;
+                case "DeadStockAddEdit":
+                    var controller77 = (DeadStockAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/DeadStockAddEdit.fxml"));
+                    controller77.setDeadStock(object != null ? (DeadStock) object : null);
+                    controller77.setStage(stage);
+                    controller77.setCallback(callback);
+                    root.setCenter(controller77.getRoot());
                     break;
             }
         } catch (Exception e) {
