@@ -34,7 +34,7 @@
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%fromshift" GridPane.columnIndex="1" />
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%todate" GridPane.columnIndex="2" />
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%toshift" GridPane.columnIndex="3" />
-                  <E_TextField fx:id="txtMessageGuj" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                  <E_TextFieldLocal fx:id="txtMessageGuj" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
                   <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%messageguj" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <E_ComboBox fx:id="cboxFromShift" prefHeight="25.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <E_ComboBox fx:id="cboxToShift" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />

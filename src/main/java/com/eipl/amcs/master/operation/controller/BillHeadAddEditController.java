@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -40,7 +41,9 @@ public class BillHeadAddEditController implements MyInitialization {
     private BillHead billHead = null;
 
     @FXML
-    private E_TextField txtCode, txtName, txtLocalName;
+    private E_TextField txtCode, txtName;
+    @FXML
+    private E_TextFieldLocal txtLocalName;
 
     private ResourceBundle resourceBundle;
 

@@ -5,6 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -36,7 +37,9 @@ public class VoucherTypeAddEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private E_TextField txtCode, txtName, txtLocalName;
+    private E_TextField txtCode, txtName;
+    @FXML
+    private E_TextFieldLocal txtLocalName;
     @FXML
     private E_ComboBox<Ledger> cboxLedgers;
     @FXML

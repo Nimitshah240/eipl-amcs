@@ -6,6 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -38,7 +39,9 @@ public class LedgerGroupAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<LedgerType> cboxLedgertype;
     @FXML
-    private E_TextField txtName, txtCode, txtLocalName;
+    private E_TextField txtName, txtCode;
+    @FXML
+    private E_TextFieldLocal txtLocalName;
 
 
     private Stage stage;

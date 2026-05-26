@@ -37,7 +37,7 @@ public class E_TextFieldLocal extends TextField {
                 currentWord.append(ch);
 
                 String existing = getText();
-                if (existing.length() >= getPreviousGujaratiLength()) {
+                if (existing != null && existing.length() >= getPreviousGujaratiLength()) {
                     setText(existing.substring(0, existing.length() - getPreviousGujaratiLength()));
                 }
                 String preview = transliterator.transliterate(preprocess(currentWord.toString()));
@@ -73,7 +73,7 @@ public class E_TextFieldLocal extends TextField {
             currentWord.deleteCharAt(currentWord.length() - 1);
 
             String existing = getText();
-            if (existing.length() >= previousGujaratiLength) {
+            if (existing != null && existing.length() >= previousGujaratiLength) {
                 setText(existing.substring(0, existing.length() - previousGujaratiLength));
             }
 

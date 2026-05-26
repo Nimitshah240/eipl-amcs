@@ -49,7 +49,7 @@
                                                 <Label text="%designation" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                                                 <E_TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
                                                 <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
-                                                <E_TextField fx:id="txtNameLocal" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+                                                <E_TextFieldLocal fx:id="txtNameLocal" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
                                                 <E_TextField fx:id="txtMobileNo" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3"/>
                                                 <E_TextField fx:id="txtQualification" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                                                 <E_ComboBox fx:id="cboxDesignation" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3"/>

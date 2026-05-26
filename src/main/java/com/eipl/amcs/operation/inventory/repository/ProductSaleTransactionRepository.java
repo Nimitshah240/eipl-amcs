@@ -24,4 +24,7 @@ public interface ProductSaleTransactionRepository extends BaseRepository<Product
     @EntityGraph(attributePaths = {"productSale", "product"})
     List<ProductSaleTransaction> findByProductSale(ProductSale productSale);
 
+    @EntityGraph(attributePaths = {"productSale", "product","product.saleLedger"})
+    List<ProductSaleTransaction> findByProductSaleIn(List<ProductSale> productSale);
+
 }

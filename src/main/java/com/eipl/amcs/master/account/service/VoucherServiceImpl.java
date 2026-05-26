@@ -185,7 +185,7 @@ public class VoucherServiceImpl implements VoucherService {
             List<LedgerGroup> ledgerGroupsCashType = ledgerGroupRepository.findByIsCash(cashType);
             List<Ledger> ledgerList = ledgerRepository.findByLedgerGroupIn(ledgerGroupsCashType);
             List<Voucher> voucherList = voucherRepository.findByVoucherDateBetween(fromDate, toDate, Sort.by("voucherDate").descending());
-            return voucherTxnRepository.findByVoucherInAndLedgerIn(voucherList, ledgerList);
+            return voucherTxnRepository.findByVoucherInAndLedgerIn(voucherList, ledgerList, Sort.by("voucherCode").ascending());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

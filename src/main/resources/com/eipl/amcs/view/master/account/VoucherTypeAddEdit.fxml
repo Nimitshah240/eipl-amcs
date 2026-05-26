@@ -3,6 +3,7 @@
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_TextFieldLocal?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -40,7 +41,7 @@
                                      GridPane.rowIndex="1"/>
                         <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
                                      GridPane.rowIndex="1"/>
-                        <E_TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
+                        <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
                                      GridPane.rowIndex="1"/>
                         <E_ComboBox fx:id="cboxVoucherType" prefWidth="150.0" GridPane.rowIndex="3"/>
                         <E_ComboBox fx:id="cboxCreditDebit" prefWidth="150.0" GridPane.columnIndex="1"

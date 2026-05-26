@@ -6,6 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -65,7 +66,9 @@ public class StaffMemberAddEditController implements MyInitialization {
 
 
     @FXML
-    private E_TextField txtCode, txtNomineeName, txtRelation, txtGuarantorName, txtGuarantorMobileNo, txtPfLoanAmount, txtPfAmount, txtNameLocal, txtMobileNo, txtBloodGroup, txtName, txtQualification, txtSalary, txtFarmerCode, txtAddress, txtIfsc, txtAcNo;
+    private E_TextField txtCode, txtNomineeName, txtRelation, txtGuarantorName, txtGuarantorMobileNo, txtPfLoanAmount, txtPfAmount, txtMobileNo, txtBloodGroup, txtName, txtQualification, txtSalary, txtFarmerCode, txtAddress, txtIfsc, txtAcNo;
+    @FXML
+    private E_TextFieldLocal txtNameLocal;
     @FXML
     private GridPane gridBankDetail;
     @FXML

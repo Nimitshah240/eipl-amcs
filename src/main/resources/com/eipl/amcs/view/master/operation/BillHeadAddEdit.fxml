@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_TextFieldLocal?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -42,7 +43,7 @@
                         <E_TextField fx:id="txtName" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="3"
                                      GridPane.rowIndex="1"/>
-                        <E_TextField fx:id="txtLocalName" maxHeight="1.7976931348623157E308"
+                        <E_TextFieldLocal fx:id="txtLocalName" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
                         <ComboBox fx:id="cboxDisbursment" maxHeight="1.7976931348623157E308"
                                   maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3"/>

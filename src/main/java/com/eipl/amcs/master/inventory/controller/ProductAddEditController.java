@@ -5,6 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -34,7 +35,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -42,10 +42,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class ProductAddEditController implements MyInitialization {
     @FXML
@@ -64,7 +62,9 @@ public class ProductAddEditController implements MyInitialization {
     private CheckBox chkIsMilk;
 
     @FXML
-    private E_TextField txtCode, txtName, txtLocalName, txtReferenceCode;
+    private E_TextField txtCode, txtName, txtReferenceCode;
+    @FXML
+    private E_TextFieldLocal txtLocalName;
 
     private Stage stage;
     private PopupCallback callback;
@@ -120,7 +120,7 @@ public class ProductAddEditController implements MyInitialization {
             cboxMilkType.setDisable(!newVal);
             cboxLocalSaleLedger.setDisable(!newVal);
             cboxCouponLedger.setDisable(!newVal);
-            if (!newVal){
+            if (!newVal) {
                 cboxMilkType.getSelectionModel().select(null);
                 cboxLocalSaleLedger.getSelectionModel().select(null);
                 cboxCouponLedger.getSelectionModel().select(null);
@@ -228,13 +228,17 @@ public class ProductAddEditController implements MyInitialization {
 //            errorMsg.append(resourceBundle.getString("productlocalnamenullerror") + "\n");
 
         if (cboxOtherTax.getValue() == null) errorMsg.append(resourceBundle.getString("othertaxnullerror") + "\n");
-        if (cboxPurchaseLedger.getValue() == null) errorMsg.append(resourceBundle.getString("purhcaseledgernullerror") + "\n");
+        if (cboxPurchaseLedger.getValue() == null)
+            errorMsg.append(resourceBundle.getString("purhcaseledgernullerror") + "\n");
         if (cboxSaleLedger.getValue() == null) errorMsg.append(resourceBundle.getString("saleledgernullerror") + "\n");
-        if (cboxStockLedger.getValue() == null) errorMsg.append(resourceBundle.getString("stockledgernullerror") + "\n");
+        if (cboxStockLedger.getValue() == null)
+            errorMsg.append(resourceBundle.getString("stockledgernullerror") + "\n");
         if (chkIsMilk.isSelected()) {
             if (cboxMilkType.getValue() == null) errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
-            if (cboxLocalSaleLedger.getValue() == null) errorMsg.append(resourceBundle.getString("localsaleledgernullerror") + "\n");
-            if (cboxCouponLedger.getValue() == null) errorMsg.append(resourceBundle.getString("couponledgernullerror") + "\n");
+            if (cboxLocalSaleLedger.getValue() == null)
+                errorMsg.append(resourceBundle.getString("localsaleledgernullerror") + "\n");
+            if (cboxCouponLedger.getValue() == null)
+                errorMsg.append(resourceBundle.getString("couponledgernullerror") + "\n");
         }
         return errorMsg.length() == 0;
     }
@@ -314,7 +318,7 @@ public class ProductAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<ProductGroup> list = task.get();
-                if (list != null){
+                if (list != null) {
                     cboxProductGroup.setItems(FXCollections.observableList(list));
                     new AutoCompleteComboBoxListener<>(cboxProductGroup);
 

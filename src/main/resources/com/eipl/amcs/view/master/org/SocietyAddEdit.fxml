@@ -89,7 +89,7 @@
                                                         <Insets left="5.0" />
                                                     </padding>
                                                 </Label>
-                                                <E_TextField fx:id="txtSocietyNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                <E_TextFieldLocal fx:id="txtSocietyNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                                                 <E_TextField fx:id="txtShortName" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
 
                                                 <E_TextFieldLocal fx:id="txtShortNameLocal" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
