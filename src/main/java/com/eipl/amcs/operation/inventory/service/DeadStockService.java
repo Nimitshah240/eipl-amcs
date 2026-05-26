@@ -2,6 +2,7 @@ package com.eipl.amcs.operation.inventory.service;
 
 import com.eipl.amcs.operation.inventory.model.DeadStock;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,6 @@ public interface DeadStockService {
     DeadStock findByDeadStock(String code);
 
     void delete(DeadStock deadStock);
+
+    List<DeadStock> findByPurchaseDateBetween(LocalDate fromDate, LocalDate toDate);
 }
