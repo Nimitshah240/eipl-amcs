@@ -26,6 +26,10 @@ public class MessageSaveTask extends Task<Object> {
             if (dto.getCode() == null || dto.getCode().isBlank()) {
                 dto.setCode(nextCodeRepository.getNextCode("Message", "code", MainApp.identityDto.getSociety().getCode(), 0));
             }
+            if(update == 0)
+                dto.setInitData();
+            else
+                dto.setupdateData();
 
             messageRepository.save(dto);
             return true;
