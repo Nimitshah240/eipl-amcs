@@ -32,4 +32,7 @@ public interface ProductSaleRepository extends BaseRepository<ProductSale, Strin
             LocalDate startDate,
             LocalDate endDate
     );
+
+    @EntityGraph(attributePaths = {"dock", "union", "society"})
+    List<ProductSale> findByVoucherNoIn(List<String> voucherNo);
 }

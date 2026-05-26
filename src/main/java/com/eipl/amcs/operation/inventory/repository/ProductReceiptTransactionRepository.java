@@ -23,4 +23,7 @@ public interface ProductReceiptTransactionRepository extends BaseRepository<Prod
 
     @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit"})
     List<ProductReceiptTransaction> findByProductReceipt(ProductReceipt productreceipt);
+
+    @EntityGraph(attributePaths = {"productReceipt", "product", "tax", "unit", "product.purchaseLedger", "product.saleLedger"})
+    List<ProductReceiptTransaction> findByProductReceiptIn(List<ProductReceipt> productreceipt);
 }

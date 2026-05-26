@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -16,6 +17,15 @@ import com.eipl.amcs.master.account.model.VoucherTransaction;
 import com.eipl.amcs.master.account.task.LedgerDeleteTask;
 import com.eipl.amcs.master.account.task.RojmedOpeningBalanceLoadTask;
 import com.eipl.amcs.master.account.task.VoucherTransactionByDateLoadTask;
+import com.eipl.amcs.master.inventory.model.Product;
+import com.eipl.amcs.operation.inventory.model.ProductReceipt;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
+import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
+import com.eipl.amcs.operation.inventory.repository.ProductReceiptRepository;
+import com.eipl.amcs.operation.inventory.repository.ProductReceiptTransactionRepository;
+import com.eipl.amcs.operation.inventory.repository.ProductSaleRepository;
+import com.eipl.amcs.operation.inventory.repository.ProductSaleTransactionRepository;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -24,7 +34,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -53,7 +62,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
     @FXML
     Button btnClose, btnCredit, btnDebit, btnJournal, btnSale, btnPurchase, btnPrint, btnPrev, btnNext;
     @FXML
-    private Label lblOpeningBalance, lblClosingBalance, lblRojmelHeader, lblTotalCredit, lblTotalDebit;
+    private Label lblRojmelHeader, lblTotalCredit, lblTotalDebit, lblTotalCredit2, lblTotalDebit2;
 
     BigDecimal crTotal = BigDecimal.ZERO;
     BigDecimal drTotal = BigDecimal.ZERO;
@@ -134,6 +143,8 @@ public class RojmedController implements MyInitialization, PopupCallback {
                                     vt -> vt.getCode(),
                                     vt -> vt
                             ));
+                    voucherTransactionList = bifurcateProductReceiptTransaction(voucherTransactionList);
+                    voucherTransactionList = bifurcateProductSaleTransaction(voucherTransactionList);
 
                     crVoucherTransactionList = voucherTransactionList.stream()
                             .filter(vt -> vt.getCreditDebit() == true)
@@ -184,11 +195,11 @@ public class RojmedController implements MyInitialization, PopupCallback {
         closingBalance = crTotal.subtract(drTotal);
 
         if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
-            lblClosingBalance.setText(Math.abs(closingBalance.doubleValue()) + " Debit");
-            lblClosingBalance.setTextFill(Color.RED);
+            lblTotalCredit2.setText(closingBalance.add(crTotal).toString());
+            lblTotalDebit2.setText(closingBalance.add(drTotal).toString());
         } else {
-            lblClosingBalance.setText(closingBalance + " Credit");
-            lblClosingBalance.setTextFill(Color.GREEN);
+            lblTotalCredit2.setText(closingBalance.add(drTotal).toString());
+            lblTotalDebit2.setText(closingBalance.add(drTotal).toString());
         }
     }
 
@@ -231,14 +242,25 @@ public class RojmedController implements MyInitialization, PopupCallback {
             for (String name : columnNames) {
                 // Create Column for Table 1
                 TableColumn<TableRowModel, String> col1 = new TableColumn<>(name);
+                if (name.contains(resourceBundle.getString("sub.amount")) || name.contains(resourceBundle.getString("amount"))) {
+                    col1.getStyleClass().add("cell-right-aligned");
+                    col1.setPrefWidth(130);
+                } else {
+                    col1.setPrefWidth(tableData.getWidth() - 270);
+                }
                 col1.setCellValueFactory(data -> data.getValue().columnProperty(name));
-                col1.setPrefWidth(120);
+
                 tableData.getColumns().add(col1);
 
                 // Create a completely NEW instance for Table 2
                 TableColumn<TableRowModel, String> col2 = new TableColumn<>(name);
+                if (name.contains(resourceBundle.getString("sub.amount")) || name.contains(resourceBundle.getString("amount"))) {
+                    col2.getStyleClass().add("cell-right-aligned");
+                    col2.setPrefWidth(130);
+                } else {
+                    col2.setPrefWidth(tableData.getWidth() - 270);
+                }
                 col2.setCellValueFactory(data -> data.getValue().columnProperty(name));
-                col2.setPrefWidth(120);
                 tableData1.getColumns().add(col2);
             }
             if (voucherTransactionList == null)
@@ -354,7 +376,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
             data.addAll(dataEntryRowList);
         }
         if (credit_debit) {
-            if (openingBalance.compareTo(BigDecimal.ZERO) < 0) {
+            if (openingBalance.compareTo(BigDecimal.ZERO) <= 0) {
                 SummaryRow sum1 = new SummaryRow();
                 sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
                 sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
@@ -376,7 +398,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 finaldata.add(sum1);
                 finaldata.addAll(data);
             }
-            if (closingBalance.compareTo(BigDecimal.ZERO) > 0) {
+            if (closingBalance.compareTo(BigDecimal.ZERO) >= 0) {
                 SummaryRow sum1 = new SummaryRow();
                 sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
                 sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
@@ -389,7 +411,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
     }
 
     private void handleCreditDoubleClick(String id) {
-        if (id == null)
+        if (id == null || id.contains("temp"))
             return;
 
         VoucherTransaction vt = voucherTransactionMap.get(id);
@@ -411,19 +433,151 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 openingBalance = task.get();
                 log.info(openingBalance.toString());
                 loadVoucherTransactionByDate(dpDate.getValue(), dpDate.getValue());
-
-                if (openingBalance.compareTo(BigDecimal.ZERO) < 0) {
-                    lblOpeningBalance.setText(Math.abs(openingBalance.doubleValue()) + " Debit");
-                    lblOpeningBalance.setTextFill(Color.RED);
-                } else {
-                    lblOpeningBalance.setText(openingBalance.doubleValue() + " Credit");
-                    lblOpeningBalance.setTextFill(Color.GREEN);
-                }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         });
         new Thread(task).start();
+    }
+
+    private List<VoucherTransaction> bifurcateProductReceiptTransaction(List<VoucherTransaction> voucherTransactionList) {
+        try {
+            List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
+            List<VoucherTransaction> productReceiptTransaction = new ArrayList<>();
+
+            productReceiptTransaction = voucherTransactionList.stream()
+                    .filter(vt -> vt.getVoucher().getProcessName() != null &&
+                            vt.getVoucher().getProcessName().contains("product_receipt")
+                            && vt.getCreditDebit() == true)
+                    .collect(Collectors.toList());
+
+            List<String> productReceiptCodes = productReceiptTransaction.stream()
+                    .map(vt -> vt.getNarration().replace("Product receipt ", "").trim())
+                    .collect(Collectors.toList());
+
+            ProductReceiptRepository productReceiptRepository = EmcsAppContext.getContext().getBean(ProductReceiptRepository.class);
+            ProductReceiptTransactionRepository productReceiptTransactionRepository = EmcsAppContext.getContext().getBean(ProductReceiptTransactionRepository.class);
+            List<ProductReceipt> productReceipts = productReceiptRepository.findAllById(productReceiptCodes);
+            List<ProductReceiptTransaction> productReceiptTransactions = productReceiptTransactionRepository.findByProductReceiptIn(productReceipts);
+            Set<String> ledgerSet = productReceiptTransactions.stream()
+                    .map(prt -> prt.getProduct().getPurchaseLedger().getCode())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            productReceiptTransaction = voucherTransactionList.stream()
+                    .filter(vt -> ledgerSet.contains(vt.getLedger().getCode()))
+                    .collect(Collectors.toList());
+
+            Map<Ledger, Map<Product, List<ProductReceiptTransaction>>> ledgerProductTxnMap =
+                    productReceiptTransactions.stream()
+                            .filter(prt -> prt.getProduct() != null && prt.getProduct().getPurchaseLedger() != null)
+//                            .peek(prt -> {
+//                                Ledger unproxiedLedger = Hibernate.unproxy(prt.getProduct().getPurchaseLedger(), Ledger.class);
+//                                prt.getProduct().setPurchaseLedger(unproxiedLedger);
+//                            })
+                            .collect(Collectors.groupingBy(
+                                    prt -> prt.getProduct().getPurchaseLedger(),
+                                    Collectors.groupingBy(ProductReceiptTransaction::getProduct)
+                            ));
+
+            int tempCode = 0;
+            for (Ledger ledger : ledgerProductTxnMap.keySet()) {
+                Map<Product, List<ProductReceiptTransaction>> map = ledgerProductTxnMap.get(ledger);
+                for (Product product : map.keySet()) {
+                    List<ProductReceiptTransaction> productReceiptTransactions1 = map.get(product);
+                    BigDecimal amount = BigDecimal.ZERO;
+                    Integer qty = 0;
+                    for (ProductReceiptTransaction productReceiptTransaction1 : productReceiptTransactions1) {
+                        amount = amount.add(productReceiptTransaction1.getAmount());
+                        qty += productReceiptTransaction1.getQuantity();
+                    }
+                    tempCode++;
+                    VoucherTransaction voucherTransaction = new VoucherTransaction();
+                    voucherTransaction.setCode("temp" + tempCode);
+                    voucherTransaction.setLedger(ledger);
+                    voucherTransaction.setAmount(amount);
+                    voucherTransaction.setNarration(product.toString() + " - " + qty + " x " + amount.divide(new BigDecimal(qty), 2, RoundingMode.HALF_DOWN));
+                    voucherTransaction.setCreditDebit(false);
+                    updatedVoucherTxn.add(voucherTransaction);
+                }
+            }
+            voucherTransactionList.removeAll(productReceiptTransaction);
+            updatedVoucherTxn.addAll(voucherTransactionList);
+            return updatedVoucherTxn;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<VoucherTransaction> bifurcateProductSaleTransaction(List<VoucherTransaction> voucherTransactionList) {
+        try {
+            List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
+            List<VoucherTransaction> productSaleTransaction = new ArrayList<>();
+
+            productSaleTransaction = voucherTransactionList.stream()
+                    .filter(vt -> vt.getVoucher() != null && vt.getVoucher().getProcessName() != null &&
+                            vt.getVoucher().getProcessName().contains("tbl_product_sale")
+                            && vt.getCreditDebit() == true)
+                    .collect(Collectors.toList());
+
+            Set<String> voucherNo = productSaleTransaction.stream()
+                    .map(prt -> prt.getVoucher().getCode())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            if (voucherNo == null || voucherNo.isEmpty())
+                return voucherTransactionList;
+
+            ProductSaleRepository productSaleRepository = EmcsAppContext.getContext().getBean(ProductSaleRepository.class);
+            ProductSaleTransactionRepository productSaleTransactionRepository = EmcsAppContext.getContext().getBean(ProductSaleTransactionRepository.class);
+            List<ProductSale> productSales = productSaleRepository.findByVoucherNoIn((new ArrayList<>(voucherNo)));
+
+            List<ProductSaleTransaction> productSaleTransactions = productSaleTransactionRepository.findByProductSaleIn(productSales);
+            Set<String> ledgerSet = productSaleTransactions.stream()
+                    .map(prt -> prt.getProduct().getSaleLedger().getCode())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            productSaleTransaction = voucherTransactionList.stream()
+                    .filter(vt -> ledgerSet.contains(vt.getLedger().getCode()))
+                    .collect(Collectors.toList());
+
+            Map<Ledger, Map<Product, List<ProductSaleTransaction>>> ledgerProductTxnMap =
+                    productSaleTransactions.stream()
+                            .filter(prt -> prt.getProduct() != null && prt.getProduct().getSaleLedger() != null)
+                            .collect(Collectors.groupingBy(
+                                    prt -> prt.getProduct().getSaleLedger(),
+                                    Collectors.groupingBy(ProductSaleTransaction::getProduct)
+                            ));
+
+            int tempCode = 0;
+            for (Ledger ledger : ledgerProductTxnMap.keySet()) {
+                Map<Product, List<ProductSaleTransaction>> map = ledgerProductTxnMap.get(ledger);
+                for (Product product : map.keySet()) {
+                    List<ProductSaleTransaction> productReceiptTransactions1 = map.get(product);
+                    BigDecimal amount = BigDecimal.ZERO;
+                    BigDecimal qty = BigDecimal.ZERO;
+                    for (ProductSaleTransaction productReceiptTransaction1 : productReceiptTransactions1) {
+                        amount = amount.add(productReceiptTransaction1.getAmount());
+                        qty = qty.add(productReceiptTransaction1.getQuantity());
+                    }
+                    tempCode++;
+                    VoucherTransaction voucherTransaction = new VoucherTransaction();
+                    voucherTransaction.setCode("tempsale" + tempCode);
+                    voucherTransaction.setLedger(ledger);
+                    voucherTransaction.setAmount(amount);
+                    voucherTransaction.setNarration(product.toString() + " - " + qty + " x " + amount.divide(qty, 2, RoundingMode.HALF_DOWN));
+                    voucherTransaction.setCreditDebit(true);
+                    updatedVoucherTxn.add(voucherTransaction);
+                }
+            }
+            voucherTransactionList.removeAll(productSaleTransaction);
+            updatedVoucherTxn.addAll(voucherTransactionList);
+            return updatedVoucherTxn;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
