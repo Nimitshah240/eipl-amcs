@@ -16,10 +16,7 @@ import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.dto.VoucherDto;
-import com.eipl.amcs.master.account.model.Ledger;
-import com.eipl.amcs.master.account.model.Voucher;
-import com.eipl.amcs.master.account.model.VoucherTransaction;
-import com.eipl.amcs.master.account.model.VoucherType;
+import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -57,7 +54,9 @@ public class VoucherEntryController implements MyInitialization {
     private E_ComboBox<Ledger> cboxLedger;
 
     @FXML
-    private E_TextField txtVoucherNo, txtBillNo, txtNarration, txtAmount;
+    private E_TextField txtVoucherNo, txtBillNo, txtAmount;
+    @FXML
+    private E_ComboBox<Narration> cboxNarration;
     @FXML
     private TableColumn<VoucherTransaction, String> colAmount, colLedger, colNarration;
     @FXML
@@ -127,6 +126,7 @@ public class VoucherEntryController implements MyInitialization {
         setupComboBox();
         setupTable();
         loadVoucherType();
+        loadNarration();
         dpVoucherDate.setValue(LocalDate.now());
 
         btnClose.setOnAction(e -> {
@@ -148,7 +148,7 @@ public class VoucherEntryController implements MyInitialization {
         dpVoucherDate.setConverter(new LocalDateConvertor());
         txtAmount.setOnAction(e -> {
             addVoucherTransaction();
-            txtNarration.setText("");
+            cboxNarration.getSelectionModel().clearSelection();
             cboxLedger.getSelectionModel().clearSelection();
             txtAmount.setText("0");
         });
@@ -232,7 +232,7 @@ public class VoucherEntryController implements MyInitialization {
             anotherSideAmt = anotherSideAmt.add(voucherTransaction.getAmount());
         }
         anotherSideTxn.setAmount(anotherSideAmt);
-        anotherSideTxn.setNarration(txtNarration.getText());
+        anotherSideTxn.setNarration(cboxNarration.getFinalText());
         anotherSideTxn.setCreditDebit(!credit_debit);
         anotherSideTxn.setAutoPostedScreen(true);
         voucherTransactionList.add(anotherSideTxn);
@@ -378,7 +378,7 @@ public class VoucherEntryController implements MyInitialization {
             cboxLedger.getSelectionModel().clearSelection();
             tableVoucherTransaction.setItems(FXCollections.observableList(voucherTransactionList));
             btnSaveUpdate.setText(resourceBundle.getString("save"));
-            txtNarration.setText("");
+            cboxNarration.getSelectionModel().clearSelection();
             txtAmount.setText("0");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -388,7 +388,7 @@ public class VoucherEntryController implements MyInitialization {
     private void addVoucherTransaction() {
         VoucherTransaction voucherTransaction = new VoucherTransaction();
         voucherTransaction.setLedger(cboxLedger.getValue());
-        voucherTransaction.setNarration(txtNarration.getText());
+        voucherTransaction.setNarration(cboxNarration.getFinalText());
         voucherTransaction.setAmount(new BigDecimal(txtAmount.getText()));
         voucherTransaction.setAutoPostedScreen(false);
         voucherTransaction.setCreditDebit(credit_debit);
@@ -469,6 +469,24 @@ public class VoucherEntryController implements MyInitialization {
                         voucherType = vt;
                     }
                 }
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadNarration() {
+        var task = new NarrationLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Narration> narrationList = task.get();
+                if (narrationList == null || narrationList.isEmpty())
+                    return;
+                cboxNarration.setItems(FXCollections.observableList(narrationList));
+                new AutoCompleteComboBoxListener<>(cboxNarration);
+
+
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

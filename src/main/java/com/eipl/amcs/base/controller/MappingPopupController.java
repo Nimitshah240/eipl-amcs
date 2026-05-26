@@ -615,6 +615,13 @@ public class MappingPopupController implements MyInitialization {
                     controller76.setCallback(callback);
                     root.setCenter(controller76.getRoot());
                     break;
+                case "NarrationAddEdit":
+                    var controller78 = (NarrationAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/NarrationAddEdit.fxml"));
+                    controller78.setNarration(object != null ? (Narration) object : null);
+                    controller78.setStage(stage);
+                    controller78.setCallback(callback);
+                    root.setCenter(controller78.getRoot());
+                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
