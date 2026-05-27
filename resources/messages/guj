@@ -1764,3 +1764,5 @@ purchasedate=ખરીદીની તારીખ
 qantity=જથ્થો
 data.update.fail=ડેટા અપડેટ ફેલ
 farmer_register=સભાસદ લિસ્ટ
+stock.not.available=સ્ટોક ઉપલબ્ધ નથી
+future.sale.not.possible=ભવિષ્યમાં વેચાણ શક્ય નથી

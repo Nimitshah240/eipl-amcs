@@ -1,8 +1,10 @@
 package com.eipl.amcs.report.task;
 
+import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.master.account.model.ProductStockValuation;
 import com.eipl.amcs.master.account.repository.LedgerRepository;
-import com.eipl.amcs.report.dto.ProductStockValuation;
+import com.eipl.amcs.master.account.repository.ProductStockValuationRepository;
 import javafx.concurrent.Task;
 
 import java.sql.Date;
@@ -15,6 +17,8 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
     private final LocalDate asOnDate;
     private final String locale;
     private LedgerRepository ledgerRepository;
+    private NextCodeRepository nextCodeRepository;
+    private ProductStockValuationRepository productStockValuationRepository;
 
 
     public StockValuationTask(String societyCode, LocalDate asOnDate, String locale) {
@@ -28,6 +32,8 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
     protected List<ProductStockValuation> call() throws Exception {
         try {
             ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
+            nextCodeRepository = EmcsAppContext.getContext().getBean(NextCodeRepository.class);
+            productStockValuationRepository = EmcsAppContext.getContext().getBean(ProductStockValuationRepository.class);
 
             List<ProductStockValuation> list = fetchStockValuation(Date.valueOf(asOnDate), societyCode, locale);
             if (list.isEmpty())
@@ -41,9 +47,11 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
 
     private List<ProductStockValuation> fetchStockValuation(Date endDate, String societyCode, String locale) {
         List<ProductStockValuation> list = new ArrayList<>();
+        productStockValuationRepository.deleteByGeneratedAt(endDate.toLocalDate());
         List<Object[]> listCurrentStock = ledgerRepository.fetchCurrentStockByProduct(endDate, societyCode, locale);
         listCurrentStock.forEach(item -> {
             double stockValue = 0;
+            ProductStockValuation productStockValuation = new ProductStockValuation();
             List<Object[]> listReceipt = ledgerRepository.fetchProductReceipt((String) item[0], endDate);
             if (listReceipt != null && !listReceipt.isEmpty()) {
 
@@ -60,10 +68,14 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
                         stock -= Double.parseDouble(arrReceipt[1].toString());
                     }
                 }
-                list.add(new ProductStockValuation((String) item[0], (String) item[1], Double.parseDouble(item[2].toString()), stockValue, (String) item[3]));
+                productStockValuation = new ProductStockValuation((String) item[0], (String) item[1], Double.parseDouble(item[2].toString()), stockValue, (String) item[3], endDate.toLocalDate(), nextCodeRepository.getNextCode("ProductStockValuation", "productStockValuationCode", societyCode, 0));
+                list.add(productStockValuation);
             } else {
-                list.add(new ProductStockValuation((String) item[0], (String) item[1], 0, 0, (String) item[3]));
+                productStockValuation = new ProductStockValuation((String) item[0], (String) item[1], 0, 0, (String) item[3], endDate.toLocalDate(), nextCodeRepository.getNextCode("ProductStockValuation", "productStockValuationCode", societyCode, 0));
+                list.add(productStockValuation);
             }
+            productStockValuationRepository.save(productStockValuation);
+
         });
         return list;
     }
