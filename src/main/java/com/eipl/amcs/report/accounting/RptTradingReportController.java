@@ -83,8 +83,10 @@ public class RptTradingReportController implements MyInitialization {
             try {
                 List<com.eipl.amcs.master.account.model.ProductStockValuation> listStockValuation = task.get();
                 List<ProductStockValuation> list = new ArrayList<>();
-                for (com.eipl.amcs.master.account.model.ProductStockValuation psv : listStockValuation) {
-                    list.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                if (listStockValuation != null) {
+                    for (com.eipl.amcs.master.account.model.ProductStockValuation psv : listStockValuation) {
+                        list.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                    }
                 }
 
                 Map<String, Object> params = new HashMap<>();
