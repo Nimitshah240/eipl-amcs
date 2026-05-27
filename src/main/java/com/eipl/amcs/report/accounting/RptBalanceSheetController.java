@@ -92,7 +92,7 @@ public class RptBalanceSheetController implements MyInitialization {
                     list = new ArrayList<>();
                 }
                 Map<String, Object> param = new HashMap<>();
-                param.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+                param.put("p_society_code", MainApp.identityDto.getSociety().getCodeEx());
                 if (localeStr.equals("en")) {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getName());
                 } else {

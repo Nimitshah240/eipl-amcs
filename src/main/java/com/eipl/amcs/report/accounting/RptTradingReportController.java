@@ -83,7 +83,7 @@ public class RptTradingReportController implements MyInitialization {
             try {
                 List<ProductStockValuation> list = task.get();
                 Map<String, Object> params = new HashMap<>();
-                params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+                params.put("p_society_code", MainApp.identityDto.getSociety().getCodeEx());
                 params.put("p_as_on_date", MainApp.getFinancialYear().getEndDate());
                 params.put("p_locale", localeStr);
                 params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
