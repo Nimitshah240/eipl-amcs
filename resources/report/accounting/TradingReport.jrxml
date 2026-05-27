@@ -95,9 +95,10 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="88" splitType="Stretch">
+		<band height="93" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="1" width="525" height="18" uuid="0aa91e5d-b03d-4b9d-a8d6-29c74ef381e7">
+				<reportElement x="0" y="1" width="525" height="25" uuid="0aa91e5d-b03d-4b9d-a8d6-29c74ef381e7">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<box>
@@ -112,7 +113,7 @@
 				<textFieldExpression><![CDATA[$R{accounting.traiding.reports}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="38" width="525" height="1" uuid="057f5131-75c8-454a-a82b-9559523a4dfd">
+				<reportElement x="0" y="45" width="525" height="1" uuid="057f5131-75c8-454a-a82b-9559523a4dfd">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<graphicElement>
@@ -120,7 +121,7 @@
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="1" y="19" width="525" height="17" uuid="969e2ec8-be2d-446d-83b1-bc996dc11281">
+				<reportElement x="1" y="26" width="525" height="17" uuid="969e2ec8-be2d-446d-83b1-bc996dc11281">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -139,7 +140,7 @@ $P{p_from_date}+
 $P{p_to_date}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="-1" y="87" width="525" height="1" uuid="2a6e94f1-87b6-479c-9cc1-c085854dafa1">
+				<reportElement x="0" y="89" width="525" height="1" uuid="2a6e94f1-87b6-479c-9cc1-c085854dafa1">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<graphicElement>
@@ -147,7 +148,7 @@ $P{p_to_date}]]></textFieldExpression>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement x="0" y="42" width="105" height="18" uuid="d5a4c412-98a6-4f68-8002-e734a3753884">
+				<reportElement x="0" y="49" width="60" height="18" uuid="d5a4c412-98a6-4f68-8002-e734a3753884">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -157,40 +158,43 @@ $P{p_to_date}]]></textFieldExpression>
 					<font fontName="Noto" size="12" isBold="true"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{code}.replaceFirst("^=", "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{code}+" :-"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="105" y="42" width="255" height="18" uuid="3cf0fc02-dce7-4e6b-8d79-a64901d88e05">
+				<reportElement x="60" y="49" width="300" height="18" uuid="3cf0fc02-dce7-4e6b-8d79-a64901d88e05">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="0" rightPadding="0"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_from_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_society_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="60" width="105" height="22" uuid="b03f0864-dd57-4dc5-a726-a3ca4b0bd855">
+				<reportElement x="0" y="67" width="60" height="18" uuid="b03f0864-dd57-4dc5-a726-a3ca4b0bd855">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{name}.replaceFirst("^=", "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{name}+" :-"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="105" y="60" width="255" height="22" uuid="be310b00-5ed4-4c38-a2e5-fc84062bc670"/>
+				<reportElement x="60" y="67" width="300" height="18" uuid="be310b00-5ed4-4c38-a2e5-fc84062bc670">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<box leftPadding="0" rightPadding="0"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Noto" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_to_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_society_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="378" y="64" width="78" height="15" uuid="ffe9ab0a-57f3-46d6-8758-334a5e672c44">
+				<reportElement stretchType="RelativeToTallestObject" x="378" y="71" width="78" height="15" uuid="ffe9ab0a-57f3-46d6-8758-334a5e672c44">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
@@ -202,7 +206,7 @@ $P{p_to_date}]]></textFieldExpression>
 				<textFieldExpression><![CDATA[$R{print_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement stretchType="RelativeToTallestObject" x="456" y="65" width="66" height="15" uuid="97919c84-af33-4a0e-8339-2875e3444faf">
+				<reportElement stretchType="RelativeToTallestObject" x="456" y="71" width="66" height="15" uuid="97919c84-af33-4a0e-8339-2875e3444faf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
