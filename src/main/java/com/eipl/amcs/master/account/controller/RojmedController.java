@@ -152,11 +152,19 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 headerFont.setBold(true);
                 headerStyle.setFont(headerFont);
 
-                CellStyle subHeaderStyle = workbook.createCellStyle();
-                subHeaderStyle.setAlignment(HorizontalAlignment.CENTER);
-                Font subHeaderFont = workbook.createFont();
-                subHeaderFont.setBold(true);
-                subHeaderStyle.setFont(subHeaderFont);
+                CellStyle subHeaderStyleCredit = workbook.createCellStyle();
+                subHeaderStyleCredit.setAlignment(HorizontalAlignment.CENTER);
+                Font subHeaderFontCredit = workbook.createFont();
+                subHeaderFontCredit.setBold(true);
+                subHeaderFontCredit.setColor(IndexedColors.GREEN.getIndex());
+                subHeaderStyleCredit.setFont(subHeaderFontCredit);
+
+                CellStyle subHeaderStyleDebit = workbook.createCellStyle();
+                subHeaderStyleDebit.setAlignment(HorizontalAlignment.CENTER);
+                Font subHeaderFontDebit = workbook.createFont();
+                subHeaderFontDebit.setBold(true);
+                subHeaderFontDebit.setColor(IndexedColors.RED.getIndex());
+                subHeaderStyleDebit.setFont(subHeaderFontDebit);
 
                 Row headerRow = sheet.createRow(0);
                 Cell mainHeaderCell = headerRow.createCell(0);
@@ -169,22 +177,24 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 Row tableTitlesRow = sheet.createRow(rowNum++);
                 Cell creditTitleCell = tableTitlesRow.createCell(0);
                 creditTitleCell.setCellValue("Credit");
-                creditTitleCell.setCellStyle(subHeaderStyle);
+                creditTitleCell.setCellStyle(subHeaderStyleCredit);
                 sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 0, 2));
 
                 Cell debitTitleCell = tableTitlesRow.createCell(4);
                 debitTitleCell.setCellValue("Debit");
-                debitTitleCell.setCellStyle(subHeaderStyle);
+                debitTitleCell.setCellStyle(subHeaderStyleDebit);
                 sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 4, 6));
 
                 Row columnHeadersRow = sheet.createRow(rowNum++);
                 ObservableList<TableColumn<TableRowModel, ?>> creditColumns = tableData.getColumns();
                 for (int i = 0; i < creditColumns.size(); i++) {
+                    sheet.autoSizeColumn(i);
                     columnHeadersRow.createCell(i).setCellValue(creditColumns.get(i).getText());
                 }
 
                 ObservableList<TableColumn<TableRowModel, ?>> debitColumns = tableData1.getColumns();
                 for (int i = 0; i < debitColumns.size(); i++) {
+                    sheet.autoSizeColumn(i);
                     columnHeadersRow.createCell(i + 4).setCellValue(debitColumns.get(i).getText());
                 }
 
