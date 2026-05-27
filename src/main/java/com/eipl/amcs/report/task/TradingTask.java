@@ -2,6 +2,7 @@ package com.eipl.amcs.report.task;
 
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.repository.LedgerRepository;
+import com.eipl.amcs.master.account.repository.ProductStockValuationRepository;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.utils.CommonUtils;
@@ -44,21 +45,29 @@ public class TradingTask extends Task<List<LedgerBalance>> {
     private List<LedgerBalance> fetchTrading(String societyCode, Date fromDate, Date toDate, String locale) {
         double stockValuation = 0;
         try {
-            List<ProductStockValuation> listStockValuation = fetchStockValuation(toDate, societyCode, locale);
+            ProductStockValuationRepository productStockValuationRepository = EmcsAppContext.getContext().getBean(ProductStockValuationRepository.class);
+            List<com.eipl.amcs.master.account.model.ProductStockValuation> productStockValuationList = productStockValuationRepository.findAllByNearestDate(toDate.toLocalDate());
+            List<ProductStockValuation> listStockValuation = new ArrayList<>();
+            LocalDate generatedDate = LocalDate.now();
+            for (com.eipl.amcs.master.account.model.ProductStockValuation psv : productStockValuationList) {
+                generatedDate = psv.getGeneratedAt();
+                listStockValuation.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+            }
+
             if (listStockValuation != null)
                 stockValuation = listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum();
 
             List<Object[]> list = ledgerRepository.fetchTrading(societyCode, fromDate, toDate, locale);
             if (list == null || list.isEmpty()) {
                 List<LedgerBalance> listResp = new ArrayList<>();
-                listResp.add(new LedgerBalance("", "stockvaluation", 0, stockValuation, stockValuation));
+                listResp.add(new LedgerBalance("", "stockvaluation as on " + generatedDate, 0, stockValuation, stockValuation));
                 return listResp;
             } else if (list != null && !list.isEmpty()) {
                 List<LedgerBalance> listResp = new ArrayList<>();
                 list.forEach(item -> {
                     listResp.add(new LedgerBalance((String) item[0], (String) item[1], Double.parseDouble(item[3].toString()), Double.parseDouble(item[2].toString()), Double.parseDouble(item[4].toString())));
                 });
-                listResp.add(new LedgerBalance("", "stockvaluation", 0, stockValuation, stockValuation));
+                listResp.add(new LedgerBalance("", "stockvaluation as on " + generatedDate, 0, stockValuation, stockValuation));
                 return listResp;
             }
 

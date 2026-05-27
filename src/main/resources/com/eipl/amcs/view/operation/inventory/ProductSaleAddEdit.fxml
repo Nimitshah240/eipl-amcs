@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_NumericField?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefHeight="700.0" prefWidth="900.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleAddEditController">
+<StackPane fx:id="root" prefHeight="700.0" prefWidth="900.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleAddEditController">
     <children>
         <VBox spacing="20.0">
             <children>
@@ -106,6 +122,7 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax" GridPane.columnIndex="1" />
                         <ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <ComboBox fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="lblStock" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>
                 <TableView fx:id="tableProductSaleTransaction" focusTraversable="false" VBox.vgrow="ALWAYS">
