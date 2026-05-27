@@ -267,8 +267,8 @@ public class StaffMemberAddEditController implements MyInitialization {
         dto.setNomineeRelation(txtRelation.getText());
         dto.setGuarantorName(txtGuarantorName.getText());
         dto.setGuarantorMobile(txtGuarantorMobileNo.getText());
-        dto.setPfLoanAmount(new BigDecimal(txtPfLoanAmount.getText()));
-        dto.setPfAmount(new BigDecimal(txtPfAmount.getText()));
+        dto.setPfLoanAmount(txtPfLoanAmount.getText().trim().isBlank() ? BigDecimal.ZERO : new BigDecimal(txtPfLoanAmount.getText()));
+        dto.setPfAmount(txtPfAmount.getText().trim().isBlank() ? BigDecimal.ZERO : new BigDecimal(txtPfAmount.getText()));
 
     }
 
@@ -283,6 +283,9 @@ public class StaffMemberAddEditController implements MyInitialization {
 
         if (cboxDesignation.getValue() == null)
             errorMsg.append(resourceBundle.getString("designationnullerror") + "\n");
+
+        if (cboxGender.getValue() == null)
+            errorMsg.append(resourceBundle.getString("gendernullerror") + "\n");
 
         if (rbtnBank.isSelected()) {
             if (cboxBank.getValue() == null)
