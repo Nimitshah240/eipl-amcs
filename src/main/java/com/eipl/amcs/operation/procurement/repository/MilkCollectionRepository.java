@@ -138,4 +138,7 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
             "dock"})
     List<MilkCollection> findBySocietyPaymentCycleInOrderByCollectionDateAsc(List<SocietyPaymentCycle> societyPaymentCycleList);
 
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
+            "dock"})
+    List<MilkCollection> findByAnalyserCodeAndCollectionDateBetweenAndDockDockNo(String analyserCode, LocalDateTime fromDate, LocalDateTime toDate, String dockCode);
 }

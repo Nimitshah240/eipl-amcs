@@ -100,7 +100,7 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
         list2.addAll(list);
         list2.addAll(CommonUtils.getAllCustomerTypes());
         cboxType.setItems(FXCollections.observableList(list2));
-        new AutoCompleteComboBoxListener<>(cboxType);
+//        new AutoCompleteComboBoxListener<>(cboxType);
         cboxType.getSelectionModel().select(0);
     }
 
@@ -115,7 +115,7 @@ public class RptSubLedgerBookSummaryController implements MyInitialization {
         params.put("p_sub_ledger_code", cboxSubLedgerName.getValue().getCode());
         params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
         params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
-        params.put("p_Type", cboxType.getSelectionModel().getSelectedIndex() + 1);
+        params.put("p_Type", cboxType.getSelectionModel().getSelectedIndex());
         params.put("p_locale", localeStr);
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         if (localeStr.equalsIgnoreCase("en"))

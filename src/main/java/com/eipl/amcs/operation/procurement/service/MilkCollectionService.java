@@ -64,4 +64,6 @@ public interface MilkCollectionService {
     List<MilkCollection> findAllCollectionByDockNo(LocalDateTime fromDt, LocalDateTime toDt, String dockNo);
 
     MemberWiseCollectionDto findAllInOne(String code, int parseInt, String milktype, LocalDate d, int shiftCode, String paymentCycleCode);
+
+    List<MilkCollection> findByAnalyserCodeAndCollectionDateBetweenAndDockCode(String analyserCode, LocalDateTime fromDate, LocalDateTime toDate, String dockCode);
 }

@@ -33,7 +33,7 @@
 						<Label text="%todate" GridPane.columnIndex="1" />
 						<DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
 						<DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-						<ComboBox fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+						<ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
                                 text="%generate" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                             <graphic>

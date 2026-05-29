@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.setting.controller.AnalyserReportController">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+            <children>
+                <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0">
+                    <children>
+                      <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%analyserreport" HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="cboxHardware" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <DatePicker fx:id="dpFromDate" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <ComboBox fx:id="cboxFromShift" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <Label text="%to" />
+                        <DatePicker fx:id="dpToDate" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <ComboBox fx:id="cboxToShift" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                        <ComboBox fx:id="cboxDock" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%search">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                    </children>
+                </HBox>
+                <TableView fx:id="tableCollection" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colDate" prefWidth="120.0" styleClass="cell-center-aligned" text="%date" />
+                        <TableColumn fx:id="colShift" prefWidth="100.0" styleClass="cell-center-aligned" text="%shift" />
+                        <TableColumn fx:id="colSampleNo" prefWidth="125.0" styleClass="cell-center-aligned" text="%sampleno" />
+                        <TableColumn fx:id="colMemberCode" prefWidth="100.0" styleClass="cell-center-aligned" text="%membercode" />
+                        <TableColumn fx:id="colMemberName" prefWidth="200.0" text="%name" />
+                        <TableColumn fx:id="colMilkType" prefWidth="100.0" styleClass="cell-center-aligned" text="%milktype" />
+                        <TableColumn fx:id="colQty" prefWidth="100.0" styleClass="cell-right-aligned" text="%qty" />
+                        <TableColumn fx:id="colFat" prefWidth="100.0" styleClass="cell-right-aligned" text="%fat" />
+                        <TableColumn fx:id="colSnf" prefWidth="100.0" styleClass="cell-right-aligned" text="%snf" />
+                  <TableColumn fx:id="colClr" prefWidth="100.0" styleClass="cell-right-aligned" text="%clr" />
+                  <TableColumn fx:id="colWater" prefWidth="100.0" styleClass="cell-right-aligned" text="%water" />
+                  <TableColumn fx:id="colDensity" prefWidth="100.0" styleClass="cell-right-aligned" text="%density" />
+                  <TableColumn fx:id="colLectose" prefWidth="100.0" styleClass="cell-right-aligned" text="%lectose" />
+                  <TableColumn fx:id="colProtein" prefWidth="100.0" styleClass="cell-right-aligned" text="%protein" />
+                        <TableColumn fx:id="colRate" prefWidth="100.0" styleClass="cell-right-aligned" text="%rate" />
+                        <TableColumn fx:id="colAmount" prefWidth="125.0" styleClass="cell-right-aligned" text="%amount" />
+                    </columns>
+                </TableView>
+                <HBox>
+                    <children>
+                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="35.0" prefWidth="60.0" text="%close">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btnExport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="35.0" prefWidth="60.0" text="%export">
+                     <graphic>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/excel.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                    </children>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</StackPane>
