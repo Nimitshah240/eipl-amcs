@@ -27,6 +27,7 @@ import com.eipl.amcs.operation.inventory.repository.ProductReceiptRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductReceiptTransactionRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleTransactionRepository;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -96,6 +97,9 @@ public class RojmedController implements MyInitialization, PopupCallback {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupTable();
+        dpDate.setOnAction(e -> {
+            FocusUtils.requestFocus(btnCredit);
+        });
         dpDate.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 getOpeningLedgerBalance();
@@ -104,13 +108,13 @@ public class RojmedController implements MyInitialization, PopupCallback {
         });
         dpDate.setValue(LocalDate.now());
         btnCredit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", null, this, resourceBundle.getString("credit.entry"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", dpDate.getValue(), this, resourceBundle.getString("credit.entry"));
         });
         btnDebit.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", null, this, resourceBundle.getString("debit.entry"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", dpDate.getValue(), this, resourceBundle.getString("debit.entry"));
         });
         btnJournal.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "Havalo", null, this, resourceBundle.getString("journal.entry"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "Havalo", dpDate.getValue(), this, resourceBundle.getString("journal.entry"));
         });
         btnSale.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml")));
@@ -412,7 +416,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
                     protected void updateItem(TableRowModel item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item instanceof SummaryRow) {
-                            setStyle("-fx-background-color: #e8f4ff; -fx-font-weight: bold;");
+                            setStyle("-fx-background-color: #9dc5d1; -fx-font-weight: bold;");
                         } else {
                             setStyle("");
                         }
@@ -439,7 +443,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
                     protected void updateItem(TableRowModel item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item instanceof SummaryRow) {
-                            setStyle("-fx-background-color: #e8f4ff; -fx-font-weight: bold;");
+                            setStyle("-fx-background-color: #9dc5d1; -fx-font-weight: bold;");
                         } else {
                             setStyle("");
                         }
@@ -507,13 +511,12 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
                 sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
                 finaldata.add(sum1);
-                finaldata.addAll(data);
             }
+            finaldata.addAll(data);
             if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
                 SummaryRow sum1 = new SummaryRow();
                 sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
                 sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
-                finaldata.addAll(data);
                 finaldata.add(sum1);
             }
         } else {
@@ -522,16 +525,49 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
                 sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
                 finaldata.add(sum1);
-                finaldata.addAll(data);
             }
+            finaldata.addAll(data);
             if (closingBalance.compareTo(BigDecimal.ZERO) >= 0) {
                 SummaryRow sum1 = new SummaryRow();
                 sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
                 sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
-                finaldata.addAll(data);
                 finaldata.add(sum1);
             }
         }
+
+//        if (credit_debit) {
+//            if (openingBalance.compareTo(BigDecimal.ZERO) <= 0) {
+//                SummaryRow sum1 = new SummaryRow();
+//                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
+//                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
+//                finaldata.add(sum1);
+//                finaldata.addAll(data);
+//            }
+//            if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
+//                SummaryRow sum1 = new SummaryRow();
+//                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
+//                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
+//                if (!(openingBalance.compareTo(BigDecimal.ZERO) <= 0))
+//                    finaldata.addAll(data);
+//                finaldata.add(sum1);
+//            }
+//        } else {
+//            if (openingBalance.compareTo(BigDecimal.ZERO) > 0) {
+//                SummaryRow sum1 = new SummaryRow();
+//                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("opening.balance"));
+//                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(openingBalance.doubleValue())));
+//                finaldata.add(sum1);
+//                finaldata.addAll(data);
+//            }
+//            if (closingBalance.compareTo(BigDecimal.ZERO) >= 0) {
+//                SummaryRow sum1 = new SummaryRow();
+//                sum1.setColumnValue(resourceBundle.getString("ledger"), resourceBundle.getString("closing.balance"));
+//                sum1.setColumnValue(resourceBundle.getString("amount"), String.valueOf(Math.abs(closingBalance.doubleValue())));
+//                if (!(openingBalance.compareTo(BigDecimal.ZERO) > 0))
+//                    finaldata.addAll(data);
+//                finaldata.add(sum1);
+//            }
+//        }
 
         return finaldata;
     }
@@ -574,11 +610,11 @@ public class RojmedController implements MyInitialization, PopupCallback {
             productReceiptTransaction = voucherTransactionList.stream()
                     .filter(vt -> vt.getVoucher().getProcessName() != null &&
                             vt.getVoucher().getProcessName().contains("product_receipt")
-                            && vt.getCreditDebit() == true)
+                            && vt.getCreditDebit() == false)
                     .collect(Collectors.toList());
 
             List<String> productReceiptCodes = productReceiptTransaction.stream()
-                    .map(vt -> vt.getNarration().replace("Product receipt ", "").trim())
+                    .map(vt -> vt.getVoucher().getProcessReference())
                     .collect(Collectors.toList());
 
             ProductReceiptRepository productReceiptRepository = EmcsAppContext.getContext().getBean(ProductReceiptRepository.class);

@@ -3,6 +3,7 @@
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -46,7 +47,7 @@
                         <E_TextField fx:id="txtBillNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <E_ComboBox fx:id="cboxLedger" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
                         <E_ComboBox fx:id="cboxNarration" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <E_TextField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <E_NumericField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <Label text="%ledger" GridPane.rowIndex="3" />
                         <Label text="%date" />
                         <Label text="%narration" GridPane.columnIndex="1" GridPane.rowIndex="3" />

@@ -53,7 +53,7 @@ public class E_ComboBox<T> extends ComboBox<T> {
                     if (existing != null && existing.length() >= previousGujaratiLength) {
                         setText(existing.substring(0, existing.length() - previousGujaratiLength));
                     }
-                    String preview = transliterator.transliterate(preprocess(currentWord.toString()));
+                    String preview = transliteratePreservingDigits(currentWord.toString());
                     appendText(preview);
                     previousGujaratiLength = preview.length();
                     positionCaret(getText().length());
@@ -92,7 +92,7 @@ public class E_ComboBox<T> extends ComboBox<T> {
             if (existing.length() >= previousGujaratiLength) {
                 setText(existing.substring(0, existing.length() - previousGujaratiLength));
             }
-            String finalWord = transliterator.transliterate(preprocess(currentWord.toString()));
+            String finalWord = transliteratePreservingDigits(currentWord.toString());
             appendText(finalWord);
             positionCaret(getText().length());
             currentWord.setLength(0);
@@ -110,7 +110,7 @@ public class E_ComboBox<T> extends ComboBox<T> {
             }
 
             if (currentWord.length() > 0) {
-                String preview = transliterator.transliterate(preprocess(currentWord.toString()));
+                String preview = transliteratePreservingDigits(currentWord.toString());
                 appendText(preview);
                 previousGujaratiLength = preview.length();
             } else {
@@ -199,6 +199,36 @@ public class E_ComboBox<T> extends ComboBox<T> {
             return selected.toString();
         }
         return editorText != null ? editorText : "";
+    }
+
+    private String transliteratePreservingDigits(String input) {
+        String preprocessed = preprocess(input);
+
+        // Split on digit boundaries, transliterate only non-digit segments
+        StringBuilder result = new StringBuilder();
+        StringBuilder segment = new StringBuilder();
+
+        for (int i = 0; i < preprocessed.length(); i++) {
+            char c = preprocessed.charAt(i);
+
+            if (Character.isDigit(c)) {
+                // Flush any pending non-digit segment
+                if (segment.length() > 0) {
+                    result.append(transliterator.transliterate(segment.toString()));
+                    segment.setLength(0);
+                }
+                result.append(c); // Keep digit as-is (ASCII)
+            } else {
+                segment.append(c);
+            }
+        }
+
+        // Flush remaining segment
+        if (segment.length() > 0) {
+            result.append(transliterator.transliterate(segment.toString()));
+        }
+
+        return result.toString();
     }
 }
 

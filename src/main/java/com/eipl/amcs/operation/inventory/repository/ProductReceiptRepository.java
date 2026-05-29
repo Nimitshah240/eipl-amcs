@@ -14,13 +14,13 @@ import java.util.Optional;
 public interface ProductReceiptRepository extends BaseRepository<ProductReceipt, String> {
 
     @Override
-    @EntityGraph(attributePaths = {"customer", "union", "society"})
+    @EntityGraph(attributePaths = {"customer", "union", "society", "customer.ledger"})
     Optional<ProductReceipt> findById(String id);
 
     @Override
-    @EntityGraph(attributePaths = {"customer", "union", "society"})
+    @EntityGraph(attributePaths = {"customer", "union", "society", "customer.ledger"})
     List<ProductReceipt> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"customer", "union", "society"})
+    @EntityGraph(attributePaths = {"customer", "union", "society", "customer.ledger"})
     List<ProductReceipt> findByGrnDateBetween(LocalDate fromDate, LocalDate toDate, Sort sort);
 }

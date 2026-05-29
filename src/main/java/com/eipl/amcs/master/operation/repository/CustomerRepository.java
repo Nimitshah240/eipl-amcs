@@ -14,20 +14,20 @@ import java.util.Optional;
 public interface CustomerRepository extends BaseRepository<Customer, String> {
 
     @Override
-    @EntityGraph(attributePaths = {"union", "society"})
+    @EntityGraph(attributePaths = {"union", "society", "ledger"})
     List<Customer> findAll(Sort sort);
 
-    @EntityGraph(attributePaths = {"union", "society"})
+    @EntityGraph(attributePaths = {"union", "society", "ledger"})
     Customer findByCode(String Code);
 
     @Override
-    @EntityGraph(attributePaths = {"union", "society"})
+    @EntityGraph(attributePaths = {"union", "society", "ledger"})
     Optional<Customer> findById(String id);
 
-    @EntityGraph(attributePaths = {"union", "society"})
+    @EntityGraph(attributePaths = {"union", "society", "ledger"})
     List<Customer> findAllBySociety(Society society, Sort sort);
 
-    @EntityGraph(attributePaths = {"union", "society"})
+    @EntityGraph(attributePaths = {"union", "society", "ledger"})
     Customer findByCodeAndType(String code, Integer type);
 
 }

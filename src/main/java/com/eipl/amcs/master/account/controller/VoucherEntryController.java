@@ -5,6 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -18,6 +19,7 @@ import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -54,7 +56,9 @@ public class VoucherEntryController implements MyInitialization {
     private E_ComboBox<Ledger> cboxLedger;
 
     @FXML
-    private E_TextField txtVoucherNo, txtBillNo, txtAmount;
+    private E_TextField txtVoucherNo, txtBillNo;
+    @FXML
+    private E_NumericField txtAmount;
     @FXML
     private E_ComboBox<Narration> cboxNarration;
     @FXML
@@ -92,6 +96,9 @@ public class VoucherEntryController implements MyInitialization {
         return root;
     }
 
+    public void setDate(LocalDate date) {
+        dpVoucherDate.setValue(date);
+    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -386,6 +393,13 @@ public class VoucherEntryController implements MyInitialization {
     }
 
     private void addVoucherTransaction() {
+        errorMsg = new StringBuilder();
+        if (!validateTransaction()) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
+                    errorMsg.toString());
+            alert.createAlert();
+            return;
+        }
         VoucherTransaction voucherTransaction = new VoucherTransaction();
         voucherTransaction.setLedger(cboxLedger.getValue());
         voucherTransaction.setNarration(cboxNarration.getFinalText());
@@ -394,6 +408,7 @@ public class VoucherEntryController implements MyInitialization {
         voucherTransaction.setCreditDebit(credit_debit);
         voucherTransactionList.add(voucherTransaction);
         tableVoucherTransaction.setItems(FXCollections.observableList(voucherTransactionList));
+        clearTransaction();
     }
 
     private void deleteVoucherTransaction(VoucherTransaction voucherTransaction) {
@@ -494,4 +509,25 @@ public class VoucherEntryController implements MyInitialization {
         new Thread(task).start();
     }
 
+    private void clearTransaction() {
+        try {
+            cboxLedger.getSelectionModel().clearSelection();
+            cboxNarration.getSelectionModel().clearSelection();
+            txtAmount.setText("0");
+            FocusUtils.requestFocus(cboxLedger);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean validateTransaction() {
+        try {
+            if (cboxLedger.getSelectionModel().getSelectedItem() == null)
+                errorMsg.append(resourceBundle.getString("ledgernullerror") + "\n");
+            return errorMsg.length() == 0;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

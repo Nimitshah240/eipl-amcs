@@ -26,7 +26,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -88,6 +91,9 @@ public class HavaloController implements MyInitialization, PopupCallback {
         return root;
     }
 
+    public void setDate(LocalDate date) {
+        dpVoucherDate.setValue(date);
+    }
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -238,6 +244,8 @@ public class HavaloController implements MyInitialization, PopupCallback {
             errorMsg.append(resourceBundle.getString("datenullerror") + "\n");
         if (crAmt.compareTo(drAmt) != 0)
             errorMsg.append(resourceBundle.getString("cr.dr.not.match") + "\n");
+        if ((debitVoucherTransactionList == null || debitVoucherTransactionList.isEmpty()) || (creditVoucherTransactionList == null || creditVoucherTransactionList.isEmpty()))
+            errorMsg.append(resourceBundle.getString("voucher.transaction.null.error") + "\n");
 
         return errorMsg.length() == 0;
     }

@@ -59,6 +59,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -573,21 +574,33 @@ public class MappingPopupController implements MyInitialization {
                     break;
                 case "VoucherEntryCredit":
                     var controller71 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
-                    controller71.setVoucher(object != null ? (Voucher) object : null, true);
+                    if (object instanceof LocalDate) {
+                        controller71.setDate((LocalDate) object);
+                        controller71.setVoucher(null, true);
+
+                    }
+                    if (object instanceof Voucher)
+                        controller71.setVoucher(object != null ? (Voucher) object : null, true);
                     controller71.setStage(stage);
                     controller71.setCallback(callback);
                     root.setCenter(controller71.getRoot());
                     break;
                 case "VoucherEntryDebit":
                     var controller72 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
-                    controller72.setVoucher(object != null ? (Voucher) object : null, false);
+                    if (object instanceof LocalDate) {
+                        controller72.setDate((LocalDate) object);
+                        controller72.setVoucher(null, false);
+
+                    }
+                    if (object instanceof Voucher)
+                        controller72.setVoucher(object != null ? (Voucher) object : null, false);
                     controller72.setStage(stage);
                     controller72.setCallback(callback);
                     root.setCenter(controller72.getRoot());
                     break;
                 case "Havalo":
                     var controller73 = (HavaloController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/Havalo.fxml"));
-//                    controller73.setVoucher(object != null ? (Voucher) object : null, false);
+                    controller73.setDate(object != null ? (LocalDate) object : LocalDate.now());
                     controller73.setStage(stage);
                     controller73.setCallback(callback);
                     root.setCenter(controller73.getRoot());

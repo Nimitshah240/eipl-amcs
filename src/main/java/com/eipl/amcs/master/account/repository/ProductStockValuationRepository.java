@@ -16,10 +16,11 @@ public interface ProductStockValuationRepository extends BaseRepository<ProductS
     @Query(value = "SELECT * " +
             "FROM tbl_product_stock_valuation " +
             "WHERE generated_at = ( " +
-            "SELECT MAX(generated_at) " +
-            "FROM tbl_product_stock_valuation " +
-            "WHERE generated_at <=:targetDate " +
-            ") ORDER BY product_code ", nativeQuery = true)
+            "    SELECT COALESCE( " +
+            "        (SELECT MAX(generated_at) FROM tbl_product_stock_valuation WHERE generated_at <= :targetDate), " +
+            "        (SELECT MIN(generated_at) FROM tbl_product_stock_valuation) " +
+            "    ) " +
+            ") ORDER BY product_code", nativeQuery = true)
     List<ProductStockValuation> findAllByNearestDate(@Param("targetDate") LocalDate targetDate);
 
     @Modifying

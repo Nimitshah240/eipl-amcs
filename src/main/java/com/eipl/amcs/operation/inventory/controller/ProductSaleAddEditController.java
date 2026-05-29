@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.E_TextField;
@@ -91,7 +92,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private RadioButton rbtnCash, rbtnCredit;
     @FXML
-    private ComboBox<Product> cboxProduct;
+    private E_ComboBox<Product> cboxProduct;
     @FXML
     private ComboBox<Tax> cboxTaxCode;
     @FXML
@@ -153,7 +154,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtDifferance.setText("0");
         txtMilkAmount.setText("0");
         txtDeductionAmount.setText("0");
-
+        dpDate.setOnAction(e -> {
+            FocusUtils.requestFocus(cboxProduct);
+        });
 //        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml"))));
         btnSaveUpdate.setOnAction(e -> {
 
@@ -198,37 +201,26 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             clearControls();
             FocusUtils.requestFocus(btnSaveUpdate);
         });
-        btnInstallments.setOnAction(e ->
+        btnInstallments.setOnAction(e -> checkPaymentCycleAndSaveInstallment((short) 0));
+        btnDelete.setOnAction(e -> deleteData());
 
-                checkPaymentCycleAndSaveInstallment((short) 0));
-        btnDelete.setOnAction(e ->
-
-                deleteData());
-
-        propSaleTxn.addListener((observable, oldValue, newValue) ->
-
-        {
+        propSaleTxn.addListener((observable, oldValue, newValue) -> {
             btnDelete.setDisable(newValue == null);
             r = newValue;
         });
-        txtConsumerCode.setOnAction(e ->
 
-        {
+        txtConsumerCode.setOnAction(e -> {
             String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
             setConsumerName(code);
-            FocusUtils.requestFocus(cboxProduct);
+//            FocusUtils.requestFocus(dpDate);
         });
-        txtConsumerCode.focusedProperty().
-
-                addListener((ob, oldValue, newValue) ->
-
-                {
-                    if (!newValue && txtConsumerCode.getText().length() > 0) {
-                        String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
-                        setConsumerName(code);
-                        FocusUtils.requestFocus(cboxProduct);
-                    }
-                });
+        txtConsumerCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
+            if (!newValue && txtConsumerCode.getText().length() > 0) {
+                String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
+                setConsumerName(code);
+//                        FocusUtils.requestFocus(dpDate);
+            }
+        });
 
         txtRate.focusedProperty().addListener((ob, oldVal, newVal) -> {
             if (!newVal) {
@@ -237,7 +229,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtQuantity.setText("");
                         txtAmount.setText("");
                         txtNetAmount.setText("");
-                        FocusUtils.requestFocus(txtQuantity);
+//                        FocusUtils.requestFocus(txtQuantity);
                         return;
                     }
                 }
@@ -287,9 +279,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         });
 
 
-        cboxProduct.setOnAction(e ->
-
-        {
+        cboxProduct.setOnAction(e -> {
             if (cboxProduct.getValue() != null) {
                 Tax tax = cboxTaxCode.getItems().stream()
                         .filter(p -> p.getCode().equalsIgnoreCase(cboxProduct.getValue().getTax() == null ? null : cboxProduct.getValue().getTax().getCode()))
@@ -301,8 +291,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                             .filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
 
                 fetchSaleRate();
-                fetchStock();
-                FocusUtils.requestFocus(txtQuantity);
+                if (cboxProduct.getValue() != null)
+                    fetchStock();
+//                FocusUtils.requestFocus(txtQuantity);
             }
         });
 
@@ -342,20 +333,17 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         dpDeductionToDate.setOnAction(e ->
 
                 getDeductionData());
-        txtConsumerCode.setOnAction(e ->
-
-        {
+        txtConsumerCode.setOnAction(e -> {
             getDeductionAndPurchaseData();
         });
 
         txtRate.setOnAction(e -> {
-
             if (!txtQuantity.getText().isEmpty()) {
                 if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
                     txtQuantity.setText("");
                     txtAmount.setText("");
                     txtNetAmount.setText("");
-                    FocusUtils.requestFocus(txtQuantity);
+//                    FocusUtils.requestFocus(txtQuantity);
                     return;
                 }
             }
@@ -1090,6 +1078,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
         if (dpDate.getValue().isAfter(LocalDate.now()))
             errorMsg.append(resourceBundle.getString("future.sale.not.possible") + "\n");
+
+        if (cboxProduct.getSelectionModel().getSelectedItem() == null)
+            errorMsg.append(resourceBundle.getString("productnullerror") + "\n");
 
         return errorMsg.length() == 0;
 

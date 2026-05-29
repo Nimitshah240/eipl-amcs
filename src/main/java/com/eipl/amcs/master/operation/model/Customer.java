@@ -79,7 +79,7 @@ public class Customer extends BaseModel {
 
     @Override
     public String toString() {
-        return (this.getXCol3() == null ? "" : this.getXCol3()) + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal);
+        return (this.getLedger() == null ? "" : this.getLedger().getRefCode() + ' ' + CommonUtils.getLocalString(this.name, this.nameLocal));
 
 //        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }

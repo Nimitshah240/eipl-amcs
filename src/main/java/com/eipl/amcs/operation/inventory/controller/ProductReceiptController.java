@@ -76,8 +76,8 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
         this.resourceBundle = resourceBundle;
 
 
-        dpFromDate.setValue(LocalDate.now());
-        dpToDate.setValue(LocalDate.now());
+        dpFromDate.setValue(MainApp.getFinancialYear().getStartDate());
+        dpToDate.setValue(MainApp.getFinancialYear().getEndDate());
         loadData();
         setupTable();
         btnSearch.setOnAction(e -> loadData());

@@ -36,8 +36,8 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%date" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <E_TextField fx:id="txtGrnNo" disable="true" GridPane.rowIndex="1" />
 
-                        <E_TextField fx:id="txtBillNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtChallanNo" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <E_TextField fx:id="txtBillNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_ComboBox fx:id="cboxParty" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                         <E_DatePicker fx:id="dpChallanDate" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 

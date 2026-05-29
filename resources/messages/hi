@@ -1771,3 +1771,5 @@ electionregister1=चुनाव रजिस्टर
 noofdays=दिनों की संख्या
 stock.not.available=स्टॉक उपलब्ध नहीं है
 future.sale.not.possible=भविष्य में कोई बिक्री संभव नहीं
+ledgernullerror=खाता बही खाली या शून्य नहीं हो सकती।
+productnullerror=उत्पादō खाली या शून्य नहीं हो सकती।

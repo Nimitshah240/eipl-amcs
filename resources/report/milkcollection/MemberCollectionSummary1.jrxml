@@ -11,7 +11,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="eipl"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="EiplAmcsDb"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="300"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="686"/>
 	<style name="noto" vTextAlign="Middle" fontName="Noto" fontSize="10"/>
@@ -149,13 +149,15 @@
 		<variableExpression><![CDATA[$F{kg_fat}]]></variableExpression>
 	</variable>
 	<variable name="Member_Fat" class="java.math.BigDecimal" resetType="Group" resetGroup="Member Group">
-		<variableExpression><![CDATA[$V{Member_Total_Qty}.compareTo(BigDecimal.ZERO)>0 ?$V{Member_Kg_Fat} .divide($V{Member_Total_Qty},18,2).multiply(new BigDecimal(100)) : 0.0]]></variableExpression>
+		<variableExpression><![CDATA[$V{Member_Total_Qty}.compareTo(BigDecimal.ZERO) > 0 ? $V{Member_Kg_Fat}.divide($V{Member_Total_Qty}, 18, 2).multiply(new BigDecimal(100)) : BigDecimal.ZERO
+]]></variableExpression>
 	</variable>
 	<variable name="Member_Kg_Snf" class="java.math.BigDecimal" resetType="Group" resetGroup="Member Group" calculation="Sum">
 		<variableExpression><![CDATA[$F{kg_snf}]]></variableExpression>
 	</variable>
 	<variable name="Member_Snf" class="java.math.BigDecimal" resetType="Group" resetGroup="Member Group">
-		<variableExpression><![CDATA[$V{Member_Total_Qty}.compareTo(BigDecimal.ZERO)>0 ?$V{Member_Kg_Snf} .divide($V{Member_Total_Qty},18,2).multiply(new BigDecimal(100)) : 0.0]]></variableExpression>
+		<variableExpression><![CDATA[$V{Member_Total_Qty}.compareTo(BigDecimal.ZERO) > 0 ? $V{Member_Kg_Snf}.divide($V{Member_Total_Qty}, 18, 2).multiply(new BigDecimal(100)) : BigDecimal.ZERO
+]]></variableExpression>
 	</variable>
 	<variable name="Member_Kg_Clr" class="java.math.BigDecimal" resetType="Group" resetGroup="Member Group" calculation="Sum">
 		<variableExpression><![CDATA[$F{kg_clr}]]></variableExpression>
@@ -496,7 +498,7 @@
 				<textFieldExpression><![CDATA[$R{collection_date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="noto" x="616" y="0" width="78" height="15" uuid="a5e15611-f091-43b8-98be-90f66b4a9e67">
+				<reportElement style="noto" x="637" y="0" width="89" height="15" uuid="a5e15611-f091-43b8-98be-90f66b4a9e67">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
@@ -526,7 +528,7 @@
 				<textFieldExpression><![CDATA[$P{p_ltr_kg} == 0 ? $R{ltr} : $R{kg}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="694" y="0" width="80" height="15" uuid="01c35bb0-91cb-4c25-a6c2-ee1647abcadc">
+				<reportElement x="726" y="0" width="50" height="15" uuid="01c35bb0-91cb-4c25-a6c2-ee1647abcadc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -816,7 +818,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#########0.0">
+			<textField isStretchWithOverflow="true" pattern="#########0.0" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="390" y="0" width="45" height="15" uuid="79c8fb3a-e618-41cc-bd89-efebc7d3ff0a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
@@ -887,7 +889,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#########0.0">
+			<textField isStretchWithOverflow="true" pattern="#########0.0" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="435" y="0" width="45" height="15" uuid="66e40fb1-cc1b-45bd-9289-3eced1e8a6a3">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -905,7 +907,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{avg_snf}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#########0.00">
+			<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="480" y="0" width="60" height="15" uuid="26667c16-1408-4e50-8ffd-9799f1a47001"/>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
@@ -919,7 +921,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{avg_rate}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#########0.00">
+			<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="540" y="0" width="85" height="15" uuid="a1a093ec-68bb-4c3d-82eb-d6707870cd03">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
@@ -935,7 +937,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#########0.00">
+			<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="625" y="0" width="70" height="15" uuid="4a57e4f8-932e-4e68-9350-7ca28a1a123b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>

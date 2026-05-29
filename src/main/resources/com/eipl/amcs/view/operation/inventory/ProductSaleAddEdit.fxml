@@ -3,6 +3,7 @@
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_NumericField?>
+<?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -51,22 +52,22 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%consumertype" GridPane.rowIndex="4" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%date" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                         <E_TextField fx:id="txtInvoiceNo" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="7" />
-                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
-                        <E_NumericField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <E_TextField fx:id="txtConsumerName" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="7" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%consumercode" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%billno" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milk.date" />
                         <E_DatePicker fx:id="dpMilkFromDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" />
-                        <E_DatePicker fx:id="dpMilkToDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milkamount" GridPane.columnIndex="3" />
                         <E_NumericField fx:id="txtMilkAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%deduction.date" GridPane.rowIndex="2" />
                         <E_DatePicker fx:id="dpDeductionFromDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <E_DatePicker fx:id="dpDeductionToDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <E_NumericField fx:id="txtDeductionAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <E_TextField fx:id="txtDifferance" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <E_DatePicker fx:id="dpMilkToDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" />
+                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                        <E_TextField fx:id="txtConsumerName" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%consumercode" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%billno" GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milk.date" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milkamount" GridPane.columnIndex="3" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%deduction.date" GridPane.rowIndex="2" />
                         <Label disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%differanceamount" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                   <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                     </children>
@@ -91,6 +92,8 @@
                     <children>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%productname" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%quantityy" GridPane.columnIndex="2" />
+                        <E_ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_NumericField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate" GridPane.columnIndex="3" />
                         <E_NumericField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -120,8 +123,6 @@
                             </children>
                         </HBox>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax" GridPane.columnIndex="1" />
-                        <ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="lblStock" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                     </children>
                 </GridPane>

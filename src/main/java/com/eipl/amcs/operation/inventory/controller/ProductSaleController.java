@@ -77,8 +77,10 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
 
         this.resourceBundle = resourceBundle;
 
-        dpFromDate.setValue(LocalDate.now().minusDays(LocalDate.now().getDayOfMonth() - 1));
-        dpToDate.setValue(LocalDate.now());
+//        dpFromDate.setValue(LocalDate.now().minusDays(LocalDate.now().getDayOfMonth() - 1));
+//        dpToDate.setValue(LocalDate.now());
+        dpFromDate.setValue(MainApp.getFinancialYear().getStartDate());
+        dpToDate.setValue(MainApp.getFinancialYear().getEndDate());
         loadData();
         setupTable();
         btnSearch.setOnAction(e -> loadData());

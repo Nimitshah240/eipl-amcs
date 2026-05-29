@@ -133,11 +133,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         setupTable();
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
-        FocusUtils.requestFocus(txtChallanNo);
+        FocusUtils.requestFocus(txtBillNo);
 
         cboxProduct.setOnAction(e -> {
             Tax tax = cboxTax.getItems().stream()
-                    .filter(p -> p.getCode().equalsIgnoreCase(cboxProduct.getValue().getTax().getCode()))
+                    .filter(p -> p != null && cboxProduct.getValue().getTax() != null && p.getCode().equalsIgnoreCase(cboxProduct.getValue().getTax().getCode()))
                     .findFirst().orElse(null);
             if (tax != null)
                 cboxTax.getSelectionModel().select(tax);
@@ -170,6 +170,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         txtTaxAmount.setText("0");
         txtTotalAmount.setText("0");
+        txtRate.setOnAction(e -> {
+            calculateAmount();
+            calculateTaxAmount();
+            validateAndSaveProduct();
+        });
 
     }
 
@@ -278,7 +283,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private void setValuesInObject() {
         productReceipt.setSociety(MainApp.identityDto.getSociety());
         productReceipt.setUnion(MainApp.identityDto.getUnion());
-        productReceipt.setGrnDate(LocalDate.now());
+        productReceipt.setGrnDate(dpChallanDate.getValue());
         productReceipt.setGrnNo(txtGrnNo.getText());
         productReceipt.setChallanNo(txtChallanNo.getText());
         productReceipt.setChallanDate(dpChallanDate.getValue());
@@ -423,9 +428,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     cboxParty.setItems(FXCollections.observableArrayList(list));
                     new AutoCompleteComboBoxListener<>(cboxParty);
                     if (cboxParty.getItems() != null) {
-                        if (productReceipt == null)
-                            cboxParty.getSelectionModel().select(0);
-                        else
+                        if (productReceipt != null)
+//                            cboxParty.getSelectionModel().select(0);
+//                        else
                             cboxParty.getSelectionModel().select(productReceipt.getCustomer());
                     }
                 }
@@ -523,6 +528,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         receiptTxnTaxDto.setReceiptTaxList(setValuesInReceiptTax());
         returnProductReceiptTxnTaxDto(receiptTxnTaxDto);
 //        stage.close();
+        clearControls();
     }
 
     private boolean validateProduct() {
@@ -630,5 +636,16 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             }
         });
         new Thread(task).start();
+    }
+
+    @Override
+    public void clearControls() {
+        txtRate.setText("0");
+        txtQuantity.setText("0");
+        txtAmount.setText("0");
+        txtProductTotalAmount.setText("0");
+        cboxProduct.getSelectionModel().clearSelection();
+        cboxTax.getSelectionModel().clearSelection();
+        FocusUtils.requestFocus(cboxProduct);
     }
 }
