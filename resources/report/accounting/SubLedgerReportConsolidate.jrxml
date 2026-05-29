@@ -64,7 +64,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="50" splitType="Stretch">
+		<band height="62" splitType="Stretch">
 			<textField>
 				<reportElement key="" style="noto" x="0" y="0" width="525" height="20" uuid="7a9f8936-d7ec-4a2a-bdd7-ecacb32d0795">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -148,6 +148,17 @@
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="0" y="55" width="525" height="1" uuid="4eb93617-aa76-4c31-8e45-2eb5bbdab50c">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
 		</band>
 	</title>
 	<pageHeader>
@@ -230,7 +241,14 @@
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_Type}.equals("0")?$R{All}:$P{p_Type} == 1 ?  $R{accunting.member} : $P{p_Type}==2?$R{accunting.nonmember}: $P{p_Type} ==3 ?$R{accunting.vendor}: $P{p_Type} ==4 ?$R{accunting.institute}: $P{p_Type} ==5 ?$R{accunting.retailsale}:$P{p_Type} ==6?$R{accunting.consumer}: $P{p_Type} ==7?$R{accunting.other}:""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_Type} == 0 ? $R{All} :
+$P{p_Type} == 1 ? $R{Members} : 
+$P{p_Type} == 2 ? $R{accunting.nonmember} : 
+$P{p_Type} == 3 ? $R{accunting.vendor} : 
+$P{p_Type} == 4 ? $R{accunting.institute} : 
+$P{p_Type} == 5 ? $R{accunting.retailsale} :
+$P{p_Type} == 6 ? $R{accunting.consumer} : 
+$P{p_Type} == 7 ? $R{accunting.other} : ""]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -349,7 +367,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[(new BigDecimal($V{balDisp}).setScale(2,BigDecimal.ROUND_HALF_UP))+" "+($V{balance} < 0 ?$R{dr} :$R{cr})]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yy">
+			<textField>
 				<reportElement key="" style="noto" stretchType="RelativeToTallestObject" x="0" y="0" width="250" height="15" uuid="989cc8ff-c6ae-44b8-a381-2a7f0b41657c">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>

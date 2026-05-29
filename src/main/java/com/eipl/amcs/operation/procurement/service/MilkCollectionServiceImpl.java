@@ -700,4 +700,9 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
         collNew.setMilkType(collection.getMilkType());
         return collNew;
     }
+
+    @Override
+    public List<MilkCollection> findByAnalyserCodeAndCollectionDateBetweenAndDockCode(String analyserCode, LocalDateTime fromDate, LocalDateTime toDate, String dockCode) {
+        return milkCollectionRepository.findByAnalyserCodeAndCollectionDateBetweenAndDockDockNo(analyserCode, fromDate, toDate, dockCode);
+    }
 }

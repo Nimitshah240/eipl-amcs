@@ -247,7 +247,7 @@
 				<textElement verticalAlignment="Middle" markup="none">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_Type} ==0 ?$R{All}:$P{p_Type} == 1 ?  $R{Member} : $P{p_Type}==2?$R{nonmember}: $P{p_Type} ==3 ?$R{Vendor}: $P{p_Type} ==4 ?$R{Institute}: $P{p_Type} ==5 ?$R{other}:$P{p_Type} ==6?$R{staff}: $P{p_Type} ==7?$R{CashConsumer}:""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_Type} ==0 ?$R{All}:$P{p_Type} == 1 ?  $R{accunting.member} : $P{p_Type}==2?$R{accunting.nonmember}: $P{p_Type} ==3 ?$R{accunting.vendor}: $P{p_Type} ==4 ?$R{accunting.institute}: $P{p_Type} ==5 ?$R{accunting.other}:$P{p_Type} ==6?$R{staff}: $P{p_Type} ==7?$R{cashConsumer}:""]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
