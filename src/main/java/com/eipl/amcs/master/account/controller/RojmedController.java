@@ -69,7 +69,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
     @FXML
     E_DatePicker dpDate;
     @FXML
-    Button btnClose, btnCredit, btnDebit, btnJournal, btnSale, btnPurchase, btnPrint, btnPrev, btnNext;
+    Button btnClose, btnCredit, btnDebit, btnJournal, btnSale, btnPurchase, btnPrint, btnPrev, btnNext, btnReportGenerate;
     @FXML
     private Label lblRojmelHeader, lblTotalCredit, lblTotalDebit, lblTotalCredit2, lblTotalDebit2;
 
@@ -120,6 +120,9 @@ public class RojmedController implements MyInitialization, PopupCallback {
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+        });
+        btnReportGenerate.setOnAction(e -> {
+            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/account/StockValuation.fxml")));
         });
 
         btnNext.setOnAction(e -> {
