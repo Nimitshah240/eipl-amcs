@@ -35,14 +35,8 @@ import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.FetchAllPaymentCycleLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
 import com.eipl.amcs.operation.inventory.dto.SaleTxnTaxDto;
-import com.eipl.amcs.operation.inventory.model.ProductSale;
-import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTax;
-import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
-import com.eipl.amcs.operation.inventory.task.ProductSaleByMemberAndDateLoadTask;
-import com.eipl.amcs.operation.inventory.task.ProductSaleGetNextCodeTask;
-import com.eipl.amcs.operation.inventory.task.ProductSaleSaveTask;
-import com.eipl.amcs.operation.inventory.task.ProductSaleTransactionsByInvoiceNoLoadTask;
+import com.eipl.amcs.operation.inventory.model.*;
+import com.eipl.amcs.operation.inventory.task.*;
 import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.LocalSaleByMemberAndDateLoadTask;
@@ -62,6 +56,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
@@ -105,6 +100,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     private TableColumn<ProductSaleTransaction, Number> colQuantity, colRate, colAmount, colActualAmount, colTaxAmount;
     @FXML
     private TableColumn<ProductSaleTransaction, Product> colProduct;
+    @FXML
+    private Label lblStock;
+
+    private ProductStock stock;
+
     private Map<TaxDetail, BigDecimal> taxBifurcation = null;
     private ProductSale productSale;
     private ResourceBundle resourceBundle;
@@ -301,6 +301,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                             .filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
 
                 fetchSaleRate();
+                fetchStock();
                 FocusUtils.requestFocus(txtQuantity);
             }
         });
@@ -441,6 +442,24 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     txtRate.setText("0");
                 } else {
                     txtRate.setText(rate.getRate().toString());
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+
+    private void fetchStock() {
+        var task = new ProductStockByCodeLoadTask(cboxProduct.getValue().getCode());
+        task.setOnSucceeded(e -> {
+            try {
+                this.stock = task.get();
+                if (stock == null) {
+                    lblStock.setText("0 " + resourceBundle.getString("quantityy"));
+                } else {
+                    lblStock.setText(stock.getStock().setScale(2, RoundingMode.UP) + " " + resourceBundle.getString("quantityy"));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -1066,6 +1085,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         if (txtQuantity.getText().trim().isEmpty() || new BigDecimal(txtQuantity.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
             errorMsg.append(resourceBundle.getString("qtyzero") + "\n");
         }
+        if (stock == null || stock.getStock().subtract(new BigDecimal(BigInteger.ZERO)).compareTo(BigDecimal.ZERO) < 0)
+            errorMsg.append(resourceBundle.getString("stock.not.available") + "\n");
+
+        if (dpDate.getValue().isAfter(LocalDate.now()))
+            errorMsg.append(resourceBundle.getString("future.sale.not.possible") + "\n");
+
         return errorMsg.length() == 0;
 
     }

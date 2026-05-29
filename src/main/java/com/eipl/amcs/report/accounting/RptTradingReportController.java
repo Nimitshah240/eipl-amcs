@@ -4,7 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.ProductStockValuation;
-import com.eipl.amcs.report.task.StockValuationTask;
+import com.eipl.amcs.report.task.LoadStockValuationTask;
 import com.eipl.amcs.report.task.TradingTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
@@ -78,10 +78,17 @@ public class RptTradingReportController implements MyInitialization {
     @Override
     public void loadData() {
         String localeStr = getLocaleString();
-        StockValuationTask task = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getEndDate(), localeStr);
+        LoadStockValuationTask task = new LoadStockValuationTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getEndDate(), localeStr);
         task.setOnSucceeded(e -> {
             try {
-                List<ProductStockValuation> list = task.get();
+                List<com.eipl.amcs.master.account.model.ProductStockValuation> listStockValuation = task.get();
+                List<ProductStockValuation> list = new ArrayList<>();
+                if (listStockValuation != null) {
+                    for (com.eipl.amcs.master.account.model.ProductStockValuation psv : listStockValuation) {
+                        list.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                    }
+                }
+
                 Map<String, Object> params = new HashMap<>();
                 params.put("p_society_code", MainApp.identityDto.getSociety().getCodeEx());
                 params.put("p_as_on_date", MainApp.getFinancialYear().getEndDate());

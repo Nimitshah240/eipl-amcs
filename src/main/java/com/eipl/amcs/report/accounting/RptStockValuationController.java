@@ -128,7 +128,7 @@ public class RptStockValuationController implements MyInitialization {
     @Override
     public void loadData() {
         String localeStr = getLocaleString();
-        StockValuationTaskWithProduct task = new StockValuationTaskWithProduct(MainApp.identityDto.getSociety().getCode(), dpAsOnDate.getValue(), localeStr, cboxProduct.getValue().getCode());
+        StockValuationTaskWithProduct task = new StockValuationTaskWithProduct(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), localeStr, cboxProduct.getValue().getCode());
         task.setOnSucceeded(e -> {
             try {
                 List<ProductStockValuation> list = task.get();

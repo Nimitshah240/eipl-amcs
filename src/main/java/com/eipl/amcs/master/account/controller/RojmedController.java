@@ -7,6 +7,7 @@ import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.controls.table.DataEntryRow;
@@ -34,8 +35,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.util.CellRangeAddress;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -53,9 +62,9 @@ public class RojmedController implements MyInitialization, PopupCallback {
     @FXML
     StackPane root;
     @FXML
-    TableView tableData;
+    TableView<TableRowModel> tableData;
     @FXML
-    TableView tableData1;
+    TableView<TableRowModel> tableData1;
 
     @FXML
     E_DatePicker dpDate;
@@ -119,8 +128,125 @@ public class RojmedController implements MyInitialization, PopupCallback {
         btnPrev.setOnAction(e -> {
             dpDate.setValue(dpDate.getValue().minusDays(1));
         });
+        btnPrint.setOnAction(e -> {
+            exportToExcel();
+        });
+
         loadData();
         dpDate.setConverter(new LocalDateConvertor());
+    }
+
+    private void exportToExcel() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Excel File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xls"));
+        File file = fileChooser.showSaveDialog(MainApp.getStage());
+
+        if (file != null) {
+            try (Workbook workbook = new HSSFWorkbook()) {
+                Sheet sheet = workbook.createSheet("Rojmed Report");
+
+                CellStyle headerStyle = workbook.createCellStyle();
+                headerStyle.setAlignment(HorizontalAlignment.CENTER);
+                Font headerFont = workbook.createFont();
+                headerFont.setBold(true);
+                headerStyle.setFont(headerFont);
+
+                CellStyle subHeaderStyleCredit = workbook.createCellStyle();
+                subHeaderStyleCredit.setAlignment(HorizontalAlignment.CENTER);
+                Font subHeaderFontCredit = workbook.createFont();
+                subHeaderFontCredit.setBold(true);
+                subHeaderFontCredit.setColor(IndexedColors.GREEN.getIndex());
+                subHeaderStyleCredit.setFont(subHeaderFontCredit);
+
+                CellStyle subHeaderStyleDebit = workbook.createCellStyle();
+                subHeaderStyleDebit.setAlignment(HorizontalAlignment.CENTER);
+                Font subHeaderFontDebit = workbook.createFont();
+                subHeaderFontDebit.setBold(true);
+                subHeaderFontDebit.setColor(IndexedColors.RED.getIndex());
+                subHeaderStyleDebit.setFont(subHeaderFontDebit);
+
+                Row headerRow = sheet.createRow(0);
+                Cell mainHeaderCell = headerRow.createCell(0);
+                mainHeaderCell.setCellValue(lblRojmelHeader.getText());
+                mainHeaderCell.setCellStyle(headerStyle);
+                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+
+                int rowNum = 2;
+
+                Row tableTitlesRow = sheet.createRow(rowNum++);
+                Cell creditTitleCell = tableTitlesRow.createCell(0);
+                creditTitleCell.setCellValue("Credit");
+                creditTitleCell.setCellStyle(subHeaderStyleCredit);
+                sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 0, 2));
+
+                Cell debitTitleCell = tableTitlesRow.createCell(4);
+                debitTitleCell.setCellValue("Debit");
+                debitTitleCell.setCellStyle(subHeaderStyleDebit);
+                sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 4, 6));
+
+                Row columnHeadersRow = sheet.createRow(rowNum++);
+                ObservableList<TableColumn<TableRowModel, ?>> creditColumns = tableData.getColumns();
+                for (int i = 0; i < creditColumns.size(); i++) {
+                    sheet.autoSizeColumn(i);
+                    columnHeadersRow.createCell(i).setCellValue(creditColumns.get(i).getText());
+                }
+
+                ObservableList<TableColumn<TableRowModel, ?>> debitColumns = tableData1.getColumns();
+                for (int i = 0; i < debitColumns.size(); i++) {
+                    sheet.autoSizeColumn(i);
+                    columnHeadersRow.createCell(i + 4).setCellValue(debitColumns.get(i).getText());
+                }
+
+                ObservableList<TableRowModel> creditItems = tableData.getItems();
+                ObservableList<TableRowModel> debitItems = tableData1.getItems();
+                int maxRows = Math.max(creditItems.size(), debitItems.size());
+
+                for (int i = 0; i < maxRows; i++) {
+                    Row dataRow = sheet.createRow(rowNum++);
+
+                    if (i < creditItems.size()) {
+                        TableRowModel creditItem = creditItems.get(i);
+                        for (int j = 0; j < creditColumns.size(); j++) {
+                            String cellValue = (String) creditColumns.get(j).getCellObservableValue(creditItem).getValue();
+                            dataRow.createCell(j).setCellValue(cellValue);
+                        }
+                    }
+
+                    if (i < debitItems.size()) {
+                        TableRowModel debitItem = debitItems.get(i);
+                        for (int j = 0; j < debitColumns.size(); j++) {
+                            String cellValue = (String) debitColumns.get(j).getCellObservableValue(debitItem).getValue();
+                            dataRow.createCell(j + 4).setCellValue(cellValue);
+                        }
+                    }
+                }
+
+                rowNum++;
+                Row totalRow1 = sheet.createRow(rowNum++);
+                totalRow1.createCell(0).setCellValue("Total Credit");
+                totalRow1.createCell(1).setCellValue(lblTotalCredit.getText());
+                totalRow1.createCell(4).setCellValue("Total Debit");
+                totalRow1.createCell(5).setCellValue(lblTotalDebit.getText());
+
+                Row totalRow2 = sheet.createRow(rowNum++);
+                totalRow2.createCell(0).setCellValue("Total");
+                totalRow2.createCell(1).setCellValue(lblTotalCredit2.getText());
+                totalRow2.createCell(4).setCellValue("Total");
+                totalRow2.createCell(5).setCellValue(lblTotalDebit2.getText());
+
+                try (FileOutputStream fileOut = new FileOutputStream(file)) {
+                    workbook.write(fileOut);
+                    MyAlert alert = new InformationAlert(MainApp.getStage(), "Export Success", "Excel file has been generated successfully.");
+                    alert.createAlert();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), "Export Error", "An error occurred while generating the Excel file.");
+                alert.createAlert();
+            }
+        }
     }
 
 

@@ -52,6 +52,8 @@ public class ElectionRegisterController implements MyInitialization {
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
+    private ComboBox<Shift> cboxFromShift1, cboxToShift1;
+    @FXML
     private E_NumericField txtLimit;
 
     @FXML
@@ -176,15 +178,16 @@ public class ElectionRegisterController implements MyInitialization {
     }
 
     public void validateAndGenerateReport1() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Map<String, Object> params = new HashMap<>();
         String localeStr = getElectionRegister1LocaleString();
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         params.put("p_locale", localeStr);
 
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        params.put("p_from_date", dpFromDate2.getValue().format(formatter));
-        params.put("p_to_date", dpToDate2.getValue().format(formatter));
+        params.put("p_from_date", Timestamp.valueOf(dpFromDate2.getValue().atTime(
+            cboxFromShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
+        params.put("p_to_date", Timestamp.valueOf(dpToDate2.getValue().atTime(
+            cboxToShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
         params.put("p_no_of_days", Integer.parseInt(txtLimit2.getText().trim()));
         params.put("p_qty", Integer.parseInt(txtqty.getText().trim()));
 
@@ -217,9 +220,15 @@ public class ElectionRegisterController implements MyInitialization {
 
         var task2 = new ShiftLoadTask();
         task2.setOnSucceeded(e -> {
+
             try {
                 List<Shift> list = task2.get();
                 if (list != null) {
+
+                    cboxFromShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxFromShift1.getSelectionModel().select(0);
+                    cboxToShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxToShift1.getSelectionModel().select(1);
                     cboxFromShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
                     cboxFromShift.getSelectionModel().select(0);
                     cboxToShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));

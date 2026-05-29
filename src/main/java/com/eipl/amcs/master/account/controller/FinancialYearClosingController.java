@@ -766,13 +766,18 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
 
     //stock valuation
     private void loadStockValuation() {
-        StockValuationTask stockValuationTask = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
+        LoadStockValuationTask stockValuationTask = new LoadStockValuationTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getEndDate(), MainApp.locale);
         stockValuationTask.setOnSucceeded(e -> {
             try {
-                listStockValuation = stockValuationTask.get();
+                List<com.eipl.amcs.master.account.model.ProductStockValuation> list = stockValuationTask.get();
+
+                listStockValuation = new ArrayList<>();
+                for (com.eipl.amcs.master.account.model.ProductStockValuation psv : list) {
+                    listStockValuation.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                }
+
                 tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
-                lblStockValuation.setText(String
-                        .valueOf(listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum()));
+                lblStockValuation.setText(String.format("%.2f", listStockValuation.stream().mapToDouble(m -> m.getValuation()).sum()));
                 tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
