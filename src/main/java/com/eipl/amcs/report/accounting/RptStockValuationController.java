@@ -193,7 +193,7 @@ public class RptStockValuationController implements MyInitialization {
                 } else {
                     params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
-                params.put("p_as_on_date", dpAsOnDate.getValue());
+                params.put("p_as_on_date", dpFromDate.getValue());
                 params.put("p_locale", localeStr);
                 params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 params.put("p_product_code", cboxProduct.getValue().getCode());
@@ -255,7 +255,7 @@ public class RptStockValuationController implements MyInitialization {
     public void loadDataProfitLoss() {
         String localeStr = getLocaleString();
         ProfitLossTask profitLossTask = new ProfitLossTask(MainApp.identityDto.getSociety().getCode(),
-                dpFromDate.getValue(), dpToDate.getValue(), localeStr);
+                dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
         profitLossTask.setOnSucceeded(ee -> {
             try {
                 List<LedgerBalance> list = profitLossTask.get();
@@ -269,8 +269,8 @@ public class RptStockValuationController implements MyInitialization {
                 } else {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
-                param.put("p_from_date", dpFromDate.getValue());
-                param.put("p_to_date", dpToDate.getValue());
+                param.put("p_from_date", dpFromDate1.getValue());
+                param.put("p_to_date", dpToDate1.getValue());
                 param.put("p_locale", localeStr);
                 param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
@@ -351,7 +351,7 @@ public class RptStockValuationController implements MyInitialization {
 
                 double stockValuationTask = list.stream().mapToDouble(m -> m.getValuation()).sum();
 
-                TradingTask tradingTask = new TradingTask(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), dpToDate.getValue(), localeStr);
+                TradingTask tradingTask = new TradingTask(MainApp.identityDto.getSociety().getCode(), dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
                 tradingTask.setOnSucceeded(ee -> {
                     try {
                         List<LedgerBalance> listtradingTask = tradingTask.get();
@@ -362,8 +362,8 @@ public class RptStockValuationController implements MyInitialization {
                         } else {
                             TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                         }
-                        TradingTaskparams.put("p_from_date", dpFromDate.getValue());
-                        TradingTaskparams.put("p_to_date", dpToDate.getValue());
+                        TradingTaskparams.put("p_from_date", dpFromDate1.getValue());
+                        TradingTaskparams.put("p_to_date", dpToDate1.getValue());
 
 
                         TradingTaskparams.put("p_locale", localeStr);
@@ -387,7 +387,7 @@ public class RptStockValuationController implements MyInitialization {
     public void loadDataBalanceSheet() {
         String localeStr = getLocaleString();
         BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
-                dpFromDate.getValue(), dpToDate.getValue(), localeStr);
+                dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
         balanceSheetTask.setOnSucceeded(ee -> {
             try {
                 List<LedgerBalance> list = balanceSheetTask.get();
@@ -401,8 +401,8 @@ public class RptStockValuationController implements MyInitialization {
                 } else {
                     param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
                 }
-                param.put("p_from_date", LocalDate.parse(dpFromDate.getValue().toString()));
-                param.put("p_to_date", LocalDate.parse(dpToDate.getValue().toString()));
+                param.put("p_from_date", LocalDate.parse(dpFromDate1.getValue().toString()));
+                param.put("p_to_date", LocalDate.parse(dpToDate1.getValue().toString()));
                 param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 param.put("p_locale", localeStr);
 

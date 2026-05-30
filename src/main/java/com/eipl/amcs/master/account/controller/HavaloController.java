@@ -310,7 +310,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
                 }
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
-                        resourceBundle.getString("voucher.update.successful"));
+                        resourceBundle.getString("voucher.insert.successful"));
                 alert.createAlert();
                 clearControls();
                 this.callback.reloadData(true);

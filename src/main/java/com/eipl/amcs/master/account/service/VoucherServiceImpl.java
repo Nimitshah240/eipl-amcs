@@ -116,7 +116,7 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = dto.getVoucher();
         voucher.setFinancialYearsCode(financialYearRepository.findCurrentFinancialYear(voucher.getVoucherDate()).get().getCode());
         voucher = voucherRepository.customUpdate(dto.getVoucher(), identityInfo);
-        int txnCode = 1;
+        int txnCode = dto.getVoucherTransactions().size() + 1;
         for (VoucherTransaction voucherTransaction : dto.getVoucherTransactions()) {
             voucherTransaction.setVoucher(voucher);
 

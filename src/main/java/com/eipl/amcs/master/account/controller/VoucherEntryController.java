@@ -159,6 +159,13 @@ public class VoucherEntryController implements MyInitialization {
             cboxLedger.getSelectionModel().clearSelection();
             txtAmount.setText("0");
         });
+
+        txtAmount.setOnAction(e -> {
+            addVoucherTransaction();
+        });
+        btnAdd.setOnAction(e -> {
+            addVoucherTransaction();
+        });
     }
 
     public void loadControls() {
@@ -316,7 +323,7 @@ public class VoucherEntryController implements MyInitialization {
                 }
 
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
-                        resourceBundle.getString("voucher.update.successful"));
+                        resourceBundle.getString("voucher.insert.successful"));
                 alert.createAlert();
                 clearControls();
                 this.callback.reloadData(true);
