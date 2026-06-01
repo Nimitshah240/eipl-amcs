@@ -2,20 +2,32 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.account.model.FinancialYear;
+import com.eipl.amcs.master.account.model.Ledger;
+import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.repository.FinancialYearRepository;
+import com.eipl.amcs.master.account.task.RojmedOpeningBalanceLoadTask;
+import com.eipl.amcs.master.account.task.VoucherTransactionByDateLoadTask;
 import com.eipl.amcs.master.inventory.convertor.ProductCellFactory;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.convertor.ProductLocalCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
-import com.eipl.amcs.report.dto.BalanceSheetRow;
-import com.eipl.amcs.report.dto.LedgerBalance;
-import com.eipl.amcs.report.dto.ProductStockValuation;
-import com.eipl.amcs.report.dto.ProductStockValuationWithSaleAndPurchase;
+import com.eipl.amcs.operation.inventory.model.ProductReceipt;
+import com.eipl.amcs.operation.inventory.model.ProductReceiptTransaction;
+import com.eipl.amcs.operation.inventory.model.ProductSale;
+import com.eipl.amcs.operation.inventory.model.ProductSaleTransaction;
+import com.eipl.amcs.operation.inventory.repository.ProductReceiptRepository;
+import com.eipl.amcs.operation.inventory.repository.ProductReceiptTransactionRepository;
+import com.eipl.amcs.operation.inventory.repository.ProductSaleRepository;
+import com.eipl.amcs.operation.inventory.repository.ProductSaleTransactionRepository;
+import com.eipl.amcs.report.dto.*;
 import com.eipl.amcs.report.task.*;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
@@ -34,18 +46,23 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static com.eipl.amcs.utils.AppConstant.Formatter3;
 
 public class RptStockValuationController implements MyInitialization {
     @FXML
     private Button btnClose;
 
     @FXML
-    private Button btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
+    private Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
     @FXML
     private Label lblAsOnDate;
 
@@ -101,6 +118,9 @@ public class RptStockValuationController implements MyInitialization {
         FocusUtils.requestFocus(btnGenerate);
         btnGenerate.setOnAction(e -> {
             validateAndGenerate();
+        });
+        btnRojmed.setOnAction(e -> {
+            loadDataRojmed();
         });
         btnProfitLoss.setOnAction(e -> {
             loadDataProfitLoss();
@@ -482,6 +502,582 @@ public class RptStockValuationController implements MyInitialization {
 
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.LEDGER_SUMMARY, params);
         JasperViewer.viewReport(print, false);
+    }
+
+    LocalDate currentDate = LocalDate.now();
+
+    private void loadDataRojmed() {
+        LocalDate fromDate = dpFromDate1.getValue();
+        LocalDate toDate = dpToDate1.getValue();
+
+        processDate(fromDate, fromDate, toDate);
+    }
+
+    private void processDate(LocalDate fromDate,
+                             LocalDate processingDate,
+                             LocalDate endDate) {
+
+        if (processingDate.isAfter(endDate)) {
+            System.out.println("ALL COMPLETED");
+
+
+            Map<String, Object> params = new HashMap<>();
+            String localeStr = cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+            params.put("p_society_name", MainApp.identityDto.getSociety().getName());
+            params.put("p_financial_year", MainApp.getFinancialYear().getCode());
+            params.put("p_locale", localeStr);
+            params.put("p_from_date", dpFromDate1.getValue());
+            params.put("p_to_date", dpToDate1.getValue());
+            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+            JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.ROJMED, params, new JRBeanCollectionDataSource(listRojmed));
+            JasperViewer.viewReport(print, false);
+            return;
+        }
+
+        System.out.println("Processing Date : " + processingDate);
+
+        getOpeningLedgerBalance(fromDate, processingDate)
+                .thenCompose(v -> loadVoucherTransactionByDate(processingDate, processingDate))
+                .thenRun(() -> {
+                    System.out.println("Completed Date : " + processingDate);
+                    currentDate = processingDate.plusDays(1);
+                    processDate(fromDate, processingDate.plusDays(1), endDate);
+                })
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
+    }
+
+    BigDecimal openingBalance = BigDecimal.ZERO;
+
+    private CompletableFuture<Void> getOpeningLedgerBalance(LocalDate fromDate, LocalDate toDate) {
+
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        FinancialYearRepository financialYearRepository = EmcsAppContext.getContext().getBean(FinancialYearRepository.class);
+
+        FinancialYear financialYear = financialYearRepository.findCurrentFinancialYear(toDate).orElse(null);
+
+        if (financialYear == null) {
+            future.completeExceptionally(new RuntimeException("Financial Year not found"));
+            return future;
+        }
+
+        var task = new RojmedOpeningBalanceLoadTask(financialYear.getStartDate(), toDate);
+
+        task.setOnSucceeded(e -> {
+            try {
+
+                openingBalance = task.getValue();
+
+                System.out.println("Opening Balance " + toDate + " = " +
+                        openingBalance);
+
+                future.complete(null);
+
+            } catch (Exception ex) {
+                future.completeExceptionally(ex);
+            }
+        });
+
+        task.setOnFailed(e ->
+                future.completeExceptionally(task.getException()));
+
+        new Thread(task).start();
+
+        return future;
+    }
+
+    private List<VoucherTransaction> crVoucherTransactionList = new ArrayList<>();
+    private List<VoucherTransaction> drVoucherTransactionList = new ArrayList<>();
+
+    private CompletableFuture<Void> loadVoucherTransactionByDate(
+            LocalDate fromDate,
+            LocalDate toDate) {
+
+        CompletableFuture<Void> future =
+                new CompletableFuture<>();
+
+        var task =
+                new VoucherTransactionByDateLoadTask(
+                        fromDate,
+                        toDate);
+
+        task.setOnSucceeded(e -> {
+
+            try {
+
+                List<VoucherTransaction> voucherTransactionList =
+                        task.getValue();
+
+                if (voucherTransactionList == null)
+                    voucherTransactionList = new ArrayList<>();
+
+                voucherTransactionList =
+                        bifurcateProductReceiptTransaction(
+                                voucherTransactionList);
+
+                voucherTransactionList =
+                        bifurcateProductSaleTransaction(
+                                voucherTransactionList);
+
+                crVoucherTransactionList =
+                        voucherTransactionList.stream()
+                                .filter(VoucherTransaction::getCreditDebit)
+                                .collect(Collectors.toList());
+
+                drVoucherTransactionList =
+                        voucherTransactionList.stream()
+                                .filter(v -> !v.getCreditDebit())
+                                .collect(Collectors.toList());
+
+                calculateCrDrTotal();
+
+                creatingRojmedDto(fromDate);
+
+                future.complete(null);
+
+            } catch (Exception ex) {
+                future.completeExceptionally(ex);
+            }
+        });
+
+        task.setOnFailed(e ->
+                future.completeExceptionally(task.getException()));
+
+        new Thread(task).start();
+
+        return future;
+    }
+
+    private List<VoucherTransaction> bifurcateProductReceiptTransaction(List<VoucherTransaction> voucherTransactionList) {
+        try {
+            List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
+            List<VoucherTransaction> productReceiptTransaction = new ArrayList<>();
+
+            productReceiptTransaction = voucherTransactionList.stream()
+                    .filter(vt -> vt.getVoucher().getProcessName() != null &&
+                            vt.getVoucher().getProcessName().contains("product_receipt")
+                            && vt.getCreditDebit() == false)
+                    .collect(Collectors.toList());
+
+            List<String> productReceiptCodes = productReceiptTransaction.stream()
+                    .map(vt -> vt.getVoucher().getProcessReference())
+                    .collect(Collectors.toList());
+
+            ProductReceiptRepository productReceiptRepository = EmcsAppContext.getContext().getBean(ProductReceiptRepository.class);
+            ProductReceiptTransactionRepository productReceiptTransactionRepository = EmcsAppContext.getContext().getBean(ProductReceiptTransactionRepository.class);
+            List<ProductReceipt> productReceipts = productReceiptRepository.findAllById(productReceiptCodes);
+            List<ProductReceiptTransaction> productReceiptTransactions = productReceiptTransactionRepository.findByProductReceiptIn(productReceipts);
+            Set<String> ledgerSet = productReceiptTransactions.stream()
+                    .map(prt -> prt.getProduct().getPurchaseLedger().getCode())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            productReceiptTransaction = voucherTransactionList.stream()
+                    .filter(vt -> ledgerSet.contains(vt.getLedger().getCode()))
+                    .collect(Collectors.toList());
+
+            Map<Ledger, Map<Product, List<ProductReceiptTransaction>>> ledgerProductTxnMap =
+                    productReceiptTransactions.stream()
+                            .filter(prt -> prt.getProduct() != null && prt.getProduct().getPurchaseLedger() != null)
+                            .collect(Collectors.groupingBy(
+                                    prt -> prt.getProduct().getPurchaseLedger(),
+                                    Collectors.groupingBy(ProductReceiptTransaction::getProduct)
+                            ));
+
+            int tempCode = 0;
+            for (Ledger ledger : ledgerProductTxnMap.keySet()) {
+                Map<Product, List<ProductReceiptTransaction>> map = ledgerProductTxnMap.get(ledger);
+                for (Product product : map.keySet()) {
+                    List<ProductReceiptTransaction> productReceiptTransactions1 = map.get(product);
+                    BigDecimal amount = BigDecimal.ZERO;
+                    Integer qty = 0;
+                    for (ProductReceiptTransaction productReceiptTransaction1 : productReceiptTransactions1) {
+                        amount = amount.add(productReceiptTransaction1.getAmount());
+                        qty += productReceiptTransaction1.getQuantity();
+                    }
+                    tempCode++;
+                    VoucherTransaction voucherTransaction = new VoucherTransaction();
+                    voucherTransaction.setCode("temp" + tempCode);
+                    voucherTransaction.setLedger(ledger);
+                    voucherTransaction.setAmount(amount);
+                    voucherTransaction.setNarration(product.toString() + " - " + qty + " x " + amount.divide(new BigDecimal(qty), 2, RoundingMode.HALF_DOWN));
+                    voucherTransaction.setCreditDebit(false);
+                    updatedVoucherTxn.add(voucherTransaction);
+                }
+            }
+            voucherTransactionList.removeAll(productReceiptTransaction);
+            updatedVoucherTxn.addAll(voucherTransactionList);
+            return updatedVoucherTxn;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<VoucherTransaction> bifurcateProductSaleTransaction(List<VoucherTransaction> voucherTransactionList) {
+        try {
+            List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
+            List<VoucherTransaction> productSaleTransaction = new ArrayList<>();
+
+            productSaleTransaction = voucherTransactionList.stream()
+                    .filter(vt -> vt.getVoucher() != null && vt.getVoucher().getProcessName() != null &&
+                            vt.getVoucher().getProcessName().contains("tbl_product_sale")
+                            && vt.getCreditDebit() == true)
+                    .collect(Collectors.toList());
+
+            Set<String> voucherNo = productSaleTransaction.stream()
+                    .map(prt -> prt.getVoucher().getCode())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            if (voucherNo == null || voucherNo.isEmpty())
+                return voucherTransactionList;
+
+            ProductSaleRepository productSaleRepository = EmcsAppContext.getContext().getBean(ProductSaleRepository.class);
+            ProductSaleTransactionRepository productSaleTransactionRepository = EmcsAppContext.getContext().getBean(ProductSaleTransactionRepository.class);
+            List<ProductSale> productSales = productSaleRepository.findByVoucherNoIn((new ArrayList<>(voucherNo)));
+
+            List<ProductSaleTransaction> productSaleTransactions = productSaleTransactionRepository.findByProductSaleIn(productSales);
+            Set<String> ledgerSet = productSaleTransactions.stream()
+                    .map(prt -> prt.getProduct().getSaleLedger().getCode())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+
+            productSaleTransaction = voucherTransactionList.stream()
+                    .filter(vt -> ledgerSet.contains(vt.getLedger().getCode()))
+                    .collect(Collectors.toList());
+
+            Map<Ledger, Map<Product, List<ProductSaleTransaction>>> ledgerProductTxnMap =
+                    productSaleTransactions.stream()
+                            .filter(prt -> prt.getProduct() != null && prt.getProduct().getSaleLedger() != null)
+                            .collect(Collectors.groupingBy(
+                                    prt -> prt.getProduct().getSaleLedger(),
+                                    Collectors.groupingBy(ProductSaleTransaction::getProduct)
+                            ));
+
+            int tempCode = 0;
+            for (Ledger ledger : ledgerProductTxnMap.keySet()) {
+                Map<Product, List<ProductSaleTransaction>> map = ledgerProductTxnMap.get(ledger);
+                for (Product product : map.keySet()) {
+                    List<ProductSaleTransaction> productReceiptTransactions1 = map.get(product);
+                    BigDecimal amount = BigDecimal.ZERO;
+                    BigDecimal qty = BigDecimal.ZERO;
+                    for (ProductSaleTransaction productReceiptTransaction1 : productReceiptTransactions1) {
+                        amount = amount.add(productReceiptTransaction1.getAmount());
+                        qty = qty.add(productReceiptTransaction1.getQuantity());
+                    }
+                    tempCode++;
+                    VoucherTransaction voucherTransaction = new VoucherTransaction();
+                    voucherTransaction.setCode("tempsale" + tempCode);
+                    voucherTransaction.setLedger(ledger);
+                    voucherTransaction.setAmount(amount);
+                    voucherTransaction.setNarration(product.toString() + " - " + qty + " x " + amount.divide(qty, 2, RoundingMode.HALF_DOWN));
+                    voucherTransaction.setCreditDebit(true);
+                    updatedVoucherTxn.add(voucherTransaction);
+                }
+            }
+            voucherTransactionList.removeAll(productSaleTransaction);
+            updatedVoucherTxn.addAll(voucherTransactionList);
+            return updatedVoucherTxn;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void calculateCrDrTotal() {
+        crTotal = BigDecimal.ZERO;
+        drTotal = BigDecimal.ZERO;
+        if (openingBalance.compareTo(BigDecimal.ZERO) < 0)
+            crTotal = crTotal.add(new BigDecimal(Math.abs(openingBalance.doubleValue())).setScale(2, RoundingMode.HALF_DOWN));
+        else
+            drTotal = drTotal.add(new BigDecimal(Math.abs(openingBalance.doubleValue())).setScale(2, RoundingMode.HALF_DOWN));
+
+        crTotal = crTotal.add(crVoucherTransactionList.stream()
+                .filter(vt -> vt.getCode() != null)
+                .map(VoucherTransaction::getAmount)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+        drTotal = drTotal.add(drVoucherTransactionList.stream()
+                .filter(vt -> vt.getCode() != null)
+                .map(VoucherTransaction::getAmount)
+                .filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add));
+        calculateClosingBalance();
+
+        addOpeningAndClosingBalance(true);
+        addOpeningAndClosingBalance(false);
+    }
+
+    BigDecimal crTotal = BigDecimal.ZERO;
+    BigDecimal drTotal = BigDecimal.ZERO;
+    BigDecimal closingBalance = BigDecimal.ZERO;
+
+    private void calculateClosingBalance() {
+        closingBalance = drTotal.subtract(crTotal);
+    }
+
+    private void addOpeningAndClosingBalance(boolean creditDebit) {
+
+        BigDecimal absOpening = openingBalance.abs();
+        BigDecimal absClosing = closingBalance.abs();
+
+        if (creditDebit) {
+
+            // OPENING CREDIT
+            if (openingBalance.compareTo(BigDecimal.ZERO) < 0) {
+
+                VoucherTransaction vt = new VoucherTransaction();
+
+                Ledger ledger = new Ledger();
+                ledger.setName("Opening Balance");
+                ledger.setNameLocal(resourceBundle.getString("opening.balance"));
+
+                vt.setLedger(ledger);
+                vt.setCode("tempLedgerOpening");
+                vt.setNarration(resourceBundle.getString("opening.balance"));
+                vt.setAmount(absOpening);
+
+                crVoucherTransactionList.add(0, vt);
+            }
+
+            // CLOSING CREDIT
+            if (closingBalance.compareTo(BigDecimal.ZERO) > 0) {
+
+                VoucherTransaction vt = new VoucherTransaction();
+
+                Ledger ledger = new Ledger();
+                ledger.setName("Closing Balance");
+                ledger.setNameLocal(resourceBundle.getString("closing.balance"));
+
+                vt.setLedger(ledger);
+                vt.setCode("tempLedgerClosing");
+                vt.setNarration(resourceBundle.getString("closing.balance"));
+                vt.setAmount(absClosing);
+
+                crVoucherTransactionList.add(vt);
+            }
+        } else {
+
+            // OPENING DEBIT
+            if (openingBalance.compareTo(BigDecimal.ZERO) > 0) {
+
+                VoucherTransaction vt = new VoucherTransaction();
+
+                Ledger ledger = new Ledger();
+                ledger.setName("Opening Balance");
+                ledger.setNameLocal(resourceBundle.getString("opening.balance"));
+
+                vt.setLedger(ledger);
+                vt.setCode("tempLedgerOpening");
+                vt.setNarration(resourceBundle.getString("opening.balance"));
+                vt.setAmount(absOpening);
+
+                drVoucherTransactionList.add(0, vt);
+            }
+
+            // CLOSING DEBIT
+            if (closingBalance.compareTo(BigDecimal.ZERO) < 0) {
+
+                VoucherTransaction vt = new VoucherTransaction();
+
+                Ledger ledger = new Ledger();
+                ledger.setName("Closing Balance");
+                ledger.setNameLocal(resourceBundle.getString("closing.balance"));
+
+                vt.setLedger(ledger);
+                vt.setCode("tempLedgerClosing");
+                vt.setNarration(resourceBundle.getString("closing.balance"));
+                vt.setAmount(absClosing);
+
+                drVoucherTransactionList.add(vt);
+            }
+        }
+    }
+
+    List<RojmedDto> listRojmed = new ArrayList<>();
+
+    private void creatingRojmedDto(LocalDate processingDate) {
+
+        VoucherTransaction openingCr = null;
+        VoucherTransaction closingCr = null;
+        VoucherTransaction openingDr = null;
+        VoucherTransaction closingDr = null;
+
+        List<VoucherTransaction> crTransactions = new ArrayList<>();
+        List<VoucherTransaction> drTransactions = new ArrayList<>();
+
+        if (crVoucherTransactionList != null) {
+            for (VoucherTransaction vt : crVoucherTransactionList) {
+
+                if ("tempLedgerOpening".equals(vt.getCode())) {
+                    openingCr = vt;
+                } else if ("tempLedgerClosing".equals(vt.getCode())) {
+                    closingCr = vt;
+                } else {
+                    crTransactions.add(vt);
+                }
+            }
+        }
+
+        if (drVoucherTransactionList != null) {
+            for (VoucherTransaction vt : drVoucherTransactionList) {
+
+                if ("tempLedgerOpening".equals(vt.getCode())) {
+                    openingDr = vt;
+                } else if ("tempLedgerClosing".equals(vt.getCode())) {
+                    closingDr = vt;
+                } else {
+                    drTransactions.add(vt);
+                }
+            }
+        }
+
+        Map<Ledger, List<VoucherTransaction>> crLedgerTransactionMap = new LinkedHashMap<>();
+        Map<Ledger, List<VoucherTransaction>> drLedgerTransactionMap = new LinkedHashMap<>();
+
+        for (VoucherTransaction voucherTransaction : crTransactions) {
+
+            List<VoucherTransaction> tempTxnList =
+                    crLedgerTransactionMap.get(voucherTransaction.getLedger());
+
+            if (tempTxnList == null) {
+                tempTxnList = new ArrayList<>();
+            }
+
+            tempTxnList.add(voucherTransaction);
+            crLedgerTransactionMap.put(
+                    voucherTransaction.getLedger(),
+                    tempTxnList);
+        }
+
+        for (VoucherTransaction voucherTransaction : drTransactions) {
+
+            List<VoucherTransaction> tempTxnList =
+                    drLedgerTransactionMap.get(voucherTransaction.getLedger());
+
+            if (tempTxnList == null) {
+                tempTxnList = new ArrayList<>();
+            }
+
+            tempTxnList.add(voucherTransaction);
+            drLedgerTransactionMap.put(
+                    voucherTransaction.getLedger(),
+                    tempTxnList);
+        }
+
+        List<VoucherTransaction> finalCrList = new ArrayList<>();
+        List<VoucherTransaction> finalDrList = new ArrayList<>();
+
+        if (openingCr != null) {
+            finalCrList.add(openingCr);
+        }
+
+        for (Ledger ledger : crLedgerTransactionMap.keySet()) {
+
+            BigDecimal totalAmt = BigDecimal.ZERO;
+
+            List<VoucherTransaction> tempTransaction =
+                    crLedgerTransactionMap.get(ledger);
+
+            for (VoucherTransaction vt : tempTransaction) {
+                totalAmt = totalAmt.add(vt.getAmount());
+            }
+
+            VoucherTransaction header = new VoucherTransaction();
+            header.setCode("tempLedger");
+            header.setAmount(totalAmt);
+            header.setNarration(ledger.toString());
+
+            finalCrList.add(header);
+            finalCrList.addAll(tempTransaction);
+            VoucherTransaction emptyTransaction = new VoucherTransaction();
+            emptyTransaction.setCode("");
+            emptyTransaction.setNarration("");
+            finalCrList.add(emptyTransaction);
+        }
+
+        if (closingCr != null) {
+            finalCrList.add(closingCr);
+        }
+
+        if (openingDr != null) {
+            finalDrList.add(openingDr);
+        }
+
+        for (Ledger ledger : drLedgerTransactionMap.keySet()) {
+
+            BigDecimal totalAmt = BigDecimal.ZERO;
+
+            List<VoucherTransaction> tempTransaction =
+                    drLedgerTransactionMap.get(ledger);
+
+            for (VoucherTransaction vt : tempTransaction) {
+                totalAmt = totalAmt.add(vt.getAmount());
+            }
+
+            VoucherTransaction header = new VoucherTransaction();
+            header.setCode("tempLedger");
+            header.setAmount(totalAmt);
+            header.setNarration(ledger.toString());
+
+            finalDrList.add(header);
+            finalDrList.addAll(tempTransaction);
+            VoucherTransaction emptyTransaction = new VoucherTransaction();
+            emptyTransaction.setCode("");
+            emptyTransaction.setNarration("");
+            finalDrList.add(emptyTransaction);
+
+        }
+
+        if (closingDr != null) {
+            finalDrList.add(closingDr);
+        }
+
+        int maxRows = Math.max(
+                finalCrList.size(),
+                finalDrList.size()
+        );
+
+
+        for (int i = 0; i < maxRows; i++) {
+
+            VoucherTransaction credit = i < finalCrList.size() ? finalCrList.get(i) : null;
+
+            VoucherTransaction debit = i < finalDrList.size() ? finalDrList.get(i) : null;
+
+            RojmedDto rojmedDto = new RojmedDto();
+
+            if (credit != null) {
+
+                if (credit.getCode() == null || credit.getCode().contains("tempLedger")) {
+                    rojmedDto.setCreditAmount(credit.getAmount() == null ? null : credit.getAmount().doubleValue());
+                } else {
+                    rojmedDto.setCreditSubAmount(credit.getAmount() == null ? null : credit.getAmount().doubleValue());
+                    rojmedDto.setCreditLedger("   ");
+                }
+
+                rojmedDto.setCreditLedger(rojmedDto.getCreditLedger() != null ? rojmedDto.getCreditLedger().concat(credit.getNarration()) : credit.getNarration());
+            }
+
+            if (debit != null) {
+                if (debit.getCode() == null || debit.getCode().contains("tempLedger")) {
+                    rojmedDto.setDebitAmount(debit.getAmount() == null ? null : debit.getAmount().doubleValue());
+                } else {
+                    rojmedDto.setDebitSubAmount(debit.getAmount() == null ? null : debit.getAmount().doubleValue());
+                    rojmedDto.setDebitLedger("   ");
+                }
+
+                rojmedDto.setDebitLedger(rojmedDto.getDebitLedger() != null ? rojmedDto.getDebitLedger().concat(debit.getNarration()) : debit.getNarration());
+            }
+
+            rojmedDto.setDate(java.sql.Date.valueOf(processingDate));
+            rojmedDto.setRojmedDate(processingDate.format(Formatter3));
+
+            listRojmed.add(rojmedDto);
+        }
     }
 }
 

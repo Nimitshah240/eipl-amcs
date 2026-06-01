@@ -11,17 +11,19 @@ import java.time.LocalDate;
 
 public class RojmedOpeningBalanceLoadTask extends Task<BigDecimal> {
     private static final Logger LOGGER = LoggerFactory.getLogger(RojmedOpeningBalanceLoadTask.class);
+    private final LocalDate fromDate;
     private final LocalDate toDate;
 
-    public RojmedOpeningBalanceLoadTask(LocalDate toDate) {
+    public RojmedOpeningBalanceLoadTask(LocalDate fromDate, LocalDate toDate) {
         this.toDate = toDate;
+        this.fromDate = fromDate;
     }
 
     @Override
     protected BigDecimal call() throws Exception {
         try {
             LedgerOpeningBalanceService ledgerOpeningBalanceService = EmcsAppContext.getContext().getBean(LedgerOpeningBalanceService.class);
-            return ledgerOpeningBalanceService.getLedgerOpeningBalanceOfTypeCash(toDate);
+            return ledgerOpeningBalanceService.getLedgerOpeningBalanceOfTypeCash(fromDate, toDate);
         } catch (Exception e) {
             LOGGER.error("ledger Number fetch", e);
         }
