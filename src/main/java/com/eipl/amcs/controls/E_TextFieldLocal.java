@@ -46,6 +46,8 @@ public class E_TextFieldLocal extends TextField {
                 positionCaret(getText().length());
             }
         });
+
+        setOnKeyReleased(new FocusHandler());
     }
 
     private int previousGujaratiLength = 0;

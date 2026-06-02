@@ -16,10 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
@@ -68,11 +65,9 @@ public class CustomerController implements MyInitialization {
         btnEdit.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_CUSTOMER_EDIT"))
                 throw new UnAuthorizedAccessException();
-            if (propCustomer.get() != null) {
-                CustomerAddEditController controller = (CustomerAddEditController) MainApp.getFxmlLoaderUtil()
-                        .loadAndSet(MainApp.class.getResource("view/master/operation/CustomerAddEdit.fxml"));
-                controller.setCustomer(propCustomer.get());
-                MainApp.getContentPane().setCenter((controller).getRoot());
+            Customer dto = propCustomer.get();
+            if (dto != null) {
+                editCustomer(dto);
             }
         });
         btnDelete.setOnAction(e -> {
@@ -90,6 +85,45 @@ public class CustomerController implements MyInitialization {
                 btnDelete.setDisable(true);
             }
         });
+
+
+        tableCustomer.setOnKeyPressed(event -> {
+            Customer dto = tableCustomer.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propCustomer.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editCustomer(dto);
+                    break;
+            }
+        });
+
+        tableCustomer.setRowFactory(tv -> {
+            TableRow<Customer> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Customer data = row.getItem();
+                    editCustomer(data);
+                }
+            });
+            return row;
+        });
+    }
+
+    private void editCustomer(Customer dto) {
+        if (!MainApp.user.getPermissions().contains("ACTION_CUSTOMER_EDIT"))
+            throw new UnAuthorizedAccessException();
+        if (dto != null) {
+            CustomerAddEditController controller = (CustomerAddEditController) MainApp.getFxmlLoaderUtil()
+                    .loadAndSet(MainApp.class.getResource("view/master/operation/CustomerAddEdit.fxml"));
+            controller.setCustomer(dto);
+            MainApp.getContentPane().setCenter((controller).getRoot());
+        }
     }
 
     @Override

@@ -10,6 +10,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import com.eipl.amcs.controls.E_TextFieldLocal?>
+<?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -89,21 +91,22 @@
                                 <Label fx:id="lblLocalName" text="%localname" GridPane.rowIndex="2" />
 
                                 <ComboBox fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                                <TextField fx:id="txtMobileNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                <E_TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                <E_TextField fx:id="txtMobileNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                 <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                                <TextField fx:id="txtCst" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                <E_TextField fx:id="txtCst" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                 <DatePicker fx:id="dpRegistrationDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                <TextField fx:id="txtRegistrationNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                                <ComboBox fx:id="cboxState" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
-                                <ComboBox fx:id="cboxDistrict" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                <ComboBox fx:id="cboxSubDistrict" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                                <ComboBox fx:id="cboxVillage" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                                <TextField fx:id="txtEmail" maxWidth="1.7976931348623157E308" GridPane.rowIndex="10" />
-                                <TextField fx:id="txtPanNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                                <TextField fx:id="txtAadharCardNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                                <TextField fx:id="txtPincode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="10" />
+                                <E_TextField fx:id="txtRegistrationNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                <AutoSearchTextField fx:id="cboxState" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                                <AutoSearchTextField fx:id="cboxDistrict" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <AutoSearchTextField fx:id="cboxSubDistrict" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                <AutoSearchTextField fx:id="cboxVillage" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                <AutoSearchTextField fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                                <E_TextField fx:id="txtEmail" maxWidth="1.7976931348623157E308" GridPane.rowIndex="10" />
+                                <E_TextField fx:id="txtPanNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                                <E_TextField fx:id="txtAadharCardNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                                <E_TextField fx:id="txtPincode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="10" />
                                 <TextArea fx:id="txtAddress" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="10" GridPane.rowSpan="3" />
 
                                 <RadioButton fx:id="rbtnCash" mnemonicParsing="false" selected="true" text="%cash" GridPane.rowIndex="15">
@@ -131,8 +134,8 @@
                                         <Label fx:id="lblIfsc" text="%ifsc" GridPane.columnIndex="3" />
                                         <ComboBox fx:id="cboxBankName" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                                         <ComboBox fx:id="cboxBranchName" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <TextField fx:id="txtAcNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                        <TextField fx:id="txtIfsc" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                        <E_TextField fx:id="txtAcNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                        <E_TextField fx:id="txtIfsc" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     </children>
                                 </GridPane>
 
@@ -142,7 +145,6 @@
 
                                 <Label text="%pincode" GridPane.columnIndex="3" GridPane.rowIndex="9" />
                                 <Label text="%mobileno" GridPane.columnIndex="4" />
-                        <ComboBox fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
                         <Label text="%ledger" GridPane.columnIndex="4" GridPane.rowIndex="4" />
 
                             </children>
