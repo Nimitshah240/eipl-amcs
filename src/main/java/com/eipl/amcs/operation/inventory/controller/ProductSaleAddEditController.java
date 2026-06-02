@@ -52,6 +52,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -155,7 +156,15 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtMilkAmount.setText("0");
         txtDeductionAmount.setText("0");
         dpDate.setOnAction(e -> {
-            FocusUtils.requestFocus(cboxProduct);
+            if (!dpDeductionStartDate.isDisable()) {
+                dpDeductionStartDate.setValue(dpDate.getValue());
+            }
+        });
+        dpDate.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(cboxProduct);
+                e.consume();
+            }
         });
 //        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml"))));
         btnSaveUpdate.setOnAction(e -> {
@@ -222,8 +231,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             }
         });
 
-        txtRate.focusedProperty().addListener((ob, oldVal, newVal) -> {
-            if (!newVal) {
+        txtRate.textProperty().addListener((ob, oldVal, newVal) -> {
+            if (!oldVal.equalsIgnoreCase(newVal)) {
                 if (!txtQuantity.getText().isEmpty()) {
                     if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
                         txtQuantity.setText("");
@@ -237,8 +246,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 calculateTaxAmount();
             }
         });
-        txtQuantity.focusedProperty().addListener((ob, oldVal, newVal) -> {
-            if (!newVal) {
+        txtQuantity.textProperty().addListener((ob, oldVal, newVal) -> {
+            if (!oldVal.equalsIgnoreCase(newVal)) {
                 if (!txtQuantity.getText().isEmpty()) {
                     if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
                         txtQuantity.setText("");
@@ -261,7 +270,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             dpDeductionFromDate.setDisable(false);
             dpDeductionToDate.setDisable(false);
             dpDeductionStartDate.setDisable(false);
-            dpDeductionStartDate.setValue(LocalDate.now());
+            dpDeductionStartDate.setValue(dpDate.getValue());
             txtNoOfInstallment.setDisable(true);
             txtNoOfInstallment.setText("1");
             btnInstallments.setDisable(false);
@@ -371,6 +380,19 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             calculateSummary();
             clearControls();
             FocusUtils.requestFocus(cboxProduct);
+        });
+
+        tableProductSaleTransaction.setOnKeyPressed(event -> {
+            ProductSaleTransaction dto = tableProductSaleTransaction.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propSaleTxn.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+            }
         });
     }
 
@@ -732,6 +754,12 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
     // 0-from btn installment, 1-from btn save
     private void checkPaymentCycleAndSaveInstallment(short from) {
+        if (dpDeductionStartDate.getValue().isBefore(dpDate.getValue())) {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                    resourceBundle.getString("productsale.installment.start.validation.date.past"));
+            alert.createAlert();
+            return;
+        }
         var task = new FetchAllPaymentCycleLoadTask(dpDeductionStartDate.getValue(), Integer.parseInt(txtNoOfInstallment.getText()));
         task.setOnSucceeded(e -> {
             try {
@@ -915,6 +943,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     listProductSaleTransaction.add(saleTxnTaxDtoList.get(i).getTransaction());
                 }
                 tableProductSaleTransaction.setItems(FXCollections.observableList(listProductSaleTransaction));
+                propSaleTxn.bind(tableProductSaleTransaction.getSelectionModel().selectedItemProperty());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

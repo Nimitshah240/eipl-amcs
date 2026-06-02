@@ -47,6 +47,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -151,10 +152,10 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         cboxTax.setOnAction(e -> calculateTaxAmount());
 
-        txtQuantity.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+        txtQuantity.textProperty().addListener((observable, oldValue, newValue) -> {
             calculateAmount();
         });
-        txtRate.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+        txtRate.textProperty().addListener((observable, oldValue, newValue) -> {
             calculateAmount();
         });
 
@@ -176,6 +177,24 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             validateAndSaveProduct();
         });
 
+        dpChallanDate.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(cboxProduct);
+                e.consume();
+            }
+        });
+        tableProductReceiptTransaction.setOnKeyPressed(event -> {
+            ProductReceiptTransaction dto = tableProductReceiptTransaction.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propReceiptTxn.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+            }
+        });
     }
 
     public void setProductReceipt(ProductReceipt productReceipt) {
@@ -211,6 +230,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 }
                 listProductReceiptTransaction.addAll(listTransactions);
                 tableProductReceiptTransaction.setItems(FXCollections.observableList(listProductReceiptTransaction));
+                propReceiptTxn.bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
