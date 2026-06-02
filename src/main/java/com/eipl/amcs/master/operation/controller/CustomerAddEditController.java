@@ -2,19 +2,16 @@ package com.eipl.amcs.master.operation.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.geo.converter.DistrictConvertor;
-import com.eipl.amcs.master.geo.converter.StateConvertor;
-import com.eipl.amcs.master.geo.converter.SubDistrictConvertor;
-import com.eipl.amcs.master.geo.converter.VillageConvertor;
 import com.eipl.amcs.master.geo.model.District;
 import com.eipl.amcs.master.geo.model.State;
 import com.eipl.amcs.master.geo.model.SubDistrict;
@@ -38,6 +35,7 @@ import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -67,13 +65,13 @@ public class CustomerAddEditController implements MyInitialization {
     @FXML
     private ToggleGroup paymentType;
     @FXML
-    private ComboBox<State> cboxState;
+    private AutoSearchTextField<State> cboxState;
     @FXML
-    private ComboBox<District> cboxDistrict;
+    private AutoSearchTextField<District> cboxDistrict;
     @FXML
-    private ComboBox<SubDistrict> cboxSubDistrict;
+    private AutoSearchTextField<SubDistrict> cboxSubDistrict;
     @FXML
-    private ComboBox<Village> cboxVillage;
+    private AutoSearchTextField<Village> cboxVillage;
     @FXML
     private ComboBox<CustomerTypeKeyValDto> cboxType;
     @FXML
@@ -81,9 +79,9 @@ public class CustomerAddEditController implements MyInitialization {
     @FXML
     private ComboBox<Branch> cboxBranchName;
     @FXML
-    private ComboBox<Ledger> cboxLedger;
+    private AutoSearchTextField<Ledger> cboxLedger;
     @FXML
-    private TextField txtCst, txtCode, txtMobileNo, txtPincode,
+    private E_TextField txtCst, txtCode, txtMobileNo, txtPincode,
             txtName,
             txtEmail, txtPanNo, txtAadharCardNo, txtAcNo, txtIfsc, txtRegistrationNo;
     @FXML
@@ -125,6 +123,9 @@ public class CustomerAddEditController implements MyInitialization {
         loadCustomerType();
         loadBank();
         loadLedger();
+        dpRegistrationDate.setOnAction(e -> {
+            FocusUtils.requestFocus(txtRegistrationNo);
+        });
 
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/operation/Customer.fxml")));
@@ -346,13 +347,8 @@ public class CustomerAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxState.setConverter(new StateConvertor(cboxState));
-        cboxDistrict.setConverter(new DistrictConvertor(cboxDistrict));
-        cboxSubDistrict.setConverter(new SubDistrictConvertor(cboxSubDistrict));
-        cboxVillage.setConverter(new VillageConvertor(cboxVillage));
         cboxBankName.setConverter(new BankConvertor(cboxBankName));
         cboxBranchName.setConverter(new BranchConvertor(cboxBranchName));
-        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
         dpRegistrationDate.setConverter(new LocalDateConvertor());
         dpRegistrationDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -370,7 +366,6 @@ public class CustomerAddEditController implements MyInitialization {
                 List<State> list = task.get();
                 if (list != null) {
                     cboxState.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxState);
 
                     if (customerDetail != null)
                         cboxState.setValue(customerDetail.getState());
@@ -401,7 +396,6 @@ public class CustomerAddEditController implements MyInitialization {
                 List<District> list = task.get();
                 if (list != null) {
                     cboxDistrict.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxDistrict);
                     if (customerDetail != null)
                         cboxDistrict.setValue(customerDetail.getDistrict());
                 }
@@ -419,7 +413,6 @@ public class CustomerAddEditController implements MyInitialization {
                 List<SubDistrict> list = task.get();
                 if (list != null) {
                     cboxSubDistrict.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxSubDistrict);
                     if (customerDetail != null)
                         cboxSubDistrict.setValue(customerDetail.getSubDistrict());
                 }
@@ -437,7 +430,6 @@ public class CustomerAddEditController implements MyInitialization {
                 List<Village> list = task.get();
                 if (list != null) {
                     cboxVillage.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxVillage);
                     if (customerDetail != null)
                         cboxVillage.setValue(customerDetail.getVillage());
                 }
@@ -489,7 +481,6 @@ public class CustomerAddEditController implements MyInitialization {
                 List<Ledger> list = task.get();
                 if (list != null) {
                     cboxLedger.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxLedger);
                     if (customer != null)
                         cboxLedger.setValue(customer.getLedger());
                 }

@@ -136,8 +136,6 @@ public class AutoSearchTextField<T> extends TextField {
     }
 
     public void setupLocalTransliteration() {
-        if (true)
-            return;
         if (MainApp.getLocale().equalsIgnoreCase("en")) {
             return;
         }
@@ -183,6 +181,7 @@ public class AutoSearchTextField<T> extends TextField {
                     T highlighted = listView.getSelectionModel().getSelectedItem();
                     if (highlighted != null) {
                         selectItem(highlighted);
+                        this.fireEvent(new javafx.event.ActionEvent(this, null));
                     }
                     this.fireEvent(new KeyEvent(
                             KeyEvent.KEY_PRESSED, "", "",
@@ -465,7 +464,7 @@ public class AutoSearchTextField<T> extends TextField {
 
         for (int i = 0; i < preprocessed.length(); i++) {
             char c = preprocessed.charAt(i);
-            if (Character.isDigit(c)) {
+            if (Character.isDigit(c) || c == '.') {
                 if (segment.length() > 0) {
                     result.append(transliterator.transliterate(segment.toString()));
                     segment.setLength(0);
@@ -525,5 +524,53 @@ public class AutoSearchTextField<T> extends TextField {
                 updateBackground();
             }
         }
+    }
+    // ── COMBOBOX COMPATIBILITY LAYER ──────────────────────────────────────
+
+    /**
+     * Fake selection model to allow drop-in replacement for standard ComboBox code.
+     */
+    public FakeSelectionModel getSelectionModel() {
+        return new FakeSelectionModel();
+    }
+
+    public class FakeSelectionModel {
+        /**
+         * Mimics ComboBox.getSelectionModel().getSelectedItem()
+         *
+         * @return The currently selected object of type T, or null.
+         */
+        public T getSelectedItem() {
+            return getValue();
+        }
+
+        /**
+         * Mimics ComboBox.getSelectionModel().select(item)
+         * Programmatically sets and pre-selects a value safely.
+         */
+        public void select(T item) {
+            setValue(item);
+        }
+
+    }
+
+    // ── COMBOBOX COMPATIBILITY LAYER (PROPERTY BINDINGS) ──────────────────
+
+    /**
+     * Mimics ComboBox.valueProperty() to allow direct property manipulation and binding.
+     */
+    public javafx.beans.property.ObjectProperty<T> valueProperty() {
+        // Create a proxy property that syncs directly with our internal selection state
+        javafx.beans.property.ObjectProperty<T> proxyProperty = new javafx.beans.property.SimpleObjectProperty<>(getValue());
+
+        proxyProperty.addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) {
+                clearSelection();
+            } else {
+                setValue(newVal);
+            }
+        });
+
+        return proxyProperty;
     }
 }
