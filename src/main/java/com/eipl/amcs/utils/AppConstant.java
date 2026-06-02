@@ -197,7 +197,7 @@ public class AppConstant {
         String MEMBER_REGISTER_ONE = "MemberRegister1";
         String FARMER_REGISTER = "FarmerRegister";
         String FARMER_PENDING_LIST = "FarmerPendingList";
-        String Farmer_MAPPING="FarmerMapping";
+        String Farmer_MAPPING = "FarmerMapping";
         String DAIRY_SALE_REGISTER = "DairySaleRegister";
         String SUMMARY_2 = "Summary";
         String SOCIETY_PURCHASE = "SocietyPurchase";
@@ -274,6 +274,7 @@ public class AppConstant {
         String PRODUCT_STOCK_STATEMENT = "ProductStockStatement";
         String PRODUCT_STOCK_LEDGER = "ProductStockLedger";
         String LEDGER_SUMMARY = "LedgerSummary";
+        String ROJMED = "Rojmed";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
 

@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.account.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
+import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.org.model.Society;
@@ -131,9 +132,10 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
      * -----------   --------------   ---------   ---------------------------------
      * 23/05/2026    Nimit             1.0.0       Get opening balance for ledger group which are cash for particular
      * financial year till the date -1 for which user is finding rojmed data
+     * 01/06/2026    Nimit             1.0.1       From date will pass from method call.
      */
     @Override
-    public BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate toDate) {
+    public BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate fromDate, LocalDate toDate) {
 
 
         // NIMIT | 23.05.2026 : Get Ledger of ledger group which have is_cash column true.
@@ -142,6 +144,7 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
 
 
         // NIMIT | 23.05.2026 : Get Opening Balance of Fetch Cash Type Ledger for particular financial year.
+        FinancialYearRepository financialYearRepository = EmcsAppContext.getContext().getBean(FinancialYearRepository.class);
         FinancialYear financialYear = financialYearRepository.findCurrentFinancialYear(toDate).orElse(null);
         if (financialYear == null)
             return BigDecimal.ZERO;
@@ -150,7 +153,6 @@ public class LedgerOpeningBalanceServiceImpl implements LedgerOpeningBalanceServ
 
 
         // NIMIT | 23.05.2026 : Get all voucher transaction from financial year start to the day-1 from where user is standing.
-        LocalDate fromDate = financialYear.getStartDate();
         List<VoucherTransaction> voucherTransactionList = voucherService.loadVoucherTransactionByCashTypeAndDateBetween(fromDate, toDate.minusDays(1), false);
 
 

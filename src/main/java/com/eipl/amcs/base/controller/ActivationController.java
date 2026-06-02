@@ -224,7 +224,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         try {
             societyCheckFlag = txtSociety.getText().length() >= 7;
             dockCheckFlag = txtDock.getText().length() >= 9;
-            validateCheckFlag = Integer.parseInt(txtDock.getText().substring(txtSociety.getText().length())) >  1;
+            validateCheckFlag = Integer.parseInt(txtDock.getText().substring(txtSociety.getText().length())) > 1;
         } catch (Exception e) {
             System.out.println("error : " + e);
         }

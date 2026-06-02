@@ -13,8 +13,10 @@ import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.controls.table.DataEntryRow;
 import com.eipl.amcs.controls.table.SummaryRow;
 import com.eipl.amcs.controls.table.TableRowModel;
+import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.VoucherTransaction;
+import com.eipl.amcs.master.account.repository.FinancialYearRepository;
 import com.eipl.amcs.master.account.task.LedgerDeleteTask;
 import com.eipl.amcs.master.account.task.RojmedOpeningBalanceLoadTask;
 import com.eipl.amcs.master.account.task.VoucherTransactionByDateLoadTask;
@@ -592,7 +594,14 @@ public class RojmedController implements MyInitialization, PopupCallback {
     }
 
     private void getOpeningLedgerBalance() {
-        var task = new RojmedOpeningBalanceLoadTask(dpDate.getValue());
+        FinancialYearRepository financialYearRepository = EmcsAppContext.getContext().getBean(FinancialYearRepository.class);
+
+        FinancialYear financialYear = financialYearRepository.findCurrentFinancialYear(dpDate.getValue()).orElse(null);
+        if (financialYear == null)
+            return;
+
+        LocalDate fromDate = financialYear.getStartDate();
+        var task = new RojmedOpeningBalanceLoadTask(fromDate, dpDate.getValue());
         task.setOnSucceeded(e -> {
             try {
                 openingBalance = task.get();

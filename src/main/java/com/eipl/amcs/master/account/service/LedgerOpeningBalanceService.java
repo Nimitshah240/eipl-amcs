@@ -22,5 +22,5 @@ public interface LedgerOpeningBalanceService {
 
     List<LedgerOpeningBalance> importLedgerBalance(List<LedgerOpeningBalance> dtoList, String header);
 
-    BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate toDate);
+    BigDecimal getLedgerOpeningBalanceOfTypeCash(LocalDate fromDate, LocalDate toDate);
 }

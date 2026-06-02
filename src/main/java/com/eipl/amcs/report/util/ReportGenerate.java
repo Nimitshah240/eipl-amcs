@@ -328,6 +328,8 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/MemberRegisterFarmerMapping.jasper";
             case AppConstant.ReportPath.ELECTION_REGISTER_ONE:
                 return "resources/report/milkcollection/ElectionRegister1.jasper";
+            case AppConstant.ReportPath.ROJMED:
+                return "resources/report/milkcollection/Rojmed.jasper";
 
         }
         return null;
