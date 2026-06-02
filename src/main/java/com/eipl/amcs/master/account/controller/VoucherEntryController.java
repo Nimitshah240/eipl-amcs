@@ -20,6 +20,7 @@ import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
 import com.eipl.amcs.utils.FocusUtils;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,6 +31,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
@@ -135,6 +138,7 @@ public class VoucherEntryController implements MyInitialization {
         loadVoucherType();
         loadNarration();
         dpVoucherDate.setValue(LocalDate.now());
+        Platform.runLater(() -> dpVoucherDate.requestFocus());
 
         btnClose.setOnAction(e -> {
             this.callback.reloadData(true);
@@ -152,20 +156,38 @@ public class VoucherEntryController implements MyInitialization {
         });
 
         btnSaveUpdate.setOnAction(e -> validateAndSave());
+        dpVoucherDate.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(txtBillNo);
+                e.consume();
+            }
+        });
         dpVoucherDate.setConverter(new LocalDateConvertor());
         txtAmount.setOnAction(e -> {
             addVoucherTransaction();
-            cboxNarration.getSelectionModel().clearSelection();
-            cboxLedger.getSelectionModel().clearSelection();
-            txtAmount.setText("0");
         });
 
-        txtAmount.setOnAction(e -> {
-            addVoucherTransaction();
-        });
-        btnAdd.setOnAction(e -> {
-            addVoucherTransaction();
-        });
+        if (root != null) {
+            root.setFocusTraversable(true);
+            root.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    if (tableVoucherTransaction.getItems() != null && !tableVoucherTransaction.getItems().isEmpty()) {
+                        MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
+                                resourceBundle.getString("want.to.save"));
+                        Optional<ButtonType> result = alert.createConfirmationAlert();
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
+                            validateAndSave();
+                        }
+                        if (callback != null) {
+                            callback.reloadData(true);
+                        }
+                        if (stage != null) {
+                            stage.close();
+                        }
+                    }
+                }
+            });
+        }
     }
 
     public void loadControls() {
@@ -519,7 +541,7 @@ public class VoucherEntryController implements MyInitialization {
     private void clearTransaction() {
         try {
             cboxLedger.getSelectionModel().clearSelection();
-            cboxNarration.getSelectionModel().clearSelection();
+            cboxNarration.setValue(null);
             txtAmount.setText("0");
             FocusUtils.requestFocus(cboxLedger);
         } catch (Exception e) {
@@ -531,6 +553,8 @@ public class VoucherEntryController implements MyInitialization {
         try {
             if (cboxLedger.getSelectionModel().getSelectedItem() == null)
                 errorMsg.append(resourceBundle.getString("ledgernullerror") + "\n");
+            if (txtAmount.getText().equals("0") || txtAmount.getText().isEmpty())
+                errorMsg.append(resourceBundle.getString("greaterthan.amount") + "\n");
             return errorMsg.length() == 0;
 
         } catch (Exception e) {
