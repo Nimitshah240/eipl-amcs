@@ -1780,3 +1780,4 @@ tredingreport=ट्रेडिंग रिपोर्ट
 trialbalance=ट्रायल बैलेंस
 stockvaluation.title=स्टॉक वैल्यूएशन सेव करें
 stockvaluation.title.fail=स्टॉक वैल्यूएशन विफलō
+productsale.installment.start.validation.date.past=किश्तों की तारीख पुरानी नहीं हो सकती।
