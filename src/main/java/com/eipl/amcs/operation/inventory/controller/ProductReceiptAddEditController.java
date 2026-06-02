@@ -26,6 +26,7 @@ import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
+import com.eipl.amcs.master.inventory.task.ProductPurchaseRateSaveTask;
 import com.eipl.amcs.master.operation.convertor.CustomerConvertor;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
@@ -92,6 +93,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private List<ProductReceiptTransaction> listTransactions;
     private ProductReceipt productReceipt;
+    private ProductPurchaseRate productPurchaseRate;
+    private final Map<String, ProductPurchaseRate> productPurchaseRateMap = new HashMap<>();
     private ResourceBundle resourceBundle;
     private StringBuilder errorMsg = null;
     private List<Product> productList;
@@ -147,6 +150,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                         .filter(p -> p.getName().equalsIgnoreCase("NIL")).findFirst().orElse(null));
 
             if (cboxProduct.getValue() != null)
+                fetchPurchaseRate();
+        });
+
+        dpChallanDate.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && cboxProduct.getValue() != null)
                 fetchPurchaseRate();
         });
 
@@ -346,6 +354,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
                             CommonUtils.getResourceString(resourceBundle, "product.receipt.insert.successful"));
                     alert.createAlert();
+                    saveProductPurchaseRates();
                     this.callback.reloadData(true);
                     this.stage.close();
                 } catch (InterruptedException | ExecutionException ex) {
@@ -394,6 +403,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 MyAlert alert = new InformationAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
                         CommonUtils.getResourceString(resourceBundle, "product.receipt.update.successful"));
                 alert.createAlert();
+                saveProductPurchaseRates();
                 this.callback.reloadData(true);
                 this.stage.close();
             } catch (InterruptedException | ExecutionException ex) {
@@ -401,6 +411,28 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             }
         });
         new Thread(task).start();
+    }
+
+    private void saveProductPurchaseRates() {
+        for (ReceiptTxnTaxDto txnDto : receiptTxnTaxDtoList) {
+            ProductReceiptTransaction txn = txnDto.getTransaction();
+            if (txn.getProduct() == null) {
+                continue;
+            }
+
+            String pCode = txn.getProduct().getCode();
+            ProductPurchaseRate rateObj = productPurchaseRateMap.getOrDefault(pCode, new ProductPurchaseRate());
+            short mode = (rateObj.getCode() != null) ? (short) 1 : (short) 0;
+            rateObj.setProduct(txn.getProduct());
+            rateObj.setRate(txn.getRate());
+            rateObj.setWefDate(dpChallanDate.getValue());
+            rateObj.setSociety(MainApp.identityDto.getSociety());
+            rateObj.setUnion(MainApp.identityDto.getUnion());
+            rateObj.setEntryType((short) 1); // Indicating GRN Entry
+
+            var task = new ProductPurchaseRateSaveTask(rateObj, mode);
+            new Thread(task).start();
+        }
     }
 
     public void deleteData() {
@@ -505,15 +537,24 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     .filter(p -> p.getProduct().getCode().equalsIgnoreCase(dto.getTransaction().getProduct().getCode()))
                     .findAny();
             if (trans.isPresent()) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
-                        CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.product.repeat"));
-                alert.createAlert();
-                return;
-            }
+                ProductReceiptTransaction existingTxn = trans.get();
+                existingTxn.setQuantity(dto.getTransaction().getQuantity());
+                existingTxn.setRate(dto.getTransaction().getRate());
+                existingTxn.setAmount(dto.getTransaction().getAmount());
+                existingTxn.setTaxAmount(dto.getTransaction().getTaxAmount());
+                existingTxn.setNetAmount(dto.getTransaction().getNetAmount());
 
-            receiptTxnTaxDtoList.add(dto);
-            listProductReceiptTransaction.add(dto.getTransaction());
-            tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
+                receiptTxnTaxDtoList.stream()
+                        .filter(txnDto -> txnDto.getTransaction().getProduct().getCode().equalsIgnoreCase(dto.getTransaction().getProduct().getCode()))
+                        .findFirst()
+                        .ifPresent(txnDto -> txnDto.setReceiptTaxList(dto.getReceiptTaxList()));
+
+                tableProductReceiptTransaction.refresh();
+            } else {
+                receiptTxnTaxDtoList.add(dto);
+                listProductReceiptTransaction.add(dto.getTransaction());
+                tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
+            }
             calculateSummary();
         }
     }
@@ -640,14 +681,27 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     private void fetchPurchaseRate() {
-        var task = new ProductPurchaseRateByProductTask(cboxProduct.getValue().getCode(), dpChallanDate.getValue());
+        Product selectedProduct = cboxProduct.getValue();
+        LocalDate selectedDate = dpChallanDate.getValue();
+        if (selectedProduct == null || selectedDate == null) return;
+
+        String pCode = selectedProduct.getCode();
+        var task = new ProductPurchaseRateByProductTask(pCode, selectedDate);
         task.setOnSucceeded(e -> {
             try {
-                ProductPurchaseRate rate = task.get();
-                if (rate == null) {
+                productPurchaseRate = task.get();
+                if (productPurchaseRate == null) {
                     txtRate.setText("0");
+                    productPurchaseRateMap.remove(pCode);
                 } else {
-                    txtRate.setText(rate.getRate().toString());
+                    txtRate.setText(productPurchaseRate.getRate().toString());
+                    // Only update existing record if the date is an exact match
+                    if (productPurchaseRate.getWefDate() != null && productPurchaseRate.getWefDate().isEqual(selectedDate)) {
+                        productPurchaseRateMap.put(pCode, productPurchaseRate);
+                    } else {
+                        // Different date found: for "this" date, we want a new row (Insert)
+                        productPurchaseRateMap.remove(pCode);
+                    }
                 }
                 calculateAmount();
                 calculateTaxAmount();
