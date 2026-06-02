@@ -30,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -142,6 +143,20 @@ public class HavaloController implements MyInitialization, PopupCallback {
         });
         dpVoucherDate.setConverter(new LocalDateConvertor());
         FocusUtils.requestFocus(dpVoucherDate);
+
+        dpVoucherDate.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(txtBillRefNo);
+                e.consume();
+            }
+        });
+
+        txtBillRefNo.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(btnCredit);
+                e.consume();
+            }
+        });
     }
 
     public void loadControls() {
