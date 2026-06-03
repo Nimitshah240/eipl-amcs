@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -15,7 +16,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
@@ -33,7 +37,7 @@ public class StaffController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<StaffMember, String> colDesignation, colMembername, colTenureFromDate, colTenureToDate;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnSalary;
+    E_Button btnClose, btnAdd, btnDelete, btnEdit, btnSalary;
     private ResourceBundle resourceBundle;
 
 

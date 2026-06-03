@@ -2,9 +2,10 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.*;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
@@ -17,7 +18,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -46,15 +49,15 @@ public class LedgerOpeningBalanceController implements MyInitialization {
     @FXML
     VBox vbox;
     @FXML
-    Button btnClose, btnSave, btnDelete, btnImport;
+    E_Button btnClose, btnSave, btnDelete, btnImport;
     @FXML
-    private TextField txtBalance;
+    private E_TextField txtBalance;
     @FXML
-    private ComboBox<String> cboxType;
+    private AutoSearchTextField<String> cboxType;
     @FXML
-    private ComboBox<Ledger> cboxLedger;
+    private AutoSearchTextField<Ledger> cboxLedger;
     @FXML
-    private ComboBox<FinancialYear> cboxFinancialYear;
+    private AutoSearchTextField<FinancialYear> cboxFinancialYear;
     private List<Ledger> ledgerList;
     private List<FinancialYear> financialYearList;
     private ResourceBundle resourceBundle;
@@ -221,8 +224,8 @@ public class LedgerOpeningBalanceController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
-        new AutoCompleteComboBoxListener<>(cboxLedger);
+//        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
+//        new AutoCompleteComboBoxListener<>(cboxLedger);
 
     }
 
@@ -293,8 +296,8 @@ public class LedgerOpeningBalanceController implements MyInitialization {
                 List<Ledger> list = task.get();
                 if (list != null) {
                     cboxLedger.getItems().addAll(FXCollections.observableList(list));
-                    cboxLedger.getSelectionModel().select(0);
-                    new AutoCompleteComboBoxListener<>(cboxLedger);
+//                    cboxLedger.getSelectionModel().select(0);
+//                    new AutoCompleteComboBoxListener<>(cboxLedger);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -338,9 +341,9 @@ public class LedgerOpeningBalanceController implements MyInitialization {
 //        cboxFinancialYear.getSelectionModel().select(0);
         FocusUtils.requestFocus(cboxLedger);
         cboxLedger.getSelectionModel().clearSelection();
-        cboxLedger.getEditor().clear();
+//        cboxLedger.getEditor().clear();
         cboxLedger.setValue(null);
         cboxLedger.getSelectionModel().select(0);
-//        cboxType.getSelectionModel().select(0);
+        cboxType.getSelectionModel().select(0);
     }
 }

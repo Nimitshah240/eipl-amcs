@@ -7,6 +7,7 @@ import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.model.Society;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -111,5 +112,10 @@ public class StaffMember extends BaseModelTxn {
     @Override
     public String getTableName() {
         return "staff_member";
+    }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }

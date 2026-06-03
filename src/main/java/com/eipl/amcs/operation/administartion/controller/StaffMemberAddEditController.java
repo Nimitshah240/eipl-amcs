@@ -3,30 +3,26 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.account.model.Designation;
 import com.eipl.amcs.master.account.model.StaffMember;
-import com.eipl.amcs.master.global.convertor.GenderConvertor;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.task.GenderLoadTask;
-import com.eipl.amcs.master.org.convertor.BankConvertor;
-import com.eipl.amcs.master.org.convertor.BranchConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
-import com.eipl.amcs.operation.administartion.converter.DesignationConvertor;
 import com.eipl.amcs.operation.administartion.task.DesignationLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffCodeLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffMemberSaveTask;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -34,6 +30,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -53,16 +51,16 @@ public class StaffMemberAddEditController implements MyInitialization {
     @FXML
     private CheckBox chkCommittee, chkDisabled, chkTrained;
     @FXML
-    private E_ComboBox<Designation> cboxDesignation;
+    private AutoSearchTextField<Designation> cboxDesignation;
     @FXML
-    private E_ComboBox<Branch> cboxBranch;
+    private AutoSearchTextField<Branch> cboxBranch;
     @FXML
-    private E_ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
     private RadioButton rbtnCash, rbtnBank;
 
     @FXML
-    private E_ComboBox<Gender> cboxGender;
+    private AutoSearchTextField<Gender> cboxGender;
 
 
     @FXML
@@ -125,6 +123,7 @@ public class StaffMemberAddEditController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         setupComboBox();
+        FocusUtils.requestFocus(txtName);
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         loadDesignation();
@@ -302,11 +301,6 @@ public class StaffMemberAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-
-        cboxGender.setConverter(new GenderConvertor(cboxGender));
-        cboxBank.setConverter(new BankConvertor(cboxBank));
-        cboxBranch.setConverter(new BranchConvertor(cboxBranch));
-        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
         dpJoiningDate.setConverter(new LocalDateConvertor());
         dpJoiningDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -330,7 +324,7 @@ public class StaffMemberAddEditController implements MyInitialization {
                 List<Gender> list = task2.get();
                 if (list != null) {
                     cboxGender.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxGender);
+//                    new AutoCompleteComboBoxListener<>(cboxGender);
                     if (dto != null)
                         cboxGender.setValue(dto.getGender());
                 }
@@ -348,7 +342,7 @@ public class StaffMemberAddEditController implements MyInitialization {
                 List<Bank> list = task.get();
                 if (list != null) {
                     cboxBank.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxBank);
+//                    new AutoCompleteComboBoxListener<>(cboxBank);
                     if (dto != null)
                         cboxBank.setValue(dto.getBank());
                 }
@@ -366,7 +360,7 @@ public class StaffMemberAddEditController implements MyInitialization {
                 List<Branch> list = task.get();
                 if (list != null) {
                     cboxBranch.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxBranch);
+//                    new AutoCompleteComboBoxListener<>(cboxBranch);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_Button?>
-<?import com.eipl.amcs.controls.E_ComboBox?>
-<?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.account.controller.LedgerOpeningBalanceController">
@@ -53,11 +41,12 @@
                         <Label text="%financialyear"/>
                         <Label text="%type" GridPane.columnIndex="2"/>
                         <Label text="%balance" GridPane.columnIndex="3"/>
-                        <E_ComboBox fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
-                        <E_ComboBox fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308"
-                                    GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <E_ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
-                                    GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308"
+                                             GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308"
+                                             GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
+                                             GridPane.rowIndex="1"/>
                         <E_TextField fx:id="txtBalance" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
                     </children>
                 </GridPane>
@@ -104,8 +93,8 @@
                             </graphic>
                         </E_Button>
                         <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnImport" contentDisplay="TOP" minWidth="75.0" mnemonicParsing="true"
-                                text="%import">
+                        <E_Button fx:id="btnImport" contentDisplay="TOP" minWidth="75.0" mnemonicParsing="true"
+                                  text="%import">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -113,7 +102,7 @@
                                     </image>
                                 </ImageView>
                             </graphic>
-                        </Button>
+                        </E_Button>
                     </children>
                 </HBox>
             </children>

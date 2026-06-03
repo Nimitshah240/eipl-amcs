@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -21,7 +22,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -39,7 +39,7 @@ public class LedgerAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnClose, btnSaveUpdate;
+    private E_Button btnClose, btnSaveUpdate;
     @FXML
     private ComboBox<LedgerGroup> cboxLedgerGroup;
     @FXML
@@ -135,7 +135,7 @@ public class LedgerAddEditController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         setupComboBox();
         loadLedgerType();
-//        setupSubLedgerTable();
+//      setupSubLedgerTable();
         loadSubLedger();
         FocusUtils.requestFocus(cboxLedgerType);
         ledgerSubLedgerMappingList = new ArrayList<>();
