@@ -3,6 +3,7 @@ package com.eipl.amcs.master.org.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -21,7 +22,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -82,7 +82,7 @@ public class SocietyController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<Society, LocalDate> colRegistrationDate;
     @FXML
-    Button btnClose, btnEdit;
+    E_Button btnClose, btnEdit;
     @FXML
     private StackPane root;
     private Society dto;

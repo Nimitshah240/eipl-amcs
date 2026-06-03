@@ -4,19 +4,14 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_NumericField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.master.org.convertor.BankConvertor;
-import com.eipl.amcs.master.org.convertor.BranchConvertor;
-import com.eipl.amcs.master.org.convertor.RouteConvertor;
 import com.eipl.amcs.master.org.model.*;
 import com.eipl.amcs.master.org.task.*;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,6 +19,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -40,11 +37,11 @@ public class SocietyAddEditController implements MyInitialization {
     @FXML
     private TabPane tabPane;
     @FXML
-    private E_ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
-    private E_ComboBox<Branch> cboxBranch;
+    private AutoSearchTextField<Branch> cboxBranch;
     @FXML
-    private E_ComboBox<Route> cboxRoute;
+    private AutoSearchTextField<Route> cboxRoute;
     @FXML
     private TableView<DcsChillerInfo> tableBmcChillerInfo;
     @FXML
@@ -52,18 +49,20 @@ public class SocietyAddEditController implements MyInitialization {
     @FXML
     private Tab tabSocietyDetail, tabContactDetail, tabOtherDetail;
     @FXML
-    private TextField txtSocietyCode, txtSocietyName, txtShortName,
-            txtSocietyNameLocal, txtShortNameLocal, txtFssaiCode, txtIfscCode,
+    private E_TextField txtSocietyCode, txtSocietyName, txtShortName, txtFssaiCode, txtIfscCode,
             txtSapNo, txtBankAccNo, txtAdharCard, txtRegistrationCode,
             txtAddress, txtPhoneNo, txtEmail, txtChairmanName, txtGstNo, txtPan,
             txtSecretaryName, txtBmcFacilator, txtOwnerName, txtAgreementPeriod;
 
     @FXML
+    private E_TextFieldLocal txtSocietyNameLocal, txtShortNameLocal;
+
+    @FXML
     private E_NumericField txtChairmanMobileNo, txtSecretaryMobileNo, txtBcuCapacity;
     @FXML
-    private DatePicker dpStartYear, dpFssaiExpiryDate, dpRegistrationDate, dpAgreementFromDate, dpAgreementToDate;
+    private E_DatePicker dpStartYear, dpFssaiExpiryDate, dpRegistrationDate, dpAgreementFromDate, dpAgreementToDate;
     @FXML
-    private Button btnSave, btnClose;
+    private E_Button btnSave, btnClose;
     @FXML
     private E_Button btnAdd, btnDelete;
 
@@ -122,6 +121,7 @@ public class SocietyAddEditController implements MyInitialization {
         setupTable();
         loadBmcChillerInfo();
 
+        FocusUtils.requestFocus(txtSocietyNameLocal);
         btnClose.setOnAction(e -> this.stage.close());
         btnSave.setOnAction(e -> validateAndSave());
         btnAdd.setOnAction(e -> addBmcChillerInfo());
@@ -143,13 +143,32 @@ public class SocietyAddEditController implements MyInitialization {
                     break;
             }
         });
+        dpStartYear.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(txtRegistrationCode);
+                e.consume();
+            }
+        });
+
+        dpRegistrationDate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(txtSapNo);
+                e.consume();
+            }
+        });
+        dpFssaiExpiryDate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(cboxBank);
+                e.consume();
+            }
+        });
     }
 
     @Override
     public void setupComboBox() {
-        cboxRoute.setConverter(new RouteConvertor(cboxRoute));
-        cboxBank.setConverter(new BankConvertor(cboxBank));
-        cboxBranch.setConverter(new BranchConvertor(cboxBranch));
+//        cboxRoute.setConverter(new RouteConvertor(cboxRoute));
+//        cboxBank.setConverter(new BankConvertor(cboxBank));
+//        cboxBranch.setConverter(new BranchConvertor(cboxBranch));
     }
 
     @Override
@@ -219,7 +238,7 @@ public class SocietyAddEditController implements MyInitialization {
                     if (society != null && society.getBank() != null)
                         cboxBank.getSelectionModel().select(society.getBank());
 
-                    new AutoCompleteComboBoxListener<>(cboxBank);
+//                    new AutoCompleteComboBoxListener<>(cboxBank);
 
                 }
 
@@ -239,7 +258,7 @@ public class SocietyAddEditController implements MyInitialization {
                     cboxRoute.setItems(FXCollections.observableList(list));
                 if (society != null && society.getRoute() != null)
                     cboxRoute.getSelectionModel().select(society.getRoute());
-                new AutoCompleteComboBoxListener<>(cboxRoute);
+//                new AutoCompleteComboBoxListener<>(cboxRoute);
 
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -257,7 +276,7 @@ public class SocietyAddEditController implements MyInitialization {
                     cboxBranch.setItems(FXCollections.observableList(list));
                 if (society != null && society.getBranch() != null)
                     cboxBranch.getSelectionModel().select(society.getBranch());
-                new AutoCompleteComboBoxListener<>(cboxBranch);
+//                new AutoCompleteComboBoxListener<>(cboxBranch);
 
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

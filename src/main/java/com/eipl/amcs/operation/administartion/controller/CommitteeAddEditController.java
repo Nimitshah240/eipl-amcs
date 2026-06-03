@@ -13,9 +13,9 @@ import com.eipl.amcs.master.account.model.CommitteeMembers;
 import com.eipl.amcs.master.account.model.Designation;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
-import com.eipl.amcs.operation.administartion.converter.DesignationConvertor;
 import com.eipl.amcs.operation.administartion.task.*;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,6 +25,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -52,7 +54,7 @@ public class CommitteeAddEditController implements MyInitialization {
     @FXML
     private E_Button btnClose, btnSave, btnAdd, btnDelete, btnExport;
     @FXML
-    private E_ComboBox<Designation> cboxDesignation;
+    private AutoSearchTextField<Designation> cboxDesignation;
     @FXML
     private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtMemberName, txtCode, txtMemberCode;
     @FXML
@@ -112,8 +114,20 @@ public class CommitteeAddEditController implements MyInitialization {
         loadDesignation();
         setupComboBox();
         setupTable();
-//        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
-//        cboxDesignation.getSelectionModel().select(0);
+        dpFormation.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(txtMemberCode);
+                e.consume();
+            }
+        });
+        dpRegistrationdate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(btnAdd);
+                e.consume();
+            }
+        });
+//      cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
+//      cboxDesignation.getSelectionModel().select(0);
         dpElectionDate.setValue(LocalDate.now());
         dpFormation.setValue(LocalDate.now());
         dpJoiningDate.setValue(LocalDate.now());
@@ -355,8 +369,8 @@ public class CommitteeAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
-        cboxDesignation.getSelectionModel().select(0);
+//        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
+//        cboxDesignation.getSelectionModel().select(0);
     }
 
     private void loadDesignation() {

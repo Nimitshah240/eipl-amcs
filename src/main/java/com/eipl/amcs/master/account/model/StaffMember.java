@@ -112,4 +112,9 @@ public class StaffMember extends BaseModelTxn {
     public String getTableName() {
         return "staff_member";
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

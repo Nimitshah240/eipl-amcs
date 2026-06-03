@@ -3,8 +3,8 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.master.account.model.StaffMember;
-import com.eipl.amcs.operation.administartion.converter.StaffMemberConvertor;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
 import com.eipl.amcs.report.util.ReportGenerate;
@@ -32,7 +32,7 @@ public class StaffSalaryReportController implements MyInitialization {
     private Stage stage;
     private PopupCallback callback;
     @FXML
-    private ComboBox<StaffMember> cboxStaff;
+    private AutoSearchTextField<StaffMember> cboxStaff;
     @FXML
     private ComboBox<String> cboxMonth, cboxYear;
 
@@ -64,15 +64,15 @@ public class StaffSalaryReportController implements MyInitialization {
         loadStaff();
         loadMonth();
         setupComboBox();
-        cboxStaff.getSelectionModel().select(0);
+//        cboxStaff.getSelectionModel().select(0);
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnClose.setOnAction(e -> stage.close());
     }
 
     @Override
     public void setupComboBox() {
-        cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
-        cboxStaff.getSelectionModel().select(0);
+//        cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
+//        cboxStaff.getSelectionModel().select(0);
     }
 
     private void validateAndGenerateReport() {

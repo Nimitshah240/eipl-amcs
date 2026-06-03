@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -43,11 +44,11 @@ public class CommitteeController implements MyInitialization, PopupCallback {
     @FXML
     TableView<Committee> tableCommittee;
     @FXML
-    TableColumn<Committee, String> colName, colNameLocal, colElectionDate, colFormationDate, colCommitteeMembmers ;
+    TableColumn<Committee, String> colName, colNameLocal, colElectionDate, colFormationDate, colCommitteeMembmers;
     @FXML
     DatePicker dpDate;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnRegister, btnExport;
+    E_Button btnClose, btnAdd, btnDelete, btnEdit, btnRegister, btnExport;
     private ResourceBundle resourceBundle;
     private List<Committee> committeeList;
 
