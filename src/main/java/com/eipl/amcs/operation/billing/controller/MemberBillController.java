@@ -3,15 +3,15 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.*;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleEditController;
-import com.eipl.amcs.master.procurement.converter.SocietyPaymentCycleConvertor;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
 import com.eipl.amcs.operation.billing.dto.FinalizeDto;
@@ -29,7 +29,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -54,13 +56,13 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
     @FXML
     private StackPane root;
     @FXML
-    private ComboBox<SocietyPaymentCycle> cboxPaymentCycle;
+    private AutoSearchTextField<SocietyPaymentCycle> cboxPaymentCycle;
     @FXML
-    private E_ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
-    private Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport, btnReport;
+    private E_Button btnGenerate, btnDisburse, btnEdit, btnClose, btnFinalize, btnExport, btnReport;
     @FXML
-    private DatePicker dpDisburseDate, dpDeductionFromDate, dpDeductionToDate;
+    private E_DatePicker dpDisburseDate, dpDeductionFromDate, dpDeductionToDate;
     @FXML
     private TableView<MemberBill> tableBill;
     @FXML
@@ -419,13 +421,28 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
                     }
 
                     cboxPaymentCycle.setItems(FXCollections.observableList(paymentCycleList));
-                    new AutoCompleteComboBoxListener<>(cboxPaymentCycle);
+
+                    SocietyPaymentCycle oldCycle = null;
                     if (this.billSummary != null) {
                         SocietyPaymentCycle cycle = cboxPaymentCycle.getItems().stream()
                                 .filter(p -> p.getCode().equals(this.billSummary.getPaymentCycle().getCode()))
                                 .findFirst().orElse(null);
                         cboxPaymentCycle.getSelectionModel().select(cycle);
                         loadData(cboxPaymentCycle.getValue(), MainApp.identityDto.getSociety(), dpDeductionFromDate.getValue(), dpDeductionToDate.getValue(), (short) 0);
+                    } else {
+                        for (SocietyPaymentCycle spc : paymentCycleList) {
+                            LocalDate toDate = LocalDate.from(spc.getToDate());
+                            LocalDate fromDate = LocalDate.from(spc.getFromDate());
+                            LocalDate currentDate = LocalDate.now();
+                            if (!currentDate.isBefore(fromDate) && !currentDate.isAfter(toDate)) {
+                                if (oldCycle != null)
+                                    cboxPaymentCycle.setValue(oldCycle);
+                                else
+                                    cboxPaymentCycle.setValue(spc);
+                                break;
+                            }
+                            oldCycle = spc;
+                        }
                     }
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -465,7 +482,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
 
     @Override
     public void setupComboBox() {
-        cboxPaymentCycle.setConverter(new SocietyPaymentCycleConvertor(cboxPaymentCycle));
         dpDisburseDate.setConverter(new LocalDateConvertor());
         dpDisburseDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -496,7 +512,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         }
     }
 
-    public void loadData(SocietyPaymentCycle paymentCycle, Society society, LocalDate deductionFromDate, LocalDate deductionToDate, short generate) {
+    public void loadData(SocietyPaymentCycle paymentCycle, Society society, LocalDate deductionFromDate, LocalDate
+            deductionToDate, short generate) {
         tableBill.setItems(null);
         var task = new MemberBillLoadTask(paymentCycle, society, deductionFromDate, deductionToDate, generate);
         task.setOnSucceeded(e -> {

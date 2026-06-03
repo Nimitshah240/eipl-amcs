@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_ComboBox?>
-<?import com.eipl.amcs.controls.E_TextField?>
-<?import com.eipl.amcs.controls.E_TextFieldLocal?>
+<?import com.eipl.amcs.controls.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -18,96 +16,120 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.inventory.controller.ProductAddEditController">
+<StackPane fx:id="root" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.master.inventory.controller.ProductAddEditController">
     <children>
-        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="700.0" spacing="20.0" styleClass="pane-white">
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="700.0" spacing="20.0"
+              styleClass="pane-white">
             <children>
                 <GridPane fx:id="grid" hgap="15.0" VBox.vgrow="ALWAYS">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="179.0" prefWidth="179.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="179.0" prefWidth="179.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="179.0" prefWidth="179.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="179.0" prefWidth="179.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="179.0" prefWidth="179.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="179.0" prefWidth="179.0"/>
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="34.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="34.0" prefHeight="30.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="34.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="34.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="30.0" prefHeight="20.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="34.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="34.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="30.0" prefHeight="20.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="70.0" prefHeight="70.0" vgrow="ALWAYS" />
-                        <RowConstraints />
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="34.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="34.0" prefHeight="30.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="34.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="34.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="30.0" prefHeight="20.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="34.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="34.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="30.0" prefHeight="20.0" vgrow="ALWAYS"/>
+                        <RowConstraints minHeight="70.0" prefHeight="70.0" vgrow="ALWAYS"/>
+                        <RowConstraints/>
                     </rowConstraints>
                     <children>
-                        <Label maxWidth="1.7976931348623157E308" text="%item.code" />
-                        <Label text="%productgroup" GridPane.columnIndex="1" />
-                        <Label text="%item.name" GridPane.rowIndex="2" />
-                        <Label text="%item.name.local" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="%tax" GridPane.rowIndex="4" />
-                        <E_ComboBox fx:id="cboxProductGroup" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <E_TextField fx:id="txtReferenceCode" maxWidth="1.7976931348623157E308" promptText="Code" GridPane.rowIndex="1" />
-                        <E_TextField fx:id="txtCode" disable="true" editable="false" maxWidth="1.7976931348623157E308" opacity="0.0" promptText="Code" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" promptText="Name" GridPane.rowIndex="3" />
-<!--                        <E_TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" promptText="Local Name" GridPane.columnIndex="1" GridPane.rowIndex="3" />-->
-                        <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" promptText="Local Name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <E_ComboBox fx:id="cboxTaxName" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
-                        <E_ComboBox fx:id="cboxOtherTax" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <E_ComboBox fx:id="cboxPurchaseLedger" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" />
-                        <E_ComboBox fx:id="cboxSaleLedger" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <E_ComboBox fx:id="cboxStockLedger" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <Label maxWidth="1.7976931348623157E308" text="%item.code"/>
+                        <Label text="%productgroup" GridPane.columnIndex="1"/>
+                        <Label text="%item.name" GridPane.rowIndex="2"/>
+                        <Label text="%item.name.local" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="%tax" GridPane.rowIndex="4"/>
+                        <E_TextField fx:id="txtReferenceCode" maxWidth="1.7976931348623157E308" promptText="Code"
+                                     GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxProductGroup" maxWidth="1.7976931348623157E308"
+                                             GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <E_TextField fx:id="txtCode" disable="true" editable="false" maxWidth="1.7976931348623157E308"
+                                     opacity="0.0" promptText="Code" visible="false" GridPane.columnIndex="2"
+                                     GridPane.rowIndex="1"/>
+                        <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" promptText="Name"
+                                     GridPane.rowIndex="3"/>
+                        <!--                        <E_TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" promptText="Local Name" GridPane.columnIndex="1" GridPane.rowIndex="3" />-->
+                        <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" promptText="Local Name"
+                                          GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <AutoSearchTextField fx:id="cboxTaxName" maxWidth="1.7976931348623157E308"
+                                             GridPane.rowIndex="5"/>
+                        <AutoSearchTextField fx:id="cboxOtherTax" maxWidth="1.7976931348623157E308"
+                                             GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <AutoSearchTextField fx:id="cboxPurchaseLedger" maxWidth="1.7976931348623157E308"
+                                             GridPane.rowIndex="7"/>
+                        <AutoSearchTextField fx:id="cboxSaleLedger" maxWidth="1.7976931348623157E308"
+                                             GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                        <AutoSearchTextField fx:id="cboxStockLedger" maxWidth="1.7976931348623157E308"
+                                             GridPane.columnIndex="2" GridPane.rowIndex="7"/>
 
-                        <CheckBox fx:id="chkIsMilk" alignment="CENTER" mnemonicParsing="false" text="%ismilk" GridPane.rowIndex="9">
+                        <E_CheckBox fx:id="chkIsMilk" alignment="CENTER" mnemonicParsing="false" text="%ismilk"
+                                    GridPane.rowIndex="9">
                             <font>
-                                <Font size="16.0" />
+                                <Font size="16.0"/>
                             </font>
-                        </CheckBox>
-                        <Label text="%otherstatetaxcode" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <E_ComboBox fx:id="cboxMilkType" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="11" />
-                        <Label text="%milktype" GridPane.rowIndex="10" />
-                        <E_ComboBox fx:id="cboxLocalSaleLedger" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                        <Label text="%purchase.account" GridPane.rowIndex="6" />
-                        <Label text="%sales.account" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <Label text="%stock.account" GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                        <Label text="%localsaleledger" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                        </E_CheckBox>
+                        <Label text="%otherstatetaxcode" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <AutoSearchTextField fx:id="cboxMilkType" disable="true" maxWidth="1.7976931348623157E308"
+                                             GridPane.rowIndex="11"/>
+                        <Label text="%milktype" GridPane.rowIndex="10"/>
+                        <AutoSearchTextField fx:id="cboxLocalSaleLedger" disable="true"
+                                             maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
+                                             GridPane.rowIndex="11"/>
+                        <Label text="%purchase.account" GridPane.rowIndex="6"/>
+                        <Label text="%sales.account" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Label text="%stock.account" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                        <Label text="%localsaleledger" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
 
-                        <Label text="%couponledger" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                        <E_ComboBox fx:id="cboxCouponLedger" disable="true" layoutX="10.0" layoutY="143.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="11" />
-                        <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="8" />
-                        <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="12" />
-                        <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="70.0" spacing="15.0" GridPane.rowIndex="13">
+                        <Label text="%couponledger" GridPane.columnIndex="2" GridPane.rowIndex="10"/>
+                        <AutoSearchTextField fx:id="cboxCouponLedger" disable="true" layoutX="10.0" layoutY="143.0"
+                                             maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
+                                             GridPane.rowIndex="11"/>
+                        <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="8"/>
+                        <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="12"/>
+                        <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="50.0"
+                              prefWidth="70.0" spacing="15.0" GridPane.rowIndex="13">
                             <children>
-                                <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
+                                <E_Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0"
+                                          prefHeight="50.0" prefWidth="70.0" text="%save">
                                     <graphic>
-                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
                                             <image>
-                                                <Image url="@../../images/save.png" />
+                                                <Image url="@../../images/save.png"/>
                                             </image>
                                         </ImageView>
                                     </graphic>
-                                </Button>
-                                <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                                </E_Button>
+                                <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                          prefWidth="70.0" text="%close">
                                     <graphic>
-                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
                                             <image>
-                                                <Image url="@../../images/close.png" />
+                                                <Image url="@../../images/close.png"/>
                                             </image>
                                         </ImageView>
                                     </graphic>
-                                </Button>
+                                </E_Button>
                             </children>
                         </HBox>
                     </children>
                 </GridPane>
             </children>
             <padding>
-                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
             </padding>
         </VBox>
     </children>

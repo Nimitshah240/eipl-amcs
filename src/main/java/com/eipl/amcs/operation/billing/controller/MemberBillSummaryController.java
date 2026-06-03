@@ -3,6 +3,8 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.procurement.task.MemberBillLoadByDateTask;
@@ -38,7 +40,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     @FXML
     private TableView<MemberBillSummary> tableBillSummary;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
     private TableColumn<MemberBillSummary, String> colPaymentCycle;
     @FXML
@@ -49,7 +51,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     @FXML
     private TableColumn<MemberBillSummary, String> colStatus;
     @FXML
-    private Button btnAdd, btnEdit, btnClose, btnPaymentRegister, btnGeneral, btnSearch;
+    private E_Button btnAdd, btnEdit, btnClose, btnPaymentRegister, btnGeneral, btnSearch;
     @FXML
     private RadioButton rbtnCash, rbtnBank;
     @FXML
@@ -92,14 +94,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
             MainApp.getContentPane().setCenter(controller.getRoot());
         });
         btnEdit.setOnAction(e -> {
-            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_SUMMARY_EDIT"))
-                throw new UnAuthorizedAccessException();
-            if (propSummary.get() != null) {
-                MemberBillController controller = (MemberBillController) MainApp.getFxmlLoaderUtil()
-                        .loadAndSet(MainApp.class.getResource("view/operation/billing/MemberBill.fxml"));
-                controller.setBillSummary(propSummary.get());
-                MainApp.getContentPane().setCenter((controller).getRoot());
-            }
+            editMemberBill(propSummary.get());
         });
         propSummary.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -117,6 +112,29 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
         btnGeneral.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "GeneralReportPopup", propSummary.get(), this);
         });
+
+
+        tableBillSummary.setRowFactory(tv -> {
+            TableRow<MemberBillSummary> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    MemberBillSummary data = row.getItem();
+                    editMemberBill(data);
+                }
+            });
+            return row;
+        });
+
+        tableBillSummary.setOnKeyPressed(event -> {
+            MemberBillSummary dto = tableBillSummary.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case ENTER:
+                    editMemberBill(dto);
+                    break;
+            }
+        });
     }
 
     private void validateAndGenerateReport() {
@@ -131,6 +149,21 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
             JasperViewer.viewReport(print, false);
         } else if (rbtnBank.isSelected()) {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "BankReportPopup", propSummary.get(), this);
+        }
+    }
+
+    private void editMemberBill(MemberBillSummary dto) {
+        try {
+            if (dto == null)
+                return;
+            if (!MainApp.user.getPermissions().contains("ACTION_MEMBER_BILL_SUMMARY_EDIT"))
+                throw new UnAuthorizedAccessException();
+            MemberBillController controller = (MemberBillController) MainApp.getFxmlLoaderUtil()
+                    .loadAndSet(MainApp.class.getResource("view/operation/billing/MemberBill.fxml"));
+            controller.setBillSummary(dto);
+            MainApp.getContentPane().setCenter((controller).getRoot());
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -169,6 +202,12 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
                     if (list == null)
                         return;
                     tableBillSummary.setItems(FXCollections.observableList(list));
+                    tableBillSummary.requestFocus();
+
+                    if (!tableBillSummary.getItems().isEmpty()) {
+                        tableBillSummary.getSelectionModel().select(0);
+                        tableBillSummary.getFocusModel().focus(0);
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
@@ -181,6 +220,12 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
                     List<MemberBillSummary> list = task.get();
                     if (list != null)
                         tableBillSummary.setItems(FXCollections.observableList(list));
+                    tableBillSummary.requestFocus();
+
+                    if (!tableBillSummary.getItems().isEmpty()) {
+                        tableBillSummary.getSelectionModel().select(0);
+                        tableBillSummary.getFocusModel().focus(0);
+                    }
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }

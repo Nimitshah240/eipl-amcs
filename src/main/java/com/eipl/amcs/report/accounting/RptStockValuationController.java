@@ -3,10 +3,11 @@ package com.eipl.amcs.report.accounting;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.Ledger;
@@ -14,9 +15,6 @@ import com.eipl.amcs.master.account.model.VoucherTransaction;
 import com.eipl.amcs.master.account.repository.FinancialYearRepository;
 import com.eipl.amcs.master.account.task.RojmedOpeningBalanceLoadTask;
 import com.eipl.amcs.master.account.task.VoucherTransactionByDateLoadTask;
-import com.eipl.amcs.master.inventory.convertor.ProductCellFactory;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
-import com.eipl.amcs.master.inventory.convertor.ProductLocalCellFactory;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
@@ -36,9 +34,6 @@ import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
@@ -59,23 +54,23 @@ import static com.eipl.amcs.utils.AppConstant.Formatter3;
 
 public class RptStockValuationController implements MyInitialization {
     @FXML
-    private Button btnClose;
+    private E_Button btnClose;
 
     @FXML
-    private Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
+    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
     @FXML
     private Label lblAsOnDate;
 
     @FXML
-    private DatePicker dpAsOnDate, dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private E_DatePicker dpAsOnDate, dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private E_DatePicker dpStockValuation;
     @FXML
     private SwingNode reportNode;
     @FXML
-    private ComboBox<Product> cboxProduct;
+    private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private ComboBox<String> cboxFormat, cboxLanguage, cboxLanguage1;
+    private AutoSearchTextField<String> cboxFormat, cboxLanguage, cboxLanguage1;
     private List<Product> listProductList;
     private List<LedgerBalance> listBSLiability, listBSAsset;
 
@@ -115,7 +110,7 @@ public class RptStockValuationController implements MyInitialization {
         btnGenerate1.setOnAction(e -> {
             loadProductStockValuation();
         });
-        FocusUtils.requestFocus(btnGenerate);
+        FocusUtils.requestFocus(dpFromDate1);
         btnGenerate.setOnAction(e -> {
             validateAndGenerate();
         });
@@ -182,17 +177,6 @@ public class RptStockValuationController implements MyInitialization {
                 loadData1();
                 break;
         }
-    }
-
-    @Override
-    public void setupComboBox() {
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
-        if (MainApp.locale.equalsIgnoreCase("gu")) {
-            cboxProduct.setCellFactory(new ProductLocalCellFactory());
-        } else {
-            cboxProduct.setCellFactory(new ProductCellFactory());
-        }
-        new AutoCompleteComboBoxListener<>(cboxProduct);
     }
 
     private String getLocaleString() {
