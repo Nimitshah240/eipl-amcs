@@ -3,19 +3,14 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_NumericField;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
@@ -27,7 +22,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -52,18 +46,17 @@ public class VoucherEntryController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnClose, btnSaveUpdate, btnAdd, btnDelete;
+    private E_Button btnClose, btnSaveUpdate, btnAdd, btnDelete;
     @FXML
     private E_DatePicker dpVoucherDate;
     @FXML
-    private E_ComboBox<Ledger> cboxLedger;
-
+    private AutoSearchTextField<Ledger> cboxLedger;
     @FXML
     private E_TextField txtVoucherNo, txtBillNo;
     @FXML
     private E_NumericField txtAmount;
     @FXML
-    private E_ComboBox<Narration> cboxNarration;
+    private AutoSearchTextField<Narration> cboxNarration;
     @FXML
     private TableColumn<VoucherTransaction, String> colAmount, colLedger, colNarration;
     @FXML
@@ -133,7 +126,6 @@ public class VoucherEntryController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        setupComboBox();
         setupTable();
         loadVoucherType();
         loadNarration();
@@ -268,7 +260,7 @@ public class VoucherEntryController implements MyInitialization {
             anotherSideAmt = anotherSideAmt.add(voucherTransaction.getAmount());
         }
         anotherSideTxn.setAmount(anotherSideAmt);
-        anotherSideTxn.setNarration(cboxNarration.getFinalText());
+//        anotherSideTxn.setNarration(cboxNarration.getFinalText()); //TODO - Make this in AutoSearchTextField
         anotherSideTxn.setCreditDebit(!credit_debit);
         anotherSideTxn.setAutoPostedScreen(true);
         voucherTransactionList.add(anotherSideTxn);
@@ -358,11 +350,6 @@ public class VoucherEntryController implements MyInitialization {
         new Thread(task).start();
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
-    }
-
     private void loadVoucherTransaction(String voucherCode) {
         var task = new VoucherTransactionLoadTask(voucherCode);
         task.setOnSucceeded(e -> {
@@ -396,7 +383,6 @@ public class VoucherEntryController implements MyInitialization {
                             .orElse(new Ledger());
 
                     anotherSideTxn.setLedger(cashLedger);
-                    new AutoCompleteComboBoxListener<>(cboxLedger);
                 }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -431,7 +417,7 @@ public class VoucherEntryController implements MyInitialization {
         }
         VoucherTransaction voucherTransaction = new VoucherTransaction();
         voucherTransaction.setLedger(cboxLedger.getValue());
-        voucherTransaction.setNarration(cboxNarration.getFinalText());
+//        voucherTransaction.setNarration(cboxNarration.getFinalText()); //TODO - Make this in AutoSearchTextField
         voucherTransaction.setAmount(new BigDecimal(txtAmount.getText()));
         voucherTransaction.setAutoPostedScreen(false);
         voucherTransaction.setCreditDebit(credit_debit);
@@ -528,8 +514,6 @@ public class VoucherEntryController implements MyInitialization {
                 if (narrationList == null || narrationList.isEmpty())
                     return;
                 cboxNarration.setItems(FXCollections.observableList(narrationList));
-                new AutoCompleteComboBoxListener<>(cboxNarration);
-
 
             } catch (Exception ex) {
                 throw new RuntimeException(ex);

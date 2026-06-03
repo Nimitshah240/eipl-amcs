@@ -22,6 +22,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_Button?>
 
 <StackPane fx:id="root" prefHeight="700.0" prefWidth="900.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductSaleAddEditController">
     <children>
@@ -59,7 +61,7 @@
                         <E_NumericField fx:id="txtDeductionAmount" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                         <E_TextField fx:id="txtDifferance" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                         <E_DatePicker fx:id="dpMilkToDate" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" />
-                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <AutoSearchTextField fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
                         <E_NumericField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="5" />
                         <E_TextField fx:id="txtConsumerName" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="7" />
@@ -92,8 +94,8 @@
                     <children>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%productname" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%quantityy" GridPane.columnIndex="2" />
-                        <E_ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxTaxCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_NumericField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate" GridPane.columnIndex="3" />
                         <E_NumericField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -179,7 +181,7 @@
                 </GridPane>
                 <HBox fx:id="hboxMaster" alignment="CENTER_LEFT" spacing="15.0">
                     <children>
-                        <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
+                        <E_Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -187,8 +189,8 @@
                                     </image>
                                 </ImageView>
                             </graphic>
-                        </Button>
-                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                        </E_Button>
+                        <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
@@ -196,7 +198,7 @@
                                     </image>
                                 </ImageView>
                             </graphic>
-                        </Button>
+                        </E_Button>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                         <E_Button fx:id="btnInstallments" contentDisplay="TOP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%installments">
                             <graphic>

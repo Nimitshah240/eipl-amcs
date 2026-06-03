@@ -3,25 +3,18 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_NumericField;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
-import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
@@ -78,24 +71,22 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private StackPane root;
     @FXML
-    private Button btnClose, btnSaveUpdate, btnDelete, btnInstallments, btnProductSave;
+    private E_Button btnClose, btnSaveUpdate, btnDelete, btnInstallments, btnProductSave;
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxType;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
     private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance;
     @FXML
     private E_NumericField txtConsumerCode, txtCreditLimit, txtQuantity, txtRate, txtAmount, txtNetAmount,
             txtTotalAmount, txtNoOfInstallment, txtTotalDiscount, txtMilkAmount, txtDeductionAmount, txtTotalAmountTax, txtNetPayable;
     @FXML
-    private DatePicker dpDate, dpDeductionStartDate;
-    @FXML
-    private E_DatePicker dpMilkFromDate, dpMilkToDate, dpDeductionToDate, dpDeductionFromDate;
+    private E_DatePicker dpMilkFromDate, dpMilkToDate, dpDeductionToDate, dpDeductionFromDate, dpDate, dpDeductionStartDate;
     @FXML
     private RadioButton rbtnCash, rbtnCredit;
     @FXML
-    private E_ComboBox<Product> cboxProduct;
+    private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private ComboBox<Tax> cboxTaxCode;
+    private AutoSearchTextField<Tax> cboxTaxCode;
     @FXML
     private TableView<ProductSaleTransaction> tableProductSaleTransaction;
     @FXML
@@ -139,11 +130,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cboxProduct.setEditable(false);
-        cboxTaxCode.setEditable(false);
         this.resourceBundle = resourceBundle;
         FocusUtils.requestFocus(txtConsumerCode);
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
         dpDate.setValue(LocalDate.now());
         dpDate.setConverter(new LocalDateConvertor());
         dpDeductionFromDate.setConverter(new LocalDateConvertor());
@@ -510,7 +498,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     private void setConsumerName(String text) {
-        if (cboxType.getValue().getKey() < 3) { // Member table
+        if (cboxType.getValue() != null && cboxType.getValue().getKey() < 3) { // Member table
             var task = new MemberByIdLoadTask(text);
             task.setOnSucceeded(e -> {
                 try {
@@ -529,7 +517,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 }
             });
             new Thread(task).start();
-        } else if (cboxType.getValue().getKey() > 2) {
+        } else if (cboxType.getValue() != null && cboxType.getValue().getKey() > 2) {
             var task = new CustomerByIdLoadTask(text, Integer.valueOf(cboxType.getValue().getKey()));
             task.setOnSucceeded(e -> {
                 try {
@@ -550,7 +538,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 }
             });
             new Thread(task).start();
-        } else if (cboxType.getValue().getKey() == 2) {
+        } else if (cboxType.getValue() != null && cboxType.getValue().getKey() == 2) {
             var task = new MemberByIdLoadTask(text);
             task.setOnSucceeded(e -> {
                 try {
@@ -603,9 +591,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 dpDeductionStartDate.setValue(dpDeductionStartDate.getConverter().fromString(dpDeductionStartDate.getEditor().getText()));
             }
         });
-        cboxType.setConverter(new CustomerTypeConvertor(cboxType));
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
-        cboxTaxCode.setConverter(new TaxConvertor(cboxTaxCode));
         cboxType.setOnAction(e -> {
                     txtConsumerCode.clear();
                     txtConsumerName.clear();
@@ -1042,7 +1027,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForProductSale()));
 //                .stream().
 //                filter(e -> e.getKey() <= (short) 2 || e.getKey() == (short) 4).collect(Collectors.toList())));
-        cboxType.getSelectionModel().select(0);
+//        cboxType.getSelectionModel().select(0); //TODO combo- select(0) is not working
         if (productSale != null) {
             Optional<CustomerTypeKeyValDto> dd = cboxType.getItems().stream()
                     .filter(p -> p.getKey() == productSale.getConsumerType()).findFirst();
@@ -1056,7 +1041,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 cboxProduct.setItems(FXCollections.observableList(task1.get()));
 //                        .stream().filter(ee -> ee.getCreatedBy() == null ||
 //                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList())));
-                new AutoCompleteComboBoxListener<>(cboxProduct);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -1068,7 +1052,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             try {
                 taxDtoList = task2.get();
                 cboxTaxCode.setItems(FXCollections.observableList(CommonUtils.getTaxFromDto(taxDtoList)));
-                new AutoCompleteComboBoxListener<>(cboxTaxCode);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -1116,7 +1099,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     private void getDeductionAndPurchaseData() {
-        if ((txtConsumerCode.getText() != null || !txtConsumerCode.getText().isBlank()) && cboxType.getSelectionModel().getSelectedIndex() == 0) {
+        if ((txtConsumerCode.getText() != null || !txtConsumerCode.getText().isBlank())) { //&& cboxType.getSelectionModel().getSelectedIndex() == 0 // TODO combo
             String memberCode = generateCode(txtConsumerCode.getText());
             if (dpMilkFromDate.getValue() != null && dpMilkToDate.getValue() != null) {
                 var task = new MilkCollectionByMemberAndDateLoadTask(dpMilkFromDate.getValue(), dpMilkToDate.getValue(), memberCode);

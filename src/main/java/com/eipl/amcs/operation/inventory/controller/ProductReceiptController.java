@@ -3,6 +3,8 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -19,7 +21,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 
 import java.net.URL;
@@ -44,9 +49,9 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
     @FXML
     TableColumn<ProductReceipt, LocalDate> colGrnDate, colChallanDate;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
+    E_Button btnClose, btnAdd, btnDelete, btnEdit, btnSearch;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
 
     public ProductReceiptController() {
