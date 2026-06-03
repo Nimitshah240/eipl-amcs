@@ -38,11 +38,11 @@
 
                         <E_TextField fx:id="txtChallanNo" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtBillNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <E_ComboBox fx:id="cboxParty" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                        <AutoSearchTextField fx:id="cboxParty" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                         <E_DatePicker fx:id="dpChallanDate" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
-                        <E_ComboBox fx:id="cboxProduct" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="6" />
-                        <E_ComboBox fx:id="cboxTax" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <AutoSearchTextField fx:id="cboxProduct" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="6" />
+                        <AutoSearchTextField fx:id="cboxTax" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <E_TextField fx:id="txtQuantity" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         <E_TextField fx:id="txtRate" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                         <E_TextField fx:id="txtAmount" disable="true" GridPane.rowIndex="8" />
@@ -102,7 +102,7 @@
                     <children>
                         <HBox fx:id="hboxMaster" alignment="BOTTOM_CENTER" spacing="15">
                             <children>
-                                <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
+                                <E_Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
                                     <graphic>
                                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
@@ -110,8 +110,8 @@
                                             </image>
                                         </ImageView>
                                     </graphic>
-                                </Button>
-                                <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                                </E_Button>
+                                <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
                                     <graphic>
                                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
@@ -119,7 +119,7 @@
                                             </image>
                                         </ImageView>
                                     </graphic>
-                                </Button>
+                                </E_Button>
                             </children>
                         </HBox>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />

@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_TextField?>
@@ -45,8 +46,8 @@
                         <E_TextField fx:id="txtVoucherNo" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <E_DatePicker fx:id="dpVoucherDate" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtBillNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <E_ComboBox fx:id="cboxLedger" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
-                        <E_ComboBox fx:id="cboxNarration" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <AutoSearchTextField fx:id="cboxLedger" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
+                        <AutoSearchTextField fx:id="cboxNarration" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <E_NumericField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                         <Label text="%ledger" GridPane.rowIndex="3" />
                         <Label text="%date" />
@@ -56,7 +57,7 @@
                         <Label text="%amount" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <HBox fx:id="hboxMaster1" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="100.0" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                             <children>
-                                <Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
+                                <E_Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
                                     <graphic>
                                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
@@ -64,8 +65,8 @@
                                             </image>
                                         </ImageView>
                                     </graphic>
-                                </Button>
-                                <Button fx:id="btnDelete" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%delete">
+                                </E_Button>
+                                <E_Button fx:id="btnDelete" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%delete">
                                     <graphic>
                                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
@@ -73,7 +74,7 @@
                                             </image>
                                         </ImageView>
                                     </graphic>
-                                </Button>
+                                </E_Button>
                             </children>
                         </HBox>
                         <Separator prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="2" />

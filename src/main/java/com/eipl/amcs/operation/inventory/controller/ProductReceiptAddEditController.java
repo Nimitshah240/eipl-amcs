@@ -3,31 +3,28 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_ComboBox;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.dto.TaxDto;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.model.TaxDetail;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateSaveTask;
-import com.eipl.amcs.master.operation.convertor.CustomerConvertor;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
@@ -47,7 +44,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -68,19 +66,15 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private StackPane root;
     @FXML
-    private DatePicker dpChallanDate;
+    private E_DatePicker dpChallanDate;
     @FXML
-    private TextField txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount;
+    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount;
     @FXML
-    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity;
+    private AutoSearchTextField<Customer> cboxParty;
     @FXML
-    private E_ComboBox<Customer> cboxParty;
+    private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private E_ComboBox<Product> cboxProduct;
-    @FXML
-    private Button btnAddProduct, btnSaveUpdate, btnClose;
-    @FXML
-    private E_Button btnDeleteProduct;
+    private E_Button btnDeleteProduct, btnAddProduct, btnSaveUpdate, btnClose;
     @FXML
     private TableView<ProductReceiptTransaction> tableProductReceiptTransaction;
     @FXML
@@ -105,7 +99,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private Stage stage;
 
     @FXML
-    private ComboBox<Tax> cboxTax;
+    private AutoSearchTextField<Tax> cboxTax;
     private Map<TaxDetail, BigDecimal> taxBifurcation = null;
 
 
@@ -278,17 +272,12 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
     @Override
     public void setupComboBox() {
-        new AutoCompleteComboBoxListener<>(cboxTax);
-        cboxTax.setConverter(new TaxConvertor(cboxTax));
-        cboxParty.setConverter(new CustomerConvertor(cboxParty));
         dpChallanDate.setConverter(new LocalDateConvertor());
         dpChallanDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpChallanDate.setValue(dpChallanDate.getConverter().fromString(dpChallanDate.getEditor().getText()));
             }
         });
-
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
     }
 
     public void setupTable() {
@@ -478,7 +467,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 List<Customer> list = task.get();
                 if (list != null) {
                     cboxParty.setItems(FXCollections.observableArrayList(list));
-                    new AutoCompleteComboBoxListener<>(cboxParty);
                     if (cboxParty.getItems() != null) {
                         if (productReceipt != null)
 //                            cboxParty.getSelectionModel().select(0);
@@ -498,7 +486,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 productList = task1.get();
                 if (!productList.isEmpty()) {
                     cboxProduct.setItems(FXCollections.observableList(productList));
-                    new AutoCompleteComboBoxListener<>(cboxProduct);
                 }
 
             } catch (InterruptedException | ExecutionException ex) {
