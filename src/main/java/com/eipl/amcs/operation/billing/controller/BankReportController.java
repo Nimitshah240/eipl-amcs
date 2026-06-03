@@ -3,10 +3,11 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.master.org.convertor.BankConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
@@ -17,8 +18,6 @@ import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,13 +43,13 @@ public class BankReportController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose;
+    private E_Button btnGenerate, btnClose;
     private Stage stage;
     private PopupCallback callback;
     @FXML
-    private ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
-    private ComboBox<String> cboxReportType;
+    private AutoSearchTextField<String> cboxReportType;
     private ResourceBundle resourceBundle;
     private MemberBillSummary dto = null;
 
@@ -93,7 +92,6 @@ public class BankReportController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxBank.setConverter(new BankConvertor(cboxBank));
         cboxBank.getSelectionModel().select(0);
         cboxReportType.getSelectionModel().select(0);
     }

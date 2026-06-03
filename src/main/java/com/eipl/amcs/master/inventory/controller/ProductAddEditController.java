@@ -3,27 +3,20 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_TextField;
-import com.eipl.amcs.controls.E_TextFieldLocal;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
-import com.eipl.amcs.master.account.converter.TaxConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.model.Tax;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.master.account.task.TaxLoadTask;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Unit;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.UnitLoadTask;
-import com.eipl.amcs.master.inventory.convertor.ProductGroupConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductGroup;
 import com.eipl.amcs.master.inventory.task.ProductGroupLoadTask;
@@ -33,8 +26,6 @@ import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -49,17 +40,17 @@ public class ProductAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnClose, btnSaveUpdate;
+    private E_Button btnClose, btnSaveUpdate;
     @FXML
-    private E_ComboBox<ProductGroup> cboxProductGroup;
+    private AutoSearchTextField<ProductGroup> cboxProductGroup;
     @FXML
-    private E_ComboBox<Tax> cboxTaxName, cboxOtherTax;
+    private AutoSearchTextField<Tax> cboxTaxName, cboxOtherTax;
     @FXML
-    private E_ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private E_ComboBox<Ledger> cboxPurchaseLedger, cboxSaleLedger, cboxStockLedger, cboxLocalSaleLedger, cboxCouponLedger;
+    private AutoSearchTextField<Ledger> cboxPurchaseLedger, cboxSaleLedger, cboxStockLedger, cboxLocalSaleLedger, cboxCouponLedger;
     @FXML
-    private CheckBox chkIsMilk;
+    private E_CheckBox chkIsMilk;
 
     @FXML
     private E_TextField txtCode, txtName, txtReferenceCode;
@@ -121,9 +112,9 @@ public class ProductAddEditController implements MyInitialization {
             cboxLocalSaleLedger.setDisable(!newVal);
             cboxCouponLedger.setDisable(!newVal);
             if (!newVal) {
-                cboxMilkType.getSelectionModel().select(null);
-                cboxLocalSaleLedger.getSelectionModel().select(null);
-                cboxCouponLedger.getSelectionModel().select(null);
+                cboxMilkType.getSelectionModel().clearSelection();
+                cboxLocalSaleLedger.getSelectionModel().clearSelection();
+                cboxCouponLedger.getSelectionModel().clearSelection();
             }
         });
 
@@ -301,18 +292,6 @@ public class ProductAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxProductGroup.setConverter(new ProductGroupConvertor(cboxProductGroup));
-        cboxTaxName.setConverter(new TaxConvertor(cboxTaxName));
-        cboxPurchaseLedger.setConverter(new LedgerConvertor(cboxPurchaseLedger));
-        cboxSaleLedger.setConverter(new LedgerConvertor(cboxSaleLedger));
-        cboxStockLedger.setConverter(new LedgerConvertor(cboxStockLedger));
-        cboxCouponLedger.setConverter(new LedgerConvertor(cboxCouponLedger));
-        cboxLocalSaleLedger.setConverter(new LedgerConvertor(cboxLocalSaleLedger));
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-    }
-
     private void loadProductGroup() {
         var task = new ProductGroupLoadTask();
         task.setOnSucceeded(e -> {
@@ -320,8 +299,6 @@ public class ProductAddEditController implements MyInitialization {
                 List<ProductGroup> list = task.get();
                 if (list != null) {
                     cboxProductGroup.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxProductGroup);
-
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -369,7 +346,7 @@ public class ProductAddEditController implements MyInitialization {
                 List<MilkType> list = task.get();
                 if (list != null) {
                     cboxMilkType.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxMilkType);
+//                    new AutoCompleteComboBoxListener<>(cboxMilkType);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -385,15 +362,10 @@ public class ProductAddEditController implements MyInitialization {
                 List<Ledger> list = task.get();
                 if (list != null) {
                     cboxPurchaseLedger.setItems(FXCollections.observableArrayList(list));
-                    new AutoCompleteComboBoxListener<>(cboxPurchaseLedger);
                     cboxStockLedger.setItems(FXCollections.observableArrayList(list));
-                    new AutoCompleteComboBoxListener<>(cboxStockLedger);
                     cboxSaleLedger.setItems(FXCollections.observableArrayList(list));
-                    new AutoCompleteComboBoxListener<>(cboxSaleLedger);
                     cboxLocalSaleLedger.setItems(FXCollections.observableArrayList(list));
-                    new AutoCompleteComboBoxListener<>(cboxLocalSaleLedger);
                     cboxCouponLedger.setItems(FXCollections.observableArrayList(list));
-                    new AutoCompleteComboBoxListener<>(cboxCouponLedger);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

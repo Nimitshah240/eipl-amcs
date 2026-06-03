@@ -3,7 +3,8 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.operation.billing.model.MemberBillSummary;
@@ -12,8 +13,6 @@ import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -28,11 +27,11 @@ public class GeneralReportController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose;
+    private E_Button btnGenerate, btnClose;
     private Stage stage;
     private PopupCallback callback;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
 
 
     private ResourceBundle resourceBundle;
@@ -69,7 +68,6 @@ public class GeneralReportController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
         cboxMilkType.getSelectionModel().select(0);
     }
 

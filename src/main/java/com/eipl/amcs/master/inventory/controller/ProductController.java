@@ -3,7 +3,10 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.*;
+import com.eipl.amcs.controls.alert.ConfirmationAlert;
+import com.eipl.amcs.controls.alert.ErrorAlert;
+import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
@@ -14,10 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
@@ -71,27 +71,52 @@ public class ProductController implements MyInitialization, PopupCallback {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         btnDelete.setOnAction(e -> {
-            if (propProductDto.get().getCreatedBy() == null || propProductDto.get().getCreatedBy().equalsIgnoreCase("SYSTEM")) {
-                if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_DELETE"))
-                    throw new UnAuthorizedAccessException();
-                deleteData();
-            } else {
-                MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.delete.fail"));
-                errorAlert.createAlert();
-            }
+            deleteData();
         });
         btnEdit.setOnAction(e -> {
-            if (propProductDto.get().getCreatedBy() == null || propProductDto.get().getCreatedBy().equalsIgnoreCase("SYSTEM")) {
-                if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_EDIT"))
-                    throw new UnAuthorizedAccessException();
-                Product dto = propProductDto.get();
-                if (dto != null)
-                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", dto, this, resourceBundle.getString("product"));
-            } else {
-                MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.update.fail"));
-                errorAlert.createAlert();
+            editProduct(propProductDto.get());
+        });
+
+
+        tableProduct.setRowFactory(tv -> {
+            TableRow<Product> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Product data = row.getItem();
+                    editProduct(data);
+                }
+            });
+            return row;
+        });
+
+        tableProduct.setOnKeyPressed(event -> {
+            Product dto = tableProduct.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propProductDto.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editProduct(dto);
+                    break;
             }
         });
+    }
+
+    private void editProduct(Product dto) {
+        if (dto == null)
+            return;
+        if (dto.getCreatedBy() == null || dto.getCreatedBy().equalsIgnoreCase("SYSTEM")) {
+            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_EDIT"))
+                throw new UnAuthorizedAccessException();
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductAddEdit", dto, this, resourceBundle.getString("product"));
+        } else {
+            MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.update.fail"));
+            errorAlert.createAlert();
+        }
     }
 
     @Override
@@ -126,29 +151,39 @@ public class ProductController implements MyInitialization, PopupCallback {
 
     @Override
     public void deleteData() {
+        Product dto = propProductDto.get();
+        if (dto == null)
+            return;
+
+        if (dto.getCreatedBy() == null || dto.getCreatedBy().equalsIgnoreCase("SYSTEM")) {
+            if (!MainApp.user.getPermissions().contains("ACTION_PRODUCT_DELETE"))
+                throw new UnAuthorizedAccessException();
+        } else {
+            MyAlert errorAlert = new WarningAlert(MainApp.stage, resourceBundle.getString("product"), resourceBundle.getString("product.delete.fail"));
+            errorAlert.createAlert();
+            return;
+        }
+
         MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("product"),
                 resourceBundle.getString("alert.delete"));
         Optional<ButtonType> resp = alert.createConfirmationAlert();
         if (resp.isPresent() && resp.get() == ButtonType.OK) {
-            Product dto = propProductDto.get();
-            if (dto != null) {
-                var task = new ProductDeleteTask(dto.getCode());
-                task.setOnSucceeded(e -> {
-                    try {
-                        Boolean respDelete = task.get();
-                        if (respDelete == null || !respDelete.booleanValue()) {
-                            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
-                                    resourceBundle.getString("error.occurred"));
-                            alert1.createAlert();
-                            return;
-                        }
-                        loadData();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
+            var task = new ProductDeleteTask(dto.getCode());
+            task.setOnSucceeded(e -> {
+                try {
+                    Boolean respDelete = task.get();
+                    if (respDelete == null || !respDelete.booleanValue()) {
+                        MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("product"),
+                                resourceBundle.getString("error.occurred"));
+                        alert1.createAlert();
+                        return;
                     }
-                });
-                new Thread(task).start();
-            }
+                    loadData();
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
         }
     }
 

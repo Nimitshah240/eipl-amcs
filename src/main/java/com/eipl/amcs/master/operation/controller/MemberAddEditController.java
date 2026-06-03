@@ -3,19 +3,14 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.geo.task.*;
-import com.eipl.amcs.master.global.convertor.GenderConvertor;
-import com.eipl.amcs.master.global.convertor.MemberTypeConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.Gender;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -23,8 +18,6 @@ import com.eipl.amcs.master.global.task.GenderLoadTask;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.model.*;
 import com.eipl.amcs.master.operation.task.*;
-import com.eipl.amcs.master.org.convertor.BankConvertor;
-import com.eipl.amcs.master.org.convertor.BranchConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Branch;
 import com.eipl.amcs.master.org.task.BankLoadTask;
@@ -32,6 +25,7 @@ import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,6 +33,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -57,55 +53,56 @@ public class MemberAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private DatePicker dpBirthDate, dpRegistrationDate, dpBirthDate1;
+    private E_DatePicker dpBirthDate, dpRegistrationDate, dpBirthDate1;
     @FXML
     private TextArea txtAddress;
     @FXML
     private RadioButton rbtnCash, rbtnBank, rbtnIsFarmer;
     @FXML
-    private ComboBox<MemberType> cboxMemberType;
+    private AutoSearchTextField<MemberType> cboxMemberType;
     @FXML
-    private ComboBox<State> cboxState;
+    private AutoSearchTextField<State> cboxState;
     @FXML
-    private ComboBox<District> cboxDistrict;
+    private AutoSearchTextField<District> cboxDistrict;
     @FXML
-    private ComboBox<SubDistrict> cboxSubDistrict;
+    private AutoSearchTextField<SubDistrict> cboxSubDistrict;
     @FXML
-    private ComboBox<Village> cboxVillage;
+    private AutoSearchTextField<Village> cboxVillage;
     @FXML
-    private ComboBox<Hamlet> cboxHamlet;
+    private AutoSearchTextField<Hamlet> cboxHamlet;
     @FXML
-    private ComboBox<MilkType> cboxDefaultMilkType;
+    private AutoSearchTextField<MilkType> cboxDefaultMilkType;
     @FXML
-    private ComboBox<Gender> cboxGender, cboxGender1;
+    private AutoSearchTextField<Gender> cboxGender, cboxGender1;
     @FXML
-    private ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
-    private ComboBox<Branch> cboxBranch;
+    private AutoSearchTextField<Branch> cboxBranch;
 
     @FXML
-    private ComboBox<AppConstant.LandType> cboxLandType;
+    private AutoSearchTextField<AppConstant.LandType> cboxLandType;
     @FXML
-    private ComboBox<AppConstant.FarmerType> cboxFarmerType;
+    private AutoSearchTextField<AppConstant.FarmerType> cboxFarmerType;
     @FXML
-    private ComboBox<AppConstant.Occupation> cboxOccupation;
+    private AutoSearchTextField<AppConstant.Occupation> cboxOccupation;
     @FXML
-    private ComboBox<AppConstant.MaritalStatus> cboxMaritalStatus;
+    private AutoSearchTextField<AppConstant.MaritalStatus> cboxMaritalStatus;
     @FXML
-    private ComboBox<AppConstant.CattleDetail> cboxCattleDetail;
+    private AutoSearchTextField<AppConstant.CattleDetail> cboxCattleDetail;
     @FXML
-    private ComboBox<Relationship> cboxRelation, cboxRelation1;
+    private AutoSearchTextField<Relationship> cboxRelation, cboxRelation1;
     @FXML
-    private ComboBox<CasteCategory> cboxCaste;
+    private AutoSearchTextField<CasteCategory> cboxCaste;
     @FXML
-    private ComboBox<AppConstant.RationCardType> cboxRationCardType;
+    private AutoSearchTextField<AppConstant.RationCardType> cboxRationCardType;
     @FXML
-    private TextField txtCodeEx, txtSapNo, txtCode, txtMobileNo, txtPinCode, txtMiddleName,
+    private E_TextField txtCodeEx, txtSapNo, txtCode, txtMobileNo, txtPinCode, txtMiddleName,
             txtName, txtLastName, txtMiddleLocalName, txtLocalLastName,
             txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit,
-            txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtLand, txtRegistrationNo, txtQualification;
+            txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtLand, txtRegistrationNo, txtQualification,
+            txtMilky, txtDry, txtCalf, txtChildFarmerName, txtChildFarmerCode;
     @FXML
-    private TextField txtLocalName, txtNomineeNameLocal;
+    private E_TextFieldLocal txtLocalName, txtNomineeNameLocal;
     @FXML
     private Button btnSaveUpdate, btnClose;
     @FXML
@@ -131,12 +128,7 @@ public class MemberAddEditController implements MyInitialization {
     private TableColumn<Member, String> colChildFarmerCode, colChildFarmerName;
 
     @FXML
-    private TextField txtMilky, txtDry, txtCalf, txtChildFarmerName;
-    @FXML
-    private E_TextField txtChildFarmerCode;
-
-    @FXML
-    private CheckBox chkIsEducated, chkIsCookingGas, chkIsMember, chkIsMilkMachine, chkIsPiyetLand, chkIsChafCutter, IsToilet;
+    private E_CheckBox chkIsEducated, chkIsCookingGas, chkIsMember, chkIsMilkMachine, chkIsPiyetLand, chkIsChafCutter, IsToilet;
 
     private final ObjectProperty<MemberCattleDetail> propMemberCattleDetail;
     private final ObjectProperty<MemberFamilyDetail> propMembmerFamiliyDetail;
@@ -201,7 +193,6 @@ public class MemberAddEditController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         gridBankDetail.setDisable(true);
-        FocusUtils.requestFocus(txtCodeEx);
         setupComboBox();
 //        txtNoOfCow.setText("0");
 //        txtNoOfBuffalo.setText("0");
@@ -214,7 +205,9 @@ public class MemberAddEditController implements MyInitialization {
         btnClose.setOnAction(e -> {
             this.stage.close();
         });
-
+        txtCalf.setText("0");
+        txtMilky.setText("0");
+        txtDry.setText("0");
         ToggleGroup paymentGroup = new ToggleGroup();
         rbtnCash.setToggleGroup(paymentGroup);
         rbtnBank.setToggleGroup(paymentGroup);
@@ -341,6 +334,7 @@ public class MemberAddEditController implements MyInitialization {
 
         btnAddCattleDetail.setOnAction(e -> {
             addMemberCattleDetail();
+            FocusUtils.requestFocus(cboxCattleDetail);
         });
 
         btnDeleteCattleDetail.setOnAction(e -> {
@@ -362,6 +356,7 @@ public class MemberAddEditController implements MyInitialization {
             if (txtChildFarmerCode.getText() == null || txtChildFarmerCode.getText().trim().isBlank())
                 return;
             loadMember(MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtChildFarmerCode.getText())));
+            FocusUtils.requestFocus(btnAddChild);
         });
 
 
@@ -371,6 +366,23 @@ public class MemberAddEditController implements MyInitialization {
 //            }
 //        });
 
+        txtIfsc.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(txtNomineeName);
+                e.consume();
+            }
+        });
+
+        txtCalf.setOnAction(e -> {
+            FocusUtils.requestFocus(btnAddCattleDetail);
+        });
+        txtAadharCardNo1.setOnAction(e -> {
+            FocusUtils.requestFocus(btnAdd1);
+        });
+
+        Platform.runLater(() -> {
+            FocusUtils.requestFocus(txtName);
+        });
     }
 
     private void validateAndSave() {
@@ -582,18 +594,6 @@ public class MemberAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMemberType.setConverter(new MemberTypeConvertor(cboxMemberType));
-        cboxDefaultMilkType.setConverter(new MilkTypeConvertor(cboxDefaultMilkType));
-        cboxGender.setConverter(new GenderConvertor(cboxGender));
-        cboxGender1.setConverter(new GenderConvertor(cboxGender1));
-//        cboxState.setConverter(new StateConvertor(cboxState));
-//        cboxDistrict.setConverter(new DistrictConvertor(cboxDistrict));
-//        cboxSubDistrict.setConverter(new SubDistrictConvertor(cboxSubDistrict));
-//        cboxVillage.setConverter(new VillageConvertor(cboxVillage));
-//        cboxHamlet.setConverter(new HamletConvertor(cboxHamlet));
-        cboxBank.setConverter(new BankConvertor(cboxBank));
-        cboxBranch.setConverter(new BranchConvertor(cboxBranch));
-
         dpBirthDate.setConverter(new LocalDateConvertor());
         dpBirthDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -623,7 +623,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<MemberType> list = task.get();
                 if (list != null) {
                     cboxMemberType.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxMemberType);
                     cboxMemberType.getSelectionModel().select(0);
 
                     if (member != null)
@@ -642,7 +641,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<MilkType> list = task1.get();
                 if (list != null) {
                     cboxDefaultMilkType.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxDefaultMilkType);
                     if (member != null)
                         cboxDefaultMilkType.setValue(member.getMilkType());
                 }
@@ -660,7 +658,6 @@ public class MemberAddEditController implements MyInitialization {
                 if (list != null) {
                     cboxGender.setItems(FXCollections.observableList(list));
                     cboxGender1.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxGender);
                     if (memberDetail != null) {
                         cboxGender.setValue(memberDetail.getGender());
                         cboxGender1.setValue(memberDetail.getGender());
@@ -718,7 +715,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<SubDistrict> list = task.get();
                 if (list != null) {
                     cboxSubDistrict.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxSubDistrict);
                     if (memberDetail != null)
                         cboxSubDistrict.setValue(memberDetail.getSubDistrict());
                 }
@@ -736,7 +732,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<Village> list = task.get();
                 if (list != null) {
                     cboxVillage.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxVillage);
                     if (memberDetail != null)
                         cboxVillage.setValue(memberDetail.getVillage());
                 }
@@ -754,7 +749,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<Hamlet> list = task.get();
                 if (list != null) {
                     cboxHamlet.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxHamlet);
                     if (memberDetail != null)
                         cboxHamlet.setValue(memberDetail.getHamlet());
                 }
@@ -772,7 +766,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<Bank> list = task.get();
                 if (list != null) {
                     cboxBank.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxBank);
                     if (memberDetail != null)
                         cboxBank.setValue(memberDetail.getBank());
                 }
@@ -790,7 +783,6 @@ public class MemberAddEditController implements MyInitialization {
                 List<Branch> list = task.get();
                 if (list != null) {
                     cboxBranch.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxBranch);
                     if (memberDetail != null)
                         cboxBranch.setValue(memberDetail.getBranch());
                 }
@@ -1149,7 +1141,7 @@ public class MemberAddEditController implements MyInitialization {
 
     private void addFarmerMapping() {
         try {
-            if (mappingFarmer != null) {
+            if (mappingFarmer != null && mappingFarmer.getCode() != null) {
                 farmerMapping.add(mappingFarmer);
                 tblFarmerMapping.setItems(FXCollections.observableList(farmerMapping));
             }

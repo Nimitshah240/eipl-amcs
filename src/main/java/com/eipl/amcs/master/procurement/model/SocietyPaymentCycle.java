@@ -106,4 +106,13 @@ public class SocietyPaymentCycle extends BaseModelTxn {
                 CommonUtils.getShiftShort(getToShift());
         return sb;
     }
+
+    public String toString() {
+        String sb = getFromDate().toLocalDate().format(AppConstant.DATE_FORMATTER) +
+                CommonUtils.getShiftShort(getFromShift()) +
+                " - " +
+                getToDate().toLocalDate().format(AppConstant.DATE_FORMATTER) +
+                CommonUtils.getShiftShort(getToShift());
+        return sb;
+    }
 }

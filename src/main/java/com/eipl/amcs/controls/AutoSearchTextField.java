@@ -2,6 +2,7 @@ package com.eipl.amcs.controls;
 
 import com.eipl.amcs.MainApp;
 import com.ibm.icu.text.Transliterator;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -38,11 +39,13 @@ public class AutoSearchTextField<T> extends TextField {
 
     private boolean suppressFilter = false;
     private T selectedItem = null;
+    private Integer selectedIndex = -1;
 
     private static final int MAX_ROWS = 6;
     private Transliterator transliterator;
     private final StringBuilder currentWord = new StringBuilder();
     private int previousGujaratiLength = 0;
+    private String language = "English";
 
     /**
      * FXML Default Constructor. Required by FXMLLoader.
@@ -88,7 +91,7 @@ public class AutoSearchTextField<T> extends TextField {
     }
 
     private void applyBaseStyles() {
-        this.setPrefHeight(38);
+        this.setPrefHeight(28);
         this.getStyleClass().add("auto-search-text-field");
 
         // 1. Safely resolve the absolute URL path to your asset file
@@ -136,7 +139,7 @@ public class AutoSearchTextField<T> extends TextField {
     }
 
     public void setupLocalTransliteration() {
-        if (MainApp.getLocale().equalsIgnoreCase("en")) {
+        if (language.equalsIgnoreCase("English")) {
             return;
         }
         this.transliterator = createTransliterator();
@@ -156,8 +159,53 @@ public class AutoSearchTextField<T> extends TextField {
     }
 
     private void wireKeyNavigation() {
-        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-            if (!popup.isShowing()) return;
+        addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            if (!popup.isShowing()) {
+                switch (event.getCode()) {
+                    case ENTER:
+                        T highlighted = listView.getSelectionModel().getSelectedItem();
+                        if (highlighted != null) {
+                            selectItem(highlighted);
+                            this.fireEvent(new javafx.event.ActionEvent(this, null));
+                        }
+
+                        Platform.runLater(() -> {
+                            this.fireEvent(new KeyEvent(
+                                    KeyEvent.KEY_PRESSED, "", "",
+                                    KeyCode.TAB, false, false, false, false
+                            ));
+                        });
+
+                        event.consume();
+                        break;
+                    case RIGHT:
+                        if (event.isControlDown()) {
+
+                            this.fireEvent(new javafx.event.ActionEvent(this, null));
+                            Platform.runLater(() -> {
+                                this.fireEvent(new KeyEvent(
+                                        KeyEvent.KEY_PRESSED, "", "",
+                                        KeyCode.TAB, false, false, false, false
+                                ));
+                            });
+                            event.consume();
+                        }
+                        break;
+                    case LEFT:
+                        if (event.isControlDown()) {
+
+                            this.fireEvent(new javafx.event.ActionEvent(this, null));
+                            Platform.runLater(() -> {
+                                this.fireEvent(new KeyEvent(
+                                        KeyEvent.KEY_PRESSED, "", "",
+                                        KeyCode.TAB, true, false, false, false
+                                ));
+                            });
+                            event.consume();
+                        }
+                        break;
+                }
+            }
 
             int size = listView.getItems().size();
             if (size == 0) return;
@@ -299,6 +347,20 @@ public class AutoSearchTextField<T> extends TextField {
             this.masterList.clear();
         } else {
             this.masterList.setAll(newItems);
+            if (!newItems.isEmpty()) {
+                String sampleText = textExtractor.apply(newItems.get(0));
+                detectLanguage(sampleText);
+                setupLocalTransliteration();
+                listView.setItems(newItems);
+
+            }
+            if (selectedIndex > -1) {
+                setValue(masterList.get(selectedIndex));
+                return;
+            }
+            if (selectedItem != null) {
+                setValue(selectedItem);
+            }
         }
     }
 
@@ -308,6 +370,20 @@ public class AutoSearchTextField<T> extends TextField {
             this.masterList.clear();
         } else {
             this.masterList.setAll(newItems);
+            if (!newItems.isEmpty()) {
+                String sampleText = textExtractor.apply(newItems.get(0));
+                detectLanguage(sampleText);
+                setupLocalTransliteration();
+                listView.setItems(FXCollections.observableArrayList(newItems));
+
+            }
+            if (selectedIndex > -1) {
+                setValue(masterList.get(selectedIndex));
+                return;
+            }
+            if (selectedItem != null) {
+                setValue(selectedItem);
+            }
         }
     }
 
@@ -535,6 +611,55 @@ public class AutoSearchTextField<T> extends TextField {
     }
 
     public class FakeSelectionModel {
+
+        /**
+         * Mimics ComboBox.getItems().addAll(T... items)
+         * Adds multiple items passed as individual arguments or an array.
+         */
+        @SafeVarargs
+        public final void addAll(T... items) {
+            if (items != null && items.length > 0) {
+                masterList.addAll(items);
+
+                // OPTIONAL: Check language script of the new dataset batch
+                if (masterList.size() == items.length) { // Only log if it was empty before
+                    String sampleText = textExtractor.apply(items[0]);
+                    detectLanguage(sampleText);
+                    setupLocalTransliteration();
+
+                }
+            }
+        }
+
+        /**
+         * Mimics ComboBox.getItems().addAll(Collection<? extends T> col)
+         * Adds a complete collection or list of items to the master list.
+         */
+        public void addAll(List<T> items) {
+            if (items != null && !items.isEmpty()) {
+                masterList.addAll(items);
+
+                // OPTIONAL: Check language script of the new dataset batch
+                if (masterList.size() == items.size()) {
+                    String sampleText = textExtractor.apply(items.get(0));
+                    detectLanguage(sampleText);
+                    setupLocalTransliteration();
+                }
+            }
+        }
+
+        /**
+         * Mimics ComboBox.getSelectionModel().getSelectedIndex()
+         * * @return The active integer index position (0-based) currently highlighted or chosen,
+         * or -1 if no item is selected or the list is empty.
+         */
+        public int getSelectedIndex() {
+            if (listView != null && listView.getSelectionModel() != null) {
+                return listView.getSelectionModel().getSelectedIndex();
+            }
+            return -1;
+        }
+
         /**
          * Mimics ComboBox.getSelectionModel().getSelectedItem()
          *
@@ -549,7 +674,19 @@ public class AutoSearchTextField<T> extends TextField {
          * Programmatically sets and pre-selects a value safely.
          */
         public void select(T item) {
+            selectedItem = item;
             setValue(item);
+        }
+
+        /**
+         * Mimics ComboBox.getSelectionModel().select(item)
+         * Programmatically sets and pre-selects a value safely.
+         */
+        public void select(Integer pos) {
+            selectedIndex = pos;
+            if (masterList == null || masterList.isEmpty())
+                return;
+            setValue(masterList.get(pos));
         }
 
         public void clearSelection() {
@@ -582,5 +719,40 @@ public class AutoSearchTextField<T> extends TextField {
         });
 
         return proxyProperty;
+    }
+
+    /**
+     * Detects the language script of the given text based on Unicode blocks.
+     *
+     * @param text The string text to inspect.
+     * @return A string identifier indicating the detected language layout ("Gujarati", "Hindi", "English", etc.)
+     */
+    public void detectLanguage(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            language = "English";
+        }
+
+        // Strip out numbers, spaces, and standard punctuation to avoid false positives
+        String cleanText = text.replaceAll("[\\d\\s\\p{Punct}]", "");
+        if (cleanText.isEmpty()) {
+            language = "English";
+        }
+
+        // Inspect the very first clean alphabetic character
+        char firstChar = cleanText.charAt(0);
+        Character.UnicodeBlock block = Character.UnicodeBlock.of(firstChar);
+
+
+        if (block == Character.UnicodeBlock.GUJARATI) {
+            language = "Gujarati";
+        } else if (block == Character.UnicodeBlock.DEVANAGARI) {
+            language = "Hindi"; // Covers Hindi, Marathi, Nepali, etc.
+        } else if (block == Character.UnicodeBlock.BENGALI) {
+            language = "Bengali";
+        } else if (block == Character.UnicodeBlock.BASIC_LATIN) {
+            language = "English";
+        } else {
+            language = "English";
+        }
     }
 }
