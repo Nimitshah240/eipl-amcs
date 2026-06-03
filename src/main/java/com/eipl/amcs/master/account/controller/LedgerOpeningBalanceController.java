@@ -79,7 +79,7 @@ public class LedgerOpeningBalanceController implements MyInitialization {
         vbox.getChildren().remove(gridMaster);
         this.resourceBundle = resourceBundle;
         cboxType.getItems().addAll(resourceBundle.getString("debit"), resourceBundle.getString("credit"));
-//        cboxType.getSelectionModel().select(0);
+        cboxType.getSelectionModel().select(0);
         loadData();
         loadLedger();
         setupComboBox();
@@ -343,7 +343,7 @@ public class LedgerOpeningBalanceController implements MyInitialization {
         cboxLedger.getSelectionModel().clearSelection();
 //        cboxLedger.getEditor().clear();
         cboxLedger.setValue(null);
-//        cboxLedger.getSelectionModel().select(0);
-//        cboxType.getSelectionModel().select(0);
+        cboxLedger.getSelectionModel().select(0);
+        cboxType.getSelectionModel().select(0);
     }
 }

@@ -114,20 +114,8 @@ public class CommitteeAddEditController implements MyInitialization {
         loadDesignation();
         setupComboBox();
         setupTable();
-        dpFormation.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(txtMemberCode);
-                e.consume();
-            }
-        });
-        dpRegistrationdate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(btnAdd);
-                e.consume();
-            }
-        });
 //      cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
-//      cboxDesignation.getSelectionModel().select(0);
+        cboxDesignation.getSelectionModel().select(0);
         dpElectionDate.setValue(LocalDate.now());
         dpFormation.setValue(LocalDate.now());
         dpJoiningDate.setValue(LocalDate.now());
@@ -369,8 +357,7 @@ public class CommitteeAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-//        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
-//        cboxDesignation.getSelectionModel().select(0);
+        cboxDesignation.getSelectionModel().select(0);
     }
 
     private void loadDesignation() {

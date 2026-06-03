@@ -143,32 +143,6 @@ public class SocietyAddEditController implements MyInitialization {
                     break;
             }
         });
-        dpStartYear.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(txtRegistrationCode);
-                e.consume();
-            }
-        });
-
-        dpRegistrationDate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(txtSapNo);
-                e.consume();
-            }
-        });
-        dpFssaiExpiryDate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(cboxBank);
-                e.consume();
-            }
-        });
-    }
-
-    @Override
-    public void setupComboBox() {
-//        cboxRoute.setConverter(new RouteConvertor(cboxRoute));
-//        cboxBank.setConverter(new BankConvertor(cboxBank));
-//        cboxBranch.setConverter(new BranchConvertor(cboxBranch));
     }
 
     @Override

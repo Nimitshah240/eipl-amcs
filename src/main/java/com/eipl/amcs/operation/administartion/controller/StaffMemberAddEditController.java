@@ -154,12 +154,6 @@ public class StaffMemberAddEditController implements MyInitialization {
                 txtIfsc.clear();
             }
         });
-        dpResignationDate.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(txtSalary);
-                e.consume();
-            }
-        });
     }
 
     private void loadDesignation() {
@@ -307,11 +301,6 @@ public class StaffMemberAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-
-//        cboxGender.setConverter(new GenderConvertor(cboxGender));
-//        cboxBank.setConverter(new BankConvertor(cboxBank));
-//        cboxBranch.setConverter(new BranchConvertor(cboxBranch));
-//        cboxDesignation.setConverter(new DesignationConvertor(cboxDesignation));
         dpJoiningDate.setConverter(new LocalDateConvertor());
         dpJoiningDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
