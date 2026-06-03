@@ -552,6 +552,16 @@ public class AutoSearchTextField<T> extends TextField {
             setValue(item);
         }
 
+        public void clearSelection() {
+            selectedItem = null;
+            suppressFilter = true;
+            clear();
+            currentWord.setLength(0);
+            previousGujaratiLength = 0;
+            suppressFilter = false;
+            hidePopup();
+        }
+
     }
 
     // ── COMBOBOX COMPATIBILITY LAYER (PROPERTY BINDINGS) ──────────────────
