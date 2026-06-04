@@ -1,6 +1,5 @@
 package com.eipl.amcs.controls;
 
-import com.eipl.amcs.MainApp;
 import com.ibm.icu.text.Transliterator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -46,6 +45,9 @@ public class AutoSearchTextField<T> extends TextField {
     private final StringBuilder currentWord = new StringBuilder();
     private int previousGujaratiLength = 0;
     private String language = "English";
+
+    //NIMIT | 03.06.2026 | Tracks objects selected before items are loaded
+    private T deferredSelectedItem = null;
 
     /**
      * FXML Default Constructor. Required by FXMLLoader.
@@ -94,7 +96,6 @@ public class AutoSearchTextField<T> extends TextField {
         this.setPrefHeight(28);
         this.getStyleClass().add("auto-search-text-field");
 
-        // 1. Safely resolve the absolute URL path to your asset file
         var imageResource = getClass().getResource("/com/eipl/amcs/view/images/search.png");
         String imagePathString = "";
 
@@ -102,19 +103,18 @@ public class AutoSearchTextField<T> extends TextField {
             imagePathString = imageResource.toExternalForm();
         }
 
-        // 2. Apply the clean CSS styling block
         this.setStyle(
                 "-fx-font-size: 14px; " +
-                        "-fx-padding: 6 36 6 12; " + // 36px right padding keeps typed text from overlapping your icon
+                        "-fx-padding: 6 36 6 12; " +
                         "-fx-background-color: white; " +
                         "-fx-border-color: #aab7c4; " +
                         "-fx-border-radius: 6; " +
                         "-fx-background-radius: 6; " +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 4, 0, 0, 1); " +
-                        "-fx-background-image: url('" + imagePathString + "'); " + // Loads your custom downloaded icon
+                        "-fx-background-image: url('" + imagePathString + "'); " +
                         "-fx-background-repeat: no-repeat; " +
-                        "-fx-background-position: right 12px center; " + // Locks icon 12px from the right edge
-                        "-fx-background-size: 16px 16px;" // Since your icon is slightly big, this forces it to a clean 16x16px size
+                        "-fx-background-position: right 12px center; " +
+                        "-fx-background-size: 16px 16px;"
         );
     }
 
@@ -146,6 +146,7 @@ public class AutoSearchTextField<T> extends TextField {
         textFieldLocal();
     }
 
+    //    -------------------- CONTROLS FOR TEXTFIELD AND POPUP -----------------------
     private void wireTextChanges() {
         textProperty().addListener((obs, oldText, newText) -> {
             if (suppressFilter) return;
@@ -160,6 +161,8 @@ public class AutoSearchTextField<T> extends TextField {
 
     private void wireKeyNavigation() {
         addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+
+//          Nimit | 03.06.2026 : WHEN POPUP IS NOT VISIBLE - KEY ACTIONS.
             if (!popup.isShowing()) {
                 switch (event.getCode()) {
                     case ENTER:
@@ -177,7 +180,7 @@ public class AutoSearchTextField<T> extends TextField {
                         });
 
                         event.consume();
-                        break;
+                        return;
                     case RIGHT:
                         if (event.isControlDown()) {
 
@@ -207,11 +210,12 @@ public class AutoSearchTextField<T> extends TextField {
                 }
             }
 
+
             int size = listView.getItems().size();
             if (size == 0) return;
-
             int current = listView.getSelectionModel().getSelectedIndex();
 
+//          Nimit | 03.06.2026 : WHEN POPUP IS VISIBLE - KEY ACTIONS.
             switch (event.getCode()) {
                 case DOWN:
                     int next = (current + 1) % size;
@@ -262,6 +266,15 @@ public class AutoSearchTextField<T> extends TextField {
         });
     }
 
+//    -------------------- CONTROLS FOR TEXTFIELD AND POPUP -----------------------
+
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO FILTER DATA BY SEARCH QUERY
+     */
     private void filterAndShow(String query) {
         String lower = query.toLowerCase();
 
@@ -270,7 +283,7 @@ public class AutoSearchTextField<T> extends TextField {
                     String text = textExtractor.apply(item);
                     return text != null && text.toLowerCase().contains(lower);
                 })
-                .limit(50) // Performance optimization guardrail
+                .limit(50)
                 .collect(Collectors.toList());
 
         if (results.isEmpty()) {
@@ -284,13 +297,17 @@ public class AutoSearchTextField<T> extends TextField {
         int staticCellHeight = subTextExtractor != null ? 60 : 40;
         int visibleRows = Math.min(results.size(), MAX_ROWS);
         listView.setPrefHeight((visibleRows * staticCellHeight) + 8);
-        // ── CHANGED: Remove fixed width constraint ──
-        // Do not call: listView.setPrefWidth(this.getWidth());
-        // Instead, clear any previous explicit preferred width so it wraps text sizes naturally:
         listView.setPrefWidth(ListView.USE_COMPUTED_SIZE);
         showPopupBelow();
     }
 
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO SHOW POPUP OF FILTER DATA
+     */
     private void showPopupBelow() {
         if (getScene() == null || getScene().getWindow() == null) return;
         var bounds = localToScreen(getBoundsInLocal());
@@ -302,10 +319,31 @@ public class AutoSearchTextField<T> extends TextField {
         }
     }
 
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO HIDE POPUP
+     */
     private void hidePopup() {
         popup.hide();
     }
 
+    public void setOnUserSelected(Consumer<T> callback) {
+        this.onItemSelected = callback;
+    }
+
+    public T getValue() {
+        return selectedItem;
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
+     */
     private void selectItem(T item) {
         selectedItem = item;
         suppressFilter = true;
@@ -319,17 +357,14 @@ public class AutoSearchTextField<T> extends TextField {
         }
     }
 
-    public void setOnUserSelected(Consumer<T> callback) {
-        this.onItemSelected = callback;
-    }
-
-    public T getValue() {
-        return selectedItem;
-    }
-
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
+     */
     public void setValue(T item) {
         if (item == null) {
-            clearSelection();
             return;
         }
         this.selectedItem = item;
@@ -341,8 +376,13 @@ public class AutoSearchTextField<T> extends TextField {
         hidePopup();
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO SET LIST OF ITEMS
+     */
     public void setItems(ObservableList<T> newItems) {
-        clearSelection();
         if (newItems == null) {
             this.masterList.clear();
         } else {
@@ -354,16 +394,34 @@ public class AutoSearchTextField<T> extends TextField {
                 listView.setItems(newItems);
 
             }
-            if (selectedIndex > -1) {
+            if (selectedIndex > -1 && selectedIndex < masterList.size()) {
                 setValue(masterList.get(selectedIndex));
                 return;
             }
+
+            if (deferredSelectedItem != null) {
+                if (masterList.contains(deferredSelectedItem)) {
+                    setValue(deferredSelectedItem);
+                } else {
+                    setValue(deferredSelectedItem);
+                }
+                deferredSelectedItem = null;
+                return;
+            }
+
             if (selectedItem != null) {
                 setValue(selectedItem);
             }
+
         }
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO SET LIST OF ITEMS
+     */
     public void setItems(List<T> newItems) {
         clearSelection();
         if (newItems == null) {
@@ -377,10 +435,19 @@ public class AutoSearchTextField<T> extends TextField {
                 listView.setItems(FXCollections.observableArrayList(newItems));
 
             }
-            if (selectedIndex > -1) {
+            if (selectedIndex > -1 && selectedIndex < masterList.size()) {
                 setValue(masterList.get(selectedIndex));
                 return;
             }
+
+            if (deferredSelectedItem != null) {
+                if (masterList.contains(deferredSelectedItem)) {
+                    setValue(deferredSelectedItem);
+                }
+                deferredSelectedItem = null;
+                return;
+            }
+
             if (selectedItem != null) {
                 setValue(selectedItem);
             }
@@ -391,6 +458,12 @@ public class AutoSearchTextField<T> extends TextField {
         return this.masterList;
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO CLEAR SELECTED ITEM
+     */
     public void clearSelection() {
         selectedItem = null;
         suppressFilter = true;
@@ -401,8 +474,171 @@ public class AutoSearchTextField<T> extends TextField {
         hidePopup();
     }
 
-    // ── TRANSLITERATION ENGINE ENGINE ───────────────────────────────────────
 
+    //                                      ~~~ FAKE COMBOX METHOD ~~~
+//----------------------------------------------------------------------------------------------------------------------
+    public FakeSelectionModel getSelectionModel() {
+        return new FakeSelectionModel();
+    }
+
+    public class FakeSelectionModel {
+
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT WILL ADD ITEMS IN THE MASTER LIST WHATEVER PASSED.
+         * ("A", "B", "C")
+         */
+        @SafeVarargs
+        public final void addAll(T... items) {
+            if (items != null && items.length > 0) {
+                masterList.addAll(items);
+
+                if (masterList.size() == items.length) {
+                    String sampleText = textExtractor.apply(items[0]);
+                    detectLanguage(sampleText);
+                    setupLocalTransliteration();
+                }
+            }
+        }
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT WILL ADD LIST OF ITEMS IN THE MASTER LIST.
+         */
+        public void addAll(List<T> items) {
+            if (items != null && !items.isEmpty()) {
+                masterList.addAll(items);
+                if (masterList.size() == items.size()) {
+                    String sampleText = textExtractor.apply(items.get(0));
+                    detectLanguage(sampleText);
+                    setupLocalTransliteration();
+                }
+            }
+        }
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT RETURN WHATEVER INDEX OF THE SELECTED ITEM.
+         */
+        public int getSelectedIndex() {
+            if (listView != null && listView.getSelectionModel() != null) {
+                return listView.getSelectionModel().getSelectedIndex();
+            }
+            return -1;
+        }
+
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT RETURN SELECTED ITEM.
+         */
+        public T getSelectedItem() {
+            return getValue();
+        }
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT SELECT THE PASSED PARAM ITEM.
+         */
+        public void select(T item) {
+            if (item == null) {
+                clearSelection();
+                deferredSelectedItem = null;
+                return;
+            }
+            deferredSelectedItem = item;
+            selectedItem = item;
+            setValue(item);
+        }
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT SELECT ITEM ON THE PASSED PARAM INDEX.
+         */
+        public void select(Integer pos) {
+            selectedIndex = pos;
+            if (masterList == null || masterList.isEmpty())
+                return;
+            setValue(masterList.get(pos));
+        }
+
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 06/03/2026    Nimit             1.0.0     IT CLEAR/ UNSELECT SELECTED ITEM.
+         */
+        public void clearSelection() {
+            selectedItem = null;
+            suppressFilter = true;
+            clear();
+            currentWord.setLength(0);
+            previousGujaratiLength = 0;
+            suppressFilter = false;
+            hidePopup();
+        }
+
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO DETECT LANGUAGE OF THE ITEM SO THAT SET IN WHICH LANGUAGE TO SEARCH
+     */
+    public void detectLanguage(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            language = "English";
+        }
+
+        // Strip out numbers, spaces, and standard punctuation to avoid false positives
+        String cleanText = text.replaceAll("[\\d\\s\\p{Punct}]", "");
+        if (cleanText.isEmpty()) {
+            language = "English";
+        }
+
+        // Inspect the very first clean alphabetic character
+        char firstChar = cleanText.charAt(0);
+        Character.UnicodeBlock block = Character.UnicodeBlock.of(firstChar);
+
+
+        if (block == Character.UnicodeBlock.GUJARATI) {
+            language = "Gujarati";
+        } else if (block == Character.UnicodeBlock.DEVANAGARI) {
+            language = "Hindi"; // Covers Hindi, Marathi, Nepali, etc.
+        } else if (block == Character.UnicodeBlock.BENGALI) {
+            language = "Bengali";
+        } else if (block == Character.UnicodeBlock.BASIC_LATIN) {
+            language = "English";
+        } else {
+            language = "English";
+        }
+    }
+
+
+//                                      ~~~ TRANSLATION PROCESS ~~~
+//----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0      IF OTHER LANGUAGE OF TEXTFIELD THEN THIS METHOD WILL HELP
+     * TO TRANSLATE THE WRITTEN ENGLISH WORD
+     */
     private void textFieldLocal() {
         addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.BACK_SPACE) {
@@ -437,6 +673,12 @@ public class AutoSearchTextField<T> extends TextField {
         });
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0     IT TAKE CHAR COMBINE WITH OTHER WORD, PREPROCESS IT, THEN TRANSLATE THE WORD
+     */
     private void flushCurrentWord() {
         if (currentWord.length() > 0) {
             String existing = getText();
@@ -451,6 +693,13 @@ public class AutoSearchTextField<T> extends TextField {
         }
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0       TO MANAGE BACKSPACE EVENT, BECAUSE TRANSLATION NEED TO PROPERLY CHECK AND
+     * THEN REMOVE LAST CHAR
+     */
     private void handleBackspace() {
         if (currentWord.length() > 0) {
             currentWord.deleteCharAt(currentWord.length() - 1);
@@ -475,6 +724,13 @@ public class AutoSearchTextField<T> extends TextField {
         }
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0      OTHER LANGUAGE REQUIRED SPECIAL ENGLISH CHAR TO GET SPECIFIC LANGUAGE WORD
+     * SO THIS METHOD WILL PREPROCESS IT.
+     */
     private String preprocess(String text) {
         return text
                 .replace("aa", "ā")
@@ -492,11 +748,16 @@ public class AutoSearchTextField<T> extends TextField {
                 .replace("rr", "ṛ");
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0      THIS METHOD WILL SET TEXTFIELD LANGUAGE.
+     */
     private Transliterator createTransliterator() {
-        String language = MainApp.getLocale();
         String targetScript;
 
-        switch (language) {
+        switch (language.substring(0, 2).toLowerCase()) {
             case "hi":
             case "mr":
             case "ne":
@@ -533,6 +794,12 @@ public class AutoSearchTextField<T> extends TextField {
         return Transliterator.getInstance("Latin-" + targetScript);
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0      METHOD HELPS TO SKIP DIGITS TO TRANSLATE
+     */
     private String transliteratePreservingDigits(String input) {
         String preprocessed = preprocess(input);
         StringBuilder result = new StringBuilder();
@@ -555,6 +822,9 @@ public class AutoSearchTextField<T> extends TextField {
         }
         return result.toString();
     }
+    //                                      ~~~ TRANSLATION PROCESS ~~~
+//----------------------------------------------------------------------------------------------------------------------
+
 
     // ── CUSTOM CELL RENDERER ────────────────────────────────────────────────
     private class DynamicCell extends ListCell<T> {
@@ -601,105 +871,6 @@ public class AutoSearchTextField<T> extends TextField {
             }
         }
     }
-    // ── COMBOBOX COMPATIBILITY LAYER ──────────────────────────────────────
-
-    /**
-     * Fake selection model to allow drop-in replacement for standard ComboBox code.
-     */
-    public FakeSelectionModel getSelectionModel() {
-        return new FakeSelectionModel();
-    }
-
-    public class FakeSelectionModel {
-
-        /**
-         * Mimics ComboBox.getItems().addAll(T... items)
-         * Adds multiple items passed as individual arguments or an array.
-         */
-        @SafeVarargs
-        public final void addAll(T... items) {
-            if (items != null && items.length > 0) {
-                masterList.addAll(items);
-
-                // OPTIONAL: Check language script of the new dataset batch
-                if (masterList.size() == items.length) { // Only log if it was empty before
-                    String sampleText = textExtractor.apply(items[0]);
-                    detectLanguage(sampleText);
-                    setupLocalTransliteration();
-
-                }
-            }
-        }
-
-        /**
-         * Mimics ComboBox.getItems().addAll(Collection<? extends T> col)
-         * Adds a complete collection or list of items to the master list.
-         */
-        public void addAll(List<T> items) {
-            if (items != null && !items.isEmpty()) {
-                masterList.addAll(items);
-
-                // OPTIONAL: Check language script of the new dataset batch
-                if (masterList.size() == items.size()) {
-                    String sampleText = textExtractor.apply(items.get(0));
-                    detectLanguage(sampleText);
-                    setupLocalTransliteration();
-                }
-            }
-        }
-
-        /**
-         * Mimics ComboBox.getSelectionModel().getSelectedIndex()
-         * * @return The active integer index position (0-based) currently highlighted or chosen,
-         * or -1 if no item is selected or the list is empty.
-         */
-        public int getSelectedIndex() {
-            if (listView != null && listView.getSelectionModel() != null) {
-                return listView.getSelectionModel().getSelectedIndex();
-            }
-            return -1;
-        }
-
-        /**
-         * Mimics ComboBox.getSelectionModel().getSelectedItem()
-         *
-         * @return The currently selected object of type T, or null.
-         */
-        public T getSelectedItem() {
-            return getValue();
-        }
-
-        /**
-         * Mimics ComboBox.getSelectionModel().select(item)
-         * Programmatically sets and pre-selects a value safely.
-         */
-        public void select(T item) {
-            selectedItem = item;
-            setValue(item);
-        }
-
-        /**
-         * Mimics ComboBox.getSelectionModel().select(item)
-         * Programmatically sets and pre-selects a value safely.
-         */
-        public void select(Integer pos) {
-            selectedIndex = pos;
-            if (masterList == null || masterList.isEmpty())
-                return;
-            setValue(masterList.get(pos));
-        }
-
-        public void clearSelection() {
-            selectedItem = null;
-            suppressFilter = true;
-            clear();
-            currentWord.setLength(0);
-            previousGujaratiLength = 0;
-            suppressFilter = false;
-            hidePopup();
-        }
-
-    }
 
     // ── COMBOBOX COMPATIBILITY LAYER (PROPERTY BINDINGS) ──────────────────
 
@@ -707,7 +878,6 @@ public class AutoSearchTextField<T> extends TextField {
      * Mimics ComboBox.valueProperty() to allow direct property manipulation and binding.
      */
     public javafx.beans.property.ObjectProperty<T> valueProperty() {
-        // Create a proxy property that syncs directly with our internal selection state
         javafx.beans.property.ObjectProperty<T> proxyProperty = new javafx.beans.property.SimpleObjectProperty<>(getValue());
 
         proxyProperty.addListener((obs, oldVal, newVal) -> {
@@ -722,37 +892,17 @@ public class AutoSearchTextField<T> extends TextField {
     }
 
     /**
-     * Detects the language script of the given text based on Unicode blocks.
-     *
-     * @param text The string text to inspect.
-     * @return A string identifier indicating the detected language layout ("Gujarati", "Hindi", "English", etc.)
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 06/03/2026    Nimit             1.0.0      TO GET TEXT OF SELECTED VALUE
      */
-    public void detectLanguage(String text) {
-        if (text == null || text.trim().isEmpty()) {
-            language = "English";
+    public String getFinalText() {
+        T selected = getValue();
+        String editorText = getText();
+        if (selected != null && selected.toString().equals(editorText)) {
+            return selected.toString();
         }
-
-        // Strip out numbers, spaces, and standard punctuation to avoid false positives
-        String cleanText = text.replaceAll("[\\d\\s\\p{Punct}]", "");
-        if (cleanText.isEmpty()) {
-            language = "English";
-        }
-
-        // Inspect the very first clean alphabetic character
-        char firstChar = cleanText.charAt(0);
-        Character.UnicodeBlock block = Character.UnicodeBlock.of(firstChar);
-
-
-        if (block == Character.UnicodeBlock.GUJARATI) {
-            language = "Gujarati";
-        } else if (block == Character.UnicodeBlock.DEVANAGARI) {
-            language = "Hindi"; // Covers Hindi, Marathi, Nepali, etc.
-        } else if (block == Character.UnicodeBlock.BENGALI) {
-            language = "Bengali";
-        } else if (block == Character.UnicodeBlock.BASIC_LATIN) {
-            language = "English";
-        } else {
-            language = "English";
-        }
+        return editorText != null ? editorText : "";
     }
 }
