@@ -35,10 +35,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
@@ -214,6 +211,7 @@ public class RateTask extends Task<Void> {
                         List<Map<String, Object>> basedList = (List) data.get("purchaseRateBased");
                         LOGGER.info("Member milk purchase rate based: {}", basedList.size());
                         List<MemberMilkPurchaseRateBased> listMemberRateBased = new ArrayList<>();
+                        Set<MilkType> milkTypeSet = new HashSet<>();
                         for (Map<String, Object> map : basedList) {
                             MemberMilkPurchaseRateBased based = new MemberMilkPurchaseRateBased();
                             based.setRateType(map.get("rateTypeCode") == null ? 1 : (int) map.get("rateTypeCode"));
@@ -230,6 +228,7 @@ public class RateTask extends Task<Void> {
                             based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
                             based.setMilkQualityType(mapMilkQuality.get(1));
                             listMemberRateBased.add(based);
+                            milkTypeSet.add(based.getMilkType());
                         }
                         memberRateDto.setListRateBased(listMemberRateBased);
 
@@ -260,14 +259,14 @@ public class RateTask extends Task<Void> {
                         url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
                         LOGGER.info("API PROCESSN , REQUEST OF : {}", url);
                         List<String> listRateDetails = new ArrayList<>();
-                        for (MilkType milkType : milkTypeList) {
+                        for (MilkType milkType : milkTypeSet) {
                             try {
                                 Map<String, String> contentRateDetail = new HashMap<>();
                                 contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
                                 contentRateDetail.put("milkQualityTypeCode", "1");
                                 contentRateDetail.put("milkTypeCode", milkType.getCode().toString());
                                 contentRateDetail.put("rateType", "MEMBER");
-//                            contentRateDetail.put("rateClass", "0");
+//                              contentRateDetail.put("rateClass", "0");
                                 LOGGER.info("purchaseRateCode : {}, milkQualityTypeCode : {}, milkTypeCode : {}, rateType : {}", purchaseRate.get("purchaseRateCode").toString(), "1", milkType.getCode().toString(), "MEMBER");
                                 updateMessage("Download rate " + purchaseRate.get("purchaseRateCode").toString() + "(" + milkType + ")");
 
@@ -282,7 +281,7 @@ public class RateTask extends Task<Void> {
                                 RealTimeMultipleResponse respRateDtl = responseRateDtl.getBody();
                                 if (respRateDtl == null || !"success".equalsIgnoreCase(respRateDtl.getStatus()))
                                     return null;
-//                            Map<String, Object> dataDtl = respRateDtl.getData();
+//                              Map<String, Object> dataDtl = respRateDtl.getData();
                                 List<String> listStr = respRateDtl.getData();
                                 LOGGER.info("Member milk purchase rate detail: {}-{}", milkType.getName(), listStr.size());
                                 if (listStr != null && !listStr.isEmpty()) {
@@ -302,6 +301,7 @@ public class RateTask extends Task<Void> {
                                 }
                             } catch (Exception e) {
                                 LOGGER.error("DETAIL ERROR : " + e.getMessage());
+                                return null;
                             }
                         }
                         memberRateDto.setListDetail(listRateDetails);
@@ -420,6 +420,7 @@ public class RateTask extends Task<Void> {
                     List<Map<String, Object>> basedList1 = (List) data.get("purchaseRateBased");
                     LOGGER.info("Society milk purchase rate based: {}", basedList1.size());
                     List<SocietyMilkPurchaseRateBased> listMemberRateBased1 = new ArrayList<>();
+                    Set<MilkType> milkTypeSet = new HashSet<>();
                     for (Map<String, Object> map : basedList1) {
                         SocietyMilkPurchaseRateBased based = new SocietyMilkPurchaseRateBased();
                         based.setRateType(rate1.getRateType().getCode());
@@ -435,6 +436,7 @@ public class RateTask extends Task<Void> {
                         based.setFormula(map.get("formulaCode") == null ? null : mapFormula.get(map.get("formulaCode").toString()));
                         based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
                         based.setMilkQualityType(mapMilkQuality.get((int) map.get("milkQualityTypeCode")));
+                        milkTypeSet.add(based.getMilkType());
                         listMemberRateBased1.add(based);
                     }
                     socRateDto.setListRateBased(listMemberRateBased1);
@@ -459,7 +461,7 @@ public class RateTask extends Task<Void> {
                     // Details
                     url = MainApp.getProperty(AppConstant.Props.BASE_URL_REALTIME, null) + AppConstant.UrlPath.RATE_DETAIL_DOWNLOAD;
                     List<String> listSocRateDetails = new ArrayList<>();
-                    for (MilkType milkType : milkTypeList) {
+                    for (MilkType milkType : milkTypeSet) {
                         content = new HashMap<>();
 //                        content.put("purchaseRateCode", sRate.get("purchaseRateCode").toString());
                         content.put("purchaseRateCode", bmcApplicableRate);
