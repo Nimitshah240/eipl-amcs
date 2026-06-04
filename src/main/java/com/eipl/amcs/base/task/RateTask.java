@@ -214,7 +214,7 @@ public class RateTask extends Task<Void> {
                         Set<MilkType> milkTypeSet = new HashSet<>();
                         Map<MilkType, BigDecimal> milkTypeWiseDetailCount = new HashMap<>();
                         MilkType newMilkType = null;
-                        BigDecimal count = BigDecimal.ONE;
+                        BigDecimal count = BigDecimal.ZERO;
                         for (Map<String, Object> map : basedList) {
                             MemberMilkPurchaseRateBased based = new MemberMilkPurchaseRateBased();
                             based.setRateType(map.get("rateTypeCode") == null ? 1 : (int) map.get("rateTypeCode"));
@@ -231,15 +231,14 @@ public class RateTask extends Task<Void> {
                             based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
                             based.setMilkQualityType(mapMilkQuality.get(1));
                             listMemberRateBased.add(based);
+
                             MilkType currentMilkType = based.getMilkType();
                             milkTypeSet.add(currentMilkType);
-                            if (newMilkType != null && currentMilkType != newMilkType) {
-                                LOGGER.info("MILK TYPE : {}, DETAIL COUNT : {} - CALCULATED ", newMilkType, count);
-                                count = BigDecimal.ONE;
-                            }
-                            count = count.multiply((based.getEndVal().subtract(based.getStartVal()).multiply(BigDecimal.TEN)).add(BigDecimal.ONE));
+
+                            BigDecimal val = (based.getEndVal().subtract(based.getStartVal())).multiply(BigDecimal.valueOf(10)).add(BigDecimal.ONE);
+                            count = milkTypeWiseDetailCount.containsKey(currentMilkType) ?
+                                    milkTypeWiseDetailCount.get(currentMilkType).multiply(val) : val;
                             milkTypeWiseDetailCount.put(currentMilkType, count);
-                            newMilkType = currentMilkType;
                         }
                         memberRateDto.setListRateBased(listMemberRateBased);
 
