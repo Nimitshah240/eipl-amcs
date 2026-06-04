@@ -148,12 +148,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 dpDeductionStartDate.setValue(dpDate.getValue());
             }
         });
-        dpDate.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(cboxProduct);
-                e.consume();
-            }
-        });
 //        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml"))));
         btnSaveUpdate.setOnAction(e -> {
 
@@ -181,6 +175,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                         errorMsg.toString());
                 alert.createAlert();
+                FocusUtils.requestFocus(cboxProduct);
                 return;
             }
             if (productSale == null) {
@@ -196,7 +191,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             tableProductSaleTransaction.setItems(listProductSaleTransaction);
             calculateSummary();
             clearControls();
-            FocusUtils.requestFocus(btnSaveUpdate);
+            FocusUtils.requestFocus(cboxProduct);
+            cboxTaxCode.getSelectionModel().clearSelection();
+            cboxProduct.getSelectionModel().clearSelection();
         });
         btnInstallments.setOnAction(e -> checkPaymentCycleAndSaveInstallment((short) 0));
         btnDelete.setOnAction(e -> deleteData());
@@ -313,7 +310,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     }
                     BigDecimal totalAmt = taxableAmt.add(taxAmount).setScale(2, RoundingMode.HALF_UP);
                     txtNetAmount.setText(totalAmt.toString());
-                    FocusUtils.requestFocus(btnProductSave);
                 }
             }
         });
@@ -335,39 +331,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         });
 
         txtRate.setOnAction(e -> {
-            if (!txtQuantity.getText().isEmpty()) {
-                if (new BigDecimal(txtQuantity.getText()).compareTo(BigDecimal.ZERO) <= 0) {
-                    txtQuantity.setText("");
-                    txtAmount.setText("");
-                    txtNetAmount.setText("");
-//                    FocusUtils.requestFocus(txtQuantity);
-                    return;
-                }
-            }
-            calculateAmount();
-            calculateTaxAmount();
-
-
-            if (!validateProductSave()) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
-                        errorMsg.toString());
-                alert.createAlert();
-                return;
-            }
-            if (productSale == null) {
-                productSale = new ProductSale();
-                setValuesInObject();
-            }
-            saleTxnTaxDto = new SaleTxnTaxDto();
-            saleTxnTaxDto.setSaleTaxList(setValuesInSaleTax());
-            ProductSaleTransaction txn = setValuesInSaleTransaction();
-            saleTxnTaxDto.setTransaction(txn);
-            saleTxnTaxDtoList.add(saleTxnTaxDto);
-            listProductSaleTransaction.add(txn);
-            tableProductSaleTransaction.setItems(listProductSaleTransaction);
-            calculateSummary();
-            clearControls();
-            FocusUtils.requestFocus(cboxProduct);
+            FocusUtils.requestFocus(btnProductSave);
+            e.consume();
         });
 
         tableProductSaleTransaction.setOnKeyPressed(event -> {
@@ -678,6 +643,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     dpDeductionStartDate.setDisable(false);
                 }
             } else {
+                cboxType.getSelectionModel().select(0);
                 btnSaveUpdate.setText(resourceBundle.getString("save"));
                 getNextCode();
             }
@@ -1027,7 +993,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForProductSale()));
 //                .stream().
 //                filter(e -> e.getKey() <= (short) 2 || e.getKey() == (short) 4).collect(Collectors.toList())));
-//        cboxType.getSelectionModel().select(0); //TODO combo- select(0) is not working
+        cboxType.getSelectionModel().select(0);
         if (productSale != null) {
             Optional<CustomerTypeKeyValDto> dd = cboxType.getItems().stream()
                     .filter(p -> p.getKey() == productSale.getConsumerType()).findFirst();
@@ -1088,7 +1054,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         if (stock == null || stock.getStock().subtract(new BigDecimal(BigInteger.ZERO)).compareTo(BigDecimal.ZERO) < 0)
             errorMsg.append(resourceBundle.getString("stock.not.available") + "\n");
 
-        if (dpDate.getValue().isAfter(LocalDate.now()))
+        if (dpDate.getValue() == null || dpDate.getValue().isAfter(LocalDate.now()))
             errorMsg.append(resourceBundle.getString("future.sale.not.possible") + "\n");
 
         if (cboxProduct.getSelectionModel().getSelectedItem() == null)
@@ -1099,7 +1065,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     private void getDeductionAndPurchaseData() {
-        if ((txtConsumerCode.getText() != null || !txtConsumerCode.getText().isBlank())) { //&& cboxType.getSelectionModel().getSelectedIndex() == 0 // TODO combo
+        if ((txtConsumerCode.getText() != null || !txtConsumerCode.getText().isBlank() && cboxType.getSelectionModel().getSelectedIndex() == 0 )) {
             String memberCode = generateCode(txtConsumerCode.getText());
             if (dpMilkFromDate.getValue() != null && dpMilkToDate.getValue() != null) {
                 var task = new MilkCollectionByMemberAndDateLoadTask(dpMilkFromDate.getValue(), dpMilkToDate.getValue(), memberCode);
