@@ -30,8 +30,8 @@ public class ApplicationConfig {
     public RestTemplate restTemplate() {
         if ("1".equalsIgnoreCase(MainApp.getProperty(AppConstant.Props.APP_REQUEST_DEBUG, "0"))) {
             SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-            factory.setConnectTimeout(5000);
-            factory.setReadTimeout(15000);
+            factory.setConnectTimeout(180000);
+            factory.setReadTimeout(180000);
             RestTemplate restTemplate = new RestTemplate(
                     new BufferingClientHttpRequestFactory(factory)
             );
@@ -42,8 +42,8 @@ public class ApplicationConfig {
             return restTemplate;
         } else {
             SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-            factory.setConnectTimeout(5000);
-            factory.setReadTimeout(15000);
+            factory.setConnectTimeout(180000);
+            factory.setReadTimeout(180000);
             RestTemplate restTemplate = new RestTemplate(factory);
             List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
             interceptors.add(new SystemParamInterceptor());
