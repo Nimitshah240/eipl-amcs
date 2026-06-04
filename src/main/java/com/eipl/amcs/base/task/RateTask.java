@@ -212,6 +212,9 @@ public class RateTask extends Task<Void> {
                         LOGGER.info("Member milk purchase rate based: {}", basedList.size());
                         List<MemberMilkPurchaseRateBased> listMemberRateBased = new ArrayList<>();
                         Set<MilkType> milkTypeSet = new HashSet<>();
+                        Map<MilkType, BigDecimal> milkTypeWiseDetailCount = new HashMap<>();
+                        MilkType newMilkType = null;
+                        BigDecimal count = BigDecimal.ONE;
                         for (Map<String, Object> map : basedList) {
                             MemberMilkPurchaseRateBased based = new MemberMilkPurchaseRateBased();
                             based.setRateType(map.get("rateTypeCode") == null ? 1 : (int) map.get("rateTypeCode"));
@@ -228,7 +231,15 @@ public class RateTask extends Task<Void> {
                             based.setMilkType(mapMilkType.get((int) map.get("milkTypeCode")));
                             based.setMilkQualityType(mapMilkQuality.get(1));
                             listMemberRateBased.add(based);
-                            milkTypeSet.add(based.getMilkType());
+                            MilkType currentMilkType = based.getMilkType();
+                            milkTypeSet.add(currentMilkType);
+                            if (newMilkType != null && currentMilkType != newMilkType) {
+                                LOGGER.info("MILK TYPE : {}, DETAIL COUNT : {} - CALCULATED ", newMilkType, count);
+                                count = BigDecimal.ONE;
+                            }
+                            count = count.multiply((based.getEndVal().subtract(based.getStartVal()).multiply(BigDecimal.TEN)).add(BigDecimal.ONE));
+                            milkTypeWiseDetailCount.put(currentMilkType, count);
+                            newMilkType = currentMilkType;
                         }
                         memberRateDto.setListRateBased(listMemberRateBased);
 
@@ -261,6 +272,7 @@ public class RateTask extends Task<Void> {
                         List<String> listRateDetails = new ArrayList<>();
                         for (MilkType milkType : milkTypeSet) {
                             try {
+                                int i = 0;
                                 Map<String, String> contentRateDetail = new HashMap<>();
                                 contentRateDetail.put("purchaseRateCode", purchaseRate.get("purchaseRateCode").toString());
                                 contentRateDetail.put("milkQualityTypeCode", "1");
@@ -297,7 +309,14 @@ public class RateTask extends Task<Void> {
                                                 "#" +
                                                 "1";
                                         listRateDetails.add(sb);
+                                        i++;
                                     }
+                                }
+
+                                BigDecimal milkDetailCount = milkTypeWiseDetailCount.get(milkType);
+                                if (milkDetailCount != null && milkDetailCount.compareTo(new BigDecimal(i)) != 0) {
+                                    LOGGER.error("COUNT OF MILK TYPE {}, DOES NOT MATCH, BASED COUNT {}, DETAIL FETCH COUNT {}", milkType, milkDetailCount, i);
+                                    return null;
                                 }
                             } catch (Exception e) {
                                 LOGGER.error("DETAIL ERROR : " + e.getMessage());
