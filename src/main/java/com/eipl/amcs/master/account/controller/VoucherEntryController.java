@@ -156,7 +156,8 @@ public class VoucherEntryController implements MyInitialization {
         });
         dpVoucherDate.setConverter(new LocalDateConvertor());
         txtAmount.setOnAction(e -> {
-            addVoucherTransaction();
+            FocusUtils.requestFocus(btnAdd);
+            e.consume();
         });
 
         if (root != null) {
@@ -260,7 +261,7 @@ public class VoucherEntryController implements MyInitialization {
             anotherSideAmt = anotherSideAmt.add(voucherTransaction.getAmount());
         }
         anotherSideTxn.setAmount(anotherSideAmt);
-//        anotherSideTxn.setNarration(cboxNarration.getFinalText()); //TODO - Make this in AutoSearchTextField
+        anotherSideTxn.setNarration(cboxNarration.getFinalText());
         anotherSideTxn.setCreditDebit(!credit_debit);
         anotherSideTxn.setAutoPostedScreen(true);
         voucherTransactionList.add(anotherSideTxn);
@@ -413,11 +414,12 @@ public class VoucherEntryController implements MyInitialization {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
                     errorMsg.toString());
             alert.createAlert();
+            FocusUtils.requestFocus(cboxLedger);
             return;
         }
         VoucherTransaction voucherTransaction = new VoucherTransaction();
         voucherTransaction.setLedger(cboxLedger.getValue());
-//        voucherTransaction.setNarration(cboxNarration.getFinalText()); //TODO - Make this in AutoSearchTextField
+        voucherTransaction.setNarration(cboxNarration.getFinalText());
         voucherTransaction.setAmount(new BigDecimal(txtAmount.getText()));
         voucherTransaction.setAutoPostedScreen(false);
         voucherTransaction.setCreditDebit(credit_debit);
@@ -524,6 +526,7 @@ public class VoucherEntryController implements MyInitialization {
 
     private void clearTransaction() {
         try {
+            cboxNarration.getSelectionModel().clearSelection();
             cboxLedger.getSelectionModel().clearSelection();
             cboxNarration.setValue(null);
             txtAmount.setText("0");

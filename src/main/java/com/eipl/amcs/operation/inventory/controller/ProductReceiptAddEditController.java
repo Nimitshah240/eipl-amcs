@@ -163,6 +163,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         btnAddProduct.setOnAction(e -> {
             validateAndSaveProduct();
+            FocusUtils.requestFocus(cboxProduct);
         });
         btnDeleteProduct.setOnAction(e -> deleteData());
 
@@ -174,16 +175,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txtTaxAmount.setText("0");
         txtTotalAmount.setText("0");
         txtRate.setOnAction(e -> {
-            calculateAmount();
-            calculateTaxAmount();
-            validateAndSaveProduct();
-        });
-
-        dpChallanDate.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                FocusUtils.requestFocus(cboxProduct);
-                e.consume();
-            }
+            FocusUtils.requestFocus(btnAddProduct);
+            e.consume();
         });
         tableProductReceiptTransaction.setOnKeyPressed(event -> {
             ProductReceiptTransaction dto = tableProductReceiptTransaction.getSelectionModel().getSelectedItem();
@@ -707,6 +700,5 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txtProductTotalAmount.setText("0");
         cboxProduct.getSelectionModel().clearSelection();
         cboxTax.getSelectionModel().clearSelection();
-        FocusUtils.requestFocus(cboxProduct);
     }
 }
