@@ -23,6 +23,7 @@ import javax.persistence.*;
 public class UserRole extends BaseModelTxn {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer code;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -4,8 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
-import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.task.UserLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -65,7 +63,7 @@ public class UsersController implements MyInitialization, PopupCallback {
         btnEdit.setOnAction(e -> {
             User dto = propUser.get();
             if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "UsersAddEdit",dto, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "UsersAddEdit", dto, this, resourceBundle.getString("user"));
         });
 
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
