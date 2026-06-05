@@ -12,6 +12,7 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.operation.model.Customer;
+import com.eipl.amcs.master.operation.model.Vendor;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptLoadTask;
@@ -43,7 +44,7 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
     @FXML
     TableColumn<ProductReceipt, String> colGrnNo, colChallanNo;
     @FXML
-    TableColumn<ProductReceipt, Customer> colParty;
+    TableColumn<ProductReceipt, Vendor> colParty;
     @FXML
     TableColumn<ProductReceipt, Number> colAmount;
     @FXML
@@ -178,7 +179,7 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
             colChallanNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getChallanNo()));
             colChallanDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getChallanDate()));
             colChallanDate.setCellFactory(new LocalDateCellFactory<>());
-            colParty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCustomer()));
+            colParty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getVendor()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getNetAmount()));
             propProductReceiptDto.bind(tableProductReceipt.getSelectionModel().selectedItemProperty());
 

@@ -1,13 +1,13 @@
 package com.eipl.amcs.operation.inventory.model;
 
 import com.eipl.amcs.base.model.BaseModelTxnAudit;
-import com.eipl.amcs.json.deserialize.CustomerDeserializer;
 import com.eipl.amcs.json.deserialize.SocietyDeserializer;
 import com.eipl.amcs.json.deserialize.UnionDeserializer;
-import com.eipl.amcs.json.serialize.CustomerSerialize;
+import com.eipl.amcs.json.deserialize.VendorDeserializer;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
-import com.eipl.amcs.master.operation.model.Customer;
+import com.eipl.amcs.json.serialize.VendorSerialize;
+import com.eipl.amcs.master.operation.model.Vendor;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -46,11 +46,11 @@ public class ProductReceiptAudit extends BaseModelTxnAudit {
     private BigDecimal netAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonSerialize(using = CustomerSerialize.class)
-    @JsonDeserialize(using = CustomerDeserializer.class)
-    @JoinColumn(name = "customer_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JsonSerialize(using = VendorSerialize.class)
+    @JsonDeserialize(using = VendorDeserializer.class)
+    @JoinColumn(name = "vendor_master_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     @JsonIgnoreProperties(value = {"society", "union"})
-    private Customer customer;
+    private Vendor vendor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = UnionSerialize.class)

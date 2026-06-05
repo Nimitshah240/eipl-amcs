@@ -26,7 +26,9 @@ import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateSaveTask;
 import com.eipl.amcs.master.operation.model.Customer;
+import com.eipl.amcs.master.operation.model.Vendor;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
+import com.eipl.amcs.master.operation.task.VendorLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
@@ -70,7 +72,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount;
     @FXML
-    private AutoSearchTextField<Customer> cboxParty;
+    private AutoSearchTextField<Vendor> cboxParty;
     @FXML
     private AutoSearchTextField<Product> cboxProduct;
     @FXML
@@ -298,7 +300,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         productReceipt.setChallanNo(txtChallanNo.getText());
         productReceipt.setChallanDate(dpChallanDate.getValue());
         productReceipt.setBillNo(txtBillNo.getText());
-        productReceipt.setCustomer(cboxParty.getValue());
+        productReceipt.setVendor(cboxParty.getValue());
     }
 
     @Override
@@ -454,17 +456,17 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
     @Override
     public void loadData() {
-        CustomerLoadTask task = new CustomerLoadTask();
+        VendorLoadTask task = new VendorLoadTask();
         task.setOnSucceeded(event -> {
             try {
-                List<Customer> list = task.get();
+                List<Vendor> list = task.get();
                 if (list != null) {
                     cboxParty.setItems(FXCollections.observableArrayList(list));
                     if (cboxParty.getItems() != null) {
                         if (productReceipt != null)
 //                            cboxParty.getSelectionModel().select(0);
 //                        else
-                            cboxParty.getSelectionModel().select(productReceipt.getCustomer());
+                            cboxParty.getSelectionModel().select(productReceipt.getVendor());
                     }
                 }
             } catch (InterruptedException | ExecutionException e) {
