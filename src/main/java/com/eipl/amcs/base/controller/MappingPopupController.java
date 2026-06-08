@@ -527,7 +527,12 @@ public class MappingPopupController implements MyInitialization {
                     var controller64 = (UsersAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/org/UsersAddEdit.fxml"));
                     controller64.setStage(stage);
                     controller64.setCallback(callback);
-                    controller64.setUser(object != null ? (User) object : null);
+                    if (object instanceof User) {
+                        controller64.setUser((User) object);
+                    } else {
+                        controller64.setUser(null);
+                    }
+                    controller64.initData();
                     root.setCenter(controller64.getRoot());
                     break;
                 case "SocietyAddEdit":
