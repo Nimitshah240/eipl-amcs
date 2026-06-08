@@ -4,6 +4,7 @@
 <?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -44,8 +45,8 @@
                     <children>
 
                         <E_DatePicker fx:id="dpSellDate" disable="false" editable="false" GridPane.rowIndex="1" />
-                        <E_ComboBox fx:id="cboxShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <E_ComboBox fx:id="cboxConsumertype" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+                        <AutoSearchTextField fx:id="cboxShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxConsumertype" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                         <Label text="%consumercode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <E_TextField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="%consumername" GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -58,9 +59,9 @@
                         <Label text="%rate" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="%amount" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                         <Label text="%couponbalance" GridPane.rowIndex="11" />
-                        <E_ComboBox fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
-                        <E_ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <E_ComboBox fx:id="cboxClass" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <AutoSearchTextField fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <AutoSearchTextField fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <AutoSearchTextField fx:id="cboxClass" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <E_TextField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" />
                         <E_TextField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                         <E_TextField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />

@@ -45,7 +45,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -135,7 +134,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         dpDate.setValue(LocalDate.now());
         dpDate.setConverter(new LocalDateConvertor());
         dpDeductionFromDate.setConverter(new LocalDateConvertor());
-        rbtnCash.setSelected(true);
+        rbtnCredit.setSelected(true);
+        cboxType.setDisable(true);
+        dpDeductionStartDate.setDisable(false);
         setupComboBox();
         setupTable();
         loadData();
@@ -247,9 +248,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             }
         });
 
-        rbtnCredit.setOnAction(event ->
-
-        {
+        rbtnCredit.setOnAction(event -> {
+            cboxType.setDisable(true);
+            cboxType.getSelectionModel().select(0);
+            txtConsumerCode.clear();
+            txtConsumerName.clear();
             dpMilkFromDate.setDisable(false);
             dpMilkToDate.setDisable(false);
             dpDeductionFromDate.setDisable(false);
@@ -260,9 +263,14 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             txtNoOfInstallment.setText("1");
             btnInstallments.setDisable(false);
         });
-        rbtnCash.setOnAction(event ->
-
-        {
+        rbtnCash.setOnAction(event -> {
+            cboxType.setDisable(false);
+            Optional<CustomerTypeKeyValDto> customerDto = cboxType.getItems().stream()
+                    .filter(item -> item.getKey() > 2).findFirst();
+            customerDto.ifPresent(dto -> cboxType.getSelectionModel().select(dto));
+            txtConsumerCode.setText("1");
+            String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
+            setConsumerName(code);
             dpMilkFromDate.setDisable(true);
             dpMilkToDate.setDisable(true);
             dpDeductionFromDate.setDisable(true);
@@ -491,7 +499,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtConsumerName.setText(list.getName());
 //                        txtCreditLimit.setText("0");
 //                        txtCreditLimit.setDisable(true);
-                        rbtnCredit.setDisable(true);
                     } else {
                         txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
@@ -510,7 +517,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     Member list = task.get();
                     if (list != null && list.getMemberType().getCode() == 2) {
                         txtConsumerName.setText(list.toMemberName());
-                        rbtnCredit.setDisable(true);
                     } else {
                         txtConsumerCode.setText("");
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
@@ -1065,7 +1071,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     }
 
     private void getDeductionAndPurchaseData() {
-        if ((txtConsumerCode.getText() != null || !txtConsumerCode.getText().isBlank() && cboxType.getSelectionModel().getSelectedIndex() == 0 )) {
+        if ((txtConsumerCode.getText() != null || !txtConsumerCode.getText().isBlank() && cboxType.getSelectionModel().getSelectedIndex() == 0)) {
             String memberCode = generateCode(txtConsumerCode.getText());
             if (dpMilkFromDate.getValue() != null && dpMilkToDate.getValue() != null) {
                 var task = new MilkCollectionByMemberAndDateLoadTask(dpMilkFromDate.getValue(), dpMilkToDate.getValue(), memberCode);

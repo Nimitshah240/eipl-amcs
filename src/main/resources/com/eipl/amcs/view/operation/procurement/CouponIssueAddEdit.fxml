@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 
 <StackPane fx:id="root" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -49,24 +50,28 @@
                     </rowConstraints>
                     <children>
                         <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
-                        <E_ComboBox fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5"/>
-                        <ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
-                                  GridPane.rowIndex="1"/>
-                        <ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
-                                  GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
+                                                          GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
+                                                          GridPane.rowIndex="1"/>
+                        <E_NumericField fx:id="txtCode" maxLength="11" GridPane.rowIndex="3"/>
+                        <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0"
+                                                             GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
+                        <AutoSearchTextField fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5"/>
+                        <AutoSearchTextField fx:id="cboxBankName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
+                                                            GridPane.rowIndex="5"/>
+                        <E_NumericField fx:id="txtAmount" maxLength="7" real="true" GridPane.columnIndex="2"
+                                                                GridPane.rowIndex="5"/>
                         <Label text="%couponissue.create.milktype" GridPane.columnIndex="2"/>
                         <Label text="%couponissue.create.date"/>
                         <!--                                <ComboBox fx:id="cboxSubCenter" editable="true" layoutX="10.0" layoutY="43.0" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />-->
                         <Label text="%couponissue.create.type" GridPane.columnIndex="1"/>
-                        <E_NumericField fx:id="txtCode" maxLength="11" GridPane.rowIndex="3"/>
-                        <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0"
-                                     GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3"/>
+
+
                         <Label text="%couponissue.create.issuenumber" GridPane.rowIndex="6"/>
                         <Label text="%couponissue.create.couponamount" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
                         <Label text="%consumer.name" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                         <Label text="%couponissue.create.consumercode" GridPane.rowIndex="2"/>
-                        <E_NumericField fx:id="txtAmount" maxLength="7" real="true" GridPane.columnIndex="2"
-                                        GridPane.rowIndex="5"/>
                         <E_NumericField fx:id="txtIssueNumber" maxLength="15" GridPane.rowIndex="7"/>
 
                         <!-- 4. Footer Buttons -->
@@ -101,8 +106,6 @@
                             </children>
                         </HBox>
                         <Label text="%paymenttype" GridPane.rowIndex="4"/>
-                        <E_ComboBox fx:id="cboxBankName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
-                                    GridPane.rowIndex="5"/>
                         <Label text="%bank" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                     </children>
                     <padding>

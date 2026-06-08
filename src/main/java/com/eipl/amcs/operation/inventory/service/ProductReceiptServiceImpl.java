@@ -80,7 +80,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
         productReceiptDto.getProductReceipt().setVoucherNo(voucherNo);
         productReceiptDto.getProductReceipt().setxCol1(UUID.randomUUID().toString());
         ProductReceipt receiptNew = productReceiptRepository.customSave(productReceiptDto.getProductReceipt(), identityInfo);
-        receiptNew.setCustomer(productReceiptDto.getProductReceipt().getCustomer());
+        receiptNew.setVendor(productReceiptDto.getProductReceipt().getVendor());
         receiptNew.setUnion(productReceiptDto.getProductReceipt().getUnion());
         receiptNew.setSociety(productReceiptDto.getProductReceipt().getSociety());
 
@@ -224,13 +224,13 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                 for (ProductSaleAcUtil a : list) {
                     amt = amt.add(a.getAmount());
                 }
-                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, dto.getProductReceipt().getCustomer().getLedger() == null ? eventsList.get(0).getCreditLedger() : dto.getProductReceipt().getCustomer().getLedger(),
+                VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, dto.getProductReceipt().getVendor().getLedger() == null ? eventsList.get(0).getCreditLedger() : dto.getProductReceipt().getVendor().getLedger(),
                         "Product receipt " + dto.getProductReceipt().getGrnNo(), "1");
                 creditTxn.setAutoPostedScreen(false);
                 voucher.getVoucherTransactions().add(creditTxn);
                 if (eventsList.get(0).getCreditSubLedger()) {
                     VoucherSubLedger voucherSubLedger = null;
-                    Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode(Short.valueOf(String.valueOf(dto.getProductReceipt().getCustomer().getType())), dto.getProductReceipt().getCustomer().getCode());
+                    Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode(Short.valueOf(String.valueOf(dto.getProductReceipt().getVendor().getVendorType())), dto.getProductReceipt().getVendor().getCode());
                     if (subLedger.isPresent()) {
                         creditTxn.setVoucherSubLedgers(new ArrayList<>());
                         voucherSubLedger = VoucherUtil.getVoucherSubLedger(voucher, creditTxn, "1", amt, true,
@@ -365,7 +365,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
         ProductReceiptDto dtoNew = new ProductReceiptDto();
         productReceiptDto.getProductReceipt().setupdateData();
         ProductReceipt receiptNew = productReceiptRepository.customUpdate(productReceiptDto.getProductReceipt(), identityInfo);
-        receiptNew.setCustomer(productReceiptDto.getProductReceipt().getCustomer());
+        receiptNew.setVendor(productReceiptDto.getProductReceipt().getVendor());
         receiptNew.setUnion(productReceiptDto.getProductReceipt().getUnion());
         receiptNew.setSociety(productReceiptDto.getProductReceipt().getSociety());
 

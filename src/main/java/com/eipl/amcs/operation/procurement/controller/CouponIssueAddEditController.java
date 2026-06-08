@@ -3,15 +3,11 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_NumericField;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.operation.model.Customer;
@@ -29,7 +25,6 @@ import com.eipl.amcs.utils.FocusUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -51,15 +46,15 @@ public class CouponIssueAddEditController implements MyInitialization {
     @FXML
     private E_DatePicker dpDate;
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxType;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private ComboBox<Bank> cboxBankName;
+    private AutoSearchTextField<Bank> cboxBankName;
     @FXML
     private VBox vbox;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<String> cboxPaymentType;
+    private AutoSearchTextField<String> cboxPaymentType;
     @FXML
     private E_Button btnClose, btnSaveUpdate;
     @FXML
@@ -97,8 +92,8 @@ public class CouponIssueAddEditController implements MyInitialization {
         });
         cboxBankName.setDisable(true);
         cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
-        cboxPaymentType.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            if (cboxPaymentType.getSelectionModel().getSelectedIndex() == 1) {
+        cboxPaymentType.setOnAction(e -> {
+            if (cboxPaymentType.getSelectionModel().getSelectedItem().equalsIgnoreCase("bank")) {
                 cboxBankName.setDisable(false);
             } else {
                 cboxBankName.setDisable(true);
@@ -107,13 +102,10 @@ public class CouponIssueAddEditController implements MyInitialization {
         });
         cboxPaymentType.getSelectionModel().select(0);
 
-        FocusUtils.requestFocus(btnSaveUpdate);
-
         btnClose.setOnAction(e -> this.stage.close());
 
         btnSaveUpdate.setOnAction(event -> {
             validateAndSave();
-            FocusUtils.requestFocus(txtCode);
         });
 
         txtCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
@@ -126,6 +118,9 @@ public class CouponIssueAddEditController implements MyInitialization {
                     getNameFromCustomerCode(code);
                 }
             }
+        });
+        txtAmount.setOnAction(e -> {
+            FocusUtils.requestFocus(btnSaveUpdate);
         });
     }
 
@@ -240,7 +235,7 @@ public class CouponIssueAddEditController implements MyInitialization {
                 txtCode.setText(dto.getConsumerCode().substring(MainApp.identityDto.getSociety().getCode().length()));
                 txtAmount.setText(String.valueOf(dto.getAmount()));
                 cboxMilkType.getSelectionModel().select(dto.getMilkType());
-                cboxPaymentType.getSelectionModel().select(dto.getPaymentMode());
+                cboxPaymentType.getSelectionModel().select(Integer.valueOf(dto.getPaymentMode()));
                 cboxBankName.getSelectionModel().select(Integer.parseInt(dto.getBank().getCode()));
             } else {
                 getNextCouponIssue();
@@ -276,7 +271,6 @@ public class CouponIssueAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
         dpDate.setConverter(new LocalDateConvertor());
     }
 
@@ -358,7 +352,7 @@ public class CouponIssueAddEditController implements MyInitialization {
                 clearControls();
                 getNextCouponIssue();
                 this.callback.reloadData(true);
-                FocusUtils.requestFocus(btnSaveUpdate);
+                FocusUtils.requestFocus(txtCode);
             } else {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("couponissue.title"),
                         resourceBundle.getString("couponissue.alert.insert.message"));
@@ -393,7 +387,7 @@ public class CouponIssueAddEditController implements MyInitialization {
                     clearControls();
                     getNextCouponIssue();
                     this.callback.reloadData(true);
-                    FocusUtils.requestFocus(btnSaveUpdate);
+                    FocusUtils.requestFocus(txtCode);
                 } else {
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("couponissue.title"),
                             resourceBundle.getString("couponissue.alert.update.message"));
