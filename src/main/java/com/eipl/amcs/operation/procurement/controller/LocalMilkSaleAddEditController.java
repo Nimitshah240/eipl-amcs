@@ -4,18 +4,14 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
-import com.eipl.amcs.master.global.convertor.MilkClassConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkClass;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -38,7 +34,6 @@ import com.eipl.amcs.utils.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -58,15 +53,15 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxConsumertype;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxConsumertype;
     @FXML
-    private ComboBox<String> cboxPaymentType;
+    private AutoSearchTextField<String> cboxPaymentType;
     @FXML
-    private E_ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private E_ComboBox<MilkClass> cboxClass;
+    private AutoSearchTextField<MilkClass> cboxClass;
     @FXML
-    private E_ComboBox<Shift> cboxShift;
+    private AutoSearchTextField<Shift> cboxShift;
     @FXML
     private E_TextField txtDiscount, txtRate, txtAmount, txtQuantity, txtCash, txtCredit, txtCoupon, txtInvoiceNo, txtConsumerName, txtConsumerCode, txtCouponBalance;
     @FXML
@@ -129,7 +124,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         loadMilkClass();
         getNextCode();
         fetchCouponBalance();
-        cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("credit"), resourceBundle.getString("coupon"));
+        cboxPaymentType.getSelectionModel().addAll(resourceBundle.getString("cash"), resourceBundle.getString("credit"), resourceBundle.getString("coupon"));
         cboxPaymentType.getSelectionModel().select(0);
         cboxPaymentType.setOnAction(e -> {
             paymentSelection();
@@ -179,7 +174,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         });
 
         cboxClass.setOnAction(e -> {
-            if (!cboxMilkType.getSelectionModel().isEmpty()) {
+            if (!cboxMilkType.getText().isEmpty()) {
                 getRate(dpSellDate.getValue(), cboxMilkType.getValue(), cboxClass.getValue());
             }
         });
@@ -206,13 +201,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxClass.setConverter(new MilkClassConvertor(cboxClass));
-        cboxShift.setConverter(new ShiftConvertor(cboxShift));
         dpSellDate.setConverter(new LocalDateConvertor());
-
-        cboxConsumertype.setConverter(new CustomerTypeConvertor(cboxConsumertype));
-
     }
 
     public void loadCustomerType() {
@@ -312,7 +301,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 errorMsg.append(resourceBundle.getString("consumernullerror") + "\n");
             if (txtConsumerName.getText() == null || txtConsumerName.getText().isEmpty())
                 errorMsg.append(resourceBundle.getString("consumernamenullerror") + "\n");
-            if (cboxPaymentType.getValue() == null || cboxPaymentType.getSelectionModel().isEmpty())
+            if (cboxPaymentType.getValue() == null || cboxPaymentType.getText().isEmpty())
                 errorMsg.append(resourceBundle.getString("paymenttypenullerror") + "\n");
             if (cboxMilkType.getValue() == null)
                 errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");

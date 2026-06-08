@@ -84,8 +84,8 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     couponIssue.getMilkType());
             Optional<SubLedger> subLedger = subLedgerRepository.findByTypeAndReferenceCode((short) Integer.parseInt(String.valueOf(couponIssue.getConsumerType())), couponIssue.getConsumerCode());
 
-            String voucherNo = createAutoPosting(couponIssue, null, subLedger.orElse(null), CommonUtils.setIdentityHeader());
-            couponIssue.setVoucherNo(voucherNo);
+//            String voucherNo = createAutoPosting(couponIssue, null, subLedger.orElse(null), CommonUtils.setIdentityHeader());
+//            couponIssue.setVoucherNo(voucherNo);
             if (couponBal == null) {
                 couponBal = new CouponBalance();
                 couponBal.setValuesInObject(couponIssue.getConsumerCode(), couponIssue.getConsumerType(),
@@ -301,8 +301,8 @@ public class CouponIssueServiceImpl implements CouponIssueService {
             String oldVoucherCode = couponIssuePrev.getVoucherNo();
 
             // Create new voucher
-            String voucherNo = createAutoPosting(updatedCouponIssue, null, subLedger.orElse(null), CommonUtils.setIdentityHeader());
-            updatedCouponIssue.setVoucherNo(voucherNo);
+//            String voucherNo = createAutoPosting(updatedCouponIssue, null, subLedger.orElse(null), CommonUtils.setIdentityHeader());
+//            updatedCouponIssue.setVoucherNo(voucherNo);
 
             if (!Objects.equals(couponIssuePrev.getMilkType().getCode(), updatedCouponIssue.getMilkType().getCode()) || !Objects.equals(couponIssuePrev.getConsumerCode(), updatedCouponIssue.getConsumerCode())
                     || !Objects.equals(couponIssuePrev.getConsumerType(), updatedCouponIssue.getConsumerType())) {
