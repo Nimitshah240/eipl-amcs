@@ -25,9 +25,7 @@ import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateByProductTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateSaveTask;
-import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Vendor;
-import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.master.operation.task.VendorLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductReceiptDto;
 import com.eipl.amcs.operation.inventory.dto.ReceiptTxnTaxDto;
@@ -48,7 +46,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -345,6 +342,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     ex.printStackTrace();
                 }
             });
+            task.setOnFailed(e -> {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
+                        resourceBundle.getString("product.receipt.insert.failed"));
+                alert.createAlert();
+            });
             new Thread(task).start();
         }
     }
@@ -393,6 +395,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(e -> {
+            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
+                    resourceBundle.getString("product.receipt.insert.failed"));
+            alert.createAlert();
         });
         new Thread(task).start();
     }

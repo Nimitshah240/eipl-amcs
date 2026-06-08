@@ -706,6 +706,7 @@ product.receipt.validation.grndate.before.challandate=GRN दिनांक च
 product.receipt.validation.member.empty=ग्राहक चुनें
 product.receipt.validation.challan.no.empty=चालान संख्या दर्ज करें
 product.receipt.insert.successful=उत्पाद रसीद सफलतापूर्वक सहेजी गई
+product.receipt.insert.failed=उत्पाद रसीद असफल सहेजी गई
 productsale.insert.successful=उत्पाद बिक्री सफलतापूर्वक सहेजी गई
 product.receipt.update.successful=उत्पाद रसीद सफलतापूर्वक अपडेट की गई
 product.receipt.delete.successful=उत्पाद रसीद सफलतापूर्वक हटाई गई
