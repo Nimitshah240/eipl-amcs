@@ -30,7 +30,7 @@ public class AutoSearchTextField<T> extends TextField {
 
     private final ObservableList<T> masterList;
     private final Function<T, String> textExtractor;
-    private final Function<T, String> subTextExtractor;
+    private Function<T, String> subTextExtractor;
 
     private Consumer<T> onItemSelected;
     private final Popup popup;
@@ -73,7 +73,7 @@ public class AutoSearchTextField<T> extends TextField {
         this(items, textExtractor, null);
         applyBaseStyles();
         setupLocalTransliteration();
-
+        initializeControlNodes();
     }
 
     /**
@@ -118,6 +118,14 @@ public class AutoSearchTextField<T> extends TextField {
         );
     }
 
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 03/06/2026    Nimit             1.0.0      Set design and initialize different methods
+     * 08/06/2026    Nimit             1.0.1      Added focus method call - to show popup on focus
+     */
     private void initializeControlNodes() {
         this.listView.setFocusTraversable(false);
         this.listView.setStyle("-fx-background-color: white; -fx-background-insets: 0; -fx-padding: 0;");
@@ -136,6 +144,25 @@ public class AutoSearchTextField<T> extends TextField {
         wireKeyNavigation();
         wireMouseSelection();
         wireFocusLost();
+        focusedOnTextField();
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 08/06/2026    Nimit             1.0.0       To show popup on getting focus on textfield, and select item if any selected.
+     */
+    private void focusedOnTextField() {
+        focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                showPopup(masterList);
+                if (selectedItem != null)
+                    listView.getSelectionModel().select(selectedItem);
+            } else {
+                hidePopup();
+            }
+        });
     }
 
     public void setupLocalTransliteration() {
@@ -159,6 +186,14 @@ public class AutoSearchTextField<T> extends TextField {
         });
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 03/06/2026    Nimit             1.0.0       To manage different key events
+     * 08/06/2026    Nimit             1.0.1       Solved bug of pre-selected value and
+     * just click enter without changing data then it will take the pre-selected value.
+     */
     private void wireKeyNavigation() {
         addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 
@@ -166,9 +201,8 @@ public class AutoSearchTextField<T> extends TextField {
             if (!popup.isShowing()) {
                 switch (event.getCode()) {
                     case ENTER:
-                        T highlighted = listView.getSelectionModel().getSelectedItem();
-                        if (highlighted != null) {
-                            selectItem(highlighted);
+                        if (selectedItem != null) {
+                            selectItem(selectedItem);
                             this.fireEvent(new javafx.event.ActionEvent(this, null));
                         }
 
@@ -245,12 +279,43 @@ public class AutoSearchTextField<T> extends TextField {
                     hidePopup();
                     event.consume();
                     break;
+                case RIGHT:
+                    if (event.isControlDown()) {
+
+                        this.fireEvent(new javafx.event.ActionEvent(this, null));
+                        Platform.runLater(() -> {
+                            this.fireEvent(new KeyEvent(
+                                    KeyEvent.KEY_PRESSED, "", "",
+                                    KeyCode.TAB, false, false, false, false
+                            ));
+                        });
+                        event.consume();
+                    }
+                    break;
+                case LEFT:
+                    if (event.isControlDown()) {
+
+                        this.fireEvent(new javafx.event.ActionEvent(this, null));
+                        Platform.runLater(() -> {
+                            this.fireEvent(new KeyEvent(
+                                    KeyEvent.KEY_PRESSED, "", "",
+                                    KeyCode.TAB, true, false, false, false
+                            ));
+                        });
+                        event.consume();
+                    }
                 default:
                     break;
             }
         });
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 03/06/2026    Nimit             1.0.0       To handle mouse click selection
+     */
     private void wireMouseSelection() {
         listView.setOnMouseClicked(event -> {
             T clicked = listView.getSelectionModel().getSelectedItem();
@@ -260,6 +325,12 @@ public class AutoSearchTextField<T> extends TextField {
         });
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 03/06/2026    Nimit             1.0.0       Close popup on focus lost
+     */
     private void wireFocusLost() {
         focusedProperty().addListener((obs, wasFocused, isFocused) -> {
             if (!isFocused) hidePopup();
@@ -273,7 +344,8 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO FILTER DATA BY SEARCH QUERY
+     * 03/06/2026    Nimit             1.0.0       TO FILTER DATA BY SEARCH QUERY
+     * 08/06/2026    Nimit             1.0.1       Extract showing popup to different method for multiple use.
      */
     private void filterAndShow(String query) {
         String lower = query.toLowerCase();
@@ -290,7 +362,16 @@ public class AutoSearchTextField<T> extends TextField {
             hidePopup();
             return;
         }
+        showPopup(results);
+    }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 08/06/2026    Nimit             1.0.0       TO SHOW POPUP OF DATA
+     */
+    private void showPopup(List<T> results) {
         listView.setItems(FXCollections.observableArrayList(results));
         listView.getSelectionModel().selectFirst();
 
@@ -306,7 +387,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO SHOW POPUP OF FILTER DATA
+     * 03/06/2026    Nimit             1.0.0       TO SHOW POPUP OF FILTER DATA
      */
     private void showPopupBelow() {
         if (getScene() == null || getScene().getWindow() == null) return;
@@ -324,7 +405,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO HIDE POPUP
+     * 03/06/2026    Nimit             1.0.0       TO HIDE POPUP
      */
     private void hidePopup() {
         popup.hide();
@@ -342,10 +423,17 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
+     * 03/06/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
+     * 08/06/2026    Nimit             1.0.1       Solved bug - To get index of the selected item from the list.
+     * And clear string which is written by user for searching
      */
     private void selectItem(T item) {
+        currentWord.setLength(0);
+        previousGujaratiLength = 0;
         selectedItem = item;
+        if (masterList != null && item != null) {
+            selectedIndex = masterList.indexOf(item);
+        }
         suppressFilter = true;
         String displayStr = textExtractor.apply(item);
         setText(displayStr);
@@ -361,11 +449,15 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
+     * 03/06/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
+     * 08/06/2026    Nimit             1.0.1       Solved bug - To get index of the selected item from the list.
      */
     public void setValue(T item) {
         if (item == null) {
             return;
+        }
+        if (masterList != null) {
+            selectedIndex = masterList.indexOf(item);
         }
         this.selectedItem = item;
         this.suppressFilter = true;
@@ -380,7 +472,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO SET LIST OF ITEMS
+     * 03/06/2026    Nimit             1.0.0       TO SET LIST OF ITEMS
      */
     public void setItems(ObservableList<T> newItems) {
         if (newItems == null) {
@@ -420,10 +512,91 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO SET LIST OF ITEMS
+     * 08/06/2026    Nimit             1.0.0       To set subtext in the list
+     */
+    public void setItems(ObservableList<T> newItems, Function<T, String> subTextExtractor) {
+        if (newItems == null) {
+            this.masterList.clear();
+        } else {
+            this.subTextExtractor = subTextExtractor;
+            this.masterList.setAll(newItems);
+            if (!newItems.isEmpty()) {
+                String sampleText = textExtractor.apply(newItems.get(0));
+                detectLanguage(sampleText);
+                setupLocalTransliteration();
+                listView.setItems(newItems);
+
+            }
+            if (selectedIndex > -1 && selectedIndex < masterList.size()) {
+                setValue(masterList.get(selectedIndex));
+                return;
+            }
+
+            if (deferredSelectedItem != null) {
+                if (masterList.contains(deferredSelectedItem)) {
+                    setValue(deferredSelectedItem);
+                } else {
+                    setValue(deferredSelectedItem);
+                }
+                deferredSelectedItem = null;
+                return;
+            }
+
+            if (selectedItem != null) {
+                setValue(selectedItem);
+            }
+
+        }
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 03/06/2026    Nimit             1.0.0       TO SET LIST OF ITEMS
+     * 08/06/2026    Nimit             1.0.1       Solved bug- It will select value if already pre-selected before setting list
      */
     public void setItems(List<T> newItems) {
         clearSelection();
+        if (newItems == null) {
+            this.masterList.clear();
+        } else {
+            this.masterList.setAll(newItems);
+            if (!newItems.isEmpty()) {
+                String sampleText = textExtractor.apply(newItems.get(0));
+                detectLanguage(sampleText);
+                setupLocalTransliteration();
+                listView.setItems(FXCollections.observableArrayList(newItems));
+
+            }
+            if (selectedIndex > -1 && selectedIndex < masterList.size()) {
+                setValue(masterList.get(selectedIndex));
+                return;
+            }
+
+            if (deferredSelectedItem != null) {
+                if (masterList.contains(deferredSelectedItem)) {
+                    setValue(deferredSelectedItem);
+                }
+                deferredSelectedItem = null;
+                return;
+            }
+
+            if (selectedItem != null) {
+                setValue(selectedItem);
+            }
+        }
+    }
+
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 08/06/2026    Nimit             1.0.0       To set sub text in the list.
+     */
+    public void setItems(List<T> newItems, Function<T, String> subTextExtractor) {
+        clearSelection();
+        this.subTextExtractor = subTextExtractor;
         if (newItems == null) {
             this.masterList.clear();
         } else {
@@ -462,7 +635,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO CLEAR SELECTED ITEM
+     * 03/06/2026    Nimit             1.0.0       TO CLEAR SELECTED ITEM
      */
     public void clearSelection() {
         selectedItem = null;
@@ -488,8 +661,9 @@ public class AutoSearchTextField<T> extends TextField {
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT WILL ADD ITEMS IN THE MASTER LIST WHATEVER PASSED.
+         * 03/06/2026    Nimit             1.0.0     IT WILL ADD ITEMS IN THE MASTER LIST WHATEVER PASSED.
          * ("A", "B", "C")
+         * 08/06/2026    Nimit             1.0.1     Solved bug - It will select pre-selected value.
          */
         @SafeVarargs
         public final void addAll(T... items) {
@@ -501,6 +675,23 @@ public class AutoSearchTextField<T> extends TextField {
                     detectLanguage(sampleText);
                     setupLocalTransliteration();
                 }
+
+                if (selectedIndex > -1 && selectedIndex < masterList.size()) {
+                    setValue(masterList.get(selectedIndex));
+                    return;
+                }
+
+                if (deferredSelectedItem != null) {
+                    if (masterList.contains(deferredSelectedItem)) {
+                        setValue(deferredSelectedItem);
+                    }
+                    deferredSelectedItem = null;
+                    return;
+                }
+
+                if (selectedItem != null) {
+                    setValue(selectedItem);
+                }
             }
         }
 
@@ -508,7 +699,8 @@ public class AutoSearchTextField<T> extends TextField {
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT WILL ADD LIST OF ITEMS IN THE MASTER LIST.
+         * 03/06/2026    Nimit             1.0.0     IT WILL ADD LIST OF ITEMS IN THE MASTER LIST.
+         * 08/06/2026    Nimit             1.0.1     Solved bug - It will select pre-selected value.
          */
         public void addAll(List<T> items) {
             if (items != null && !items.isEmpty()) {
@@ -518,6 +710,23 @@ public class AutoSearchTextField<T> extends TextField {
                     detectLanguage(sampleText);
                     setupLocalTransliteration();
                 }
+
+                if (selectedIndex > -1 && selectedIndex < masterList.size()) {
+                    setValue(masterList.get(selectedIndex));
+                    return;
+                }
+
+                if (deferredSelectedItem != null) {
+                    if (masterList.contains(deferredSelectedItem)) {
+                        setValue(deferredSelectedItem);
+                    }
+                    deferredSelectedItem = null;
+                    return;
+                }
+
+                if (selectedItem != null) {
+                    setValue(selectedItem);
+                }
             }
         }
 
@@ -525,13 +734,11 @@ public class AutoSearchTextField<T> extends TextField {
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT RETURN WHATEVER INDEX OF THE SELECTED ITEM.
+         * 03/06/2026    Nimit             1.0.0     IT RETURN WHATEVER INDEX OF THE SELECTED ITEM.
+         * 08/06/2026    Nimit             1.0.1     Solved bug - Return direct selected index.
          */
         public int getSelectedIndex() {
-            if (listView != null && listView.getSelectionModel() != null) {
-                return listView.getSelectionModel().getSelectedIndex();
-            }
-            return -1;
+            return selectedIndex;
         }
 
 
@@ -539,7 +746,7 @@ public class AutoSearchTextField<T> extends TextField {
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT RETURN SELECTED ITEM.
+         * 03/06/2026    Nimit             1.0.0     IT RETURN SELECTED ITEM.
          */
         public T getSelectedItem() {
             return getValue();
@@ -549,7 +756,8 @@ public class AutoSearchTextField<T> extends TextField {
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT SELECT THE PASSED PARAM ITEM.
+         * 03/06/2026    Nimit             1.0.0     IT SELECT THE PASSED PARAM ITEM.
+         * 03/06/2026    Nimit             1.0.1     Solved bug - Get selected index of the selected item.
          */
         public void select(T item) {
             if (item == null) {
@@ -557,6 +765,10 @@ public class AutoSearchTextField<T> extends TextField {
                 deferredSelectedItem = null;
                 return;
             }
+            if (masterList != null) {
+                selectedIndex = masterList.indexOf(item);
+            }
+            listView.getSelectionModel().select(item);
             deferredSelectedItem = item;
             selectedItem = item;
             setValue(item);
@@ -566,20 +778,25 @@ public class AutoSearchTextField<T> extends TextField {
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT SELECT ITEM ON THE PASSED PARAM INDEX.
+         * 03/06/2026    Nimit             1.0.0     IT SELECT ITEM ON THE PASSED PARAM INDEX.
+         * 08/06/2026    Nimit             1.0.1     Solved bug - Get item which selected using index.
          */
         public void select(Integer pos) {
             selectedIndex = pos;
             if (masterList == null || masterList.isEmpty())
                 return;
-            setValue(masterList.get(pos));
+            T item = masterList.get(pos);
+            listView.getSelectionModel().select(item);
+            deferredSelectedItem = item;
+            selectedItem = item;
+            setValue(item);
         }
 
         /**
          * Change History:
          * Date          Author           Version     Description
          * -----------   --------------   ---------   ---------------------------------
-         * 06/03/2026    Nimit             1.0.0     IT CLEAR/ UNSELECT SELECTED ITEM.
+         * 03/06/2026    Nimit             1.0.0     IT CLEAR/ UNSELECT SELECTED ITEM.
          */
         public void clearSelection() {
             selectedItem = null;
@@ -597,7 +814,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO DETECT LANGUAGE OF THE ITEM SO THAT SET IN WHICH LANGUAGE TO SEARCH
+     * 03/06/2026    Nimit             1.0.0       TO DETECT LANGUAGE OF THE ITEM SO THAT SET IN WHICH LANGUAGE TO SEARCH
      */
     public void detectLanguage(String text) {
         if (text == null || text.trim().isEmpty()) {
@@ -636,7 +853,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0      IF OTHER LANGUAGE OF TEXTFIELD THEN THIS METHOD WILL HELP
+     * 03/06/2026    Nimit             1.0.0      IF OTHER LANGUAGE OF TEXTFIELD THEN THIS METHOD WILL HELP
      * TO TRANSLATE THE WRITTEN ENGLISH WORD
      */
     private void textFieldLocal() {
@@ -677,7 +894,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0     IT TAKE CHAR COMBINE WITH OTHER WORD, PREPROCESS IT, THEN TRANSLATE THE WORD
+     * 03/06/2026    Nimit             1.0.0     IT TAKE CHAR COMBINE WITH OTHER WORD, PREPROCESS IT, THEN TRANSLATE THE WORD
      */
     private void flushCurrentWord() {
         if (currentWord.length() > 0) {
@@ -697,7 +914,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0       TO MANAGE BACKSPACE EVENT, BECAUSE TRANSLATION NEED TO PROPERLY CHECK AND
+     * 03/06/2026    Nimit             1.0.0       TO MANAGE BACKSPACE EVENT, BECAUSE TRANSLATION NEED TO PROPERLY CHECK AND
      * THEN REMOVE LAST CHAR
      */
     private void handleBackspace() {
@@ -728,7 +945,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0      OTHER LANGUAGE REQUIRED SPECIAL ENGLISH CHAR TO GET SPECIFIC LANGUAGE WORD
+     * 03/06/2026    Nimit             1.0.0      OTHER LANGUAGE REQUIRED SPECIAL ENGLISH CHAR TO GET SPECIFIC LANGUAGE WORD
      * SO THIS METHOD WILL PREPROCESS IT.
      */
     private String preprocess(String text) {
@@ -752,7 +969,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0      THIS METHOD WILL SET TEXTFIELD LANGUAGE.
+     * 03/06/2026    Nimit             1.0.0      THIS METHOD WILL SET TEXTFIELD LANGUAGE.
      */
     private Transliterator createTransliterator() {
         String targetScript;
@@ -798,7 +1015,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0      METHOD HELPS TO SKIP DIGITS TO TRANSLATE
+     * 03/06/2026    Nimit             1.0.0      METHOD HELPS TO SKIP DIGITS TO TRANSLATE
      */
     private String transliteratePreservingDigits(String input) {
         String preprocessed = preprocess(input);
@@ -895,7 +1112,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Change History:
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
-     * 06/03/2026    Nimit             1.0.0      TO GET TEXT OF SELECTED VALUE
+     * 03/06/2026    Nimit             1.0.0      TO GET TEXT OF SELECTED VALUE
      */
     public String getFinalText() {
         T selected = getValue();
