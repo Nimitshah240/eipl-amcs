@@ -244,7 +244,17 @@ public class CommonUtils {
     }
 
     public static List<Tax> getTaxFromDto(List<TaxDto> dto) {
-        return dto.stream().map(m -> m.getTax()).collect(Collectors.toList());
+        List<Tax> list = dto.stream()
+                .filter(m -> m.getTax().getName().equalsIgnoreCase("nil"))
+                .map(TaxDto::getTax)
+                .collect(Collectors.toList());
+
+        list.addAll(dto.stream()
+                .filter(m -> m.getTax() != null && m.getTax().getName() != null
+                        && !m.getTax().getName().equalsIgnoreCase("nil"))
+                .map(TaxDto::getTax)
+                .collect(Collectors.toList()));
+        return list;
     }
 
     public static File openExcelFileDialog(String dialogTitle) {
