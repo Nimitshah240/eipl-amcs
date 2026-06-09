@@ -3,6 +3,7 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.task.RateTask;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -48,7 +49,7 @@ public class MemberMilkPurchaseRateController implements MyInitialization {
     @FXML
     TableColumn<MemberMilkPurchaseRate, String> colRateGenMethodCode;
     @FXML
-    Button btnAdd, btnClose, btnView, btnSync;
+    E_Button btnAdd, btnClose, btnView, btnSync;
     private ResourceBundle resourceBundle;
 
     public MemberMilkPurchaseRateController() {

@@ -1,6 +1,7 @@
 package com.eipl.amcs.master.procurement.controller;
 
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkQualityType;
@@ -29,7 +30,7 @@ import java.util.concurrent.ExecutionException;
 public class MilkRateViewController implements MyInitialization {
     private final Map<String, List<PurchaseRateGenerate>> mapTableData = new HashMap<>();
     @FXML
-    private Button btnClose;
+    private E_Button btnClose;
     @FXML
     private ComboBox<MilkQualityType> cboxMilkQualityType;
     @FXML

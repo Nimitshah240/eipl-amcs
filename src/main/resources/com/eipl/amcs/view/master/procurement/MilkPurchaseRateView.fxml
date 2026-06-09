@@ -1,44 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.eipl.amcs.controls.E_Button?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.eipl.amcs.master.procurement.controller.MilkRateViewController">
+<StackPane fx:id="root" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.procurement.controller.MilkRateViewController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="">
             <children>
-                <Label fx:id="lblTitle" styleClass="header-text" text="%membermilkpurchaserate"/>
+                <Label fx:id="lblTitle" styleClass="header-text" text="%membermilkpurchaserate" />
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <ComboBox fx:id="cboxMilkType" editable="true" prefWidth="125.0"/>
-                        <ComboBox fx:id="cboxMilkQualityType" editable="true" prefWidth="125.0"/>
+                        <ComboBox fx:id="cboxMilkType" editable="true" prefWidth="125.0" />
+                        <ComboBox fx:id="cboxMilkQualityType" editable="true" prefWidth="125.0" />
                     </children>
                 </HBox>
-                <HBox VBox.vgrow="ALWAYS" spacing="0">
-                    <TableView fx:id="tableFixed" prefWidth="100.0" minWidth="100.0" maxWidth="100.0"/>
+                <HBox spacing="0" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="tableFixed" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
                     <TableView fx:id="tableRateDetails" HBox.hgrow="ALWAYS" />
                 </HBox>
                 <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
-                    <children>
-                        <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                text="%close"/>
-                    </children>
+               <children>
+                  <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </E_Button>
+               </children>
                 </HBox>
             </children>
             <padding>
-                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0"/>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
             </padding>
         </VBox>
     </children>
     <padding>
-        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
 </StackPane>

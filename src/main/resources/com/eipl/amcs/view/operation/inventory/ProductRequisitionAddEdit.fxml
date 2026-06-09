@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,7 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" prefHeight="700.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductRequisitionAddEditController">
+<StackPane fx:id="root" prefHeight="700.0" prefWidth="800.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.ProductRequisitionAddEditController">
     <children>
         <VBox spacing="20.0">
             <children>
@@ -65,10 +67,26 @@
                   <Label text="%unit" GridPane.columnIndex="3" />
                   <Label text="%expecteddeliverydate" GridPane.columnIndex="4" />
                   <Label text="%productcode" GridPane.columnIndex="1" />
-                      <HBox alignment="CENTER_RIGHT" focusTraversable="true" spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                      <HBox alignment="CENTER_RIGHT" focusTraversable="true" spacing="15" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3">
                           <children>
-                              <E_Button fx:id="btnAdd" mnemonicParsing="true" styleClass="button-primary" text="%addproduct" />
-                              <E_Button fx:id="btnDelete" mnemonicParsing="true" text="%delete" />
+                        <Button fx:id="btnAdd" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%addproduct">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/plus.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="btnDelete" layoutX="9.0" layoutY="10.0" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%delete">
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/delete.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                           </children>
                       </HBox>
                         <E_ComboBox fx:id="cboxUnit" disable="false" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
@@ -96,8 +114,24 @@
                 <HBox alignment="TOP_RIGHT" />
                 <HBox fx:id="hboxMaster" alignment="CENTER_LEFT" prefWidth="200.0" spacing="15">
                     <children>
-                        <E_Button fx:id="btnSaveUpdate" minWidth="80.0" mnemonicParsing="true" styleClass="button-primary" text="%save" />
-                        <E_Button fx:id="btnClose" minWidth="80.0" mnemonicParsing="true" text="%close" />
+                  <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%save">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/close.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                     </children>
                 </HBox>
             </children>

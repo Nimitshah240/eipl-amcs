@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.master.org.task.UserLoadTask;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -35,9 +36,9 @@ public class UsersController implements MyInitialization, PopupCallback {
     @FXML
     private TableColumn<User, String> colMobileNo;
     @FXML
-    private Button btnEdit;
+    private E_Button btnEdit;
     @FXML
-    private Button btnClose;
+    private E_Button btnClose;
 
     private ResourceBundle resourceBundle;
 
