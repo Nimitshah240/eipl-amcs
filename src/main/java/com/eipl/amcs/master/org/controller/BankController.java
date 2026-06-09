@@ -2,6 +2,7 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,7 +31,7 @@ public class BankController implements MyInitialization {
     @FXML
     TableColumn<Bank, String> colCheckedAcNo, colNationalizedBank;
     @FXML
-    Button btnClose;
+    E_Button btnClose;
     @FXML
     private StackPane root;
     private ResourceBundle resourceBundle;

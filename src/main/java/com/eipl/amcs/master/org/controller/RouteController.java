@@ -2,6 +2,7 @@ package com.eipl.amcs.master.org.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.org.model.Bmc;
@@ -13,7 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -38,7 +38,7 @@ public class RouteController implements MyInitialization {
     @FXML
     TableColumn<Route, String> colCapacity, colLengthKms;
     @FXML
-    Button btnClose, btnSave;
+    E_Button btnClose, btnSave;
     @FXML
     private StackPane root;
 

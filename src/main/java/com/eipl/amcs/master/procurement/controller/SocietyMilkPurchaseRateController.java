@@ -2,6 +2,7 @@ package com.eipl.amcs.master.procurement.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.master.global.model.RateType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -43,7 +44,9 @@ public class SocietyMilkPurchaseRateController implements MyInitialization {
     @FXML
     TableColumn<SocietyMilkPurchaseRate, String> colRateGenMethodCode;
     @FXML
-    Button btnAdd, btnClose, btnView;
+    E_Button btnAdd, btnClose;
+    @FXML
+    Button btnView;
 
     public SocietyMilkPurchaseRateController() {
         propRate = new SimpleObjectProperty<>();

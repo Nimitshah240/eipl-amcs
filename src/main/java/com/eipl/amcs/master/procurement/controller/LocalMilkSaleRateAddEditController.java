@@ -3,6 +3,7 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -38,7 +39,7 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnClose, btnSaveUpdate;
+    private E_Button btnClose, btnSaveUpdate;
     @FXML
     private ComboBox<MilkType> cboxMilkType;
     @FXML

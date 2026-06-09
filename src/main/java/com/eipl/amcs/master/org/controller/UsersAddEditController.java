@@ -6,6 +6,7 @@ import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.auth.model.UserRole;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -43,9 +44,9 @@ public class UsersAddEditController implements MyInitialization {
     @FXML
     private E_ComboBox<Role> cboxRoleCode;
     @FXML
-    private Button btnUpdate;
+    private E_Button btnUpdate;
     @FXML
-    private Button btnClose;
+    private E_Button btnClose;
     private UserRole userRole;
     private Stage stage;
     private PopupCallback callback;

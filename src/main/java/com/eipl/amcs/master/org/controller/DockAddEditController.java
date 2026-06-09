@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.CheckComboBox;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -22,7 +23,6 @@ import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -40,7 +40,7 @@ public class DockAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnClose, btnSaveUpdate;
+    private E_Button btnClose, btnSaveUpdate;
     @FXML
     private ComboBox<Society> cboxSociety;
     @FXML

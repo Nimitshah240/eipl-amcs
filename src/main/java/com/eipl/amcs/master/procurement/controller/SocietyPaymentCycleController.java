@@ -3,6 +3,7 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -48,7 +49,9 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
     @FXML
     TableColumn<SocietyPaymentCycle, String> colIsBilling, colLockBillingProcess;
     @FXML
-    Button btnClose, btnEdit, btnGenerate, btnDelete, btnSearch;
+    Button btnClose, btnEdit, btnGenerate, btnDelete;
+    @FXML
+    E_Button btnSearch;
     @FXML
     private DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
