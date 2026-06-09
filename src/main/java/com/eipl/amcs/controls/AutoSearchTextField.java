@@ -823,8 +823,9 @@ public class AutoSearchTextField<T> extends TextField {
 
         // Strip out numbers, spaces, and standard punctuation to avoid false positives
         String cleanText = text.replaceAll("[\\d\\s\\p{Punct}]", "");
-        if (cleanText.isEmpty()) {
+        if (cleanText.isEmpty() || cleanText.isBlank()) {
             language = "English";
+            return;
         }
 
         // Inspect the very first clean alphabetic character

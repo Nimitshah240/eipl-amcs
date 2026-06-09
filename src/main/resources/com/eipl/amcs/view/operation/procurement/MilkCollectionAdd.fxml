@@ -236,7 +236,7 @@
                                                    <graphic>
                                                       <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
-                                                            <Image url="@../../images/Setting.png" />
+                                                            <Image url="@../../images/setting.png" />
                                                          </image>
                                                          <viewport>
                                                             <Rectangle2D />
