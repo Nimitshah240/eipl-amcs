@@ -383,6 +383,13 @@ public class MemberAddEditController implements MyInitialization {
         Platform.runLater(() -> {
             FocusUtils.requestFocus(txtName);
         });
+
+        txtSapNo.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(btnSaveUpdate);
+                e.consume();
+            }
+        });
     }
 
     private void validateAndSave() {
