@@ -3,10 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.InformationAlert;
-import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.task.VoucherDeleteTask;
@@ -106,6 +103,30 @@ public class VoucherController implements MyInitialization, PopupCallback {
                 }
             });
             return row;
+        });
+
+        tableVoucher.setOnKeyPressed(event -> {
+            VoucherDto dto = tableVoucher.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propVoucherDto.get();
+                    if (dto != null) {
+                        if (dto.getVoucher().getCancelled()) {
+                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
+                                    resourceBundle.getString("cancelled.can.not.delete"));
+                            alert.createAlert();
+                        } else if (!dto.getVoucher().getAutoPosted()) {
+                            deleteData();
+                        } else {
+                            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
+                                    resourceBundle.getString("autoposted.can.not.delete"));
+                            alert.createAlert();
+                        }
+                    }
+                    break;
+            }
         });
     }
 

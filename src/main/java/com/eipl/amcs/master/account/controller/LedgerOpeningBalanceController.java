@@ -20,11 +20,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -124,8 +126,42 @@ public class LedgerOpeningBalanceController implements MyInitialization {
             }
         });
 
-    }
+        tableData.setRowFactory(tv -> {
+            TableRow<LedgerOpeningBalance> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()) {
+                    tableData.requestFocus();
+                }
+            });
+            return row;
+        });
+        tableData.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.DELETE) {
+                LedgerOpeningBalance dto = tableData.getSelectionModel().getSelectedItem();
+                if (dto != null) {
+                    dto = propLedgerOpeningBalance.get();
+                    if (dto != null) {
+                        deleteData();
+                        event.consume();
+                    }
+                }
+            }
+        });
+        txtBalance.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(btnSave);
+                e.consume();
+            }
+        });
 
+        btnSave.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                FocusUtils.requestFocus(cboxFinancialYear);
+                e.consume();
+            }
+        });
+
+    }
     private void loadImportPreReq() {
         var task = new FinancialYearLoadTask();
         task.setOnSucceeded(e -> {

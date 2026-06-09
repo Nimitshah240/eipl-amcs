@@ -23,6 +23,7 @@ import com.eipl.amcs.operation.billing.task.MemberBillFinalizeLoadTask;
 import com.eipl.amcs.operation.billing.task.MemberBillLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -102,6 +103,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         dpDeductionFromDate.setValue(LocalDate.now());
         dpDeductionToDate.setValue(LocalDate.now());
         memberBillList = FXCollections.emptyObservableList();
+        FocusUtils.requestFocus(cboxPaymentCycle);
 
         setupTable();
         setupComboBox();

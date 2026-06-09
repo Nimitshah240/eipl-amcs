@@ -33,7 +33,7 @@ public interface ProductRepository extends BaseRepository<Product, String> {
     List<Product> findAllBySociety(Society society, Sort by);
 
     @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
-            "union"})
+            "union", "purchaseLedger", "stockLedger", "localSaleLedger", "saleLedger"})
     List<Product> findAllBySocietyIsNull(Sort by);
 
     @EntityGraph(attributePaths = {"conversionUnit", "primaryUom", "productGroup", "tax", "secondaryPackaging",
