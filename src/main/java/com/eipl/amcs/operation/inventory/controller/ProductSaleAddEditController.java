@@ -139,7 +139,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         dpDeductionStartDate.setDisable(false);
         setupComboBox();
         setupTable();
-        loadData();
+//        loadData();
         btnClose.setOnAction(e -> this.stage.close());
         txtDifferance.setText("0");
         txtMilkAmount.setText("0");

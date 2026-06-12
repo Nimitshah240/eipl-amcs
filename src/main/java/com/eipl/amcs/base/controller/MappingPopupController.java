@@ -621,9 +621,9 @@ public class MappingPopupController implements MyInitialization {
                 case "HavaloVoucherEntryDebit":
                     var controller75 = (VoucherEntryController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherEntry.fxml"));
                     controller75.setVoucher(object != null ? (Voucher) object : null, false);
-                    controller75.setHavaloDetails();
-                    controller75.setVoucher(object != null ? (Voucher) object : null, false);
                     controller75.setStage(stage);
+                    controller75.setHavaloDetails();
+//                    controller75.setVoucher(object != null ? (Voucher) object : null, false);
                     controller75.setCallback(callback);
                     root.setCenter(controller75.getRoot());
                     break;
