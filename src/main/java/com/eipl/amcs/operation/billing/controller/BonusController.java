@@ -35,6 +35,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,6 +43,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -113,8 +115,10 @@ public class BonusController extends SocietyPaymentCycleEditController implement
         task.setOnSucceeded(event -> {
             try {
                 dto = task.get();
-                bonusList = dto.getBonusList();
-                tableBonus.setItems(FXCollections.observableList(bonusList));
+                // Create a mutable list and sort by member code
+                bonusList = new ArrayList<>(dto.getBonusList());
+                bonusList.sort(Comparator.comparing(b -> b.getMember().getCodeEx()));
+                tableBonus.setItems(FXCollections.observableArrayList(bonusList));
             } catch (Exception exception) {
 
             }
@@ -214,7 +218,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
             }
-            tableBonus.setItems(FXCollections.observableList(bonusList));
         } else if (criteria.equalsIgnoreCase(resourceBundle.getString("rs"))) {
             for (Bonus b : bonusList) {
                 bonus = b.getMilkQty().multiply(new BigDecimal(bonusValue));
@@ -223,7 +226,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
             }
-            tableBonus.setItems(FXCollections.observableList(bonusList));
         } else {
 
             for (Bonus b1 : bonusList) {
@@ -236,8 +238,10 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
             }
-            tableBonus.setItems(FXCollections.observableList(bonusList));
         }
+        // Sort list by Member Code before updating the table
+        bonusList.sort(Comparator.comparing(b -> b.getMember().getCodeEx()));
+        tableBonus.setItems(FXCollections.observableArrayList(bonusList));
     }
 
 
@@ -263,14 +267,41 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     @Override
     public void setupTable() {
         try {
-            colMemberCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCode()));
+            colMemberCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCodeEx()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getFirstName()));
             colBonusAmt.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBonusAmount().setScale(2,
                     RoundingMode.HALF_DOWN)));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus() == 0 ? "PENDING" : "DONE"));
-            colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus() == 0 ? "Union Bonus" : "Society Bonus"));
+            colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getType() == 0 ? "Union Bonus" : "Society Bonus"));
+            tableBonus.setEditable(true);
             colKapaat.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getxCol1()));
-            colKapaat.setCellFactory(TextFieldTableCell.forTableColumn());
+            colKapaat.setCellFactory(column -> new TextFieldTableCell<Bonus, String>(new DefaultStringConverter()) {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                        setStyle("");
+                    } else {
+                        Bonus bonus = getTableRow().getItem();
+                        // Visually indicate if the cell is non-editable (Union Bonus is type 0)
+                        if (bonus.getType() == 0) {
+                            setStyle("-fx-background-color: #f4f4f4; -fx-text-fill: #a0a0a0;");
+                        } else {
+                            setStyle("");
+                        }
+                    }
+                }
+
+                @Override
+                public void startEdit() {
+                    Bonus bonus = getTableRow().getItem();
+                    // Prevent editing if the row is "Union Bonus" (type == 0)
+                    if (bonus != null && bonus.getType() == 0) {
+                        return;
+                    }
+                    super.startEdit();
+                }
+            });
             colKapaat.setOnEditCommit(e -> {
                 Bonus r = e.getRowValue();
                 if (e.getNewValue() != null && !e.getNewValue().equalsIgnoreCase("")) {
