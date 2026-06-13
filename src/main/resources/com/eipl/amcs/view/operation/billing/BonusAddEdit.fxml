@@ -56,7 +56,7 @@
                                     </GridPane.margin></Button>
                                 <Label text="%bonus.value" GridPane.columnIndex="2" GridPane.rowIndex="4" />
                                 <TextField fx:id="txtBonusValue" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <ComboBox fx:id="cboxMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="cboxMilkType" editable="true"  disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <Label text="%milktype" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <ComboBox fx:id="cboxFromShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                         <ComboBox fx:id="cboxToShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
