@@ -596,12 +596,29 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             alert.createAlert();
             return;
         }
-
-        if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
-            updateData();
-        } else {
-            saveData();
-        }
+        var task = new LocalSaleShiftCheckTask(
+                CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()),
+                CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue())
+        );
+        task.setOnSucceeded(e -> {
+            try {
+                List<String> missingShifts = task.get();
+                if (missingShifts == null || missingShifts.isEmpty()) {
+                    if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
+                        updateData();
+                    } else {
+                        saveData();
+                    }
+                } else {
+                    String msg = resourceBundle.getString("error.local.sale.required") + ":\n" + String.join("\n", missingShifts);
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"), msg);
+                    alert.createAlert();
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
     }
 
     private void setValuesInObjectUpdate() {
@@ -1119,13 +1136,6 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             txtRouteNo.setText(dto.getRouteNo());
 
     }
-
-    /**
-     * Change History:
-     * Date          Author           Version     Description
-     * -----------   --------------   ---------   ---------------------------------
-     * 23/05/2026    Chintan             1.0.0     Load last record of dispatch to get route no and vehicle no
-     */
     private void loadLastRecord() {
         MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
         MilkDispatch lastDispatch = milkDispatchRepository.findFirstByOrderByCreatedAtDesc();
