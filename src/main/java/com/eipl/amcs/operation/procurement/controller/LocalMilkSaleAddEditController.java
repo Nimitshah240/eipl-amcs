@@ -437,24 +437,26 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 errorMsg.append(resourceBundle.getString("amountnullerror")).append("\n");
             }
 
-            // 6. Conditional Breakdown Rules (Bypassed if total amount is 0)
-            if (cboxPaymentType.getSelectionModel().getSelectedItem() != null && Double.parseDouble(amountStr) > 0) {
+            if (cboxPaymentType.getSelectionModel().getSelectedItem() != null) {
                 String selectedPayment = cboxPaymentType.getSelectionModel().getSelectedItem().toString();
 
-                if (selectedPayment.equals(resourceBundle.getString("cash"))) {
-                    if (txtCredit.getText() == null || txtCredit.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("creditnullerror")).append("\n");
+                if (selectedPayment.equals(resourceBundle.getString("coupon")) && couponBalance == null) {
+                    errorMsg.append(resourceBundle.getString("localmilksaleratenotavailable")).append("\n");
+                }
+                if (Double.parseDouble(amountStr) > 0) {
+                    if (selectedPayment.equals(resourceBundle.getString("cash"))) {
+                        if (txtCredit.getText() == null || txtCredit.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("creditnullerror")).append("\n");
+                        if (txtCoupon.getText() == null || txtCoupon.getText().trim().isEmpty() || parseDouble(txtCoupon.getText()) < 0) errorMsg.append(resourceBundle.getString("couponnullerror")).append("\n");
+                    } else if (selectedPayment.equals(resourceBundle.getString("credit"))) {
+                    if (txtCash.getText() == null || txtCash.getText().trim().isEmpty() || parseDouble(txtCash.getText()) < 0) errorMsg.append(resourceBundle.getString("cashnullerror")).append("\n");
                     if (txtCoupon.getText() == null || txtCoupon.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("couponnullerror")).append("\n");
-                } else if (selectedPayment.equals(resourceBundle.getString("credit"))) {
-                    if (txtCash.getText() == null || txtCash.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("cashnullerror")).append("\n");
-                    if (txtCoupon.getText() == null || txtCoupon.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("couponnullerror")).append("\n");
-                } else if (selectedPayment.equals(resourceBundle.getString("coupon"))) {
-                    if (txtCredit.getText() == null || txtCredit.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("creditnullerror")).append("\n");
-                    if (txtCash.getText() == null || txtCash.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("cashnullerror")).append("\n");
-                    if (checkBalance()) errorMsg.append(resourceBundle.getString("insufficient.balance")).append("\n");
+                    } else if (selectedPayment.equals(resourceBundle.getString("coupon"))) {
+                        if (txtCredit.getText() == null || txtCredit.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("creditnullerror")).append("\n");
+                        if (txtCash.getText() == null || txtCash.getText().trim().isEmpty()) errorMsg.append(resourceBundle.getString("cashnullerror")).append("\n");
+                        if (checkBalance()) errorMsg.append(resourceBundle.getString("insufficient.balance")).append("\n");
+                    }
                 }
             }
-
-            // 7. Final Math Reconciliation
             if (errorMsg.length() == 0) {
                 double cash = parseDouble(cashField);
                 double credit = parseDouble(creditField);
@@ -847,6 +849,9 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
     }
 
     private void reCalculateCouponBalance() {
+        if (this.couponBalance == null) {
+            return;
+        }
         BigDecimal newAmount = parseBigDecimal(txtAmount.getText());
         BigDecimal currentCouponBalance = parseBigDecimal(txtCouponBalance.getText());
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("update"))) {
