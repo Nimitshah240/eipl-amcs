@@ -569,6 +569,7 @@ public class MappingPopupController implements MyInitialization {
 
                     if (object instanceof LocalDate) {
                         controller69.setDate((LocalDate) object);
+                        controller69.setProductReceipt(null);
                     } else if (object instanceof ProductReceipt)
                         controller69.setProductReceipt((ProductReceipt) object);
                     else
@@ -581,6 +582,7 @@ public class MappingPopupController implements MyInitialization {
                     var controller70 = (ProductSaleAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml"));
                     if (object instanceof LocalDate) {
                         controller70.setDate((LocalDate) object);
+                        controller70.setProductSale(null);
                     } else if (object instanceof ProductSale)
                         controller70.setProductSale((ProductSale) object);
                     else
