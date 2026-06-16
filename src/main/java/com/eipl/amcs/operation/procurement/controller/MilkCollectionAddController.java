@@ -731,6 +731,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                         weightLock = new BigDecimal(getQty());
                         tareWs();
                     }
+                    break;
                 case ESCAPE:
                     btnClose.fire();
                     break;
