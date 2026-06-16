@@ -191,6 +191,10 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         });
     }
 
+    public void setDate(LocalDate date) {
+        dpChallanDate.setValue(date);
+    }
+
     public void setProductReceipt(ProductReceipt productReceipt) {
         this.productReceipt = productReceipt;
         if (productReceipt != null) {
