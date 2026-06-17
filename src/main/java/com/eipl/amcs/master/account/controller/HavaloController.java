@@ -6,6 +6,7 @@ import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -26,11 +27,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -39,6 +38,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
@@ -157,6 +157,36 @@ public class HavaloController implements MyInitialization, PopupCallback {
                 e.consume();
             }
         });
+
+
+        root.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                if ((tableCredit.getItems() != null && !tableCredit.getItems().isEmpty()) || (tableDebit.getItems() != null && !tableDebit.getItems().isEmpty())) {
+                    MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("voucher"),
+                            resourceBundle.getString("want.to.save"));
+                    Optional<ButtonType> result = alert.createConfirmationAlert();
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
+                        validateAndSave();
+                        if (!validate())
+                            return;
+                    }
+                    if (callback != null) {
+                        callback.reloadData(true);
+                    }
+                    if (stage != null) {
+                        stage.close();
+                    }
+                } else {
+                    if (callback != null) {
+                        callback.reloadData(true);
+                    }
+                    if (stage != null) {
+                        stage.close();
+                    }
+                }
+            }
+        });
+
     }
 
     public void loadControls() {

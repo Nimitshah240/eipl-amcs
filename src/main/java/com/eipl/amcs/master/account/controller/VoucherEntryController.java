@@ -177,6 +177,13 @@ public class VoucherEntryController implements MyInitialization {
                         if (stage != null) {
                             stage.close();
                         }
+                    } else {
+                        if (callback != null) {
+                            callback.reloadData(true);
+                        }
+                        if (stage != null) {
+                            stage.close();
+                        }
                     }
                 }
             });

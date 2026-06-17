@@ -146,7 +146,7 @@
                                 <HBox fx:id="btnPanel" alignment="BOTTOM_RIGHT" focusTraversable="true" spacing="10.0" GridPane.columnIndex="4" GridPane.columnSpan="3" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
                                     <children>
                                         <Button fx:id="btnEdit" disable="true" layoutX="100.0" layoutY="10.0" minWidth="75.0" text="%edit" visible="false" />
-                              <Button fx:id="btnAdd" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
+                              <Button fx:id="btnAdd" disable="true" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
                                  <graphic>
                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                        <image>

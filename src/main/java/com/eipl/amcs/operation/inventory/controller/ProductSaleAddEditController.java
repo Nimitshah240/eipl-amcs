@@ -357,6 +357,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         });
     }
 
+    public void setDate(LocalDate date) {
+        dpDate.setValue(date);
+    }
+
     @Override
     public void clearControls() {
         txtRate.setText("0");

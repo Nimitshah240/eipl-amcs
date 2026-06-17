@@ -30,6 +30,7 @@ import com.eipl.amcs.operation.inventory.repository.ProductReceiptTransactionRep
 import com.eipl.amcs.operation.inventory.repository.ProductSaleRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleTransactionRepository;
 import com.eipl.amcs.utils.FocusUtils;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -37,6 +38,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import lombok.extern.slf4j.Slf4j;
@@ -119,10 +121,10 @@ public class RojmedController implements MyInitialization, PopupCallback {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "Havalo", dpDate.getValue(), this, resourceBundle.getString("journal.entry"));
         });
         btnSale.setOnAction(e -> {
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml")));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", dpDate.getValue(), this, resourceBundle.getString("productsale"));
         });
         btnPurchase.setOnAction(e -> {
-            MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductReceipt.fxml")));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", dpDate.getValue(), this, resourceBundle.getString("productreceipt"));
         });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -143,6 +145,63 @@ public class RojmedController implements MyInitialization, PopupCallback {
 
         loadData();
         dpDate.setConverter(new LocalDateConvertor());
+
+        root.setFocusTraversable(true);
+        Platform.runLater(() -> root.requestFocus());
+        root.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            switch (event.getCode()) {
+                case R:
+                    if (event.isControlDown()) {
+                        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/account/StockValuation.fxml")));
+                        break;
+                    }
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", dpDate.getValue(), this, resourceBundle.getString("credit.entry"));
+                    break;
+                case T:
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryDebit", dpDate.getValue(), this, resourceBundle.getString("debit.entry"));
+                    break;
+                case J:
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "Havalo", dpDate.getValue(), this, resourceBundle.getString("journal.entry"));
+                    break;
+                case N:
+                    dpDate.setValue(dpDate.getValue().plusDays(1));
+                    break;
+                case P:
+                    if (event.isControlDown()) {
+                        exportToExcel();
+                        break;
+                    }
+                    dpDate.setValue(dpDate.getValue().minusDays(1));
+                    break;
+                case ESCAPE:
+                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+                    break;
+                case F2:
+                    MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "NarrationAddEdit", null, this, resourceBundle.getString("narrationname"));
+                    break;
+                case F5:
+                    loadData();
+                    break;
+                case A:
+                    if (event.isControlDown()) {
+                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "LedgerAddEdit", null, this, resourceBundle.getString("ledger"));
+                    }
+                    break;
+                case DIGIT1:
+                case NUMPAD1:
+                    if (event.isControlDown()) {
+                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductReceiptAddEdit", dpDate.getValue(), this, resourceBundle.getString("productreceipt"));
+                    }
+                    break;
+                case DIGIT2:
+                case NUMPAD2:
+                    if (event.isControlDown()) {
+                        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ProductSaleAddEdit", dpDate.getValue(), this, resourceBundle.getString("productsale"));
+                    }
+                    break;
+            }
+        });
+
     }
 
     private void exportToExcel() {

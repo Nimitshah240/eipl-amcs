@@ -565,14 +565,29 @@ public class MappingPopupController implements MyInitialization {
                     break;
                 case "ProductReceiptAddEdit":
                     var controller69 = (ProductReceiptAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductReceiptAddEdit.fxml"));
-                    controller69.setProductReceipt(object != null ? (ProductReceipt) object : null);
+//                    controller69.setProductReceipt(object != null ? (ProductReceipt) object : null);
+
+                    if (object instanceof LocalDate) {
+                        controller69.setDate((LocalDate) object);
+                        controller69.setProductReceipt(null);
+                    } else if (object instanceof ProductReceipt)
+                        controller69.setProductReceipt((ProductReceipt) object);
+                    else
+                        controller69.setProductReceipt(null);
                     controller69.setStage(stage);
                     controller69.setCallback(callback);
                     root.setCenter(controller69.getRoot());
                     break;
                 case "ProductSaleAddEdit":
                     var controller70 = (ProductSaleAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/inventory/ProductSaleAddEdit.fxml"));
-                    controller70.setProductSale(object != null ? (ProductSale) object : null);
+                    if (object instanceof LocalDate) {
+                        controller70.setDate((LocalDate) object);
+                        controller70.setProductSale(null);
+                    } else if (object instanceof ProductSale)
+                        controller70.setProductSale((ProductSale) object);
+                    else
+                        controller70.setProductSale(null);
+
                     controller70.setStage(stage);
                     controller70.setCallback(callback);
                     root.setCenter(controller70.getRoot());
@@ -582,7 +597,6 @@ public class MappingPopupController implements MyInitialization {
                     if (object instanceof LocalDate) {
                         controller71.setDate((LocalDate) object);
                         controller71.setVoucher(null, true);
-
                     }
                     if (object instanceof Voucher)
                         controller71.setVoucher(object != null ? (Voucher) object : null, true);
