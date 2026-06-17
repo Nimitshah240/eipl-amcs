@@ -1788,3 +1788,5 @@ rolecode=रोल
 userroles=यूज़र रोल
 required=आवश्यक
 error.local.sale.required=સस्थानीय दूध का सीधा विक्रय
+balancesheetgrouping=बैलेंस शीट ग्रुपिंग
+stock.ledger.summary=स्टॉक लेजर सारांश

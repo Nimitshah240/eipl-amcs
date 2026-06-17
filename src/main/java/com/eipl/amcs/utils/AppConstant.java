@@ -279,6 +279,8 @@ public class AppConstant {
         String TradingReportOne="TradingReportOne";
         String BalanceSheetOne="BalanceSheetOne";
         String TBReportOne="TBReportOne";
+        String PRODUCT_STOCK_LEDGER_SUMMARY="ProductStockLedgerSummary";
+        String BalanceSheetGrouping="BalanceSheetGrouping";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
 

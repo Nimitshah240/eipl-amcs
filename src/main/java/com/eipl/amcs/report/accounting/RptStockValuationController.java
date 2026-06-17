@@ -59,7 +59,7 @@ public class RptStockValuationController implements MyInitialization {
     private E_Button btnClose;
 
     @FXML
-    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
+    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1,btnBalanceSheetGrouping;
     @FXML
     private Label lblAsOnDate;
 
@@ -126,6 +126,8 @@ public class RptStockValuationController implements MyInitialization {
         });
         btnBalanceSheet.setOnAction(e -> {
             loadDataBalanceSheet();
+        });
+        btnBalanceSheetGrouping.setOnAction(e -> {
             loadDataBalanceSheetGrouping();
         });
         btnTredingReport.setOnAction(e -> {
@@ -1197,7 +1199,7 @@ public class RptStockValuationController implements MyInitialization {
                 }
 
                 // TODO - ANANT HERE MAKE CHANGES
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(rojmedDtoList));
+                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.BalanceSheetGrouping, param, new JRBeanCollectionDataSource(rojmedDtoList));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

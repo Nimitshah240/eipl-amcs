@@ -211,7 +211,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="15" splitType="Prevent">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Noto" stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="15" uuid="46de37df-ec36-4ebb-8db0-952f04cf1d48">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d66cc82-7035-40f5-95d5-131cb0a85561"/>
