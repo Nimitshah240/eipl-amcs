@@ -1138,9 +1138,6 @@ public class RptStockValuationController implements MyInitialization {
             listRojmed.add(rojmedDto);
         }
     }
-}
-
-
 
     public void loadDataBalanceSheetGrouping() {
         String localeStr = getLocaleString();
