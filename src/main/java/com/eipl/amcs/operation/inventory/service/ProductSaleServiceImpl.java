@@ -374,7 +374,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
     @Transactional
     private void setupProductStock(ProductSaleTransaction transaction, Society society, String operation, String trnsType, String identityInfo) {
-        Optional<ProductStock> stockData = stockRepository.findByProduct(transaction.getProduct());
+        Optional<ProductStock> stockData = stockRepository.findByProductAndBatchNo(transaction.getProduct(), transaction.getBatchNo());
         String code = null;
         BigDecimal oldVal = null;
         if (stockData.isPresent()) {
@@ -400,6 +400,9 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             stock.setUnionCode(transaction.getUnionCode());
             stock.setProduct(transaction.getProduct());
             stock.setSociety(society);
+            stock.setBatchNo(transaction.getBatchNo());
+            stock.setSaleRate(transaction.getRate());
+            stock.setReferenceCode(transaction.getInvoiceTxnNo());
             stock.setInitData();
             stock.setxCol1(UUID.randomUUID().toString());
             stockRepository.customSave(stock, identityInfo);
@@ -417,6 +420,9 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             txn.setFinalValue(oldVal.subtract(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
         // FIXME(NIMIT | 25.05.2026): In product receipt reference code in txn code because this indicate stock transaction is of which txn.
 //        txn.setReferenceCode(code);
+        txn.setBatchNo(transaction.getBatchNo());
+        txn.setSaleRate(transaction.getRate());
+        txn.setReferenceCode(transaction.getInvoiceTxnNo());
         txn.setReferenceCode(transaction.getInvoiceTxnNo());
 
 

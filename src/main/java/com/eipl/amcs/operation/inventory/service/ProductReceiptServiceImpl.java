@@ -282,7 +282,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
     @Transactional
     private void setupProductStock(ProductReceiptTransaction transaction, Society society, String operation,
                                    String trnsType, String identityInfo) {
-        Optional<ProductStock> stockData = stockRepository.findByProduct(transaction.getProduct());
+        Optional<ProductStock> stockData = stockRepository.findByProductAndBatchNo(transaction.getProduct(), transaction.getBatchNo());
         String code = null;
         BigDecimal oldVal = null;
         if (stockData.isPresent()) {
@@ -304,6 +304,10 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             code = nextCodeRepository.getNextCode("ProductStock", "code", transaction.getSocietyCode(), 0);
             ProductStock stock = new ProductStock();
             stock.setCode(code);
+            stock.setBatchNo(transaction.getBatchNo());
+            stock.setSaleRate(transaction.getSaleRate());
+            stock.setPurchaseRate(transaction.getRate());
+            stock.setReferenceCode(transaction.getGrnTxnNo());
 
 
             if (operation.equals("CREATE"))
@@ -323,6 +327,11 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
         txn.setCode(txnCode);
         txn.setNewValue(BigDecimal.valueOf(transaction.getQuantity()));
         txn.setOldValue(oldVal);
+
+        txn.setBatchNo(transaction.getBatchNo());
+        txn.setSaleRate(transaction.getSaleRate());
+        txn.setPurchaseRate(transaction.getRate());
+
         if (operation.equals("CREATE"))
             txn.setFinalValue(oldVal.add(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
         else if (operation.equals("DELETE"))

@@ -50,7 +50,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
@@ -74,7 +73,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance;
+    private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance, txtBatch;
     @FXML
     private E_NumericField txtConsumerCode, txtCreditLimit, txtQuantity, txtRate, txtAmount, txtNetAmount,
             txtTotalAmount, txtNoOfInstallment, txtTotalDiscount, txtMilkAmount, txtDeductionAmount, txtTotalAmountTax, txtNetPayable;
@@ -368,6 +367,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtQuantity.setText("0");
         txtNetAmount.setText("0");
         cboxProduct.setValue(null);
+        lblStock.setText("");
+        txtBatch.setText("");
         FocusUtils.requestFocus(cboxProduct);
     }
 
@@ -389,6 +390,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
         txn.setTaxCode(cboxTaxCode.getValue().getCode());
+        txn.setBatchNo(txtBatch.getText());
         return txn;
     }
 
@@ -413,11 +415,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         task.setOnSucceeded(e -> {
             try {
                 ProductSaleRate rate = task.get();
-                if (rate == null) {
-                    txtRate.setText("0");
-                } else {
-                    txtRate.setText(rate.getRate().toString());
-                }
+//                if (rate == null) {
+//                    txtRate.setText("0");
+//                } else {
+//                    txtRate.setText(rate.getRate().toString());
+//                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -436,6 +438,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 } else {
                     lblStock.setText(stock.getStock().setScale(2, RoundingMode.UP) + " " + resourceBundle.getString("quantityy"));
                 }
+                txtRate.setText(String.valueOf(this.stock.getSaleRate()));
+                txtBatch.setText(this.stock.getBatchNo());
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -1061,7 +1065,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         if (txtQuantity.getText().trim().isEmpty() || new BigDecimal(txtQuantity.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
             errorMsg.append(resourceBundle.getString("qtyzero") + "\n");
         }
-        if (stock == null || stock.getStock().subtract(new BigDecimal(BigInteger.ZERO)).compareTo(BigDecimal.ZERO) < 0)
+        if (stock == null || stock.getStock().subtract(new BigDecimal(txtQuantity.getText())).compareTo(BigDecimal.ZERO) < 0)
             errorMsg.append(resourceBundle.getString("stock.not.available") + "\n");
 
         if (dpDate.getValue() == null || dpDate.getValue().isAfter(LocalDate.now()))

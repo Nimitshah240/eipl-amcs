@@ -53,6 +53,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -67,7 +68,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private E_DatePicker dpChallanDate;
     @FXML
-    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount;
+    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount, txtSaleRate;
     @FXML
     private AutoSearchTextField<Vendor> cboxParty;
     @FXML
@@ -82,7 +83,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private TableColumn<ProductReceiptTransaction, Product> colProductName;
     @FXML
     private TableColumn<ProductReceiptTransaction, Number> colTotalAmount,
-            colQuantity, colAmount, colRate, colTax;
+            colQuantity, colAmount, colRate, colTax, colProductSale;
     @FXML
     private List<ProductReceiptTransaction> listTransactions;
     private ProductReceipt productReceipt;
@@ -173,7 +174,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         txtTaxAmount.setText("0");
         txtTotalAmount.setText("0");
-        txtRate.setOnAction(e -> {
+        txtSaleRate.setText("0");
+        txtSaleRate.setOnAction(e -> {
             FocusUtils.requestFocus(btnAddProduct);
             e.consume();
         });
@@ -287,6 +289,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colTotalAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));
+            colProductSale.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaleRate()));
             propReceiptTxn.bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             e.printStackTrace();
@@ -602,6 +605,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             if (qty.doubleValue() <= 0)
                 errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
         }
+        BigDecimal salerate = new BigDecimal(txtSaleRate.getText());
+
+        if (salerate.compareTo(BigDecimal.ZERO) <= 0) {
+            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "entervalidsalerate") + "\n");
+        }
         return errorMsg.length() == 0;
     }
 
@@ -626,6 +634,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txn.setProduct(cboxProduct.getValue());
         txn.setUnit(txn.getProduct().getPrimaryUom());
         txn.setRate(new BigDecimal(txtRate.getText()));
+        txn.setSaleRate(new BigDecimal(txtSaleRate.getText()));
+        txn.setBatchNo(dpChallanDate.getValue().format(DateTimeFormatter.ofPattern("yyMMdd")) + cboxProduct.getValue().getCode());
         txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getText()))));
         txn.setAmount(new BigDecimal(txtAmount.getText()));
         txn.setTax(cboxTax.getValue());
@@ -708,6 +718,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @Override
     public void clearControls() {
         txtRate.setText("0");
+        txtSaleRate.setText("0");
         txtQuantity.setText("0");
         txtAmount.setText("0");
         txtProductTotalAmount.setText("0");
