@@ -12,7 +12,7 @@
 	<parameter name="p_society_name" class="java.lang.String"/>
 	<parameter name="p_locale" class="java.lang.String"/>
 	<parameter name="p_from_date" class="java.lang.String"/>
-	<parameter name="p_to_date" class="java.lang.String"/>
+	<parameter name="p_to_date" class="java.time.LocalDate"/>
 	<parameter name="p_financial_year" class="java.lang.String"/>
 	<parameter name="p_rojmed_list" class="java.util.List"/>
 	<queryString>
@@ -39,7 +39,7 @@
 			<band height="60">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField isBlankWhenNull="true">
-					<reportElement style="noto" x="0" y="21" width="525" height="21" uuid="d0c435df-9748-4d08-9f12-caa6a84b3c93">
+					<reportElement style="noto" x="0" y="21" width="525" height="19" uuid="d0c435df-9748-4d08-9f12-caa6a84b3c93">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -52,10 +52,10 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto" size="12" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{rojmed}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{balance_grouping}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement style="noto" x="0" y="43" width="525" height="17" uuid="e8609409-dd09-43a1-a600-b5eac8f540e3">
+					<reportElement style="noto" x="0" y="40" width="525" height="17" uuid="e8609409-dd09-43a1-a600-b5eac8f540e3">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<box>
@@ -67,7 +67,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto" size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{date}+" "+$F{rojmedDate}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{balance_sheet} + " " +$P{p_to_date}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement style="noto" x="0" y="0" width="525" height="21" uuid="57f9a3a4-846b-4722-83ab-a08066d54b62">
@@ -136,7 +136,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{account.credit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{accounting.liability}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement style="noto" mode="Opaque" x="262" y="0" width="262" height="22" backcolor="#E4E4F5" uuid="fc3c845e-2bc2-4044-a189-50d8b1c8cc01">
@@ -150,7 +150,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{account.debit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{accounting.asset}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="147" y="22" width="55" height="22" backcolor="#E4E4F5" uuid="67e9104e-495a-4699-96c3-d838cbfda7b5">

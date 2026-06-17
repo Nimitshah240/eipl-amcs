@@ -12,6 +12,8 @@ public class LedgerBalance {
     private double credit;
     private double balance;
     private int incomeExpense;
+    private String ledgerGroupCode;
+    private String ledgerGroupName;
 
     public LedgerBalance(String ledgerCode, String ledgerName, double debit, double credit, double balance) {
         this.ledgerCode = ledgerCode;
@@ -29,6 +31,17 @@ public class LedgerBalance {
         this.balance = balance;
         this.incomeExpense = incomeExpense;
     }
+
+    public LedgerBalance(String ledgerCode, String ledgerName, double debit, double credit, double balance, String ledgerGroupCode, String ledgerGroupName) {
+        this.ledgerCode = ledgerCode;
+        this.ledgerName = ledgerName;
+        this.debit = debit;
+        this.credit = credit;
+        this.balance = balance;
+        this.ledgerGroupCode = ledgerGroupCode;
+        this.ledgerGroupName = ledgerGroupName;
+    }
+
 
     @Override
     public String toString() {

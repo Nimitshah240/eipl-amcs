@@ -57,7 +57,7 @@ public class ProductStockServiceImpl implements ProductStockService {
 
     @Override
     public ProductStock findByProduct(String code) {
-        return stockRepository.findByProduct(productRepository.findById(code).get()).get();
+        return stockRepository.findByProduct(productRepository.findById(code).get()).orElse(null);
     }
 
 }

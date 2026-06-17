@@ -53,7 +53,7 @@ public class BalanceSheetTask extends Task<List<LedgerBalance>> {
 
 
             listObject.forEach(item -> {
-                listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+                listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue(), (String) item[3], (String) item[4]));
             });
             listResp.add(new LedgerBalance("", "stockvaluation as on " + stockValuationGeneratedDate, 0, stockValuation, stockValuation));
 
@@ -65,7 +65,7 @@ public class BalanceSheetTask extends Task<List<LedgerBalance>> {
                 listObject1 = new ArrayList<>();
 
             listObject1.forEach(item -> {
-                listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
+                listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue(), (String) item[3], (String) item[4]));
             });
             listResp.forEach(item -> item.setIncomeExpense(1));
             list.addAll(listResp);

@@ -35,6 +35,8 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -57,7 +59,7 @@ public class RptStockValuationController implements MyInitialization {
     private E_Button btnClose;
 
     @FXML
-    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
+    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1,btnBalanceSheetGrouping;
     @FXML
     private Label lblAsOnDate;
 
@@ -69,6 +71,8 @@ public class RptStockValuationController implements MyInitialization {
     private SwingNode reportNode;
     @FXML
     private AutoSearchTextField<Product> cboxProduct;
+    @FXML
+    private RadioButton rbtVertical, rbtHorizontal;
     @FXML
     private AutoSearchTextField<String> cboxFormat, cboxLanguage, cboxLanguage1;
     private List<Product> listProductList;
@@ -123,6 +127,9 @@ public class RptStockValuationController implements MyInitialization {
         btnBalanceSheet.setOnAction(e -> {
             loadDataBalanceSheet();
         });
+        btnBalanceSheetGrouping.setOnAction(e -> {
+            loadDataBalanceSheetGrouping();
+        });
         btnTredingReport.setOnAction(e -> {
             loadDataTreadingReport();
         });
@@ -151,6 +158,33 @@ public class RptStockValuationController implements MyInitialization {
         } else {
             cboxLanguage1.setValue("English");
         }
+
+        ToggleGroup group = new ToggleGroup();
+        rbtHorizontal.setToggleGroup(group);
+        rbtVertical.setToggleGroup(group);
+        rbtHorizontal.setSelected(true);
+
+        cboxLanguage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                String selected = cboxLanguage.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String loc = selected.equalsIgnoreCase("Gujarati") ? "gu" : selected.equalsIgnoreCase("Hindi") ? "hi" : "en";
+                    MainApp.setLocale(loc);
+                    cboxLanguage1.getSelectionModel().select(selected);
+                }
+            }
+        });
+
+        cboxLanguage1.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                String selected = cboxLanguage1.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String loc = selected.equalsIgnoreCase("Gujarati") ? "gu" : selected.equalsIgnoreCase("Hindi") ? "hi" : "en";
+                    MainApp.setLocale(loc);
+                    cboxLanguage.getSelectionModel().select(selected);
+                }
+            }
+        });
     }
 
     public void loadProductStockValuation() {
@@ -277,55 +311,57 @@ public class RptStockValuationController implements MyInitialization {
                 param.put("p_to_date", dpToDate1.getValue());
                 param.put("p_locale", localeStr);
                 param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+                JasperPrint print = null;
                 listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
-                param.put("p_imcome_side", listPLIncome);
                 listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
-                param.put("p_expense_side", listPLExpense);
-
-//                if (listPLExpense != null && listPLIncome != null) {
-//                    param.put("p_balance", listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()
-//
-//                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()));
-//                } else if (listPLIncome != null) {
-//                    param.put("p_balance",
-//                            listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() - 0);
-//                } else if (listPLExpense != null) {
-//                    param.put("p_balance",
-//                            0 - listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum());
-//                }
-
                 double incomeTotal = listPLIncome != null
                         ? listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() : 0;
                 double expenseTotal = listPLExpense != null
                         ? Math.abs(listPLExpense.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum()) : 0;
-
                 param.put("p_balance", incomeTotal - expenseTotal);
 
-                listPLIncome = list.stream()
-                        .filter(p -> p != null && p.getIncomeExpense() == 1)
-                        .collect(Collectors.toList());
+                if (rbtHorizontal.isSelected()) {
+                    param.put("p_imcome_side", listPLIncome);
+                    param.put("p_expense_side", listPLExpense);
 
-                listPLExpense = list.stream()
-                        .filter(p -> p != null && p.getIncomeExpense() == 0)
-                        .collect(Collectors.toList());
+                    listPLIncome = list.stream()
+                            .filter(p -> p != null && p.getIncomeExpense() == 1)
+                            .collect(Collectors.toList());
 
-                int maxRows = Math.max(
-                        listPLIncome != null ? listPLIncome.size() : 0,
-                        listPLExpense != null ? listPLExpense.size() : 0
-                );
+                    listPLExpense = list.stream()
+                            .filter(p -> p != null && p.getIncomeExpense() == 0)
+                            .collect(Collectors.toList());
 
-                List<BalanceSheetRow> listPLRows = new ArrayList<>();
-                for (int i = 0; i < maxRows; i++) {
-                    LedgerBalance income = (listPLIncome != null && i < listPLIncome.size())
-                            ? listPLIncome.get(i) : null;
-                    LedgerBalance expense = (listPLExpense != null && i < listPLExpense.size())
-                            ? listPLExpense.get(i) : null;
-                    listPLRows.add(new BalanceSheetRow(income, expense));
+                    int maxRows = Math.max(
+                            listPLIncome != null ? listPLIncome.size() : 0,
+                            listPLExpense != null ? listPLExpense.size() : 0
+                    );
+
+                    List<BalanceSheetRow> listPLRows = new ArrayList<>();
+                    for (int i = 0; i < maxRows; i++) {
+                        LedgerBalance income = (listPLIncome != null && i < listPLIncome.size())
+                                ? listPLIncome.get(i) : null;
+                        LedgerBalance expense = (listPLExpense != null && i < listPLExpense.size())
+                                ? listPLExpense.get(i) : null;
+                        listPLRows.add(new BalanceSheetRow(income, expense));
+                    }
+
+                    param.put("p_pl_rows", listPLRows);
+
+                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_PROFIT_LOSS_REPORT, param, new JRBeanCollectionDataSource(listPLRows));
+                } else {
+                    // (NIMIT | 15.03.2026): This code is used for vertical report design.
+                    list.stream().forEach(item -> {
+                        double balance = item.getBalance();
+                        if (balance < 0) {
+                            item.setDebit(Math.abs(balance));
+                        } else {
+                            item.setCredit(balance);
+                        }
+                    });
+                    // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
+                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.ProfitLossOne, param, new JRBeanCollectionDataSource(list));
                 }
-
-                param.put("p_pl_rows", listPLRows);
-
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_PROFIT_LOSS_REPORT, param, new JRBeanCollectionDataSource(listPLRows));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -372,7 +408,32 @@ public class RptStockValuationController implements MyInitialization {
 
                         TradingTaskparams.put("p_locale", localeStr);
                         TradingTaskparams.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-                        JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listtradingTask));
+                        JasperPrint print = null;
+                        if (rbtVertical.isSelected()) {
+                            print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listtradingTask));
+                        } else {
+                            // (NIMIT | 15.03.2026): This code is used for horizontal report design.
+
+                            listBSAsset = listtradingTask.stream().filter(p -> p.getBalance() < 0).collect(Collectors.toList());
+                            listBSLiability = listtradingTask.stream().filter(p -> p.getBalance() > 0).collect(Collectors.toList());
+
+                            int maxRows = Math.max(
+                                    listBSLiability != null ? listBSLiability.size() : 0,
+                                    listBSAsset != null ? listBSAsset.size() : 0
+                            );
+
+                            List<BalanceSheetRow> listBSRows = new ArrayList<>();
+                            for (int i = 0; i < maxRows; i++) {
+                                LedgerBalance liability = (listBSLiability != null && i < listBSLiability.size())
+                                        ? listBSLiability.get(i) : null;
+                                LedgerBalance asset = (listBSAsset != null && i < listBSAsset.size())
+                                        ? listBSAsset.get(i) : null;
+                                listBSRows.add(new BalanceSheetRow(liability, asset));
+                            }
+
+                            // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
+                            print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.TradingReportOne, TradingTaskparams, new JRBeanCollectionDataSource(listBSRows));
+                        }
                         JasperViewer.viewReport(print, false);
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
@@ -410,9 +471,7 @@ public class RptStockValuationController implements MyInitialization {
                 param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 param.put("p_locale", localeStr);
 
-//                Change made by manoj - (12.05.2022)
-//                if (listPLExpense == null || listPLExpense.isEmpty() || listPLIncome == null || listPLIncome.isEmpty())
-//                    loadPL();
+
                 double diff = 0;
                 if (listPLExpense != null && listPLIncome != null) {
                     diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
@@ -428,44 +487,56 @@ public class RptStockValuationController implements MyInitialization {
                     if (diff > 0) {
                         listBSLiability.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 1));
                     }
-//                    listBSLiability.add(new LedgerBalance("", "Total", 0, 0,
-//                            NumberUtil.round(listBSLiability.stream().mapToDouble(m -> m.getBalance()).sum(), 2), 1));
-
                 }
                 listBSAsset = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
                 if (listBSAsset != null) {
                     if (diff < 0) {
                         listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 0));
                     }
-//                    listBSAsset.add(new LedgerBalance("", "Total", 0, 0,
-//                            NumberUtil.round(listBSAsset.stream().mapToDouble(m -> Math.abs(m.getBalance())).sum(), 2), 0));
-
                 }
 
+                JasperPrint print = null;
+                if (rbtHorizontal.isSelected()) {
+                    int maxRows = Math.max(
+                            listBSLiability != null ? listBSLiability.size() : 0,
+                            listBSAsset != null ? listBSAsset.size() : 0
+                    );
 
-//                param.put("p_liability_side", listBSLiability);
-//
-//                param.put("p_asset_side", listBSAsset);
+                    List<BalanceSheetRow> listBSRows = new ArrayList<>();
+                    for (int i = 0; i < maxRows; i++) {
+                        LedgerBalance liability = (listBSLiability != null && i < listBSLiability.size())
+                                ? listBSLiability.get(i) : null;
+                        LedgerBalance asset = (listBSAsset != null && i < listBSAsset.size())
+                                ? listBSAsset.get(i) : null;
+                        listBSRows.add(new BalanceSheetRow(liability, asset));
+                    }
 
+                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(listBSRows));
+                } else {
+                    // (NIMIT | 15.03.2026): This code is used for vertical report design.
+                    list.clear();
+                    list.addAll(listBSLiability);
+                    list.addAll(listBSAsset);
 
-                int maxRows = Math.max(
-                        listBSLiability != null ? listBSLiability.size() : 0,
-                        listBSAsset != null ? listBSAsset.size() : 0
-                );
+                    list.sort(Comparator.comparing(
+                            LedgerBalance::getLedgerCode,
+                            Comparator.nullsLast(Comparator.naturalOrder())
+                    ));
 
-                List<BalanceSheetRow> listBSRows = new ArrayList<>();
-                for (int i = 0; i < maxRows; i++) {
-                    LedgerBalance liability = (listBSLiability != null && i < listBSLiability.size())
-                            ? listBSLiability.get(i) : null;
-                    LedgerBalance asset = (listBSAsset != null && i < listBSAsset.size())
-                            ? listBSAsset.get(i) : null;
-                    listBSRows.add(new BalanceSheetRow(liability, asset));
+                    list.stream().forEach(item -> {
+                        double balance = item.getBalance();
+
+                        if (balance < 0) {
+                            item.setDebit(Math.abs(balance));
+                            item.setCredit(0.0);
+                        } else {
+                            item.setCredit(balance);
+                            item.setDebit(0.0);
+                        }
+                    });
+                    // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
+                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.BalanceSheetOne, param, new JRBeanCollectionDataSource(list));
                 }
-
-//                param.put("p_balance_sheet_rows", listBSRows);
-
-
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(listBSRows));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -484,7 +555,11 @@ public class RptStockValuationController implements MyInitialization {
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
 
-        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.LEDGER_SUMMARY, params);
+        if (rbtVertical.isSelected()) {
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.TBReportOne, params);
+        } else {
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.LEDGER_SUMMARY, params);
+        }
         JasperViewer.viewReport(print, false);
     }
 
@@ -636,7 +711,8 @@ public class RptStockValuationController implements MyInitialization {
         return future;
     }
 
-    private List<VoucherTransaction> bifurcateProductReceiptTransaction(List<VoucherTransaction> voucherTransactionList) {
+    private List<VoucherTransaction> bifurcateProductReceiptTransaction
+            (List<VoucherTransaction> voucherTransactionList) {
         try {
             List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
             List<VoucherTransaction> productReceiptTransaction = new ArrayList<>();
@@ -702,7 +778,8 @@ public class RptStockValuationController implements MyInitialization {
         return null;
     }
 
-    private List<VoucherTransaction> bifurcateProductSaleTransaction(List<VoucherTransaction> voucherTransactionList) {
+    private List<VoucherTransaction> bifurcateProductSaleTransaction
+            (List<VoucherTransaction> voucherTransactionList) {
         try {
             List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
             List<VoucherTransaction> productSaleTransaction = new ArrayList<>();
@@ -1063,5 +1140,136 @@ public class RptStockValuationController implements MyInitialization {
             listRojmed.add(rojmedDto);
         }
     }
-}
 
+    public void loadDataBalanceSheetGrouping() {
+        String localeStr = getLocaleString();
+        BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
+                dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
+        balanceSheetTask.setOnSucceeded(ee -> {
+            try {
+                List<LedgerBalance> list = balanceSheetTask.get();
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                Map<String, Object> param = new HashMap<>();
+                param.put("p_society_code", MainApp.identityDto.getSociety().getCodeEx());
+                if (localeStr.equals("en")) {
+                    param.put("p_society_name", MainApp.identityDto.getSociety().getName());
+                } else {
+                    param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+                }
+                param.put("p_from_date", LocalDate.parse(dpFromDate1.getValue().toString()));
+                param.put("p_to_date", LocalDate.parse(dpToDate1.getValue().toString()));
+                param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+                param.put("p_locale", localeStr);
+
+                double diff = 0;
+                if (listPLExpense != null && listPLIncome != null) {
+                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
+                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+                } else if (listPLIncome != null) {
+                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum() - 0;
+                } else if (listPLExpense != null) {
+                    diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+                }
+
+                listBSLiability = list.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
+                if (listBSLiability != null) {
+                    if (diff > 0) {
+                        listBSLiability.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 1));
+                    }
+                }
+                listBSAsset = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+                if (listBSAsset != null) {
+                    if (diff < 0) {
+                        listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 0));
+                    }
+                }
+                Map<String, List<LedgerBalance>> liabilityGroupMap = listBSLiability.stream()
+                        .collect(Collectors.groupingBy(
+                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName()
+                        ));
+                Map<String, List<LedgerBalance>> assetGroupMap = listBSAsset.stream()
+                        .collect(Collectors.groupingBy(
+                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName()
+                        ));
+                List<RojmedDto> rojmedDtoList = generateSideBySideRojmed(assetGroupMap, liabilityGroupMap);
+                for (RojmedDto rojmedDto : rojmedDtoList) {
+                    System.out.println(rojmedDto.getCreditLedger() + " - " + rojmedDto.getCreditSubAmount() + " - " + rojmedDto.getCreditAmount() + " - " + rojmedDto.getDebitLedger() + " - " + rojmedDto.getDebitSubAmount() + " - " + rojmedDto.getDebitAmount());
+                }
+
+                // TODO - ANANT HERE MAKE CHANGES
+                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.BalanceSheetGrouping, param, new JRBeanCollectionDataSource(rojmedDtoList));
+                JasperViewer.viewReport(print, false);
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(balanceSheetTask).start();
+    }
+
+
+    public List<RojmedDto> generateSideBySideRojmed(Map<String, List<LedgerBalance>> assetGroupMap, Map<String, List<LedgerBalance>> liabilityGroupMap) {
+        List<RojmedDto> reportRows = new ArrayList<>();
+        List<RojmedDto> assetRows = flattenToSideRows(assetGroupMap, true);
+        List<RojmedDto> liabilityRows = flattenToSideRows(liabilityGroupMap, false);
+
+        int maxRows = Math.max(assetRows.size(), liabilityRows.size());
+
+        for (int i = 0; i < maxRows; i++) {
+            RojmedDto combinedRow = new RojmedDto();
+
+            if (i < assetRows.size()) {
+                RojmedDto assetSource = assetRows.get(i);
+                combinedRow.setDebitLedger(assetSource.getDebitLedger());
+                combinedRow.setDebitAmount(assetSource.getDebitAmount());
+                combinedRow.setDebitSubAmount(assetSource.getDebitSubAmount());
+            }
+
+            if (i < liabilityRows.size()) {
+                RojmedDto liabilitySource = liabilityRows.get(i);
+                combinedRow.setCreditLedger(liabilitySource.getCreditLedger());
+                combinedRow.setCreditAmount(liabilitySource.getCreditAmount());
+                combinedRow.setCreditSubAmount(liabilitySource.getCreditSubAmount());
+            }
+
+            reportRows.add(combinedRow);
+        }
+
+        return reportRows;
+    }
+
+    private List<RojmedDto> flattenToSideRows(Map<String, List<LedgerBalance>> groupMap, boolean isAsset) {
+        List<RojmedDto> sideRows = new ArrayList<>();
+
+        groupMap.forEach((groupName, balances) -> {
+            RojmedDto header = new RojmedDto();
+            double totalBalance = balances.stream().mapToDouble(LedgerBalance::getBalance).sum();
+
+            if (isAsset) {
+                header.setDebitLedger(groupName);
+                header.setDebitAmount(totalBalance);
+            } else {
+                header.setCreditLedger(groupName);
+                header.setCreditAmount(totalBalance);
+            }
+            sideRows.add(header);
+
+            for (LedgerBalance ledger : balances) {
+                RojmedDto child = new RojmedDto();
+                String ledgerDisplay = ledger.getLedgerName() + " (" + ledger.getLedgerCode() + ")";
+
+                if (isAsset) {
+                    child.setDebitLedger(ledgerDisplay);
+                    child.setDebitSubAmount(ledger.getBalance());
+                } else {
+                    child.setCreditLedger(ledgerDisplay);
+                    child.setCreditSubAmount(ledger.getBalance());
+                }
+                sideRows.add(child);
+            }
+        });
+
+        return sideRows;
+    }
+}

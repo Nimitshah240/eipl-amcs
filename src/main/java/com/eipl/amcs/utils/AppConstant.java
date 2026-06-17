@@ -275,6 +275,12 @@ public class AppConstant {
         String PRODUCT_STOCK_LEDGER = "ProductStockLedger";
         String LEDGER_SUMMARY = "LedgerSummary";
         String ROJMED = "Rojmed";
+        String ProfitLossOne="ProfitLossOne";
+        String TradingReportOne="TradingReportOne";
+        String BalanceSheetOne="BalanceSheetOne";
+        String TBReportOne="TBReportOne";
+        String PRODUCT_STOCK_LEDGER_SUMMARY="ProductStockLedgerSummary";
+        String BalanceSheetGrouping="BalanceSheetGrouping";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
 
