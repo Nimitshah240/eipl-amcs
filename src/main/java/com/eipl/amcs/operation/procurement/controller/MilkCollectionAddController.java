@@ -116,7 +116,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_NumericField txtSampleNo, txtCode, txtQty, txtFat, txtSnf1, txtFat1, txtSnf2, txtFat2, txtSnf3, txtFat3, txtSnf4, txtFat4, txtSnf, txtClr, txtWater, txtRate, txtAmount;
     @FXML
-    private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting, btnShiftReport;
+    private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting, btnShiftReport, btnRejectedMilk;
     @FXML
     private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate, lblManual, lblLocalTime, lblEdited;
     @FXML
@@ -580,6 +580,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             }
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/ShiftReportCode.fxml")));
         });
+
+        btnRejectedMilk.setOnAction(e -> {
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", null, this, "Add Rejected Milk");
+        });
+
         txtFat.textProperty().addListener(qualityParamChangeListener);
         txtSnf.textProperty().addListener(qualityParamChangeListener);
         txtQty.textProperty().addListener(qtyRateChangeListener);

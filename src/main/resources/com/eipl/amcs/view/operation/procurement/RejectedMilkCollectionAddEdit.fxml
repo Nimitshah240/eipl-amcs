@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.eipl.amcs.controls.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<StackPane fx:id="root" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.RejectedMilkCollectionAddEditController">
+
+    <children>
+
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" styleClass="">
+            <children>
+                <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%rejectedmilkcollection">
+                    <VBox.margin>
+                        <Insets left="10.0" />
+                    </VBox.margin>
+                </Label>
+                <GridPane hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints vgrow="ALWAYS" />
+                        <RowConstraints />
+                  <RowConstraints />
+                    </rowConstraints>
+                    <children>
+                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <E_TextField fx:id="txtCode" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtQty" GridPane.rowIndex="5" />
+                        <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                        <E_TextField fx:id="txtFat" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <E_TextField fx:id="txtSnf" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Label text="%milktype" GridPane.columnIndex="2" />
+                        <Label text="%date" />
+                        <Label text="%shift" GridPane.columnIndex="1" />
+
+                        <Label text="%remark" GridPane.rowIndex="6" />
+                        <Label text="%snf" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label text="%name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="%code" GridPane.rowIndex="2" />
+                        <Label text="%qty" GridPane.rowIndex="4" />
+                        <E_TextField fx:id="txtRemarks" GridPane.columnSpan="3" GridPane.rowIndex="7" />
+
+                        <!-- 4. Footer E_Buttons -->
+                        <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="10.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                            <padding>
+                                <Insets bottom="10.0" right="5.0" />
+                            </padding>
+                            <children>
+                                <E_Button fx:id="btnSaveUpdate" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%add">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/plus.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </E_Button>
+                                <E_Button fx:id="btnClose" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0" text="%close">
+                                    <graphic>
+                                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/close.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </E_Button>
+                            </children>
+                        </HBox>
+                        <Label text="%fat" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" />
+                    </padding>
+                </GridPane>
+            </children>
+        </VBox>
+    </children>
+</StackPane>

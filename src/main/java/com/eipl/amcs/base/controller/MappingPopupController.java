@@ -47,10 +47,7 @@ import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.procurement.controller.*;
 import com.eipl.amcs.operation.procurement.dto.CollectionEditDelete;
-import com.eipl.amcs.operation.procurement.model.CouponIssue;
-import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
-import com.eipl.amcs.operation.procurement.model.MilkCollection;
-import com.eipl.amcs.operation.procurement.model.MilkDispatch;
+import com.eipl.amcs.operation.procurement.model.*;
 import com.eipl.amcs.operation.share.controller.*;
 import com.eipl.amcs.setting.controller.*;
 import javafx.fxml.FXML;
@@ -662,6 +659,12 @@ public class MappingPopupController implements MyInitialization {
                     controller78.setCallback(callback);
                     root.setCenter(controller78.getRoot());
                     break;
+                case "RejectedMilkCollectionAddEdit":
+                    var controller79 = (RejectedMilkCollectionAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/operation/procurement/RejectedMilkCollectionAddEdit.fxml"));
+                    controller79.setRejectedMilkCollection(object != null ? (RejectedMilkCollection) object : null);
+                    controller79.setStage(stage);
+                    controller79.setCallback(callback);
+                    root.setCenter(controller79.getRoot());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
