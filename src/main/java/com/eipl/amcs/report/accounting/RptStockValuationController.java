@@ -122,6 +122,7 @@ public class RptStockValuationController implements MyInitialization {
         });
         btnBalanceSheet.setOnAction(e -> {
             loadDataBalanceSheet();
+            loadDataBalanceSheetGrouping();
         });
         btnTredingReport.setOnAction(e -> {
             loadDataTreadingReport();
@@ -1122,7 +1123,7 @@ public class RptStockValuationController implements MyInitialization {
                     System.out.println(rojmedDto.getCreditLedger() + " - " + rojmedDto.getCreditSubAmount() + " - " + rojmedDto.getCreditAmount() + " - " + rojmedDto.getDebitLedger() + " - " + rojmedDto.getDebitSubAmount() + " - " + rojmedDto.getDebitAmount());
                 }
 
-            // TODO - ANANT HERE MAKE CHANGES
+                // TODO - ANANT HERE MAKE CHANGES
                 JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(rojmedDtoList));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
@@ -1181,7 +1182,7 @@ public class RptStockValuationController implements MyInitialization {
 
             for (LedgerBalance ledger : balances) {
                 RojmedDto child = new RojmedDto();
-                String ledgerDisplay = "  " + ledger.getLedgerCode() + " - " + ledger.getLedgerName();
+                String ledgerDisplay = ledger.getLedgerName() + " (" + ledger.getLedgerCode() + ")";
 
                 if (isAsset) {
                     child.setDebitLedger(ledgerDisplay);
