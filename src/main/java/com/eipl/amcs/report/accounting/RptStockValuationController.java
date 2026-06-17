@@ -1063,5 +1063,138 @@ public class RptStockValuationController implements MyInitialization {
             listRojmed.add(rojmedDto);
         }
     }
+
+
+    public void loadDataBalanceSheetGrouping() {
+        String localeStr = getLocaleString();
+        BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
+                dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
+        balanceSheetTask.setOnSucceeded(ee -> {
+            try {
+                List<LedgerBalance> list = balanceSheetTask.get();
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                Map<String, Object> param = new HashMap<>();
+                param.put("p_society_code", MainApp.identityDto.getSociety().getCodeEx());
+                if (localeStr.equals("en")) {
+                    param.put("p_society_name", MainApp.identityDto.getSociety().getName());
+                } else {
+                    param.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+                }
+                param.put("p_from_date", LocalDate.parse(dpFromDate1.getValue().toString()));
+                param.put("p_to_date", LocalDate.parse(dpToDate1.getValue().toString()));
+                param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+                param.put("p_locale", localeStr);
+
+                double diff = 0;
+                if (listPLExpense != null && listPLIncome != null) {
+                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum()
+                            - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+                } else if (listPLIncome != null) {
+                    diff = listPLIncome.stream().mapToDouble(m -> m.getBalance()).sum() - 0;
+                } else if (listPLExpense != null) {
+                    diff = 0 - Math.abs(listPLExpense.stream().mapToDouble(m -> m.getBalance()).sum());
+                }
+
+                listBSLiability = list.stream().filter(p -> p.getIncomeExpense() == 1).collect(Collectors.toList());
+                if (listBSLiability != null) {
+                    if (diff > 0) {
+                        listBSLiability.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 1));
+                    }
+                }
+                listBSAsset = list.stream().filter(p -> p.getIncomeExpense() == 0).collect(Collectors.toList());
+                if (listBSAsset != null) {
+                    if (diff < 0) {
+                        listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 0));
+                    }
+                }
+                Map<String, List<LedgerBalance>> liabilityGroupMap = listBSLiability.stream()
+                        .collect(Collectors.groupingBy(
+                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName()
+                        ));
+                Map<String, List<LedgerBalance>> assetGroupMap = listBSAsset.stream()
+                        .collect(Collectors.groupingBy(
+                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName()
+                        ));
+                List<RojmedDto> rojmedDtoList = generateSideBySideRojmed(assetGroupMap, liabilityGroupMap);
+                for (RojmedDto rojmedDto : rojmedDtoList) {
+                    System.out.println(rojmedDto.getCreditLedger() + " - " + rojmedDto.getCreditSubAmount() + " - " + rojmedDto.getCreditAmount() + " - " + rojmedDto.getDebitLedger() + " - " + rojmedDto.getDebitSubAmount() + " - " + rojmedDto.getDebitAmount());
+                }
+
+            // TODO - ANANT HERE MAKE CHANGES
+                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(rojmedDtoList));
+                JasperViewer.viewReport(print, false);
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(balanceSheetTask).start();
+    }
+
+
+    public List<RojmedDto> generateSideBySideRojmed(Map<String, List<LedgerBalance>> assetGroupMap, Map<String, List<LedgerBalance>> liabilityGroupMap) {
+        List<RojmedDto> reportRows = new ArrayList<>();
+        List<RojmedDto> assetRows = flattenToSideRows(assetGroupMap, true);
+        List<RojmedDto> liabilityRows = flattenToSideRows(liabilityGroupMap, false);
+
+        int maxRows = Math.max(assetRows.size(), liabilityRows.size());
+
+        for (int i = 0; i < maxRows; i++) {
+            RojmedDto combinedRow = new RojmedDto();
+
+            if (i < assetRows.size()) {
+                RojmedDto assetSource = assetRows.get(i);
+                combinedRow.setDebitLedger(assetSource.getDebitLedger());
+                combinedRow.setDebitAmount(assetSource.getDebitAmount());
+                combinedRow.setDebitSubAmount(assetSource.getDebitSubAmount());
+            }
+
+            if (i < liabilityRows.size()) {
+                RojmedDto liabilitySource = liabilityRows.get(i);
+                combinedRow.setCreditLedger(liabilitySource.getCreditLedger());
+                combinedRow.setCreditAmount(liabilitySource.getCreditAmount());
+                combinedRow.setCreditSubAmount(liabilitySource.getCreditSubAmount());
+            }
+
+            reportRows.add(combinedRow);
+        }
+
+        return reportRows;
+    }
+
+    private List<RojmedDto> flattenToSideRows(Map<String, List<LedgerBalance>> groupMap, boolean isAsset) {
+        List<RojmedDto> sideRows = new ArrayList<>();
+
+        groupMap.forEach((groupName, balances) -> {
+            RojmedDto header = new RojmedDto();
+            double totalBalance = balances.stream().mapToDouble(LedgerBalance::getBalance).sum();
+
+            if (isAsset) {
+                header.setDebitLedger(groupName);
+                header.setDebitAmount(totalBalance);
+            } else {
+                header.setCreditLedger(groupName);
+                header.setCreditAmount(totalBalance);
+            }
+            sideRows.add(header);
+
+            for (LedgerBalance ledger : balances) {
+                RojmedDto child = new RojmedDto();
+                String ledgerDisplay = "  " + ledger.getLedgerCode() + " - " + ledger.getLedgerName();
+
+                if (isAsset) {
+                    child.setDebitLedger(ledgerDisplay);
+                    child.setDebitSubAmount(ledger.getBalance());
+                } else {
+                    child.setCreditLedger(ledgerDisplay);
+                    child.setCreditSubAmount(ledger.getBalance());
+                }
+                sideRows.add(child);
+            }
+        });
+
+        return sideRows;
+    }
 }
 

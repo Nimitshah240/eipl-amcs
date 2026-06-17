@@ -151,6 +151,10 @@ public class RojmedController implements MyInitialization, PopupCallback {
         root.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
             switch (event.getCode()) {
                 case R:
+                    if (event.isControlDown()) {
+                        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/account/StockValuation.fxml")));
+                        break;
+                    }
                     MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "VoucherEntryCredit", dpDate.getValue(), this, resourceBundle.getString("credit.entry"));
                     break;
                 case T:
