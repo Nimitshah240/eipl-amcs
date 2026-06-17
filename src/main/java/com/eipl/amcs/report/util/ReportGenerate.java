@@ -338,6 +338,10 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/BalanceSheetOne.jasper";
             case AppConstant.ReportPath.TBReportOne:
                 return "resources/report/milkcollection/TBReportOne.jasper";
+            case AppConstant.ReportPath.PRODUCT_STOCK_LEDGER_SUMMARY:
+                return "resources/report/milkcollection/ProductStockLedgerSummary.jasper";
+            case AppConstant.ReportPath.BalanceSheetGrouping:
+                return "resources/report/milkcollection/BalanceSheetGrouping.jasper";
         }
         return null;
     }
