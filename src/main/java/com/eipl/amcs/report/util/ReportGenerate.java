@@ -330,7 +330,14 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/ElectionRegister1.jasper";
             case AppConstant.ReportPath.ROJMED:
                 return "resources/report/milkcollection/Rojmed.jasper";
-
+            case AppConstant.ReportPath.ProfitLossOne:
+                return "resources/report/milkcollection/ProfitLossOne.jasper";
+            case AppConstant.ReportPath.TradingReportOne:
+                return "resources/report/milkcollection/TradingReportOne.jasper";
+            case AppConstant.ReportPath.BalanceSheetOne:
+                return "resources/report/milkcollection/BalanceSheetOne.jasper";
+            case AppConstant.ReportPath.TBReportOne:
+                return "resources/report/milkcollection/TBReportOne.jasper";
         }
         return null;
     }

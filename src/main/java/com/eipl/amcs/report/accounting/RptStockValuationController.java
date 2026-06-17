@@ -161,6 +161,28 @@ public class RptStockValuationController implements MyInitialization {
         rbtHorizontal.setToggleGroup(group);
         rbtVertical.setToggleGroup(group);
         rbtHorizontal.setSelected(true);
+
+        cboxLanguage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                String selected = cboxLanguage.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String loc = selected.equalsIgnoreCase("Gujarati") ? "gu" : selected.equalsIgnoreCase("Hindi") ? "hi" : "en";
+                    MainApp.setLocale(loc);
+                    cboxLanguage1.getSelectionModel().select(selected);
+                }
+            }
+        });
+
+        cboxLanguage1.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                String selected = cboxLanguage1.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    String loc = selected.equalsIgnoreCase("Gujarati") ? "gu" : selected.equalsIgnoreCase("Hindi") ? "hi" : "en";
+                    MainApp.setLocale(loc);
+                    cboxLanguage.getSelectionModel().select(selected);
+                }
+            }
+        });
     }
 
     public void loadProductStockValuation() {
@@ -336,7 +358,7 @@ public class RptStockValuationController implements MyInitialization {
                         }
                     });
                     // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
-                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_PROFIT_LOSS_REPORT, param, new JRBeanCollectionDataSource(list));
+                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.ProfitLossOne, param, new JRBeanCollectionDataSource(list));
                 }
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
@@ -408,7 +430,7 @@ public class RptStockValuationController implements MyInitialization {
                             }
 
                             // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
-                            print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listBSRows));
+                            print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.TradingReportOne, TradingTaskparams, new JRBeanCollectionDataSource(listBSRows));
                         }
                         JasperViewer.viewReport(print, false);
                     } catch (InterruptedException | ExecutionException ex) {
@@ -511,7 +533,7 @@ public class RptStockValuationController implements MyInitialization {
                         }
                     });
                     // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
-                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(list));
+                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.BalanceSheetOne, param, new JRBeanCollectionDataSource(list));
                 }
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
@@ -531,7 +553,11 @@ public class RptStockValuationController implements MyInitialization {
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = null;
 
-        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.LEDGER_SUMMARY, params);
+        if (rbtVertical.isSelected()) {
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.TBReportOne, params);
+        } else {
+            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.LEDGER_SUMMARY, params);
+        }
         JasperViewer.viewReport(print, false);
     }
 
@@ -1113,7 +1139,6 @@ public class RptStockValuationController implements MyInitialization {
         }
     }
 
-
     public void loadDataBalanceSheetGrouping() {
         String localeStr = getLocaleString();
         BalanceSheetTask balanceSheetTask = new BalanceSheetTask(MainApp.identityDto.getSociety().getCode(),
@@ -1246,4 +1271,3 @@ public class RptStockValuationController implements MyInitialization {
         return sideRows;
     }
 }
-
