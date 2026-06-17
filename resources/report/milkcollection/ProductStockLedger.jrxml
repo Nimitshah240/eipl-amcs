@@ -5,6 +5,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="301"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="685"/>
+	<style name="noto" fontName="Noto" fontSize="10"/>
 	<parameter name="p_society_code" class="java.lang.String"/>
 	<parameter name="p_product_code" class="java.lang.String"/>
 	<parameter name="p_from_date" class="java.lang.String"/>
@@ -99,7 +100,7 @@
 		<groupHeader>
 			<band height="20">
 				<textField>
-					<reportElement x="0" y="0" width="790" height="20" uuid="b86f9837-1caa-4db9-b8f7-6f4b5d3f3a13">
+					<reportElement x="0" y="0" width="802" height="20" uuid="b86f9837-1caa-4db9-b8f7-6f4b5d3f3a13">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -247,7 +248,7 @@
 					<textFieldExpression><![CDATA[$V{total_sales_amt}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="700" y="0" width="90" height="15" printWhenGroupChanges="ProductGroup" backcolor="#EDEDFA" uuid="3c1170a4-45c2-47f5-bcae-744b834f06f7">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="700" y="0" width="102" height="15" printWhenGroupChanges="ProductGroup" backcolor="#EDEDFA" uuid="3c1170a4-45c2-47f5-bcae-744b834f06f7">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					</reportElement>
@@ -285,27 +286,26 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="85" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		<band height="65" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="790" height="21" uuid="16ee4e8d-de3a-4e3c-89f5-f0c5e94b08ca">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="21" width="802" height="21" uuid="16ee4e8d-de3a-4e3c-89f5-f0c5e94b08ca">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Noto" size="14" isBold="true"/>
+					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{product_stock_ledger}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="25" width="790" height="20" uuid="87f309f4-04ae-4526-bfab-2bafa9011d4a">
+				<reportElement x="0" y="42" width="802" height="20" uuid="87f309f4-04ae-4526-bfab-2bafa9011d4a">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
@@ -317,7 +317,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Noto" size="12" isBold="true"/>
+					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{date} + " :" + 
 new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_from_date})) + 
@@ -326,62 +326,21 @@ $R{to} + " " +
 new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($P{p_to_date}))]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="611" y="67" width="78" height="15" uuid="38659d0f-2aad-41f9-bd4e-85a9a2e3535b">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="802" height="21" uuid="1485262a-39dc-43ab-92ed-6244a8449474">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" size="10" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{print_date}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement stretchType="RelativeToTallestObject" x="689" y="67" width="101" height="15" uuid="d07e0b27-002a-4f4b-bdb7-6565a4bc14b9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="63" width="115" height="22" uuid="cb439e81-03e4-4774-96af-4aba077618a5">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" size="12" isBold="true"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Noto" size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{society_name}.replaceFirst("^=", "")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="45" width="115" height="18" uuid="96f318ed-40a2-40ac-a3df-60557725f797">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{society_code}.replaceFirst("^=", "")]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="115" y="63" width="255" height="22" uuid="2236fe58-de51-4792-8c8d-0948e1f86c78"/>
-				<box leftPadding="0" rightPadding="0"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Noto" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{society_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="115" y="45" width="255" height="18" uuid="ebd6ad5e-e7a5-417e-983e-f94802463af7">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box leftPadding="0" rightPadding="0"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{society_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{society_name} + " - " + ($F{society_code} == null || $F{society_code}.length() < 4 ? $F{society_code} : $F{society_code}.substring($F{society_code}.length() - 4))]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -601,7 +560,7 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 				<textFieldExpression><![CDATA[$R{accounting.balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="700" y="0" width="90" height="20" backcolor="#EDEDFA" uuid="e78c630b-48c1-4322-80e9-c687f635f067">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="700" y="0" width="102" height="20" backcolor="#EDEDFA" uuid="e78c630b-48c1-4322-80e9-c687f635f067">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -845,7 +804,7 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="700" y="0" width="90" height="20" backcolor="#EDEDFA" uuid="3fb5551e-29df-469b-b4ea-6dc663499ec1">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="700" y="0" width="102" height="20" backcolor="#EDEDFA" uuid="3fb5551e-29df-469b-b4ea-6dc663499ec1">
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -870,12 +829,12 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="17" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="635" y="2" width="50" height="15" uuid="a444182c-e63f-49d0-b6fe-97b15292ef3f">
+				<reportElement x="635" y="5" width="50" height="15" uuid="a444182c-e63f-49d0-b6fe-97b15292ef3f">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -890,10 +849,11 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 				<textFieldExpression><![CDATA[$R{page} + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="685" y="2" width="105" height="15" uuid="0137c684-a512-4269-8b7d-f26bd23c7be8">
+				<reportElement x="685" y="5" width="117" height="15" uuid="0137c684-a512-4269-8b7d-f26bd23c7be8">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -906,6 +866,20 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 					<font fontName="Noto" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm a&#xA;" isBlankWhenNull="true">
+				<reportElement key="" positionType="Float" x="0" y="5" width="635" height="15" uuid="a8faf8fb-846d-46a0-8e3e-8dea9239710e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
@@ -948,7 +922,7 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 				<textFieldExpression><![CDATA[$V{grand_sales_qty}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="700" y="20" width="90" height="15" printWhenGroupChanges="ProductGroup" backcolor="#EDEDFA" uuid="0212cca5-57f0-40a6-83a9-70cf581c52af">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="700" y="20" width="99" height="15" printWhenGroupChanges="ProductGroup" backcolor="#EDEDFA" uuid="0212cca5-57f0-40a6-83a9-70cf581c52af">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
