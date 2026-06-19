@@ -134,6 +134,12 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
             "ORDER BY mc.collectionDate DESC, mc.sampleNo ASC")
     List<MilkCollection> findAllByMemberOrderByCollectionDateDesc(@Param("member") Member member);
 
+    @Query(nativeQuery = true, value = "select milk_type_code, DATE_FORMAT(collection_date, '%Y-%b') as year_month_data,sum(qty) as qty " +
+            "from milk_collection mc " +
+            "where mc.collection_date between ?1 and ?2 " +
+            "group by milk_type_code, DATE_FORMAT(collection_date, '%Y-%b') ")
+    List<Map<String, Object>> findDataForGraph(@Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
+
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
             "dock"})
     List<MilkCollection> findBySocietyPaymentCycleInOrderByCollectionDateAsc(List<SocietyPaymentCycle> societyPaymentCycleList);
@@ -141,4 +147,6 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
             "dock"})
     List<MilkCollection> findByAnalyserCodeAndCollectionDateBetweenAndDockDockNo(String analyserCode, LocalDateTime fromDate, LocalDateTime toDate, String dockCode);
+
+
 }
