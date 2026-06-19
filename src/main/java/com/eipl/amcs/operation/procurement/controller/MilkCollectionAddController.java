@@ -26,6 +26,7 @@ import com.eipl.amcs.operation.administartion.task.MessagesForDateAndShiftLoadTa
 import com.eipl.amcs.operation.procurement.dto.*;
 import com.eipl.amcs.operation.procurement.model.AllowDcsManualCollectionRange;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
+import com.eipl.amcs.operation.procurement.model.RejectedMilkCollection;
 import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
@@ -89,6 +90,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private final ObservableList<CollectionSummary> listCollectionSummary = FXCollections.observableArrayList();
     private final ObjectProperty<MilkCollection> propCollection;
     private final ObjectProperty<MilkCollection> propCollectionSummary;
+    private boolean isRejectedSaved = false;
 
     //Printer
     private final ArrayList<String> masterLines = new ArrayList<>();
@@ -509,6 +511,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         tableCollection.setItems(listCollection);
         tableSummary.setItems(listCollectionSummary);
         btnStart.setOnAction(e -> {
+//            btnRejectedMilk.setVisible(true);
+            btnRejectedMilk.setDisable(false);
             loadMessages();
             LocalDateTime collectionDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue());
             MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
@@ -580,8 +584,53 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/report/ShiftReportCode.fxml")));
         });
 
+        btnRejectedMilk.setDisable(true);
         btnRejectedMilk.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", null, this, "Add Rejected Milk");
+            isRejectedSaved = false;
+            String originalCode = txtCode.getText();
+            String originalName = txtName.getText();
+            MilkType originalMilkType = cboxMilkType.getValue();
+            String originalQty = txtQty.getText();
+            String originalFat = txtFat.getText();
+            String originalSnf = txtSnf.getText();
+
+            RejectedMilkCollection rejectedMilk = new RejectedMilkCollection();
+            rejectedMilk.setQty(CommonUtils.isNumeric(originalQty) ? new BigDecimal(originalQty.trim()) : BigDecimal.ZERO);
+            rejectedMilk.setFat(CommonUtils.isNumeric(originalFat) ? new BigDecimal(originalFat.trim()) : BigDecimal.ZERO);
+            rejectedMilk.setSnf(CommonUtils.isNumeric(originalSnf) ? new BigDecimal(originalSnf.trim()) : BigDecimal.ZERO);
+
+            if (memberSocietyInfoDto != null && memberSocietyInfoDto.getMember() != null) {
+                rejectedMilk.setMember(memberSocietyInfoDto.getMember());
+            }
+            if (originalMilkType != null) {
+                rejectedMilk.setMilkType(originalMilkType);
+            }
+            if (cboxShift.getValue() != null) {
+                rejectedMilk.setShift(cboxShift.getValue());
+            }
+            if (dpDate.getValue() != null && cboxShift.getValue() != null) {
+                rejectedMilk.setDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue()));
+            }
+
+            txtCode.setText("");
+            txtName.setText("");
+            cboxMilkType.setValue(null);
+            txtQty.setText("");
+            txtFat.setText("");
+            txtSnf.setText("");
+
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", rejectedMilk, this, "Add Rejected Milk");
+
+            if (!isRejectedSaved) {
+                txtCode.setText(originalCode);
+                txtName.setText(originalName);
+                cboxMilkType.setValue(originalMilkType);
+                txtQty.setText(originalQty);
+                txtFat.setText(originalFat);
+                txtSnf.setText(originalSnf);
+            } else {
+                FocusUtils.requestFocus(txtCode);
+            }
         });
 
         txtFat.textProperty().addListener(qualityParamChangeListener);
@@ -2210,7 +2259,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     public void reloadData(boolean flag) {
-        if (flag) fetchCurrentShiftCollection();
+        if (flag) {
+            isRejectedSaved = true;
+            fetchCurrentShiftCollection();
+        }
     }
 
     private void readFile() {

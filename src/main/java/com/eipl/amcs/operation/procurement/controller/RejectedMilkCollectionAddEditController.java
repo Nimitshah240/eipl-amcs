@@ -3,14 +3,13 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.*;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -72,7 +71,11 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
     public void setRejectedMilkCollection(RejectedMilkCollection dto) {
         if (dto != null) {
             this.dto = dto;
-            btnSaveUpdate.setText(resourceBundle.getString("update"));
+            if (dto.getMilkCollectionRejectedCode() != null && !dto.getMilkCollectionRejectedCode().trim().isEmpty()) {
+                btnSaveUpdate.setText(resourceBundle.getString("update"));
+            } else {
+                btnSaveUpdate.setText(resourceBundle.getString("add"));
+            }
             loadControls();
         }
     }
@@ -81,8 +84,7 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         dpDate.setValue(LocalDate.now());
-        
-        setupComboBox();
+
         loadShift();
         loadMilkTypes();
 
@@ -97,15 +99,11 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
         });
 
         FocusUtils.requestFocus(dpDate);
-    }
-    
-    @Override
-    public void setupComboBox() {
-        dpDate.setConverter(new LocalDateConvertor());
-//        cboxShift.setConverter(new ShiftConvertor(cboxShift));
-//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-//        new AutoCompleteComboBoxListener<>(cboxShift);
-//        new AutoCompleteComboBoxListener<>(cboxMilkType);
+
+        txtRemarks.setOnAction(e -> {
+            FocusUtils.requestFocus(btnSaveUpdate);
+            e.consume();
+        });
     }
 
     private void validateAndSave() {
@@ -130,21 +128,21 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
 
     private boolean validate() {
         if (dpDate.getValue() == null)
-            errorMsg.append("Date cannot be empty.\n");
+            errorMsg.append(resourceBundle.getString("purchase.date.null.error") + "\n");
         if (cboxShift.getValue() == null)
-            errorMsg.append("Shift cannot be empty.\n");
+            errorMsg.append(resourceBundle.getString("fromshiftnullerror") + "\n");
         if (cboxMilkType.getValue() == null)
-            errorMsg.append("Milk Type cannot be empty.\n");
+            errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
         if (txtCode.getText() == null || txtCode.getText().trim().isEmpty())
-            errorMsg.append("Member Code cannot be empty.\n");
+            errorMsg.append(resourceBundle.getString("membercode.cannot.be.null") + "\n");
         if (txtName.getText() == null || txtName.getText().trim().isEmpty())
-            errorMsg.append("Member Name cannot be found.\n");
+            errorMsg.append(resourceBundle.getString("membernamenullerror") + "\n");
         if (txtQty.getText() == null || parseBigDecimal(txtQty.getText()).compareTo(BigDecimal.ZERO) <= 0)
-            errorMsg.append("Quantity must be greater than zero.\n");
+            errorMsg.append(resourceBundle.getString("qty.cannot.be.null") + "\n");
         if (txtFat.getText() == null || parseBigDecimal(txtFat.getText()).compareTo(BigDecimal.ZERO) < 0)
-            errorMsg.append("Fat cannot be negative.\n");
+            errorMsg.append(resourceBundle.getString("fat.cannot.be.null") + "\n");
         if (txtSnf.getText() == null || parseBigDecimal(txtSnf.getText()).compareTo(BigDecimal.ZERO) < 0)
-            errorMsg.append("SNF cannot be negative.\n");
+            errorMsg.append(resourceBundle.getString("snf.cannot.be.null") + "\n");
 
         return errorMsg.length() == 0;
     }
@@ -153,11 +151,11 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
         if (dto == null) {
             dto = new RejectedMilkCollection();
         }
-        
+
         dto.setDate(CommonUtils.getLocalDateTimeFromDateAndShift(dpDate.getValue(), cboxShift.getValue()));
         dto.setShift(cboxShift.getValue());
         dto.setMilkType(cboxMilkType.getValue());
-        
+
         Member member = new Member();
         member.setCode(generateCode(txtCode.getText().trim()));
         dto.setMember(member);
@@ -167,7 +165,7 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
         dto.setSnf(parseBigDecimal(txtSnf.getText()));
         dto.setRemark(txtRemarks.getText());
         dto.setDock(MainApp.identityDto.getDock());
-        
+
         if (btnSaveUpdate.getText().equalsIgnoreCase(resourceBundle.getString("update"))) {
             dto.setupdateData();
         } else {
@@ -179,17 +177,24 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
     public void saveData() {
         var task = new RejectedMilkCollectionSaveTask(dto, (short) 0);
         task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), "Success", "Record saved successfully.");
-            alert.createAlert();
-            if (callback != null) {
-                callback.reloadData(true);
+            try {
+                RejectedMilkCollection savedDto = task.get();
+                if (savedDto != null) {
+                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilkaddedit"), resourceBundle.getString("rejectedmilk.insert.successful"));
+                    alert.createAlert();
+                    if (callback != null) {
+                        callback.reloadData(true);
+                    }
+                    if (stage != null) {
+                        stage.close();
+                    }
+                } else {
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilkaddedit"), resourceBundle.getString("rejectedmilk.insert.failed"));
+                    alert.createAlert();
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-            if (stage != null) {
-                stage.close();
-            }
-        });
-        task.setOnFailed(e -> {
-            new ErrorAlert(MainApp.getStage(), "Error", "Failed to save record.").createAlert();
         });
         new Thread(task).start();
     }
@@ -198,17 +203,24 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
     public void updateData() {
         var task = new RejectedMilkCollectionSaveTask(dto, (short) 1);
         task.setOnSucceeded(e -> {
-            MyAlert alert = new InformationAlert(MainApp.getStage(), "Success", "Record updated successfully.");
-            alert.createAlert();
-            if (callback != null) {
-                callback.reloadData(true);
+            try {
+                RejectedMilkCollection savedDto = task.get();
+                if (savedDto != null) {
+                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilkaddedit"), resourceBundle.getString("rejectedmilk.update.successful"));
+                    alert.createAlert();
+                    if (callback != null) {
+                        callback.reloadData(true);
+                    }
+                    if (stage != null) {
+                        stage.close();
+                    }
+                } else {
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilkaddedit"), resourceBundle.getString("rejectedmilk.update.failed"));
+                    alert.createAlert();
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
             }
-            if (stage != null) {
-                stage.close();
-            }
-        });
-        task.setOnFailed(e -> {
-            new ErrorAlert(MainApp.getStage(), "Error", "Failed to update record.").createAlert();
         });
         new Thread(task).start();
     }
@@ -263,7 +275,7 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
                     txtName.setText(member.toMemberName());
                 } else {
                     txtName.clear();
-                    new ErrorAlert(MainApp.getStage(), "Invalid Member", "Member not found for the given code.").createAlert();
+                    new ErrorAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilkaddedit"), resourceBundle.getString("membernotfound")).createAlert();
                     txtCode.setText("");
                     FocusUtils.requestFocus(txtCode);
                 }

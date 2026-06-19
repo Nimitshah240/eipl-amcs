@@ -9,17 +9,18 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.exception.UnAuthorizedAccessException;
+import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.operation.procurement.model.RejectedMilkCollection;
-//import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionDeleteTask;
-//import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadByFilterTask;
-//import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionDeleteTask;
 import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionDeleteTask;
+import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadByFilterTask;
 import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadTask;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,10 +34,14 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -105,7 +110,9 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         });
 
         setupTable();
+        setupComboBox();
         loadData();
+        loadShift();
 
         btnAdd.setOnAction(e -> {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", null, this, "Add Rejected Milk");
@@ -120,7 +127,7 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
             deleteData();
         });
 
-//        btnSearch.setOnAction(e -> searchData());
+        btnSearch.setOnAction(e -> searchData());
         btnExport.setOnAction(e -> exportToCsv());
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
@@ -150,6 +157,14 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         });
     }
 
+    @Override
+    public void setupComboBox() {
+        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+        new AutoCompleteComboBoxListener<>(cboxFromShift);
+        new AutoCompleteComboBoxListener<>(cboxToShift);
+    }
+
     private void editRejectedMilk(RejectedMilkCollection rejectedMilk) {
         if (rejectedMilk != null) {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", rejectedMilk, this, "Edit Rejected Milk");
@@ -160,17 +175,17 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
     public void deleteData() {
         RejectedMilkCollection rejectedMilk = propRejectedMilkCollection.get();
         if (rejectedMilk != null) {
-            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), "Delete Record", "Are you sure you want to delete this record?");
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilk"), resourceBundle.getString("alert.delete"));
             Optional<ButtonType> resp = alert.createConfirmationAlert();
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
                 var task = new RejectedMilkCollectionDeleteTask(rejectedMilk.getMilkCollectionRejectedCode());
                 task.setOnSucceeded(e -> {
                     try {
                         if (task.get()) {
-                            new InformationAlert(MainApp.getStage(), "Success", "Record deleted successfully.").createAlert();
+                            new InformationAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilk"), resourceBundle.getString("rejectedmilk.delete.successful")).createAlert();
                             loadData();
                         } else {
-                            new ErrorAlert(MainApp.getStage(), "Failed", "Failed to delete the record.").createAlert();
+                            new ErrorAlert(MainApp.getStage(), resourceBundle.getString("rejectedmilk"), resourceBundle.getString("rejectedmilk.delete.failed")).createAlert();
                         }
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
@@ -217,21 +232,42 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         });
         new Thread(task).start();
     }
-    
-//    private void searchData() {
-//        tableCollection.setItems(null);
-//        var task = new RejectedMilkCollectionLoadByFilterTask(dpFromDate.getValue(), dpToDate.getValue(), cboxFromShift.getValue(), cboxToShift.getValue(), cboxDock.getValue());
-//        task.setOnSucceeded(e -> {
-//            try {
-//                List<RejectedMilkCollection> list = task.get();
-//                if (list != null)
-//                    tableCollection.setItems(FXCollections.observableList(list));
-//            } catch (InterruptedException | ExecutionException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        new Thread(task).start();
-//    }
+
+    private void searchData() {
+        tableCollection.setItems(null);
+        LocalDateTime fromDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue());
+        LocalDateTime toDate = CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue());
+
+        var task = new RejectedMilkCollectionLoadByFilterTask(fromDate, toDate);
+        task.setOnSucceeded(e -> {
+            try {
+                List<RejectedMilkCollection> list = task.get();
+                if (list != null)
+                    tableCollection.setItems(FXCollections.observableList(list));
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
+
+    private void loadShift() {
+        var task = new ShiftLoadTask();
+        task.setOnSucceeded(e -> {
+            try {
+                List<Shift> list = task.get();
+                if (list != null) {
+                    cboxFromShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxToShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxFromShift.getSelectionModel().selectFirst();
+                    cboxToShift.getSelectionModel().selectLast();
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task).start();
+    }
 
     @Override
     public void reloadData(boolean flag) {
@@ -245,14 +281,22 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         File file = fileChooser.showSaveDialog(MainApp.getStage());
 
         if (file != null) {
-            try (FileWriter writer = new FileWriter(file)) {
+            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+                // Custom Header
+                writer.append(MainApp.identityDto.getSociety().getName() + " - " + MainApp.identityDto.getSociety().getCode()).append('\n');
+                writer.append("Rejected Milk Collection").append('\n');
+                writer.append("Export Date: ").append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))).append('\n');
+                writer.append('\n'); // Blank line
+
+                // CSV Header
                 writer.append("Date,Shift,Member,Milk Type,Fat,SNF,Qty,Remark\n");
 
+                // Data
                 for (RejectedMilkCollection item : tableCollection.getItems()) {
                     writer.append(escapeCsv(item.getDate().toLocalDate().toString())).append(',');
-                    writer.append(escapeCsv(item.getShift().toString())).append(',');
-                    writer.append(escapeCsv(item.getMember().toString())).append(',');
-                    writer.append(escapeCsv(item.getMilkType().toString())).append(',');
+                    writer.append(escapeCsv(item.getShift().getName())).append(',');
+                    writer.append(escapeCsv(item.getMember().toMemberName())).append(',');
+                    writer.append(escapeCsv(item.getMilkType().getName())).append(',');
                     writer.append(escapeCsv(item.getFat().toPlainString())).append(',');
                     writer.append(escapeCsv(item.getSnf().toPlainString())).append(',');
                     writer.append(escapeCsv(item.getQty().toPlainString())).append(',');

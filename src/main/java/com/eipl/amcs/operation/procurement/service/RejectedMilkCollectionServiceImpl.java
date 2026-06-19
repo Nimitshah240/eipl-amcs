@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public class RejectedMilkCollectionServiceImpl implements RejectedMilkCollection
 
     @Autowired
     private RejectedMilkCollectionRepository repository;
-    
+
     @Autowired
     private NextCodeService nextCodeService;
 
@@ -47,5 +48,10 @@ public class RejectedMilkCollectionServiceImpl implements RejectedMilkCollection
     @Override
     public void delete(RejectedMilkCollection rejectedMilkCollection) {
         repository.delete(rejectedMilkCollection);
+    }
+
+    @Override
+    public List<RejectedMilkCollection> findAllByFilter(LocalDateTime fromDate, LocalDateTime toDate) {
+        return repository.findAllByDateBetween(fromDate, toDate);
     }
 }
