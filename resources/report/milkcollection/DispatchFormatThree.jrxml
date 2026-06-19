@@ -633,7 +633,7 @@
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
 					<font fontName="Noto" size="11" isBold="true" isUnderline="true"/>
 					<paragraph rightIndent="0"/>
 				</textElement>
