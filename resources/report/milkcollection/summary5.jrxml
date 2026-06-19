@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="i18n" uuid="0fc58b13-f8cc-4e9e-a2d4-21c374f8bb33">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="EiplAmcsDb"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="noto" vTextAlign="Middle" fontName="Noto" fontSize="10"/>
+	<parameter name="p_society_code" class="java.lang.String"/>
+	<parameter name="p_member_code" class="java.lang.String"/>
+	<parameter name="p_from_date" class="java.lang.String"/>
+	<parameter name="p_to_date" class="java.lang.String"/>
+	<parameter name="p_locale" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[call rpt_milk_collection_summary_with_gender($P{p_society_code},$P{p_member_code}, $P{p_from_date},$P{p_to_date},$P{p_locale} );]]>
+	</queryString>
+	<field name="qty_male" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="qty_male"/>
+	</field>
+	<field name="qty_female" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="qty_female"/>
+	</field>
+	<field name="member_count_male" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="member_count_male"/>
+	</field>
+	<field name="member_count_female" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="member_count_female"/>
+	</field>
+	<field name="amount_male" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="amount_male"/>
+	</field>
+	<field name="amount_female" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="amount_female"/>
+	</field>
+	<field name="fat_male" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="fat_male"/>
+	</field>
+	<field name="fat_female" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="fat_female"/>
+	</field>
+	<field name="snf_male" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="snf_male"/>
+	</field>
+	<field name="snf_female" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="snf_female"/>
+	</field>
+	<field name="society_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="society_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="milk_collection"/>
+	</field>
+	<field name="from_date" class="java.time.LocalDateTime">
+		<property name="com.jaspersoft.studio.field.label" value="from_date"/>
+	</field>
+	<field name="to_date" class="java.time.LocalDateTime">
+		<property name="com.jaspersoft.studio.field.label" value="to_date"/>
+	</field>
+	<group name="Kapaat"/>
+	<background>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</background>
+	<title>
+		<band height="31"/>
+	</title>
+	<detail>
+		<band height="120" splitType="Stretch">
+			<textField>
+				<reportElement x="115" y="40" width="122" height="20" uuid="42697a62-0a18-4adb-966c-da017d43234d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_male}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="40" width="115" height="20" uuid="3d7d6af6-c80e-4c6b-84ab-ddbd1ddcacec">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_female}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="80" width="122" height="20" uuid="13a46cee-41dd-42b0-ba88-3dc998b5de40">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{snf_male}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="80" width="115" height="20" uuid="f4666c69-4e16-43e5-b5db-14a0cfc505e4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{snf_female}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="100" width="115" height="20" uuid="d57ce30d-deac-4eef-9cc3-9eaa37c4ce23">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount_female}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="100" width="122" height="20" uuid="c3ef2186-8703-457b-848f-26d2afb65126">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount_male}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="20" width="122" height="20" uuid="7e696303-85e6-4042-ae7c-5abc9f754104">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{member_count_male}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="20" width="115" height="20" uuid="d1532088-655b-41c7-8c2c-f0d0d7597c48">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{member_count_female}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="20" width="115" height="20" backcolor="#E4E4F5" uuid="1ae4bb3a-20ee-470b-8783-8585d1cdc361">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{member}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="40" width="115" height="20" backcolor="#E4E4F5" uuid="e0c613c5-8544-4693-be9b-c3535779f139">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="80" width="115" height="20" backcolor="#E4E4F5" uuid="e9db3c55-ed91-4389-989e-88434c8df520">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{snf}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="100" width="115" height="20" backcolor="#E4E4F5" uuid="407e2d98-b272-4187-9204-2d95c57d86d2">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="20" width="108" height="20" uuid="f225395f-7d3d-4c81-ac04-8ebd365c5227">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{member_count_male}+$F{member_count_female}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="352" y="40" width="108" height="20" uuid="14462846-1072-4ad6-a5f5-009690318d7a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_male}+$F{qty_female}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="352" y="100" width="108" height="20" uuid="5cbc7261-f0e9-4d5b-a5fd-5986853d7176">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount_male}+$F{amount_female}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="80" width="108" height="20" uuid="c674f21f-a9a8-42b3-b2f0-001298fb31c7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["-"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="60" width="122" height="20" uuid="99a497dd-c1f9-4f6a-a49a-13a1adf4dd6a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fat_male}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="60" width="115" height="20" uuid="79be4a61-5f19-4605-a38d-00ad7af99f1c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fat_female}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="60" width="115" height="20" backcolor="#E4E4F5" uuid="589a7ed5-5334-46a8-8786-b86e0ce2baf8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{fat}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="60" width="108" height="20" uuid="e85083bb-eb35-4953-a58c-4b8dad8d1bbd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["-"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="115" y="0" width="122" height="20" backcolor="#E4E4F5" uuid="0b812fca-6a9b-44d1-9dc2-6d21c5575d63">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{male_member}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="237" y="0" width="115" height="20" backcolor="#E4E4F5" uuid="9f3a78f9-5724-4bbb-be4f-f10922b2a790">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{female_member}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="352" y="0" width="108" height="20" backcolor="#E4E4F5" uuid="815c76f5-e03c-4253-a298-679d09089f2b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="115" height="20" backcolor="#E4E4F5" uuid="1b1361be-8ace-4070-8db6-0bc3ec82790f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{gender}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -51,7 +51,7 @@
 				<textFieldExpression><![CDATA[$F{product_short_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="180" y="0" width="200" height="20" uuid="a0123a4e-6ff3-41a3-84e3-27dfb10bd06a">
+				<reportElement x="180" y="0" width="130" height="20" uuid="a0123a4e-6ff3-41a3-84e3-27dfb10bd06a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8aa2efa7-40ed-4817-a1c0-137cbd916751"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
