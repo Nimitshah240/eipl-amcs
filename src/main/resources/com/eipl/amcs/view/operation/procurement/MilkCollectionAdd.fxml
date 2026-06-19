@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_TextField?>
@@ -117,7 +118,7 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </E_TextField>
-                                                      <E_ComboBox fx:id="cboxMilkType" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                      <AutoSearchTextField fx:id="cboxMilkType" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                       <E_ComboBox fx:id="cboxMilkQuality" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" visible="false" GridPane.columnIndex="3" />
                                                       <E_NumericField fx:id="txtQty" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" style="-fx-font-size: 22;" styleClass="text-green" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <font>

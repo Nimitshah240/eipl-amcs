@@ -47,7 +47,7 @@
                     <columns>
                         <TableColumn fx:id="colName" minWidth="150.0" prefWidth="150.0" styleClass="cell-left-aligned" text="%name" />
                         <TableColumn fx:id="colUnit" minWidth="250.0" prefWidth="250.0" styleClass="cell-center-aligned" text="%unit" />
-                        <TableColumn fx:id="colQuantity" prefWidth="150.0" styleClass="cell-right-aligned" text="%quantity" />
+                        <TableColumn fx:id="colQuantity" prefWidth="150.0" styleClass="cell-right-aligned" text="%quantityy" />
                         <TableColumn fx:id="colRate" prefWidth="150.0" styleClass="cell-right-aligned" text="%rate" />
                         <TableColumn fx:id="colAmount" prefWidth="150.0" styleClass="cell-right-aligned" text="%amount" />
                     </columns>
