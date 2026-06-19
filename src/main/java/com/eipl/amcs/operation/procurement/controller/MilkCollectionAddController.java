@@ -11,7 +11,6 @@ import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -106,7 +105,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private ComboBox<Shift> cboxShift;
     @FXML
-    private E_ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
     private E_ComboBox<MilkQualityType> cboxMilkQuality;
     @FXML
@@ -1998,7 +1997,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     public void setupComboBox() {
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+        cboxMilkType.setOpenPopupOnFocus(false);
         cboxMilkQuality.setConverter(new MilkQualityConvertor(cboxMilkQuality));
         cboxShift.setConverter(new ShiftConvertor(cboxShift));
         dpDate.setConverter(new LocalDateConvertor());

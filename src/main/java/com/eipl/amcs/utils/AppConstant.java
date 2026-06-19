@@ -344,11 +344,11 @@ public class AppConstant {
 
     public enum LandType {
 
-        NONE("None"),
-        ACRE("Acre"),
-        GUTHA("Gutha"),
-        HECTOR("Hector"),
-        VIGHA("Vigha");
+        NONE(MainApp.getBundle().getString("none")),
+        ACRE(MainApp.getBundle().getString("acre")),
+        GUTHA(MainApp.getBundle().getString("gutha")),
+        HECTOR(MainApp.getBundle().getString("hector")),
+        VIGHA(MainApp.getBundle().getString("vigha"));
 
         private final String label;
 
@@ -377,14 +377,14 @@ public class AppConstant {
 
     public enum FarmerType {
 
-        BIGFARMER("Big Farmer"),
-        MEDIUMFARMER("Medium Farmer"),
-        SMALLFARMER("Small Farmer"),
-        SHRIMANFARMER("Shriman Farmer"),
-        LANDEMPLOYEE("Land Employee"),
-        OTHER("Other"),
-        SIDEAGENCY("Side Agency"),
-        BMCFACILITATOR("BMC Facilitator");
+        BIGFARMER(MainApp.getBundle().getString("bigfarmer")),
+        MEDIUMFARMER(MainApp.getBundle().getString("mediumfarmer")),
+        SMALLFARMER(MainApp.getBundle().getString("smallfarmer")),
+        SHRIMANFARMER(MainApp.getBundle().getString("shrimanfarmer")),
+        LANDEMPLOYEE(MainApp.getBundle().getString("shrimanfarmer")),
+        OTHER(MainApp.getBundle().getString("landemployee")),
+        SIDEAGENCY(MainApp.getBundle().getString("sideagency")),
+        BMCFACILITATOR(MainApp.getBundle().getString("bmcfacilitator"));
 
         private final String label;
 
@@ -413,10 +413,10 @@ public class AppConstant {
 
     public enum CattleDetail {
 
-        BUFF("Buff"),
-        COWHF("Cow HF"),
-        DESICOW("Desi Cow"),
-        GIRCOW("Gir Cow");
+        BUFF(MainApp.getBundle().getString("buffalo")),
+        COWHF(MainApp.getBundle().getString("cowhf")),
+        DESICOW(MainApp.getBundle().getString("cowdesi")),
+        GIRCOW(MainApp.getBundle().getString("cowgir"));
 
         private final String label;
 
@@ -445,12 +445,12 @@ public class AppConstant {
 
     public enum MaritalStatus {
 
-        NONE("None"),
-        SINGLE("Single"),
-        MARRIED("Married"),
-        WIDOW("Widow"),
-        WIDOWER("Widower"),
-        DIVORCED("Divorced");
+        NONE(MainApp.getBundle().getString("none")),
+        SINGLE(MainApp.getBundle().getString("single")),
+        MARRIED(MainApp.getBundle().getString("married")),
+        WIDOW(MainApp.getBundle().getString("widow")),
+        WIDOWER(MainApp.getBundle().getString("widower")),
+        DIVORCED(MainApp.getBundle().getString("divorced"));
 
         private final String label;
 
@@ -479,12 +479,12 @@ public class AppConstant {
 
     public enum Occupation {
 
-        NONE("None"),
-        FARMER("Farmer"),
-        TRADER("Trader"),
-        STUDENT("Student"),
-        CATTLEKEEPER("Cattle Keeper"),
-        OTHER("Other");
+        NONE(MainApp.getBundle().getString("none")),
+        FARMER(MainApp.getBundle().getString("farmer")),
+        TRADER(MainApp.getBundle().getString("trader")),
+        STUDENT(MainApp.getBundle().getString("student")),
+        CATTLEKEEPER(MainApp.getBundle().getString("cattle.keeper")),
+        OTHER(MainApp.getBundle().getString("other"));
 
         private final String label;
 
@@ -513,9 +513,9 @@ public class AppConstant {
 
     public enum RationCardType {
 
-        NONE("None"),
-        BPL("Below Poverty Limit"),
-        APL("Above Poverty Limit");
+        NONE(MainApp.getBundle().getString("none")),
+        BPL(MainApp.getBundle().getString("bpl")),
+        APL(MainApp.getBundle().getString("apl"));
 
         private final String label;
 

@@ -48,6 +48,7 @@ public class AutoSearchTextField<T> extends TextField {
 
     //NIMIT | 03.06.2026 | Tracks objects selected before items are loaded
     private T deferredSelectedItem = null;
+    private boolean openPopup = true;
 
     /**
      * FXML Default Constructor. Required by FXMLLoader.
@@ -156,7 +157,9 @@ public class AutoSearchTextField<T> extends TextField {
     private void focusedOnTextField() {
         focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                showPopup(masterList);
+                if (this.openPopup) {
+                    showPopup(masterList);
+                }
                 if (selectedItem != null)
                     listView.getSelectionModel().select(selectedItem);
             } else {
@@ -199,6 +202,7 @@ public class AutoSearchTextField<T> extends TextField {
 
 //          Nimit | 03.06.2026 : WHEN POPUP IS NOT VISIBLE - KEY ACTIONS.
             if (!popup.isShowing()) {
+                this.openPopup = true;
                 switch (event.getCode()) {
                     case ENTER:
                         if (selectedItem != null) {
@@ -1122,5 +1126,9 @@ public class AutoSearchTextField<T> extends TextField {
             return selected.toString();
         }
         return editorText != null ? editorText : "";
+    }
+
+    public void setOpenPopupOnFocus(boolean openPopup) {
+        this.openPopup = openPopup;
     }
 }
