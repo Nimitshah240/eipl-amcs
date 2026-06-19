@@ -53,7 +53,7 @@
                         <TableColumn fx:id="colDate" prefWidth="125.0" text="%date"/>
                         <TableColumn fx:id="colConsumerType" prefWidth="150.0" text="%consumertype"/>
                         <TableColumn fx:id="colConsumerName" prefWidth="150.0" text="%consumername"/>
-                        <TableColumn fx:id="colMobile" prefWidth="150.0" text="%consumername"/>
+<!--                        <TableColumn fx:id="colMobile" prefWidth="150.0" text="%consumername"/>-->
                         <TableColumn fx:id="colAmount" prefWidth="150.0" text="%amount"/>
                         <TableColumn fx:id="colNetPayable" prefWidth="125.0" text="%netpayable"/>
                         <!--                  <TableColumn fx:id="colNoOfInstallment" prefWidth="150.0" text="%noofinstallment" />-->
