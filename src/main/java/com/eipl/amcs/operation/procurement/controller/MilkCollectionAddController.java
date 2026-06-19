@@ -618,6 +618,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             txtQty.setText("");
             txtFat.setText("");
             txtSnf.setText("");
+            txtRate.setText("");
+            txtAmount.setText("");
 
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", rejectedMilk, this, "Add Rejected Milk");
 
@@ -2262,6 +2264,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         if (flag) {
             isRejectedSaved = true;
             fetchCurrentShiftCollection();
+            memberSocietyInfoDto = new MemberSocietyInfoDto();
         }
     }
 

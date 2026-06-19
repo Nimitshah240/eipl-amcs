@@ -15,7 +15,6 @@ import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
-import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.operation.procurement.model.RejectedMilkCollection;
 import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionDeleteTask;
 import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadByFilterTask;
@@ -59,8 +58,6 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
     @FXML
     private ComboBox<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private ComboBox<Dock> cboxDock;
-    @FXML
     private E_Button btnSearch, btnAdd, btnEdit, btnDelete, btnClose, btnExport;
     @FXML
     private TableView<RejectedMilkCollection> tableCollection;
@@ -88,22 +85,6 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
     public void initialize(URL location, ResourceBundle resources) {
         this.resourceBundle = resources;
 
-        dpFromDate.setValue(LocalDate.now());
-        dpFromDate.setConverter(new LocalDateConvertor());
-        dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
-            }
-        });
-
-        dpToDate.setValue(LocalDate.now());
-        dpToDate.setConverter(new LocalDateConvertor());
-        dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
-            }
-        });
-
         propRejectedMilkCollection.addListener((observable, oldValue, newValue) -> {
             btnEdit.setDisable(newValue == null);
             btnDelete.setDisable(newValue == null);
@@ -111,11 +92,12 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
 
         setupTable();
         setupComboBox();
+        clearControls();
         loadData();
         loadShift();
 
         btnAdd.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", null, this, "Add Rejected Milk");
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", null, this, resourceBundle.getString("rejectedmilkaddedit"));
         });
 
         btnEdit.setOnAction(e -> {
@@ -203,7 +185,7 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         colShift.setCellValueFactory(new PropertyValueFactory<>("shift"));
         colMemberCode.setCellValueFactory(cellData -> {
             if (cellData.getValue() != null && cellData.getValue().getMember() != null) {
-                return new SimpleStringProperty(cellData.getValue().getMember().getCode());
+                return new SimpleStringProperty(cellData.getValue().getMember().getCodeEx());
             }
             return new SimpleStringProperty("");
         });
@@ -270,8 +252,23 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
     }
 
     @Override
+    public void clearControls() {
+        dpFromDate.setValue(LocalDate.now());
+        dpToDate.setValue(LocalDate.now());
+        if (cboxFromShift.getItems() != null && !cboxFromShift.getItems().isEmpty()) {
+            cboxFromShift.getSelectionModel().selectFirst();
+        }
+        if (cboxToShift.getItems() != null && !cboxToShift.getItems().isEmpty()) {
+            cboxToShift.getSelectionModel().selectLast();
+        }
+    }
+
+    @Override
     public void reloadData(boolean flag) {
-        if (flag) loadData();
+        if (flag) {
+            clearControls();
+            loadData();
+        }
     }
 
     private void exportToCsv() {
