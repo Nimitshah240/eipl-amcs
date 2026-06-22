@@ -77,14 +77,15 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
                 btnSaveUpdate.setText(resourceBundle.getString("add"));
             }
             loadControls();
+        } else {
+            clearControls();
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        dpDate.setValue(LocalDate.now());
-
+        
         loadShift();
         loadMilkTypes();
 
@@ -104,6 +105,26 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
             FocusUtils.requestFocus(btnSaveUpdate);
             e.consume();
         });
+        
+        clearControls();
+    }
+
+    @Override
+    public void clearControls() {
+        dpDate.setValue(LocalDate.now());
+        txtCode.clear();
+        txtName.clear();
+        txtFat.clear();
+        txtSnf.clear();
+        txtQty.clear();
+        txtRemarks.clear();
+        if(cboxShift.getItems() != null)
+            cboxShift.getSelectionModel().clearSelection();
+        if(cboxMilkType.getItems() != null)
+            cboxMilkType.getSelectionModel().clearSelection();
+        dto = null;
+        btnSaveUpdate.setText(resourceBundle.getString("add"));
+        FocusUtils.requestFocus(dpDate);
     }
 
     private void validateAndSave() {
