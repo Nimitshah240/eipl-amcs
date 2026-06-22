@@ -29,17 +29,17 @@ import java.util.concurrent.ExecutionException;
 public class StockReportController implements MyInitialization {
 
     @FXML
-    private Button btnGenerate, btnGenerate1, btnClose;
+    private Button btnGenerate, btnGenerate1, btnClose,btnGenerate11;
     @FXML
-    private ComboBox<Product> cboxProduct;
+    private ComboBox<Product> cboxProduct, cboxProduct1;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1,dpFromDate11,dpToDate11;
     @FXML
     private SwingNode reportNode;
     @FXML
     private AnchorPane root;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private ComboBox<String> cboxLanguage, cboxLanguage1,cboxLanguage11;
 
     @Override
     public Node getRoot() {
@@ -49,14 +49,20 @@ public class StockReportController implements MyInitialization {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cboxProduct.setConverter(new ProductConvertor(cboxProduct));
+        cboxProduct1.setConverter(new ProductConvertor(cboxProduct1));
+
         cboxProduct.setCellFactory(new ProductCellFactory());
+        cboxProduct1.setCellFactory(new ProductCellFactory());
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         dpFromDate1.setValue(LocalDate.now());
         dpToDate1.setValue(LocalDate.now());
+        dpFromDate11.setValue(LocalDate.now());
+        dpToDate11.setValue(LocalDate.now());
         loadData();
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
+        btnGenerate11.setOnAction(e -> validateAndGenerateReport2());
 
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
@@ -66,15 +72,19 @@ public class StockReportController implements MyInitialization {
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
         cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
         cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage11.setItems(FXCollections.observableList(Arrays.asList(arr)));
         if (MainApp.getLocale().equalsIgnoreCase("gu")) {
             cboxLanguage.setValue("Gujarati");
             cboxLanguage1.setValue("Gujarati");
+            cboxLanguage11.setValue("Gujarati");
         } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
             cboxLanguage.setValue("Hindi");
             cboxLanguage1.setValue("Hindi");
+            cboxLanguage11.setValue("Hindi");
         } else {
             cboxLanguage.setValue("English");
             cboxLanguage1.setValue("English");
+            cboxLanguage11.setValue("English");
         }
 
     }
@@ -111,6 +121,22 @@ public class StockReportController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
+    //    FOR STOCK LEDGER SUMMARY
+    private void validateAndGenerateReport2() {
+        Map<String, Object> params = new HashMap<>();
+        String localeStr = cboxLanguage11.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_from_date", String.valueOf(dpFromDate11.getValue()));
+        params.put("p_to_date", String.valueOf(dpToDate11.getValue()));
+        params.put("p_product_code", cboxProduct1.getSelectionModel().getSelectedItem().getCode());
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        JasperPrint print = null;
+
+        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PRODUCT_STOCK_LEDGER_SUMMARY, params);
+        JasperViewer.viewReport(print, false);
+    }
+
     @Override
     public void setupComboBox() {
 
@@ -132,6 +158,9 @@ public class StockReportController implements MyInitialization {
                     cboxProduct.setItems(FXCollections.observableList(list2));
                     new AutoCompleteComboBoxListener<>(cboxProduct);
                     cboxProduct.getSelectionModel().select(0);
+                    cboxProduct1.setItems(FXCollections.observableList(list2));
+                    new AutoCompleteComboBoxListener<>(cboxProduct1);
+                    cboxProduct1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

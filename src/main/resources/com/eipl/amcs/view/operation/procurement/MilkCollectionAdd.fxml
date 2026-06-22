@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_TextField?>
@@ -117,7 +118,7 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </E_TextField>
-                                                      <E_ComboBox fx:id="cboxMilkType" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                      <AutoSearchTextField fx:id="cboxMilkType" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                       <E_ComboBox fx:id="cboxMilkQuality" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" visible="false" GridPane.columnIndex="3" />
                                                       <E_NumericField fx:id="txtQty" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" style="-fx-font-size: 22;" styleClass="text-green" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                              <font>
@@ -227,6 +228,7 @@
                                                 <RowConstraints minHeight="51.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="51.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="51.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="51.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
                                                 <E_Button fx:id="btnSetting" alignment="CENTER" contentDisplay="TOP" graphicTextGap="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%hardwaredevice">
@@ -234,7 +236,7 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                    <graphic>
-                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@../../images/setting.png" />
                                                          </image>
@@ -249,7 +251,7 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                    <graphic>
-                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@../../images/trucksheet.png" />
                                                          </image>
@@ -261,7 +263,7 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                    <graphic>
-                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@../../images/localsale.png" />
                                                          </image>
@@ -273,9 +275,21 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                    <graphic>
-                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                                          <image>
                                                             <Image url="@../../images/Shift-report.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                </E_Button>
+                                                <E_Button fx:id="btnRejectedMilk" alignment="CENTER" contentDisplay="TOP" graphicTextGap="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%rejectedmilk" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                   <graphic>
+                                                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../images/milk-reject.png" />
                                                          </image>
                                                       </ImageView>
                                                    </graphic>

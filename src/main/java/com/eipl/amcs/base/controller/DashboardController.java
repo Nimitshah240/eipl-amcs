@@ -4,8 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.Notification;
-import com.eipl.amcs.base.task.PendingSyncTask;
-import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -16,6 +14,7 @@ import com.eipl.amcs.operation.billing.dto.MilkCollectionSummaryData;
 import com.eipl.amcs.operation.procurement.model.MilkCollection;
 import com.eipl.amcs.operation.procurement.task.DpuIncentiveRequestLoadTask;
 import com.eipl.amcs.operation.procurement.task.MemberDataSummaryLoadTask;
+import com.eipl.amcs.operation.procurement.task.MilkCollectionDashboardLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -32,9 +31,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -47,6 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
 import java.awt.*;
@@ -310,21 +308,20 @@ public class DashboardController implements MyInitialization, PopupCallback {
     }
 
     private void loadChartData() {
-        if (cboxYear == null || lineChart == null) return;
+        if (cboxYear == null || lineChart == null)
+            return;
         String selectedYearStr = cboxYear.getValue();
-        if (selectedYearStr == null) return;
+        if (selectedYearStr == null)
+            return;
 
         int selectedYear = Integer.parseInt(selectedYearStr);
-        LocalDateTime fromDate = LocalDateTime.of(selectedYear, 1, 1, 0, 0);
-        LocalDateTime toDate = LocalDateTime.of(selectedYear, 12, 31, 23, 59);
+        LocalDateTime fromDate = LocalDateTime.of(selectedYear - 1, Month.JANUARY, 1, 0, 0, 0);
+        LocalDateTime toDate = LocalDateTime.of(selectedYear, Month.DECEMBER, 31, 23, 59, 59);
 
-        var task = new MilkCollectionLoadTask(fromDate, toDate, 0);
+        var task = new MilkCollectionDashboardLoadTask(fromDate, toDate);
         task.setOnSucceeded(e -> {
             try {
-                List<MilkCollection> list = task.get();
-                if (list != null) {
-                    updateLineChart(list);
-                }
+                updateLineChart(task.get());
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -332,75 +329,76 @@ public class DashboardController implements MyInitialization, PopupCallback {
         new Thread(task).start();
     }
 
-    private void updateLineChart(List<MilkCollection> list) {
-        if (lineChart == null) return;
+    private void updateLineChart(List<Map<String, Object>> list) {
+        if (lineChart == null)
+            return;
+
         lineChart.setAnimated(false);
         lineChart.getData().clear();
 
-        // Configure X Axis (CategoryAxis)
-        if (lineChart.getXAxis() instanceof CategoryAxis) {
-            CategoryAxis xAxis = (CategoryAxis) lineChart.getXAxis();
-            ObservableList<String> months = FXCollections.observableArrayList();
-            for (Month month : Month.values()) {
-                months.add(month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
-            }
-            xAxis.getCategories().setAll(months);
+        List<MilkRecord> listRecords = new ArrayList<>();
+        for (Map<String, Object> map : list) {
+            int milkTypeCode = (int) map.get("milk_type_code");
+            String[] str = map.get("year_month_data").toString().split("-");
+            MilkRecord record = new MilkRecord();
+            record.setMilkType(milkTypeCode == 1 ? "Cow" : milkTypeCode == 2 ? "Buff" : "Mix");
+            record.setMonth(str[1]);
+            record.setYear(CommonUtils.strToInteger(str[0]) - 2000);
+            record.setTotalQty(CommonUtils.strToDouble(map.get("qty").toString()));
+            listRecords.add(record);
         }
 
-        // Configure Y Axis (NumberAxis)
-        if (lineChart.getYAxis() instanceof NumberAxis) {
-            NumberAxis yAxis = (NumberAxis) lineChart.getYAxis();
-            yAxis.setAutoRanging(false);
-            yAxis.setLowerBound(0);
-            yAxis.setUpperBound(10000);
-            yAxis.setTickUnit(1000);
-        }
+        Map<String, XYChart.Series<String, Number>> seriesMap = new HashMap<>();
+        for (MilkRecord record : listRecords) {
+            String seriesKey = record.getMilkType() + "-" + record.getYear();
+            String cssColor = getColorForYear(record.getYear());
 
-        Map<String, Map<Month, Double>> dataMap = new HashMap<>();
+            if (!seriesMap.containsKey(seriesKey)) {
+                XYChart.Series<String, Number> newSeries = new XYChart.Series<>();
+                newSeries.setName(seriesKey);
+                lineChart.getData().add(newSeries);
+                seriesMap.put(seriesKey, newSeries);
 
-        for (MilkCollection collection : list) {
-            if (collection.getMilkType() != null && collection.getQty() != null) {
-                String typeName = collection.getMilkType().getName();
-                if (typeName == null) typeName = "Unknown";
+                if (newSeries.getNode() != null) {
+                    newSeries.getNode().setStyle("-fx-stroke: " + cssColor + ";");
+                }
+            }
 
-                dataMap.putIfAbsent(typeName, new EnumMap<>(Month.class));
-                Map<Month, Double> monthData = dataMap.get(typeName);
-
-                Month month = collection.getCollectionDate().getMonth();
-                double currentQty = monthData.getOrDefault(month, 0.0);
-                monthData.put(month, currentQty + collection.getQty().doubleValue());
+            XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(record.getMonth(), record.getTotalQty());
+            dataPoint.nodeProperty().addListener((observable, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.setStyle("-fx-background-color: " + cssColor + ", white;");
+                }
+            });
+            seriesMap.get(seriesKey).getData().add(dataPoint);
+            if (dataPoint.getNode() != null) {
+                dataPoint.getNode().setStyle("-fx-background-color: " + cssColor + ", white;");
             }
         }
 
-        for (Map.Entry<String, Map<Month, Double>> entry : dataMap.entrySet()) {
-            XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName(entry.getKey());
-
-            Map<Month, Double> monthData = entry.getValue();
-            for (Month month : Month.values()) {
-                String monthName = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-                series.getData().add(new XYChart.Data<>(monthName, monthData.getOrDefault(month, 0.0)));
-            }
-            lineChart.getData().add(series);
-
-            int seriesIndex = 1;
-
-            String cssColor = "";
-            if ("Cow".equalsIgnoreCase(series.getName())) {
-                cssColor = "orange";
-            } else if ("Buffalo".equalsIgnoreCase(series.getName())) {
-                cssColor = "blue";
-            } else if ("Mix".equalsIgnoreCase(series.getName())) {
-                cssColor = "red";
-            }
-
-            if (!cssColor.isEmpty()) {
-                lineChart.setStyle(lineChart.getStyle() + String.format("CHART_COLOR_%d: %s;", seriesIndex, cssColor));
-            }
-            seriesIndex++;
-
-        }
         lineChart.setLegendSide(javafx.geometry.Side.BOTTOM);
+
+        for (Node node : lineChart.getChildrenUnmodifiable()) {
+            if (node.getClass().getName().endsWith("Legend")) {
+                javafx.scene.layout.Region legend = (javafx.scene.layout.Region) node;
+
+                for (Node legendItem : legend.getChildrenUnmodifiable()) {
+                    if (legendItem instanceof Label) {
+                        Label label = (Label) legendItem;
+                        String seriesName = label.getText();
+
+                        try {
+                            int year = Integer.parseInt(seriesName.split("-")[1]);
+                            String targetColor = getColorForYear(year);
+                            if (label.getGraphic() != null) {
+                                label.getGraphic().setStyle("-fx-background-color: " + targetColor + ", white;");
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void loadTimingList() {
@@ -779,6 +777,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
         task1.setOnSucceeded(e -> {
             try {
                 List<MilkType> list = task1.get();
+                list = list.stream().filter(mt -> mt.getCode() != 3).collect(Collectors.toList());
                 if (list != null) {
                     listMilkType.addAll(list);
                     List<MilkType> comboList = new ArrayList<>();
@@ -856,5 +855,60 @@ public class DashboardController implements MyInitialization, PopupCallback {
     public static class TableData {
         private final String tableName;
         private final int pendingCount;
+    }
+
+    @Data
+    public class MilkRecord {
+        private String milkType;
+        private String month;
+        private int year;
+        private double totalQty;
+    }
+
+    private String getColorForYear(int year) {
+        int fullYear = (year < 100) ? 2000 + year : year;
+        double hue = (fullYear * 137.5) % 360;
+        double saturation = 0.85;
+        double lightness = 0.50;
+        return hslToHex(hue, saturation, lightness);
+    }
+
+    private String hslToHex(double h, double s, double l) {
+        double c = (1 - Math.abs(2 * l - 1)) * s;
+        double x = c * (1 - Math.abs((h / 60.0) % 2 - 1));
+        double m = l - c / 2.0;
+
+        double r = 0, g = 0, b = 0;
+        if (0 <= h && h < 60) {
+            r = c;
+            g = x;
+            b = 0;
+        } else if (60 <= h && h < 120) {
+            r = x;
+            g = c;
+            b = 0;
+        } else if (120 <= h && h < 180) {
+            r = 0;
+            g = c;
+            b = x;
+        } else if (180 <= h && h < 240) {
+            r = 0;
+            g = x;
+            b = c;
+        } else if (240 <= h && h < 300) {
+            r = x;
+            g = 0;
+            b = c;
+        } else if (300 <= h && h < 360) {
+            r = c;
+            g = 0;
+            b = x;
+        }
+
+        int red = (int) ((r + m) * 255);
+        int green = (int) ((g + m) * 255);
+        int blue = (int) ((b + m) * 255);
+
+        return String.format("#%02X%02X%02X", red, green, blue);
     }
 }

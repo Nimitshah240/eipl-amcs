@@ -19,6 +19,7 @@ public class E_ComboBox<T> extends ComboBox<T> {
             setOnKeyReleased(new FocusHandler());
             return;
         }
+        setOnKeyReleased(new FocusHandler());
 
 
         setEditable(true);

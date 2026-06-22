@@ -1,10 +1,12 @@
 package com.eipl.amcs.report.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class LedgerBalance {
     private String ledgerCode;
     private String ledgerName;

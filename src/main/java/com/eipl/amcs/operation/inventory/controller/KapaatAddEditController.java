@@ -3,6 +3,9 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -12,7 +15,6 @@ import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
-import com.eipl.amcs.master.procurement.converter.SocietyPaymentCycleConvertor;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
 import com.eipl.amcs.operation.inventory.dto.ProductSaleDto;
@@ -25,12 +27,12 @@ import com.eipl.amcs.operation.inventory.task.ProductSaleSaveTask;
 import com.eipl.amcs.operation.procurement.task.MemberTotalAmountLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -39,6 +41,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -48,20 +51,23 @@ public class KapaatAddEditController implements MyInitialization {
     private final List<ProductSaleTransaction> transactionList = new ArrayList<>();
     private final List<SaleTxnTaxDto> saleTxnTaxDtoList = new ArrayList<>();
     StringBuilder sb = new StringBuilder();
+    private final ObjectProperty<ProductSaleTransaction> propSaleTransaction;
     @FXML
     private StackPane root;
     @FXML
     private Button btnClose, btnSave;
     @FXML
-    private ComboBox<SocietyPaymentCycle> cboxPaymentCycle;
+    private E_Button btnAdd, btnDelete;
     @FXML
-    private TextField txtCode, txtBalance, txtTotal, txtDue, txtName;
+    private AutoSearchTextField<SocietyPaymentCycle> cboxPaymentCycle;
     @FXML
-    private TableView<Product> tableData;
+    private TextField txtCode, txtBalance, txtTotal, txtDue, txtName, txtAmount, txtMobileNo;
+    @FXML
+    private TableView<ProductSaleTransaction> tableData;
     @FXML
     private DatePicker dpDeductionDate;
     @FXML
-    private TableColumn<Product, String> colName, colAmount;
+    private TableColumn<ProductSaleTransaction, String> colProduct, colAmount;
     private Stage stage;
     @FXML
     private Label lblTotal;
@@ -77,6 +83,8 @@ public class KapaatAddEditController implements MyInitialization {
     private ProductSaleDto productSaleDto;
     private String invoiceNo;
     private StringBuilder errorMsg = null;
+    @FXML
+    private AutoSearchTextField<Product> cboxProduct;
 
     public void setCallback(PopupCallback callback) {
         this.callback = callback;
@@ -91,6 +99,10 @@ public class KapaatAddEditController implements MyInitialization {
         return root;
     }
 
+    public KapaatAddEditController() {
+        propSaleTransaction = new SimpleObjectProperty<>();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
@@ -99,19 +111,27 @@ public class KapaatAddEditController implements MyInitialization {
         loadPaymentCycle();
         setupComboBox();
         getNextCode();
+        productSaleAmount = BigDecimal.ZERO;
         dpDeductionDate.setValue(LocalDate.now());
         btnClose.setOnAction(e -> {
             this.callback.reloadData(true);
             this.stage.close();
         });
+        btnAdd.setOnAction(e -> {
+            addProduct();
+            FocusUtils.requestFocus(cboxProduct);
+        });
+        txtAmount.setOnAction(e -> {
+            FocusUtils.requestFocus(btnAdd);
+        });
+        txtTotal.setText("0");
         txtCode.focusedProperty().addListener((ob, oldVal, newVal) -> {
-            txtTotal.setText("0");
+            calculateTotal();
             txtDue.setText("0");
             txtBalance.setText("0");
         });
         txtCode.setOnAction(e -> {
             fetchMemberDetails();
-            FocusUtils.requestFocus(lblTotal);
         });
         btnSave.setOnAction(e -> {
             saveData();
@@ -130,6 +150,20 @@ public class KapaatAddEditController implements MyInitialization {
                 default:
             }
         });
+
+
+        tableData.setOnKeyPressed(event -> {
+            ProductSaleTransaction dto = tableData.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propSaleTransaction.get();
+                    if (dto != null)
+                        deleteProductSale(dto);
+                    break;
+            }
+        });
     }
 
     private void fetchMemberDetails() {
@@ -140,6 +174,7 @@ public class KapaatAddEditController implements MyInitialization {
                 member = task.get();
                 if (member != null) {
                     txtName.setText(member.getFirstName());
+                    txtMobileNo.setText(member.getMobileNo());
                     getBalance(memberCode);
                 } else {
                     txtName.clear();
@@ -171,19 +206,14 @@ public class KapaatAddEditController implements MyInitialization {
     }
 
     @Override
-    public void setupComboBox() {
-        cboxPaymentCycle.setConverter(new SocietyPaymentCycleConvertor(cboxPaymentCycle));
-    }
-
-    @Override
     public void loadData() {
         var task = new ProductLoadTask();
         task.setOnSucceeded(e -> {
             try {
                 productList = new ArrayList<>();
-                productList.addAll(task.get().stream().filter(ee -> ee.getCreatedBy() == null ||
-                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList()));
-                tableData.setItems(FXCollections.observableList(productList));
+                productList = task.get();
+                if (productList != null && !productList.isEmpty())
+                    cboxProduct.setItems(productList);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -205,27 +235,9 @@ public class KapaatAddEditController implements MyInitialization {
 
     public void setupTable() {
         try {
-            tableData.setEditable(true);
-            colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().toString()));
-            colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol1() != null ? data.getValue().getxCol1() : "0"));
-            colAmount.setCellFactory(TextFieldTableCell.forTableColumn());
-            colAmount.setOnEditCommit(event -> {
-                try {
-                    Product w = event.getRowValue();
-                    if (new BigDecimal(event.getNewValue()).compareTo(BigDecimal.ZERO) < 0) {
-                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
-                                resourceBundle.getString("greaterthan.amount"));
-                        alert.createAlert();
-                        throw new IllegalArgumentException();
-                    } else {
-                        w.setxCol1(event.getNewValue());
-                        setControls();
-                        FocusUtils.requestFocus(lblTotal);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct().toString()));
+            colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount() != null ? data.getValue().getAmount().toString() : "0"));
+            propSaleTransaction.bind(tableData.getSelectionModel().selectedItemProperty());
         } catch (Exception e1) {
             System.out.println("KapatAddEdit setuptable Exception");
             e1.printStackTrace();
@@ -248,7 +260,6 @@ public class KapaatAddEditController implements MyInitialization {
         netPayable = netPayable.subtract(due);
         txtTotal.setText(netPayable.toString());
         txtDue.setText(due.toString());
-        tableData.refresh();
     }
 
     public void loadPaymentCycle() {
@@ -274,62 +285,64 @@ public class KapaatAddEditController implements MyInitialization {
     @Override
     public void saveData() {
         try {
-            if (member == null) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), "Invalid member");
+            if (!validate()) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
+                        errorMsg.toString());
                 alert.createAlert();
                 return;
             }
-            if (Double.parseDouble(txtDue.getText()) > 0) {
-                createDto();
-                var task = new ProductSaleSaveTask(productSaleDto, (short) 0);
-                task.setOnSucceeded(e -> {
-                    try {
-                        Object obj = task.get();
-                        if (obj instanceof ApiError) {
-                            ApiError error = (ApiError) obj;
-                            for (ApiValidationError subError : error.getSubErrors()) {
-                                sb.append(resourceBundle.getString(subError.getMessage()) + "\n");
-                            }
-                            MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
-                                    sb.toString());
-                            alert.createAlert();
-                            return;
+            saveNewSale();
+            var task = new ProductSaleSaveTask(productSaleDto, (short) 0);
+            task.setOnSucceeded(e -> {
+                try {
+                    Object obj = task.get();
+                    if (obj instanceof ApiError) {
+                        ApiError error = (ApiError) obj;
+                        for (ApiValidationError subError : error.getSubErrors()) {
+                            sb.append(resourceBundle.getString(subError.getMessage()) + "\n");
                         }
-                        MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
-                                resourceBundle.getString("save"));
+                        MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                                sb.toString());
                         alert.createAlert();
-                        txtCode.setText("");
-                        txtName.setText("");
-                        FocusUtils.requestFocus(txtCode);
-                        loadData();
-                        txtTotal.setText("0");
-                        txtDue.setText("0");
-                        txtBalance.setText("0");
-                        productSaleDto = new ProductSaleDto();
-                        installmentList.clear();
-                        saleTxnTaxDtoList.clear();
-                        transactionList.clear();
-                        getNextCode();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        ex.printStackTrace();
+                        return;
                     }
-                });
-                task.setOnFailed(e -> {
-                    Throwable t = task.getException();
-                    String errorMessage = "error.occurred";
-                    if (t.getMessage().contains("billing.already.completed")) {
-                        errorMessage = "billing.already.done";
-                    }
-                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
-                            resourceBundle.getString(errorMessage));
-                    alert1.createAlert();
-                });
-                new Thread(task).start();
-            } else {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
-                        resourceBundle.getString("error.occurred"));
-                alert.createAlert();
-            }
+                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                            resourceBundle.getString("save"));
+                    alert.createAlert();
+                    txtCode.setText("");
+                    txtName.setText("");
+                    FocusUtils.requestFocus(txtCode);
+                    txtTotal.setText("0");
+                    txtDue.setText("0");
+                    txtBalance.setText("0");
+                    productSaleDto = new ProductSaleDto();
+                    installmentList.clear();
+                    saleTxnTaxDtoList.clear();
+                    transactionList.clear();
+                    getNextCode();
+                    cboxProduct.getSelectionModel().clearSelection();
+                    tableData.getItems().clear();
+                    transactionList.clear();
+                    tableData.refresh();
+                    txtMobileNo.setText("");
+                    this.callback.reloadData(true);
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            task.setOnFailed(e -> {
+                Throwable t = task.getException();
+                String errorMessage = "error.occurred";
+                if (t.getMessage().contains("billing.already.completed")) {
+                    errorMessage = "billing.already.done";
+                } else if (t.getMessage().contains("paymentcyclenotfound")) {
+                    errorMessage = "paymentcyclenotfound";
+                }
+                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                        resourceBundle.getString(errorMessage));
+                alert1.createAlert();
+            });
+            new Thread(task).start();
         } catch (Exception e) {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
                     resourceBundle.getString("error.occurred"));
@@ -406,6 +419,143 @@ public class KapaatAddEditController implements MyInitialization {
     }
 
     public void clearControls() {
+        cboxProduct.getSelectionModel().clearSelection();
+        txtAmount.setText("0");
     }
 
+    private void addProduct() {
+        try {
+
+            BigDecimal amt = new BigDecimal(txtAmount.getText());
+            if (amt.compareTo(BigDecimal.ZERO) <= 0) {
+                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), resourceBundle.getString("invalid.amount"));
+                alert.createAlert();
+                return;
+            }
+            Product product = cboxProduct.getSelectionModel().getSelectedItem();
+            ProductSaleTransaction transaction;
+            transaction = new ProductSaleTransaction();
+            transaction.setAmount(amt);
+            transaction.setProduct(product);
+            transaction.setDiscount(BigDecimal.ZERO);
+            transaction.setNetAmount(amt);
+            transaction.setQuantity(BigDecimal.valueOf(1));
+            transaction.setRate(amt);
+            transaction.setTaxAmount(BigDecimal.ZERO);
+            transaction.setTaxCode(null);
+            transaction.setUnionCode(MainApp.identityDto.getUnion().getCode());
+            transaction.setSocietyCode(MainApp.identityDto.getSociety().getCode());
+            transaction.setUnitCode(null);
+            transactionList.add(transaction);
+            calculateTotal();
+            clearControls();
+            tableData.setItems(FXCollections.observableList(transactionList));
+        } catch (
+                RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void saveNewSale() {
+        try {
+            ProductSaleInstallment installment = new ProductSaleInstallment();
+            ProductSale productSale = new ProductSale();
+
+            //ProductSaleInstallment
+            installment.setInstallmentAmount(productSaleAmount);
+            installment.setActualInstallment(productSaleAmount);
+            installment.setBilling(false);
+            installment.setDeductionDate(dpDeductionDate.getValue());
+            installment.setType(1);
+            installment.setPreviousPendingAmount(BigDecimal.ZERO);
+            installment.setMember(member);
+            installment.setSocietyPaymentCycle(cboxPaymentCycle.getValue());
+            installment.setUnionCode(MainApp.identityDto.getUnion().getCode());
+            installment.setSocietyCode(MainApp.identityDto.getSociety().getCode());
+            installment.setInvoiceNo(invoiceNo);
+            installmentList.add(installment);
+
+            //ProductSale
+            productSale.setAmount(productSaleAmount);
+            productSale.setConsumerCode(memberCode);
+            productSale.setConsumerType((short) 1);
+            productSale.setSociety(MainApp.identityDto.getSociety());
+            productSale.setUnion(MainApp.identityDto.getUnion());
+            productSale.setDeductionStartDate(dpDeductionDate.getValue());
+            productSale.setDiscount(BigDecimal.ZERO);
+            productSale.setDock(MainApp.identityDto.getDock());
+            productSale.setInvoiceDate(dpDeductionDate.getValue());
+            productSale.setxCol3(LocalDate.now().toString());
+            productSale.setNetAmount(productSaleAmount);
+            productSale.setNoOfInstallments((short) 1);
+            productSale.setPaymentMode((short) 1);
+            productSale.setTransactionType((short) 1);
+            productSale.setTaxAmount(null);
+            productSale.setVoucherNo(null);
+            productSale.setxCol3("kapaat");
+            productSale.setInvoiceNo(invoiceNo);
+
+
+            for (ProductSaleTransaction pst : transactionList) {
+                pst.setProductSaleToMember(productSale);
+                SaleTxnTaxDto saleTxnTaxDto;
+                saleTxnTaxDto = new SaleTxnTaxDto(pst, null);
+                saleTxnTaxDtoList.add(saleTxnTaxDto);
+            }
+            productSaleDto = new ProductSaleDto();
+            productSaleDto.setProductSale(productSale);
+            productSaleDto.setSaleInstallments(installmentList);
+            productSaleDto.setSaleTxnTaxDtoList(saleTxnTaxDtoList);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void calculateTotal() {
+        BigDecimal amt = BigDecimal.ZERO;
+        for (ProductSaleTransaction pst : transactionList) {
+            amt = amt.add(pst.getAmount());
+        }
+        txtTotal.setText(amt.toString());
+        productSaleAmount = amt;
+
+    }
+
+    private void deleteProductSale(ProductSaleTransaction productSaleTransaction) {
+        try {
+            MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                    resourceBundle.getString("alert.delete"));
+            Optional<ButtonType> resp = alert.createConfirmationAlert();
+            if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                if (productSaleTransaction.getInvoiceTxnNo() != null && !productSaleTransaction.getInvoiceTxnNo().isBlank()) {
+                    alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
+                            resourceBundle.getString("cannot.delete.saved.txn"));
+                    alert.createConfirmationAlert();
+                } else {
+                    transactionList.remove(productSaleTransaction);
+                    tableData.setItems(FXCollections.observableList(transactionList));
+                    calculateTotal();
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean validate() {
+        errorMsg = new StringBuilder();
+        if (dpDeductionDate.getValue() == null) {
+            errorMsg.append(resourceBundle.getString("product.sale.validation.date.empty") + "\n");
+        }
+        if (txtCode.getText().trim().equals("")) {
+            errorMsg.append(resourceBundle.getString("product.sale.validation.consumer.code.empty") + "\n");
+        }
+        if (cboxPaymentCycle.getValue() == null) {
+            errorMsg.append(resourceBundle.getString("societypaymentcycle.not.available"));
+        }
+        if (transactionList.isEmpty()) {
+            errorMsg.append(resourceBundle.getString("add.product"));
+        }
+        return errorMsg.length() == 0;
+    }
 }

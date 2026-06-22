@@ -875,8 +875,18 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                             resourceBundle.getString("productsale.insert.successful"));
                     alert.createAlert();
+                    txtConsumerCode.setText("");
+                    txtConsumerName.setText("");
+                    cboxType.getSelectionModel().select(0);
+                    tableProductSaleTransaction.getItems().clear();
+                    initialize(null, resourceBundle);
                     this.callback.reloadData(true);
-                    this.stage.close();
+                    txtTotalAmount.setText("0");
+                    txtTotalAmountTax.setText("0");
+                    txtNetAmount.setText("0");
+                    lblStock.setText("");
+                    txtNetPayable.setText("0");
+//                    this.stage.close();
 //                    MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml")));
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
@@ -963,8 +973,16 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                         resourceBundle.getString("productsale.update.successful"));
                 alert.createAlert();
+                tableProductSaleTransaction.getItems().clear();
+                initialize(null, resourceBundle);
+                txtConsumerCode.setText("");
+                txtConsumerName.setText("");
+                cboxType.getSelectionModel().select(0);
+                tableProductSaleTransaction.getItems().clear();
+                initialize(null, resourceBundle);
                 this.callback.reloadData(true);
-                this.stage.close();
+//                this.callback.reloadData(true);
+//                this.stage.close();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -1138,6 +1156,45 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             });
             new Thread(task).start();
         }
+    }
+
+    private void reloadScreen() {
+        // 1. Reset core data models and lists
+        this.productSale = null;
+        this.r = null;
+        this.taxBifurcation = null;
+        this.saleTxnTaxDtoList.clear();
+        this.listProductSaleTransaction.clear();
+        this.installmentList.clear();
+
+        // 2. Clear out tables and summaries
+        tableProductSaleTransaction.getItems().clear();
+        txtTotalAmount.setText("0");
+        txtTotalAmountTax.setText("0");
+        txtNetPayable.setText("0");
+        txtTotalDiscount.setText("0");
+        lblStock.setText("0 " + resourceBundle.getString("quantityy"));
+        dpDate.setValue(LocalDate.now());
+        rbtnCredit.setSelected(true);
+        rbtnCash.setSelected(false);
+        cboxType.setDisable(true);
+        if (!cboxType.getItems().isEmpty()) {
+            cboxType.getSelectionModel().select(0);
+        }
+        txtConsumerCode.clear();
+        txtConsumerName.clear();
+        txtCreditLimit.clear();
+        txtDifferance.setText("0");
+        txtMilkAmount.setText("0");
+        txtDeductionAmount.setText("0");
+        txtNoOfInstallment.setText("1");
+        cboxProduct.getSelectionModel().clearSelection();
+        cboxTaxCode.getSelectionModel().clearSelection();
+        getNextCode();
+
+        btnSaveUpdate.setText(resourceBundle.getString("save"));
+        FocusUtils.requestFocus(txtConsumerCode);
+        lblStock.setText("");
     }
 }
 

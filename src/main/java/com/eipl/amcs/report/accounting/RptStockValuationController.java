@@ -59,7 +59,7 @@ public class RptStockValuationController implements MyInitialization {
     private E_Button btnClose;
 
     @FXML
-    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1;
+    private E_Button btnRojmed, btnGenerate, btnTrialBalance, btnTredingReport, btnProfitLoss, btnBalanceSheet, btnGenerate1, btnBalanceSheetGrouping;
     @FXML
     private Label lblAsOnDate;
 
@@ -125,7 +125,9 @@ public class RptStockValuationController implements MyInitialization {
             loadDataProfitLoss();
         });
         btnBalanceSheet.setOnAction(e -> {
-            loadDataBalanceSheet();
+            printProfitLossReport();
+        });
+        btnBalanceSheetGrouping.setOnAction(e -> {
             loadDataBalanceSheetGrouping();
         });
         btnTredingReport.setOnAction(e -> {
@@ -368,6 +370,31 @@ public class RptStockValuationController implements MyInitialization {
         new Thread(profitLossTask).start();
     }
 
+    private void printProfitLossReport() {
+        try {
+            String localeStr = getLocaleString();
+            ProfitLossTask profitLossTask = new ProfitLossTask(MainApp.identityDto.getSociety().getCode(),
+                    dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
+            profitLossTask.setOnSucceeded(ee -> {
+                try {
+                    List<LedgerBalance> list = profitLossTask.get();
+                    if (list == null) {
+                        list = Collections.emptyList();
+                    }
+
+                    listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
+                    listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
+                    loadDataBalanceSheet();
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(profitLossTask).start();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void loadDataTreadingReport() {
         String localeStr = getLocaleString();
         LoadStockValuationTask task = new LoadStockValuationTask(MainApp.identityDto.getSociety().getCode(), MainApp.getFinancialYear().getEndDate(), localeStr);
@@ -402,9 +429,8 @@ public class RptStockValuationController implements MyInitialization {
                         }
                         TradingTaskparams.put("p_from_date", dpFromDate1.getValue());
                         TradingTaskparams.put("p_to_date", dpToDate1.getValue());
-
-
                         TradingTaskparams.put("p_locale", localeStr);
+
                         TradingTaskparams.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                         JasperPrint print = null;
                         if (rbtVertical.isSelected()) {
@@ -495,6 +521,15 @@ public class RptStockValuationController implements MyInitialization {
 
                 JasperPrint print = null;
                 if (rbtHorizontal.isSelected()) {
+                    listBSLiability.sort(Comparator.comparing(
+                            LedgerBalance::getLedgerCode,
+                            Comparator.nullsLast(Comparator.naturalOrder())
+                    ));
+                    listBSAsset.sort(Comparator.comparing(
+                            LedgerBalance::getLedgerCode,
+                            Comparator.nullsLast(Comparator.naturalOrder())
+                    ));
+
                     int maxRows = Math.max(
                             listBSLiability != null ? listBSLiability.size() : 0,
                             listBSAsset != null ? listBSAsset.size() : 0
@@ -524,8 +559,18 @@ public class RptStockValuationController implements MyInitialization {
                     list.stream().forEach(item -> {
                         double balance = item.getBalance();
 
+                        if (item.getLedgerName().contains("stockvaluation") || item.getLedgerName().contains("MAL STOCK")) {
+                            if (balance < 0) {
+                                item.setCredit(Math.abs(item.getBalance()));
+                                item.setDebit(0.0);
+                            } else {
+                                item.setDebit(balance);
+                                item.setCredit(0.0);
+                            }
+                            return;
+                        }
                         if (balance < 0) {
-                            item.setDebit(Math.abs(balance));
+                            item.setDebit(Math.abs(item.getBalance()));
                             item.setCredit(0.0);
                         } else {
                             item.setCredit(balance);
@@ -566,7 +611,7 @@ public class RptStockValuationController implements MyInitialization {
     private void loadDataRojmed() {
         LocalDate fromDate = dpFromDate1.getValue();
         LocalDate toDate = dpToDate1.getValue();
-
+        MainApp.paneDrop.setVisible(true);
         processDate(fromDate, fromDate, toDate);
     }
 
@@ -587,11 +632,13 @@ public class RptStockValuationController implements MyInitialization {
             params.put("p_from_date", dpFromDate1.getValue());
             params.put("p_to_date", dpToDate1.getValue());
             params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+            MainApp.paneDrop.setVisible(false);
             JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.ROJMED, params, new JRBeanCollectionDataSource(listRojmed));
             JasperViewer.viewReport(print, false);
             return;
         }
 
+        MainApp.lblMessage.setText("Loading Data of - " + processingDate.toString());
         System.out.println("Processing Date : " + processingDate);
 
         getOpeningLedgerBalance(fromDate, processingDate)
@@ -623,77 +670,42 @@ public class RptStockValuationController implements MyInitialization {
         }
 
         var task = new RojmedOpeningBalanceLoadTask(financialYear.getStartDate(), toDate);
-
         task.setOnSucceeded(e -> {
             try {
-
                 openingBalance = task.getValue();
-
-                System.out.println("Opening Balance " + toDate + " = " +
-                        openingBalance);
-
+                System.out.println("Opening Balance " + toDate + " = " + openingBalance);
                 future.complete(null);
-
             } catch (Exception ex) {
                 future.completeExceptionally(ex);
             }
         });
-
-        task.setOnFailed(e ->
-                future.completeExceptionally(task.getException()));
-
+        task.setOnFailed(e -> future.completeExceptionally(task.getException()));
         new Thread(task).start();
-
         return future;
     }
 
     private List<VoucherTransaction> crVoucherTransactionList = new ArrayList<>();
     private List<VoucherTransaction> drVoucherTransactionList = new ArrayList<>();
 
-    private CompletableFuture<Void> loadVoucherTransactionByDate(
-            LocalDate fromDate,
-            LocalDate toDate) {
+    private CompletableFuture<Void> loadVoucherTransactionByDate(LocalDate fromDate, LocalDate toDate) {
 
-        CompletableFuture<Void> future =
-                new CompletableFuture<>();
-
-        var task =
-                new VoucherTransactionByDateLoadTask(
-                        fromDate,
-                        toDate);
-
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        var task = new VoucherTransactionByDateLoadTask(fromDate, toDate);
         task.setOnSucceeded(e -> {
-
             try {
-
-                List<VoucherTransaction> voucherTransactionList =
-                        task.getValue();
+                List<VoucherTransaction> voucherTransactionList = task.getValue();
 
                 if (voucherTransactionList == null)
                     voucherTransactionList = new ArrayList<>();
 
-                voucherTransactionList =
-                        bifurcateProductReceiptTransaction(
-                                voucherTransactionList);
+                voucherTransactionList = bifurcateProductReceiptTransaction(voucherTransactionList);
+                voucherTransactionList = bifurcateProductSaleTransaction(voucherTransactionList);
 
-                voucherTransactionList =
-                        bifurcateProductSaleTransaction(
-                                voucherTransactionList);
-
-                crVoucherTransactionList =
-                        voucherTransactionList.stream()
-                                .filter(VoucherTransaction::getCreditDebit)
-                                .collect(Collectors.toList());
-
-                drVoucherTransactionList =
-                        voucherTransactionList.stream()
-                                .filter(v -> !v.getCreditDebit())
-                                .collect(Collectors.toList());
+                crVoucherTransactionList = voucherTransactionList.stream().filter(VoucherTransaction::getCreditDebit).collect(Collectors.toList());
+                drVoucherTransactionList = voucherTransactionList.stream().filter(v -> !v.getCreditDebit()).collect(Collectors.toList());
 
                 calculateCrDrTotal();
-
                 creatingRojmedDto(fromDate);
-
                 future.complete(null);
 
             } catch (Exception ex) {
@@ -999,32 +1011,26 @@ public class RptStockValuationController implements MyInitialization {
 
         for (VoucherTransaction voucherTransaction : crTransactions) {
 
-            List<VoucherTransaction> tempTxnList =
-                    crLedgerTransactionMap.get(voucherTransaction.getLedger());
+            List<VoucherTransaction> tempTxnList = crLedgerTransactionMap.get(voucherTransaction.getLedger());
 
             if (tempTxnList == null) {
                 tempTxnList = new ArrayList<>();
             }
 
             tempTxnList.add(voucherTransaction);
-            crLedgerTransactionMap.put(
-                    voucherTransaction.getLedger(),
-                    tempTxnList);
+            crLedgerTransactionMap.put(voucherTransaction.getLedger(), tempTxnList);
         }
 
         for (VoucherTransaction voucherTransaction : drTransactions) {
 
-            List<VoucherTransaction> tempTxnList =
-                    drLedgerTransactionMap.get(voucherTransaction.getLedger());
+            List<VoucherTransaction> tempTxnList = drLedgerTransactionMap.get(voucherTransaction.getLedger());
 
             if (tempTxnList == null) {
                 tempTxnList = new ArrayList<>();
             }
 
             tempTxnList.add(voucherTransaction);
-            drLedgerTransactionMap.put(
-                    voucherTransaction.getLedger(),
-                    tempTxnList);
+            drLedgerTransactionMap.put(voucherTransaction.getLedger(), tempTxnList);
         }
 
         List<VoucherTransaction> finalCrList = new ArrayList<>();
@@ -1183,13 +1189,49 @@ public class RptStockValuationController implements MyInitialization {
                         listBSAsset.add(new LedgerBalance("", "PL Ledger", 0, 0, Math.abs(diff), 0));
                     }
                 }
+// --- INJECT DYNAMIC CLOSING STOCK HERE ---
+                List<LedgerBalance> combinedList = new ArrayList<>();
+                if (listBSAsset != null) combinedList.addAll(listBSAsset);
+                if (listBSLiability != null) combinedList.addAll(listBSLiability);
+
+                for (LedgerBalance ledger : combinedList) {
+                    if (ledger.getLedgerName() != null && ledger.getLedgerName().toLowerCase().contains("stockvaluation")) {
+                        ledger.setLedgerCode("1761");
+
+                        if ("gu".equalsIgnoreCase(localeStr)) {
+                            ledger.setLedgerName("માલ સ્ટોક");
+                            ledger.setLedgerGroupCode("1012");
+                            ledger.setLedgerGroupName("શ્રી બંધ માલસ્ટોક");
+                        } else {
+                            ledger.setLedgerName("Mal Stock");
+                            ledger.setLedgerGroupCode("1012");
+                            ledger.setLedgerGroupName("Closing Stock");
+                        }
+                        break;
+                    }
+                }
+                listBSLiability.sort(Comparator.comparing(
+                        LedgerBalance::getLedgerGroupCode,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                ));
+                listBSAsset.sort(Comparator.comparing(
+                        LedgerBalance::getLedgerGroupCode,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                ));
+
+// FIX HERE: Collect using LinkedHashMap to retain the exact sort ordering applied above
                 Map<String, List<LedgerBalance>> liabilityGroupMap = listBSLiability.stream()
                         .collect(Collectors.groupingBy(
-                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName()
+                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName(),
+                                LinkedHashMap::new,
+                                Collectors.toList()
                         ));
+
                 Map<String, List<LedgerBalance>> assetGroupMap = listBSAsset.stream()
                         .collect(Collectors.groupingBy(
-                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName()
+                                l -> l.getLedgerGroupCode() + " - " + l.getLedgerGroupName(),
+                                LinkedHashMap::new,
+                                Collectors.toList()
                         ));
                 List<RojmedDto> rojmedDtoList = generateSideBySideRojmed(assetGroupMap, liabilityGroupMap);
                 for (RojmedDto rojmedDto : rojmedDtoList) {
@@ -1197,7 +1239,7 @@ public class RptStockValuationController implements MyInitialization {
                 }
 
                 // TODO - ANANT HERE MAKE CHANGES
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_BALANCESHEET, param, new JRBeanCollectionDataSource(rojmedDtoList));
+                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.BalanceSheetGrouping, param, new JRBeanCollectionDataSource(rojmedDtoList));
                 JasperViewer.viewReport(print, false);
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
@@ -1220,15 +1262,15 @@ public class RptStockValuationController implements MyInitialization {
             if (i < assetRows.size()) {
                 RojmedDto assetSource = assetRows.get(i);
                 combinedRow.setDebitLedger(assetSource.getDebitLedger());
-                combinedRow.setDebitAmount(assetSource.getDebitAmount());
-                combinedRow.setDebitSubAmount(assetSource.getDebitSubAmount());
+                combinedRow.setDebitAmount(assetSource.getDebitAmount() == null ? null : Double.valueOf(new BigDecimal(String.valueOf(Math.abs(assetSource.getDebitAmount()))).setScale(2, RoundingMode.HALF_UP).toString()));
+                combinedRow.setDebitSubAmount(assetSource.getDebitSubAmount() == null ? null : Double.valueOf(new BigDecimal(String.valueOf(Math.abs(assetSource.getDebitSubAmount()))).setScale(2, RoundingMode.HALF_UP).toString()));
             }
 
             if (i < liabilityRows.size()) {
                 RojmedDto liabilitySource = liabilityRows.get(i);
                 combinedRow.setCreditLedger(liabilitySource.getCreditLedger());
-                combinedRow.setCreditAmount(liabilitySource.getCreditAmount());
-                combinedRow.setCreditSubAmount(liabilitySource.getCreditSubAmount());
+                combinedRow.setCreditAmount(liabilitySource.getCreditAmount() == null ? null : Double.valueOf(new BigDecimal(String.valueOf(Math.abs(liabilitySource.getCreditAmount()))).setScale(2, RoundingMode.HALF_UP).toString()));
+                combinedRow.setCreditSubAmount(liabilitySource.getCreditSubAmount() == null ? null : Double.valueOf(new BigDecimal(String.valueOf(Math.abs(liabilitySource.getCreditSubAmount()))).setScale(2, RoundingMode.HALF_UP).toString()));
             }
 
             reportRows.add(combinedRow);

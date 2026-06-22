@@ -118,7 +118,7 @@ public class ProductSaleServiceImpl implements ProductSaleService {
         if (productSaleDto.getProductSale().getDeductionStartDate() != null) {
             SocietyPaymentCycle paymentCycle = paymentCycleRepository.findTop1ByFromDateLessThanEqualAndToDateGreaterThanEqual(productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5), productSaleDto.getProductSale().getDeductionStartDate().atTime(13, 5, 5));
             if (paymentCycle == null || paymentCycle.getLockBillingProcess())
-                throw new BusinessValidationFailException(LocalMilkSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
+                throw new BusinessValidationFailException(ProductSale.class, CommonUtils.getFieldError("productsale", "Invoice Date", productSaleDto.getProductSale().getInvoiceDate(), "paymentcyclenotfound"));
 
             MemberBillSummary memberBillSummary = summaryRepository.findTop1ByDeductionFromDateLessThanEqualAndDeductionToDateGreaterThanEqual(productSaleDto.getProductSale().getDeductionStartDate(), productSaleDto.getProductSale().getDeductionStartDate());
             if (memberBillSummary != null)

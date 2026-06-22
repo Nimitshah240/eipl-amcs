@@ -79,8 +79,8 @@
                         <AutoSearchTextField fx:id="cboxLanguage1" maxHeight="1.7976931348623157E308"
                                              maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
                                              GridPane.rowIndex="1"/>
-                        <RadioButton fx:id="rbtVertical" text="Vertical" GridPane.columnIndex="3"/>
-                        <RadioButton fx:id="rbtHorizontal" text="Horizontal" GridPane.columnIndex="3"
+                        <RadioButton fx:id="rbtVertical" text="%vertical" GridPane.columnIndex="3"/>
+                        <RadioButton fx:id="rbtHorizontal" text="%horizontal" GridPane.columnIndex="3"
                                      GridPane.rowIndex="1"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%fromdate"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%todate"
@@ -136,6 +136,17 @@
                                 </E_Button>
                                 <E_Button fx:id="btnBalanceSheet" minHeight="35.0" minWidth="100.0"
                                           mnemonicParsing="true" text="%balancesheet">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/generate.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </E_Button>
+                                <E_Button fx:id="btnBalanceSheetGrouping" minHeight="35.0" minWidth="100.0"
+                                          mnemonicParsing="true" text="%balancesheetgrouping">
                                     <graphic>
                                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
                                                    preserveRatio="true">
