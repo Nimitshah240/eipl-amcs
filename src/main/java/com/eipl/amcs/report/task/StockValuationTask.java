@@ -16,6 +16,7 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
     private final String societyCode;
     private final LocalDate asOnDate;
     private final String locale;
+    private String productCode;
     private LedgerRepository ledgerRepository;
     private NextCodeRepository nextCodeRepository;
     private ProductStockValuationRepository productStockValuationRepository;
@@ -28,14 +29,25 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
 
     }
 
+    public StockValuationTask(String societyCode, LocalDate asOnDate, String locale, String productCode) {
+        this.societyCode = societyCode;
+        this.asOnDate = asOnDate;
+        this.locale = locale;
+        this.productCode = productCode;
+    }
+
     @Override
     protected List<ProductStockValuation> call() throws Exception {
         try {
             ledgerRepository = EmcsAppContext.getContext().getBean(LedgerRepository.class);
             nextCodeRepository = EmcsAppContext.getContext().getBean(NextCodeRepository.class);
             productStockValuationRepository = EmcsAppContext.getContext().getBean(ProductStockValuationRepository.class);
-
-            List<ProductStockValuation> list = fetchStockValuation(Date.valueOf(asOnDate), societyCode, locale);
+            List<ProductStockValuation> list = new ArrayList<>();
+            if (productCode == null) {
+                list = fetchStockValuation(Date.valueOf(asOnDate), societyCode, locale);
+            } else {
+                list = fetchStockValuationFifo(Date.valueOf(asOnDate), societyCode, locale, productCode);
+            }
             if (list.isEmpty())
                 return null;
             return list;

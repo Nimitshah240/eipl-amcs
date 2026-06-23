@@ -337,6 +337,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         });
 
         txtRate.setDisable(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("fifo"));
+
+        txtQuantity.setOnAction(e -> {
+            if (!txtRate.isEditable())
+                FocusUtils.requestFocus(btnProductSave);
+        });
     }
 
     public void setDate(LocalDate date) {
@@ -421,8 +426,15 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 } else {
                     lblStock.setText(stock.getStock().setScale(2, RoundingMode.UP) + " " + resourceBundle.getString("quantityy"));
                 }
-                txtRate.setText(String.valueOf(this.stock.getSaleRate() == null ? 0 : this.stock.getSaleRate()));
-                txtBatch.setText(this.stock.getBatchNo());
+
+                if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") && (this.stock != null && (this.stock.getSaleRate() == null || this.stock.getSaleRate().compareTo(BigDecimal.ZERO) == 0))) {
+                    txtRate.setDisable(false);
+                    txtRate.setEditable(true);
+                } else {
+                    txtRate.setEditable(true);
+                    txtRate.setText(this.stock == null ? "0" : String.valueOf(this.stock.getSaleRate() == null ? 0 : this.stock.getSaleRate()));
+                }
+                txtBatch.setText(this.stock == null ? null : this.stock.getBatchNo());
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
