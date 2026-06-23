@@ -189,6 +189,8 @@ public class RptStockValuationController implements MyInitialization {
 
     public void loadProductStockValuation() {
         var task = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), dpStockValuation.getValue(), MainApp.getLocale());
+        if (MainApp.getProperty("fifo.process", "FIFO").equalsIgnoreCase("FIFO"))
+            task = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), dpStockValuation.getValue(), MainApp.getLocale(), "0");
         task.setOnSucceeded(e -> {
             MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("stockvaluation.title"),
                     resourceBundle.getString("alert.insert.success"));
@@ -220,28 +222,54 @@ public class RptStockValuationController implements MyInitialization {
     @Override
     public void loadData() {
         String localeStr = getLocaleString();
-        StockValuationTaskWithProduct task = new StockValuationTaskWithProduct(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), localeStr, cboxProduct.getValue().getCode());
-        task.setOnSucceeded(e -> {
-            try {
-                List<ProductStockValuation> list = task.get();
-                Map<String, Object> params = new HashMap<>();
-                params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-                if (localeStr.equals("en")) {
-                    params.put("p_society_name", MainApp.identityDto.getSociety().getName());
-                } else {
-                    params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+        if (MainApp.getProperty("fifo.process", "FIFO").equalsIgnoreCase("FIFO")) {
+            StockValuationTask task = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), MainApp.getLocale(), cboxProduct.getValue().getCode());
+            task.setOnSucceeded(e -> {
+                try {
+                    List<com.eipl.amcs.master.account.model.ProductStockValuation> list = task.get();
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+                    if (localeStr.equals("en")) {
+                        params.put("p_society_name", MainApp.identityDto.getSociety().getName());
+                    } else {
+                        params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+                    }
+                    params.put("p_as_on_date", dpFromDate.getValue());
+                    params.put("p_locale", localeStr);
+                    params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+                    params.put("p_product_code", cboxProduct.getValue().getCode());
+                    JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_STOCK_VALUATION, params, new JRBeanCollectionDataSource(list));
+                    JasperViewer.viewReport(print, false);
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
                 }
-                params.put("p_as_on_date", dpFromDate.getValue());
-                params.put("p_locale", localeStr);
-                params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-                params.put("p_product_code", cboxProduct.getValue().getCode());
-                JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_STOCK_VALUATION, params, new JRBeanCollectionDataSource(list));
-                JasperViewer.viewReport(print, false);
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task).start();
+            });
+            new Thread(task).start();
+
+        } else {
+            StockValuationTaskWithProduct task = new StockValuationTaskWithProduct(MainApp.identityDto.getSociety().getCode(), dpFromDate.getValue(), localeStr, cboxProduct.getValue().getCode());
+            task.setOnSucceeded(e -> {
+                try {
+                    List<ProductStockValuation> list = task.get();
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+                    if (localeStr.equals("en")) {
+                        params.put("p_society_name", MainApp.identityDto.getSociety().getName());
+                    } else {
+                        params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+                    }
+                    params.put("p_as_on_date", dpFromDate.getValue());
+                    params.put("p_locale", localeStr);
+                    params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+                    params.put("p_product_code", cboxProduct.getValue().getCode());
+                    JasperPrint print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_STOCK_VALUATION, params, new JRBeanCollectionDataSource(list));
+                    JasperViewer.viewReport(print, false);
+                } catch (InterruptedException | ExecutionException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            new Thread(task).start();
+        }
     }
 
     public void loadProduct() {

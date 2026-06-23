@@ -36,6 +36,8 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static com.eipl.amcs.base.controller.ActivationController.isFifoProcess;
+
 @Slf4j
 public class GeneralConfigController implements MyInitialization {
 
@@ -289,6 +291,7 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("variation.fat=" + new String(Base64.getEncoder().encode(txtVariationFat.getText().trim().getBytes())));
         lines.add("variation.snf=" + new String(Base64.getEncoder().encode(txtVariationSnf.getText().trim().getBytes())));
         lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode((chkCodeMilkTypeParsing.isSelected() ? "1" : "0").getBytes())));
+        lines.add("fifo.process=" + new String(Base64.getEncoder().encode((isFifoProcess()).getBytes())));
 
         //lines.add("shift.param=" + new String(Base64.getEncoder().encode(
         //   (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));

@@ -102,9 +102,12 @@ public class StockValuationController implements MyInitialization, PopupCallback
 
     public void loadProductStockValuation() {
         var task = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), dpGenerate.getValue(), MainApp.getLocale());
+        if (MainApp.getProperty("fifo.process", "FIFO").equalsIgnoreCase("FIFO"))
+            task = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), dpGenerate.getValue(), MainApp.getLocale(), "0");
+        StockValuationTask finalTask = task;
         task.setOnSucceeded(e -> {
             try {
-                List<ProductStockValuation> list = task.get();
+                List<ProductStockValuation> list = finalTask.get();
                 if (list != null) {
                     tableStockValuation.setItems(FXCollections.observableList(list));
                     calculateTotal(list);

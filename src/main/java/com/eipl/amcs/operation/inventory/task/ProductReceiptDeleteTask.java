@@ -20,8 +20,7 @@ public class ProductReceiptDeleteTask extends Task<Boolean> {
             service.delete(grnNo, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
     }
 }

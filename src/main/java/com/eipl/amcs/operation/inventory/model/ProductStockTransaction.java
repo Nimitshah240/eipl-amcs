@@ -43,6 +43,10 @@ public class ProductStockTransaction extends BaseModelTxn {
     private String transactionType;
     private String unionCode;
 
+    private String batchNo;
+    private BigDecimal saleRate;
+    private BigDecimal purchaseRate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = SocietySerialize.class)
     @JsonDeserialize(using = SocietyDeserializer.class)

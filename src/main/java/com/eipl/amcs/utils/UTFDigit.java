@@ -290,5 +290,4 @@ public class UTFDigit {
         }
         return temp;
     }
-
 }

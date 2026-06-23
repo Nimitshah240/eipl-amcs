@@ -50,7 +50,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
@@ -74,7 +73,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance;
+    private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance, txtBatch;
     @FXML
     private E_NumericField txtConsumerCode, txtCreditLimit, txtQuantity, txtRate, txtAmount, txtNetAmount,
             txtTotalAmount, txtNoOfInstallment, txtTotalDiscount, txtMilkAmount, txtDeductionAmount, txtTotalAmountTax, txtNetPayable;
@@ -132,14 +131,15 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         this.resourceBundle = resourceBundle;
         FocusUtils.requestFocus(txtConsumerCode);
         dpDate.setValue(LocalDate.now());
+        dpDeductionStartDate.setValue(LocalDate.now());
         dpDate.setConverter(new LocalDateConvertor());
         dpDeductionFromDate.setConverter(new LocalDateConvertor());
         rbtnCredit.setSelected(true);
+        txtNoOfInstallment.setText("1");
         cboxType.setDisable(true);
         dpDeductionStartDate.setDisable(false);
         setupComboBox();
         setupTable();
-//        loadData();
         btnClose.setOnAction(e -> this.stage.close());
         txtDifferance.setText("0");
         txtMilkAmount.setText("0");
@@ -149,9 +149,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 dpDeductionStartDate.setValue(dpDate.getValue());
             }
         });
-//        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/inventory/ProductSale.fxml"))));
         btnSaveUpdate.setOnAction(e -> {
-
             if (rbtnCredit.isSelected()) {
                 productSale.setPaymentMode((short) 1);
                 productSale.setNoOfInstallments(Short.valueOf(txtNoOfInstallment.getText()));
@@ -161,17 +159,13 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 productSale.setNoOfInstallments((short) 0);
                 productSale.setDeductionStartDate(null);
             }
-
-
             if (rbtnCash.isSelected())
                 validateAndSave();
             else
                 checkPaymentCycleAndSaveInstallment((short) 1);
         });
 
-        btnProductSave.setOnAction(e ->
-
-        {
+        btnProductSave.setOnAction(e -> {
             if (!validateProductSave()) {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                         errorMsg.toString());
@@ -207,13 +201,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtConsumerCode.setOnAction(e -> {
             String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
             setConsumerName(code);
-//            FocusUtils.requestFocus(dpDate);
         });
         txtConsumerCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
             if (!newValue && txtConsumerCode.getText().length() > 0) {
                 String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtConsumerCode.getText()));
                 setConsumerName(code);
-//                        FocusUtils.requestFocus(dpDate);
             }
         });
 
@@ -224,7 +216,6 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         txtQuantity.setText("");
                         txtAmount.setText("");
                         txtNetAmount.setText("");
-//                        FocusUtils.requestFocus(txtQuantity);
                         return;
                     }
                 }
@@ -295,13 +286,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 fetchSaleRate();
                 if (cboxProduct.getValue() != null)
                     fetchStock();
-//                FocusUtils.requestFocus(txtQuantity);
             }
         });
 
-        cboxTaxCode.setOnAction(e ->
-
-        {
+        cboxTaxCode.setOnAction(e -> {
             if (cboxTaxCode.getValue() != null) {
                 if (!txtAmount.getText().isEmpty()) {
                     taxBifurcation = null;
@@ -322,18 +310,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             }
         });
 
-        dpMilkFromDate.setOnAction(e ->
-
-                getDeductionAndPurchaseData());
-        dpMilkToDate.setOnAction(e ->
-
-                getDeductionAndPurchaseData());
-        dpDeductionFromDate.setOnAction(e ->
-
-                getDeductionData());
-        dpDeductionToDate.setOnAction(e ->
-
-                getDeductionData());
+        dpMilkFromDate.setOnAction(e -> getDeductionAndPurchaseData());
+        dpMilkToDate.setOnAction(e -> getDeductionAndPurchaseData());
+        dpDeductionFromDate.setOnAction(e -> getDeductionData());
+        dpDeductionToDate.setOnAction(e -> getDeductionData());
         txtConsumerCode.setOnAction(e -> {
             getDeductionAndPurchaseData();
         });
@@ -355,6 +335,13 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                     break;
             }
         });
+
+        txtRate.setDisable(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("fifo"));
+
+        txtQuantity.setOnAction(e -> {
+            if (!txtRate.isEditable())
+                FocusUtils.requestFocus(btnProductSave);
+        });
     }
 
     public void setDate(LocalDate date) {
@@ -368,6 +355,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txtQuantity.setText("0");
         txtNetAmount.setText("0");
         cboxProduct.setValue(null);
+        lblStock.setText("");
+        txtBatch.setText("");
         FocusUtils.requestFocus(cboxProduct);
     }
 
@@ -389,6 +378,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
         txn.setTaxCode(cboxTaxCode.getValue().getCode());
+        txn.setBatchNo(txtBatch.getText());
         return txn;
     }
 
@@ -413,11 +403,11 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         task.setOnSucceeded(e -> {
             try {
                 ProductSaleRate rate = task.get();
-                if (rate == null) {
-                    txtRate.setText("0");
-                } else {
-                    txtRate.setText(rate.getRate().toString());
-                }
+//                if (rate == null) {
+//                    txtRate.setText("0");
+//                } else {
+//                    txtRate.setText(rate.getRate().toString());
+//                }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -436,6 +426,15 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 } else {
                     lblStock.setText(stock.getStock().setScale(2, RoundingMode.UP) + " " + resourceBundle.getString("quantityy"));
                 }
+
+                if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") && (this.stock != null && (this.stock.getSaleRate() == null || this.stock.getSaleRate().compareTo(BigDecimal.ZERO) == 0))) {
+                    txtRate.setDisable(false);
+                    txtRate.setEditable(true);
+                } else {
+                    txtRate.setEditable(true);
+                    txtRate.setText(this.stock == null ? "0" : String.valueOf(this.stock.getSaleRate() == null ? 0 : this.stock.getSaleRate()));
+                }
+                txtBatch.setText(this.stock == null ? null : this.stock.getBatchNo());
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -625,8 +624,16 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
     public void setProductSale(ProductSale productSale) {
         try {
+            cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForProductSale()));
+            cboxType.getSelectionModel().select(0);
+
             this.productSale = productSale;
             if (productSale != null) {
+                Optional<CustomerTypeKeyValDto> dd = cboxType.getItems().stream()
+                        .filter(p -> p.getKey() == productSale.getConsumerType()).findFirst();
+                if (dd.isPresent())
+                    cboxType.getSelectionModel().select(dd.get());
+
                 txtConsumerCode.setText(productSale.getConsumerCode().substring(MainApp.getUser().getSociety().getCode().length()));
                 setConsumerName(productSale.getConsumerCode());
                 dpDate.setValue(productSale.getInvoiceDate());
@@ -894,6 +901,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 if (t.getMessage().contains("billing.already.completed")) {
                     errorMessage = "billing.already.done";
                 }
+                if (t.getMessage().contains("StockIsLessThanZero")) {
+                    errorMessage = "stock.going.to.zero";
+                }
                 MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                         resourceBundle.getString(errorMessage));
                 alert1.createAlert();
@@ -989,6 +999,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             if (t.getMessage().contains("billing.already.completed")) {
                 errorMessage = "billing.already.done";
             }
+            if (t.getMessage().contains("StockIsLessThanZero")) {
+                errorMessage = "stock.going.to.zero";
+            }
             MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                     resourceBundle.getString(errorMessage));
             alert1.createAlert();
@@ -1018,23 +1031,10 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
 
     @Override
     public void loadData() {
-        cboxType.setItems(FXCollections.observableList(CommonUtils.getCustomerTypesForProductSale()));
-//                .stream().
-//                filter(e -> e.getKey() <= (short) 2 || e.getKey() == (short) 4).collect(Collectors.toList())));
-        cboxType.getSelectionModel().select(0);
-        if (productSale != null) {
-            Optional<CustomerTypeKeyValDto> dd = cboxType.getItems().stream()
-                    .filter(p -> p.getKey() == productSale.getConsumerType()).findFirst();
-            if (dd.isPresent())
-                cboxType.getSelectionModel().select(dd.get());
-        }
-
         var task1 = new ProductLoadTask();
         task1.setOnSucceeded(e -> {
             try {
                 cboxProduct.setItems(FXCollections.observableList(task1.get()));
-//                        .stream().filter(ee -> ee.getCreatedBy() == null ||
-//                        ee.getCreatedBy().equalsIgnoreCase("SYSTEM")).collect(Collectors.toList())));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -1079,7 +1079,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         if (txtQuantity.getText().trim().isEmpty() || new BigDecimal(txtQuantity.getText().trim()).compareTo(BigDecimal.ZERO) == 0) {
             errorMsg.append(resourceBundle.getString("qtyzero") + "\n");
         }
-        if (stock == null || stock.getStock().subtract(new BigDecimal(BigInteger.ZERO)).compareTo(BigDecimal.ZERO) < 0)
+        if (stock == null || stock.getStock().subtract(new BigDecimal(txtQuantity.getText())).compareTo(BigDecimal.ZERO) < 0)
             errorMsg.append(resourceBundle.getString("stock.not.available") + "\n");
 
         if (dpDate.getValue() == null || dpDate.getValue().isAfter(LocalDate.now()))

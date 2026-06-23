@@ -33,6 +33,11 @@ public class ProductStock extends BaseModelTxn {
     private BigDecimal stock;
     private String unionCode;
 
+    private String referenceCode;
+    private String batchNo;
+    private BigDecimal saleRate;
+    private BigDecimal purchaseRate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductSerialize.class)
     @JsonDeserialize(using = ProductDeserializer.class)

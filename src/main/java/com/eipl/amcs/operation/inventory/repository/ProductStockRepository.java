@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,10 @@ public interface ProductStockRepository extends BaseRepository<ProductStock, Str
 
     @EntityGraph(attributePaths = {"society", "product"})
     Optional<ProductStock> findByProduct(Product product);
+
+    @EntityGraph(attributePaths = {"society", "product"})
+    Optional<ProductStock> findFirstByProductAndStockGreaterThan(Product product, BigDecimal limit, Sort sort);
+
+    @EntityGraph(attributePaths = {"society", "product"})
+    Optional<ProductStock> findByProductAndBatchNo(Product product, String batchNo);
 }

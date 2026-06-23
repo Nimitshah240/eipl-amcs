@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,8 @@ public class ProductStockServiceImpl implements ProductStockService {
 
     @Override
     public ProductStock findByProduct(String code) {
-        return stockRepository.findByProduct(productRepository.findById(code).get()).orElse(null);
+//        return stockRepository.findByProduct(productRepository.findById(code).get()).orElse(null);
+        return stockRepository.findFirstByProductAndStockGreaterThan(productRepository.findById(code).get(), BigDecimal.ZERO, Sort.by("code").ascending()).orElse(null);
     }
 
 }

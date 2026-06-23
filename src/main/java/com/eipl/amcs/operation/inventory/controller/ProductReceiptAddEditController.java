@@ -44,6 +44,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
@@ -67,7 +68,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private E_DatePicker dpChallanDate;
     @FXML
-    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount;
+    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount, txtSaleRate;
     @FXML
     private AutoSearchTextField<Vendor> cboxParty;
     @FXML
@@ -82,9 +83,11 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private TableColumn<ProductReceiptTransaction, Product> colProductName;
     @FXML
     private TableColumn<ProductReceiptTransaction, Number> colTotalAmount,
-            colQuantity, colAmount, colRate, colTax;
+            colQuantity, colAmount, colRate, colTax, colProductSale;
     @FXML
     private List<ProductReceiptTransaction> listTransactions;
+    @FXML
+    private Label lblSaleRate;
     private ProductReceipt productReceipt;
     private ProductPurchaseRate productPurchaseRate;
     private final Map<String, ProductPurchaseRate> productPurchaseRateMap = new HashMap<>();
@@ -173,7 +176,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
         txtTaxAmount.setText("0");
         txtTotalAmount.setText("0");
-        txtRate.setOnAction(e -> {
+        txtSaleRate.setText("0");
+        txtSaleRate.setOnAction(e -> {
             FocusUtils.requestFocus(btnAddProduct);
             e.consume();
         });
@@ -189,6 +193,15 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     break;
             }
         });
+
+        if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO")) {
+            txtSaleRate.setVisible(true);
+            lblSaleRate.setVisible(true);
+        } else {
+            txtSaleRate.setVisible(false);
+            lblSaleRate.setVisible(false);
+        }
+
     }
 
     public void setDate(LocalDate date) {
@@ -287,6 +300,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colTotalAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));
+            colProductSale.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaleRate()));
             propReceiptTxn.bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             e.printStackTrace();
@@ -347,9 +361,14 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 }
             });
             task.setOnFailed(e -> {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
-                        resourceBundle.getString("product.receipt.insert.failed"));
-                alert.createAlert();
+                Throwable t = task.getException();
+                String errorMessage = "error.occurred";
+                if (t.getMessage().contains("StockIsLessThanZero")) {
+                    errorMessage = "stock.going.to.zero";
+                }
+                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                        resourceBundle.getString(errorMessage));
+                alert1.createAlert();
             });
             new Thread(task).start();
         }
@@ -431,7 +450,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     public void deleteData() {
-        if (propReceiptTxn.get().getGrnTxnNo() == null || propReceiptTxn.get().getGrnTxnNo().isBlank()) {
             ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
             for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
                 if (receiptTxnTaxDto.getTransaction() == r) {
@@ -443,11 +461,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             listProductReceiptTransaction.remove(propReceiptTxn.get());
             tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
             calculateSummary();
-        } else {
-            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("productreceipt"),
-                    resourceBundle.getString("cannot.delete.saved.txn"));
-            alert.createAlert();
-        }
     }
 
     private boolean validate() {
@@ -602,6 +615,14 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             if (qty.doubleValue() <= 0)
                 errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
         }
+        if (txtSaleRate.isVisible()) {
+            BigDecimal salerate = new BigDecimal(txtSaleRate.getText());
+            BigDecimal purchaserate = new BigDecimal(txtRate.getText());
+
+            if (salerate.compareTo(BigDecimal.ZERO) <= 0 || salerate.compareTo(purchaserate) < 0) {
+                errorMsg.append(CommonUtils.getResourceString(resourceBundle, "entervalidsalerate") + "\n");
+            }
+        }
         return errorMsg.length() == 0;
     }
 
@@ -626,6 +647,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txn.setProduct(cboxProduct.getValue());
         txn.setUnit(txn.getProduct().getPrimaryUom());
         txn.setRate(new BigDecimal(txtRate.getText()));
+        txn.setSaleRate(new BigDecimal(txtSaleRate.getText()));
         txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getText()))));
         txn.setAmount(new BigDecimal(txtAmount.getText()));
         txn.setTax(cboxTax.getValue());
@@ -708,6 +730,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @Override
     public void clearControls() {
         txtRate.setText("0");
+        txtSaleRate.setText("0");
         txtQuantity.setText("0");
         txtAmount.setText("0");
         txtProductTotalAmount.setText("0");
