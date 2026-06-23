@@ -121,7 +121,7 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totalamount"
                                GridPane.columnIndex="1" GridPane.rowIndex="7"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%salerate"
-                               GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                               GridPane.columnIndex="2" GridPane.rowIndex="7" fx:id="lblSaleRate"/>
                     </children>
                 </GridPane>
                 <TableView fx:id="tableProductReceiptTransaction" focusTraversable="false"

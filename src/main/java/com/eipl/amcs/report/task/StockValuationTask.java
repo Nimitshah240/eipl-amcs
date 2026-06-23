@@ -79,4 +79,17 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
         });
         return list;
     }
+
+    private List<ProductStockValuation> fetchStockValuationFifo(Date endDate, String societyCode, String locale, String productCode) {
+        List<ProductStockValuation> list = new ArrayList<>();
+        productStockValuationRepository.deleteByGeneratedAt(endDate.toLocalDate());
+        List<Object[]> listCurrentStock = ledgerRepository.fetchCurrentStockByProductFifo(endDate, societyCode, locale, productCode);
+        listCurrentStock.forEach(item -> {
+            ProductStockValuation productStockValuation = new ProductStockValuation();
+            productStockValuation = new ProductStockValuation((String) item[0], (String) item[1], Double.parseDouble(item[2].toString()), Double.parseDouble(item[6].toString()), (String) item[3], endDate.toLocalDate(), nextCodeRepository.getNextCode("ProductStockValuation", "productStockValuationCode", societyCode, 0));
+            list.add(productStockValuation);
+            productStockValuationRepository.save(productStockValuation);
+        });
+        return list;
+    }
 }

@@ -1,5 +1,6 @@
 package com.eipl.amcs.operation.inventory.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.exception.EntityNotFoundException;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +96,8 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             dto.getTransaction().setInitData();
             dto.getTransaction().setProductReceipt(receiptNew);
             dto.getTransaction().setGrnTxnNo(receiptNew.getGrnNo() + "T" + txnCnt);
-
+            if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO"))
+                dto.getTransaction().setBatchNo(receiptNew.getChallanDate().format(DateTimeFormatter.ofPattern("yyMMdd")) + dto.getTransaction().getProduct().getCode());
             dto.getTransaction().setxCol1(UUID.randomUUID().toString());
             ProductReceiptTransaction t = receiptTransRepository.customSave(dto.getTransaction(), identityInfo);
             t.setProductReceipt(receiptNew);
@@ -282,7 +285,13 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
     @Transactional
     private void setupProductStock(ProductReceiptTransaction transaction, Society society, String operation,
                                    String trnsType, String identityInfo) {
-        Optional<ProductStock> stockData = stockRepository.findByProductAndBatchNo(transaction.getProduct(), transaction.getBatchNo());
+
+        Optional<ProductStock> stockData;
+        if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("fifo")) {
+            stockData = stockRepository.findByProductAndBatchNo(transaction.getProduct(), transaction.getBatchNo());
+        } else {
+            stockData = stockRepository.findByProduct(transaction.getProduct());
+        }
         String code = null;
         BigDecimal oldVal = null;
         if (stockData.isPresent()) {
@@ -297,6 +306,12 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                         .subtract(BigDecimal.valueOf(transaction.getQuantity()).setScale(3, RoundingMode.HALF_UP)));
             stockOld.setupdateData();
             stockOld.setProduct(Hibernate.unproxy(stockOld.getProduct(), Product.class));
+            stockOld.setSaleRate(transaction.getSaleRate());
+            stockOld.setPurchaseRate(transaction.getRate());
+            stockOld.setBatchNo(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") ? transaction.getBatchNo() : null);
+            stockOld.setReferenceCode(transaction.getGrnTxnNo());
+            if (stockOld.getStock().compareTo(BigDecimal.ZERO) < 0)
+                throw new RuntimeException("StockIsLessThanZero");
             stockRepository.customSave(stockOld, identityInfo);
         } else {
             oldVal = BigDecimal.ZERO;
@@ -304,7 +319,8 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             code = nextCodeRepository.getNextCode("ProductStock", "code", transaction.getSocietyCode(), 0);
             ProductStock stock = new ProductStock();
             stock.setCode(code);
-            stock.setBatchNo(transaction.getBatchNo());
+            stock.setBatchNo(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") ? transaction.getBatchNo() : null);
+
             stock.setSaleRate(transaction.getSaleRate());
             stock.setPurchaseRate(transaction.getRate());
             stock.setReferenceCode(transaction.getGrnTxnNo());
@@ -318,6 +334,8 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             stock.setProduct(transaction.getProduct());
             stock.setSociety(society);
             stock.setInitData();
+            if (stock.getStock().compareTo(BigDecimal.ZERO) < 0)
+                throw new RuntimeException("StockIsLessThanZero");
             stockRepository.customSave(stock, identityInfo);
         }
 
@@ -328,7 +346,8 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
         txn.setNewValue(BigDecimal.valueOf(transaction.getQuantity()));
         txn.setOldValue(oldVal);
 
-        txn.setBatchNo(transaction.getBatchNo());
+        txn.setBatchNo(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") ? transaction.getBatchNo() : null);
+
         txn.setSaleRate(transaction.getSaleRate());
         txn.setPurchaseRate(transaction.getRate());
 
@@ -388,6 +407,8 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             dto.getTransaction().setupdateData();
             dto.getTransaction().setProductReceipt(receiptNew);
             dto.getTransaction().setGrnTxnNo(receiptNew.getGrnNo() + "T" + txnCnt);
+            if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO"))
+                dto.getTransaction().setBatchNo(receiptNew.getChallanDate().format(DateTimeFormatter.ofPattern("yyMMdd")) + dto.getTransaction().getProduct().getCode());
 
             ProductReceiptTransaction t = receiptTransRepository.customSave(dto.getTransaction(), identityInfo);
             t.setProductReceipt(receiptNew);

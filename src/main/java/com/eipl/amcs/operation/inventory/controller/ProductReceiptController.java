@@ -11,7 +11,6 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
-import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Vendor;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptDeleteTask;
@@ -227,6 +226,16 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
                     }
+                });
+                task.setOnFailed(e -> {
+                    Throwable t = task.getException();
+                    String errorMessage = "error.occurred";
+                    if (t.getMessage().contains("StockIsLessThanZero")) {
+                        errorMessage = "stock.going.to.zero";
+                    }
+                    MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                            resourceBundle.getString(errorMessage));
+                    alert1.createAlert();
                 });
                 new Thread(task).start();
             }

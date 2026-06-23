@@ -30,7 +30,6 @@ import com.eipl.amcs.operation.inventory.dto.ProductSaleMigrateDto;
 import com.eipl.amcs.operation.inventory.dto.SaleTxnTaxDto;
 import com.eipl.amcs.operation.inventory.model.*;
 import com.eipl.amcs.operation.inventory.repository.*;
-import com.eipl.amcs.operation.procurement.model.LocalMilkSale;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.VoucherUtil;
@@ -374,9 +373,16 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
     @Transactional
     private void setupProductStock(ProductSaleTransaction transaction, Society society, String operation, String trnsType, String identityInfo) {
-        Optional<ProductStock> stockData = stockRepository.findByProductAndBatchNo(transaction.getProduct(), transaction.getBatchNo());
+        Optional<ProductStock> stockData;
+        if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("fifo")) {
+            stockData = stockRepository.findByProductAndBatchNo(transaction.getProduct(), transaction.getBatchNo());
+        } else {
+            stockData = stockRepository.findByProduct(transaction.getProduct());
+        }
         String code = null;
         BigDecimal oldVal = null;
+        ProductStock stock = new ProductStock();
+
         if (stockData.isPresent()) {
             code = stockData.get().getCode();
             ProductStock stockOld = stockData.get();
@@ -388,24 +394,26 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             stockOld.setupdateData();
             stockData.get().setProduct(Hibernate.unproxy(stockData.get().getProduct(), Product.class));
             stockData.get().setSociety(Hibernate.unproxy(stockData.get().getSociety(), Society.class));
-            stockRepository.customUpdate(stockOld, identityInfo);
+            if (stockOld.getStock().compareTo(BigDecimal.ZERO) < 0)
+                throw new RuntimeException("StockIsLessThanZero");
+            stock = stockRepository.customUpdate(stockOld, identityInfo);
         } else {
             oldVal = BigDecimal.ZERO;
-
             code = nextCodeRepository.getNextCode("ProductStock", "code", transaction.getSocietyCode(), 0);
-            ProductStock stock = new ProductStock();
             stock.setCode(code);
             if (operation.equals("CREATE")) stock.setStock(BigDecimal.ZERO.subtract(transaction.getQuantity()));
             else if (operation.equals("DELETE")) stock.setStock(transaction.getQuantity());
             stock.setUnionCode(transaction.getUnionCode());
             stock.setProduct(transaction.getProduct());
             stock.setSociety(society);
-            stock.setBatchNo(transaction.getBatchNo());
+            stock.setBatchNo(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") ? transaction.getBatchNo() : null);
             stock.setSaleRate(transaction.getRate());
             stock.setReferenceCode(transaction.getInvoiceTxnNo());
             stock.setInitData();
             stock.setxCol1(UUID.randomUUID().toString());
-            stockRepository.customSave(stock, identityInfo);
+            if (stock.getStock().compareTo(BigDecimal.ZERO) < 0)
+                throw new RuntimeException("StockIsLessThanZero");
+            stock = stockRepository.customSave(stock, identityInfo);
         }
 
         // Stock transaction
@@ -420,9 +428,9 @@ public class ProductSaleServiceImpl implements ProductSaleService {
             txn.setFinalValue(oldVal.subtract(txn.getNewValue()).setScale(3, RoundingMode.HALF_UP));
         // FIXME(NIMIT | 25.05.2026): In product receipt reference code in txn code because this indicate stock transaction is of which txn.
 //        txn.setReferenceCode(code);
-        txn.setBatchNo(transaction.getBatchNo());
+        txn.setBatchNo(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") ? transaction.getBatchNo() : null);
         txn.setSaleRate(transaction.getRate());
-        txn.setReferenceCode(transaction.getInvoiceTxnNo());
+        txn.setPurchaseRate(stock.getPurchaseRate());
         txn.setReferenceCode(transaction.getInvoiceTxnNo());
 
 

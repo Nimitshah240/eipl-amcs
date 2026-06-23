@@ -44,6 +44,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
@@ -53,7 +54,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -86,6 +86,8 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             colQuantity, colAmount, colRate, colTax, colProductSale;
     @FXML
     private List<ProductReceiptTransaction> listTransactions;
+    @FXML
+    private Label lblSaleRate;
     private ProductReceipt productReceipt;
     private ProductPurchaseRate productPurchaseRate;
     private final Map<String, ProductPurchaseRate> productPurchaseRateMap = new HashMap<>();
@@ -191,6 +193,15 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     break;
             }
         });
+
+        if (MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO")) {
+            txtSaleRate.setVisible(true);
+            lblSaleRate.setVisible(true);
+        } else {
+            txtSaleRate.setVisible(false);
+            lblSaleRate.setVisible(false);
+        }
+
     }
 
     public void setDate(LocalDate date) {
@@ -350,9 +361,14 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                 }
             });
             task.setOnFailed(e -> {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
-                        resourceBundle.getString("product.receipt.insert.failed"));
-                alert.createAlert();
+                Throwable t = task.getException();
+                String errorMessage = "error.occurred";
+                if (t.getMessage().contains("StockIsLessThanZero")) {
+                    errorMessage = "stock.going.to.zero";
+                }
+                MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                        resourceBundle.getString(errorMessage));
+                alert1.createAlert();
             });
             new Thread(task).start();
         }
@@ -434,7 +450,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     public void deleteData() {
-        if (propReceiptTxn.get().getGrnTxnNo() == null || propReceiptTxn.get().getGrnTxnNo().isBlank()) {
             ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
             for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
                 if (receiptTxnTaxDto.getTransaction() == r) {
@@ -446,11 +461,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             listProductReceiptTransaction.remove(propReceiptTxn.get());
             tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
             calculateSummary();
-        } else {
-            MyAlert alert = new WarningAlert(MainApp.getStage(), resourceBundle.getString("productreceipt"),
-                    resourceBundle.getString("cannot.delete.saved.txn"));
-            alert.createAlert();
-        }
     }
 
     private boolean validate() {
@@ -605,10 +615,13 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             if (qty.doubleValue() <= 0)
                 errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
         }
-        BigDecimal salerate = new BigDecimal(txtSaleRate.getText());
+        if (txtSaleRate.isVisible()) {
+            BigDecimal salerate = new BigDecimal(txtSaleRate.getText());
+            BigDecimal purchaserate = new BigDecimal(txtRate.getText());
 
-        if (salerate.compareTo(BigDecimal.ZERO) <= 0) {
-            errorMsg.append(CommonUtils.getResourceString(resourceBundle, "entervalidsalerate") + "\n");
+            if (salerate.compareTo(BigDecimal.ZERO) <= 0 || salerate.compareTo(purchaserate) < 0) {
+                errorMsg.append(CommonUtils.getResourceString(resourceBundle, "entervalidsalerate") + "\n");
+            }
         }
         return errorMsg.length() == 0;
     }
@@ -635,7 +648,6 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txn.setUnit(txn.getProduct().getPrimaryUom());
         txn.setRate(new BigDecimal(txtRate.getText()));
         txn.setSaleRate(new BigDecimal(txtSaleRate.getText()));
-        txn.setBatchNo(dpChallanDate.getValue().format(DateTimeFormatter.ofPattern("yyMMdd")) + cboxProduct.getValue().getCode());
         txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getText()))));
         txn.setAmount(new BigDecimal(txtAmount.getText()));
         txn.setTax(cboxTax.getValue());

@@ -125,7 +125,7 @@
                                         GridPane.rowIndex="1"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate"
                                GridPane.columnIndex="3"/>
-                        <E_NumericField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3"
+                        <E_NumericField fx:id="txtRate" editable="false" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3"
                                         GridPane.rowIndex="1"/>
                         <E_NumericField fx:id="txtNetAmount" disable="true" maxWidth="1.7976931348623157E308"
                                         visible="false" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
@@ -163,7 +163,7 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tax"
                                GridPane.columnIndex="1"/>
                         <Label fx:id="lblStock" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                        <E_TextField fx:id="txtBatch" disable="true" maxWidth="1.7976931348623157E308"
+                        <E_TextField fx:id="txtBatch" visible="false" disable="true" maxWidth="1.7976931348623157E308"
                                      GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
                     </children>
