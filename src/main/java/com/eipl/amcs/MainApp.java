@@ -30,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +57,7 @@ public class MainApp extends Application {
     public static StackPane paneDrop;
     public static Label lblMessage;
     public static String locale;
+    public static Locale currentLocale;
     public static FxmlLoaderUtil fxmlLoaderUtil;
     public static ResourceBundle bundle;
     public static Long syncCount;
@@ -117,6 +117,14 @@ public class MainApp extends Application {
 
     public static void setLocale(String locale) {
         MainApp.locale = locale;
+    }
+
+    public static Locale getCurrentLocale() {
+        return currentLocale;
+    }
+
+    public static void setCurrentLocale(Locale locale) {
+        MainApp.currentLocale = locale;
     }
 
     public static ResourceBundle getBundle() {
@@ -308,19 +316,28 @@ public class MainApp extends Application {
         }
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 24/06/2026    Nimit             1.0.1      Added line to set Locale variable also.
+     */
     private void createAndSetLocale() {
         try {
             try (BufferedReader reader = new BufferedReader(new FileReader(new File("resources/locale.txt")))) {
                 locale = reader.readLine();
-                if (locale != null && locale.length() == 2)
-                    Locale.setDefault(new Locale(locale));
-                else {
+                if (locale != null && locale.length() == 2) {
+                    setCurrentLocale(new Locale(locale));
+                    Locale.setDefault(getCurrentLocale());
+                } else {
                     locale = "en";
-                    Locale.setDefault(new Locale("en"));
+                    setCurrentLocale(new Locale("en"));
+                    Locale.setDefault(getCurrentLocale());
                 }
             } catch (Exception e) {
                 locale = "en";
-                Locale.setDefault(new Locale("en"));
+                setCurrentLocale(new Locale("en"));
+                Locale.setDefault(getCurrentLocale());
             }
             File file = new File("resources/messages/");
             URL[] urls = {file.toURI().toURL()};

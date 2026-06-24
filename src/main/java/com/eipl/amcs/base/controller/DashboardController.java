@@ -67,6 +67,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import static com.eipl.amcs.MainApp.getCurrentLocale;
+import static com.eipl.amcs.MainApp.setCurrentLocale;
+
 public class DashboardController implements MyInitialization, PopupCallback {
 
     protected final int SCALE = 2;
@@ -418,10 +421,17 @@ public class DashboardController implements MyInitialization, PopupCallback {
     }
 
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 24/06/2026    Nimit             1.0.1      Added line to set Locale variable also.
+     */
     private void createAndSetLocale() {
         if (cboxLang == null) return;
         try {
-            Locale.setDefault(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
+            setCurrentLocale((new Locale(cboxLang.getValue().substring(0, 2).toLowerCase())));
+            Locale.setDefault(getCurrentLocale());
             MainApp.locale = Locale.getDefault().toString();
             if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2))) {
                 List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2)) ? "resources/messages/guj" : "resources/messages/hi").toPath());
@@ -442,7 +452,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 MainApp.setBundle(ResourceBundle.getBundle("message", Locale.getDefault(), classLoader));
             } catch (Exception e) {
                 e.printStackTrace();
-                Locale.setDefault(new Locale("en"));
+                setCurrentLocale(new Locale("en"));
+                Locale.setDefault(getCurrentLocale());
                 MainApp.setBundle(ResourceBundle.getBundle("message", Locale.getDefault(), classLoader));
             }
         } catch (Exception e) {

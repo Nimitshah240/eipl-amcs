@@ -319,14 +319,20 @@ public class AutoSearchTextField<T> extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 03/06/2026    Nimit             1.0.0       To handle mouse click selection
+     * 24/06/2026    Nimit             1.0.1       Change focus on mouse click on popup and also setOnAction work.
      */
     private void wireMouseSelection() {
         listView.setOnMouseClicked(event -> {
             T clicked = listView.getSelectionModel().getSelectedItem();
             if (clicked != null) {
                 selectItem(clicked);
+                this.fireEvent(new javafx.event.ActionEvent(this, null));
             }
         });
+        this.fireEvent(new KeyEvent(
+                KeyEvent.KEY_PRESSED, "", "",
+                KeyCode.TAB, false, false, false, false
+        ));
     }
 
     /**
@@ -350,6 +356,7 @@ public class AutoSearchTextField<T> extends TextField {
      * -----------   --------------   ---------   ---------------------------------
      * 03/06/2026    Nimit             1.0.0       TO FILTER DATA BY SEARCH QUERY
      * 08/06/2026    Nimit             1.0.1       Extract showing popup to different method for multiple use.
+     * 24/06/2026    Nimit             1.0.2       Change method to filter data using local language also.
      */
     private void filterAndShow(String query) {
         String lower = query.toLowerCase();
@@ -357,7 +364,11 @@ public class AutoSearchTextField<T> extends TextField {
         List<T> results = masterList.stream()
                 .filter(item -> {
                     String text = textExtractor.apply(item);
-                    return text != null && text.toLowerCase().contains(lower);
+                    if (text == null) return false;
+
+                    String localizedText = com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(text);
+                    return text.toLowerCase().contains(lower) ||
+                            (localizedText != null && localizedText.toLowerCase().contains(lower));
                 })
                 .limit(50)
                 .collect(Collectors.toList());
@@ -430,6 +441,7 @@ public class AutoSearchTextField<T> extends TextField {
      * 03/06/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
      * 08/06/2026    Nimit             1.0.1       Solved bug - To get index of the selected item from the list.
      * And clear string which is written by user for searching
+     * 24/06/2026    Nimit             1.0.2       On selection number will also convert to local language.
      */
     private void selectItem(T item) {
         currentWord.setLength(0);
@@ -440,7 +452,8 @@ public class AutoSearchTextField<T> extends TextField {
         }
         suppressFilter = true;
         String displayStr = textExtractor.apply(item);
-        setText(displayStr);
+        String localizedStr = com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(displayStr);
+        setText(localizedStr);
         positionCaret(displayStr.length());
         suppressFilter = false;
         hidePopup();
@@ -1021,6 +1034,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 03/06/2026    Nimit             1.0.0      METHOD HELPS TO SKIP DIGITS TO TRANSLATE
+     * 24/06/2026    Nimit             1.0.1      Now number will also translate to local language.
      */
     private String transliteratePreservingDigits(String input) {
         String preprocessed = preprocess(input);
@@ -1029,15 +1043,15 @@ public class AutoSearchTextField<T> extends TextField {
 
         for (int i = 0; i < preprocessed.length(); i++) {
             char c = preprocessed.charAt(i);
-            if (Character.isDigit(c) || c == '.') {
-                if (segment.length() > 0) {
-                    result.append(transliterator.transliterate(segment.toString()));
-                    segment.setLength(0);
-                }
-                result.append(c);
-            } else {
-                segment.append(c);
-            }
+//            if (Character.isDigit(c) || c == '.') {
+//                if (segment.length() > 0) {
+//                    result.append(transliterator.transliterate(segment.toString()));
+//                    segment.setLength(0);
+//                }
+//                result.append(c);
+//            } else {
+            segment.append(c);
+//            }
         }
         if (segment.length() > 0) {
             result.append(transliterator.transliterate(segment.toString()));
@@ -1068,6 +1082,12 @@ public class AutoSearchTextField<T> extends TextField {
             setStyle(isSelected() ? "-fx-background-color: #d6eaf8;" : "-fx-background-color: transparent;");
         }
 
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 24/06/2026    Nimit             1.0.1      Now number will also translate to local language.
+         */
         @Override
         protected void updateItem(T item, boolean empty) {
             super.updateItem(item, empty);
@@ -1075,9 +1095,11 @@ public class AutoSearchTextField<T> extends TextField {
                 setGraphic(null);
                 setStyle("-fx-background-color: transparent;");
             } else {
-                mainLabel.setText(textExtractor.apply(item));
-                if (subTextExtractor != null) {
-                    subLabel.setText(subTextExtractor.apply(item));
+                String rawMainText = textExtractor.apply(item);
+                String rawSubText = (subTextExtractor != null) ? subTextExtractor.apply(item) : null;
+                mainLabel.setText(com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(rawMainText));
+                if (rawSubText != null && !rawSubText.trim().isEmpty()) {
+                    subLabel.setText(com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(rawSubText));
                     subLabel.setVisible(true);
                     subLabel.setManaged(true);
                     cellLayout.setSpacing(2);

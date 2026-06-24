@@ -8,7 +8,6 @@ import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
@@ -17,6 +16,7 @@ import com.eipl.amcs.operation.inventory.task.ProductSaleDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleInstallmentByOnlyInvoiceNoLoadTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -67,13 +67,13 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        dpFromDate.setConverter(new LocalDateConvertor());
+//        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        dpToDate.setConverter(new LocalDateConvertor());
+//        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -171,13 +171,13 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
     @Override
     public void setupTable() {
         try {
-            dpFromDate.setConverter(new LocalDateConvertor());
+//            dpFromDate.setConverter(new LocalDateConvertor());
             dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) {
                     dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
                 }
             });
-            dpToDate.setConverter(new LocalDateConvertor());
+//            dpToDate.setConverter(new LocalDateConvertor());
             dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) {
                     dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -186,7 +186,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
 
             colInvoiceNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getInvoiceNo()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInvoiceDate()));
-            colDate.setCellFactory(new LocalDateCellFactory<>());
+//            colDate.setCellFactory(new LocalDateCellFactory<>());
             colConsumerType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeString(data.getValue().getConsumerType())));
             colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
@@ -194,7 +194,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
             colNoOfInstallment.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getNoOfInstallments() == null ? 0 : data.getValue().getNoOfInstallments()));
             colDeductionStartDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDeductionStartDate()));
             propProductSaleDto.bind(tableProductSaleToMember.getSelectionModel().selectedItemProperty());
-
+            TableLocalizationUtil.localizeTable(tableProductSaleToMember);
         } catch (Exception e) {
             System.out.println("ProductSale setuptable Exception");
             e.printStackTrace();

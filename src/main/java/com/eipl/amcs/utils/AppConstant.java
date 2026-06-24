@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static com.eipl.amcs.MainApp.getCurrentLocale;
 
 public class AppConstant {
 
@@ -17,6 +20,14 @@ public class AppConstant {
     public static final DateTimeFormatter Formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
     public static final DateTimeFormatter Formatter6 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static final DateTimeFormatter Formatter5 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // NIMIT | 24.06.2026: The Pattern added to check only numbers.
+    public static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
+    // NIMIT | 24.06.2026: Date Formatter DD/MM/YYYY and this is work for local language too.
+    public static final DateTimeFormatter DATE_FORMATTER_LOCALE = DateTimeFormatter.ofPattern("dd/MM/yyyy", getCurrentLocale());
+    // NIMIT | 24.06.2026: DateTime Formatter DD/MM/YYYY HH.mm.ss and this is work for local language too.
+    public static final DateTimeFormatter DATE_TIME_FORMATTER_LOCALE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", getCurrentLocale());
+
     public static final short ONE = 1;
     public static final short ZERO = 0;
 
@@ -275,12 +286,12 @@ public class AppConstant {
         String PRODUCT_STOCK_LEDGER = "ProductStockLedger";
         String LEDGER_SUMMARY = "LedgerSummary";
         String ROJMED = "Rojmed";
-        String ProfitLossOne="ProfitLossOne";
-        String TradingReportOne="TradingReportOne";
-        String BalanceSheetOne="BalanceSheetOne";
-        String TBReportOne="TBReportOne";
-        String PRODUCT_STOCK_LEDGER_SUMMARY="ProductStockLedgerSummary";
-        String BalanceSheetGrouping="BalanceSheetGrouping";
+        String ProfitLossOne = "ProfitLossOne";
+        String TradingReportOne = "TradingReportOne";
+        String BalanceSheetOne = "BalanceSheetOne";
+        String TBReportOne = "TBReportOne";
+        String PRODUCT_STOCK_LEDGER_SUMMARY = "ProductStockLedgerSummary";
+        String BalanceSheetGrouping = "BalanceSheetGrouping";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
 

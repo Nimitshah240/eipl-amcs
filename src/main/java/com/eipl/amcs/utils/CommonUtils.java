@@ -416,22 +416,28 @@ public class CommonUtils {
         }
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 24/06/2026    Nimit             1.0.1      This will return consumer type in local language
+     */
     public static String getCustomerTypeString(short val) {
         switch (val) {
             case 1:
-                return "Member";
+                return MainApp.getBundle().getString("member");
             case 2:
-                return "Non Member";
+                return MainApp.getBundle().getString("nonmember");
             case 3:
-                return "Vendor";
+                return MainApp.getBundle().getString("vendor");
             case 4:
-                return "Institute";
+                return MainApp.getBundle().getString("institute");
             case 5:
-                return "Retail-Sale";
+                return MainApp.getBundle().getString("retailsale");
             case 6:
-                return "Consumer";
+                return MainApp.getBundle().getString("consumer");
             default:
-                return "Other";
+                return MainApp.getBundle().getString("other");
         }
     }
 
