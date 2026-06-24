@@ -396,6 +396,21 @@ public class MainApp extends Application {
         });
         new Thread(task).start();
     }
+
+    public static void updateLocaleFile(String langCode) {
+        File file = new File("resources/locale.txt");
+
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write(langCode);
+            System.out.println("Locale file successfully updated to: " + langCode);
+        } catch (IOException e) {
+            System.err.println("Failed to write to locale.txt: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
 
 

@@ -772,8 +772,10 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                 List<com.eipl.amcs.master.account.model.ProductStockValuation> list = stockValuationTask.get();
 
                 listStockValuation = new ArrayList<>();
-                for (com.eipl.amcs.master.account.model.ProductStockValuation psv : list) {
-                    listStockValuation.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                if (list != null) {
+                    for (com.eipl.amcs.master.account.model.ProductStockValuation psv : list) {
+                        listStockValuation.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                    }
                 }
 
                 tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));

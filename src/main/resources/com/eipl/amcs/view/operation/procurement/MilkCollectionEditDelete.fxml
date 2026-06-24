@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_NumericField?>
+<?import com.eipl.amcs.controls.E_Label?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -21,7 +23,7 @@
     <children>
         <VBox spacing="20.0" styleClass="">
             <children>
-                <Label fx:id="lblTitle" styleClass="header-text" text="%collectionedit" />
+                <E_Label fx:id="lblTitle" styleClass="header-text" text="%collectionedit" />
                 <GridPane hgap="5.0" vgap="5.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -45,8 +47,8 @@
                         <Label text="%shift" GridPane.columnIndex="4" />
                         <E_NumericField fx:id="txtCode" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtName" disable="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dpDate" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxShift" disable="true" editable="true" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpDate" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxShift" disable="true" editable="true" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <GridPane fx:id="gridCollection" hgap="5.0" vgap="5.0" GridPane.columnSpan="5" GridPane.rowIndex="2" GridPane.rowSpan="4">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -70,8 +72,8 @@
                                 <Label text="%quantity" GridPane.columnIndex="2" />
                                 <Label text="%rate" GridPane.rowIndex="2" />
                                 <Label text="%amount" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                <E_ComboBox fx:id="cboxType" prefWidth="150.0" GridPane.rowIndex="1" />
-                                <ComboBox fx:id="cboxQualityType" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <AutoSearchTextField fx:id="cboxType" prefWidth="150.0" GridPane.rowIndex="1" />
+                                <AutoSearchTextField fx:id="cboxQualityType" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                 <E_NumericField fx:id="txtQuantity" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                 <E_NumericField fx:id="txtFat" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                 <E_NumericField fx:id="txtSnf"  GridPane.columnIndex="4" GridPane.rowIndex="1" />

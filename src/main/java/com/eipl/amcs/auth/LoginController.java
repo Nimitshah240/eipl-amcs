@@ -47,8 +47,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.eipl.amcs.MainApp.getCurrentLocale;
-import static com.eipl.amcs.MainApp.setCurrentLocale;
+import static com.eipl.amcs.MainApp.*;
 import static com.eipl.amcs.utils.AppConstant.baseUrlRealTime;
 import static com.eipl.amcs.utils.AppConstant.syncUrlRealTime;
 
@@ -140,6 +139,7 @@ public class LoginController implements MyInitialization {
     private void createAndSetLocale() {
         try {
             setCurrentLocale(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
+            updateLocaleFile(cboxLang.getValue().substring(0, 2).toLowerCase());
             Locale.setDefault(getCurrentLocale());
             if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2))) {
                 List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2)) ? "resources/messages/guj" : "resources/messages/hi").toPath());

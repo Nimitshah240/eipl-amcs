@@ -2,6 +2,7 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -51,8 +52,9 @@ public class GeneralConfigController implements MyInitialization {
     private Tab tabMilkConfig, tabProductConfig, tabPaymentMode;
     @FXML
     private TextField txtLtrToKg, txtClrConst1, txtClrConst2, txtDefaultSnfValue, txtSampleSize, txtAvgPBasedOnPrevShift,
-            txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs, txtCollectionSlip, txtDecimalValue,
-            txtVariationQty, txtVariationFat, txtVariationSnf, txtNo;
+            txtAvgPIfMachineOff, txtSampleMilk, txtBackupPath, txtSpace, txtHrs, txtCollectionSlip, txtDecimalValue;
+    @FXML
+    private E_NumericField txtNo, txtVariationQty, txtVariationFat, txtVariationSnf;
     @FXML
     private ComboBox<String> cboxDefaultSnf, cboxWeightSetting, cboxQualitySetting, cboxMemberCollectionQtyMode,
             cboxBmcCollectionQtyMode, cboxLocalMilkSaleQtyMode, cboxDispatchMilkQtyMode, cboxReceiptMilkQtyMode, cboxPaymentMode,
@@ -287,9 +289,9 @@ public class GeneralConfigController implements MyInitialization {
         lines.add("variation.qty.block=" + new String(Base64.getEncoder().encode((chkBlockQty.isSelected() ? "1" : "0").getBytes())));
         lines.add("variation.fat.block=" + new String(Base64.getEncoder().encode((chkBlockFat.isSelected() ? "1" : "0").getBytes())));
         lines.add("variation.snf.block=" + new String(Base64.getEncoder().encode((chkBlockSnf.isSelected() ? "1" : "0").getBytes())));
-        lines.add("variation.qty=" + new String(Base64.getEncoder().encode(txtVariationQty.getText().trim().getBytes())));
-        lines.add("variation.fat=" + new String(Base64.getEncoder().encode(txtVariationFat.getText().trim().getBytes())));
-        lines.add("variation.snf=" + new String(Base64.getEncoder().encode(txtVariationSnf.getText().trim().getBytes())));
+        lines.add("variation.qty=" + new String(Base64.getEncoder().encode(txtVariationQty.getInputText().trim().getBytes())));
+        lines.add("variation.fat=" + new String(Base64.getEncoder().encode(txtVariationFat.getInputText().trim().getBytes())));
+        lines.add("variation.snf=" + new String(Base64.getEncoder().encode(txtVariationSnf.getInputText().trim().getBytes())));
         lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode((chkCodeMilkTypeParsing.isSelected() ? "1" : "0").getBytes())));
         lines.add("fifo.process=" + new String(Base64.getEncoder().encode((isFifoProcess()).getBytes())));
 
@@ -300,7 +302,7 @@ public class GeneralConfigController implements MyInitialization {
 //                (cboxShift.getValue() != null ? cboxShift.getValue() : "").getBytes(StandardCharsets.UTF_8))));
 //        lines.add("based.on.param=" + new String(Base64.getEncoder().encode(
 //                (cboxAvgBasedOn.getValue() != null ? cboxAvgBasedOn.getValue() : "").getBytes(StandardCharsets.UTF_8))));
-        lines.add("variation.no.param=" + new String(Base64.getEncoder().encode(txtNo.getText().trim().getBytes())));
+        lines.add("variation.no.param=" + new String(Base64.getEncoder().encode(txtNo.getInputText().trim().getBytes())));
         lines.add("slip.font=" + new String(Base64.getEncoder().encode(cboxFont.getSelectionModel().getSelectedItem().trim().getBytes())));
         return lines;
     }

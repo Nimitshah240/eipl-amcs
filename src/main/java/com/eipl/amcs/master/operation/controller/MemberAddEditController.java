@@ -533,7 +533,7 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setAddress(txtAddress.getText());
         memberDetail.setPincode(txtPinCode.getText());
 
-        memberDetail.setOccupation(cboxOccupation.getSelectionModel().getSelectedItem() == null ? null : cboxOccupation.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setOccupation(cboxOccupation.getValue() == null ? null : cboxOccupation.getValue().name());
         memberDetail.setNomineeName(txtNomineeName.getText());
         memberDetail.setRelationship(cboxRelation.getSelectionModel().getSelectedItem());
         memberDetail.setLocalNomineeName(txtNomineeNameLocal.getText());
@@ -549,9 +549,9 @@ public class MemberAddEditController implements MyInitialization {
         memberDetail.setChafCutter(chkIsChafCutter.isSelected());
         memberDetail.setToilet(IsToilet.isSelected());
         memberDetail.setLand(txtLand.getText());
-        memberDetail.setLandType(cboxLandType.getSelectionModel().getSelectedItem() == null ? null : cboxLandType.getSelectionModel().getSelectedItem().toString());
-        memberDetail.setFarmerType(cboxFarmerType.getSelectionModel().getSelectedItem() == null ? null : cboxFarmerType.getSelectionModel().getSelectedItem().toString());
-        memberDetail.setMaritalStatus(cboxMaritalStatus.getSelectionModel().getSelectedItem() == null ? null : cboxMaritalStatus.getSelectionModel().getSelectedItem().toString());
+        memberDetail.setLandType(cboxLandType.getValue() == null ? null : cboxLandType.getValue().name());
+        memberDetail.setFarmerType(cboxFarmerType.getValue() == null ? null : cboxFarmerType.getValue().name());
+        memberDetail.setMaritalStatus(cboxMaritalStatus.getValue() == null ? null : cboxMaritalStatus.getValue().name());
         memberDetail.setRegistrationNo(txtRegistrationNo.getText());
         memberDetail.setMemberTypeCode(cboxMemberType.getSelectionModel().getSelectedItem() == null ? null : String.valueOf(cboxMemberType.getSelectionModel().getSelectedItem().getCode()));
         //  memberDetail.setState(cboxState.getValue() == null ? MainApp.identityDto.getSociety().getState() : cboxState.getValue());

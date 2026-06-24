@@ -63,6 +63,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.List;
@@ -97,7 +98,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     @FXML
     private AutoSearchTextField<Shift> cboxShift;
     @FXML
-    private AutoSearchTextField<String> cboxLang;
+    private ComboBox<String> cboxLang;
     @FXML
     private AutoSearchTextField<String> cboxNotification;
     @FXML
@@ -710,8 +711,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
     private void loadFarmers() {
         if (tableCollectionFarmers == null) return;
         tableCollectionFarmers.setPlaceholder(new Label("Loading top 10 members..."));
+        DateTimeFormatter MONTH_SHORT_FORMATTER = DateTimeFormatter.ofPattern("MMM", MainApp.getCurrentLocale());
 
-        Month month = Month.from(CommonUtils.MONTH_SHORT_FORMATTER.parse(cboxMonthMember.getSelectionModel().getSelectedItem()));
+        Month month = Month.from(MONTH_SHORT_FORMATTER.parse(cboxMonthMember.getSelectionModel().getSelectedItem()));
         int selectedMonth = month.getValue();
         int selectedYear = Integer.parseInt(cboxYearMember.getSelectionModel().getSelectedItem());
 

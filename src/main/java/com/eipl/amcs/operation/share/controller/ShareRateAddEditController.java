@@ -91,7 +91,7 @@ public class ShareRateAddEditController implements MyInitialization {
     }
 
     private void setValuesInObject() {
-        BigDecimal b = new BigDecimal(txtRate.getText());
+        BigDecimal b = new BigDecimal(txtRate.getInputText());
         BigDecimal a = b.setScale(2, RoundingMode.HALF_EVEN);
         shareRate.setShareAmount(a);
         shareRate.setWefDate(dpWefDate.getValue());
@@ -103,7 +103,7 @@ public class ShareRateAddEditController implements MyInitialization {
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtRate.getText()) <= 0 || Double.parseDouble(txtRate.getText()) >= 1000)
+            if (Double.parseDouble(txtRate.getInputText()) <= 0 || Double.parseDouble(txtRate.getInputText()) >= 1000)
                 errorMsg.append(resourceBundle.getString("entervalidrate") + "\n");
         } catch (NumberFormatException e) {
             errorMsg.append(resourceBundle.getString("sharerate") + "\n");

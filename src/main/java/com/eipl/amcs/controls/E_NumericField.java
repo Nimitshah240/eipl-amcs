@@ -46,6 +46,8 @@ public class E_NumericField extends TextField {
         try {
             TextFormatter<Number> txtInputFormatter = FormatterFactory.createNumericFormatter();
             setTextFormatter(txtInputFormatter);
+            txtInputFormatter.setValue(null);
+            this.clear();
             this.maxLength = new SimpleIntegerProperty(Integer.MAX_VALUE);
             this.real = new SimpleBooleanProperty(true);
 
