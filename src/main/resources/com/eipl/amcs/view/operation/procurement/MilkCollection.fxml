@@ -12,6 +12,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.MilkCollectionController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
@@ -19,10 +21,10 @@
                 <Label styleClass="header-text" text="%milkcollection" />
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <DatePicker fx:id="dpFromDate" prefWidth="120.0" />
+                        <E_DatePicker fx:id="dpFromDate" prefWidth="120.0" />
                         <ComboBox fx:id="cboxFromShift" editable="true" prefWidth="100.0" />
-                        <Label text="%to" />
-                        <DatePicker fx:id="dpToDate" prefWidth="120.0" />
+                        <E_Label text="%to" />
+                        <E_DatePicker fx:id="dpToDate" prefWidth="120.0" />
                         <ComboBox fx:id="cboxToShift" editable="true" prefWidth="100.0" />
                         <ComboBox fx:id="cboxDock" editable="true" prefWidth="125.0" />
                   <Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%search">

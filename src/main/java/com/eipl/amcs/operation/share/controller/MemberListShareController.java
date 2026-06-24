@@ -11,6 +11,7 @@ import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.task.ShareIssueLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -139,6 +140,8 @@ public class MemberListShareController implements MyInitialization, PopupCallbac
             colNoOfShare.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol1()));
             colShareAmount.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getxCol2()));
             propMember.bind(tableMember.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableMember);
+
         } catch (Exception e) {
             System.out.println("MemberListShare setuptable Exception");
             e.printStackTrace();

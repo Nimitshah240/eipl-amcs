@@ -10,6 +10,7 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.StaffMember;
 import com.eipl.amcs.operation.administartion.task.StaffMembersDeleteTask;
 import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -127,6 +128,8 @@ public class StaffController implements MyInitialization, PopupCallback {
             colTenureFromDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getTenureFromDate()));
             colTenureToDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getTenureToDate()));
             propStaffMembertDto.bind(tableStaffMember.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableStaffMember);
+
         } catch (Exception e) {
             System.out.println("Staff setuptable Exception");
             e.printStackTrace();

@@ -286,9 +286,9 @@ public class SocietyAddEditController implements MyInitialization {
         this.society.setServiceTax(txtGstNo.getText());
         this.society.setPanNo(txtPan.getText());
         chairman.setContactPerson(txtChairmanName.getText());
-        chairman.setMobileNo(txtChairmanMobileNo.getText());
+        chairman.setMobileNo(txtChairmanMobileNo.getInputText());
         secretary.setContactPerson(txtChairmanName.getText());
-        secretary.setMobileNo(txtChairmanMobileNo.getText());
+        secretary.setMobileNo(txtChairmanMobileNo.getInputText());
         contactDetailsList.add(chairman);
         contactDetailsList.add(secretary);
 
@@ -388,7 +388,7 @@ public class SocietyAddEditController implements MyInitialization {
             DcsChillerInfo dcsChillerInfo = new DcsChillerInfo();
             dcsChillerInfo.setSociety(MainApp.identityDto.getSociety());
             dcsChillerInfo.setChillerName(txtBmcFacilator.getText());
-            dcsChillerInfo.setChillingCapacity(Integer.valueOf(txtBcuCapacity.getText()));
+            dcsChillerInfo.setChillingCapacity(Integer.valueOf(txtBcuCapacity.getInputText()));
             dcsChillerInfo.setOwnerName(txtOwnerName.getText());
             dcsChillerInfo.setAgreementFromDate(dpAgreementFromDate.getValue());
             dcsChillerInfo.setAgreementToDate(dpAgreementToDate.getValue());

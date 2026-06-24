@@ -17,6 +17,7 @@ import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryMappingLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryMappingSaveTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -145,6 +146,8 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
                 staffSalaryMapping.setWefDate(dpDate.getValue());
                 staffSalaryMapping.setActive(true);
                 staffSalaryMappingList.add(staffSalaryMapping);
+                TableLocalizationUtil.localizeTable(tableStaffSalaryMapping);
+
             });
         } catch (Exception e) {
             System.out.println("StaffSalaryMapping setuptable Exception");

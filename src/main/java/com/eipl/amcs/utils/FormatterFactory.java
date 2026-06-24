@@ -28,7 +28,7 @@ public class FormatterFactory {
             @Override
             public String toString(Number number) {
                 if (number == null)
-                    return "";
+                    return null;
                 String formatted = numberFormat.format(number);
                 return convertEnglishToLocalizedDigits(formatted);
             }
@@ -37,13 +37,13 @@ public class FormatterFactory {
             public Number fromString(String string) {
                 try {
                     if (string == null || string.trim().isEmpty())
-                        return 0;
+                        return null;
 
                     String cleanInput = convertEnglishToLocalizedDigits(string.trim());
                     return numberFormat.parse(cleanInput);
 
                 } catch (ParseException e) {
-                    return 0;
+                    return null;
                 }
             }
         };
@@ -122,7 +122,7 @@ public class FormatterFactory {
      * Converts English digits to Gujarati or Devanagari (Hindi/Marathi) scripts dynamically
      */
     public static String convertEnglishToLocalizedDigits(String input) {
-        if (input == null) return "";
+        if (input == null) return null;
 
         int offset = 0;
         String langCode = MainApp.getLocale();

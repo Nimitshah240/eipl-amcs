@@ -23,6 +23,7 @@ import com.eipl.amcs.setting.repository.AccountPostingRepository;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -86,14 +87,12 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
         loadMember();
         loadCustomer();
         dpFromDate.setValue(LocalDate.now());
-        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
-        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -245,6 +244,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             //         colCouponBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCoupon()));
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
             propLocalMilkSaleDto.bind(tableLocalMilkSale.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableLocalMilkSale);
         } catch (Exception e) {
             System.out.println("LocalMilkSake setuptable Exception");
             e.printStackTrace();

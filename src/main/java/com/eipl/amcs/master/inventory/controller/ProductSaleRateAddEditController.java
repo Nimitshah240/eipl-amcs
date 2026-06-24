@@ -107,13 +107,13 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     private void calculateCommission() {
         try {
             BigDecimal saleRate = new BigDecimal(
-                    txtSaleRate.getText() == null || txtSaleRate.getText().trim().isEmpty() ?
-                            "0" : txtSaleRate.getText().trim()
+                    txtSaleRate.getInputText() == null || txtSaleRate.getInputText().trim().isEmpty() ?
+                            "0" : txtSaleRate.getInputText().trim()
             );
 
             BigDecimal purchaseRate = new BigDecimal(
-                    txtPurchaseRate.getText() == null || txtPurchaseRate.getText().trim().isEmpty() ?
-                            "0" : txtPurchaseRate.getText().trim()
+                    txtPurchaseRate.getInputText() == null || txtPurchaseRate.getInputText().trim().isEmpty() ?
+                            "0" : txtPurchaseRate.getInputText().trim()
             );
 
             BigDecimal commission = saleRate.subtract(purchaseRate);
@@ -159,8 +159,8 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         productSaleRate.setUnion(MainApp.identityDto.getUnion());
         getNextProductSaleRateNumber(MainApp.identityDto.getSociety());
         productSaleRate.setWefDate(dpWefDate.getValue());
-        productSaleRate.setRate(new BigDecimal(txtSaleRate.getText()));
-        productSaleRate.setPurchaseCode(txtPurchaseRate.getText());
+        productSaleRate.setRate(new BigDecimal(txtSaleRate.getInputText()));
+        productSaleRate.setPurchaseCode(txtPurchaseRate.getInputText());
         productSaleRate.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getText()));
         return productSaleRate;
     }
@@ -168,8 +168,8 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     private ProductSaleRate setValuesInObjectUpdate() {
         dto.setProduct(cboxProduct.getValue());
         dto.setWefDate(dpWefDate.getValue());
-        dto.setRate(new BigDecimal(txtSaleRate.getText()));
-        dto.setPurchaseCode(txtPurchaseRate.getText());
+        dto.setRate(new BigDecimal(txtSaleRate.getInputText()));
+        dto.setPurchaseCode(txtPurchaseRate.getInputText());
         dto.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getText()));
         return dto;
     }
@@ -189,13 +189,13 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtSaleRate.getText()) <= 0)
+            if (Double.parseDouble(txtSaleRate.getInputText()) <= 0)
                 errorMsg.append(resourceBundle.getString("entervalidsalerate") + "\n");
         } catch (NumberFormatException e) {
             errorMsg.append(resourceBundle.getString("saleratenullerror") + "\n");
         }
         try {
-            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0)
+            if (Double.parseDouble(txtPurchaseRate.getInputText()) <= 0)
                 errorMsg.append(resourceBundle.getString("entervalidpurchaserate") + "\n");
         } catch (NumberFormatException e) {
             errorMsg.append(resourceBundle.getString("purchaseratenullerror") + "\n");

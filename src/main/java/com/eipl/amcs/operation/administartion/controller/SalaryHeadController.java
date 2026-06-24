@@ -9,6 +9,7 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.StaffSalaryHead;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadDeleteTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -87,6 +88,8 @@ public class SalaryHeadController implements MyInitialization, PopupCallback {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colType.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getType() == 0 ? "DEDUCTION" : "ADDITION"));
             propStaffSalaryHeadDto.bind(tableSalaryHead.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableSalaryHead);
+
         } catch (Exception e) {
             System.out.println("SalaryHead setuptable Exception");
             e.printStackTrace();

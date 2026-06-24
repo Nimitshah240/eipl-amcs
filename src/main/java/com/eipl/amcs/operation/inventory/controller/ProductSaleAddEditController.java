@@ -378,7 +378,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         txn.setAmount(new BigDecimal(txtAmount.getInputText()));
         txn.setDiscount(new BigDecimal(0));
         txn.setTaxAmount(taxAmount);
-        txn.setNetAmount(new BigDecimal(txtNetAmount.getText()));
+        txn.setNetAmount(new BigDecimal(txtNetAmount.getInputText()));
         txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
         txn.setTaxCode(cboxTaxCode.getValue().getCode());

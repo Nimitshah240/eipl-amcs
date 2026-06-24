@@ -223,11 +223,11 @@ public class DeadStockAddEditController implements MyInitialization {
     }
 
     private DeadStock setValuesInObject() {
-        dto.setCode(txtCode.getText());
+        dto.setCode(txtCode.getInputText());
         dto.setName(txtName.getText());
         dto.setNameLocal(txtNameLocal.getText());
-        dto.setQty(new BigDecimal(txtQuantity.getText()));
-        dto.setAmount(new BigDecimal(txtAmount.getText()));
+        dto.setQty(new BigDecimal(txtQuantity.getInputText()));
+        dto.setAmount(new BigDecimal(txtAmount.getInputText()));
         dto.setPurchaseDate(dpPurchaseDate.getValue());
         dto.setLedger(cboxLedger.getValue());
         dto.setSocietyCode(MainApp.identityDto.getSociety());
@@ -246,10 +246,10 @@ public class DeadStockAddEditController implements MyInitialization {
         if (txtName.getText() == null || txtName.getText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("name.cannot.be.null")).append("\n");
         }
-        if (txtQuantity.getText() == null || txtQuantity.getText().isEmpty()) {
+        if (txtQuantity.getInputText() == null || txtQuantity.getInputText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("qty.cannot.be.null")).append("\n");
         }
-        if (txtAmount.getText() == null || txtAmount.getText().isEmpty()) {
+        if (txtAmount.getInputText() == null || txtAmount.getInputText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("amount.cannot.be.null")).append("\n");
         }
         if (dpPurchaseDate.getValue() == null) {

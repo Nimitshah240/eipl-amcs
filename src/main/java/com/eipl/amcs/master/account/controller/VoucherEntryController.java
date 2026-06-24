@@ -427,7 +427,7 @@ public class VoucherEntryController implements MyInitialization {
         VoucherTransaction voucherTransaction = new VoucherTransaction();
         voucherTransaction.setLedger(cboxLedger.getValue());
         voucherTransaction.setNarration(cboxNarration.getFinalText());
-        voucherTransaction.setAmount(new BigDecimal(txtAmount.getText()));
+        voucherTransaction.setAmount(new BigDecimal(txtAmount.getInputText()));
         voucherTransaction.setAutoPostedScreen(false);
         voucherTransaction.setCreditDebit(credit_debit);
         voucherTransactionList.add(voucherTransaction);
@@ -547,7 +547,7 @@ public class VoucherEntryController implements MyInitialization {
         try {
             if (cboxLedger.getSelectionModel().getSelectedItem() == null)
                 errorMsg.append(resourceBundle.getString("ledgernullerror") + "\n");
-            if (txtAmount.getText().equals("0") || txtAmount.getText().isEmpty())
+            if (txtAmount.getInputText().equals("0") || txtAmount.getInputText().isEmpty())
                 errorMsg.append(resourceBundle.getString("greaterthan.amount") + "\n");
             return errorMsg.length() == 0;
 

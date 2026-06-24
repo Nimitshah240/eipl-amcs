@@ -189,15 +189,15 @@ public class ProductSaleTransactionAddController implements MyInitialization {
     private ProductSaleTransaction setValuesInSaleTransaction() {
         ProductSaleTransaction txn = new ProductSaleTransaction();
         txn.setProduct(cboxProduct.getValue());
-        txn.setRate(new BigDecimal(txtRate.getText()));
-        txn.setQuantity(BigDecimal.valueOf(Integer.valueOf(txtQuantity.getText())));
-        txn.setAmount(new BigDecimal(txtAmount.getText()));
-        if (txtDiscount.getText() == null || txtDiscount.getText().isEmpty())
+        txn.setRate(new BigDecimal(txtRate.getInputText()));
+        txn.setQuantity(BigDecimal.valueOf(Integer.valueOf(txtQuantity.getInputText())));
+        txn.setAmount(new BigDecimal(txtAmount.getInputText()));
+        if (txtDiscount.getInputText() == null || txtDiscount.getInputText().isEmpty())
             txn.setDiscount(new BigDecimal(0));
         else
-            txn.setDiscount(new BigDecimal(txtDiscount.getText()));
-        txn.setTaxAmount(new BigDecimal(txtTaxAmount.getText()));
-        txn.setNetAmount(new BigDecimal(txtNetAmount.getText()));
+            txn.setDiscount(new BigDecimal(txtDiscount.getInputText()));
+        txn.setTaxAmount(new BigDecimal(txtTaxAmount.getInputText()));
+        txn.setNetAmount(new BigDecimal(txtNetAmount.getInputText()));
         txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
         txn.setTaxCode(cboxTaxCode.getValue().getCode());
@@ -207,12 +207,12 @@ public class ProductSaleTransactionAddController implements MyInitialization {
     private boolean validate() {
         if (cboxProduct.getValue() == null)
             errorMsg.append(resourceBundle.getString("productsale.transaction.validation.product.empty") + "\n");
-        BigDecimal rate = new BigDecimal(txtRate.getText());
+        BigDecimal rate = new BigDecimal(txtRate.getInputText());
         if (rate.doubleValue() <= 0)
             errorMsg.append(resourceBundle.getString("productsale.transaction.validation.rate.empty") + "\n");
-        if (txtQuantity.getText() == null || txtQuantity.getText().isEmpty() || !CommonUtils.isNumeric(txtQuantity.getText()))
+        if (txtQuantity.getInputText() == null || txtQuantity.getInputText().isEmpty() || !CommonUtils.isNumeric(txtQuantity.getInputText()))
             errorMsg.append(resourceBundle.getString("productsale.transaction.validation.quantity.empty") + "\n");
-        BigDecimal qty = new BigDecimal(txtQuantity.getText());
+        BigDecimal qty = new BigDecimal(txtQuantity.getInputText());
         if (qty.doubleValue() <= 0)
             errorMsg.append(resourceBundle.getString("productsale.transaction.validation.quantity.empty") + "\n");
         return errorMsg.length() == 0;
@@ -220,10 +220,10 @@ public class ProductSaleTransactionAddController implements MyInitialization {
 
     private void calculateTaxAmount() {
         if (cboxTaxCode.getValue() != null) {
-            if (!txtAmount.getText().isEmpty()) {
+            if (!txtAmount.getInputText().isEmpty()) {
                 taxBifurcation = null;
-                BigDecimal discount = txtDiscount.getText() == null || txtDiscount.getText().isEmpty() ? new BigDecimal("0") : new BigDecimal(txtDiscount.getText());
-                BigDecimal taxableAmt = new BigDecimal(txtAmount.getText()).subtract(discount).setScale(SCALE, RATE_ROUND);
+                BigDecimal discount = txtDiscount.getInputText() == null || txtDiscount.getInputText().isEmpty() ? new BigDecimal("0") : new BigDecimal(txtDiscount.getInputText());
+                BigDecimal taxableAmt = new BigDecimal(txtAmount.getInputText()).subtract(discount).setScale(SCALE, RATE_ROUND);
 
                 BigDecimal taxAmount = BigDecimal.ZERO;
                 if (!cboxTaxCode.getValue().getName().equalsIgnoreCase("NIL")) {
@@ -243,9 +243,9 @@ public class ProductSaleTransactionAddController implements MyInitialization {
     }
 
     private void calculateAmount() {
-        if (!txtQuantity.getText().isEmpty() && !txtRate.getText().isEmpty()) {
-            BigDecimal qty = new BigDecimal(txtQuantity.getText());
-            BigDecimal rate = new BigDecimal(txtRate.getText());
+        if (!txtQuantity.getInputText().isEmpty() && !txtRate.getInputText().isEmpty()) {
+            BigDecimal qty = new BigDecimal(txtQuantity.getInputText());
+            BigDecimal rate = new BigDecimal(txtRate.getInputText());
             BigDecimal amt = qty.multiply(rate).setScale(SCALE, RATE_ROUND);
             txtAmount.setText(amt.toString());
         }

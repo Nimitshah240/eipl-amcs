@@ -37,7 +37,7 @@ public class CommonUtils {
     public static final DateTimeFormatter Formatter3 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static final DateTimeFormatter Formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
     public static final DateTimeFormatter Formatter5 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter MONTH_SHORT_FORMATTER = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+    public static final DateTimeFormatter MONTH_SHORT_FORMATTER = DateTimeFormatter.ofPattern("MMM", MainApp.getCurrentLocale());
     final static int CHAR_PER_LINE = 40;
     final static String SPACE = " ";
     final static DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");

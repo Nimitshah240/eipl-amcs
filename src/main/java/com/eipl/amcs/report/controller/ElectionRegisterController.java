@@ -163,7 +163,7 @@ public class ElectionRegisterController implements MyInitialization {
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_animal_type", cboxReportType.getValue().getCode());
         params.put("p_gender_code", cboxGender.getValue().getCode());
-        params.put("p_limit", Integer.parseInt(txtLimit.getText()));
+        params.put("p_limit", Integer.parseInt(txtLimit.getInputText()));
         params.put("p_qty_amount", cboxQtyAmount.getSelectionModel().getSelectedIndex() == 0 ? 1 : 2);
         params.put("p_locale", localeStr);
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
@@ -188,7 +188,7 @@ public class ElectionRegisterController implements MyInitialization {
             cboxFromShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
         params.put("p_to_date", Timestamp.valueOf(dpToDate2.getValue().atTime(
             cboxToShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
-        params.put("p_no_of_days", Integer.parseInt(txtLimit2.getText().trim()));
+        params.put("p_no_of_days", Integer.parseInt(txtLimit2.getInputText().trim()));
         params.put("p_qty", Integer.parseInt(txtqty.getText().trim()));
 
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER_ONE, params);

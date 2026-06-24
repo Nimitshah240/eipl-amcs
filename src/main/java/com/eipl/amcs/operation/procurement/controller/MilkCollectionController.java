@@ -28,6 +28,7 @@ import com.eipl.amcs.operation.procurement.task.MilkCollectionListSaveTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -435,9 +436,10 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCollectionDate().toLocalDate()));
-            colDate.setCellFactory(new LocalDateCellFactory<>());
+           // colDate.setCellFactory(new LocalDateCellFactory<>());
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
+            TableLocalizationUtil.localizeTable(tableCollection);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -12,6 +12,7 @@ import com.eipl.amcs.master.account.model.LedgerOpeningBalance;
 import com.eipl.amcs.master.account.task.*;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -287,6 +288,8 @@ public class LedgerOpeningBalanceController implements MyInitialization {
                     resourceBundle.getString("credit") : resourceBundle.getString("debit")));
 
             propLedgerOpeningBalance.bind(tableData.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableData);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
