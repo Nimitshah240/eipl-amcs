@@ -10,7 +10,6 @@ import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
@@ -420,9 +419,14 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             }
         });
         task.setOnFailed(e -> {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
-                    resourceBundle.getString("product.receipt.insert.failed"));
-            alert.createAlert();
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("StockIsLessThanZero")) {
+                errorMessage = "stock.going.to.zero";
+            }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
         });
         new Thread(task).start();
     }

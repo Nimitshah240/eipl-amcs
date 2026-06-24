@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -13,6 +14,7 @@ import com.eipl.amcs.operation.inventory.task.ProductSaleLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,7 +49,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<ProductSale, LocalDate> colDate, colDeductionStartDate;
     @FXML
-    DatePicker dpFromDate, dpToDate;
+    E_DatePicker dpFromDate, dpToDate;
     @FXML
     VBox vbox;
     @FXML
@@ -86,13 +88,11 @@ public class KapaatController implements MyInitialization, PopupCallback {
         });
         dpFromDate.setValue(LocalDate.now().withDayOfMonth(1));
         dpToDate.setValue(LocalDate.now());
-        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -155,6 +155,7 @@ public class KapaatController implements MyInitialization, PopupCallback {
             colNetPayable.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colDeductionStartDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDeductionStartDate()));
             propProductSaleDto.bind(tableData.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableData);
         } catch (Exception e) {
             System.out.println("Kapaat setuptable Exception");
             e.printStackTrace();

@@ -11,6 +11,7 @@ import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.task.DockDeleteTask;
 import com.eipl.amcs.master.org.task.DockLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -98,6 +99,7 @@ public class DockController implements MyInitialization, PopupCallback {
             colMilkType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMilkTypesAsString()));
 
             propDockMilkTypeDto.bind(tableDock.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableDock);
         } catch (Exception e) {
             System.out.println("Dock setuptable Exception");
             e.printStackTrace();

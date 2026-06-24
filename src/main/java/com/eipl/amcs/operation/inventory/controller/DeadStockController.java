@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -11,6 +12,7 @@ import com.eipl.amcs.operation.inventory.model.DeadStock;
 import com.eipl.amcs.operation.inventory.task.DeadStockDeleteTask;
 import com.eipl.amcs.operation.inventory.task.DeadStockLoadByDateTask;
 import com.eipl.amcs.operation.inventory.task.DeadStockLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -51,7 +53,7 @@ public class DeadStockController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<DeadStock, String> colName, colNameLocal;
     @FXML
-    DatePicker dpFromDate, dpToDate;
+    E_DatePicker dpFromDate, dpToDate;
     @FXML
     Button btnClose, btnAdd, btnDelete, btnEdit, btnExport, btnSearch;
     private ResourceBundle resourceBundle;
@@ -171,6 +173,7 @@ public class DeadStockController implements MyInitialization, PopupCallback {
         colLedgerAccount.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLedger().getName()));
 
         propDeadStockDto.bind(tableDeadStock.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableDeadStock);
     }
 
     private void editDeadStock(DeadStock deadStock) {

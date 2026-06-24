@@ -15,6 +15,7 @@ import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.master.org.task.SocietyLoadTask;
 import com.eipl.amcs.master.org.task.SocietySaveTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -169,8 +170,8 @@ public class SocietyController implements MyInitialization, PopupCallback {
             colBank.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBank()));
             colBranch.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBranch()));
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRegistrationDate()));
-            colRegistrationDate.setCellFactory(new LocalDateCellFactory<>());
             propSociety.bind(tableSociety.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableSociety);
 
         } catch (Exception e) {
             System.out.println("Society setuptable Exception");

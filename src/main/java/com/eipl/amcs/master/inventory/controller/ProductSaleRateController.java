@@ -14,6 +14,7 @@ import com.eipl.amcs.master.inventory.task.ProductSaleRateDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductSaleRateLoadTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -105,10 +106,10 @@ public class ProductSaleRateController implements MyInitialization, PopupCallbac
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colSecretaryCommissionRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSecretaryCommissionRate()));
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate()));
-            colWefDate.setCellFactory(new LocalDateCellFactory<>());
 
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             propSaleRateDto.bind(tableProductSaleRate.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableProductSaleRate);
 
         } catch (Exception e) {
             System.out.println(e);

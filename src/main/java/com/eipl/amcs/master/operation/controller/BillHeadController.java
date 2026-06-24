@@ -11,6 +11,7 @@ import com.eipl.amcs.master.operation.model.BillHead;
 import com.eipl.amcs.master.operation.task.BillHeadDeleteTask;
 import com.eipl.amcs.master.operation.task.BillHeadLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -110,6 +111,7 @@ public class BillHeadController implements MyInitialization, PopupCallback {
             colDisburseAllowed.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getResourceString(resourceBundle, data.getValue().getDisburseAllowed() ? "yes" : "no")));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getResourceString(resourceBundle, data.getValue().isActive() ? "active" : "inactive")));
             propBillHeadDto.bind(tableBillHead.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableBillHead);
         } catch (Exception e) {
             System.out.println("BillHead setuptable Exception");
             e.printStackTrace();

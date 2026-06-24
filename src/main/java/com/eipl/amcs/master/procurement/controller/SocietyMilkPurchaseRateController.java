@@ -10,6 +10,7 @@ import com.eipl.amcs.master.procurement.dto.RateViewDto;
 import com.eipl.amcs.master.procurement.model.SocietyMilkPurchaseRate;
 import com.eipl.amcs.master.procurement.task.SocietyMilkPurchaseRateLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -85,12 +86,12 @@ public class SocietyMilkPurchaseRateController implements MyInitialization {
             colDescription.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescription()));
             colRateGenMethodCode.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getRateGenerationMethod(data.getValue().getRateGenMethodCode())));
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate().toLocalDate()));
-            colWefDate.setCellFactory(new LocalDateCellFactory<>());
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
             colShiftApplicable.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShiftApplicable()));
             colRateType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRateType()));
 
             propRate.bind(tableSocietyMilkPurchaseRates.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableSocietyMilkPurchaseRates);
         } catch (Exception e) {
             System.out.println("SocietyMilkPurchaseRate setuptable Exception");
             e.printStackTrace();

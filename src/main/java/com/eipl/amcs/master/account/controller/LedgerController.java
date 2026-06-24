@@ -15,6 +15,7 @@ import com.eipl.amcs.master.account.task.LedgerDeleteTask;
 import com.eipl.amcs.master.account.task.LedgerGroupLoadTask;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -271,6 +272,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colLedgerGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerGroup()));
+        TableLocalizationUtil.localizeTable(tableLedger);
 
         propLedger.bind(tableLedger.getSelectionModel().selectedItemProperty());
     }

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_Button?>
-<?import javafx.scene.control.Label?>
+<?import com.eipl.amcs.controls.E_Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
@@ -22,15 +22,16 @@
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="5.0">
                     <children>
-                        <Label prefHeight="17.0" prefWidth="196.0" styleClass="header-text" text="%productsalelist"/>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                        <E_Label prefHeight="17.0" prefWidth="196.0" styleClass="header-text" text="%productsalelist"/>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                HBox.hgrow="ALWAYS"/>
                         <E_DatePicker fx:id="dpFromDate" prefWidth="130.0">
                             <HBox.margin>
                                 <Insets/>
                             </HBox.margin>
                         </E_DatePicker>
-                        <Label alignment="CENTER" contentDisplay="CENTER" text="%to" textAlignment="CENTER">
+
+                        <E_Label alignment="CENTER" contentDisplay="CENTER" text="%to" textAlignment="CENTER">
                             <HBox.margin>
                                 <Insets/>
                             </HBox.margin>
@@ -40,7 +41,7 @@
                             <padding>
                                 <Insets top="5.0"/>
                             </padding>
-                        </Label>
+                        </E_Label>
                         <E_DatePicker fx:id="dpToDate" prefWidth="130.0">
                             <HBox.margin>
                                 <Insets/>

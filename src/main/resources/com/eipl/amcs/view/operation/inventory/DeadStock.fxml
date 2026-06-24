@@ -12,20 +12,22 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.inventory.controller.DeadStockController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="5.0">
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%deadstock" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <DatePicker fx:id="dpFromDate" prefWidth="130.0">
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%deadstock" />
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                        <E_DatePicker fx:id="dpFromDate" prefWidth="130.0">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>
-                        </DatePicker>
-                        <Label alignment="CENTER" contentDisplay="CENTER" text="%to" textAlignment="CENTER">
+                        </E_DatePicker>
+                        <E_Label alignment="CENTER" contentDisplay="CENTER" text="%to" textAlignment="CENTER">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>
@@ -35,12 +37,12 @@
                             <padding>
                                 <Insets top="5.0" />
                             </padding>
-                        </Label>
-                        <DatePicker fx:id="dpToDate" prefWidth="130.0">
+                        </E_Label>
+                        <E_DatePicker fx:id="dpToDate" prefWidth="130.0">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>
-                        </DatePicker>
+                        </E_DatePicker>
                         <Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" mnemonicParsing="false" text="%search">
                             <HBox.margin>
                                 <Insets />
@@ -107,7 +109,7 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnExport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%export">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">

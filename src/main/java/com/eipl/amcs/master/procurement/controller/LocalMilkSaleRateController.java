@@ -13,6 +13,7 @@ import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.procurement.model.LocalMilkSaleRate;
 import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateDeleteTask;
 import com.eipl.amcs.master.procurement.task.LocalMilkSaleRateLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -80,11 +81,11 @@ public class LocalMilkSaleRateController implements MyInitialization, PopupCallb
     public void setupTable() {
         try {
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate()));
-            colWefDate.setCellFactory(new LocalDateCellFactory<>());
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             colMilkClass.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkClass()));
             propLocalMilkSaleRate.bind(tableLocalMilkSaleRates.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableLocalMilkSaleRates);
         } catch (Exception e) {
             System.out.println("LocalMilksaleRate setuptable Exception");
             e.printStackTrace();
