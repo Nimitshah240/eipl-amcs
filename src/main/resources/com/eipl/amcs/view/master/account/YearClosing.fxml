@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.eipl.amcs.master.account.controller.FinancialYearClosingController">
@@ -29,8 +30,8 @@
         <VBox prefHeight="600.0" prefWidth="800.0" styleClass="pane-border" AnchorPane.bottomAnchor="0.0"
               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
-                       styleClass="sub-header-btm-border" text="%yearend.title"/>
+                <E_Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
+                         styleClass="sub-header-btm-border" text="%yearend.title"/>
                 <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE"
                          VBox.vgrow="ALWAYS">
                     <tabs>
@@ -65,8 +66,8 @@
                                             <children>
                                                 <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1">
                                                     <children>
-                                                        <Label styleClass="label-bold" text="%total"/>
-                                                        <Label fx:id="lblStockValuation" styleClass="label-bold"
+                                                        <E_Label styleClass="label-bold" text="%total"/>
+                                                        <E_Label fx:id="lblStockValuation" styleClass="label-bold"
                                                                text="0.0" GridPane.columnIndex="1"/>
                                                     </children>
                                                     <padding>
@@ -153,9 +154,9 @@
                                                         <Insets right="10.0"/>
                                                     </GridPane.margin>
                                                     <children>
-                                                        <Label fx:id="lblTrading" styleClass="label-bold"
+                                                        <E_Label fx:id="lblTrading" styleClass="label-bold"
                                                                text="%total"/>
-                                                        <Label fx:id="lblTotalTrading" styleClass="label-bold"
+                                                        <E_Label fx:id="lblTotalTrading" styleClass="label-bold"
                                                                text="0"/>
                                                     </children>
                                                 </HBox>
@@ -184,12 +185,12 @@
                                                                 vgrow="SOMETIMES"/>
                                             </rowConstraints>
                                             <children>
-                                                <Label styleClass="label-bold" text="%yearend.incomeside">
+                                                <E_Label styleClass="label-bold" text="%yearend.incomeside">
                                                     <padding>
                                                         <Insets left="10.0"/>
                                                     </padding>
-                                                </Label>
-                                                <Label styleClass="label-bold" text="%yearend.expenseside"
+                                                </E_Label>
+                                                <E_Label styleClass="label-bold" text="%yearend.expenseside"
                                                        GridPane.columnIndex="1"/>
                                                 <TableView fx:id="tablePLIncome" prefHeight="200.0" prefWidth="200.0"
                                                            GridPane.rowIndex="1">
@@ -240,8 +241,8 @@
                                                         <Insets right="10.0"/>
                                                     </padding>
                                                     <children>
-                                                        <Label fx:id="lblPl" styleClass="label-bold"/>
-                                                        <Label fx:id="lblPlBalance" styleClass="label-bold" text="0"/>
+                                                        <E_Label fx:id="lblPl" styleClass="label-bold"/>
+                                                        <E_Label fx:id="lblPlBalance" styleClass="label-bold" text="0"/>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -269,12 +270,12 @@
                                                                 vgrow="SOMETIMES"/>
                                             </rowConstraints>
                                             <children>
-                                                <Label styleClass="label-bold" text="%yearend.bsliabilityside">
+                                                <E_Label styleClass="label-bold" text="%yearend.bsliabilityside">
                                                     <padding>
                                                         <Insets left="10.0"/>
                                                     </padding>
-                                                </Label>
-                                                <Label styleClass="label-bold" text="%yearend.bsassetside"
+                                                </E_Label>
+                                                <E_Label styleClass="label-bold" text="%yearend.bsassetside"
                                                        GridPane.columnIndex="1"/>
                                                 <TableView fx:id="tableBSLiability" prefHeight="200.0" prefWidth="200.0"
                                                            GridPane.rowIndex="1">

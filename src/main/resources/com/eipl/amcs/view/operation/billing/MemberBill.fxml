@@ -21,7 +21,7 @@
     <children>
         <VBox spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%member.bill"/>
+                <E_Label styleClass="header-text" text="%member.bill"/>
                 <GridPane hgap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -39,7 +39,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
                     <children>
-                        <Label text="%paymentcycleid" GridPane.rowIndex="1"/>
+                        <E_Label text="%paymentcycleid" GridPane.rowIndex="1"/>
                         <AutoSearchTextField fx:id="cboxPaymentCycle" editable="true" prefWidth="230.0"
                                              GridPane.rowIndex="2"/>
                         <E_DatePicker fx:id="dpDeductionFromDate" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
@@ -48,8 +48,8 @@
                                   GridPane.rowIndex="2"/>
                         <E_Button fx:id="btnReport" mnemonicParsing="false" text="%generalreport"
                                   GridPane.columnIndex="4" GridPane.rowIndex="2"/>
-                        <Label text="%deductionfromdate" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <Label text="%deductiontodate" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <E_Label text="%deductionfromdate" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <E_Label text="%deductiontodate" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                         <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="5" GridPane.columnSpan="3"
                               GridPane.rowIndex="2">
                             <children>
@@ -93,7 +93,7 @@
                                   prefWidth="80.0" text="%edit"/>
                         <E_Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
                                   text="%close"/>
-                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
                         <E_Button fx:id="btnFinalize" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
                                   text="%finalize"/>
                         <E_Button fx:id="btnExport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"

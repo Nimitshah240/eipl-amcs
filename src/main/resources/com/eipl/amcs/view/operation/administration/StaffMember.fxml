@@ -63,7 +63,7 @@
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
                         <E_Button fx:id="btnSalary" contentDisplay="TOP" maxHeight="1.7976931348623157E308"
                                   maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%staffsalary">
                             <graphic>

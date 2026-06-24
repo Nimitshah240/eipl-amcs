@@ -14,6 +14,7 @@ import com.eipl.amcs.operation.procurement.task.MilkDispatchDeleteTask;
 import com.eipl.amcs.operation.procurement.task.MilkDispatchLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -147,13 +148,15 @@ public class MilkDispatchController implements MyInitialization, PopupCallback {
         try {
             colChallanNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getChallanNo()));
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate().toLocalDate()));
-            colFromDate.setCellFactory(new LocalDateCellFactory<>());
+         //   colFromDate.setCellFactory(new LocalDateCellFactory<>());
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate().toLocalDate()));
-            colToDate.setCellFactory(new LocalDateCellFactory<>());
+         //   colToDate.setCellFactory(new LocalDateCellFactory<>());
             colFromShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromShift()));
             colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift()));
             colDestinationType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getDispatchDestinationType(data.getValue().getDestinationType())));
             propMilkDispatch.bind(tableMilkDispatch.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableMilkDispatch);
+
 
         } catch (Exception e) {
             System.out.println(e);

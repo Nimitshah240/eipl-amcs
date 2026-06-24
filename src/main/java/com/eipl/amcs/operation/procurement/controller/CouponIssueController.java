@@ -12,6 +12,7 @@ import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.task.CouponIssueDeleteTask;
 import com.eipl.amcs.operation.procurement.task.CouponIssueLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -110,6 +111,8 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerName()));
             tableIssueCoupon.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             propertyCouponIssue.bind(tableIssueCoupon.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableIssueCoupon);
+
         } catch (Exception e) {
             System.out.println("LocalMilkSake setuptable Exception");
             e.printStackTrace();

@@ -10,6 +10,7 @@ import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.task.ShareIssueDeleteTask;
 import com.eipl.amcs.operation.share.task.ShareIssueLoadTask;
 import com.eipl.amcs.operation.share.task.ShareTranferRevertTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -148,6 +149,8 @@ public class ShareTransferController implements MyInitialization, PopupCallback 
             colNewMemberCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getShareCode()));
             colOldMemberCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTransferredFromCode()));
             colOldMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTransferredFrom().toMemberName()));
+            TableLocalizationUtil.localizeTable(tableShareTransfer);
+
         } catch (Exception e) {
             System.out.println("ShareTransfer setuptable Exception");
             e.printStackTrace();
