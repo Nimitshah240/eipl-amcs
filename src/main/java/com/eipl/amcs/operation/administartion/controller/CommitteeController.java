@@ -13,6 +13,7 @@ import com.eipl.amcs.operation.administartion.task.CommitteeDeleteTask;
 import com.eipl.amcs.operation.administartion.task.CommitteeLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -250,6 +251,8 @@ public class CommitteeController implements MyInitialization, PopupCallback {
             colFormationDate.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFormationDate().toString()));
             colCommitteeMembmers.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getMembers() != null ? data.getValue().getMembers().size() : 0)));
             propCommitteeDto.bind(tableCommittee.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableCommittee);
+
         } catch (Exception e) {
             System.out.println("CommiteMembers setuptable Exception");
             e.printStackTrace();

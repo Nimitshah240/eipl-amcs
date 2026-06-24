@@ -12,6 +12,7 @@ import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -241,6 +242,8 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
                 resourceBundle.getString("credit") : resourceBundle.getString("debit")));
 
         propSubLedgerOpeningBalance.bind(tableData.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableData);
+
     }
 
 

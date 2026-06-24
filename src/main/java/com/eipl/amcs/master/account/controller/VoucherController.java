@@ -8,6 +8,7 @@ import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.task.VoucherDeleteTask;
 import com.eipl.amcs.master.account.task.VoucherLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -152,6 +153,8 @@ public class VoucherController implements MyInitialization, PopupCallback {
         colRefNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getBillNo()));
         colRemarks.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getRemarks()));
         propVoucherDto.bind(tableVoucher.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableVoucher);
+
     }
 
     @Override

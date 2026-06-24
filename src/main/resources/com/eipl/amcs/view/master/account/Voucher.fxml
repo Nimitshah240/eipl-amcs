@@ -11,13 +11,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.account.controller.VoucherController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%voucher"/>
+                <E_Label styleClass="header-text" text="%voucher"/>
                 <TableView fx:id="tableVoucher" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colType" minWidth="150.0" prefWidth="150.0" styleClass="cell-center-aligned"
@@ -60,7 +61,7 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
                         <Button fx:id="btnDayBook" contentDisplay="TOP" mnemonicParsing="true" prefHeight="30.0"
                                 prefWidth="80.0" text="%daybook">
                             <graphic>

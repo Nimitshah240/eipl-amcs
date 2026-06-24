@@ -9,17 +9,18 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.share.controller.ShareTransferController">
     <children>
         <VBox spacing="15.0">
             <children>
                 <HBox spacing="5.0">
                     <children>
-                        <Label styleClass="header-text" text="%listofsharetransfer" HBox.hgrow="ALWAYS">
+                        <E_Label styleClass="header-text" text="%listofsharetransfer" HBox.hgrow="ALWAYS">
                             <HBox.margin>
                                 <Insets />
                             </HBox.margin>
-                        </Label>
+                        </E_Label>
                     </children>
                 </HBox>
                 <TableView fx:id="tableShareTransfer" VBox.vgrow="ALWAYS">
@@ -41,7 +42,7 @@
                     <children>
                         <Button fx:id="btnAdd" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%add" />
                         <Button fx:id="btnClose" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />
-                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnRevert" disable="true" prefHeight="30.0" prefWidth="80.0" text="%revert" />
                   <Button fx:id="btnReport" prefHeight="30.0" prefWidth="80.0" text="%report" />
                     </children>

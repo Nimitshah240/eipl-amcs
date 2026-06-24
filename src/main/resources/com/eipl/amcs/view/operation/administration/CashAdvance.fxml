@@ -14,18 +14,20 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.CashAdvanceController">
     <children>
         <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0">
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%cashadvance">
+                        <E_Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%cashadvance">
                             <HBox.margin>
                                 <Insets left="5.0" />
                             </HBox.margin>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
+                        </E_Label>
+                        <E_Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
                         <HBox alignment="CENTER_RIGHT" spacing="5.0" />
                     </children>
                 </HBox>
@@ -42,12 +44,12 @@
                             <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
                         </rowConstraints>
                         <children>
-                            <Label text="%name" GridPane.columnIndex="1" />
-                  <Label text="%code" />
-                  <Label text="%date" GridPane.columnIndex="4" />
-                  <DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                  <Label text="%amount" GridPane.columnIndex="2" />
-                  <Label text="%noofinstallment" GridPane.columnIndex="3" />
+                            <E_Label text="%name" GridPane.columnIndex="1" />
+                  <E_Label text="%code" />
+                  <E_Label text="%date" GridPane.columnIndex="4" />
+                  <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <E_Label text="%amount" GridPane.columnIndex="2" />
+                  <E_Label text="%noofinstallment" GridPane.columnIndex="3" />
                   <E_TextField fx:id="txtMemberCode" GridPane.rowIndex="1" />
                   <E_TextField fx:id="txtMemberName" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <E_TextField fx:id="txtAmount" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -70,7 +72,7 @@
                   <E_Button fx:id="btnSave" minWidth="75.0" text="%add" />
                   <E_Button fx:id="btnDelete" minWidth="75.0" text="%delete" />
                   <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
-                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   <E_Button fx:id="btnView" disable="true" minWidth="75.0" text="%view" />
                     </children>
                 </HBox>

@@ -11,6 +11,7 @@ import com.eipl.amcs.operation.procurement.model.MilkReceipt;
 import com.eipl.amcs.operation.procurement.task.MilkReceiptDeleteTask;
 import com.eipl.amcs.operation.procurement.task.MilkReceiptLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -106,12 +107,14 @@ public class MilkReceiptController implements MyInitialization {
         try {
             colChallanNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMilkDispatch() != null ? data.getValue().getMilkDispatch().getChallanNo() : "AUTOMATIC"));
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate().toLocalDate()));
-            colFromDate.setCellFactory(new LocalDateCellFactory<>());
+           // colFromDate.setCellFactory(new LocalDateCellFactory<>());
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate().toLocalDate()));
-            colToDate.setCellFactory(new LocalDateCellFactory<>());
+        //    colToDate.setCellFactory(new LocalDateCellFactory<>());
             colFromShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromShift()));
             colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift()));
             propMilkReceipt.bind(tableMilkReceipt.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableMilkReceipt);
+
 
         } catch (Exception e) {
             System.out.println(e);

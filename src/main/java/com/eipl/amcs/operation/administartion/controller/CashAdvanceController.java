@@ -20,6 +20,7 @@ import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
 import com.eipl.amcs.operation.inventory.task.ProductSaleInstallmentByOnlyInvoiceNoLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -217,6 +218,8 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
             colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().toMemberName()));
 
             propCashAdvanceDto.bind(tableCashAdvance.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableCashAdvance);
+
         } catch (Exception e) {
             System.out.println("CashAdvance setuptable Exception");
             e.printStackTrace();

@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center"
            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.operation.procurement.controller.CouponIssueController">
@@ -19,12 +20,12 @@
             <children>
                 <HBox prefWidth="600.0" spacing="5.0">
                     <children>
-                        <Label styleClass="header-text" text="%couponissue.title" HBox.hgrow="ALWAYS">
+                        <E_Label styleClass="header-text" text="%couponissue.title" HBox.hgrow="ALWAYS">
                             <HBox.margin>
                                 <Insets/>
                             </HBox.margin>
-                        </Label>
-                        <Label contentDisplay="RIGHT" prefHeight="31.0" prefWidth="176.0" text=" "/>
+                        </E_Label>
+                        <E_Label contentDisplay="RIGHT" prefHeight="31.0" prefWidth="176.0" text=" "/>
                         <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS">
                         </HBox>
                     </children>
@@ -88,7 +89,7 @@
                         <!--                        <Button fx:id="btnEditUpdate" disable="true" prefHeight="30.0" prefWidth="80.0" text="%edit" />-->
                         <!--                        <Button fx:id="btnDelete" disable="true" prefHeight="30.0" prefWidth="80.0" text="%delete" />-->
                         <!--                        <Button fx:id="btnCancel" layoutX="200.0" layoutY="10.0" prefHeight="30.0" prefWidth="80.0" text="%close" />-->
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                HBox.hgrow="ALWAYS"/>
                         <Button fx:id="btnView" contentDisplay="TOP" prefHeight="50.0" prefWidth="70.0" text="%view">
                             <graphic>

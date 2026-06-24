@@ -14,6 +14,7 @@ import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.task.ShareIssueDeleteTask;
 import com.eipl.amcs.operation.share.task.ShareIssueLoadTask;
 import com.eipl.amcs.operation.share.task.ShareIssuePermanantDeleteTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -188,6 +189,8 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
             colMemberCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareCode()));
 
             propShareIssue.bind(tableShareIssue.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableShareIssue);
+
         } catch (Exception e) {
             System.out.println("ShareIssue setuptable Exception");
             e.printStackTrace();

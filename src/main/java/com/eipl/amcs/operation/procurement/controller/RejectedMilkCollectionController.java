@@ -21,6 +21,7 @@ import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadByFilt
 import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -197,6 +198,8 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         colRemark.setCellValueFactory(new PropertyValueFactory<>("remark"));
 
         propRejectedMilkCollection.bind(tableCollection.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableCollection);
+
     }
 
     @Override
