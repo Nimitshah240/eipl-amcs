@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.eipl.amcs.controls.E_Button?>
-<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_Label?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
@@ -41,16 +44,16 @@
                             <children>
                                 <HBox alignment="CENTER" spacing="10.0">
                                     <children>
-                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="101.0" styleClass="sub-header-text-orange" text="%collectionsummary" HBox.hgrow="ALWAYS">
+                                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="101.0" styleClass="sub-header-text-orange" text="%collectionsummary" HBox.hgrow="ALWAYS">
                                             <HBox.margin>
                                                 <Insets left="5.0" />
                                             </HBox.margin>
                                             <padding>
                                                 <Insets left="5.0" />
                                             </padding>
-                                        </Label>
-                                        <DatePicker fx:id="dpDate" maxWidth="150.0" prefHeight="25.0" prefWidth="124.0" />
-                                        <ComboBox fx:id="cboxShift" editable="true" prefHeight="25.0" prefWidth="120.0" />
+                                        </E_Label>
+                                        <E_DatePicker fx:id="dpDate" maxWidth="150.0" prefHeight="25.0" prefWidth="124.0" />
+                                        <AutoSearchTextField fx:id="cboxShift" editable="true" prefHeight="25.0" prefWidth="120.0" />
                                         <E_Button fx:id="btnLoad" prefHeight="25.0" prefWidth="75.0" text="%search">
                                             <HBox.margin>
                                                 <Insets right="10.0" />
@@ -68,15 +71,15 @@
                             <children>
                                 <HBox alignment="CENTER_RIGHT" spacing="10.0">
                                     <children>
-                                        <E_ComboBox fx:id="cboxLang" editable="true" maxWidth="20.0" opacity="0.0" HBox.hgrow="ALWAYS">
+                                        <AutoSearchTextField fx:id="cboxLang" editable="true" maxWidth="20.0" opacity="0.0" HBox.hgrow="ALWAYS">
                                             <HBox.margin>
                                                 <Insets left="5.0" right="10.0" />
                                             </HBox.margin>
-                                        </E_ComboBox>
-                                        <ComboBox fx:id="cboxYear" editable="true" maxWidth="150.0">
+                                        </AutoSearchTextField>
+                                        <AutoSearchTextField fx:id="cboxYear" editable="true" maxWidth="150.0">
                                  <HBox.margin>
                                     <Insets right="10.0" />
-                                 </HBox.margin></ComboBox>
+                                 </HBox.margin></AutoSearchTextField>
                                         <!--                                    <Button fx:id="btnSearch" mnemonicParsing="false" styleClass="button-primary" text="%search">-->
                                         <!--                                       <HBox.margin>-->
                                         <!--                                          <Insets right="10.0" />-->
@@ -116,22 +119,22 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                     <children>
-                                                        <Label maxHeight="1.7976931348623157E308" styleClass="sub-header-text-orange" text="%pendingsync">
+                                                        <E_Label maxHeight="1.7976931348623157E308" styleClass="sub-header-text-orange" text="%pendingsync">
                                                             <padding>
                                                                 <Insets left="10.0" />
                                                             </padding>
 <!--                                                            <font>-->
 <!--                                                                <Font name="System Bold" size="18.0" />-->
 <!--                                                            </font>-->
-                                                        </Label>
-                                                        <Label fx:id="lblSyncCount" maxHeight="1.7976931348623157E308" text="0" textFill="#eb0505">
+                                                        </E_Label>
+                                                        <E_Label fx:id="lblSyncCount" maxHeight="1.7976931348623157E308" text="0" textFill="#eb0505">
                                                             <padding>
                                                                 <Insets left="10.0" />
                                                             </padding>
 <!--                                                            <font>-->
 <!--                                                                <Font name="System Bold" size="18.0" />-->
 <!--                                                            </font>-->
-                                                        </Label>
+                                                        </E_Label>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -159,24 +162,24 @@
                             <children>
                                 <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
                                     <children>
-                                        <Label maxHeight="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%topmember">
+                                        <E_Label maxHeight="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%topmember">
                                             <HBox.margin>
                                                 <Insets left="5.0" />
                                             </HBox.margin>
                                             <padding>
                                                 <Insets left="5.0" />
                                             </padding>
-                                        </Label>
-                                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                                        <ComboBox fx:id="cboxMonthMember" editable="false" />
-                                        <ComboBox fx:id="cboxYearMember" editable="false" />
-                                        <E_ComboBox fx:id="cboxMilkType">
+                                        </E_Label>
+                                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                                        <AutoSearchTextField fx:id="cboxMonthMember" editable="false" />
+                                        <AutoSearchTextField fx:id="cboxYearMember" editable="false" />
+                                        <AutoSearchTextField fx:id="cboxMilkType">
                                             <HBox.margin>
                                                 <Insets right="10.0" />
                                             </HBox.margin>
-                                        </E_ComboBox>
-                                        <!--                                    <DatePicker fx:id="dpDate1" prefWidth="135.0" />-->
-                                        <!--                                    <ComboBox fx:id="cboxShift1" editable="true" prefWidth="100.0" />-->
+                                        </AutoSearchTextField>
+                                        <!--                                    <E_DatePicker fx:id="dpDate1" prefWidth="135.0" />-->
+                                        <!--                                    <AutoSearchTextField fx:id="cboxShift1" editable="true" prefWidth="100.0" />-->
                                         <!--                                    <Button fx:id="btnLoad1" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="button-primary" text="%search">-->
                                         <!--                                       <HBox.margin>-->
                                         <!--                                          <Insets right="10.0" />-->
@@ -196,20 +199,20 @@
                                     <children>
                                         <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                                             <children>
-                                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-orange" text="%notification" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                                <E_Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-orange" text="%notification" textAlignment="CENTER" HBox.hgrow="ALWAYS">
                                                     <HBox.margin>
                                                         <Insets left="5.0" />
                                                     </HBox.margin>
-                                                </Label>
+                                                </E_Label>
                                                 <HBox spacing="10.0">
                                                     <children>
-                                                        <ComboBox fx:id="cboxMonth" editable="false" />
-                                                        <ComboBox fx:id="cboxYearNotification" editable="false" />
-                                                        <E_ComboBox fx:id="cboxNotification" editable="false">
+                                                        <AutoSearchTextField fx:id="cboxMonth" editable="false" />
+                                                        <AutoSearchTextField fx:id="cboxYearNotification" editable="false" />
+                                                        <AutoSearchTextField fx:id="cboxNotification" editable="false">
                                                             <HBox.margin>
                                                                 <Insets right="10.0" />
                                                             </HBox.margin>
-                                                        </E_ComboBox>
+                                                        </AutoSearchTextField>
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -234,41 +237,41 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tollfree" GridPane.rowIndex="1">
+                                <E_Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tollfree" GridPane.rowIndex="1">
                                     <font>
                                         <Font size="16.0" />
                                     </font>
-                                </Label>
-                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%email" GridPane.rowIndex="2">
+                                </E_Label>
+                                <E_Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%email" GridPane.rowIndex="2">
                                     <font>
                                         <Font size="16.0" />
                                     </font>
-                                </Label>
-                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%timing" GridPane.rowIndex="3">
+                                </E_Label>
+                                <E_Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%timing" GridPane.rowIndex="3">
                                     <font>
                                         <Font size="16.0" />
                                     </font>
-                                </Label>
-                                <Label fx:id="lbltollfree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tollfree" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                </E_Label>
+                                <E_Label fx:id="lbltollfree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%tollfree" GridPane.columnIndex="1" GridPane.rowIndex="1">
 <!--                                    <font>-->
 <!--                                        <Font name="System Bold" size="16.0" />-->
 <!--                                    </font>-->
-                                </Label>
-                                <Label fx:id="lblemail" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%email" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                </E_Label>
+                                <E_Label fx:id="lblemail" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%email" GridPane.columnIndex="1" GridPane.rowIndex="2">
 <!--                                    <font>-->
 <!--                                        <Font name="System Bold" size="16.0" />-->
 <!--                                    </font>-->
-                                </Label>
-                                <Label fx:id="lbltiming" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%timing" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                </E_Label>
+                                <E_Label fx:id="lbltiming" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%timing" GridPane.columnIndex="1" GridPane.rowIndex="3">
 <!--                                    <font>-->
 <!--                                        <Font name="System Bold" size="16.0" />-->
 <!--                                    </font>-->
-                                </Label>
-                                <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%helpline" GridPane.columnSpan="2">
+                                </E_Label>
+                                <E_Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%helpline" GridPane.columnSpan="2">
                                     <font>
                                         <Font name="System Bold" size="18.0" />
                                     </font>
-                                </Label>
+                                </E_Label>
                             </children>
                         </GridPane>
                     </children>

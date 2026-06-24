@@ -4,8 +4,10 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.model.Notification;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -18,6 +20,7 @@ import com.eipl.amcs.operation.procurement.task.MilkCollectionDashboardLoadTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import com.eipl.amcs.utils.task.BroadcastedGroupDataTask;
 import com.eipl.amcs.utils.task.BroadcastedTask;
 import javafx.application.Platform;
@@ -60,7 +63,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 import java.util.List;
@@ -69,6 +71,9 @@ import java.util.stream.Collectors;
 
 import static com.eipl.amcs.MainApp.getCurrentLocale;
 import static com.eipl.amcs.MainApp.setCurrentLocale;
+import static com.eipl.amcs.utils.AppConstant.DATE_TIME_FORMATTER_LOCALE;
+import static com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits;
+import static com.eipl.amcs.utils.FormatterFactory.convertLocalizedToEnglishDigits;
 
 public class DashboardController implements MyInitialization, PopupCallback {
 
@@ -76,33 +81,31 @@ public class DashboardController implements MyInitialization, PopupCallback {
     protected final RoundingMode ROUND = RoundingMode.HALF_UP;
     @FXML
     public ListView<Notification> lv;
-    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-    public DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     ObservableList<MilkCollection> listMilkCollection = FXCollections.observableArrayList();
     ObservableList<RowData> listCollectionSummary = FXCollections.observableArrayList();
     List<MilkType> listMilkType = new ArrayList<>();
     @FXML
     private AnchorPane root;
     @FXML
-    private Label lblCode, lblName, lblDock, lblFinancialYear, lblLanguage, lblUserName, lblSyncCount, lbltollfree, lbltiming, lblemail;
+    private E_Label lblCode, lblName, lblDock, lblFinancialYear, lblLanguage, lblUserName, lblSyncCount, lbltollfree, lbltiming, lblemail;
     @FXML
     private TableView<RowData> tableCollection;
     @FXML
     private TableView<MilkCollectionSummaryData> tableCollectionFarmers;
     @FXML
-    private DatePicker dpDate;
+    private E_DatePicker dpDate;
     @FXML
-    private ComboBox<Shift> cboxShift;
+    private AutoSearchTextField<Shift> cboxShift;
     @FXML
-    private ComboBox<String> cboxLang;
+    private AutoSearchTextField<String> cboxLang;
     @FXML
-    private ComboBox<String> cboxNotification;
+    private AutoSearchTextField<String> cboxNotification;
     @FXML
     private Button btnLoad, btnMilkCollection, btnLocalMilkSale, btnMilkDispatch, btnProductSale, btnBilling, btnKapaat, btnMilkReceipt, btnSync, btnPendingSync;
     @FXML
-    private ComboBox<String> cboxYear, cboxYearNotification, cboxMonth, cboxMonthMember, cboxYearMember;
+    private AutoSearchTextField<String> cboxYear, cboxYearNotification, cboxMonth, cboxMonthMember, cboxYearMember;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
     private Button btnSearch;
     @FXML
@@ -143,7 +146,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 .filter(n -> {
                     if (n.getWefDate() == null) return false;
                     String entryYear = String.valueOf(n.getWefDate().getYear());
-                    String entryMonth = n.getWefDate().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+                    String entryMonth = n.getWefDate().getMonth().getDisplayName(TextStyle.SHORT, MainApp.getCurrentLocale());
                     boolean matchesDate = entryYear.equals(selectedYear) && entryMonth.equals(selectedMonth);
                     boolean matchesType;
                     if (selectedTypeIndex == 0) {
@@ -295,11 +298,11 @@ public class DashboardController implements MyInitialization, PopupCallback {
         //  month
         ObservableList<String> months = FXCollections.observableArrayList();
         for (Month month : Month.values()) {
-            months.add(month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+            months.add(month.getDisplayName(TextStyle.SHORT, MainApp.getCurrentLocale()));
         }
         String currentMonthName = LocalDate.now()
                 .getMonth()
-                .getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+                .getDisplayName(TextStyle.SHORT, MainApp.getCurrentLocale());
         if (cboxMonth != null) {
             cboxMonth.setItems(months);
             cboxMonth.getSelectionModel().select(currentMonthName);
@@ -317,7 +320,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
         if (selectedYearStr == null)
             return;
 
-        int selectedYear = Integer.parseInt(selectedYearStr);
+        String englishYearStr = convertLocalizedToEnglishDigits(selectedYearStr);
+        int selectedYear = Integer.parseInt(englishYearStr);
         LocalDateTime fromDate = LocalDateTime.of(selectedYear - 1, Month.JANUARY, 1, 0, 0, 0);
         LocalDateTime toDate = LocalDateTime.of(selectedYear, Month.DECEMBER, 31, 23, 59, 59);
 
@@ -344,16 +348,26 @@ public class DashboardController implements MyInitialization, PopupCallback {
             int milkTypeCode = (int) map.get("milk_type_code");
             String[] str = map.get("year_month_data").toString().split("-");
             MilkRecord record = new MilkRecord();
-            record.setMilkType(milkTypeCode == 1 ? "Cow" : milkTypeCode == 2 ? "Buff" : "Mix");
+            // 1. LOCALIZED MILK TYPE: Find matching MilkType from your reference list and use toString()
+            String localizedTypeName = listMilkType.stream()
+                    .filter(t -> t.getCode() == milkTypeCode)
+                    .map(MilkType::toString) // Assuming toString() yields localized strings like "ગાય"
+                    .findFirst()
+                    .orElse(milkTypeCode == 1 ? "Cow" : milkTypeCode == 2 ? "Buff" : "Mix");
+
+            record.setMilkType(localizedTypeName);
             record.setMonth(str[1]);
             record.setYear(CommonUtils.strToInteger(str[0]) - 2000);
             record.setTotalQty(CommonUtils.strToDouble(map.get("qty").toString()));
             listRecords.add(record);
         }
+        java.time.format.DateTimeFormatter monthLabelFormatter = java.time.format.DateTimeFormatter.ofPattern("MMM")
+                .withLocale(MainApp.getCurrentLocale());
 
         Map<String, XYChart.Series<String, Number>> seriesMap = new HashMap<>();
         for (MilkRecord record : listRecords) {
-            String seriesKey = record.getMilkType() + "-" + record.getYear();
+            String localizedYearStr = convertEnglishToLocalizedDigits(String.valueOf(record.getYear()));
+            String seriesKey = record.getMilkType() + "-" + localizedYearStr;
             String cssColor = getColorForYear(record.getYear());
 
             if (!seriesMap.containsKey(seriesKey)) {
@@ -366,8 +380,14 @@ public class DashboardController implements MyInitialization, PopupCallback {
                     newSeries.getNode().setStyle("-fx-stroke: " + cssColor + ";");
                 }
             }
+            String localizedMonthLabel = record.getMonth();
+            try {
+                int monthValue = Integer.parseInt(record.getMonth());
+                localizedMonthLabel = monthLabelFormatter.format(java.time.Month.of(monthValue));
+            } catch (Exception ignored) {
+            }
 
-            XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(record.getMonth(), record.getTotalQty());
+            XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(localizedMonthLabel, record.getTotalQty());
             dataPoint.nodeProperty().addListener((observable, oldNode, newNode) -> {
                 if (newNode != null) {
                     newNode.setStyle("-fx-background-color: " + cssColor + ", white;");
@@ -391,7 +411,8 @@ public class DashboardController implements MyInitialization, PopupCallback {
                         String seriesName = label.getText();
 
                         try {
-                            int year = Integer.parseInt(seriesName.split("-")[1]);
+                            String localizedYear = seriesName.split("-")[1];
+                            int year = Integer.parseInt(convertLocalizedToEnglishDigits(localizedYear));
                             String targetColor = getColorForYear(year);
                             if (label.getGraphic() != null) {
                                 label.getGraphic().setStyle("-fx-background-color: " + targetColor + ", white;");
@@ -545,7 +566,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
         if (lblDock != null) lblDock.setText(MainApp.identityDto.getDock().getDockNo());
         lbltollfree.setText("0000-0000-0000");
         lblemail.setText("0000-0000-0000");
-        lbltiming.setText(LocalDateTime.now().format(formatter1));
+        lbltiming.setText(LocalDateTime.now().format(DATE_TIME_FORMATTER_LOCALE));
         if (lblUserName != null) lblUserName.setText(MainApp.user.getUsername());
         try {
             if (lblFinancialYear != null) lblFinancialYear.setText(MainApp.getFinancialYear().toString());
@@ -577,7 +598,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
     private Node createNode(Notification item) {
         Label lblTitle = new Label(item.getTitle());
         Label lblMessage = new Label(item.getMessage());
-        Label lblDate = new Label(item.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        Label lblDate = new Label(item.getCreatedAt().format((DATE_TIME_FORMATTER_LOCALE)));
         HBox hBox;
         if (item.getFilePath() == null) {
             hBox = new HBox(5, lblDate);
@@ -671,6 +692,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
                             col.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getData().get(key)));
                             col.setStyle("-fx-alignment: CENTER-RIGHT;");
                             tableCollection.getColumns().add(col);
+                            TableLocalizationUtil.localizeTable(tableCollection);
                         }
                     }
                     listCollectionSummary.addAll(rowMember, rowQty, rowFat, rowSnf, rowAmount);
@@ -744,7 +766,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
 
             String typeName = listMilkType.stream()
                     .filter(t -> t.getCode() == code)
-                    .map(MilkType::getName)
+                    .map(MilkType::toString)
                     .findFirst()
                     .orElse("Unknown (" + code + ")");
 
@@ -759,6 +781,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
         amountCol.setStyle("-fx-alignment: CENTER-RIGHT;");
 
         tableCollectionFarmers.getColumns().addAll(memberCodeCol, milkTypeCodeCol, qtyCol, amountCol);
+        TableLocalizationUtil.localizeTable(tableCollectionFarmers);
     }
 
     private String getString(String key) {
@@ -780,6 +803,9 @@ public class DashboardController implements MyInitialization, PopupCallback {
         colPendingData.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPendingCount()).asObject());
         tablePendingSync.setItems(tableDataList);
         tablePendingSync.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableLocalizationUtil.localizeTable(tableCollection);
+        TableLocalizationUtil.localizeTable(tableCollectionFarmers);
+        TableLocalizationUtil.localizeTable(tablePendingSync);
 
     }
 
@@ -817,7 +843,6 @@ public class DashboardController implements MyInitialization, PopupCallback {
             });
         }
 
-        if (cboxShift != null) cboxShift.setConverter(new ShiftConvertor(cboxShift));
     }
 
     private void loadShift() {

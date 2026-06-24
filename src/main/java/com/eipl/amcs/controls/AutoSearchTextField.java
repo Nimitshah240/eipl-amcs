@@ -21,6 +21,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits;
+
 /**
  * An optimized generic auto-searching autocomplete text field with dynamic transliteration context support.
  *
@@ -366,7 +368,7 @@ public class AutoSearchTextField<T> extends TextField {
                     String text = textExtractor.apply(item);
                     if (text == null) return false;
 
-                    String localizedText = com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(text);
+                    String localizedText = convertEnglishToLocalizedDigits(text);
                     return text.toLowerCase().contains(lower) ||
                             (localizedText != null && localizedText.toLowerCase().contains(lower));
                 })
@@ -452,7 +454,7 @@ public class AutoSearchTextField<T> extends TextField {
         }
         suppressFilter = true;
         String displayStr = textExtractor.apply(item);
-        String localizedStr = com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(displayStr);
+        String localizedStr = convertEnglishToLocalizedDigits(displayStr);
         setText(localizedStr);
         positionCaret(displayStr.length());
         suppressFilter = false;
@@ -479,6 +481,7 @@ public class AutoSearchTextField<T> extends TextField {
         this.selectedItem = item;
         this.suppressFilter = true;
         String displayStr = textExtractor.apply(item);
+        displayStr = convertEnglishToLocalizedDigits(displayStr);
         this.setText(displayStr);
         this.positionCaret(displayStr.length());
         this.suppressFilter = false;
@@ -825,6 +828,23 @@ public class AutoSearchTextField<T> extends TextField {
             hidePopup();
         }
 
+        public void selectFirst() {
+            try {
+                selectedIndex = 0;
+                if (masterList == null || masterList.isEmpty())
+                    return;
+                T item = masterList.get(0);
+                String text = textExtractor.apply(item);
+                String localizedStr = convertEnglishToLocalizedDigits(text);
+                setText(localizedStr);
+                listView.getSelectionModel().select(item);
+                deferredSelectedItem = item;
+                selectedItem = item;
+                setValue(item);
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -1097,9 +1117,9 @@ public class AutoSearchTextField<T> extends TextField {
             } else {
                 String rawMainText = textExtractor.apply(item);
                 String rawSubText = (subTextExtractor != null) ? subTextExtractor.apply(item) : null;
-                mainLabel.setText(com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(rawMainText));
+                mainLabel.setText(convertEnglishToLocalizedDigits(rawMainText));
                 if (rawSubText != null && !rawSubText.trim().isEmpty()) {
-                    subLabel.setText(com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits(rawSubText));
+                    subLabel.setText(convertEnglishToLocalizedDigits(rawSubText));
                     subLabel.setVisible(true);
                     subLabel.setManaged(true);
                     cellLayout.setSpacing(2);
