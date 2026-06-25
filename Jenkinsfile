@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven3'
+        jdk   'Zulu11'
+    }
+
     environment {
         APP_DIR    = '/mnt/jenkins/BANAS - SETUP/eipl-amcs'
         OUTPUT_DIR = '/mnt/jenkins/Output'
