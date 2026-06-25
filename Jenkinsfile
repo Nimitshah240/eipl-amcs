@@ -1,17 +1,16 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'
-        jdk   'Zulu11'
-    }
-
     environment {
+        MAVEN_HOME = '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3'
+        PATH       = "/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:${env.PATH}"
         APP_DIR    = '/mnt/jenkins/BANAS - SETUP/eipl-amcs'
         OUTPUT_DIR = '/mnt/jenkins/Output'
         ISS_FILE   = 'Z:\\mnt\\jenkins\\BANAS - SETUP\\eipl-amcs\\setup.iss'
         ISCC       = '/mnt/innosetup/ISCC.exe'
         DISPLAY    = ':99'
+        WINEDEBUG  = '-all'
+        WINEPREFIX = '/root/.wine'
     }
 
     stages {
@@ -53,8 +52,10 @@ pipeline {
                 sh """
                     mkdir -p "${OUTPUT_DIR}"
                     Xvfb :99 -screen 0 1024x768x16 &
-                    sleep 2
-                    WINEDEBUG=-all DISPLAY=:99 wine "${ISCC}" "${ISS_FILE}"
+                    sleep 3
+                    DISPLAY=:99 wineboot --init
+                    sleep 5
+                    DISPLAY=:99 wine "${ISCC}" "${ISS_FILE}"
                 """
             }
         }
