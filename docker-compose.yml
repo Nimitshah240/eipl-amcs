@@ -14,6 +14,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - N:/Jenkins:/mnt/jenkins
       - C:/Program Files (x86)/Inno Setup 6:/mnt/innosetup
+      - N:/PharmaOne/JAVA/zulu11:/mnt/zulu11
     restart: unless-stopped
 
 volumes:
