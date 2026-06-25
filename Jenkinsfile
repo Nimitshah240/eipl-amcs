@@ -14,8 +14,23 @@ pipeline {
     stages {
         stage('Maven Compile & Package') {
             steps {
-                echo 'Executing Containerized Maven Build...'
-                sh 'mvn clean package'
+                echo 'Locating and running containerized Java/Maven tools...'
+                sh '''
+                    # Find exactly where apt-get installed Zulu 11 and Maven binaries
+                    export JAVA_HOME=\$(readlink -f /usr/bin/java | sed "s:/bin/java::")
+                    export M2_HOME=/usr/share/maven
+                    export PATH="\$M2_HOME/bin:\$JAVA_HOME/bin:\$PATH"
+
+                    # Print out locations to your build log console for validation
+                    echo "Resolved JAVA_HOME: \$JAVA_HOME"
+                    echo "Resolved M2_HOME: \$M2_HOME"
+
+                    java -version
+                    mvn -version
+
+                    # Execute compilation execution loop
+                    mvn clean package
+                '''
             }
         }
 
@@ -45,7 +60,6 @@ pipeline {
                     NEW_JAR="eipl-amcs-merge-${params.APP_VERSION}.jar"
 
                     if [ -f "\$BAT_FILE" ]; then
-                        # FIXED: Double backslash (\\\\.) lets Groovy parse the regex string without crashing
                         sed -i "s/java -jar eipl-amcs-merge-.*\\.jar/java -jar \$NEW_JAR/g" "\$BAT_FILE"
                     else
                         echo "java -jar \$NEW_JAR" > "\$BAT_FILE"
