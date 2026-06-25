@@ -22,7 +22,6 @@ pipeline {
         stage('Stage Core Executables') {
             steps {
                 echo 'Updating Application JAR and library dependencies...'
-                // Linux replacement for the previous PowerShell script
                 sh """
                     # 1. Clear out older versioned JARs
                     rm -f "${env.STAGING_APP_DIR}"/eipl-amcs-merge-*.jar
@@ -46,8 +45,8 @@ pipeline {
                     NEW_JAR="eipl-amcs-merge-${params.APP_VERSION}.jar"
 
                     if [ -f "\$BAT_FILE" ]; then
-                        # Use sed to replace the old java -jar line with the new versioned name smoothly
-                        sed -i "s/java -jar eipl-amcs-merge-.*\.jar/java -jar \$NEW_JAR/g" "\$BAT_FILE"
+                        # FIXED: Double backslash (\\\\.) lets Groovy parse the regex string without crashing
+                        sed -i "s/java -jar eipl-amcs-merge-.*\\.jar/java -jar \$NEW_JAR/g" "\$BAT_FILE"
                     else
                         echo "java -jar \$NEW_JAR" > "\$BAT_FILE"
                     fi
@@ -84,7 +83,6 @@ pipeline {
         stage('Compile Inno Setup Installer') {
             steps {
                 echo 'Triggering Inno Setup inside Wine environment...'
-                // Calls our internal Linux custom alias command 'iscc' created in Step 2
                 sh """
                     iscc /DMyAppVersion="${params.APP_VERSION}" "${env.ISS_FILE_PATH}"
                 """
