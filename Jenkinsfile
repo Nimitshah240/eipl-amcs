@@ -1,10 +1,12 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven3'
+        jdk   'Zulu11'
+    }
+
     environment {
-        JAVA_HOME  = '/mnt/zulu11'
-        MAVEN_HOME = '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3'
-        PATH       = "/mnt/zulu11/bin:/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:${env.PATH}"
         APP_DIR    = '/mnt/jenkins/BANAS - SETUP/eipl-amcs'
         OUTPUT_DIR = '/mnt/jenkins/Output'
         ISS_FILE   = 'Z:\\mnt\\jenkins\\BANAS - SETUP\\eipl-amcs\\setup.iss'
