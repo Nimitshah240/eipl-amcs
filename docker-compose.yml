@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   jenkins:
-    build: .
+    image: jenkins/jenkins:lts
     container_name: jenkins-server
     privileged: true
     user: root
@@ -12,8 +12,13 @@ services:
     volumes:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      # Mount the whole Jenkins folder. Inside Docker, this becomes /mnt/jenkins
       - N:/Jenkins:/mnt/jenkins
+    # This automatically pre-installs Maven and standard JDK on startup
+    entrypoint: >
+      bash -c "
+      apt-get update && apt-get install -y maven OpenJDK-11-jdk &&
+      /usr/bin/tini -- /usr/local/bin/jenkins.sh
+      "
     restart: unless-stopped
 
 volumes:
