@@ -2,13 +2,12 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-# Install dependencies + Wine (32+64 bit)
+# Install Wine (32+64 bit) and Xvfb only - no Inno Setup needed
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         wget \
         gnupg \
-        software-properties-common \
         wine \
         wine32 \
         wine64 \
@@ -35,13 +34,5 @@ RUN wget -qO /tmp/maven.tar.gz \
 
 ENV MAVEN_HOME=/opt/maven
 ENV PATH="$MAVEN_HOME/bin:$PATH"
-
-# Install Inno Setup 6 via Wine (silent)
-RUN wget -qO /tmp/innosetup.exe \
-    https://files.jrsoftware.org/is/6/innosetup-6.3.3.exe && \
-    WINEDEBUG=-all DISPLAY=:99 Xvfb :99 -screen 0 1024x768x16 & \
-    sleep 3 && \
-    wine /tmp/innosetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- && \
-    rm /tmp/innosetup.exe
 
 USER jenkins
