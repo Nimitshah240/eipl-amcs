@@ -18,30 +18,31 @@ pipeline {
 
     stages {
         stage('Setup Build Tools') {
-            steps {
-                echo 'Provisioning portable Zulu 11 and Apache Maven binaries...'
-                sh '''
-                    mkdir -p "${TOOL_DIR}"
-                    cd "${TOOL_DIR}"
+                    steps {
+                        echo 'Provisioning portable Zulu 11 (with JavaFX) and Apache Maven binaries...'
+                        sh '''
+                            mkdir -p "${TOOL_DIR}"
+                            cd "${TOOL_DIR}"
 
-                    if [ ! -d "zulu11" ]; then
-                        echo "Downloading Azul Zulu 11..."
-                        curl -sL "https://cdn.azul.com/zulu/bin/zulu11.76.21-ca-jdk11.0.25-linux_x64.tar.gz" -o zulu.tar.gz
-                        tar -xzf zulu.tar.gz
-                        mv zulu11.* zulu11
-                        rm zulu.tar.gz
-                    fi
+                            if [ ! -d "zulu11" ]; then
+                                echo "Downloading Azul Zulu 11 with JavaFX..."
+                                # Swapped to the FX bundle link
+                                curl -sL "https://cdn.azul.com/zulu/bin/zulu11.76.23-ca-fx-jdk11.0.25-linux_x64.tar.gz" -o zulu.tar.gz
+                                tar -xzf zulu.tar.gz
+                                mv zulu11.* zulu11
+                                rm zulu.tar.gz
+                            fi
 
-                    if [ ! -d "maven" ]; then
-                        echo "Downloading Apache Maven..."
-                        curl -sL "https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz" -o maven.tar.gz
-                        tar -xzf maven.tar.gz
-                        mv apache-maven-3.9.6 maven
-                        rm maven.tar.gz
-                    fi
-                '''
-            }
-        }
+                            if [ ! -d "maven" ]; then
+                                echo "Downloading Apache Maven..."
+                                curl -sL "https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz" -o maven.tar.gz
+                                tar -xzf maven.tar.gz
+                                mv apache-maven-3.9.6 maven
+                                rm maven.tar.gz
+                            fi
+                        '''
+                    }
+                }
 
         stage('Maven Compile & Package') {
             steps {
