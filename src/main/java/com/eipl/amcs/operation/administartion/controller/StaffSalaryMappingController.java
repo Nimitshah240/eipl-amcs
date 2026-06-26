@@ -4,6 +4,8 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.service.NextCodeService;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -53,9 +55,9 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     @FXML
     Button btnClose, btnSave;
     @FXML
-    DatePicker dpDate;
+    E_DatePicker dpDate;
     @FXML
-    ComboBox<StaffMember> cboxStaff;
+    AutoSearchTextField<StaffMember> cboxStaff;
     private List<StaffMember> listStaffMembers;
     private List<StaffSalaryHead> listStaffSalaryHead;
     private List<StaffSalaryMapping> staffSalaryMappingList;
@@ -174,8 +176,8 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
         new Thread(task).start();
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
-    }
+
+//    public void setupComboBox() {
+//        cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
+//    }
 }

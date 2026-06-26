@@ -1,5 +1,6 @@
 package com.eipl.amcs.controls;
 
+import com.eipl.amcs.MainApp;
 import com.ibm.icu.text.Transliterator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,7 +14,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Popup;
 
 import java.util.List;
@@ -51,6 +51,8 @@ public class AutoSearchTextField<T> extends TextField {
     //NIMIT | 03.06.2026 | Tracks objects selected before items are loaded
     private T deferredSelectedItem = null;
     private boolean openPopup = true;
+    // FIX: Maintain a single, permanent instance of your selection model
+    private final FakeSelectionModel selectionModelInstance = new FakeSelectionModel();
 
     /**
      * FXML Default Constructor. Required by FXMLLoader.
@@ -200,8 +202,14 @@ public class AutoSearchTextField<T> extends TextField {
      * just click enter without changing data then it will take the pre-selected value.
      */
     private void wireKeyNavigation() {
-        addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER && popup.isShowing()) {
+                event.consume();
+            }
+        });
+
+        addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 //          Nimit | 03.06.2026 : WHEN POPUP IS NOT VISIBLE - KEY ACTIONS.
             if (!popup.isShowing()) {
                 this.openPopup = true;
@@ -272,13 +280,18 @@ public class AutoSearchTextField<T> extends TextField {
                 case ENTER:
                     T highlighted = listView.getSelectionModel().getSelectedItem();
                     if (highlighted != null) {
+                        // 1. Assign values completely synchronously
                         selectItem(highlighted);
+
+                        // 2. Fire the ActionEvent and handle focus shifts
                         this.fireEvent(new javafx.event.ActionEvent(this, null));
+                        Platform.runLater(() -> {
+                            this.fireEvent(new KeyEvent(
+                                    KeyEvent.KEY_PRESSED, "", "",
+                                    KeyCode.TAB, false, false, false, false
+                            ));
+                        });
                     }
-                    this.fireEvent(new KeyEvent(
-                            KeyEvent.KEY_PRESSED, "", "",
-                            KeyCode.TAB, false, false, false, false
-                    ));
                     event.consume();
                     break;
                 case ESCAPE:
@@ -448,6 +461,8 @@ public class AutoSearchTextField<T> extends TextField {
     private void selectItem(T item) {
         currentWord.setLength(0);
         previousGujaratiLength = 0;
+
+        selectionModelInstance.updateSelectedProperties(item);
         selectedItem = item;
         if (masterList != null && item != null) {
             selectedIndex = masterList.indexOf(item);
@@ -473,6 +488,7 @@ public class AutoSearchTextField<T> extends TextField {
      */
     public void setValue(T item) {
         if (item == null) {
+            setText(null);
             return;
         }
         if (masterList != null) {
@@ -671,11 +687,21 @@ public class AutoSearchTextField<T> extends TextField {
     //                                      ~~~ FAKE COMBOX METHOD ~~~
 //----------------------------------------------------------------------------------------------------------------------
     public FakeSelectionModel getSelectionModel() {
-        return new FakeSelectionModel();
+        return this.selectionModelInstance;
     }
 
     public class FakeSelectionModel {
 
+        // Internal synchronizer to route global values cleanly down to property listeners
+        protected void updateSelectedProperties(T item) {
+            selectedItem = item;
+            if (masterList != null && item != null) {
+                selectedIndex = masterList.indexOf(item);
+            } else if (item == null) {
+                selectedIndex = -1;
+            }
+//            this.selectedItemProperty.set(item);
+        }
 
         /**
          * Change History:
@@ -834,6 +860,24 @@ public class AutoSearchTextField<T> extends TextField {
                 if (masterList == null || masterList.isEmpty())
                     return;
                 T item = masterList.get(0);
+                String text = textExtractor.apply(item);
+                String localizedStr = convertEnglishToLocalizedDigits(text);
+                setText(localizedStr);
+                listView.getSelectionModel().select(item);
+                deferredSelectedItem = item;
+                selectedItem = item;
+                setValue(item);
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void selectLast() {
+            try {
+                if (masterList == null || masterList.isEmpty())
+                    return;
+                selectedIndex = masterList.size() - 1;
+                T item = masterList.get(selectedIndex);
                 String text = textExtractor.apply(item);
                 String localizedStr = convertEnglishToLocalizedDigits(text);
                 setText(localizedStr);
@@ -1089,9 +1133,11 @@ public class AutoSearchTextField<T> extends TextField {
         private final VBox cellLayout = new VBox(mainLabel, subLabel);
 
         DynamicCell() {
-            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
+            mainLabel.setFont(javafx.scene.text.Font.font(MainApp.getProperty("slip.font", "System"), javafx.scene.text.FontWeight.BOLD, 14));
+            subLabel.setFont(javafx.scene.text.Font.font(MainApp.getProperty("slip.front", "System"), 14));
+//            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
             mainLabel.setTextFill(Color.web("#2c3e50"));
-            subLabel.setFont(Font.font("System", 11));
+//            subLabel.setFont(Font.font("System", 11));
             subLabel.setTextFill(Color.web("#7f8c8d"));
 
             hoverProperty().addListener((obs, w, isHovered) -> updateBackground());

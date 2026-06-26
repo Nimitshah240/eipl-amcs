@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -50,7 +51,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<Ledger, LedgerGroup> colLedgerGroup;
     @FXML
-    ComboBox<LedgerGroup> cboxLedgerGroup;
+    AutoSearchTextField<LedgerGroup> cboxLedgerGroup;
     @FXML
     TextField txtSearch;
     @FXML
@@ -294,7 +295,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
     }
 
     public void loadLedgerGroups() {
-        cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
+//        cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
         LedgerGroupLoadTask task = new LedgerGroupLoadTask();
         task.setOnSucceeded(e -> {
             try {

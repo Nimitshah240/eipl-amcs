@@ -2,13 +2,13 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.*;
-import com.eipl.amcs.master.account.converter.SubLedgerConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.model.SubLedgerOpeningBalance;
 import com.eipl.amcs.master.account.task.*;
-import com.eipl.amcs.master.global.convertor.CustomerTypeConvertor;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.CustomerTypeKeyValDto;
 import com.eipl.amcs.utils.FocusUtils;
@@ -19,7 +19,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -51,15 +54,15 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     @FXML
     Button btnClose, btnSave, btnDelete, btnImport;
     @FXML
-    private TextField txtBalance;
+    private E_NumericField txtBalance;
     @FXML
-    private ComboBox<String> cboxType;
+    private AutoSearchTextField<String> cboxType;
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxSubLedgerType;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxSubLedgerType;
     @FXML
-    private ComboBox<SubLedger> cboxSubLedger;
+    private AutoSearchTextField<SubLedger> cboxSubLedger;
     @FXML
-    private ComboBox<FinancialYear> cboxFinancialYear;
+    private AutoSearchTextField<FinancialYear> cboxFinancialYear;
     private List<SubLedger> subledgerList;
     private List<FinancialYear> financialYearList;
     private ResourceBundle resourceBundle;
@@ -83,6 +86,8 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         cboxType.getItems().addAll("Debit", "Credit");
         cboxType.getSelectionModel().select(0);
         cboxSubLedgerType.getItems().addAll(CommonUtils.getAllCustomerTypes());
+        cboxSubLedgerType.getSelectionModel().select(0);
+        loadSubLedger();
         loadData();
 
         loadFinancialYear();
@@ -133,8 +138,8 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxSubLedger.setConverter(new SubLedgerConvertor(cboxSubLedger));
-        cboxSubLedgerType.setConverter(new CustomerTypeConvertor(cboxSubLedgerType));
+//        cboxSubLedger.setConverter(new SubLedgerConvertor(cboxSubLedger));
+//        cboxSubLedgerType.setConverter(new CustomerTypeConvertor(cboxSubLedgerType));
 
     }
 
@@ -142,7 +147,7 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         subLedgerOpeningBalance = new SubLedgerOpeningBalance();
         subLedgerOpeningBalance.setSociety(MainApp.identityDto.getSociety());
         subLedgerOpeningBalance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-        subLedgerOpeningBalance.setBalance(new BigDecimal(txtBalance.getText()));
+        subLedgerOpeningBalance.setBalance(new BigDecimal(txtBalance.getInputText()));
         subLedgerOpeningBalance.setFinancialYearsCode(cboxFinancialYear.getValue().getCode());
         subLedgerOpeningBalance.setSubLedger(cboxSubLedger.getValue());
         subLedgerOpeningBalance.setCreditDebit(!cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("debit")));
@@ -237,7 +242,7 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     public void setupTable() {
         colFinancialYear.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFinancialYearsCode()));
         colBalance.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBalance()));
-        colSubLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSubLedger().getName()));
+        colSubLedger.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSubLedger().toString()));
         colType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCreditDebit() ?
                 resourceBundle.getString("credit") : resourceBundle.getString("debit")));
 

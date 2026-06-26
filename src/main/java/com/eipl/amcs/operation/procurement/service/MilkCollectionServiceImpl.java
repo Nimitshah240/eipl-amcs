@@ -1,12 +1,12 @@
 package com.eipl.amcs.operation.procurement.service;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.repository.NextCodeRepository;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.EntityNotFoundException;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.repository.*;
 import com.eipl.amcs.master.global.model.MilkQualityType;
-import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.repository.MilkQualityTypeRepository;
 import com.eipl.amcs.master.global.repository.MilkTypeRepository;
@@ -108,6 +108,7 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
 
         return milkCollectionRepository.findTop10MemberSummaries(start, end, selectedMilkTypeCode, topTen);
     }
+
     @Override
     public List<MilkCollection> findAllCollectionByDate(LocalDateTime fromDt, LocalDateTime toDt, String headers) {
         List<MilkCollection> milkCollectionList = milkCollectionRepository.findByCollectionDateBetween(fromDt, toDt, Sort.by("collectionDate"));
@@ -634,11 +635,18 @@ public class MilkCollectionServiceImpl implements MilkCollectionService {
 
     @Override
     public List<MilkCollection> findAllCollectionByDockNo(LocalDateTime fromDt, LocalDateTime toDt, String dockNo) {
-        Dock dock = dockRepository.findById(dockNo)
-                .orElseThrow(() -> new EntityNotFoundException(Dock.class, "dock", dockNo));
-        Sort sort = Sort.by("collectionDate").descending()
-                .and(Sort.by("sampleNo").ascending());
-        return milkCollectionRepository.findByCollectionDateBetweenAndDock(fromDt, toDt, dock, sort);
+        if (dockNo.contains(MainApp.getBundle().getString("all")) || dockNo.equalsIgnoreCase("0")) {
+            List<Dock> dock = dockRepository.findAll();
+            Sort sort = Sort.by("collectionDate").descending()
+                    .and(Sort.by("sampleNo").ascending());
+            return milkCollectionRepository.findByCollectionDateBetweenAndDockIn(fromDt, toDt, dock, sort);
+        } else {
+            Dock dock = dockRepository.findById(dockNo)
+                    .orElseThrow(() -> new EntityNotFoundException(Dock.class, "dock", dockNo));
+            Sort sort = Sort.by("collectionDate").descending()
+                    .and(Sort.by("sampleNo").ascending());
+            return milkCollectionRepository.findByCollectionDateBetweenAndDock(fromDt, toDt, dock, sort);
+        }
     }
 
     @Override

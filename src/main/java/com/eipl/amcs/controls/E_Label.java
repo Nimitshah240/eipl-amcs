@@ -12,6 +12,25 @@ public class E_Label extends Label {
         initLocalizationListener();
     }
 
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 24/06/2026    Nimit             1.0.0      Added method to get locale number input in English in backend.
+     */
+    public String getInputText() {
+        try {
+            String rawText = getText();
+            if (rawText == null || rawText.trim().isEmpty()) {
+                return "";
+            }
+            return FormatterFactory.convertLocalizedToEnglishDigits(rawText.trim());
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public E_Label(String text) {
         super(FormatterFactory.convertEnglishToLocalizedDigits(text));
         initLocalizationListener();

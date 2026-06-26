@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import com.eipl.amcs.controls.E_Button?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.share.controller.ShareDividendController">
     <children>
         <VBox prefWidth="100.0" spacing="15.0">
@@ -43,7 +44,7 @@
                      <children>
                         <E_DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label text="%fromdate" />
                         <Label text="%todate" GridPane.columnIndex="1" />
                         <Label text="%type" GridPane.columnIndex="2" />

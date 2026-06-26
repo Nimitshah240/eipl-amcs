@@ -3,11 +3,12 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
@@ -17,9 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -36,9 +35,9 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<Product> cboxProduct;
+    private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private TextField txtPurchaseRate;
+    private E_NumericField txtPurchaseRate;
     @FXML
     private GridPane grid;
     @FXML
@@ -83,7 +82,7 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
+//        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
         dpWefDate.setConverter(new LocalDateConvertor());
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -120,14 +119,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         productPurchaseRate.setSociety(MainApp.identityDto.getSociety());
         productPurchaseRate.setUnion(MainApp.identityDto.getUnion());
         productPurchaseRate.setWefDate(dpWefDate.getValue());
-        productPurchaseRate.setRate(new BigDecimal(txtPurchaseRate.getText()));
+        productPurchaseRate.setRate(new BigDecimal(txtPurchaseRate.getInputText()));
         return productPurchaseRate;
     }
 
     private ProductPurchaseRate setValuesInObjectUpdate() {
         dto.setProduct(cboxProduct.getValue());
         dto.setWefDate(dpWefDate.getValue());
-        dto.setRate(new BigDecimal(txtPurchaseRate.getText()));
+        dto.setRate(new BigDecimal(txtPurchaseRate.getInputText()));
         return dto;
     }
 
@@ -142,14 +141,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private boolean validate() {
         if (cboxProduct.getValue() == null)
             errorMsg.append("Product can not be null or empty\n");
-        if (txtPurchaseRate.getText() == null)
+        if (txtPurchaseRate.getInputText() == null)
             errorMsg.append("Union can not be null or empty\n");
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0 || Double.parseDouble(txtPurchaseRate.getText()) >= 1000000)
+            if (Double.parseDouble(txtPurchaseRate.getInputText()) <= 0 || Double.parseDouble(txtPurchaseRate.getInputText()) >= 1000000)
                 errorMsg.append(resourceBundle.getString("entervalidrate") + "\n");
-            Double.parseDouble(txtPurchaseRate.getText().trim());
+            Double.parseDouble(txtPurchaseRate.getInputText().trim());
         } catch (NumberFormatException e) {
             errorMsg.append(resourceBundle.getString("purchaseratenullerror") + "\n");
         }
@@ -174,13 +173,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         });
 
         task.setOnFailed(e -> {
-            try {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
-                        resourceBundle.getString("error.occurred"));
-                alert.createAlert();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("wefdate.not.valid")) {
+                errorMessage = "wefdate.not.valid";
             }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
         });
         new Thread(task).start();
     }

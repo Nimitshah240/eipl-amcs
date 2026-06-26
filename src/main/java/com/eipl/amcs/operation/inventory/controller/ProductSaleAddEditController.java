@@ -56,6 +56,7 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -77,9 +78,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance, txtBatch;
+    private E_TextField txtInvoiceNo, txtConsumerName,  txtBatch;
     @FXML
-    private E_NumericField txtConsumerCode, txtCreditLimit, txtQuantity, txtRate, txtAmount, txtNetAmount,
+    private E_NumericField txtConsumerCode, txtCreditLimit,txtDifferance, txtQuantity, txtRate, txtAmount, txtNetAmount,
             txtTotalAmount, txtNoOfInstallment, txtTotalDiscount, txtMilkAmount, txtDeductionAmount, txtTotalAmountTax, txtNetPayable;
     @FXML
     private E_DatePicker dpMilkFromDate, dpMilkToDate, dpDeductionToDate, dpDeductionFromDate, dpDate, dpDeductionStartDate;
@@ -243,20 +244,21 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             }
         });
 
+        dpMilkFromDate.setDisable(false);
+        dpMilkToDate.setDisable(false);
+        dpDeductionFromDate.setDisable(false);
+        dpDeductionToDate.setDisable(false);
+        dpDeductionStartDate.setDisable(false);
+        dpDeductionStartDate.setValue(dpDate.getValue());
         rbtnCredit.setOnAction(event -> {
             cboxType.setDisable(true);
             cboxType.getSelectionModel().select(0);
             txtConsumerCode.clear();
             txtConsumerName.clear();
-            dpMilkFromDate.setDisable(false);
-            dpMilkToDate.setDisable(false);
-            dpDeductionFromDate.setDisable(false);
-            dpDeductionToDate.setDisable(false);
-            dpDeductionStartDate.setDisable(false);
-            dpDeductionStartDate.setValue(dpDate.getValue());
             txtNoOfInstallment.setDisable(true);
             txtNoOfInstallment.setText("1");
             btnInstallments.setDisable(false);
+            txtConsumerCode.setDisable(false);
         });
         rbtnCash.setOnAction(event -> {
             cboxType.setDisable(false);
@@ -273,6 +275,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             dpDeductionStartDate.setDisable(true);
             txtNoOfInstallment.setDisable(true);
             btnInstallments.setDisable(true);
+            cboxType.setDisable(true);
+            txtConsumerCode.setDisable(true);
         });
 
 
@@ -698,8 +702,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             return;
         }
         BigDecimal diff = BigDecimal.ZERO;
-        if (!txtDifferance.getText().equals("0"))
-            diff = new BigDecimal(txtDifferance.getText()).subtract(new BigDecimal(txtNetPayable.getInputText()));
+        if (!txtDifferance.getInputText().equals("0"))
+            diff = new BigDecimal(txtDifferance.getInputText()).subtract(new BigDecimal(txtNetPayable.getInputText()));
 
         if (rbtnCredit.isSelected() && diff.compareTo(BigDecimal.ZERO) < 0) {
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
@@ -711,7 +715,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         }
         if (rbtnCredit.isSelected()) {
             String formattedDate = dpDeductionStartDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String msg = "Do you want to save data? Deduction will start from " + formattedDate;
+            String pattern = resourceBundle.getString("save.confirmation.msg");
+            String msg = MessageFormat.format(pattern, formattedDate);
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsale"), msg);
             alert.createAlert();
             Optional<ButtonType> resp = alert.createConfirmationAlert();
@@ -760,7 +765,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     private void viewInstallmentPopup() {
         if (installmentList == null || installmentList.isEmpty())
             return;
-        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this);
+        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this, resourceBundle.getString("installmenttitle"));
     }
 
     private void prepareInstallment() {

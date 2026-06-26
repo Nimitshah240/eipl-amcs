@@ -181,7 +181,7 @@ public class ShareIssueController implements MyInitialization, PopupCallback {
     @Override
     public void setupTable() {
         try {
-            colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode()));
+            colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode().substring(MainApp.identityDto.getSociety().getCode().length())));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getIssueDate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareAmount()));
             colNoOfShare.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfShare().toString()));

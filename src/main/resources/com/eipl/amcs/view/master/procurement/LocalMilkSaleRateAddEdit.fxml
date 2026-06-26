@@ -15,6 +15,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <StackPane fx:id="root" prefWidth="500.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.procurement.controller.LocalMilkSaleRateAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="">
@@ -37,9 +39,9 @@
                         <Label text="%milktype" GridPane.columnIndex="1" />
                         <Label text="%milkclass" GridPane.columnIndex="2" />
                         <Label text="%rateltr" GridPane.rowIndex="2" />
-                        <DatePicker fx:id="dpWefDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxMilkClass" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpWefDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxMilkClass" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <E_NumericField fx:id="txtRate" GridPane.rowIndex="3" />
                     </children>
                 </GridPane>

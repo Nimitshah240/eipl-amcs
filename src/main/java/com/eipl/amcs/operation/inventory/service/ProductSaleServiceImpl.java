@@ -126,8 +126,10 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
 
         ProductSaleDto dtoNew = new ProductSaleDto();
-
-        String voucherNo = createAutoPosting(productSaleDto, null, identityInfo);
+        String voucherNo = null;
+        if (!productSaleDto.getProductSale().getXCol3().equalsIgnoreCase("kapaat")) {
+            voucherNo = createAutoPosting(productSaleDto, null, identityInfo);
+        }
         productSaleDto.getProductSale().setInitData();
         productSaleDto.getProductSale().setSociety(societyRepository.findById(societyCode).get());
         productSaleDto.getProductSale().setUnion(unionRepository.findById(unionCode).get());
@@ -180,8 +182,8 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                     taxCnt++;
                 }
             }
-
-            setupProductStock(dto.getTransaction(), productSaleDto.getProductSale().getSociety(), "CREATE", "Product Sale Add", identityInfo);
+            if (!productSaleDto.getProductSale().getXCol3().equalsIgnoreCase("kapaat"))
+                setupProductStock(dto.getTransaction(), productSaleDto.getProductSale().getSociety(), "CREATE", "Product Sale Add", identityInfo);
             listNew.add(temp);
         }
         int txnInstallment = 1;
@@ -471,9 +473,11 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
 
         ProductSaleDto dtoNew = new ProductSaleDto();
-        createAutoPosting(productSaleDto, productSaleDto.getProductSale().getVoucherNo(), identityInfo);
-        String voucherNo = createAutoPosting(productSaleDto, null, identityInfo);
-
+        String voucherNo = null;
+        if (!productSaleDto.getProductSale().getXCol3().equalsIgnoreCase("kapaat")) {
+            createAutoPosting(productSaleDto, productSaleDto.getProductSale().getVoucherNo(), identityInfo);
+            voucherNo = createAutoPosting(productSaleDto, null, identityInfo);
+        }
 
         productSaleDto.getProductSale().setInitData();
         productSaleDto.getProductSale().setVoucherNo(voucherNo);
@@ -524,7 +528,8 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                 }
             }
 
-            setupProductStock(dto.getTransaction(), productSaleDto.getProductSale().getSociety(), "CREATE", "Product Sale Add", identityInfo);
+            if (!productSaleDto.getProductSale().getXCol3().equalsIgnoreCase("kapaat"))
+                setupProductStock(dto.getTransaction(), productSaleDto.getProductSale().getSociety(), "CREATE", "Product Sale Add", identityInfo);
             listNew.add(temp);
         }
         int txnInstallment = 1;
@@ -573,7 +578,8 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
         List<ProductSaleTransaction> listTxn = saleTransRepository.findByProductSale(productSale);
         for (ProductSaleTransaction txn : listTxn) {
-            setupProductStock(txn, productSale.getSociety(), "DELETE", "Product Sale Delete", identityInfo);
+            if (!productSale.getXCol3().equalsIgnoreCase("kapaat"))
+                setupProductStock(txn, productSale.getSociety(), "DELETE", "Product Sale Delete", identityInfo);
             txn.setProduct(null);
             saleTransRepository.customDelete(txn, identityInfo);
         }

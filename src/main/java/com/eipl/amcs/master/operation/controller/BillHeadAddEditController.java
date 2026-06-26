@@ -3,6 +3,7 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -33,7 +34,7 @@ public class BillHeadAddEditController implements MyInitialization {
     private StackPane root;
 
     @FXML
-    private ComboBox cboxDisbursment;
+    private AutoSearchTextField cboxDisbursment;
 
     @FXML
     private Button btnClose, btnSaveUpdate;

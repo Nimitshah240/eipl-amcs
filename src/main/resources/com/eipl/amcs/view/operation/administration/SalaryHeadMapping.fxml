@@ -12,6 +12,7 @@
 
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_Label?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.StaffSalaryMappingController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
@@ -19,7 +20,7 @@
                 <E_Label styleClass="header-text" text="%staffsalarymapping" />
                 <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <ComboBox fx:id="cboxStaff" editable="true" prefWidth="130.0" />
+                        <AutoSearchTextField fx:id="cboxStaff" editable="true" prefWidth="130.0" />
                         <E_DatePicker fx:id="dpDate" prefWidth="120.0" />
                     </children>
                 </HBox>

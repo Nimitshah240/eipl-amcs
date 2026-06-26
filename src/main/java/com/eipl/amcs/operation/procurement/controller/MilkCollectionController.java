@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -74,11 +75,11 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
     @FXML
     DatePicker dpFromDate, dpToDate;
     @FXML
-    ComboBox<Shift> cboxFromShift, cboxToShift;
+    AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
     Button btnSearch, btnClose, btnStartCollection, btnImport, btnExport, btnSync;
     @FXML
-    private ComboBox<Dock> cboxDock;
+    private AutoSearchTextField<Dock> cboxDock;
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
@@ -370,7 +371,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                         cboxDock.setItems(FXCollections.observableList(listDock));
                         cboxDock.getSelectionModel().select(0);
                     } else {
-                        listDock.add(0, new Dock("All"));
+                        listDock.add(0, new Dock(resourceBundle.getString("all")));
                         cboxDock.setItems(FXCollections.observableList(listDock));
                     }
                 }
@@ -406,8 +407,8 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
 
     @Override
     public void setupComboBox() {
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -420,7 +421,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        cboxDock.setConverter(new DockConvertor(cboxDock));
+//        cboxDock.setConverter(new DockConvertor(cboxDock));
         cboxDock.getSelectionModel().select(0);
     }
 

@@ -128,6 +128,7 @@ public class DeadStockController implements MyInitialization, PopupCallback {
                     break;
             }
         });
+
     }
 
     private void searchData() {
@@ -164,13 +165,13 @@ public class DeadStockController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCode()));
+        colCode.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCode().substring(MainApp.identityDto.getSociety().getCode().length())));
         colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         colNameLocal.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNameLocal()));
         colQty.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQty()));
         colAmount.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAmount()));
         colPurchaseDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getPurchaseDate()));
-        colLedgerAccount.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLedger().getName()));
+        colLedgerAccount.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLedger().toString()));
 
         propDeadStockDto.bind(tableDeadStock.getSelectionModel().selectedItemProperty());
         TableLocalizationUtil.localizeTable(tableDeadStock);

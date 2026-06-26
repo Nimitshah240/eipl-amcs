@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.eipl.amcs.controls.E_Button?>
-<?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.scene.control.Button?>
 <?import com.eipl.amcs.controls.E_Label?>
@@ -23,7 +23,7 @@
                         <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                styleClass="header-text" text="%ledger"/>
                         <E_Label maxWidth="1.7976931348623157E308" styleClass="header-text" HBox.hgrow="ALWAYS"/>
-                        <E_ComboBox fx:id="cboxLedgerGroup"/>
+                        <AutoSearchTextField fx:id="cboxLedgerGroup"/>
                         <E_TextField fx:id="txtSearch"/>
                         <E_Button fx:id="btnClear" minHeight="35.0" minWidth="100.0" text="%clear">
                             <graphic>

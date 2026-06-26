@@ -54,7 +54,7 @@
                                                        GridPane.rowIndex="2"/>
                                                 <Label text="%designation" GridPane.columnIndex="2"
                                                        GridPane.rowIndex="2"/>
-                                                <E_TextField fx:id="txtCode" disable="true"
+                                                <E_NumericField fx:id="txtCode" disable="true"
                                                              maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
                                                 <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308"
                                                              GridPane.columnIndex="1" GridPane.columnSpan="2"
@@ -62,7 +62,7 @@
                                                 <E_TextFieldLocal fx:id="txtNameLocal" maxWidth="1.7976931348623157E308"
                                                                   GridPane.columnIndex="3" GridPane.columnSpan="2"
                                                                   GridPane.rowIndex="1"/>
-                                                <E_TextField fx:id="txtMobileNo" maxWidth="1.7976931348623157E308"
+                                                <E_NumericField fx:id="txtMobileNo" maxWidth="1.7976931348623157E308"
                                                              GridPane.rowIndex="3"/>
                                                 <E_TextField fx:id="txtQualification" maxWidth="1.7976931348623157E308"
                                                              GridPane.columnIndex="1" GridPane.rowIndex="3"/>
@@ -90,9 +90,9 @@
                                                 <E_DatePicker fx:id="dpResignationDate"
                                                               maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
                                                               GridPane.rowIndex="7"/>
-                                                <E_TextField fx:id="txtSalary" maxWidth="1.7976931348623157E308"
+                                                <E_NumericField fx:id="txtSalary" maxWidth="1.7976931348623157E308"
                                                              GridPane.columnIndex="3" GridPane.rowIndex="7"/>
-                                                <E_TextField fx:id="txtFarmerCode" maxWidth="1.7976931348623157E308"
+                                                <E_NumericField fx:id="txtFarmerCode" maxWidth="1.7976931348623157E308"
                                                              GridPane.rowIndex="9"/>
                                                 <E_CheckBox fx:id="chkCommittee" mnemonicParsing="false"
                                                             text="%iscommittee" GridPane.columnIndex="1"
@@ -147,7 +147,7 @@
                                                                              maxWidth="1.7976931348623157E308"
                                                                              GridPane.columnIndex="1"
                                                                              GridPane.rowIndex="1"/>
-                                                        <E_TextField fx:id="txtAcNo" maxWidth="1.7976931348623157E308"
+                                                        <E_NumericField fx:id="txtAcNo" maxWidth="1.7976931348623157E308"
                                                                      GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                                                         <E_TextField fx:id="txtIfsc" maxWidth="1.7976931348623157E308"
                                                                      GridPane.columnIndex="3" GridPane.rowIndex="1"/>
@@ -210,15 +210,15 @@
                                                 <E_TextField fx:id="txtRelation" GridPane.columnIndex="1"
                                                              GridPane.rowIndex="2"/>
                                                 <E_TextField fx:id="txtGuarantorName" GridPane.rowIndex="5"/>
-                                                <E_TextField fx:id="txtGuarantorMobileNo" GridPane.columnIndex="1"
+                                                <E_NumericField fx:id="txtGuarantorMobileNo" GridPane.columnIndex="1"
                                                              GridPane.rowIndex="5"/>
                                                 <Label maxHeight="1.7976931348623157E308"
                                                        maxWidth="1.7976931348623157E308" text="%otherdetail"
                                                        styleClass="sub-header-text-primary" GridPane.rowIndex="6"/>
                                                 <Separator prefWidth="200.0" GridPane.columnIndex="1"
                                                            GridPane.rowIndex="6"/>
-                                                <E_TextField fx:id="txtPfLoanAmount" GridPane.rowIndex="8"/>
-                                                <E_TextField fx:id="txtPfAmount" GridPane.columnIndex="1"
+                                                <E_NumericField fx:id="txtPfLoanAmount" GridPane.rowIndex="8"/>
+                                                <E_NumericField fx:id="txtPfAmount" GridPane.columnIndex="1"
                                                              GridPane.rowIndex="8"/>
                                                 <Label maxHeight="1.7976931348623157E308"
                                                        maxWidth="1.7976931348623157E308" text="%pfloanamount"

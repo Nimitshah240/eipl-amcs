@@ -57,7 +57,7 @@ public class SocietyPaymentCycleServiceImpl implements SocietyPaymentCycleServic
                     payment.getFromDate(), payment.getToDate())) {
             } else {
                 FieldError rangeNotValid = CommonUtils.getFieldError("societypaymentcycle", "paymentcyclerange",
-                        payment.getCode(), "paymentcyclerange.not.valid");
+                        payment.getCode(), "societypaymentcycle.conflict");
                 throw new BusinessValidationFailException(getClass(), rangeNotValid);
             }
             payment.setInitData();

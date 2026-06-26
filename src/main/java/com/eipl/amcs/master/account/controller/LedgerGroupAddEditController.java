@@ -3,10 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_TextField;
-import com.eipl.amcs.controls.E_TextFieldLocal;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -37,7 +34,7 @@ public class LedgerGroupAddEditController implements MyInitialization {
     private E_Button btnClose, btnSaveUpdate;
 
     @FXML
-    private E_ComboBox<LedgerType> cboxLedgertype;
+    private AutoSearchTextField<LedgerType> cboxLedgertype;
     @FXML
     private E_TextField txtName, txtCode;
     @FXML
@@ -215,7 +212,7 @@ public class LedgerGroupAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxLedgertype.setConverter(new LedgerTypeConvertor(cboxLedgertype));
+//        cboxLedgertype.setConverter(new LedgerTypeConvertor(cboxLedgertype));
         cboxLedgertype.getSelectionModel().select(0);
     }
 

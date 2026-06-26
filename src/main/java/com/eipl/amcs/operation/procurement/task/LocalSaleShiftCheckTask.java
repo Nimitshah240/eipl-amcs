@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eipl.amcs.utils.AppConstant.DATE_FORMATTER_LOCALE;
+
 /**
  * Task to verify that every shift in a given range has at least one local milk sale.
  */
@@ -34,7 +36,7 @@ public class LocalSaleShiftCheckTask extends Task<List<String>> {
         while (!current.isAfter(endDateTime)) {
             java.time.LocalDate date = current.toLocalDate();
             int shiftCode = current.getHour() < 12 ? 1 : 2;
-            String shiftName = shiftCode == 1 ? "Morning" : "Evening";
+            String shiftName = shiftCode == 1 ? MainApp.getBundle().getString("Morning") :  MainApp.getBundle().getString("Evening");
             LocalDateTime shiftStart = current.withHour(shiftCode == 1 ? 0 : 12).withMinute(0).withSecond(0);
             LocalDateTime shiftEnd= current.withHour(shiftCode == 1 ? 11 : 23).withMinute(59).withSecond(59);
 
@@ -46,7 +48,7 @@ public class LocalSaleShiftCheckTask extends Task<List<String>> {
             );
 
             if (count == 0) {
-                missingShifts.add(date.format(dateFormatter) + " (" + shiftName + ")");
+                missingShifts.add(date.format(DATE_FORMATTER_LOCALE) + " (" + shiftName + ")");
             }
 
             // Move to the next shift

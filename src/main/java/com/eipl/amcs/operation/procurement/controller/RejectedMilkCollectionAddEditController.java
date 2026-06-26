@@ -3,10 +3,7 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.AutoSearchTextField;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -45,7 +42,9 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
     @FXML
     private E_DatePicker dpDate;
     @FXML
-    private E_TextField txtCode, txtName, txtFat, txtRemarks, txtQty, txtSnf;
+    private E_NumericField txtCode, txtFat, txtQty, txtSnf;
+    @FXML
+    private E_TextField txtName, txtRemarks;
     @FXML
     private E_Button btnSaveUpdate, btnClose;
 
@@ -85,7 +84,7 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        
+
         loadShift();
         loadMilkTypes();
 
@@ -93,8 +92,8 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
         btnSaveUpdate.setOnAction(e -> validateAndSave());
 
         txtCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
-            if (!newValue && txtCode.getText().length() > 0) {
-                String code = generateCode(txtCode.getText().trim());
+            if (!newValue && txtCode.getInputText().length() > 0) {
+                String code = generateCode(txtCode.getInputText().trim());
                 getNameFromMemberCode(code);
             }
         });
@@ -105,7 +104,7 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
             FocusUtils.requestFocus(btnSaveUpdate);
             e.consume();
         });
-        
+
         clearControls();
     }
 
@@ -118,9 +117,9 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
         txtSnf.clear();
         txtQty.clear();
         txtRemarks.clear();
-        if(cboxShift.getItems() != null)
+        if (cboxShift.getItems() != null)
             cboxShift.getSelectionModel().clearSelection();
-        if(cboxMilkType.getItems() != null)
+        if (cboxMilkType.getItems() != null)
             cboxMilkType.getSelectionModel().clearSelection();
         dto = null;
         btnSaveUpdate.setText(resourceBundle.getString("add"));
@@ -154,15 +153,15 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
             errorMsg.append(resourceBundle.getString("fromshiftnullerror") + "\n");
         if (cboxMilkType.getValue() == null)
             errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
-        if (txtCode.getText() == null || txtCode.getText().trim().isEmpty())
+        if (txtCode.getInputText() == null || txtCode.getInputText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("membercode.cannot.be.null") + "\n");
         if (txtName.getText() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("membernamenullerror") + "\n");
-        if (txtQty.getText() == null || parseBigDecimal(txtQty.getText()).compareTo(BigDecimal.ZERO) <= 0)
+        if (txtQty.getInputText() == null || parseBigDecimal(txtQty.getInputText()).compareTo(BigDecimal.ZERO) <= 0)
             errorMsg.append(resourceBundle.getString("qty.cannot.be.null") + "\n");
-        if (txtFat.getText() == null || parseBigDecimal(txtFat.getText()).compareTo(BigDecimal.ZERO) < 0)
+        if (txtFat.getInputText() == null || parseBigDecimal(txtFat.getInputText()).compareTo(BigDecimal.ZERO) < 0)
             errorMsg.append(resourceBundle.getString("fat.cannot.be.null") + "\n");
-        if (txtSnf.getText() == null || parseBigDecimal(txtSnf.getText()).compareTo(BigDecimal.ZERO) < 0)
+        if (txtSnf.getInputText() == null || parseBigDecimal(txtSnf.getInputText()).compareTo(BigDecimal.ZERO) < 0)
             errorMsg.append(resourceBundle.getString("snf.cannot.be.null") + "\n");
 
         return errorMsg.length() == 0;
@@ -178,12 +177,12 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
         dto.setMilkType(cboxMilkType.getValue());
 
         Member member = new Member();
-        member.setCode(generateCode(txtCode.getText().trim()));
+        member.setCode(generateCode(txtCode.getInputText().trim()));
         dto.setMember(member);
 
-        dto.setQty(parseBigDecimal(txtQty.getText()));
-        dto.setFat(parseBigDecimal(txtFat.getText()));
-        dto.setSnf(parseBigDecimal(txtSnf.getText()));
+        dto.setQty(parseBigDecimal(txtQty.getInputText()));
+        dto.setFat(parseBigDecimal(txtFat.getInputText()));
+        dto.setSnf(parseBigDecimal(txtSnf.getInputText()));
         dto.setRemark(txtRemarks.getText());
         dto.setDock(MainApp.identityDto.getDock());
 
@@ -315,7 +314,7 @@ public class RejectedMilkCollectionAddEditController implements MyInitialization
             if (dto.getMilkType() != null) cboxMilkType.getSelectionModel().select(dto.getMilkType());
             if (dto.getMember() != null) {
                 txtCode.setText(dto.getMember().getCode().substring(MainApp.getUser().getSociety().getCode().length()));
-                txtName.setText(dto.getMember().getFirstName());
+                txtName.setText(dto.getMember().toMemberName());
             }
             txtQty.setText(dto.getQty().toPlainString());
             txtFat.setText(dto.getFat().toPlainString());

@@ -116,7 +116,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting, btnShiftReport, btnRejectedMilk;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate, lblManual, lblLocalTime, lblEdited;
+    private E_Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate, lblManual, lblLocalTime, lblEdited;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -140,7 +140,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private HBox hboxDataShift;
     @FXML
-    private Label lblShortcut;
+    private E_Label lblShortcut;
     @FXML
     private ToggleGroup tagMa;
     @FXML
@@ -991,11 +991,11 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         String variationProp = MainApp.getProperty("variation.qty", "20");
         double variationLimit = Double.parseDouble(variationProp);
         if (variationLimit > 0
-                && !lblAvgQty.getText().trim().isEmpty()
-                && Double.parseDouble(lblAvgQty.getText().trim()) > 0) {
+                && !lblAvgQty.getInputText().trim().isEmpty()
+                && Double.parseDouble(lblAvgQty.getInputText().trim()) > 0) {
 
             double currentQty = Double.parseDouble(txtQty.getInputText().trim().isEmpty() ? "0" : txtQty.getInputText().trim());
-            double avgQty = Double.parseDouble(lblAvgQty.getText().trim());
+            double avgQty = Double.parseDouble(lblAvgQty.getInputText().trim());
             double variationPercentage = (currentQty * 100) / avgQty;
 
             return variationPercentage <= (100 + variationLimit);
@@ -1005,8 +1005,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private boolean isFatVariationValid() {
         double fatLimit = Double.parseDouble(MainApp.getProperty("variation.fat", "30"));
-        if (fatLimit > 0 && !lblAvgFat.getText().trim().isEmpty()) {
-            double avgFat = Double.parseDouble(lblAvgFat.getText().trim());
+        if (fatLimit > 0 && !lblAvgFat.getInputText().trim().isEmpty()) {
+            double avgFat = Double.parseDouble(lblAvgFat.getInputText().trim());
             if (avgFat > 0) {
                 double currentFat = Double.parseDouble(txtFat.getInputText().trim().isEmpty() ? "0" : txtFat.getInputText().trim());
                 return currentFat >= (avgFat - fatLimit) && currentFat <= (avgFat + fatLimit);
@@ -1017,8 +1017,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private boolean isSnfVariationValid() {
         double snfLimit = Double.parseDouble(MainApp.getProperty("variation.snf", "30"));
-        if (snfLimit > 0 && !lblAvgSnf.getText().trim().isEmpty()) {
-            double avgSnf = Double.parseDouble(lblAvgSnf.getText().trim());
+        if (snfLimit > 0 && !lblAvgSnf.getInputText().trim().isEmpty()) {
+            double avgSnf = Double.parseDouble(lblAvgSnf.getInputText().trim());
             if (avgSnf > 0) {
                 double currentSnf = Double.parseDouble(txtSnf.getInputText().trim().isEmpty() ? "0" : txtSnf.getInputText().trim());
                 return currentSnf >= (avgSnf - snfLimit) && currentSnf <= (avgSnf + snfLimit);

@@ -3,6 +3,9 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -25,6 +28,7 @@ import com.eipl.amcs.operation.billing.task.BonusListLoadTask;
 import com.eipl.amcs.operation.billing.task.BonusLoadTask;
 import com.eipl.amcs.operation.billing.task.BonusSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -61,18 +65,18 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     @FXML
     private Button btnGenerate, btnSaveUpdate, btnClose, btnExport;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<String> cboxType, cboxCriteria;
+    private AutoSearchTextField<String> cboxType, cboxCriteria;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     private Stage stage;
     @FXML
-    private TextField txtBonusValue;
+    private E_NumericField txtBonusValue;
     @FXML
     private TableView<Bonus> tableBonus;
     @FXML
-    private ComboBox<Shift> cboxToShift, cboxFromShift;
+    private AutoSearchTextField<Shift> cboxToShift, cboxFromShift;
     @FXML
     private TableColumn<Bonus, String> colMemberCode, colMemberName, colStatus, colType, colKapaat, colRemarks, colTotal;
     @FXML
@@ -161,8 +165,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 Optional<ButtonType> resp = calert.createConfirmationAlert();
                 if (resp.isPresent() && resp.get() == ButtonType.OK) {
                     try {
-                        if (dpFromDate.getValue() != null && dpToDate.getValue() != null && cboxType.getValue() != null && cboxCriteria.getValue() != null && txtBonusValue.getText() != null && Double.parseDouble(txtBonusValue.getText()) > 0)
-                            loadData(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()), CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()), cboxType.getValue(), cboxCriteria.getValue(), txtBonusValue.getText(), cboxMilkType.getValue());
+                        if (dpFromDate.getValue() != null && dpToDate.getValue() != null && cboxType.getValue() != null && cboxCriteria.getValue() != null && txtBonusValue.getInputText() != null && Double.parseDouble(txtBonusValue.getInputText()) > 0)
+                            loadData(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()), CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()), cboxType.getValue(), cboxCriteria.getValue(), txtBonusValue.getInputText(), cboxMilkType.getValue());
                         else {
                             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("bonus"), resourceBundle.getString("entervalid"));
                             alert.createAlert();
@@ -174,8 +178,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 }
             } else {
                 try {
-                    if (dpFromDate.getValue() != null && dpToDate.getValue() != null && cboxType.getValue() != null && cboxCriteria.getValue() != null && txtBonusValue.getText() != null && Double.parseDouble(txtBonusValue.getText()) > 0)
-                        loadData(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()), CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()), cboxType.getValue(), cboxCriteria.getValue(), txtBonusValue.getText(), cboxMilkType.getValue());
+                    if (dpFromDate.getValue() != null && dpToDate.getValue() != null && cboxType.getValue() != null && cboxCriteria.getValue() != null && txtBonusValue.getInputText() != null && Double.parseDouble(txtBonusValue.getInputText()) > 0)
+                        loadData(CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()), CommonUtils.getLocalDateTimeFromDateAndShift(dpToDate.getValue(), cboxToShift.getValue()), cboxType.getValue(), cboxCriteria.getValue(), txtBonusValue.getInputText(), cboxMilkType.getValue());
                     else {
                         MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("bonus"), resourceBundle.getString("entervalid"));
                         alert.createAlert();
@@ -217,6 +221,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
+                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         } else if (criteria.equalsIgnoreCase(resourceBundle.getString("rs"))) {
             for (Bonus b : bonusList) {
@@ -225,6 +230,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
+                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         } else {
 
@@ -237,6 +243,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
+                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         }
         // Sort list by Member Code before updating the table
@@ -259,16 +266,16 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
     }
 
     @Override
     public void setupTable() {
         try {
             colMemberCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCodeEx()));
-            colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getFirstName()));
+            colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
             colBonusAmt.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBonusAmount().setScale(2,
                     RoundingMode.HALF_DOWN)));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus() == 0 ? "PENDING" : "DONE"));
@@ -323,6 +330,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             colMilkQty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkQty()));
             colMilkAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkAmount()));
             propBonus.bind(tableBonus.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableBonus);
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -343,7 +352,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
         if (bonusSummary != null) {
             dto.setBonusList(bonusList);
             dto.getBonusSummary().setBonusCriteria(cboxCriteria.getValue().equalsIgnoreCase("percentage") ? (short) 0 : cboxCriteria.getValue().equalsIgnoreCase("rs") ? (short) 1 : (short) 2);
-            dto.getBonusSummary().setBonusCriteriaValue(new BigDecimal(txtBonusValue.getText()));
+            dto.getBonusSummary().setBonusCriteriaValue(new BigDecimal(txtBonusValue.getInputText()));
             dto.getBonusSummary().setFromDate(dpFromDate.getValue());
             dto.getBonusSummary().setToDate(dpToDate.getValue());
             for (Bonus b : bonusList) {
@@ -358,7 +367,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 }
             }
             if (cboxCriteria.getValue().equalsIgnoreCase(resourceBundle.getString("total"))) {
-                dto.getBonusSummary().setBonusCriteriaAmount(new BigDecimal(txtBonusValue.getText()));
+                dto.getBonusSummary().setBonusCriteriaAmount(new BigDecimal(txtBonusValue.getInputText()));
             } else {
                 dto.getBonusSummary().setBonusCriteriaAmount(bonus);
             }
@@ -395,7 +404,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             bs.setFromDate(dpFromDate.getValue());
             bs.setToDate(dpToDate.getValue());
             bs.setBonusCriteria(cboxCriteria.getValue().equalsIgnoreCase(resourceBundle.getString("percentage")) ? (short) 0 : cboxCriteria.getValue().equalsIgnoreCase(resourceBundle.getString("rs")) ? (short) 1 : (short) 2);
-            bs.setBonusCriteriaValue(new BigDecimal(txtBonusValue.getText()));
+            bs.setBonusCriteriaValue(new BigDecimal(txtBonusValue.getInputText()));
             bs.setSociety(MainApp.identityDto.getSociety());
             bs.setUnion(MainApp.identityDto.getUnion());
             bs.setxCol1(String.valueOf(cboxMilkType.getValue().getCode()));
@@ -411,7 +420,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 }
             }
             if (cboxCriteria.getValue().equalsIgnoreCase(resourceBundle.getString("total"))) {
-                bs.setBonusCriteriaAmount(new BigDecimal(txtBonusValue.getText()));
+                bs.setBonusCriteriaAmount(new BigDecimal(txtBonusValue.getInputText()));
             } else {
                 bs.setBonusCriteriaAmount(bonus);
             }

@@ -90,12 +90,12 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
                 throw new UnAuthorizedAccessException();
             SocietyPaymentCycle paymentCycle = propPaymentCycle.get();
             if (paymentCycle != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleEdit", paymentCycle, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleEdit", paymentCycle, this, resourceBundle.getString("societypaymentcycle"));
         });
         btnGenerate.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_SOCIETY_PAYMENT_CYCLE_GENERATE"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleGenerate", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleGenerate", null, this, resourceBundle.getString("societypaymentcycle"));
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_SOCIETY_PAYMENT_CYCLE_DELETE"))
@@ -123,8 +123,8 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
             colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift()));
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate().toLocalDate()));
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate().toLocalDate()));
-            colIsBilling.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? "YES" : "No"));
-            colLockBillingProcess.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLockBillingProcess() ? "YES" : "No"));
+            colIsBilling.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? resourceBundle.getString("yes") :resourceBundle.getString("no")));
+            colLockBillingProcess.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLockBillingProcess() ? resourceBundle.getString("yes") :resourceBundle.getString("no")));
 
             propPaymentCycle.bind(tableSocietyPaymentCycles.getSelectionModel().selectedItemProperty());
             TableLocalizationUtil.localizeTable(tableSocietyPaymentCycles);

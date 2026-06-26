@@ -3,12 +3,12 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
@@ -21,9 +21,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -40,14 +37,11 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<Product> cboxProduct;
+    private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private E_NumericField txtSaleRate, txtPurchaseRate;
-
+    private E_NumericField txtSaleRate, txtPurchaseRate, txtSecretaryCommission;
     @FXML
-    private TextField txtSecretaryCommission;
-    @FXML
-    private DatePicker dpWefDate;
+    private E_DatePicker dpWefDate;
 
     private Stage stage;
     private PopupCallback callback;
@@ -142,8 +136,8 @@ public class ProductSaleRateAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
-        dpWefDate.setConverter(new LocalDateConvertor());
+//        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
+//        dpWefDate.setConverter(new LocalDateConvertor());
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
@@ -161,7 +155,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         productSaleRate.setWefDate(dpWefDate.getValue());
         productSaleRate.setRate(new BigDecimal(txtSaleRate.getInputText()));
         productSaleRate.setPurchaseCode(txtPurchaseRate.getInputText());
-        productSaleRate.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getText()));
+        productSaleRate.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getInputText()));
         return productSaleRate;
     }
 
@@ -170,7 +164,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         dto.setWefDate(dpWefDate.getValue());
         dto.setRate(new BigDecimal(txtSaleRate.getInputText()));
         dto.setPurchaseCode(txtPurchaseRate.getInputText());
-        dto.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getText()));
+        dto.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getInputText()));
         return dto;
     }
 
