@@ -38,11 +38,11 @@
                         <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <AutoSearchTextField fx:id="cboxShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <AutoSearchTextField fx:id="cboxMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <E_TextField fx:id="txtCode" GridPane.rowIndex="3" />
-                        <E_TextField fx:id="txtQty" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtCode" GridPane.rowIndex="3" />
+                        <E_NumericField fx:id="txtQty" GridPane.rowIndex="5" />
                         <E_TextField fx:id="txtName" disable="true" prefHeight="25.0" prefWidth="131.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-                        <E_TextField fx:id="txtFat" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <E_TextField fx:id="txtSnf" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtFat" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <E_NumericField fx:id="txtSnf" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                         <Label text="%milktype" GridPane.columnIndex="2" />
                         <Label text="%date" />
                         <Label text="%shift" GridPane.columnIndex="1" />

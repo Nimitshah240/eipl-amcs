@@ -5,6 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -21,6 +22,7 @@ import com.eipl.amcs.master.account.task.VoucherNumberLoadTask;
 import com.eipl.amcs.master.account.task.VoucherSaveTask;
 import com.eipl.amcs.master.account.task.VoucherTypeLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -55,7 +57,7 @@ public class HavaloController implements MyInitialization, PopupCallback {
     @FXML
     private E_TextField txtBillRefNo, txtVoucherNo;
     @FXML
-    private Label lblCredit, lblDebit;
+    private E_Label lblCredit, lblDebit;
     @FXML
     private TableColumn<VoucherTransaction, String> colAmount, colLedger, colAmount1, colLedger1;
     @FXML
@@ -224,6 +226,8 @@ public class HavaloController implements MyInitialization, PopupCallback {
             });
 //            colNarration.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarration()));
 //            propDto.bind(tableVoucherTransaction.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableCredit);
+            TableLocalizationUtil.localizeTable(tableDebit);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

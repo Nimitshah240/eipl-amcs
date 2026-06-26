@@ -2,6 +2,7 @@ package com.eipl.amcs.setting.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -56,7 +57,7 @@ public class GeneralConfigController implements MyInitialization {
     @FXML
     private E_NumericField txtNo, txtVariationQty, txtVariationFat, txtVariationSnf;
     @FXML
-    private ComboBox<String> cboxDefaultSnf, cboxWeightSetting, cboxQualitySetting, cboxMemberCollectionQtyMode,
+    private AutoSearchTextField<String> cboxDefaultSnf, cboxWeightSetting, cboxQualitySetting, cboxMemberCollectionQtyMode,
             cboxBmcCollectionQtyMode, cboxLocalMilkSaleQtyMode, cboxDispatchMilkQtyMode, cboxReceiptMilkQtyMode, cboxPaymentMode,
             cboxPaymentOption, cboxQualityMachine;
     //    , cboxAvgBasedOn, cboxShift
@@ -66,10 +67,10 @@ public class GeneralConfigController implements MyInitialization {
     @FXML
     private Button btnSave, btnClose, btnSave1, btnClose1, btnSave2, btnClose2, btnBrowse, btnBackup;
     @FXML
-    private ComboBox<String> cboxSlipLanguage, cboxApplicationLanguage;
+    private AutoSearchTextField<String> cboxSlipLanguage, cboxApplicationLanguage;
     private ResourceBundle resourceBundle;
     @FXML
-    private ComboBox<String> cboxFont;
+    private AutoSearchTextField<String> cboxFont;
 
     @Override
     public Node getRoot() {

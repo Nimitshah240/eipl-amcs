@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -69,10 +70,11 @@ public class ProductSaleInstallmentController implements MyInitialization {
         try {
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInstallmentAmount()));
             colTrDate.setText(resourceBundle.getString("period"));
-            colTrDate.setCellValueFactory(data -> new SimpleStringProperty(dtf.format(data.getValue().getSocietyPaymentCycle().getFromDate().toLocalDate()) + " To " + dtf.format(data.getValue().getSocietyPaymentCycle().getToDate().toLocalDate())));
+            colTrDate.setCellValueFactory(data -> new SimpleStringProperty(dtf.format(data.getValue().getSocietyPaymentCycle().getFromDate().toLocalDate()) + " " + resourceBundle.getString("to") + " " + dtf.format(data.getValue().getSocietyPaymentCycle().getToDate().toLocalDate())));
 //            colSrNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode().replace(data.getValue().getInvoiceNo() + "-", "")));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? "Done" : "Pending"));
             tableProductInstallment.setItems(FXCollections.observableList(list));
+            TableLocalizationUtil.localizeTable(tableProductInstallment);
         } catch (Exception e) {
             System.out.println("ProductSaleInstallment setuptable Exception");
             e.printStackTrace();

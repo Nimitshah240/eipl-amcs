@@ -8,7 +8,6 @@ import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.geo.model.*;
 import com.eipl.amcs.master.geo.task.*;
 import com.eipl.amcs.master.global.model.Gender;
@@ -25,6 +24,7 @@ import com.eipl.amcs.master.org.task.BranchLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -96,11 +96,16 @@ public class MemberAddEditController implements MyInitialization {
     @FXML
     private AutoSearchTextField<AppConstant.RationCardType> cboxRationCardType;
     @FXML
-    private E_TextField txtCodeEx, txtSapNo, txtCode, txtMobileNo, txtPinCode, txtMiddleName,
+    private E_TextField txtSapNo, txtPinCode, txtMiddleName,
             txtName, txtLastName, txtMiddleLocalName, txtLocalLastName,
-            txtEmail, txtPanNo, txtAadharCardNo, txtNoOfCow, txtNoOfBuffalo, txtAcNo, txtIfsc, txtCreditLimit,
-            txtRationCardNo, txtMemberName, txtFarmerCode, txtFarmerName, txtAge, txtAadharCardNo1, txtNomineeName, txtLand, txtRegistrationNo, txtQualification,
-            txtMilky, txtDry, txtCalf, txtChildFarmerName, txtChildFarmerCode;
+            txtEmail, txtPanNo, txtNoOfCow, txtNoOfBuffalo, txtIfsc,
+            txtRationCardNo, txtMemberName, txtFarmerName, txtNomineeName, txtLand, txtRegistrationNo, txtQualification,
+            txtChildFarmerName;
+
+    @FXML
+    private E_NumericField txtCode, txtCodeEx, txtMobileNo,
+            txtAadharCardNo, txtAcNo, txtCreditLimit, txtFarmerCode,
+            txtAge, txtAadharCardNo1, txtMilky, txtDry, txtCalf, txtChildFarmerCode;
     @FXML
     private E_TextFieldLocal txtLocalName, txtNomineeNameLocal;
     @FXML
@@ -353,16 +358,16 @@ public class MemberAddEditController implements MyInitialization {
         });
 
         txtChildFarmerCode.setOnAction(e -> {
-            if (txtChildFarmerCode.getText() == null || txtChildFarmerCode.getText().trim().isBlank())
+            if (txtChildFarmerCode.getInputText() == null || txtChildFarmerCode.getInputText().trim().isBlank())
                 return;
-            loadMember(MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtChildFarmerCode.getText())));
+            loadMember(MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtChildFarmerCode.getInputText())));
             FocusUtils.requestFocus(btnAddChild);
         });
 
 
 //        txtCodeEx.focusedProperty().addListener((observableValue, oldVal, newVal) -> {
 //            if (!newVal) {
-//                txtCode.setText(MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCodeEx.getText()));
+//                txtCode.setText(MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCodeEx.getInputText()));
 //            }
 //        });
 
@@ -419,7 +424,7 @@ public class MemberAddEditController implements MyInitialization {
         colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFamilyMemberName()));
 //        colFarmerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFarmerCode()));
 //        colFarmerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFarmerName()));
-        colRelation.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRelationship().getRelationship()));
+        colRelation.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRelationship().toString()));
 
         colBirthDate.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getDob() != null
@@ -429,7 +434,7 @@ public class MemberAddEditController implements MyInitialization {
         colGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getGender().toString()));
         colAadhar.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAadharCard()));
 //        colIsFarmer.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isFarmer() ? "Yes" : "No"));
-        colCattleDetail.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCattleDetail()));
+        colCattleDetail.setCellValueFactory(data -> new SimpleStringProperty(AppConstant.CattleDetail.fromLabel(data.getValue().getCattleDetail()).toString()));
         colMilky.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMilky() != null ? String.valueOf(data.getValue().getMilky()) : ""));
         colDry.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDry() != null ? String.valueOf(data.getValue().getDry()) : ""));
         colCalf.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCalf() != null ? String.valueOf(data.getValue().getCalf()) : ""));
@@ -439,7 +444,9 @@ public class MemberAddEditController implements MyInitialization {
         propMemberCattleDetail.bind(tblCattleDetail.getSelectionModel().selectedItemProperty());
         propMembmerFamiliyDetail.bind(tblFamilyDetail.getSelectionModel().selectedItemProperty());
         propFarmerMapping.bind(tblFarmerMapping.getSelectionModel().selectedItemProperty());
-
+        TableLocalizationUtil.localizeTable(tblCattleDetail);
+        TableLocalizationUtil.localizeTable(tblFamilyDetail);
+        TableLocalizationUtil.localizeTable(tblFarmerMapping);
     }
 
     @Override
@@ -509,12 +516,12 @@ public class MemberAddEditController implements MyInitialization {
 
     private void setValuesInObject() {
         member.setActive(true);
-        member.setCode(txtCode.getText());
-        member.setCodeEx(txtCode.getText().substring(txtCode.getText().length() - 4));
+        member.setCode(txtCode.getInputText());
+        member.setCodeEx(txtCode.getInputText().substring(txtCode.getInputText().length() - 4));
         member.setSociety(MainApp.identityDto.getSociety());
         member.setMemberType(cboxMemberType.getValue());
         member.setMilkType(cboxDefaultMilkType.getValue());
-        member.setMobileNo(txtMobileNo.getText());
+        member.setMobileNo(txtMobileNo.getInputText());
         member.setFirstName(txtName.getText());
         member.setDcsMember(chkIsMember.isSelected());
         member.setCasteCategory(cboxCaste.getSelectionModel().getSelectedItem());
@@ -525,7 +532,7 @@ public class MemberAddEditController implements MyInitialization {
         member.setFirstNameLocal(txtLocalName.getText() == null ? "" : txtLocalName.getText());
         //member.setMiddleNameLocal(txtMiddleLocalName.getText() == null ? "" : txtMiddleLocalName.getText());
         //member.setLastNameLocal(txtLocalLastName.getText() == null ? "" : txtLocalLastName.getText());
-        member.setCreditLimit(new BigDecimal(txtCreditLimit.getText()));
+        member.setCreditLimit(new BigDecimal(txtCreditLimit.getInputText()));
         memberDetail.setUnionCode(MainApp.identityDto.getUnion().getCode());
         memberDetail.setRegistrationDate(dpRegistrationDate.getValue());
         memberDetail.setGender(cboxGender.getValue());
@@ -562,13 +569,13 @@ public class MemberAddEditController implements MyInitialization {
 
         memberDetail.setEmail(txtEmail.getText());
         memberDetail.setPanNo(txtPanNo.getText());
-        memberDetail.setAadharNo(txtAadharCardNo.getText());
-        //  memberDetail.setNumberOfCow(txtNoOfCow.getText().isEmpty() ? (short) 0 : Short.valueOf(txtNoOfCow.getText()));
-        // memberDetail.setNumberOfBuffalo(txtNoOfBuffalo.getText().isEmpty() ? (short) 0 : Short.valueOf(txtNoOfBuffalo.getText()));
+        memberDetail.setAadharNo(txtAadharCardNo.getInputText());
+        memberDetail.setNumberOfCow((short) 0);
+        memberDetail.setNumberOfBuffalo((short) 0);
         memberDetail.setPaymentMode((short) (rbtnBank.isSelected() ? 1 : 0));
         memberDetail.setBank(cboxBank.getValue());
         memberDetail.setBranch(cboxBranch.getValue());
-        memberDetail.setAccountNo(txtAcNo.getText());
+        memberDetail.setAccountNo(txtAcNo.getInputText());
         memberDetail.setIfsc(txtIfsc.getText());
         memberDetail.setMember(member);
         memberDetail.setCode(member.getCode());
@@ -579,21 +586,21 @@ public class MemberAddEditController implements MyInitialization {
     private boolean validate() {
         errorMsg = new StringBuilder();
 
-//        if (txtCodeEx.getText() == null || txtCodeEx.getText().isEmpty())
+//        if (txtCodeEx.getInputText() == null || txtCodeEx.getInputText().isEmpty())
         //          errorMsg.append(resourceBundle.getString("codeexnullerror") + "\n");
-        if (txtCode.getText() == null || txtCode.getText().isEmpty())
+        if (txtCode.getInputText() == null || txtCode.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("codenullerror") + "\n");
         if (cboxDefaultMilkType.getValue() == null)
             errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
         if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
-        if (txtAadharCardNo.getText() == null || txtAadharCardNo.getText().trim() == null || txtAadharCardNo.getText().trim().isEmpty() || !txtAadharCardNo.getText().matches("\\d{12}"))
+        if (txtAadharCardNo.getInputText() == null || txtAadharCardNo.getInputText().trim() == null || txtAadharCardNo.getInputText().trim().isEmpty() || !txtAadharCardNo.getInputText().matches("\\d{12}"))
             errorMsg.append(resourceBundle.getString("aadharcardnonullerror") + "\n");
-        if (txtCreditLimit.getText() == null || txtCreditLimit.getText().trim() == null || txtCreditLimit.getText().trim().isEmpty())
+        if (txtCreditLimit.getInputText() == null || txtCreditLimit.getInputText().trim() == null || txtCreditLimit.getInputText().trim().isEmpty())
             errorMsg.append(resourceBundle.getString("creditlimitnonullerror") + "\n");
-        if (txtMobileNo.getText() == null || txtMobileNo.getText().trim().isEmpty()) {
+        if (txtMobileNo.getInputText() == null || txtMobileNo.getInputText().trim().isEmpty()) {
             errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
-        } else if (!txtMobileNo.getText().matches("^[0-9]{10}$")) {
+        } else if (!txtMobileNo.getInputText().matches("^[0-9]{10}$")) {
             errorMsg.append(resourceBundle.getString("mobileDigitError") + "\n");
         }
         return errorMsg.length() == 0;
@@ -601,13 +608,13 @@ public class MemberAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        dpBirthDate.setConverter(new LocalDateConvertor());
+//        dpBirthDate.setConverter(new LocalDateConvertor());
         dpBirthDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpBirthDate.setValue(dpBirthDate.getConverter().fromString(dpBirthDate.getEditor().getText()));
             }
         });
-        dpRegistrationDate.setConverter(new LocalDateConvertor());
+//        dpRegistrationDate.setConverter(new LocalDateConvertor());
         dpRegistrationDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpRegistrationDate.setValue(dpRegistrationDate.getConverter().fromString(dpRegistrationDate.getEditor().getText()));
@@ -844,7 +851,7 @@ public class MemberAddEditController implements MyInitialization {
                 mappingFarmer = task.get();
                 if (mappingFarmer != null) {
                     txtChildFarmerCode.setText(mappingFarmer.getCodeEx());
-                    txtChildFarmerName.setText(mappingFarmer.getFirstName());
+                    txtChildFarmerName.setText(mappingFarmer.toMemberName());
                 }
 
             } catch (Exception ex) {
@@ -908,6 +915,7 @@ public class MemberAddEditController implements MyInitialization {
 //        txtCodeEx.setText(member.getCodeEx());
 //        txtCodeEx.setDisable(true);
         txtCode.setText(member.getCode());
+        dpBirthDate.setValue(memberDetail.getBirthDate());
         txtName.setText(member.getFirstName());
 //        txtMiddleName.setText(member.getMiddleName());
 //        txtLastName.setText(member.getLastName());
@@ -946,21 +954,21 @@ public class MemberAddEditController implements MyInitialization {
         try {
             errorMsg = new StringBuilder();
 
-            if (txtCodeEx.getText() == null || txtCodeEx.getText().isEmpty())
+            if (txtCodeEx.getInputText() == null || txtCodeEx.getInputText().isEmpty())
                 errorMsg.append(resourceBundle.getString("codeexnullerror") + "\n");
-            if (txtCode.getText() == null || txtCode.getText().isEmpty())
+            if (txtCode.getInputText() == null || txtCode.getInputText().isEmpty())
                 errorMsg.append(resourceBundle.getString("codenullerror") + "\n");
             if (cboxDefaultMilkType.getValue() == null)
                 errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
             if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
                 errorMsg.append(resourceBundle.getString("namenullerror") + "\n");
-            if (txtAadharCardNo.getText() == null || txtAadharCardNo.getText().trim() == null || txtAadharCardNo.getText().trim().isEmpty() || !txtAadharCardNo.getText().matches("\\d{12}"))
+            if (txtAadharCardNo.getInputText() == null || txtAadharCardNo.getInputText().trim() == null || txtAadharCardNo.getInputText().trim().isEmpty() || !txtAadharCardNo.getInputText().matches("\\d{12}"))
                 errorMsg.append(resourceBundle.getString("aadharcardnonullerror") + "\n");
-            if (txtCreditLimit.getText() == null || txtCreditLimit.getText().trim() == null || txtCreditLimit.getText().trim().isEmpty())
+            if (txtCreditLimit.getInputText() == null || txtCreditLimit.getInputText().trim() == null || txtCreditLimit.getInputText().trim().isEmpty())
                 errorMsg.append(resourceBundle.getString("creditlimitnonullerror") + "\n");
-            if (txtMobileNo.getText() == null || txtMobileNo.getText().trim().isEmpty()) {
+            if (txtMobileNo.getInputText() == null || txtMobileNo.getInputText().trim().isEmpty()) {
                 errorMsg.append(resourceBundle.getString("mobilenonullerror") + "\n");
-            } else if (!txtMobileNo.getText().matches("^[0-9]{10}$")) {
+            } else if (!txtMobileNo.getInputText().matches("^[0-9]{10}$")) {
                 errorMsg.append(resourceBundle.getString("mobileDigitError") + "\n");
             }
             return errorMsg.length() == 0;
@@ -972,16 +980,21 @@ public class MemberAddEditController implements MyInitialization {
     private void addMemberCattleDetail() {
         try {
             MemberCattleDetail memberCattleDetail = new MemberCattleDetail();
-            memberCattleDetail.setCalf(Integer.valueOf(txtCalf.getText()));
-            memberCattleDetail.setDry(Integer.valueOf(txtDry.getText()));
-            memberCattleDetail.setMilky(Integer.valueOf(txtMilky.getText()));
-            AppConstant.CattleDetail selected = cboxCattleDetail.getValue();
-            String cattleDetailValue = selected.getLabel();
+            memberCattleDetail.setCalf(Integer.valueOf(txtCalf.getInputText()));
+            memberCattleDetail.setDry(Integer.valueOf(txtDry.getInputText()));
+            memberCattleDetail.setMilky(Integer.valueOf(txtMilky.getInputText()));
+//            AppConstant.CattleDetail selected = cboxCattleDetail.getValue();
+            String cattleDetailValue = cboxCattleDetail.getValue() == null ? null : cboxCattleDetail.getValue().name();
             memberCattleDetail.setCattleDetail(cattleDetailValue);
             Integer total = memberCattleDetail.getCalf() + memberCattleDetail.getDry() + memberCattleDetail.getMilky();
             memberCattleDetail.setTotal(total);
             memberCattleDetailList.add(memberCattleDetail);
             tblCattleDetail.setItems(FXCollections.observableList(memberCattleDetailList));
+
+            cboxCattleDetail.getSelectionModel().clearSelection();
+            txtMilky.setText("");
+            txtCalf.setText("");
+            txtDry.setText("");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1053,18 +1066,25 @@ public class MemberAddEditController implements MyInitialization {
             }
             MemberFamilyDetail memberFamilyDetail = new MemberFamilyDetail();
             memberFamilyDetail.setRationCardNo(txtRationCardNo.getText());
-            memberFamilyDetail.setRationCardType(cboxRationCardType.getValue().getLabel());
+            memberFamilyDetail.setRationCardType(cboxRationCardType.getValue() == null ? null : cboxRationCardType.getValue().name());
             memberFamilyDetail.setFarmer(rbtnIsFarmer.isSelected());
-            memberFamilyDetail.setFarmerCode(txtFarmerCode.getText());
+            memberFamilyDetail.setFarmerCode(txtFarmerCode.getInputText());
             memberFamilyDetail.setFarmerName(txtFarmerName.getText());
             memberFamilyDetail.setFamilyMemberName(txtMemberName.getText());
             memberFamilyDetail.setRelationship(cboxRelation1.getValue());
             memberFamilyDetail.setDob(dpBirthDate.getValue());
-            memberFamilyDetail.setAge(Integer.valueOf(txtAge.getText()));
+            memberFamilyDetail.setAge(Integer.valueOf(txtAge.getInputText()));
             memberFamilyDetail.setGender(cboxGender1.getValue());
-            memberFamilyDetail.setAadharCard(txtAadharCardNo1.getText());
+            memberFamilyDetail.setAadharCard(txtAadharCardNo1.getInputText());
             memberFamilyDetailList.add(memberFamilyDetail);
             tblFamilyDetail.setItems(FXCollections.observableList(memberFamilyDetailList));
+
+            txtMemberName.setText("");
+            cboxRelation1.clearSelection();
+            dpBirthDate.setValue(null);
+            txtAge.setText("");
+            cboxGender1.clearSelection();
+            txtAadharCardNo1.setText("");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -1151,6 +1171,8 @@ public class MemberAddEditController implements MyInitialization {
             if (mappingFarmer != null && mappingFarmer.getCode() != null) {
                 farmerMapping.add(mappingFarmer);
                 tblFarmerMapping.setItems(FXCollections.observableList(farmerMapping));
+                txtChildFarmerCode.setText("");
+                txtChildFarmerName.setText("");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

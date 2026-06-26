@@ -15,6 +15,7 @@ import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -203,6 +204,7 @@ public class VoucherEntryController implements MyInitialization {
             colLedger.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedger().toString()));
             colNarration.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarration()));
             propDto.bind(tableVoucherTransaction.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableVoucherTransaction);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

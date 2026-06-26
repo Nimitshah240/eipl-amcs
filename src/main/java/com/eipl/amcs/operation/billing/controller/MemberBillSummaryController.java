@@ -13,6 +13,7 @@ import com.eipl.amcs.operation.billing.task.MemberBillSummaryLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -184,7 +185,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
             colNetAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colDisbursedAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDisbursedAmount()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getPaymentStatus(data.getValue().getStatus())));
-
+            TableLocalizationUtil.localizeTable(tableBillSummary);
             propSummary.bind(tableBillSummary.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("MemberBillSummary setuptable Exception");

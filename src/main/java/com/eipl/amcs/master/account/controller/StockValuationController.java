@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.account.model.ProductStockValuation;
 import com.eipl.amcs.report.task.LoadStockValuationTask;
@@ -42,7 +43,7 @@ public class StockValuationController implements MyInitialization, PopupCallback
     @FXML
     private E_DatePicker dpGenerate;
     @FXML
-    private Label lblTotal;
+    private E_Label lblTotal;
 
     public StockValuationController() {
         propStockValuationDto = new SimpleObjectProperty<>();

@@ -760,7 +760,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     private void viewInstallmentPopup() {
         if (installmentList == null || installmentList.isEmpty())
             return;
-        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this);
+        MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this, resourceBundle.getString("installmenttitle"));
     }
 
     private void prepareInstallment() {

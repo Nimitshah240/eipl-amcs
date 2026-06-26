@@ -3,6 +3,7 @@
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
@@ -36,11 +37,11 @@
                         <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="%date" />
+                        <E_Label text="%date" />
                         <E_DatePicker fx:id="dpVoucherDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <Label text="%billno" GridPane.columnIndex="1" />
+                        <E_Label text="%billno" GridPane.columnIndex="1" />
                         <E_TextField fx:id="txtBillRefNo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="%voucherno" GridPane.columnIndex="2" />
+                        <E_Label text="%voucherno" GridPane.columnIndex="2" />
                         <E_TextField fx:id="txtVoucherNo" disable="true" editable="false" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
@@ -72,8 +73,8 @@
                                                 </TableView>
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label minWidth="40.0" prefHeight="17.0" prefWidth="92.0" text="%totalcredit" />
-                                                        <Label fx:id="lblCredit" contentDisplay="CENTER" minWidth="80.0" text="0" />
+                                                        <E_Label minWidth="40.0" prefHeight="17.0" prefWidth="92.0" text="%totalcredit" />
+                                                        <E_Label fx:id="lblCredit" contentDisplay="CENTER" minWidth="80.0" text="0" />
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -103,8 +104,8 @@
                                                 </TableView>
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label minWidth="42.0" prefHeight="17.0" prefWidth="88.0" text="%totaldebit" />
-                                                        <Label fx:id="lblDebit" minWidth="80.0" text="0" />
+                                                        <E_Label minWidth="42.0" prefHeight="17.0" prefWidth="88.0" text="%totaldebit" />
+                                                        <E_Label fx:id="lblDebit" minWidth="80.0" text="0" />
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -118,7 +119,7 @@
                 <Separator />
                 <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
                     <children>
-                        <Label maxWidth="-Infinity" HBox.hgrow="ALWAYS" />
+                        <E_Label maxWidth="-Infinity" HBox.hgrow="ALWAYS" />
                         <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%save">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">

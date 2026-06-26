@@ -8,7 +8,6 @@ import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.model.ProductSaleInstallment;
@@ -266,7 +265,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
             } catch (ExecutionException ex) {
                 ex.printStackTrace();
             }
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this,  resourceBundle.getString("installmenttitle"));
         });
         new Thread(task).start();
     }

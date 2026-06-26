@@ -84,6 +84,10 @@ public class Customer extends BaseModel {
 //        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 
+    public String toCustomerName() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
+    }
+
     @Override
     public JsonAndTableBuilder getAuditModel(String operation, String user) {
         CustomerAudit audit = new CustomerAudit();
