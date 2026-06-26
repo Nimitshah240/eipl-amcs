@@ -3,6 +3,7 @@ package com.eipl.amcs.master.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -40,7 +41,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<Product> cboxProduct;
+    private AutoSearchTextField<Product> cboxProduct;
     @FXML
     private E_NumericField txtSaleRate, txtPurchaseRate;
 
@@ -142,8 +143,8 @@ public class ProductSaleRateAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
-        dpWefDate.setConverter(new LocalDateConvertor());
+//        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
+//        dpWefDate.setConverter(new LocalDateConvertor());
         dpWefDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));

@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.inventory.controller.ProductSaleRateAddEditController">
     <children>
@@ -41,7 +42,7 @@
                         <Label text="%purchaserate" GridPane.columnIndex="2"/>
                         <Label text="%salerate" GridPane.rowIndex="2"/>
                         <Label text="%secretarycommission" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <ComboBox fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
+                        <AutoSearchTextField fx:id="cboxProduct" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
                         <DatePicker fx:id="dpWefDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
                                     GridPane.rowIndex="1"/>
                         <E_NumericField fx:id="txtPurchaseRate" GridPane.columnIndex="2" GridPane.rowIndex="1"/>

@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.E_TextFieldLocal;
@@ -32,7 +33,7 @@ public class NarrationAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private E_ComboBox<NarrationType> cboxNarrationType;
+    private AutoSearchTextField<NarrationType> cboxNarrationType;
     @FXML
     private E_TextField txtNarrationName;
     @FXML
@@ -63,7 +64,7 @@ public class NarrationAddEditController implements MyInitialization {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         loadNarrationType();
-        cboxNarrationType.setConverter(new NarrationTypeConvertor(cboxNarrationType));
+//        cboxNarrationType.setConverter(new NarrationTypeConvertor(cboxNarrationType));
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         if (btnClose != null) {
             btnClose.setOnAction(e -> {
