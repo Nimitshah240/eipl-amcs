@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -39,7 +40,7 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     @FXML
     private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private TextField txtPurchaseRate;
+    private E_NumericField txtPurchaseRate;
     @FXML
     private GridPane grid;
     @FXML
@@ -121,14 +122,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         productPurchaseRate.setSociety(MainApp.identityDto.getSociety());
         productPurchaseRate.setUnion(MainApp.identityDto.getUnion());
         productPurchaseRate.setWefDate(dpWefDate.getValue());
-        productPurchaseRate.setRate(new BigDecimal(txtPurchaseRate.getText()));
+        productPurchaseRate.setRate(new BigDecimal(txtPurchaseRate.getInputText()));
         return productPurchaseRate;
     }
 
     private ProductPurchaseRate setValuesInObjectUpdate() {
         dto.setProduct(cboxProduct.getValue());
         dto.setWefDate(dpWefDate.getValue());
-        dto.setRate(new BigDecimal(txtPurchaseRate.getText()));
+        dto.setRate(new BigDecimal(txtPurchaseRate.getInputText()));
         return dto;
     }
 
@@ -143,14 +144,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
     private boolean validate() {
         if (cboxProduct.getValue() == null)
             errorMsg.append("Product can not be null or empty\n");
-        if (txtPurchaseRate.getText() == null)
+        if (txtPurchaseRate.getInputText() == null)
             errorMsg.append("Union can not be null or empty\n");
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtPurchaseRate.getText()) <= 0 || Double.parseDouble(txtPurchaseRate.getText()) >= 1000000)
+            if (Double.parseDouble(txtPurchaseRate.getInputText()) <= 0 || Double.parseDouble(txtPurchaseRate.getInputText()) >= 1000000)
                 errorMsg.append(resourceBundle.getString("entervalidrate") + "\n");
-            Double.parseDouble(txtPurchaseRate.getText().trim());
+            Double.parseDouble(txtPurchaseRate.getInputText().trim());
         } catch (NumberFormatException e) {
             errorMsg.append(resourceBundle.getString("purchaseratenullerror") + "\n");
         }

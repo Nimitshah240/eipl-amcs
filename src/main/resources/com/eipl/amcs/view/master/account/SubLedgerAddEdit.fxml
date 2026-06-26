@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_TextFieldLocal?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -52,9 +53,9 @@
                         <Label text="%code" GridPane.rowIndex="1"/>
                         <Label text="%type" GridPane.columnIndex="5" GridPane.rowIndex="1"/>
                         <Label text="%localname" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                        <E_TextField fx:id="txtLocalName" maxWidth="1.7976931348623157E308" prefHeight="25.0"
-                                     prefWidth="120.0" GridPane.columnIndex="3" GridPane.columnSpan="2"
-                                     GridPane.rowIndex="2"/>
+                        <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" prefHeight="25.0"
+                                          prefWidth="120.0" GridPane.columnIndex="3" GridPane.columnSpan="2"
+                                          GridPane.rowIndex="2"/>
                     </children>
                 </GridPane>
                 <HBox alignment="BOTTOM_LEFT">

@@ -3,6 +3,7 @@
 <?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_Button?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -49,13 +50,13 @@
                                              maxWidth="1.7976931348623157E308" GridPane.rowIndex="2"/>
                         <E_DatePicker fx:id="dpDeductionDate" maxHeight="1.7976931348623157E308"
                                       maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <E_TextField fx:id="txtCode" maxHeight="1.7976931348623157E308"
+                        <E_NumericField fx:id="txtCode" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" promptText="Member Code" GridPane.rowIndex="4"/>
                         <Label text="%code" GridPane.rowIndex="3"/>
                         <AutoSearchTextField fx:id="cboxProduct" maxHeight="1.7976931348623157E308"
                                              maxWidth="1.7976931348623157E308" GridPane.columnSpan="2"
                                              GridPane.rowIndex="6"/>
-                        <E_TextField fx:id="txtAmount" maxHeight="1.7976931348623157E308"
+                        <E_NumericField fx:id="txtAmount" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" promptText="Amount" GridPane.columnIndex="2"
                                      GridPane.rowIndex="6"/>
                         <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="7">
@@ -88,27 +89,27 @@
                             </padding>
                         </HBox>
 
-                        <E_TextField fx:id="txtBalance" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <E_NumericField fx:id="txtBalance" disable="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
                             <font>
                                 <Font name="System Bold" size="16.0"/>
                             </font>
-                        </E_TextField>
+                        </E_NumericField>
                         <Label contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" text="%balance"
                                GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                        <E_TextField fx:id="txtDue" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <E_NumericField fx:id="txtDue" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="2">
                             <font>
                                 <Font name="System Bold" size="16.0"/>
                             </font>
-                        </E_TextField>
-                        <E_TextField fx:id="txtTotal" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                        </E_NumericField>
+                        <E_NumericField fx:id="txtTotal" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="6">
                             <font>
                                 <Font name="System Bold" size="16.0"/>
                             </font>
-                        </E_TextField>
+                        </E_NumericField>
                         <E_TextField fx:id="txtName" disable="true" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" promptText="Member Name" GridPane.columnIndex="1"
                                      GridPane.columnSpan="2" GridPane.rowIndex="4"/>
-                        <E_TextField fx:id="txtMobileNo" maxHeight="1.7976931348623157E308" disable="true"
+                        <E_NumericField fx:id="txtMobileNo" maxHeight="1.7976931348623157E308" disable="true"
                                      maxWidth="1.7976931348623157E308" promptText="Mobile No" GridPane.columnIndex="3"
                                      GridPane.rowIndex="4"/>
                         <Label maxWidth="1.7976931348623157E308" text="%kapaat" GridPane.columnIndex="3"

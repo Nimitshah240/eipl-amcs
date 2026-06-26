@@ -91,9 +91,9 @@ public class CouponIssueAddEditController implements MyInitialization {
             txtName.setText("");
         });
         cboxBankName.setDisable(true);
-        cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
+        cboxPaymentType.getSelectionModel().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
         cboxPaymentType.setOnAction(e -> {
-            if (cboxPaymentType.getSelectionModel().getSelectedItem().equalsIgnoreCase("bank")) {
+            if (cboxPaymentType.getSelectionModel().getSelectedItem().equalsIgnoreCase(resourceBundle.getString("bank"))) {
                 cboxBankName.setDisable(false);
             } else {
                 cboxBankName.setDisable(true);

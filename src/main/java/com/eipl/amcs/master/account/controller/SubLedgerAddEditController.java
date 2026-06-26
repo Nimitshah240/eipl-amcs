@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.E_TextFieldLocal;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -21,7 +22,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -45,7 +49,9 @@ public class SubLedgerAddEditController implements MyInitialization {
     @FXML
     private CheckBox chkSelectAll;
     @FXML
-    private E_TextField txtCode, txtName, txtLocalName;
+    private E_TextField txtCode, txtName;
+    @FXML
+    private E_TextFieldLocal txtLocalName;
     private List<LedgerSubLedgerMapping> ledgerSubLedgerMappingList;
     @FXML
     private TableView<Ledger> tableLedgerData;

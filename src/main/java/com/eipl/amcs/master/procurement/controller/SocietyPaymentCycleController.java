@@ -123,8 +123,8 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
             colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift()));
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate().toLocalDate()));
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate().toLocalDate()));
-            colIsBilling.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? "YES" : "No"));
-            colLockBillingProcess.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLockBillingProcess() ? "YES" : "No"));
+            colIsBilling.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? resourceBundle.getString("yes") :resourceBundle.getString("no")));
+            colLockBillingProcess.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLockBillingProcess() ? resourceBundle.getString("yes") :resourceBundle.getString("no")));
 
             propPaymentCycle.bind(tableSocietyPaymentCycles.getSelectionModel().selectedItemProperty());
             TableLocalizationUtil.localizeTable(tableSocietyPaymentCycles);

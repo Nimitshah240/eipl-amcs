@@ -8,8 +8,6 @@ import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.operation.inventory.model.DeadStock;
@@ -33,7 +31,9 @@ public class DeadStockAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private E_TextField txtName, txtNameLocal;
+    private E_TextField txtName;
+    @FXML
+    private E_TextFieldLocal txtNameLocal;
     @FXML
     private E_NumericField txtQuantity, txtCode, txtAmount;
     @FXML
@@ -91,12 +91,6 @@ public class DeadStockAddEditController implements MyInitialization {
         txtAmount.setText(dto.getAmount().toString());
         dpPurchaseDate.setValue(dto.getPurchaseDate());
         cboxLedger.getSelectionModel().select(dto.getLedger());
-    }
-
-    @Override
-    public void setupComboBox() {
-//        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
-//        new AutoCompleteComboBoxListener<>(cboxLedger);
     }
 
     @Override

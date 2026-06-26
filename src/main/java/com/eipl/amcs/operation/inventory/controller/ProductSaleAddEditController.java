@@ -77,9 +77,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private E_TextField txtInvoiceNo, txtConsumerName, txtDifferance, txtBatch;
+    private E_TextField txtInvoiceNo, txtConsumerName,  txtBatch;
     @FXML
-    private E_NumericField txtConsumerCode, txtCreditLimit, txtQuantity, txtRate, txtAmount, txtNetAmount,
+    private E_NumericField txtConsumerCode, txtCreditLimit,txtDifferance, txtQuantity, txtRate, txtAmount, txtNetAmount,
             txtTotalAmount, txtNoOfInstallment, txtTotalDiscount, txtMilkAmount, txtDeductionAmount, txtTotalAmountTax, txtNetPayable;
     @FXML
     private E_DatePicker dpMilkFromDate, dpMilkToDate, dpDeductionToDate, dpDeductionFromDate, dpDate, dpDeductionStartDate;
@@ -243,20 +243,21 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             }
         });
 
+        dpMilkFromDate.setDisable(false);
+        dpMilkToDate.setDisable(false);
+        dpDeductionFromDate.setDisable(false);
+        dpDeductionToDate.setDisable(false);
+        dpDeductionStartDate.setDisable(false);
+        dpDeductionStartDate.setValue(dpDate.getValue());
         rbtnCredit.setOnAction(event -> {
             cboxType.setDisable(true);
             cboxType.getSelectionModel().select(0);
             txtConsumerCode.clear();
             txtConsumerName.clear();
-            dpMilkFromDate.setDisable(false);
-            dpMilkToDate.setDisable(false);
-            dpDeductionFromDate.setDisable(false);
-            dpDeductionToDate.setDisable(false);
-            dpDeductionStartDate.setDisable(false);
-            dpDeductionStartDate.setValue(dpDate.getValue());
             txtNoOfInstallment.setDisable(true);
             txtNoOfInstallment.setText("1");
             btnInstallments.setDisable(false);
+            txtConsumerCode.setDisable(false);
         });
         rbtnCash.setOnAction(event -> {
             cboxType.setDisable(false);
@@ -273,6 +274,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             dpDeductionStartDate.setDisable(true);
             txtNoOfInstallment.setDisable(true);
             btnInstallments.setDisable(true);
+            cboxType.setDisable(true);
+            txtConsumerCode.setDisable(true);
         });
 
 
@@ -698,8 +701,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
             return;
         }
         BigDecimal diff = BigDecimal.ZERO;
-        if (!txtDifferance.getText().equals("0"))
-            diff = new BigDecimal(txtDifferance.getText()).subtract(new BigDecimal(txtNetPayable.getInputText()));
+        if (!txtDifferance.getInputText().equals("0"))
+            diff = new BigDecimal(txtDifferance.getInputText()).subtract(new BigDecimal(txtNetPayable.getInputText()));
 
         if (rbtnCredit.isSelected() && diff.compareTo(BigDecimal.ZERO) < 0) {
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsale"),

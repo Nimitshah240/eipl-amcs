@@ -43,10 +43,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     @FXML
     private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private E_NumericField txtSaleRate, txtPurchaseRate;
-
-    @FXML
-    private TextField txtSecretaryCommission;
+    private E_NumericField txtSaleRate, txtPurchaseRate,txtSecretaryCommission;
     @FXML
     private DatePicker dpWefDate;
 
@@ -162,7 +159,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         productSaleRate.setWefDate(dpWefDate.getValue());
         productSaleRate.setRate(new BigDecimal(txtSaleRate.getInputText()));
         productSaleRate.setPurchaseCode(txtPurchaseRate.getInputText());
-        productSaleRate.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getText()));
+        productSaleRate.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getInputText()));
         return productSaleRate;
     }
 
@@ -171,7 +168,7 @@ public class ProductSaleRateAddEditController implements MyInitialization {
         dto.setWefDate(dpWefDate.getValue());
         dto.setRate(new BigDecimal(txtSaleRate.getInputText()));
         dto.setPurchaseCode(txtPurchaseRate.getInputText());
-        dto.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getText()));
+        dto.setSecretaryCommissionRate(new BigDecimal(txtSecretaryCommission.getInputText()));
         return dto;
     }
 

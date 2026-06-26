@@ -103,6 +103,10 @@ public interface MilkCollectionRepository extends BaseRepository<MilkCollection,
 
     @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
             "dock"})
+    List<MilkCollection> findByCollectionDateBetweenAndDockIn(LocalDateTime fromDt, LocalDateTime toDt, List<Dock> dock, Sort sort);
+
+    @EntityGraph(attributePaths = {"societyPaymentCycle", "member", "shift", "milkType", "milkQualityType", "society",
+            "dock"})
     List<MilkCollection> findByMemberAndCollectionDateLessThanEqualOrderByCollectionDateDesc(Member member,
                                                                                              LocalDateTime date,
                                                                                              Pageable ofSize);

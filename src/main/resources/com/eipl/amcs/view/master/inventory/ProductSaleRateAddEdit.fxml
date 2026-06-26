@@ -47,7 +47,7 @@
                                     GridPane.rowIndex="1"/>
                         <E_NumericField fx:id="txtPurchaseRate" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                         <E_NumericField fx:id="txtSaleRate" GridPane.rowIndex="3"/>
-                        <E_TextField fx:id="txtSecretaryCommission" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <E_NumericField fx:id="txtSecretaryCommission" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                     </children>
                 </GridPane>
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15">

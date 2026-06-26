@@ -8,9 +8,7 @@ import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
@@ -253,6 +251,16 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        });
+        task.setOnFailed(e -> {
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("societypaymentcycle.conflict")) {
+                errorMessage = "societypaymentcycle.conflict";
+            }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
         });
         new Thread(task).start();
     }

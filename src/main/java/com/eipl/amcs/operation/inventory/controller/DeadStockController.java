@@ -128,6 +128,7 @@ public class DeadStockController implements MyInitialization, PopupCallback {
                     break;
             }
         });
+
     }
 
     private void searchData() {
@@ -170,7 +171,7 @@ public class DeadStockController implements MyInitialization, PopupCallback {
         colQty.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQty()));
         colAmount.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getAmount()));
         colPurchaseDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getPurchaseDate()));
-        colLedgerAccount.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLedger().getName()));
+        colLedgerAccount.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLedger().toString()));
 
         propDeadStockDto.bind(tableDeadStock.getSelectionModel().selectedItemProperty());
         TableLocalizationUtil.localizeTable(tableDeadStock);

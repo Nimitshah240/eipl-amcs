@@ -33,7 +33,7 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
 
     private ObservableList<CouponIssue> listCouponIssue;
     @FXML
-    private Button btnCancel, btnAddSave, btnEditUpdate, btnDelete,btnView;
+    private Button btnCancel, btnAddSave, btnEditUpdate, btnDelete, btnView;
     @FXML
     private TableView<CouponIssue> tableIssueCoupon;
     @FXML
@@ -78,14 +78,41 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
         });
         btnEditUpdate.setOnAction(e -> {
             CouponIssue dto = propertyCouponIssue.get();
-            if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this, resourceBundle.getString("couponissue"));
+            editCoupon(dto);
         });
 
         btnDelete.setOnAction(e -> {
             deleteData();
         });
         FocusUtils.requestFocus(btnAddSave);
+
+
+        tableIssueCoupon.setRowFactory(tv -> {
+            TableRow<CouponIssue> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    CouponIssue data = row.getItem();
+                    editCoupon(data);
+                }
+            });
+            return row;
+        });
+
+        tableIssueCoupon.setOnKeyPressed(event -> {
+            CouponIssue dto = tableIssueCoupon.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propertyCouponIssue.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editCoupon(dto);
+                    break;
+            }
+        });
     }
 
 
@@ -117,6 +144,11 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
             System.out.println("LocalMilkSake setuptable Exception");
             e.printStackTrace();
         }
+    }
+
+    private void editCoupon(CouponIssue dto) {
+        if (dto != null)
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this, resourceBundle.getString("couponissue"));
     }
 
 

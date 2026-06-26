@@ -336,7 +336,8 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                     throw new RuntimeException("insufficient.balance");
                 }
             }
-            deleteVoucher(oldVoucherCode, CommonUtils.setIdentityHeader());
+            if (oldVoucherCode != null)
+                deleteVoucher(oldVoucherCode, CommonUtils.setIdentityHeader());
             couponIssueRepository.customUpdate(updatedCouponIssue, CommonUtils.setIdentityHeader());
             return true;
         } catch (Exception e) {
@@ -391,18 +392,18 @@ public class CouponIssueServiceImpl implements CouponIssueService {
                 if (type == 1 || type == 2) {
                     item.setConsumerTypeString("member");
                     Member m = memberService.findByMemberCode(item.getConsumerCode());
-                    if (m != null) item.setConsumerName(m.getFirstName());
+                    if (m != null) item.setConsumerName(m.toMemberName());
 
                 } else if (type == 3 || type == 4) {
                     item.setConsumerTypeString(type == 3 ? "institute" : "retail sale");
                     Customer c = customerService.findByCustomerCodeAndType(item.getConsumerCode(), item.getConsumerType());
-                    if (c != null) item.setConsumerName(c.getName());
+                    if (c != null) item.setConsumerName(c.toCustomerName());
 
                 } else {
                     item.setConsumerTypeString("consumer");
                     Customer c = customerService.findByCustomerCodeAndType(item.getConsumerCode(), item.getConsumerType());
                     if (c != null) {
-                        item.setConsumerName(c.getName());
+                        item.setConsumerName(c.toCustomerName());
                     } else {
                         item.setConsumerName(item.getConsumerCode());
                     }

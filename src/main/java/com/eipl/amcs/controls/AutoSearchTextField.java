@@ -13,7 +13,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Popup;
 
 import java.util.List;
@@ -488,6 +487,7 @@ public class AutoSearchTextField<T> extends TextField {
      */
     public void setValue(T item) {
         if (item == null) {
+            setText(null);
             return;
         }
         if (masterList != null) {
@@ -1132,9 +1132,11 @@ public class AutoSearchTextField<T> extends TextField {
         private final VBox cellLayout = new VBox(mainLabel, subLabel);
 
         DynamicCell() {
-            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
+            mainLabel.setFont(javafx.scene.text.Font.font("Shruti", javafx.scene.text.FontWeight.BOLD, 14));
+            subLabel.setFont(javafx.scene.text.Font.font("Shruti", 14));
+//            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
             mainLabel.setTextFill(Color.web("#2c3e50"));
-            subLabel.setFont(Font.font("System", 11));
+//            subLabel.setFont(Font.font("System", 11));
             subLabel.setTextFill(Color.web("#7f8c8d"));
 
             hoverProperty().addListener((obs, w, isHovered) -> updateBackground());

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -41,7 +42,7 @@
                                              GridPane.rowIndex="1"/>
                         <E_DatePicker fx:id="dpWefDate" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <Label text="%purchaserate" GridPane.columnIndex="2"/>
-                        <TextField fx:id="txtPurchaseRate" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <E_NumericField fx:id="txtPurchaseRate" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
 
                     </children>

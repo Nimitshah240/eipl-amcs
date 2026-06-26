@@ -72,7 +72,7 @@
                                       GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                         <E_NumericField fx:id="txtDeductionAmount" disable="true" maxWidth="1.7976931348623157E308"
                                         GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-                        <E_TextField fx:id="txtDifferance" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4"
+                        <E_NumericField fx:id="txtDifferance" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4"
                                      GridPane.rowIndex="2"/>
                         <E_DatePicker fx:id="dpMilkToDate" disable="true" maxWidth="1.7976931348623157E308"
                                       GridPane.columnIndex="2"/>
