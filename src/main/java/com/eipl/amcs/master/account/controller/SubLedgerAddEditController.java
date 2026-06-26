@@ -2,6 +2,7 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -40,7 +41,7 @@ public class SubLedgerAddEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxType;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
     private CheckBox chkSelectAll;
     @FXML

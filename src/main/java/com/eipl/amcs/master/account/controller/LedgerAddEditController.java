@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.E_TextFieldLocal;
@@ -41,9 +42,9 @@ public class LedgerAddEditController implements MyInitialization {
     @FXML
     private E_Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<LedgerGroup> cboxLedgerGroup;
+    private AutoSearchTextField<LedgerGroup> cboxLedgerGroup;
     @FXML
-    private ComboBox<LedgerType> cboxLedgerType;
+    private AutoSearchTextField<LedgerType> cboxLedgerType;
     //    @FXML
 //    private CheckBox chkBoxSubLedger;
 //    chkBoxSelectAll;
@@ -147,7 +148,7 @@ public class LedgerAddEditController implements MyInitialization {
 //            }
 //        });
 
-        cboxLedgerType.selectionModelProperty().addListener(e -> {
+       cboxLedgerType.textProperty().addListener(e -> {
             if (cboxLedgerType.getValue() != null)
                 loadLedgerGroupByType();
         });
@@ -341,8 +342,8 @@ public class LedgerAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
-        cboxLedgerType.setConverter(new LedgerTypeConvertor(cboxLedgerType));
+//        cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
+//        cboxLedgerType.setConverter(new LedgerTypeConvertor(cboxLedgerType));
     }
 
     private void loadLedgerGroup() {
