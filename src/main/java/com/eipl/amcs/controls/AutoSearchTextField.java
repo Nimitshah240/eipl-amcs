@@ -157,19 +157,35 @@ public class AutoSearchTextField<T> extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 08/06/2026    Nimit             1.0.0       To show popup on getting focus on textfield, and select item if any selected.
+     * 26/06/2026    Nimit             1.0.01      Change to open popup on mouse click after select item using mouse click.
      */
     private void focusedOnTextField() {
+        // 1. Keep this for Keyboard navigation (e.g., Tabbing into the field)
         focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                if (this.openPopup) {
-                    showPopup(masterList);
-                }
-                if (selectedItem != null)
-                    listView.getSelectionModel().select(selectedItem);
+                handlePopupTrigger();
             } else {
+                // Delay hide slightly if mouse clicking the popup needs to register first
                 hidePopup();
             }
         });
+
+        // 2. Add this for Mouse Clicks when the field is ALREADY focused
+        this.setOnMouseClicked(event -> {
+            if (this.isFocused()) {
+                handlePopupTrigger();
+            }
+        });
+    }
+
+    // Helper method to avoid duplicating the popup logic
+    private void handlePopupTrigger() {
+        if (this.openPopup) {
+            showPopup(masterList);
+        }
+        if (selectedItem != null) {
+            listView.getSelectionModel().select(selectedItem);
+        }
     }
 
     public void setupLocalTransliteration() {
@@ -344,10 +360,13 @@ public class AutoSearchTextField<T> extends TextField {
                 this.fireEvent(new javafx.event.ActionEvent(this, null));
             }
         });
-        this.fireEvent(new KeyEvent(
-                KeyEvent.KEY_PRESSED, "", "",
-                KeyCode.TAB, false, false, false, false
-        ));
+
+        Platform.runLater(() -> {
+            this.fireEvent(new KeyEvent(
+                    KeyEvent.KEY_PRESSED, "", "",
+                    KeyCode.TAB, false, false, false, false
+            ));
+        });
     }
 
     /**

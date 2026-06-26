@@ -1,12 +1,15 @@
 package com.eipl.amcs.controls;
 
 import com.eipl.amcs.utils.FormatterFactory;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.util.Locale;
 
@@ -41,6 +44,7 @@ public class E_NumericField extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 24/06/2026    Nimit             1.0.1      Added method to get locale number input in English in backend.
+     * 26/06/2026    Nimit             1.0.2      Added Listener to change focus on Ctrl + Arrow Click.
      */
     public E_NumericField() {
         try {
@@ -68,6 +72,39 @@ public class E_NumericField extends TextField {
                     }
                 });
             }
+
+            addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+                switch (event.getCode()) {
+                    case RIGHT:
+                        if (event.isControlDown()) {
+
+                            this.fireEvent(new javafx.event.ActionEvent(this, null));
+                            Platform.runLater(() -> {
+                                this.fireEvent(new KeyEvent(
+                                        KeyEvent.KEY_PRESSED, "", "",
+                                        KeyCode.TAB, false, false, false, false
+                                ));
+                            });
+                            event.consume();
+                        }
+                        break;
+                    case LEFT:
+                        if (event.isControlDown()) {
+
+                            this.fireEvent(new javafx.event.ActionEvent(this, null));
+                            Platform.runLater(() -> {
+                                this.fireEvent(new KeyEvent(
+                                        KeyEvent.KEY_PRESSED, "", "",
+                                        KeyCode.TAB, true, false, false, false
+                                ));
+                            });
+                            event.consume();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
