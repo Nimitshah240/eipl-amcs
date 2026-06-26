@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_ComboBox?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import com.eipl.amcs.controls.AutoSearchTextField?>
@@ -48,7 +49,7 @@
                         <AutoSearchTextField fx:id="cboxShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <AutoSearchTextField fx:id="cboxConsumertype" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
                         <Label text="%consumercode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <E_TextField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <E_NumericField fx:id="txtConsumerCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="%consumername" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <E_TextField fx:id="txtConsumerName" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                         <Label text="%consumertype" GridPane.rowIndex="2" />
@@ -62,13 +63,13 @@
                         <AutoSearchTextField fx:id="cboxPaymentType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
                         <AutoSearchTextField fx:id="cboxMilkType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <AutoSearchTextField fx:id="cboxClass" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <E_TextField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" />
-                        <E_TextField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <E_TextField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                        <E_TextField fx:id="txtCouponBalance" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                        <E_TextField fx:id="txtCash" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.rowIndex="9" />
-                        <E_TextField fx:id="txtCredit" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                        <E_TextField fx:id="txtCoupon" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                        <E_NumericField fx:id="txtQuantity" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" />
+                        <E_NumericField fx:id="txtRate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <E_NumericField fx:id="txtAmount" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                        <E_NumericField fx:id="txtCouponBalance" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                        <E_NumericField fx:id="txtCash" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.rowIndex="9" />
+                        <E_NumericField fx:id="txtCredit" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <E_NumericField fx:id="txtCoupon" disable="true" maxWidth="1.7976931348623157E308" opacity="0.0" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="9" />
                         <Label disable="true" opacity="0.0" text="%cash" visible="false" GridPane.rowIndex="8" />
                         <Label disable="true" opacity="0.0" text="%credit" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                         <Label disable="true" opacity="0.0" text="%coupon" visible="false" GridPane.columnIndex="2" GridPane.rowIndex="8" />

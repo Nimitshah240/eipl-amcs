@@ -62,13 +62,13 @@
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%occupation" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%mobileno" GridPane.columnIndex="3" GridPane.rowIndex="11" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%joiningdate" GridPane.columnIndex="2" />
-                                                        <E_TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                                                        <E_NumericField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                                                         <AutoSearchTextField fx:id="cboxMemberType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                         <E_DatePicker fx:id="dpRegistrationDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                         <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                                         <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                                                         <AutoSearchTextField fx:id="cboxDefaultMilkType" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
-                                                        <E_TextField fx:id="txtCreditLimit" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+                                                        <E_NumericField fx:id="txtCreditLimit" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                                                         <E_DatePicker fx:id="dpBirthDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                                                         <E_TextField fx:id="txtQualification" disable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="5" GridPane.valignment="TOP" />
                                                         <AutoSearchTextField fx:id="cboxGender" maxWidth="1.7976931348623157E308" GridPane.rowIndex="7" />
@@ -82,10 +82,10 @@
 
                                                         <TextArea fx:id="txtAddress" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="12" />
                                                         <E_TextField fx:id="txtPinCode" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-                                                        <E_TextField fx:id="txtMobileNo" accessibleText="^(?:[0-9]{10}|)$" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="12" />
+                                                        <E_NumericField fx:id="txtMobileNo" accessibleText="^(?:[0-9]{10}|)$" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="12" />
                                                         <E_TextField fx:id="txtEmail" maxWidth="1.7976931348623157E308" GridPane.rowIndex="14" />
                                                         <E_TextField fx:id="txtPanNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-                                                        <E_TextField fx:id="txtAadharCardNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="14" />
+                                                        <E_NumericField fx:id="txtAadharCardNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="14" />
                                                         <E_TextField fx:id="txtSapNo" accessibleText="^(?:[0-9]{10}|)$" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="14" />
 
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%creditlimit" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -165,7 +165,7 @@
                                                                 <Label fx:id="lblIfsc" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%ifsc" GridPane.columnIndex="3" />
                                                                 <AutoSearchTextField fx:id="cboxBank" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                                                                 <AutoSearchTextField fx:id="cboxBranch" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                <E_TextField fx:id="txtAcNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                <E_NumericField fx:id="txtAcNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                                 <E_TextField fx:id="txtIfsc" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                             </children>
                                                         </GridPane>
@@ -192,9 +192,9 @@
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%cattledetail" GridPane.rowIndex="10" />
                                                         <Separator prefHeight="0.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="10" />
                                                         <AutoSearchTextField fx:id="cboxCattleDetail" maxWidth="1.7976931348623157E308" GridPane.rowIndex="12" />
-                                                        <E_TextField fx:id="txtMilky" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                                                        <E_TextField fx:id="txtDry" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-                                                        <E_TextField fx:id="txtCalf" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="12" />
+                                                        <E_NumericField fx:id="txtMilky" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                                                        <E_NumericField fx:id="txtDry" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                                                        <E_NumericField fx:id="txtCalf" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="12" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%cattledetail" GridPane.rowIndex="11" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%milky" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%dry" GridPane.columnIndex="2" GridPane.rowIndex="11" />
@@ -280,14 +280,14 @@
                                                         <E_TextField fx:id="txtRationCardNo" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                                                         <AutoSearchTextField fx:id="cboxRationCardType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                         <RadioButton fx:id="rbtnIsFarmer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%is.farmer" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                                                        <E_TextField fx:id="txtFarmerCode" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
+                                                        <E_NumericField fx:id="txtFarmerCode" maxWidth="1.7976931348623157E308" GridPane.rowIndex="4" />
                                                         <E_TextField fx:id="txtFarmerName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                                                         <E_TextField fx:id="txtMemberName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="6" />
                                                         <AutoSearchTextField fx:id="cboxRelation1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="6" />
                                                         <E_DatePicker fx:id="dpBirthDate1" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                                                        <E_TextField fx:id="txtAge" maxWidth="1.7976931348623157E308" GridPane.rowIndex="8" />
+                                                        <E_NumericField fx:id="txtAge" maxWidth="1.7976931348623157E308" GridPane.rowIndex="8" />
                                                         <AutoSearchTextField fx:id="cboxGender1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                                                        <E_TextField fx:id="txtAadharCardNo1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                                                        <E_NumericField fx:id="txtAadharCardNo1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="8" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rationcardno" GridPane.rowIndex="1" />
                                                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rationcardtype" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                         <HBox spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="8">
@@ -361,7 +361,7 @@
                                        </rowConstraints>
                                        <children>
                                           <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="sub-header-text-primary" text="%farmermapping" />
-                                          <E_TextField fx:id="txtChildFarmerCode" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
+                                          <E_NumericField fx:id="txtChildFarmerCode" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
                                           <E_TextField fx:id="txtChildFarmerName" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                           <HBox alignment="CENTER" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                              <children>

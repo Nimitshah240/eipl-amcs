@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.operation.controller.BillCriteriaAddEditController">
     <children>
@@ -44,7 +45,7 @@
                         <E_TextField fx:id="txtName" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2"
                                      GridPane.rowIndex="1"/>
-                        <ComboBox fx:id="cboxBillHead" editable="true" maxHeight="1.7976931348623157E308"
+                        <AutoSearchTextField fx:id="cboxBillHead" editable="true" maxHeight="1.7976931348623157E308"
                                   maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="5"/>
                         <E_TextField fx:id="txtCode" disable="true" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
@@ -83,8 +84,8 @@
                                 </E_Button>
                             </children>
                         </HBox>
-                        <ComboBox fx:id="cboxFormula" editable="true" maxHeight="1.7976931348623157E308"
-                                  maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                        <AutoSearchTextField fx:id="cboxFormula" editable="true" maxHeight="1.7976931348623157E308"
+                                             maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
                         <Label text="%formula" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                     </children>
                 </GridPane>

@@ -3,15 +3,13 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
@@ -28,8 +26,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 
@@ -57,7 +57,7 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
     @FXML
     private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
     private E_Button btnSearch, btnAdd, btnEdit, btnDelete, btnClose, btnExport;
     @FXML
@@ -140,14 +140,6 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
         });
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        new AutoCompleteComboBoxListener<>(cboxFromShift);
-        new AutoCompleteComboBoxListener<>(cboxToShift);
-    }
-
     private void editRejectedMilk(RejectedMilkCollection rejectedMilk) {
         if (rejectedMilk != null) {
             MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "RejectedMilkCollectionAddEdit", rejectedMilk, this, "Edit Rejected Milk");
@@ -181,22 +173,16 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
 
     @Override
     public void setupTable() {
-        colSrNo.setCellValueFactory(new PropertyValueFactory<>("milkCollectionRejectedCode"));
+        colSrNo.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getMilkCollectionRejectedCode()));
         colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDate().toLocalDate()));
-        colShift.setCellValueFactory(new PropertyValueFactory<>("shift"));
-        colMemberCode.setCellValueFactory(cellData -> {
-            if (cellData.getValue() != null && cellData.getValue().getMember() != null) {
-                return new SimpleStringProperty(cellData.getValue().getMember().getCodeEx());
-            }
-            return new SimpleStringProperty("");
-        });
-        colMemberName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMember().getFirstName()));
-        colMilkType.setCellValueFactory(new PropertyValueFactory<>("milkType"));
-        colFat.setCellValueFactory(new PropertyValueFactory<>("fat"));
-        colSnf.setCellValueFactory(new PropertyValueFactory<>("snf"));
-        colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
-        colRemark.setCellValueFactory(new PropertyValueFactory<>("remark"));
-
+        colShift.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getShift()));
+        colMemberCode.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMember().getCodeEx()));
+        colMemberName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMember().toMemberName()));
+        colMilkType.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getMilkType()));
+        colFat.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getFat()));
+        colSnf.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getSnf()));
+        colQty.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQty()));
+        colRemark.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRemark()));
         propRejectedMilkCollection.bind(tableCollection.getSelectionModel().selectedItemProperty());
         TableLocalizationUtil.localizeTable(tableCollection);
 

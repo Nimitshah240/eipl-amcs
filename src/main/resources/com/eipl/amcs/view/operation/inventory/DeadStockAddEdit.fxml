@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.operation.inventory.controller.DeadStockAddEditController">
@@ -52,8 +53,8 @@
                                GridPane.columnIndex="1"/>
                         <E_TextField fx:id="txtNameLocal" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
                                      GridPane.columnSpan="2" GridPane.rowIndex="3"/>
-                        <E_ComboBox fx:id="cboxLedger" editable="true" maxHeight="1.7976931348623157E308"
-                                    maxWidth="1.7976931348623157E308" GridPane.columnSpan="3" GridPane.rowIndex="5"/>
+                        <AutoSearchTextField fx:id="cboxLedger" editable="true" maxHeight="1.7976931348623157E308"
+                                             maxWidth="1.7976931348623157E308" GridPane.columnSpan="3" GridPane.rowIndex="5"/>
                         <E_NumericField fx:id="txtCode" disable="true" editable="false"
                                         maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%qantity"

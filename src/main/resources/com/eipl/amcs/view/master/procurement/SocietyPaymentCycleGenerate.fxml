@@ -18,11 +18,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefWidth="700.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.procurement.controller.SocietyPaymentCycleGenerateController">
     <children>
         <VBox spacing="20.0" styleClass="">
             <children>
-                <Label styleClass="header-text" text="%societypaymentcycle" />
+<!--                <Label styleClass="header-text" text="%societypaymentcycle" />-->
                 <GridPane fx:id="grid" hgap="15.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="121.0" minWidth="-Infinity" percentWidth="25.0" prefWidth="121.0" />
@@ -40,10 +42,10 @@
                         <Label text="%interval" GridPane.rowIndex="2" />
                         <Label text="%fromshift" GridPane.columnIndex="1" />
                         <Label text="%todate" GridPane.columnIndex="2" />
-                        <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxFromShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxToShift" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxFromShift" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxToShift" editable="true" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <TextField fx:id="txtInterval" GridPane.rowIndex="3" />
                         <CheckBox fx:id="chkCheckMonth" disable="true" mnemonicParsing="false" text="%checkmonth" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="%toshift" GridPane.columnIndex="3" />

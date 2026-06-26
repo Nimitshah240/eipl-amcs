@@ -5,6 +5,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -30,6 +31,7 @@ import com.eipl.amcs.operation.inventory.repository.ProductReceiptTransactionRep
 import com.eipl.amcs.operation.inventory.repository.ProductSaleRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleTransactionRepository;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -76,7 +78,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
     @FXML
     Button btnClose, btnCredit, btnDebit, btnJournal, btnSale, btnPurchase, btnPrint, btnPrev, btnNext, btnReportGenerate;
     @FXML
-    private Label lblRojmelHeader, lblTotalCredit, lblTotalDebit, lblTotalCredit2, lblTotalDebit2;
+    private E_Label lblRojmelHeader, lblTotalCredit, lblTotalDebit, lblTotalCredit2, lblTotalDebit2;
 
     BigDecimal crTotal = BigDecimal.ZERO;
     BigDecimal drTotal = BigDecimal.ZERO;
@@ -100,7 +102,6 @@ public class RojmedController implements MyInitialization, PopupCallback {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        setupTable();
         dpDate.setOnAction(e -> {
             FocusUtils.requestFocus(btnCredit);
         });
@@ -528,7 +529,8 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 return row;
             });
 
-
+            TableLocalizationUtil.localizeTable(tableData);
+            TableLocalizationUtil.localizeTable(tableData1);
         } catch (Exception e) {
             e.printStackTrace();
         }

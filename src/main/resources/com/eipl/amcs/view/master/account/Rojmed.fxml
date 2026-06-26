@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
@@ -91,7 +91,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                  <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnReportGenerate" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%reportgenerate">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -109,7 +109,7 @@
             <Separator prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Label fx:id="lblRojmelHeader" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="617.0" text="%rojmedtodate" HBox.hgrow="ALWAYS" />
+                  <E_Label fx:id="lblRojmelHeader" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="617.0" text="%rojmedtodate" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
                 <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
@@ -122,10 +122,10 @@
                                             <children>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: GREEN;" text="%credit" HBox.hgrow="ALWAYS">
+                                                        <E_Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: GREEN;" text="%credit" HBox.hgrow="ALWAYS">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
-                                             </font></Label>
+                                             </font></E_Label>
                                                     </children>
                                                 </HBox>
                                                 <TableView fx:id="tableData" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
@@ -139,10 +139,10 @@
                                             <children>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: RED;" text="%debit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                                        <E_Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: RED;" text="%debit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
                                              <font>
                                                 <Font name="System Bold" size="14.0" />
-                                             </font></Label>
+                                             </font></E_Label>
                                                     </children>
                                                 </HBox>
                                                 <TableView fx:id="tableData1" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
@@ -173,15 +173,15 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totalcredit" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totaldebit" GridPane.columnIndex="2" />
-                  <Label fx:id="lblClosingBalance" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <Label fx:id="lblTotalCredit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" />
-                  <Label fx:id="lblTotalDebit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.vgrow="ALWAYS" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total" GridPane.rowIndex="1" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label fx:id="lblTotalCredit2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="lblTotalDebit2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totalcredit" />
+                  <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totaldebit" GridPane.columnIndex="2" />
+                  <E_Label fx:id="lblClosingBalance" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <E_Label fx:id="lblTotalCredit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" />
+                  <E_Label fx:id="lblTotalDebit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.vgrow="ALWAYS" />
+                  <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total" GridPane.rowIndex="1" />
+                  <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <E_Label fx:id="lblTotalCredit2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <E_Label fx:id="lblTotalDebit2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             </children>

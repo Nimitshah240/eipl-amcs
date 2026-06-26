@@ -90,12 +90,12 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
                 throw new UnAuthorizedAccessException();
             SocietyPaymentCycle paymentCycle = propPaymentCycle.get();
             if (paymentCycle != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleEdit", paymentCycle, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleEdit", paymentCycle, this, resourceBundle.getString("societypaymentcycle"));
         });
         btnGenerate.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_SOCIETY_PAYMENT_CYCLE_GENERATE"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleGenerate", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleGenerate", null, this, resourceBundle.getString("societypaymentcycle"));
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_SOCIETY_PAYMENT_CYCLE_DELETE"))

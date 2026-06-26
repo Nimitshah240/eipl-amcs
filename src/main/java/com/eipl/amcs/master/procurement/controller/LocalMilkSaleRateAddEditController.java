@@ -3,7 +3,9 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -41,11 +43,11 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
     @FXML
     private E_Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<MilkClass> cboxMilkClass;
+    private AutoSearchTextField<MilkClass> cboxMilkClass;
     @FXML
-    private DatePicker dpWefDate;
+    private E_DatePicker dpWefDate;
     @FXML
     private E_NumericField txtRate;
     private Stage stage;
@@ -82,8 +84,8 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxMilkClass.setConverter(new MilkClassConvertor(cboxMilkClass));
+//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//        cboxMilkClass.setConverter(new MilkClassConvertor(cboxMilkClass));
     }
 
     @Override

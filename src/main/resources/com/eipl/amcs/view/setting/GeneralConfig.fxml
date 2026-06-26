@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_CheckBox?>
 <?import com.eipl.amcs.controls.E_NumericField?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -98,11 +99,11 @@
                                                       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="19.0" GridPane.rowIndex="2">
                                                          <children>
                                                             <Label text="%defaultsnf" />
-                                                            <ComboBox fx:id="cboxDefaultSnf" editable="true">
+                                                            <AutoSearchTextField fx:id="cboxDefaultSnf" editable="true">
                                                                <HBox.margin>
                                                                   <Insets left="10.0" />
                                                                </HBox.margin>
-                                                            </ComboBox>
+                                                            </AutoSearchTextField>
                                                             <Separator orientation="VERTICAL" prefHeight="200.0" />
                                                             <Label layoutX="117.0" layoutY="17.0" text="%defaultsnfvalue" />
                                                             <TextField fx:id="txtDefaultSnfValue" />
@@ -111,22 +112,22 @@
                                                       <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.rowIndex="3">
                                                          <children>
                                                             <Label text="%weightsetting" />
-                                                            <ComboBox fx:id="cboxWeightSetting" editable="true" />
+                                                            <AutoSearchTextField fx:id="cboxWeightSetting" editable="true" />
                                                             <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="13.0" />
                                                             <Label text="%qualitysetting">
                                                                <HBox.margin>
                                                                   <Insets />
                                                                </HBox.margin>
                                                             </Label>
-                                                            <ComboBox fx:id="cboxQualitySetting" editable="true">
+                                                            <AutoSearchTextField fx:id="cboxQualitySetting" editable="true">
                                                                <HBox.margin>
                                                                   <Insets left="15.0" />
                                                                </HBox.margin>
-                                                            </ComboBox>
-                                                            <ComboBox fx:id="cboxQualityMachine" editable="true">
+                                                            </AutoSearchTextField>
+                                                            <AutoSearchTextField fx:id="cboxQualityMachine" editable="true">
                                                                <HBox.margin>
                                                                   <Insets right="5.0" />
-                                                               </HBox.margin></ComboBox>
+                                                               </HBox.margin></AutoSearchTextField>
                                                          </children>
                                                       </HBox>
                                                       <HBox prefHeight="100.0" prefWidth="200.0" spacing="8.0" GridPane.rowIndex="4">
@@ -188,24 +189,24 @@
                                                             <Label text="%space" GridPane.columnIndex="3" />
                                                             <TextField fx:id="txtSpace" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                             <Label text="%applicationlanguage" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                                                            <ComboBox fx:id="cboxApplicationLanguage" editable="true" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                                                            <AutoSearchTextField fx:id="cboxApplicationLanguage" editable="true" GridPane.columnIndex="4" GridPane.rowIndex="3">
                                                                <GridPane.margin>
                                                                   <Insets right="5.0" />
-                                                               </GridPane.margin></ComboBox>
+                                                               </GridPane.margin></AutoSearchTextField>
                                                             <Label text="%samplemilk" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                             <TextField fx:id="txtSampleMilk" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                                                             <Label text="%sliplanguage" GridPane.columnIndex="2" />
-                                                            <ComboBox fx:id="cboxSlipLanguage" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                            <AutoSearchTextField fx:id="cboxSlipLanguage" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                                             <Label text="%receiptquantitymode" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                                            <ComboBox fx:id="cboxReceiptMilkQtyMode" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                            <AutoSearchTextField fx:id="cboxReceiptMilkQtyMode" editable="true" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                                                             <Label text="%bmccollectionquantitymode" GridPane.columnIndex="1" />
-                                                            <ComboBox fx:id="cboxBmcCollectionQtyMode" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                            <AutoSearchTextField fx:id="cboxBmcCollectionQtyMode" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                             <Label text="%dispatchquantitymode" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                            <ComboBox fx:id="cboxDispatchMilkQtyMode" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <AutoSearchTextField fx:id="cboxDispatchMilkQtyMode" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                             <Label text="%membercollectionquantitymode" />
-                                                            <ComboBox fx:id="cboxMemberCollectionQtyMode" editable="true" GridPane.rowIndex="1" />
+                                                            <AutoSearchTextField fx:id="cboxMemberCollectionQtyMode" editable="true" GridPane.rowIndex="1" />
                                                             <Label text="%localmilksalequantitymode" GridPane.rowIndex="2" />
-                                                            <ComboBox fx:id="cboxLocalMilkSaleQtyMode" editable="true" GridPane.rowIndex="3" />
+                                                            <AutoSearchTextField fx:id="cboxLocalMilkSaleQtyMode" editable="true" GridPane.rowIndex="3" />
                                                          </children>
                                                       </GridPane>
                                                       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="12">
@@ -256,7 +257,7 @@
                                                             <CheckBox fx:id="chkAcceptOtherMilk" mnemonicParsing="false" text="%acceptmilktype" />
                                                             <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="13.0" />
                                                             <Label text="%printslipfont" />
-                                                            <ComboBox fx:id="cboxFont" editable="true" />
+                                                            <AutoSearchTextField fx:id="cboxFont" editable="true" />
                                                          </children>
                                                       </HBox>
                                                    </children>
@@ -337,8 +338,8 @@
                                                                         <Label maxWidth="1.7976931348623157E308" text="%paymenttransfer" GridPane.rowIndex="1" />
                                                                         <Label maxWidth="1.7976931348623157E308" styleClass="label-bold" text="%paymentoption" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                                                                         <Label maxWidth="1.7976931348623157E308" text="%payableconfig" GridPane.rowIndex="3" />
-                                                                        <ComboBox fx:id="cboxPaymentMode" editable="true" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                        <ComboBox fx:id="cboxPaymentOption" editable="true" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                                        <AutoSearchTextField fx:id="cboxPaymentMode" editable="true" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                        <AutoSearchTextField fx:id="cboxPaymentOption" editable="true" prefWidth="141.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                                         <TextField fx:id="txtDecimalValue" maxWidth="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                         <Label text="%decimalvalue" GridPane.rowIndex="4" />
                                                                     </children>

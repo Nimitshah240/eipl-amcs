@@ -48,9 +48,10 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                                             </rowConstraints>
                                             <children>
-                                                <E_TextField fx:id="txtSocietyCode" disable="true" editable="false"
-                                                             maxHeight="1.7976931348623157E308"
-                                                             maxWidth="1.7976931348623157E308" GridPane.rowIndex="1"/>
+                                                <E_NumericField fx:id="txtSocietyCode" disable="true" editable="false"
+                                                                maxHeight="1.7976931348623157E308"
+                                                                maxWidth="1.7976931348623157E308"
+                                                                GridPane.rowIndex="1"/>
                                                 <E_TextField fx:id="txtSocietyName" disable="true" editable="false"
                                                              maxHeight="1.7976931348623157E308"
                                                              maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
@@ -106,10 +107,11 @@
 
                                                 <E_DatePicker fx:id="dpStartYear" maxHeight="1.7976931348623157E308"
                                                               maxWidth="1.7976931348623157E308" GridPane.rowIndex="5"/>
-                                                <E_TextField fx:id="txtRegistrationCode"
-                                                             maxHeight="1.7976931348623157E308"
-                                                             maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
-                                                             GridPane.rowIndex="5"/>
+                                                <E_NumericField fx:id="txtRegistrationCode"
+                                                                maxHeight="1.7976931348623157E308"
+                                                                maxWidth="1.7976931348623157E308"
+                                                                GridPane.columnIndex="1"
+                                                                GridPane.rowIndex="5"/>
                                                 <E_DatePicker fx:id="dpRegistrationDate"
                                                               maxHeight="1.7976931348623157E308"
                                                               maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
@@ -185,9 +187,10 @@
                                                                      maxHeight="1.7976931348623157E308"
                                                                      maxWidth="1.7976931348623157E308"
                                                                      GridPane.columnIndex="1" GridPane.rowIndex="9"/>
-                                                <E_TextField fx:id="txtBankAccNo" maxHeight="1.7976931348623157E308"
-                                                             maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
-                                                             GridPane.rowIndex="9"/>
+                                                <E_NumericField fx:id="txtBankAccNo" maxHeight="1.7976931348623157E308"
+                                                                maxWidth="1.7976931348623157E308"
+                                                                GridPane.columnIndex="2"
+                                                                GridPane.rowIndex="9"/>
                                                 <E_TextField fx:id="txtIfscCode" maxHeight="1.7976931348623157E308"
                                                              maxWidth="1.7976931348623157E308" GridPane.columnIndex="3"
                                                              GridPane.rowIndex="9"/>
@@ -290,7 +293,7 @@
                                                 <E_TextField fx:id="txtAddress" maxHeight="1.7976931348623157E308"
                                                              maxWidth="1.7976931348623157E308" GridPane.columnSpan="2"
                                                              GridPane.rowIndex="2"/>
-                                                <E_TextField fx:id="txtPhoneNo" maxHeight="1.7976931348623157E308"
+                                                <E_NumericField fx:id="txtPhoneNo" maxHeight="1.7976931348623157E308"
                                                              maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
                                                              GridPane.rowIndex="2"/>
                                                 <E_TextField fx:id="txtEmail" maxHeight="1.7976931348623157E308"

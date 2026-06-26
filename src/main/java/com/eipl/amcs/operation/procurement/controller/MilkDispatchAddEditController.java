@@ -3,20 +3,17 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.BusinessValidationFailException;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.global.convertor.MilkQualityConvertor;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkQualityType;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -42,6 +39,7 @@ import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -85,15 +83,15 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     @FXML
     private E_DatePicker dpFromDate, dpToDate, dpChallanDate;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private ComboBox<String> cboxDispatchType;
+    private AutoSearchTextField<String> cboxDispatchType;
     //    @FXML
-//    private ComboBox<Route> cboxRouteNo;
+//    private AutoSearchTextField<Route> cboxRouteNo;
     @FXML
-    private ComboBox<String> cboxDestinationType;
+    private AutoSearchTextField<String> cboxDestinationType;
     @FXML
-    private ComboBox<String> cboxDestination;
+    private AutoSearchTextField<String> cboxDestination;
     @FXML
     private TableView<MilkDispatchSummaryDto> tableMilkDispatchSummary;
     @FXML
@@ -103,9 +101,9 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
     @FXML
     private GridPane gridTransaction;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<MilkQualityType> cboxMilkQuality;
+    private AutoSearchTextField<MilkQualityType> cboxMilkQuality;
     @FXML
     private Label lblQuantity;
     @FXML
@@ -172,14 +170,13 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         setupComboBox();
         setupTable();
         setupCollectionTable();
-        FocusUtils.requestFocus(cboxDispatchType);
         btnAdd.setDisable(true);
         //cboxRouteNo.getSelectionModel().select(0);
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         if (btnSaveUpdate.getText().equals(resourceBundle.getString("save"))) {
             nextChallanNo();
-			loadLastRecord();
+            loadLastRecord();
         }
         cboxMilkType.setOnAction(e -> {
             fetchRateForDispatch(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue(), CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()));
@@ -203,7 +200,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 txtCans.setDisable(false);
                 if (cboxFromShift.getSelectionModel() != null) {
                     cboxToShift.valueProperty().set(null);
-                    cboxToShift.setValue(cboxFromShift.getValue());
+//                    cboxToShift.setValue(cboxFromShift.getValue());
                 }
                 if (dpFromDate.getValue() != null) {
                     dpToDate.setValue(null);
@@ -237,6 +234,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                 }
             }
             loadDispatchSummary();
+//            if (dpToDate.isDisable())
+//                FocusUtils.requestFocus(btnCopy);
         });
         dpFromDate.setOnAction(event -> {
             if (cboxDispatchType.getSelectionModel().getSelectedIndex() >= 0) {
@@ -313,6 +312,10 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         btnCopy.setOnAction(e -> {
             copyData();
         });
+        txtDipStickReadingClosing.setOnAction(e -> {
+            FocusUtils.requestFocus(btnSaveUpdate);
+        });
+        FocusUtils.requestFocus(cboxDispatchType);
     }
 
     private void copyData() {
@@ -364,6 +367,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         }
         loadMilkDispatchTempData(listMilkDispatch);
         setupTable();
+        FocusUtils.requestFocus(txtVehicleNo);
     }
 
     private void loadDispatchSummary() {
@@ -540,19 +544,11 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
 
     @Override
     public void setupComboBox() {
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxMilkQuality.setConverter(new MilkQualityConvertor(cboxMilkQuality));
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        //cboxRouteNo.setConverter(new RouteConvertor(cboxRouteNo));
-        dpChallanDate.setConverter(new LocalDateConvertor());
-        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -585,7 +581,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
         colDifference.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkBalance()));
 
         propDto.bind(tableMilkDispatchSummary.getSelectionModel().selectedItemProperty());
-
+        TableLocalizationUtil.localizeTable(tableMilkDispatch);
+        TableLocalizationUtil.localizeTable(tableMilkDispatchSummary);
     }
 
     private void validateAndSave() {
@@ -1050,8 +1047,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
 
     private void fetchPurchaseRateCode() {
         var task = new MilkDispatchSocietyPurchaseRateLoadTask
-                (CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getValue()),
-                        cboxToShift.getValue(), MainApp.identityDto.getSociety());
+                (CommonUtils.getLocalDateTimeFromDateAndShift(dpFromDate.getValue(), cboxFromShift.getSelectionModel().getSelectedItem()),
+                        cboxToShift.getSelectionModel().getSelectedItem(), MainApp.identityDto.getSociety());
         task.setOnSucceeded(e -> {
             try {
                 societyMilkPurchaseRate = task.get();
@@ -1136,6 +1133,7 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
             txtRouteNo.setText(dto.getRouteNo());
 
     }
+
     private void loadLastRecord() {
         MilkDispatchRepository milkDispatchRepository = EmcsAppContext.getContext().getBean(MilkDispatchRepository.class);
         MilkDispatch lastDispatch = milkDispatchRepository.findFirstByOrderByCreatedAtDesc();

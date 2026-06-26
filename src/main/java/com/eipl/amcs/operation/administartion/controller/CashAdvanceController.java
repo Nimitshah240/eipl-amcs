@@ -145,7 +145,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this,  resourceBundle.getString("installmenttitle"));
         });
         new Thread(task).start();
     }

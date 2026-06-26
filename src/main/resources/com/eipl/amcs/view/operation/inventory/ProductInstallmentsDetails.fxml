@@ -13,7 +13,7 @@
     <children>
         <VBox spacing="20.0" styleClass="">
             <children>
-                <Label styleClass="header-text" text="%installmenttitle" />
+<!--                <Label styleClass="header-text" text="%installmenttitle" />-->
                 <TableView fx:id="tableProductInstallment" focusTraversable="false" prefHeight="200.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colSrNo" minWidth="0.0" prefWidth="0.0" text="%srno" />

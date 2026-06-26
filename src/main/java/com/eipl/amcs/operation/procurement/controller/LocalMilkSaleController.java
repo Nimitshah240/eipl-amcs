@@ -109,7 +109,6 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             }
         });
 
-        loadData();
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
@@ -210,6 +209,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
         task.setOnSucceeded(e -> {
             try {
                 listMembers = task.get();
+                loadData();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -278,7 +278,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             if (listMembers != null) {
                 for (Member member : listMembers) {
                     if (code.equals(member.getCode())) {
-                        this.name = member.getFirstName();
+                        this.name = member.toMemberName();
                         break;
                     }
                 }
@@ -287,7 +287,7 @@ public class LocalMilkSaleController implements MyInitialization, PopupCallback 
             if (listCustomers != null && code != null) {
                 for (Customer customer : listCustomers) {
                     if (code.equals(customer.getCode())) {
-                        this.name = customer.getName();
+                        this.name = customer.toCustomerName();
                         break;
                     }
                 }
