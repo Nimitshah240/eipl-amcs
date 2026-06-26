@@ -33,7 +33,7 @@ public class VoucherController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<VoucherDto, String> colType, colVoucherDate, colVoucherNo, colRefNo, colRemarks;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnLedger, btnDayBook;
+    Button btnClose, btnDelete, btnLedger, btnDayBook;// btnAdd;
     private ResourceBundle resourceBundle;
 
     public VoucherController() {
@@ -54,11 +54,11 @@ public class VoucherController implements MyInitialization, PopupCallback {
         });
         setupTable();
         loadData();
-        btnAdd.setOnAction(e -> {
-            VoucherAddEditController controller = (VoucherAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherAddEdit.fxml"));
-            controller.setVoucher(null);
-            MainApp.getContentPane().setCenter(controller.getRoot());
-        });
+//        btnAdd.setOnAction(e -> {
+//            VoucherAddEditController controller = (VoucherAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherAddEdit.fxml"));
+//            controller.setVoucher(null);
+//            MainApp.getContentPane().setCenter(controller.getRoot());
+//        });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });

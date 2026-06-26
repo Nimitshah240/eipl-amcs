@@ -9,13 +9,13 @@ import com.eipl.amcs.base.dto.JarUpdate;
 import com.eipl.amcs.base.task.DownloadFileTask;
 import com.eipl.amcs.base.task.UpdaterCheckTask;
 import com.eipl.amcs.base.task.UpdaterLogTask;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
 import com.eipl.amcs.setting.model.GeneralConfig;
@@ -27,7 +27,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +58,9 @@ public class LoginController implements MyInitialization {
     @FXML
     Button btnLogin;
     @FXML
-    private ComboBox<FinancialYear> cboxFinancialYear;
+    private AutoSearchTextField<FinancialYear> cboxFinancialYear;
     @FXML
-    private ComboBox<String> cboxLang;
+    private AutoSearchTextField<String> cboxLang;
     @FXML
     private E_TextField txtUsername;
     @FXML
@@ -123,11 +122,6 @@ public class LoginController implements MyInitialization {
         cboxLang.setOnAction(e -> {
             FocusUtils.requestFocus(btnLogin);
         });
-    }
-
-    @Override
-    public void setupComboBox() {
-        cboxFinancialYear.setConverter(new FinancialYearConvertor(cboxFinancialYear));
     }
 
     /**

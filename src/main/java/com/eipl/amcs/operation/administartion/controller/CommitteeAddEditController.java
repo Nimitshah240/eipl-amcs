@@ -167,7 +167,7 @@ public class CommitteeAddEditController implements MyInitialization {
         try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMemberName()));
-            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
+            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().toString()));
             colJoiningDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getJoiningDate()));
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getRegistrationDate()));
             propCommitteMembertDto.bind(tableCommitteeMembers.getSelectionModel().selectedItemProperty());

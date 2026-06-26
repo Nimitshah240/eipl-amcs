@@ -32,16 +32,16 @@
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15">
                     <children>
-                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
-                                prefHeight="25.0" prefWidth="76.0" text="%add">
-                            <graphic>
-                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="@../../images/save.png"/>
-                                    </image>
-                                </ImageView>
-                            </graphic>
-                        </Button>
+<!--                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"-->
+<!--                                prefHeight="25.0" prefWidth="76.0" text="%add">-->
+<!--                            <graphic>-->
+<!--                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">-->
+<!--                                    <image>-->
+<!--                                        <Image url="@../../images/save.png"/>-->
+<!--                                    </image>-->
+<!--                                </ImageView>-->
+<!--                            </graphic>-->
+<!--                        </Button>-->
                         <Button fx:id="btnDelete" contentDisplay="TOP" minWidth="75.0" text="%delete">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">

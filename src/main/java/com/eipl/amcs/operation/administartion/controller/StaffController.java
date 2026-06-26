@@ -36,7 +36,7 @@ public class StaffController implements MyInitialization, PopupCallback {
     @FXML
     TableView<StaffMember> tableStaffMember;
     @FXML
-    TableColumn<StaffMember, String> colDesignation, colMembername, colTenureFromDate, colTenureToDate;
+    TableColumn<StaffMember, String> colDesignation, colMembername, colMemberNameLocal, colTenureFromDate, colTenureToDate;
     @FXML
     E_Button btnClose, btnAdd, btnDelete, btnEdit, btnSalary;
     private ResourceBundle resourceBundle;
@@ -124,7 +124,8 @@ public class StaffController implements MyInitialization, PopupCallback {
     public void setupTable() {
         try {
             colMembername.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
-            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
+            colMemberNameLocal.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
+            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().toString()));
             colTenureFromDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getTenureFromDate()));
             colTenureToDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getTenureToDate()));
             propStaffMembertDto.bind(tableStaffMember.getSelectionModel().selectedItemProperty());
