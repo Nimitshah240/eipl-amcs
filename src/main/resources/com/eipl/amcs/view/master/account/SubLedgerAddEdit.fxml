@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" minWidth="800.0" prefWidth="800.0" styleClass="pane-center"
            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.account.controller.SubLedgerAddEditController">
@@ -42,8 +43,8 @@
                     </rowConstraints>
                     <children>
                         <Label text="%name" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <ComboBox fx:id="cboxType" disable="true" maxWidth="1.7976931348623157E308"
-                                  GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+                        <AutoSearchTextField fx:id="cboxType" disable="true" maxWidth="1.7976931348623157E308"
+                                             GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2"/>
                         <E_TextField fx:id="txtCode" disable="true" maxWidth="1.7976931348623157E308"
                                      GridPane.rowIndex="2"/>
                         <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"

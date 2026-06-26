@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.account.controller.VoucherTypeAddEditController">
     <children>
@@ -43,11 +44,11 @@
                                      GridPane.rowIndex="1"/>
                         <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2"
                                      GridPane.rowIndex="1"/>
-                        <E_ComboBox fx:id="cboxVoucherType" prefWidth="150.0" GridPane.rowIndex="3"/>
-                        <E_ComboBox fx:id="cboxCreditDebit" prefWidth="150.0" GridPane.columnIndex="1"
+                        <AutoSearchTextField fx:id="cboxVoucherType" prefWidth="150.0" GridPane.rowIndex="3"/>
+                        <AutoSearchTextField fx:id="cboxCreditDebit" prefWidth="150.0" GridPane.columnIndex="1"
                                     GridPane.rowIndex="3"/>
-                        <E_ComboBox fx:id="cboxLedgers" disable="true" prefWidth="150.0" GridPane.columnIndex="2"
-                                    GridPane.rowIndex="3"/>
+                        <AutoSearchTextField fx:id="cboxLedgers" disable="true" prefWidth="150.0" GridPane.columnIndex="2"
+                                             GridPane.rowIndex="3"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%vouchertype"
                                GridPane.rowIndex="2"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%creditdebit"

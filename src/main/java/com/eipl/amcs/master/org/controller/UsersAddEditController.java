@@ -6,6 +6,7 @@ import com.eipl.amcs.auth.model.User;
 import com.eipl.amcs.auth.model.UserRole;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_ComboBox;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -42,7 +43,7 @@ public class UsersAddEditController implements MyInitialization {
     @FXML
     private TextField txtMobile;
     @FXML
-    private E_ComboBox<Role> cboxRoleCode;
+    private AutoSearchTextField<Role> cboxRoleCode;
     @FXML
     private E_Button btnUpdate;
     @FXML
@@ -153,17 +154,17 @@ public class UsersAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxRoleCode.setConverter(new StringConverter<Role>() {
-            @Override
-            public String toString(Role role) {
-                return (role != null) ? role.getName() : "";
-            }
-
-            @Override
-            public Role fromString(String string) {
-                return null;
-            }
-        });
+//        cboxRoleCode.setConverter(new StringConverter<Role>() {
+//            @Override
+//            public String toString(Role role) {
+//                return (role != null) ? role.getName() : "";
+//            }
+//
+//            @Override
+//            public Role fromString(String string) {
+//                return null;
+//            }
+//        });
         var roleTask = new RoleLoadTask();
         roleTask.setOnSucceeded(e -> {
             List<Role> rolesList = roleTask.getValue();

@@ -2,6 +2,8 @@ package com.eipl.amcs.master.account.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.master.account.converter.SubLedgerConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
@@ -51,15 +53,15 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
     @FXML
     Button btnClose, btnSave, btnDelete, btnImport;
     @FXML
-    private TextField txtBalance;
+    private E_NumericField txtBalance;
     @FXML
-    private ComboBox<String> cboxType;
+    private AutoSearchTextField<String> cboxType;
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxSubLedgerType;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxSubLedgerType;
     @FXML
-    private ComboBox<SubLedger> cboxSubLedger;
+    private AutoSearchTextField<SubLedger> cboxSubLedger;
     @FXML
-    private ComboBox<FinancialYear> cboxFinancialYear;
+    private AutoSearchTextField<FinancialYear> cboxFinancialYear;
     private List<SubLedger> subledgerList;
     private List<FinancialYear> financialYearList;
     private ResourceBundle resourceBundle;
@@ -133,8 +135,8 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxSubLedger.setConverter(new SubLedgerConvertor(cboxSubLedger));
-        cboxSubLedgerType.setConverter(new CustomerTypeConvertor(cboxSubLedgerType));
+//        cboxSubLedger.setConverter(new SubLedgerConvertor(cboxSubLedger));
+//        cboxSubLedgerType.setConverter(new CustomerTypeConvertor(cboxSubLedgerType));
 
     }
 
@@ -142,7 +144,7 @@ public class SubLedgerOpeningBalanceController implements MyInitialization {
         subLedgerOpeningBalance = new SubLedgerOpeningBalance();
         subLedgerOpeningBalance.setSociety(MainApp.identityDto.getSociety());
         subLedgerOpeningBalance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-        subLedgerOpeningBalance.setBalance(new BigDecimal(txtBalance.getText()));
+        subLedgerOpeningBalance.setBalance(new BigDecimal(txtBalance.getInputText()));
         subLedgerOpeningBalance.setFinancialYearsCode(cboxFinancialYear.getValue().getCode());
         subLedgerOpeningBalance.setSubLedger(cboxSubLedger.getValue());
         subLedgerOpeningBalance.setCreditDebit(!cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("debit")));

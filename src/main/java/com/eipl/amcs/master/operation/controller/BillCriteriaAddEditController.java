@@ -3,6 +3,7 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -50,10 +51,10 @@ public class BillCriteriaAddEditController implements MyInitialization {
     private E_TextField txtCode, txtName;
 
     @FXML
-    private ComboBox<BillHead> cboxBillHead;
+    private AutoSearchTextField<BillHead> cboxBillHead;
 
     @FXML
-    private ComboBox<Formula> cboxFormula;
+    private AutoSearchTextField<Formula> cboxFormula;
 
     @FXML
     private E_DatePicker dpStartDate, dpEndDate;
@@ -94,8 +95,8 @@ public class BillCriteriaAddEditController implements MyInitialization {
     @Override
     public void setupComboBox() {
         try {
-            cboxFormula.setConverter(new FormulaConvertor(cboxFormula));
-            cboxBillHead.setConverter(new BillHeadConvertor(cboxBillHead));
+//            cboxFormula.setConverter(new FormulaConvertor(cboxFormula));
+//            cboxBillHead.setConverter(new BillHeadConvertor(cboxBillHead));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
