@@ -3,6 +3,8 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -14,6 +16,7 @@ import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -40,9 +43,9 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate, btnGenerate;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
     private TextField txtInterval;
     @FXML
@@ -148,16 +151,16 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
 
-        dpFromDate.setConverter(new LocalDateConvertor());
+//        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        dpToDate.setConverter(new LocalDateConvertor());
+//        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -192,6 +195,8 @@ public class SocietyPaymentCycleGenerateController implements MyInitialization {
             colFromShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromShift()));
             colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift()));
             colInterval.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIntervalValue()));
+            TableLocalizationUtil.localizeTable(tablePaymentCycle);
+
         } catch (Exception e) {
             System.out.println("SocietyPaymentCycleGenerate setuptable Exception");
             e.printStackTrace();

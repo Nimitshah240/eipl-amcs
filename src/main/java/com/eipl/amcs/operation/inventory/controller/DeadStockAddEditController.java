@@ -4,10 +4,7 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_NumericField;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -42,7 +39,7 @@ public class DeadStockAddEditController implements MyInitialization {
     @FXML
     private E_DatePicker dpPurchaseDate;
     @FXML
-    private E_ComboBox<Ledger> cboxLedger;
+    private AutoSearchTextField<Ledger> cboxLedger;
     @FXML
     private Button btnSaveUpdate, btnClose;
     private Stage stage;
@@ -98,8 +95,8 @@ public class DeadStockAddEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
-        new AutoCompleteComboBoxListener<>(cboxLedger);
+//        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
+//        new AutoCompleteComboBoxListener<>(cboxLedger);
     }
 
     @Override

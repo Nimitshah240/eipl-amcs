@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
@@ -30,7 +31,7 @@ public class SalaryHeadAddEditController implements MyInitialization {
     private E_Button btnClose, btnSaveUpdate;
 
     @FXML
-    private ComboBox cboxType;
+    private AutoSearchTextField cboxType;
     @FXML
     private E_TextField txtName, txtCode;
     private Stage stage;
