@@ -303,8 +303,6 @@ public class ActivationController implements MyInitialization, PopupCallback {
             DB_LOC = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_LOC", "bG9jYWxob3N0")));
             EIPL_DB_PASS = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_PASS", "RUFtY3MyMDIx")));
             EIPL_DB_NAME = new String(Base64.getDecoder().decode(preferences.get("AMCS_DB_NAME", "ZWlwbF9hbWNzX2Ri")));
-            DB_LOC = "192.168.1.15";
-            EIPL_DB_NAME = "eipl_amcs_db_ruppura_fifo";
         } catch (Exception e) {
             e.printStackTrace();
         }
