@@ -221,6 +221,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
+                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         } else if (criteria.equalsIgnoreCase(resourceBundle.getString("rs"))) {
             for (Bonus b : bonusList) {
@@ -229,6 +230,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
+                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         } else {
 
@@ -241,6 +243,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
+                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         }
         // Sort list by Member Code before updating the table

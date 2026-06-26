@@ -1,5 +1,6 @@
 package com.eipl.amcs.controls;
 
+import com.eipl.amcs.MainApp;
 import com.ibm.icu.text.Transliterator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -1132,8 +1133,8 @@ public class AutoSearchTextField<T> extends TextField {
         private final VBox cellLayout = new VBox(mainLabel, subLabel);
 
         DynamicCell() {
-            mainLabel.setFont(javafx.scene.text.Font.font("Shruti", javafx.scene.text.FontWeight.BOLD, 14));
-            subLabel.setFont(javafx.scene.text.Font.font("Shruti", 14));
+            mainLabel.setFont(javafx.scene.text.Font.font(MainApp.getProperty("slip.font", "System"), javafx.scene.text.FontWeight.BOLD, 14));
+            subLabel.setFont(javafx.scene.text.Font.font(MainApp.getProperty("slip.front", "System"), 14));
 //            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
             mainLabel.setTextFill(Color.web("#2c3e50"));
 //            subLabel.setFont(Font.font("System", 11));

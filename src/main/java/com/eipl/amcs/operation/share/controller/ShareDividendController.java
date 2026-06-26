@@ -7,7 +7,6 @@ import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.operation.model.Member;
@@ -85,13 +84,11 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         FocusUtils.requestFocus(txtValue);
-      //  dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-     //   dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -202,10 +199,10 @@ public class ShareDividendController implements MyInitialization, PopupCallback 
     @Override
     public void setupTable() {
         try {
-            colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode()));
+            colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode().substring(MainApp.identityDto.getSociety().getCode().length())));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getIssueDate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareAmount()));
-            colMemberCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().getCode()));
+            colMemberCode.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().getCodeEx()));
             colNoOfShare.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfShare().toString()));
             colDividend.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getXcol4()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));

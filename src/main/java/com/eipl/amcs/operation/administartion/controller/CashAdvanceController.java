@@ -3,10 +3,8 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.alert.ConfirmationAlert;
-import com.eipl.amcs.controls.alert.ErrorAlert;
-import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.alert.WarningAlert;
+import com.eipl.amcs.controls.E_NumericField;
+import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.master.account.dto.CashAdvanceDto;
 import com.eipl.amcs.master.account.model.CashAdvance;
 import com.eipl.amcs.master.operation.model.Member;
@@ -63,7 +61,9 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
     @FXML
     Button btnClose, btnSave, btnDelete, btnView;
     @FXML
-    private TextField txtAmount, txtMemberName, txtMemberCode, txtNoOfInstallment;
+    private TextField txtMemberName;
+    @FXML
+    private E_NumericField txtAmount, txtMemberCode, txtNoOfInstallment;
     @FXML
     private DatePicker dpDate;
     private Stage stage;
@@ -122,8 +122,8 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
         });
 
         txtMemberCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
-            if (!newValue && txtMemberCode.getText().length() > 0) {
-                String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtMemberCode.getText()));
+            if (!newValue && !txtMemberCode.getInputText().isEmpty()) {
+                String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtMemberCode.getInputText()));
                 setMemberName(code);
             }
         });
@@ -145,7 +145,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this,  resourceBundle.getString("installmenttitle"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this, resourceBundle.getString("installmenttitle"));
         });
         new Thread(task).start();
     }
@@ -201,8 +201,8 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
         cashAdvance = new CashAdvance();
         cashAdvance.setSociety(MainApp.identityDto.getSociety());
         cashAdvance.setUnionCode(MainApp.identityDto.getUnion().getCode());
-        cashAdvance.setAmount(new BigDecimal(txtAmount.getText()));
-        cashAdvance.setNoOfInstallment(Integer.parseInt(txtNoOfInstallment.getText()));
+        cashAdvance.setAmount(new BigDecimal(txtAmount.getInputText()));
+        cashAdvance.setNoOfInstallment(Integer.parseInt(txtNoOfInstallment.getInputText()));
         cashAdvance.setMember(member);
         cashAdvance.setDate(LocalDate.now());
         cashAdvance.setInstallmentDate(dpDate.getValue());
@@ -212,7 +212,7 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
     @Override
     public void setupTable() {
         try {
-            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCode()));
+            colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().getCodeEx()));
             colNoOfInstallment.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfInstallment().toString()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colName.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMember().toMemberName()));
@@ -229,12 +229,12 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
 
     private void checkPaymentCycleAndSaveInstallment() {
         try {
-            int noOfInstallments = Integer.parseInt(txtNoOfInstallment.getText());
+            int noOfInstallments = Integer.parseInt(txtNoOfInstallment.getInputText());
             var task = new FetchAllPaymentCycleLoadTask(dpDate.getValue(), noOfInstallments);
             task.setOnSucceeded(e -> {
                 try {
                     paymentCycleList = task.get();
-                    if (paymentCycleList.size() >= Integer.parseInt(txtNoOfInstallment.getText())) {
+                    if (paymentCycleList.size() >= Integer.parseInt(txtNoOfInstallment.getInputText())) {
                         prepareInstallment();
                         saveData();
                     } else {
@@ -256,11 +256,11 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
         try {
             if (installmentList != null)
                 installmentList.clear();
-            Integer loopNo = Integer.parseInt(txtNoOfInstallment.getText());
-            BigDecimal totalAmount = new BigDecimal(txtAmount.getText());
-            BigDecimal noOfInstallment = new BigDecimal(txtNoOfInstallment.getText());
+            Integer loopNo = Integer.parseInt(txtNoOfInstallment.getInputText());
+            BigDecimal totalAmount = new BigDecimal(txtAmount.getInputText());
+            BigDecimal noOfInstallment = new BigDecimal(txtNoOfInstallment.getInputText());
             BigDecimal num = totalAmount.divide(noOfInstallment, RoundingMode.HALF_DOWN);
-            BigDecimal actualInstallment = new BigDecimal(txtAmount.getText());
+            BigDecimal actualInstallment = new BigDecimal(txtAmount.getInputText());
             BigDecimal lastAmount = actualInstallment.subtract(num.multiply(new BigDecimal(loopNo - 1)));
             for (int i = 1; i <= loopNo; i++) {
                 ProductSaleInstallment psi = new ProductSaleInstallment();
@@ -343,6 +343,9 @@ public class CashAdvanceController implements MyInitialization, PopupCallback {
                             alert1.createAlert();
                             return;
                         }
+                        MyAlert alert1 = new InformationAlert(MainApp.getStage(), resourceBundle.getString("cashadvance"),
+                                resourceBundle.getString("record.delete.successful"));
+                        alert1.createAlert();
                         loadData();
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();

@@ -187,7 +187,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getInvoiceDate()));
 //            colDate.setCellFactory(new LocalDateCellFactory<>());
             colConsumerType.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getCustomerTypeString(data.getValue().getConsumerType())));
-            colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode()));
+            colConsumerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerCode().substring(MainApp.identityDto.getSociety().getCode().length())));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colNetPayable.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colNoOfInstallment.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getNoOfInstallments() == null ? 0 : data.getValue().getNoOfInstallments()));
@@ -265,7 +265,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
             } catch (ExecutionException ex) {
                 ex.printStackTrace();
             }
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this,  resourceBundle.getString("installmenttitle"));
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "InstallmentsAddEdit", installmentList, this, resourceBundle.getString("installmenttitle"));
         });
         new Thread(task).start();
     }

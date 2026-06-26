@@ -1829,3 +1829,4 @@ vigha=बीघा
 horizontal=आड़ा
 vertical=खड़े
 stock.going.to.zero=त्रुटि: ऐसा करने से स्टॉक माइनस में चला जाएगा।
+save.confirmation.msg=क्या आप डेटा सहेजना (save) चाहते हैं? कटौती {0} से शुरू होगी।

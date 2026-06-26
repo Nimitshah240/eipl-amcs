@@ -165,7 +165,7 @@ public class DeadStockController implements MyInitialization, PopupCallback {
 
     @Override
     public void setupTable() {
-        colCode.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCode()));
+        colCode.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getCode().substring(MainApp.identityDto.getSociety().getCode().length())));
         colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         colNameLocal.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNameLocal()));
         colQty.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getQty()));

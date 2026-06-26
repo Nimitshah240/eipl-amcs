@@ -9,7 +9,6 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
@@ -19,9 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -176,13 +173,14 @@ public class ProductPurchaseRateAddEditController implements MyInitialization {
         });
 
         task.setOnFailed(e -> {
-            try {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
-                        resourceBundle.getString("error.occurred"));
-                alert.createAlert();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("wefdate.not.valid")) {
+                errorMessage = "wefdate.not.valid";
             }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productpurchaserate"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
         });
         new Thread(task).start();
     }

@@ -56,6 +56,7 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -714,7 +715,8 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         }
         if (rbtnCredit.isSelected()) {
             String formattedDate = dpDeductionStartDate.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String msg = "Do you want to save data? Deduction will start from " + formattedDate;
+            String pattern = resourceBundle.getString("save.confirmation.msg");
+            String msg = MessageFormat.format(pattern, formattedDate);
             MyAlert alert = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("productsale"), msg);
             alert.createAlert();
             Optional<ButtonType> resp = alert.createConfirmationAlert();

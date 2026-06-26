@@ -4,12 +4,11 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.model.ProductPurchaseRate;
 import com.eipl.amcs.master.inventory.model.ProductSaleRate;
@@ -22,9 +21,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -43,9 +39,9 @@ public class ProductSaleRateAddEditController implements MyInitialization {
     @FXML
     private AutoSearchTextField<Product> cboxProduct;
     @FXML
-    private E_NumericField txtSaleRate, txtPurchaseRate,txtSecretaryCommission;
+    private E_NumericField txtSaleRate, txtPurchaseRate, txtSecretaryCommission;
     @FXML
-    private DatePicker dpWefDate;
+    private E_DatePicker dpWefDate;
 
     private Stage stage;
     private PopupCallback callback;

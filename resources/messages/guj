@@ -1831,3 +1831,4 @@ vigha=વિઘા
 horizontal=આડું
 vertical=ઊભું
 stock.going.to.zero=આ કરવાથી સ્ટોક માઇનસમાં જશે.
+save.confirmation.msg=શું તમે ડેટા સેવ કરવા માંગો છો? કપાત {0} થી શરૂ થશે.
