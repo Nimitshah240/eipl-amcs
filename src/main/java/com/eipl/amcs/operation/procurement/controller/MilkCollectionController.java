@@ -8,17 +8,14 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
-import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
-import com.eipl.amcs.master.org.convertor.DockConvertor;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.task.DockLoadTask;
@@ -147,7 +144,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
         try {
             FileChooser fileDialog = new FileChooser();
             fileDialog.setTitle("Export Collection");
-            fileDialog.setInitialFileName("Milk_Collection_Report-" + dpFromDate.getValue() + "-" + cboxFromShift.getValue()+" To "+dpToDate.getValue() + "-" + cboxToShift.getValue()+ ".xls");
+            fileDialog.setInitialFileName("Milk_Collection_Report-" + dpFromDate.getValue() + "-" + cboxFromShift.getValue() + " To " + dpToDate.getValue() + "-" + cboxToShift.getValue() + ".xls");
             fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
             File file = fileDialog.showSaveDialog(MainApp.stage);
             if (file != null) {
@@ -392,7 +389,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
         task.setOnSucceeded(e -> {
             try {
                 List<MilkCollection> list = task.get();
-                if (list == null) {
+                if (list == null || list.isEmpty()) {
                     tableCollection.setPlaceholder(new Label("No data..."));
                     return;
                 }
@@ -437,7 +434,6 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCollectionDate().toLocalDate()));
-           // colDate.setCellFactory(new LocalDateCellFactory<>());
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
             TableLocalizationUtil.localizeTable(tableCollection);
