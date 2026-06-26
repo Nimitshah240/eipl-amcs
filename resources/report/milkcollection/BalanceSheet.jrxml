@@ -32,8 +32,8 @@
 		<groupFooter>
 			<band height="18">
 				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
-					<reportElement style="noto" mode="Opaque" x="435" y="0" width="90" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="3a47085b-aaa9-46fc-950a-5548ae03177a">
+				<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="435" y="0" width="90" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="3a47085b-aaa9-46fc-950a-5548ae03177a">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -48,10 +48,10 @@
 						<font size="10" isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{total_asset_balance}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en")? $V{total_asset_balance} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($V{total_asset_balance}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement mode="Opaque" x="0" y="0" width="39" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="53263183-c399-4dad-b3c7-09afe9d05c7e">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="53263183-c399-4dad-b3c7-09afe9d05c7e">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -67,8 +67,8 @@
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement style="noto" mode="Opaque" x="39" y="0" width="153" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="ea80edb7-1554-44d2-b9ad-2922dd84306d">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="39" y="0" width="153" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="ea80edb7-1554-44d2-b9ad-2922dd84306d">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -84,8 +84,8 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement style="noto" mode="Opaque" x="282" y="0" width="153" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="d520bd09-947c-41ce-ab76-956de42cc295">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="282" y="0" width="153" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="d520bd09-947c-41ce-ab76-956de42cc295">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
@@ -102,8 +102,8 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
-					<reportElement style="noto" mode="Opaque" x="192" y="0" width="90" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="73b1ea8a-424a-49b7-a0a9-6231ccaad110">
+				<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="0" width="90" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="73b1ea8a-424a-49b7-a0a9-6231ccaad110">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -118,7 +118,9 @@
 						<font size="10" isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{total_liability_balance}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+new java.math.BigDecimal($V{total_liability_balance}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP).doubleValue() : 
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_liability_balance}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -158,7 +160,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{balance_sheet} + " " +$P{p_to_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{balance_sheet} + " " + $P{p_to_date}.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy"))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="noto" x="0" y="0" width="525" height="26" uuid="384b9969-5653-42c4-860f-58ddd7255876">
@@ -236,7 +238,7 @@
 				<textFieldExpression><![CDATA[$R{accounting.asset}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="22" backcolor="#E4E4F5" uuid="967e7d21-8e66-4a64-81cf-a1ef9bc5c94a">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="22" backcolor="#E4E4F5" uuid="967e7d21-8e66-4a64-81cf-a1ef9bc5c94a">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -252,8 +254,8 @@
 	</columnHeader>
 	<detail>
 		<band height="19">
-			<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
-				<reportElement style="noto" x="435" y="0" width="90" height="19" uuid="1246394d-ad0a-40e0-acc0-fd430065c3e6">
+			<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="435" y="0" width="90" height="19" uuid="1246394d-ad0a-40e0-acc0-fd430065c3e6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -265,10 +267,10 @@
 					<font size="10"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{assetBalance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en")? new BigDecimal($F{assetBalance}).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() : com.eipl.amcs.utils.UTFDigit.getUTFDouble(new BigDecimal($F{assetBalance}).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement style="noto" x="282" y="0" width="153" height="19" uuid="ceadcaa6-a20c-46ec-8381-6a6f1fe6db7f">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="282" y="0" width="153" height="19" uuid="ceadcaa6-a20c-46ec-8381-6a6f1fe6db7f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -279,10 +281,10 @@
 					<font size="10"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{assetName} == null ? "" : $F{assetCode}+"-"+$F{assetName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{assetName} == null ? "" : $F{assetName} + "- (" + ($P{p_locale}.equals("en") ? $F{assetCode} : com.eipl.amcs.utils.UTFDigit.getUTFString($F{assetCode}, $P{p_locale})) + " )"]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement style="noto" x="39" y="0" width="153" height="19" uuid="a2525d7f-eb85-414a-a3e6-c8c39d8201e0">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="39" y="0" width="153" height="19" uuid="a2525d7f-eb85-414a-a3e6-c8c39d8201e0">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
@@ -292,10 +294,10 @@
 					<font size="10"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{liabilityName} == null ? "" : $F{liabilityCode}+"- "+$F{liabilityName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{liabilityName} == null ? "" : $F{liabilityName}+" - ("+($P{p_locale}.equals("en")? $F{liabilityCode} : com.eipl.amcs.utils.UTFDigit.getUTFString($F{liabilityCode}, $P{p_locale}))+" )"]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="0" y="0" width="39" height="19" uuid="1cfaf61c-ec59-4197-84af-9fdb179b9b97">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="0" width="39" height="19" uuid="1cfaf61c-ec59-4197-84af-9fdb179b9b97">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -305,10 +307,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en")? $V{REPORT_COUNT} : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{REPORT_COUNT}, $P{p_locale})]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
-				<reportElement style="noto" x="192" y="0" width="90" height="19" uuid="70089a5a-9d63-4e06-b8ae-676126937e2d">
+			<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="192" y="0" width="90" height="19" uuid="70089a5a-9d63-4e06-b8ae-676126937e2d">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -321,7 +323,9 @@
 					<font size="10"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{liabilityBalance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+new java.math.BigDecimal($F{liabilityBalance}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP).doubleValue() : 
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($F{liabilityBalance}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -337,7 +341,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{page}+ ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement style="noto" x="484" y="5" width="40" height="15" uuid="2c1de456-8791-4dc1-9672-11c240e2da16">
@@ -347,7 +351,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{of} + ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy hh:mm a&#xA;">
 				<reportElement key="" style="noto" positionType="Float" x="0" y="5" width="435" height="15" uuid="c4d423ed-7501-4078-9a5a-ea70693bd3d3">
@@ -360,7 +364,9 @@
 					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+    new java.util.Date() : 
+    com.eipl.amcs.utils.UTFDigit.getUTFDate(new java.text.SimpleDateFormat("dd/MM/yy").format(new java.util.Date()), $P{p_locale})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
