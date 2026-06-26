@@ -1,14 +1,13 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:lts-jdk17
 
 USER root
 
-RUN dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        wine \
-        wine32 \
-        wine64 \
-        xvfb && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y \
+        git \
+        maven \
+        wget \
+        unzip && \
+    apt-get clean
 
 USER jenkins
