@@ -122,8 +122,8 @@
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["DeductionSubReport.jasper"]]></subreportExpression>
 				</subreport>
-				<textField>
-					<reportElement mode="Opaque" x="49" y="0" width="80" height="20" backcolor="#E4E4F5" uuid="116553f0-fcae-43f6-b51d-61dbaaf2d2cf">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="0" width="80" height="20" backcolor="#E4E4F5" uuid="116553f0-fcae-43f6-b51d-61dbaaf2d2cf">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<box leftPadding="5" rightPadding="5">
@@ -143,15 +143,15 @@
 		</band>
 	</background>
 	<title>
-		<band height="31">
-			<textField>
-				<reportElement style="noto" x="49" y="11" width="480" height="20" uuid="82fd86f7-f943-4b91-8c8d-488602d69c6a">
+		<band height="54">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="49" y="34" width="480" height="20" uuid="82fd86f7-f943-4b91-8c8d-488602d69c6a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -159,12 +159,28 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{payment_register_with_deduction}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="49" y="10" width="480" height="24" uuid="16049591-0fce-4ba1-b23c-73ace7315b29">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Noto" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{society_code}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="66" splitType="Stretch">
-			<textField>
-				<reportElement mode="Opaque" x="49" y="46" width="80" height="20" backcolor="#E4E4F5" uuid="c9281ea1-7407-4699-8fce-1453a51a606c">
+		<band height="40" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="20" width="80" height="20" backcolor="#E4E4F5" uuid="c9281ea1-7407-4699-8fce-1453a51a606c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -175,8 +191,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{summary}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="129" y="46" width="200" height="20" backcolor="#E4E4F5" uuid="5e496306-fee2-4ff5-9d45-20cb18d38332"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="129" y="20" width="200" height="20" backcolor="#E4E4F5" uuid="5e496306-fee2-4ff5-9d45-20cb18d38332"/>
 				<box>
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
@@ -185,65 +201,20 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{qty}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="49" y="9" width="64" height="15" uuid="7f90a028-2c8d-4598-a703-fd527f6a23e8">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{society}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="113" y="9" width="416" height="15" uuid="b556fdfe-1d36-4538-852c-241b0c04c244">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Noto" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{society_code}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="49" y="25" width="64" height="15" uuid="976937c6-cc74-4c28-8532-8ae8113b817a">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{date}+" :-"]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
-				<reportElement stretchType="RelativeToTallestObject" x="113" y="25" width="416" height="15" uuid="68b41eaf-0269-419e-8283-26b1339c0540">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="49" y="0" width="480" height="20" uuid="68b41eaf-0269-419e-8283-26b1339c0540">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd").format($F{from_date}) + " To " + java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd").format($F{to_date})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($R{date_period} +java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd").format($F{from_date}) + " To " + java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd").format($F{to_date}))]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="329" y="46" width="200" height="20" backcolor="#E4E4F5" uuid="605a82b3-9015-4123-9693-38296efdc586"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="329" y="20" width="200" height="20" backcolor="#E4E4F5" uuid="605a82b3-9015-4123-9693-38296efdc586"/>
 				<box>
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
@@ -255,37 +226,43 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="140" splitType="Stretch">
-			<textField>
-				<reportElement x="129" y="0" width="200" height="20" uuid="42697a62-0a18-4adb-966c-da017d43234d">
+		<band height="120" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="129" y="0" width="200" height="20" uuid="42697a62-0a18-4adb-966c-da017d43234d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cow_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{cow_qty} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{cow_qty}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="129" y="60" width="200" height="20" uuid="c3ef2186-8703-457b-848f-26d2afb65126">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="129" y="40" width="200" height="20" uuid="c3ef2186-8703-457b-848f-26d2afb65126">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{a2_cow_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{a2_cow_qty} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{a2_cow_qty}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="0" width="80" height="20" backcolor="#E4E4F5" uuid="e0c613c5-8544-4693-be9b-c3535779f139">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="0" width="80" height="20" backcolor="#E4E4F5" uuid="e0c613c5-8544-4693-be9b-c3535779f139">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -296,8 +273,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{cow}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="60" width="80" height="20" backcolor="#E4E4F5" uuid="407e2d98-b272-4187-9204-2d95c57d86d2">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="40" width="80" height="20" backcolor="#E4E4F5" uuid="407e2d98-b272-4187-9204-2d95c57d86d2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -308,67 +285,79 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{a2_Cow}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="60" width="200" height="20" uuid="5f3834a4-97bd-4754-98c1-7ae42071eb1e">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="329" y="40" width="200" height="20" uuid="5f3834a4-97bd-4754-98c1-7ae42071eb1e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{a2_cow_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{a2_cow_amount} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{a2_cow_amount}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="0" width="200" height="20" uuid="e8f57d46-010f-42bd-9714-2ce4d53c2ae7">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="329" y="0" width="200" height="20" uuid="e8f57d46-010f-42bd-9714-2ce4d53c2ae7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cow_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{cow_amount} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{cow_amount}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="20" width="200" height="20" uuid="9afdf076-f2be-4ec4-8b1a-d3cefdcf7d18">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="329" y="20" width="200" height="20" uuid="9afdf076-f2be-4ec4-8b1a-d3cefdcf7d18">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{buff_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{buff_amount} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{buff_amount}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="129" y="20" width="200" height="20" uuid="adf15b2c-f2e7-492f-8dfc-dade1bb5e7ed">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="129" y="20" width="200" height="20" uuid="adf15b2c-f2e7-492f-8dfc-dade1bb5e7ed">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{buaff_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{buaff_qty} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{buaff_qty}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="20" width="80" height="20" backcolor="#E4E4F5" uuid="c26285b3-7c20-49a7-8adb-823f9d25e81b">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="20" width="80" height="20" backcolor="#E4E4F5" uuid="c26285b3-7c20-49a7-8adb-823f9d25e81b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -379,49 +368,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{buffalo}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="40" width="200" height="20" uuid="94d4038f-11f7-43e4-b810-14ca1dd6e80d">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Noto"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{mix_amount}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="40" width="80" height="20" backcolor="#E4E4F5" uuid="76139a8c-8e5e-40cc-bf8f-ec1f1eabb53a">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineStyle="Solid"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{mix}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="129" y="40" width="200" height="20" uuid="2f4fbd64-ff46-4849-af12-a40f06854d43">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="5" rightPadding="5">
-					<pen lineWidth="1.0" lineStyle="Solid"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Noto"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{mix_qty}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="80" width="80" height="20" backcolor="#E4E4F5" uuid="da4e960f-5e5e-4d02-bc25-7acb2bf28d81">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="60" width="80" height="20" backcolor="#E4E4F5" uuid="da4e960f-5e5e-4d02-bc25-7acb2bf28d81">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -432,37 +380,69 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{total}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="129" y="80" width="200" height="20" uuid="4d98240c-fa8c-4b36-a8b7-c93e7e0a8956">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="129" y="60" width="200" height="20" uuid="4d98240c-fa8c-4b36-a8b7-c93e7e0a8956">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[String.format("%.2f",$F{mix_qty}.doubleValue() + $F{cow_qty}.doubleValue() + $F{buaff_qty}.doubleValue() + $F{a2_cow_qty}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{cow_qty} == null && $F{buaff_qty} == null && $F{a2_cow_qty} == null) ? "" : (
+    $P{p_locale}.equals("en") ? 
+        new java.text.DecimalFormat("#,###,###,##0.00").format(
+            ($F{cow_qty} == null ? 0.0 : $F{cow_qty}.doubleValue()) + 
+            ($F{buaff_qty} == null ? 0.0 : $F{buaff_qty}.doubleValue()) + 
+            ($F{a2_cow_qty} == null ? 0.0 : $F{a2_cow_qty}.doubleValue())
+        ) : 
+        com.eipl.amcs.utils.UTFDigit.getUTFString(
+            new java.text.DecimalFormat("#########0.00").format(
+                ($F{cow_qty} == null ? 0.0 : $F{cow_qty}.doubleValue()) + 
+                ($F{buaff_qty} == null ? 0.0 : $F{buaff_qty}.doubleValue()) + 
+                ($F{a2_cow_qty} == null ? 0.0 : $F{a2_cow_qty}.doubleValue())
+            ), $P{p_locale})
+)
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="80" width="200" height="20" uuid="3d9dfbcd-af1c-48a0-9422-af671c4808c0">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="329" y="60" width="200" height="20" uuid="3d9dfbcd-af1c-48a0-9422-af671c4808c0">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[String.format("%.2f",$F{buff_amount}.doubleValue() + $F{cow_amount}.doubleValue() + $F{mix_amount}.doubleValue() + $F{a2_cow_amount}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{buff_amount} == null && $F{cow_amount} == null && $F{a2_cow_amount} == null) ? "" : (
+    $P{p_locale}.equals("en") ? 
+        new java.text.DecimalFormat("#,###,###,##0.00").format(
+            ($F{buff_amount} == null ? 0.0 : $F{buff_amount}.doubleValue()) + 
+            ($F{cow_amount} == null ? 0.0 : $F{cow_amount}.doubleValue()) + 
+            ($F{a2_cow_amount} == null ? 0.0 : $F{a2_cow_amount}.doubleValue())
+        ) : 
+        com.eipl.amcs.utils.UTFDigit.getUTFString(
+            new java.text.DecimalFormat("#########0.00").format(
+                ($F{buff_amount} == null ? 0.0 : $F{buff_amount}.doubleValue()) + 
+                ($F{cow_amount} == null ? 0.0 : $F{cow_amount}.doubleValue()) + 
+                ($F{a2_cow_amount} == null ? 0.0 : $F{a2_cow_amount}.doubleValue())
+            ), $P{p_locale})
+)
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="120" width="80" height="20" backcolor="#E4E4F5" uuid="6a41d6ae-7e73-4c6e-a4bb-4c855da1c193">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="100" width="80" height="20" backcolor="#E4E4F5" uuid="6a41d6ae-7e73-4c6e-a4bb-4c855da1c193">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -473,37 +453,73 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{gross}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="129" y="120" width="200" height="20" uuid="5e9f6803-c44a-4c8f-8916-eb7aad15dc1b">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="129" y="100" width="200" height="20" uuid="5e9f6803-c44a-4c8f-8916-eb7aad15dc1b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[String.format("%.2f",$F{mix_qty} + $F{cow_qty} + $F{buaff_qty} + $F{a2_cow_qty} + $F{sample_qty})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{cow_qty} == null && $F{buaff_qty} == null && $F{a2_cow_qty} == null && $F{sample_qty} == null) ? "" : (
+    $P{p_locale}.equals("en") ? 
+        new java.text.DecimalFormat("#,###,###,##0.00").format(
+            ($F{cow_qty} == null ? 0.0 : $F{cow_qty}.doubleValue()) + 
+            ($F{buaff_qty} == null ? 0.0 : $F{buaff_qty}.doubleValue()) + 
+            ($F{a2_cow_qty} == null ? 0.0 : $F{a2_cow_qty}.doubleValue()) + 
+            ($F{sample_qty} == null ? 0.0 : $F{sample_qty}.doubleValue())
+        ) : 
+        com.eipl.amcs.utils.UTFDigit.getUTFString(
+            new java.text.DecimalFormat("#########0.00").format(
+                ($F{cow_qty} == null ? 0.0 : $F{cow_qty}.doubleValue()) + 
+                ($F{buaff_qty} == null ? 0.0 : $F{buaff_qty}.doubleValue()) + 
+                ($F{a2_cow_qty} == null ? 0.0 : $F{a2_cow_qty}.doubleValue()) + 
+                ($F{sample_qty} == null ? 0.0 : $F{sample_qty}.doubleValue())
+            ), $P{p_locale})
+)
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="120" width="200" height="20" uuid="85f45e14-c782-4e25-a2a1-956a9a97cd7f">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="329" y="100" width="200" height="20" uuid="85f45e14-c782-4e25-a2a1-956a9a97cd7f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[String.format("%.2f", $F{buff_amount}.doubleValue() + $F{cow_amount}.doubleValue() + $F{mix_amount}.doubleValue() + $F{a2_cow_amount}.doubleValue() + $F{sample_amount}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{buff_amount} == null && $F{cow_amount} == null && $F{a2_cow_amount} == null && $F{sample_amount} == null) ? "" : (
+    $P{p_locale}.equals("en") ? 
+        new java.text.DecimalFormat("#,###,###,##0.00").format(
+            ($F{buff_amount} == null ? 0.0 : $F{buff_amount}.doubleValue()) + 
+            ($F{cow_amount} == null ? 0.0 : $F{cow_amount}.doubleValue()) + 
+            ($F{a2_cow_amount} == null ? 0.0 : $F{a2_cow_amount}.doubleValue()) + 
+            ($F{sample_amount} == null ? 0.0 : $F{sample_amount}.doubleValue())
+        ) : 
+        com.eipl.amcs.utils.UTFDigit.getUTFString(
+            new java.text.DecimalFormat("#########0.00").format(
+                ($F{buff_amount} == null ? 0.0 : $F{buff_amount}.doubleValue()) + 
+                ($F{cow_amount} == null ? 0.0 : $F{cow_amount}.doubleValue()) + 
+                ($F{a2_cow_amount} == null ? 0.0 : $F{a2_cow_amount}.doubleValue()) + 
+                ($F{sample_amount} == null ? 0.0 : $F{sample_amount}.doubleValue())
+            ), $P{p_locale})
+)
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement mode="Opaque" x="49" y="100" width="80" height="20" backcolor="#E4E4F5" uuid="6f1b39ac-6577-438a-a8f3-9c39b6fea3ff">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="49" y="80" width="80" height="20" backcolor="#E4E4F5" uuid="6f1b39ac-6577-438a-a8f3-9c39b6fea3ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -514,34 +530,40 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{sample}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="129" y="100" width="200" height="20" uuid="a760287b-acc7-49e7-96a7-d632cd0ff4bb">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="129" y="80" width="200" height="20" uuid="a760287b-acc7-49e7-96a7-d632cd0ff4bb">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sample_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{sample_qty} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{sample_qty}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="329" y="100" width="200" height="20" uuid="0e29ff34-29ff-4a0b-84f0-e8afe5ecaf41">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="329" y="80" width="200" height="20" uuid="0e29ff34-29ff-4a0b-84f0-e8afe5ecaf41">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sample_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{sample_amount} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{sample_amount}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
