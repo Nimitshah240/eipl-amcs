@@ -4,11 +4,9 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.operation.billing.model.MemberBill;
 import com.eipl.amcs.operation.billing.model.MemberBillTransaction;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
