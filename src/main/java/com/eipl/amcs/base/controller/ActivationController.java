@@ -20,6 +20,8 @@ import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.repository.SocietyRepository;
 import com.eipl.amcs.master.org.service.DockService;
+import com.eipl.amcs.operation.inventory.model.ProductStock;
+import com.eipl.amcs.operation.inventory.repository.ProductStockRepository;
 import com.eipl.amcs.setting.model.GeneralConfig;
 import com.eipl.amcs.setting.task.GeneralConfigSaveTask;
 import com.eipl.amcs.utils.ActivationUtil;
@@ -671,6 +673,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         lines.add("product.purchaserate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
         lines.add("product.salerate=" + new String(Base64.getEncoder().encode(("0").getBytes())));
         lines.add("code.milktype.parsing=" + new String(Base64.getEncoder().encode(("0").getBytes())));
+        lines.add("fifo.process=" + new String(Base64.getEncoder().encode((isFifoProcess()).getBytes())));
 
         return lines;
     }
@@ -733,5 +736,25 @@ public class ActivationController implements MyInitialization, PopupCallback {
             e.printStackTrace();
             return "";
         }
+    }
+
+
+    public static String isFifoProcess() {
+        try {
+            ProductStockRepository productStockRepository = EmcsAppContext.getContext().getBean(ProductStockRepository.class);
+            List<ProductStock> productStocks = productStockRepository.findAll();
+            if (productStocks.isEmpty()) {
+                return "fifo";
+            }
+            if (productStocks.get(0).getBatchNo() == null) {
+                return "non-fifo";
+            }
+            if (productStocks.get(0).getBatchNo() != null) {
+                return "fifo";
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+        return "fifo";
     }
 }
