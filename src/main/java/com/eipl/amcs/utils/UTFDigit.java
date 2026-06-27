@@ -1,5 +1,6 @@
 package com.eipl.amcs.utils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class UTFDigit {
@@ -42,7 +43,6 @@ public class UTFDigit {
     }
 
     /**
-     *
      * @param d
      * @param lang
      * @param convert 0-do not convert, 1 convert
@@ -106,6 +106,25 @@ public class UTFDigit {
     public static String getUTFFloat(double d, String lang) {
         char digitZero = utfDigit.get(lang);
         String temp = String.valueOf(d);
+        char[] utfBytes = temp.toCharArray();
+        String text = "";
+        char c;
+        for (int i = 0; i < utfBytes.length; i++) {
+            if (utfBytes[i] == '.' || utfBytes[i] == '-') {
+                text = text + String.valueOf(utfBytes[i]);
+            } else {
+                c = (char) (digitZero + (utfBytes[i] - '0'));
+                text = text + String.valueOf(c);
+            }
+        }
+        return text;
+    }
+
+    public static String getUTFBigDecimal(BigDecimal d, String lang) {
+        char digitZero = utfDigit.get(lang);
+        String temp = String.valueOf(d);
+        if (temp == null || temp.equalsIgnoreCase("null"))
+            return null;
         char[] utfBytes = temp.toCharArray();
         String text = "";
         char c;
@@ -290,4 +309,5 @@ public class UTFDigit {
         }
         return temp;
     }
+
 }
