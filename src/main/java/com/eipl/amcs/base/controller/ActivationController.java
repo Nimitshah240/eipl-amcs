@@ -738,6 +738,7 @@ public class ActivationController implements MyInitialization, PopupCallback {
         }
     }
 
+
     public static String isFifoProcess() {
         try {
             ProductStockRepository productStockRepository = EmcsAppContext.getContext().getBean(ProductStockRepository.class);

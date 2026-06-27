@@ -72,120 +72,146 @@
 	</title>
 	<detail>
 		<band height="120" splitType="Stretch">
-			<textField>
-				<reportElement x="115" y="40" width="122" height="20" uuid="42697a62-0a18-4adb-966c-da017d43234d">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="115" y="40" width="122" height="20" uuid="42697a62-0a18-4adb-966c-da017d43234d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{qty_male}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{qty_male} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{qty_male}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="237" y="40" width="115" height="20" uuid="3d7d6af6-c80e-4c6b-84ab-ddbd1ddcacec">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="237" y="40" width="115" height="20" uuid="3d7d6af6-c80e-4c6b-84ab-ddbd1ddcacec">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{qty_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{qty_female} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{qty_female}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="115" y="80" width="122" height="20" uuid="13a46cee-41dd-42b0-ba88-3dc998b5de40">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="115" y="80" width="122" height="20" uuid="13a46cee-41dd-42b0-ba88-3dc998b5de40">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{snf_male}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{snf_male} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{snf_male}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="237" y="80" width="115" height="20" uuid="f4666c69-4e16-43e5-b5db-14a0cfc505e4">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="237" y="80" width="115" height="20" uuid="f4666c69-4e16-43e5-b5db-14a0cfc505e4">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{snf_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{snf_female} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{snf_female}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="237" y="100" width="115" height="20" uuid="d57ce30d-deac-4eef-9cc3-9eaa37c4ce23">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="237" y="100" width="115" height="20" uuid="d57ce30d-deac-4eef-9cc3-9eaa37c4ce23">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amount_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{amount_female} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{amount_female}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="115" y="100" width="122" height="20" uuid="c3ef2186-8703-457b-848f-26d2afb65126">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="115" y="100" width="122" height="20" uuid="c3ef2186-8703-457b-848f-26d2afb65126">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amount_male}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,###.00").format($F{amount_male}) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("##########.00").format($F{amount_male}), $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="115" y="20" width="122" height="20" uuid="7e696303-85e6-4042-ae7c-5abc9f754104">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="115" y="20" width="122" height="20" uuid="7e696303-85e6-4042-ae7c-5abc9f754104">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{member_count_male}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{member_count_male} : com.eipl.amcs.utils.UTFDigit.getUTFLong($F{member_count_male}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="237" y="20" width="115" height="20" uuid="d1532088-655b-41c7-8c2c-f0d0d7597c48">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="237" y="20" width="115" height="20" uuid="d1532088-655b-41c7-8c2c-f0d0d7597c48">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{member_count_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{member_count_female} : com.eipl.amcs.utils.UTFDigit.getUTFLong($F{member_count_female}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="20" width="115" height="20" backcolor="#E4E4F5" uuid="1ae4bb3a-20ee-470b-8783-8585d1cdc361">
+				<reportElement style="noto" mode="Opaque" x="0" y="20" width="115" height="20" backcolor="#E4E4F5" uuid="1ae4bb3a-20ee-470b-8783-8585d1cdc361">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -197,7 +223,7 @@
 				<textFieldExpression><![CDATA[$R{member}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="40" width="115" height="20" backcolor="#E4E4F5" uuid="e0c613c5-8544-4693-be9b-c3535779f139">
+				<reportElement style="noto" mode="Opaque" x="0" y="40" width="115" height="20" backcolor="#E4E4F5" uuid="e0c613c5-8544-4693-be9b-c3535779f139">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -209,7 +235,7 @@
 				<textFieldExpression><![CDATA[$R{qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="80" width="115" height="20" backcolor="#E4E4F5" uuid="e9db3c55-ed91-4389-989e-88434c8df520">
+				<reportElement style="noto" mode="Opaque" x="0" y="80" width="115" height="20" backcolor="#E4E4F5" uuid="e9db3c55-ed91-4389-989e-88434c8df520">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -221,7 +247,7 @@
 				<textFieldExpression><![CDATA[$R{snf}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="100" width="115" height="20" backcolor="#E4E4F5" uuid="407e2d98-b272-4187-9204-2d95c57d86d2">
+				<reportElement style="noto" mode="Opaque" x="0" y="100" width="115" height="20" backcolor="#E4E4F5" uuid="407e2d98-b272-4187-9204-2d95c57d86d2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -232,92 +258,115 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{amount}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="352" y="20" width="108" height="20" uuid="f225395f-7d3d-4c81-ac04-8ebd365c5227">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="352" y="20" width="108" height="20" uuid="f225395f-7d3d-4c81-ac04-8ebd365c5227">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="true"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{member_count_male}+$F{member_count_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,###").format($F{member_count_male} + $F{member_count_female}) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("##########").format($F{member_count_male} + $F{member_count_female}), $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement x="352" y="40" width="108" height="20" uuid="14462846-1072-4ad6-a5f5-009690318d7a">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="352" y="40" width="108" height="20" uuid="14462846-1072-4ad6-a5f5-009690318d7a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="true"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{qty_male}+$F{qty_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,###.00").format($F{qty_male} + $F{qty_female}) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("##########.00").format($F{qty_male} + $F{qty_female}), $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement x="352" y="100" width="108" height="20" uuid="5cbc7261-f0e9-4d5b-a5fd-5986853d7176">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="352" y="100" width="108" height="20" uuid="5cbc7261-f0e9-4d5b-a5fd-5986853d7176">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="true"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amount_male}+$F{amount_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,###.00").format($F{amount_male} + $F{amount_female}) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("##########.00").format($F{amount_male} + $F{amount_female}), $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="352" y="80" width="108" height="20" uuid="c674f21f-a9a8-42b3-b2f0-001298fb31c7">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="352" y="80" width="108" height="20" uuid="c674f21f-a9a8-42b3-b2f0-001298fb31c7">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="true"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA["-"]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="115" y="60" width="122" height="20" uuid="99a497dd-c1f9-4f6a-a49a-13a1adf4dd6a">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="115" y="60" width="122" height="20" uuid="99a497dd-c1f9-4f6a-a49a-13a1adf4dd6a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fat_male}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{fat_male} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{fat_male}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="237" y="60" width="115" height="20" uuid="79be4a61-5f19-4605-a38d-00ad7af99f1c">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="237" y="60" width="115" height="20" uuid="79be4a61-5f19-4605-a38d-00ad7af99f1c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fat_female}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{fat_female} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{fat_female}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="60" width="115" height="20" backcolor="#E4E4F5" uuid="589a7ed5-5334-46a8-8786-b86e0ce2baf8">
+				<reportElement style="noto" mode="Opaque" x="0" y="60" width="115" height="20" backcolor="#E4E4F5" uuid="589a7ed5-5334-46a8-8786-b86e0ce2baf8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -328,22 +377,24 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{fat}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="352" y="60" width="108" height="20" uuid="e85083bb-eb35-4953-a58c-4b8dad8d1bbd">
+			<textField pattern="#,###,###,###.00">
+				<reportElement style="noto" x="352" y="60" width="108" height="20" uuid="e85083bb-eb35-4953-a58c-4b8dad8d1bbd">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b516155-43cd-423f-9654-e5950eca2635"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="true"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA["-"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="115" y="0" width="122" height="20" backcolor="#E4E4F5" uuid="0b812fca-6a9b-44d1-9dc2-6d21c5575d63">
+				<reportElement style="noto" mode="Opaque" x="115" y="0" width="122" height="20" backcolor="#E4E4F5" uuid="0b812fca-6a9b-44d1-9dc2-6d21c5575d63">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -355,7 +406,7 @@
 				<textFieldExpression><![CDATA[$R{male_member}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="237" y="0" width="115" height="20" backcolor="#E4E4F5" uuid="9f3a78f9-5724-4bbb-be4f-f10922b2a790">
+				<reportElement style="noto" mode="Opaque" x="237" y="0" width="115" height="20" backcolor="#E4E4F5" uuid="9f3a78f9-5724-4bbb-be4f-f10922b2a790">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -367,7 +418,7 @@
 				<textFieldExpression><![CDATA[$R{female_member}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="352" y="0" width="108" height="20" backcolor="#E4E4F5" uuid="815c76f5-e03c-4253-a298-679d09089f2b">
+				<reportElement style="noto" mode="Opaque" x="352" y="0" width="108" height="20" backcolor="#E4E4F5" uuid="815c76f5-e03c-4253-a298-679d09089f2b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
@@ -379,7 +430,7 @@
 				<textFieldExpression><![CDATA[$R{total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="0" width="115" height="20" backcolor="#E4E4F5" uuid="1b1361be-8ace-4070-8db6-0bc3ec82790f">
+				<reportElement style="noto" mode="Opaque" x="0" y="0" width="115" height="20" backcolor="#E4E4F5" uuid="1b1361be-8ace-4070-8db6-0bc3ec82790f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="5" rightPadding="5">
