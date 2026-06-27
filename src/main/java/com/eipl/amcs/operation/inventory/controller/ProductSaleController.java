@@ -243,6 +243,9 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
                     if (t.getMessage().contains("billing.already.completed")) {
                         errorMessage = "billing.already.done";
                     }
+                    if (t.getMessage().contains("StockIsLessThanZero")) {
+                        errorMessage = "stock.going.to.zero";
+                    }
                     MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("productsale"),
                             resourceBundle.getString(errorMessage));
                     alert1.createAlert();

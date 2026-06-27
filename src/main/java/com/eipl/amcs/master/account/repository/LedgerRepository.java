@@ -37,6 +37,11 @@ public interface LedgerRepository extends BaseRepository<Ledger, String> {
                                               @Param("p_society_code") String p_society_code, @Param("p_locale") String p_locale
     );
 
+    @Query(value = "CALL sp_current_stock_for_product_with_product_fifo(:p_as_on_date,:p_society_code,:p_locale, :p_product_code);", nativeQuery = true)
+    List<Object[]> fetchCurrentStockByProductFifo(@Param("p_as_on_date") Date p_as_on_date,
+                                              @Param("p_society_code") String p_society_code, @Param("p_locale") String p_locale, @Param("p_product_code") String p_product_code
+    );
+
     @Query(value = "CALL sp_current_stock_for_product_with_product(:p_as_on_date,:p_society_code,:p_locale,:p_product_code);", nativeQuery = true)
     List<Object[]> fetchCurrentStockByProductWithProduct(@Param("p_as_on_date") Date p_as_on_date,
                                                          @Param("p_society_code") String p_society_code, @Param("p_locale") String p_locale, @Param("p_product_code") String p_product_code

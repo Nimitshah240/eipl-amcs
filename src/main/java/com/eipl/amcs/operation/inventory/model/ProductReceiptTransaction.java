@@ -52,6 +52,9 @@ public class ProductReceiptTransaction extends BaseModelTxn {
     private String unionCode;
     private String societyCode;
 
+    private String batchNo;
+    private BigDecimal saleRate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductReceiptSerialize.class)
     @JsonDeserialize(using = ProductReceiptDeserializer.class)

@@ -49,6 +49,8 @@ public class ProductSaleTransaction extends BaseModelTxn {
     private String societyCode;
     private Integer unitCode;
 
+    private String batchNo;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonSerialize(using = ProductSaleSerialize.class)
     @JsonDeserialize(using = ProductSaleDeserializer.class)
