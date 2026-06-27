@@ -542,8 +542,10 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             String errorMessage = "error.occurred";
             if (t.getMessage().contains("overlapping")) {
                 errorMessage = "overlapping.deduction.date";
+            } else if (t.getMessage().contains("previous.bill.not.disbursed")) {
+                errorMessage = "previous.bill.not.disbursed";
             }
-            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("memberbill"),
                     resourceBundle.getString(errorMessage));
             alert1.createAlert();
         });

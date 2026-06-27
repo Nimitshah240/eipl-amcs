@@ -45,7 +45,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     @FXML
     private TableColumn<MemberBillSummary, String> colPaymentCycle;
     @FXML
-    private TableColumn<MemberBillSummary, LocalDate> colFromDate, colToDate;
+    private TableColumn<MemberBillSummary, LocalDate> colFromDate, colToDate, colDeductionFromDate, colDeductionToDate;
     @FXML
     private TableColumn<MemberBillSummary, Number> colMilkQty, colMilkAmount, colProductSale, colLocalSale, colLoan,
             colOtherAdd, colOtherDed, colNetAmount, colDisbursedAmount;
@@ -172,6 +172,8 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     public void setupTable() {
         try {
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPaymentCycle().getFromDate().toLocalDate()));
+            colDeductionFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDeductionFromDate()));
+            colDeductionToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDeductionToDate()));
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPaymentCycle().getToDate().toLocalDate()));
             colPaymentCycle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymentCycle().toDateShiftString()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getPaymentSummaryStatus(data.getValue().getStatus())));

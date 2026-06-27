@@ -36,4 +36,6 @@ public interface MemberBillSummaryRepository extends BaseRepository<MemberBillSu
             @Param("toDate") LocalDate deductionToDate,
             @Param("paymentCycleCode") String paymentCycleCode
     );
+
+    List<MemberBillSummary> findByStatusNot(short status);
 }
