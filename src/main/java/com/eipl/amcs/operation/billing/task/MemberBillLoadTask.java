@@ -53,7 +53,7 @@ public class MemberBillLoadTask extends Task<List<MemberBill>> {
             return memberListResult;
         } catch (Exception e) {
             LOGGER.error("Memberbill fetch", e);
-            if (e.getMessage().contains("overlapping"))
+            if (e.getMessage().contains("overlapping") || e.getMessage().contains("previous.bill.not.disbursed"))
                 throw new RuntimeException(e.getMessage());
         }
         return null;
