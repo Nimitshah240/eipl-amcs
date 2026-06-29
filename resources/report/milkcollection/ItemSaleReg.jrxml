@@ -133,7 +133,12 @@
 						<font fontName="Noto" size="11" isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_Amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Total_Amount} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format($V{Total_Amount}.doubleValue()) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($V{Total_Amount}.doubleValue()), $P{p_locale})
+)
+]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="410" y="0" width="70" height="23" backcolor="#EDEDFA" uuid="af36fd5a-57cb-4da7-b044-47b5f977e598">
@@ -149,7 +154,12 @@
 						<font fontName="Noto" size="11" isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_tax_amt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Total_tax_amt} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format($V{Total_tax_amt}.doubleValue()) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($V{Total_tax_amt}.doubleValue()), $P{p_locale})
+)
+]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="75" height="23" backcolor="#EDEDFA" uuid="13c547c4-14bd-4b92-bccd-12f4e2549862">
@@ -165,7 +175,12 @@
 						<font fontName="Noto" size="11" isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_net_amt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Total_net_amt} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format($V{Total_net_amt}.doubleValue()) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($V{Total_net_amt}.doubleValue()), $P{p_locale})
+)
+]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -192,7 +207,8 @@
 						<font fontName="Noto" isBold="false"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{invoice_no}.split("/")[2];]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{invoice_no} == null || $F{invoice_no}.split("/").length < 3 ? "" : ($P{p_locale}.equals("en") ? $F{invoice_no}.split("/")[2] : com.eipl.amcs.utils.UTFDigit.getUTFInteger(Integer.parseInt($F{invoice_no}.split("/")[2]), $P{p_locale}))
+]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="80" y="0" width="70" height="15" backcolor="#EDEDFA" uuid="68be6bc9-c598-411c-a26f-56bcac06f6b7">
@@ -229,7 +245,12 @@
 						<font fontName="Noto" isBold="false"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{product_sale_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{product_sale_amount} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format($F{product_sale_amount}.doubleValue()) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($F{product_sale_amount}.doubleValue()), $P{p_locale})
+)
+]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00&#xD;&#xA;" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="410" y="0" width="70" height="15" printWhenGroupChanges="Count" backcolor="#EDEDFA" uuid="b9d9c828-ca11-4975-a75a-4f5ce68db28c">
@@ -249,7 +270,12 @@
 						<font fontName="Noto" isBold="false"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{product_sale_tax_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{product_sale_tax_amount} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format($F{product_sale_tax_amount}.doubleValue()) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($F{product_sale_tax_amount}.doubleValue()), $P{p_locale})
+)
+]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="150" y="0" width="190" height="15" backcolor="#EDEDFA" uuid="3f1927c2-7d75-4c66-8600-83174bd323d3">
@@ -290,7 +316,12 @@
 						<font fontName="Noto" isBold="false"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{prod_sale_net_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{prod_sale_net_amount} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format($F{prod_sale_net_amount}.doubleValue()) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($F{prod_sale_net_amount}.doubleValue()), $P{p_locale})
+)
+]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -483,7 +514,11 @@ new java.text.SimpleDateFormat("dd-MM-yy").format(new java.text.SimpleDateFormat
 					<font fontName="Noto" isBold="false"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA["• " + $F{name} + " - " + $F{quantity} + " x " + $F{rate} + " = " + $F{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["• " + ($F{name} == null ? "" : $F{name}) + " - " + 
+($F{quantity} == null ? "" : ($P{p_locale}.equals("en") ? new java.text.DecimalFormat("#,###,###,##0.00").format($F{quantity}.doubleValue()) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($F{quantity}.doubleValue()), $P{p_locale}))) + " x " + 
+($F{rate} == null ? "" : ($P{p_locale}.equals("en") ? new java.text.DecimalFormat("#,###,###,##0.00").format($F{rate}.doubleValue()) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($F{rate}.doubleValue()), $P{p_locale}))) + " = " + 
+($F{amount} == null ? "" : ($P{p_locale}.equals("en") ? new java.text.DecimalFormat("#,###,###,##0.00").format($F{amount}.doubleValue()) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format($F{amount}.doubleValue()), $P{p_locale})))
+]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

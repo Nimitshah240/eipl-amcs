@@ -112,7 +112,12 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[Math.abs($F{balance})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{balance} == null ? "" : (
+  $P{p_locale}.equals("en") ? 
+    new java.text.DecimalFormat("#,###,###,##0.00").format(Math.abs($F{balance}.doubleValue())) : 
+    com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########0.00").format(Math.abs($F{balance}.doubleValue())), $P{p_locale})
+)
+]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="" style="noto" x="0" y="0" width="150" height="15" uuid="55c9f938-9f0e-46f8-a270-8bc2e4fc49df">
