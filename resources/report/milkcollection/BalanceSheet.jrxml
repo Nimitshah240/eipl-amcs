@@ -32,7 +32,7 @@
 		<groupFooter>
 			<band height="18">
 				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="435" y="0" width="90" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="3a47085b-aaa9-46fc-950a-5548ae03177a">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -48,7 +48,10 @@
 						<font size="10" isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{p_locale}.equals("en")? $V{total_asset_balance} : com.eipl.amcs.utils.UTFDigit.getUTFDouble($V{total_asset_balance}, $P{p_locale})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+new java.text.DecimalFormat("#########.00").format($V{total_asset_balance}) : 
+com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########.00").format($V{total_asset_balance}), $P{p_locale})
+]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="53263183-c399-4dad-b3c7-09afe9d05c7e">
@@ -102,7 +105,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="0" width="90" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="73b1ea8a-424a-49b7-a0a9-6231ccaad110">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -119,8 +122,9 @@
 						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
-new java.math.BigDecimal($V{total_liability_balance}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP).doubleValue() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_liability_balance}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
+new java.text.DecimalFormat("#########0.00").format(new java.math.BigDecimal($V{total_liability_balance}.toString())) : 
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{total_liability_balance}.toString()).setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
+]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
