@@ -7,12 +7,16 @@ pipeline {
     }
 
     stages {
-        stage('Check Tools') {
+
+        stage('Checkout') {
             steps {
-                bat 'java -version'
-                bat 'javac -version'
-                bat 'mvn -version'
-                bat 'git --version'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn clean package -DskipTests'
             }
         }
     }
