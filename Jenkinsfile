@@ -1,28 +1,18 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'Zulu-11'
+        maven 'Maven-3.9'
+    }
+
     stages {
-
-        stage('Checkout') {
+        stage('Check Tools') {
             steps {
-                git branch: 'dev_nimit',
-                    url: 'https://github.com/Nimitshah240/eipl-amcs.git'
-            }
-        }
-
-        stage('Environment') {
-            steps {
-                sh '''
-                    java -version
-                    mvn -version
-                    git --version
-                '''
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests'
+                bat 'java -version'
+                bat 'javac -version'
+                bat 'mvn -version'
+                bat 'git --version'
             }
         }
     }
