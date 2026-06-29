@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <StackPane fx:id="root" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.share.controller.ShareRateAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="">
@@ -30,7 +31,7 @@
                     <children>
                         <Label text="%wefdate" />
                         <Label text="%rate" GridPane.columnIndex="1" />
-                        <DatePicker fx:id="dpWefDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpWefDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <E_NumericField fx:id="txtRate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>

@@ -62,6 +62,8 @@ public class MemberServiceImpl implements MemberService {
     private MemberCattleDetailRepository memberCattleDetailRepository;
     @Autowired
     private MemberFamilyDetailRepository memberFamilyDetailRepository;
+    @Autowired
+    private CasteCategoryRepository casteCategoryRepository;
 
     @Override
     public List<Member> findAll() {
@@ -280,6 +282,19 @@ public class MemberServiceImpl implements MemberService {
         SubLedger subLedger = subLedgerRepository.findByReferenceCodeAndType(member.getCode(), (short) 1).orElse(null);
         if (subLedger != null)
             subLedgerRepository.customDelete(subLedger, CommonUtils.setIdentityHeader());
+
+        List<MemberCattleDetail> memberCattleDetails = memberCattleDetailRepository.findByMember_Code(member.getCode());
+        if (memberCattleDetailRepository != null) {
+            for (MemberCattleDetail memberCattleDetail : memberCattleDetails) {
+                memberCattleDetailRepository.delete(memberCattleDetail);
+            }
+        }
+        List<MemberFamilyDetail> memberFamilyDetail = memberFamilyDetailRepository.findByMember_Code(member.getCode());
+        if (memberFamilyDetail != null) {
+            for (MemberFamilyDetail memberFamilyDetail1 : memberFamilyDetail) {
+                memberFamilyDetailRepository.delete(memberFamilyDetail1);
+            }
+        }
 
         detail.setState(Hibernate.unproxy(detail.getState(), State.class));
         detail.setDistrict(Hibernate.unproxy(detail.getDistrict(), District.class));

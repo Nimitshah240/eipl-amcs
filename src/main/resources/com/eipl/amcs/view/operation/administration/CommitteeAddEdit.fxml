@@ -41,7 +41,7 @@
                         <E_DatePicker fx:id="dpElectionDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3"/>
                         <E_DatePicker fx:id="dpFormation" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
                                       GridPane.rowIndex="3"/>
-                        <E_TextField fx:id="txtMemberCode" GridPane.rowIndex="6"/>
+                        <E_NumericField fx:id="txtMemberCode" GridPane.rowIndex="6"/>
                         <E_TextField fx:id="txtMemberName" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1"
                                      GridPane.rowIndex="6"/>
                         <AutoSearchTextField fx:id="cboxDesignation" maxWidth="1.7976931348623157E308" prefWidth="150.0"
@@ -84,7 +84,7 @@
                                 </E_Button>
                             </children>
                         </HBox>
-                        <E_TextField fx:id="txtCommMemberCode" disable="true" editable="false" visible="false"
+                        <E_NumericField fx:id="txtCommMemberCode" disable="true" editable="false" visible="false"
                                      GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                         <E_TextField fx:id="txtCommitteeCode" disable="true" editable="false" visible="false"
                                      GridPane.columnIndex="1"/>

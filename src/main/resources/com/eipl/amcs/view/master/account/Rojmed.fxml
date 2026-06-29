@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
@@ -17,139 +17,159 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" prefHeight="700.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.RojmedController">
+<StackPane fx:id="root" prefHeight="700.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.RojmedController">
     <children>
-        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" spacing="5.0">
+        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="600.0"
+              prefWidth="800.0" spacing="5.0">
             <children>
-                <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
+                <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0"
+                      VBox.vgrow="ALWAYS">
                     <children>
-                  <Button fx:id="btnCredit" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%credit">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/import.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnDebit" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%debit">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/give-money.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnJournal" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%journal">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/journal.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                        <Button fx:id="btnSale" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%sale">
+                        <Button fx:id="btnCredit" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="25.0" prefWidth="76.0" text="%credit">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/productsale.png" />
+                                        <Image url="@../../images/import.png"/>
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                  <Button fx:id="btnPurchase" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="25.0" prefWidth="76.0" text="%purchase">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/payment.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnPrev" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="%previous" />
-                  <E_DatePicker fx:id="dpDate" />
-                  <Button fx:id="btnNext" mnemonicParsing="false" text="%next" />
-                  <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close">
+                        <Button fx:id="btnDebit" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="25.0" prefWidth="76.0" text="%debit">
                             <graphic>
                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../images/close.png" />
+                                        <Image url="@../../images/give-money.png"/>
                                     </image>
                                 </ImageView>
                             </graphic>
                         </Button>
-                  <Button fx:id="btnPrint" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%print">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/copy.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="btnReportGenerate" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%reportgenerate">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/generate.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
+                        <Button fx:id="btnJournal" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="25.0" prefWidth="76.0" text="%journal">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/journal.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnSale" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="25.0" prefWidth="76.0" text="%sale">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/productsale.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnPurchase" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="25.0" prefWidth="76.0" text="%purchase">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/payment.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnPrev" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                text="%previous"/>
+                        <E_DatePicker fx:id="dpDate"/>
+                        <Button fx:id="btnNext" mnemonicParsing="false" text="%next"/>
+                        <Separator orientation="VERTICAL" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="30.0" prefWidth="80.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="btnPrint" contentDisplay="TOP" graphicTextGap="5.0" mnemonicParsing="true"
+                                prefHeight="30.0" prefWidth="80.0" text="%print">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/copy.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                 HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnReportGenerate" contentDisplay="TOP" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%reportgenerate">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/generate.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                     <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets top="5.0"/>
                     </VBox.margin>
                 </HBox>
-            <Separator prefWidth="200.0" />
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                  <Label fx:id="lblRojmelHeader" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="617.0" text="%rojmedtodate" HBox.hgrow="ALWAYS" />
-               </children>
-            </HBox>
+                <Separator prefWidth="200.0"/>
+                <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <E_Label fx:id="lblRojmelHeader" alignment="CENTER" maxHeight="1.7976931348623157E308"
+                                 maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="617.0"
+                                 text="%rojmedtodate" HBox.hgrow="ALWAYS"/>
+                    </children>
+                </HBox>
                 <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                     <children>
                         <SplitPane dividerPositions="0.5" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                             <items>
                                 <HBox maxWidth="1.7976931348623157E308">
                                     <children>
-                                        <VBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                                        <VBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308"
+                                              HBox.hgrow="ALWAYS">
                                             <children>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: GREEN;" text="%credit" HBox.hgrow="ALWAYS">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font></Label>
+                                                        <E_Label alignment="CENTER" contentDisplay="CENTER"
+                                                                 maxHeight="1.7976931348623157E308"
+                                                                 maxWidth="1.7976931348623157E308"
+                                                                 style="-fx-text-fill: GREEN;" text="%credit"
+                                                                 HBox.hgrow="ALWAYS">
+                                                        </E_Label>
                                                     </children>
                                                 </HBox>
-                                                <TableView fx:id="tableData" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                                                <TableView fx:id="tableData" maxWidth="1.7976931348623157E308"
+                                                           VBox.vgrow="ALWAYS"/>
                                             </children>
                                         </VBox>
                                     </children>
                                 </HBox>
                                 <HBox maxWidth="1.7976931348623157E308">
                                     <children>
-                                        <VBox alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                                        <VBox alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308"
+                                              HBox.hgrow="ALWAYS">
                                             <children>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-text-fill: RED;" text="%debit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font></Label>
+                                                        <E_Label alignment="CENTER" contentDisplay="CENTER"
+                                                                 maxHeight="1.7976931348623157E308"
+                                                                 maxWidth="1.7976931348623157E308"
+                                                                 style="-fx-text-fill: RED;" text="%debit"
+                                                                 textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                                        </E_Label>
                                                     </children>
                                                 </HBox>
-                                                <TableView fx:id="tableData1" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                                                <TableView fx:id="tableData1" maxWidth="1.7976931348623157E308"
+                                                           VBox.vgrow="ALWAYS">
                                                     <columns>
-<!--                                                        <TableColumn fx:id="colLedger1" prefWidth="120.0" text="%ledger" />-->
-<!--                                                        <TableColumn fx:id="colType1" prefWidth="150.0" text="%type" />-->
-<!--                                                        <TableColumn fx:id="colAmount1" prefWidth="120.0" text="%amount" />-->
                                                     </columns>
                                                 </TableView>
                                             </children>
@@ -160,33 +180,44 @@
                         </SplitPane>
                     </children>
                 </HBox>
-            <Separator prefWidth="200.0" />
-            <GridPane hgap="10.0" vgap="10.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totalcredit" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totaldebit" GridPane.columnIndex="2" />
-                  <Label fx:id="lblClosingBalance" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <Label fx:id="lblTotalCredit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" />
-                  <Label fx:id="lblTotalDebit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.vgrow="ALWAYS" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total" GridPane.rowIndex="1" />
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Label fx:id="lblTotalCredit2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="lblTotalDebit2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-               </children>
-            </GridPane>
+                <Separator prefWidth="200.0"/>
+                <GridPane hgap="10.0" vgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                 text="%totalcredit"/>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totaldebit"
+                                 GridPane.columnIndex="2"/>
+                        <E_Label fx:id="lblClosingBalance" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <E_Label fx:id="lblTotalCredit" maxHeight="1.7976931348623157E308"
+                                 maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1"/>
+                        <E_Label fx:id="lblTotalDebit" maxHeight="1.7976931348623157E308"
+                                 maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3"
+                                 GridPane.vgrow="ALWAYS"/>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total"
+                                 GridPane.rowIndex="1"/>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%total"
+                                 GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <E_Label fx:id="lblTotalCredit2" maxHeight="1.7976931348623157E308"
+                                 maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="1"
+                                 GridPane.rowIndex="1"/>
+                        <E_Label fx:id="lblTotalDebit2" maxHeight="1.7976931348623157E308"
+                                 maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3"
+                                 GridPane.rowIndex="1"/>
+                    </children>
+                </GridPane>
             </children>
             <padding>
-                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
             </padding>
         </VBox>
     </children>

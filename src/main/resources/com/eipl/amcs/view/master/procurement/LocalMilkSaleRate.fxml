@@ -11,13 +11,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center"
            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.procurement.controller.LocalMilkSaleRateController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%localmilksalerate"/>
+                <E_Label styleClass="header-text" text="%localmilksalerate"/>
                 <TableView fx:id="tableLocalMilkSaleRates" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colWefDate" prefWidth="100.0" styleClass="cell-center-aligned"

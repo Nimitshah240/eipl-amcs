@@ -13,6 +13,7 @@ import com.eipl.amcs.operation.billing.task.MemberBillSummaryLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -44,7 +45,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     @FXML
     private TableColumn<MemberBillSummary, String> colPaymentCycle;
     @FXML
-    private TableColumn<MemberBillSummary, LocalDate> colFromDate, colToDate;
+    private TableColumn<MemberBillSummary, LocalDate> colFromDate, colToDate, colDeductionFromDate, colDeductionToDate;
     @FXML
     private TableColumn<MemberBillSummary, Number> colMilkQty, colMilkAmount, colProductSale, colLocalSale, colLoan,
             colOtherAdd, colOtherDed, colNetAmount, colDisbursedAmount;
@@ -171,6 +172,8 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
     public void setupTable() {
         try {
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPaymentCycle().getFromDate().toLocalDate()));
+            colDeductionFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDeductionFromDate()));
+            colDeductionToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDeductionToDate()));
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPaymentCycle().getToDate().toLocalDate()));
             colPaymentCycle.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymentCycle().toDateShiftString()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getPaymentSummaryStatus(data.getValue().getStatus())));
@@ -184,7 +187,7 @@ public class MemberBillSummaryController implements MyInitialization, PopupCallb
             colNetAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colDisbursedAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDisbursedAmount()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(CommonUtils.getPaymentStatus(data.getValue().getStatus())));
-
+            TableLocalizationUtil.localizeTable(tableBillSummary);
             propSummary.bind(tableBillSummary.getSelectionModel().selectedItemProperty());
         } catch (Exception e) {
             System.out.println("MemberBillSummary setuptable Exception");

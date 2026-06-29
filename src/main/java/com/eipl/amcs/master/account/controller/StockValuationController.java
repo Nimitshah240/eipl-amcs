@@ -4,10 +4,12 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_DatePicker;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.account.model.ProductStockValuation;
 import com.eipl.amcs.report.task.LoadStockValuationTask;
 import com.eipl.amcs.report.task.StockValuationTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,7 +43,7 @@ public class StockValuationController implements MyInitialization, PopupCallback
     @FXML
     private E_DatePicker dpGenerate;
     @FXML
-    private Label lblTotal;
+    private E_Label lblTotal;
 
     public StockValuationController() {
         propStockValuationDto = new SimpleObjectProperty<>();
@@ -65,7 +67,6 @@ public class StockValuationController implements MyInitialization, PopupCallback
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
-        dpGenerate.setConverter(new LocalDateConvertor());
     }
 
     @Override
@@ -97,6 +98,8 @@ public class StockValuationController implements MyInitialization, PopupCallback
         colRate.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStock() != 0D ? String.format("%.2f", data.getValue().getValuation() / data.getValue().getStock()) : "0"));
         colUnit.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUnit().toString()));
         propStockValuationDto.bind(tableStockValuation.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableStockValuation);
+
     }
 
 

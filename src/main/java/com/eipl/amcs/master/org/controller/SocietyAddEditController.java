@@ -12,6 +12,7 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.org.model.*;
 import com.eipl.amcs.master.org.task.*;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,8 +20,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -49,10 +48,13 @@ public class SocietyAddEditController implements MyInitialization {
     @FXML
     private Tab tabSocietyDetail, tabContactDetail, tabOtherDetail;
     @FXML
-    private E_TextField txtSocietyCode, txtSocietyName, txtShortName, txtFssaiCode, txtIfscCode,
-            txtSapNo, txtBankAccNo, txtAdharCard, txtRegistrationCode,
-            txtAddress, txtPhoneNo, txtEmail, txtChairmanName, txtGstNo, txtPan,
+    private E_TextField txtSocietyName, txtShortName, txtFssaiCode, txtIfscCode,
+            txtSapNo, txtAddress, txtEmail, txtChairmanName, txtGstNo, txtPan,
             txtSecretaryName, txtBmcFacilator, txtOwnerName, txtAgreementPeriod;
+
+    @FXML
+    private E_NumericField txtSocietyCode, txtBankAccNo, txtRegistrationCode,
+            txtPhoneNo;
 
     @FXML
     private E_TextFieldLocal txtSocietyNameLocal, txtShortNameLocal;
@@ -199,7 +201,7 @@ public class SocietyAddEditController implements MyInitialization {
         colAgreementFromDate.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAgreementFromDate())));
         colAgreementToDate.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getAgreementToDate())));
         propBmcChiller.bind(tableBmcChillerInfo.getSelectionModel().selectedItemProperty());
-
+        TableLocalizationUtil.localizeTable(tableBmcChillerInfo);
     }
 
     private void loadBank() {
@@ -262,12 +264,12 @@ public class SocietyAddEditController implements MyInitialization {
     private Society setValuesInObject() {
 
         // Society Detail
-        this.society.setCode(txtSocietyCode.getText());
+        this.society.setCode(txtSocietyCode.getInputText());
         this.society.setName(txtSocietyName.getText());
         this.society.setNameLocal(txtSocietyNameLocal.getText());
         this.society.setShortName(txtShortName.getText());
         this.society.setShortNameLocal(txtShortNameLocal.getText());
-        this.society.setRegistrationCode(txtRegistrationCode.getText());
+        this.society.setRegistrationCode(txtRegistrationCode.getInputText());
         this.society.setRegistrationDate(dpRegistrationDate.getValue());
         this.society.setRoute(cboxRoute.getSelectionModel().getSelectedItem());
         this.society.setFssaiCode(txtFssaiCode.getText());
@@ -275,20 +277,20 @@ public class SocietyAddEditController implements MyInitialization {
         this.society.setSapCenterCode(txtSapNo.getText());
         this.society.setBank(cboxBank.getSelectionModel().getSelectedItem());
         this.society.setBranch(cboxBranch.getSelectionModel().getSelectedItem());
-        this.society.setBankAccountNo(txtBankAccNo.getText());
+        this.society.setBankAccountNo(txtBankAccNo.getInputText());
         this.society.setIfsc(txtIfscCode.getText());
         this.society.setEffectiveDate(dpStartYear.getValue());
 
 //        Contact details
         this.society.setAddress(txtAddress.getText());
-        this.society.setPhoneNo(txtPhoneNo.getText());
+        this.society.setPhoneNo(txtPhoneNo.getInputText());
         this.society.setEmail(txtEmail.getText());
         this.society.setServiceTax(txtGstNo.getText());
         this.society.setPanNo(txtPan.getText());
         chairman.setContactPerson(txtChairmanName.getText());
-        chairman.setMobileNo(txtChairmanMobileNo.getText());
+        chairman.setMobileNo(txtChairmanMobileNo.getInputText());
         secretary.setContactPerson(txtChairmanName.getText());
-        secretary.setMobileNo(txtChairmanMobileNo.getText());
+        secretary.setMobileNo(txtChairmanMobileNo.getInputText());
         contactDetailsList.add(chairman);
         contactDetailsList.add(secretary);
 
@@ -301,7 +303,7 @@ public class SocietyAddEditController implements MyInitialization {
 //            errorMsg.append(resourceBundle.getString("mobile.cannot.be.empty.") + "\n");
 //        if (dpRegistrationDate.getValue() == null)
 //            errorMsg.append(resourceBundle.getString("mobile.cannot.be.empty.") + "\n");
-//        if (txtRegistrationCode.getText() == null )
+//        if (txtRegistrationCode.getInputText() == null )
 //            errorMsg.append(resourceBundle.getString("mobile.cannot.be.empty.") + "\n");
 //
 ////
@@ -388,7 +390,7 @@ public class SocietyAddEditController implements MyInitialization {
             DcsChillerInfo dcsChillerInfo = new DcsChillerInfo();
             dcsChillerInfo.setSociety(MainApp.identityDto.getSociety());
             dcsChillerInfo.setChillerName(txtBmcFacilator.getText());
-            dcsChillerInfo.setChillingCapacity(Integer.valueOf(txtBcuCapacity.getText()));
+            dcsChillerInfo.setChillingCapacity(Integer.valueOf(txtBcuCapacity.getInputText()));
             dcsChillerInfo.setOwnerName(txtOwnerName.getText());
             dcsChillerInfo.setAgreementFromDate(dpAgreementFromDate.getValue());
             dcsChillerInfo.setAgreementToDate(dpAgreementToDate.getValue());
@@ -414,14 +416,14 @@ public class SocietyAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             saveBmcChillerInfo();
             MyAlert alert = new InformationAlert(MainApp.stage, resourceBundle.getString("society"),
-                    "Success");
+                    resourceBundle.getString("save.successful"));
             alert.createAlert();
             this.callback.reloadData(true);
             this.stage.close();
         });
         task.setOnFailed(e -> {
             MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("society"),
-                    "ERROR");
+                    resourceBundle.getString("error.occurred"));
             alert.createAlert();
         });
         new Thread(task).start();

@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_ComboBox?>
 <StackPane fx:id="root" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.account.controller.VoucherTypeAddEditController">
     <children>
@@ -47,7 +48,7 @@
                         <E_ComboBox fx:id="cboxCreditDebit" prefWidth="150.0" GridPane.columnIndex="1"
                                     GridPane.rowIndex="3"/>
                         <E_ComboBox fx:id="cboxLedgers" disable="true" prefWidth="150.0" GridPane.columnIndex="2"
-                                    GridPane.rowIndex="3"/>
+                                             GridPane.rowIndex="3"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%vouchertype"
                                GridPane.rowIndex="2"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%creditdebit"

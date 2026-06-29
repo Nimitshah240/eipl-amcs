@@ -10,6 +10,7 @@ import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.operation.share.model.ShareRate;
 import com.eipl.amcs.operation.share.task.ShareRateDeleteTask;
 import com.eipl.amcs.operation.share.task.ShareRateLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -73,9 +74,10 @@ public class ShareRateController implements MyInitialization, PopupCallback {
     public void setupTable() {
         try {
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate()));
-            colWefDate.setCellFactory(new LocalDateCellFactory<>());
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareAmount()));
             propLocalMilkSaleRate.bind(tableLocalMilkSaleRates.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableLocalMilkSaleRates);
+
         } catch (Exception e) {
             System.out.println("ShareRate setuptable Exception");
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.eipl.amcs.master.operation.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.controls.alert.*;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.Gender;
@@ -19,6 +20,7 @@ import com.eipl.amcs.master.operation.task.*;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.task.BankLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -59,7 +61,7 @@ public class MemberController implements MyInitialization, PopupCallback {
     @FXML
     private TextField txtCode;
     @FXML
-    private Label lblStatus;
+    private E_Label lblStatus;
     @FXML
     private TableColumn<Member, String> colCode, colFirstName, colLocalName, colMobileNo, colIsActive, colAccountNo;
     @FXML
@@ -505,6 +507,7 @@ public class MemberController implements MyInitialization, PopupCallback {
             colMemberType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMemberType()));
             colIsActive.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isActive() ? "Active" : "Inactive"));
             propMember.bind(tableMember.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableMember);
         } catch (Exception e) {
             System.out.println("BillCriteria setuptable Exception");
             e.printStackTrace();

@@ -6,6 +6,7 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.master.org.task.UserLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -76,6 +77,7 @@ public class UsersController implements MyInitialization, PopupCallback {
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colMobileNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMobileNo()));
         propUser.bind(tableUsers.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable( tableUsers);
     }
 
     @Override

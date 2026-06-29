@@ -4,6 +4,8 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.base.service.NextCodeService;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -17,6 +19,7 @@ import com.eipl.amcs.operation.administartion.task.StaffMembersLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryHeadLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryMappingLoadTask;
 import com.eipl.amcs.operation.administartion.task.StaffSalaryMappingSaveTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -52,9 +55,9 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
     @FXML
     Button btnClose, btnSave;
     @FXML
-    DatePicker dpDate;
+    E_DatePicker dpDate;
     @FXML
-    ComboBox<StaffMember> cboxStaff;
+    AutoSearchTextField<StaffMember> cboxStaff;
     private List<StaffMember> listStaffMembers;
     private List<StaffSalaryHead> listStaffSalaryHead;
     private List<StaffSalaryMapping> staffSalaryMappingList;
@@ -145,6 +148,8 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
                 staffSalaryMapping.setWefDate(dpDate.getValue());
                 staffSalaryMapping.setActive(true);
                 staffSalaryMappingList.add(staffSalaryMapping);
+                TableLocalizationUtil.localizeTable(tableStaffSalaryMapping);
+
             });
         } catch (Exception e) {
             System.out.println("StaffSalaryMapping setuptable Exception");
@@ -171,8 +176,8 @@ public class StaffSalaryMappingController implements MyInitialization, PopupCall
         new Thread(task).start();
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
-    }
+
+//    public void setupComboBox() {
+//        cboxStaff.setConverter(new StaffMemberConvertor(cboxStaff));
+//    }
 }

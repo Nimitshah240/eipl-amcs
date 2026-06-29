@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static com.eipl.amcs.MainApp.getCurrentLocale;
 
 public class AppConstant {
 
@@ -17,6 +20,14 @@ public class AppConstant {
     public static final DateTimeFormatter Formatter4 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
     public static final DateTimeFormatter Formatter6 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static final DateTimeFormatter Formatter5 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // NIMIT | 24.06.2026: The Pattern added to check only numbers.
+    public static final Pattern DIGIT_PATTERN = Pattern.compile("\\d+");
+    // NIMIT | 24.06.2026: Date Formatter DD/MM/YYYY and this is work for local language too.
+    public static DateTimeFormatter DATE_FORMATTER_LOCALE = DateTimeFormatter.ofPattern("dd/MM/yyyy", getCurrentLocale());
+    // NIMIT | 24.06.2026: DateTime Formatter DD/MM/YYYY HH.mm.ss and this is work for local language too.
+    public static DateTimeFormatter DATE_TIME_FORMATTER_LOCALE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", getCurrentLocale());
+
     public static final short ONE = 1;
     public static final short ZERO = 0;
 
@@ -275,12 +286,12 @@ public class AppConstant {
         String PRODUCT_STOCK_LEDGER = "ProductStockLedger";
         String LEDGER_SUMMARY = "LedgerSummary";
         String ROJMED = "Rojmed";
-        String ProfitLossOne="ProfitLossOne";
-        String TradingReportOne="TradingReportOne";
-        String BalanceSheetOne="BalanceSheetOne";
-        String TBReportOne="TBReportOne";
-        String PRODUCT_STOCK_LEDGER_SUMMARY="ProductStockLedgerSummary";
-        String BalanceSheetGrouping="BalanceSheetGrouping";
+        String ProfitLossOne = "ProfitLossOne";
+        String TradingReportOne = "TradingReportOne";
+        String BalanceSheetOne = "BalanceSheetOne";
+        String TBReportOne = "TBReportOne";
+        String PRODUCT_STOCK_LEDGER_SUMMARY = "ProductStockLedgerSummary";
+        String BalanceSheetGrouping = "BalanceSheetGrouping";
 //        -- MilkCollectionLocalSaleDispatchFormat2WithOutMilkType
     }
 
@@ -344,201 +355,276 @@ public class AppConstant {
 
     public enum LandType {
 
-        NONE(MainApp.getBundle().getString("none")),
-        ACRE(MainApp.getBundle().getString("acre")),
-        GUTHA(MainApp.getBundle().getString("gutha")),
-        HECTOR(MainApp.getBundle().getString("hector")),
-        VIGHA(MainApp.getBundle().getString("vigha"));
+        NONE("none"),
+        ACRE("acre"),
+        GUTHA("gutha"),
+        HECTOR("hector"),
+        VIGHA("vigha");
 
-        private final String label;
+        private final String bundleKey;
 
-        LandType(String label) {
-            this.label = label;
+        LandType(String bundleKey) {
+            this.bundleKey = bundleKey;
         }
 
         public String getLabel() {
-            return label;
+            try {
+                return MainApp.getBundle().getString(bundleKey);
+            } catch (Exception e) {
+                return name();
+            }
         }
 
-        public static LandType fromLabel(String label) {
+        /**
+         * SMART PARSER: This will safely resolve the enum whether the incoming string
+         * is an English database key (like "ACRE") or a localized UI label (like "એકર")!
+         */
+        public static LandType fromLabel(String input) {
+            if (input == null || input.trim().isEmpty()) {
+                return NONE;
+            }
+
+            String cleanInput = input.trim();
+
             for (LandType type : values()) {
-                if (type.getLabel().equalsIgnoreCase(label)) {
+                if (type.getLabel().equalsIgnoreCase(cleanInput)) {
+                    return type;
+                }
+                if (type.name().equalsIgnoreCase(cleanInput)) {
+                    return type;
+                }
+                if (type.bundleKey.equalsIgnoreCase(cleanInput)) {
                     return type;
                 }
             }
-            return null; // or throw exception if you prefer strict handling
+            return NONE;
         }
 
         @Override
         public String toString() {
-            return label; // 🔥 this removes need for custom cell factory
+            return getLabel();
         }
     }
 
     public enum FarmerType {
 
-        BIGFARMER(MainApp.getBundle().getString("bigfarmer")),
-        MEDIUMFARMER(MainApp.getBundle().getString("mediumfarmer")),
-        SMALLFARMER(MainApp.getBundle().getString("smallfarmer")),
-        SHRIMANFARMER(MainApp.getBundle().getString("shrimanfarmer")),
-        LANDEMPLOYEE(MainApp.getBundle().getString("shrimanfarmer")),
-        OTHER(MainApp.getBundle().getString("landemployee")),
-        SIDEAGENCY(MainApp.getBundle().getString("sideagency")),
-        BMCFACILITATOR(MainApp.getBundle().getString("bmcfacilitator"));
+        BIGFARMER("bigfarmer"),
+        MEDIUMFARMER("mediumfarmer"),
+        SMALLFARMER("smallfarmer"),
+        SHRIMANFARMER("shrimanfarmer"),
+        LANDEMPLOYEE("landemployee"),
+        OTHER("other"),
+        SIDEAGENCY("sideagency"),
+        BMCFACILITATOR("bmcfacilitator");
 
-        private final String label;
+        private final String bundleKey;
 
-        FarmerType(String label) {
-            this.label = label;
+        FarmerType(String bundleKey) {
+            this.bundleKey = bundleKey;
         }
 
         public String getLabel() {
-            return label;
+            try {
+                return MainApp.getBundle().getString(bundleKey);
+            } catch (Exception e) {
+                return name();
+            }
         }
 
-        public static FarmerType fromLabel(String label) {
+        public static FarmerType fromLabel(String input) {
+            if (input == null || input.trim().isEmpty()) return OTHER;
+            String cleanInput = input.trim();
+
             for (FarmerType type : values()) {
-                if (type.getLabel().equalsIgnoreCase(label)) {
+                if (type.getLabel().equalsIgnoreCase(cleanInput) ||
+                        type.name().equalsIgnoreCase(cleanInput) ||
+                        type.bundleKey.equalsIgnoreCase(cleanInput)) {
                     return type;
                 }
             }
-            return null; // or throw exception if you prefer strict handling
+            return OTHER;
         }
 
         @Override
         public String toString() {
-            return label; // 🔥 this removes need for custom cell factory
+            return getLabel();
         }
     }
 
     public enum CattleDetail {
 
-        BUFF(MainApp.getBundle().getString("buffalo")),
-        COWHF(MainApp.getBundle().getString("cowhf")),
-        DESICOW(MainApp.getBundle().getString("cowdesi")),
-        GIRCOW(MainApp.getBundle().getString("cowgir"));
+        BUFF("buffalo"),
+        COWHF("cowhf"),
+        DESICOW("cowdesi"),
+        GIRCOW("cowgir");
 
-        private final String label;
+        private final String bundleKey;
 
-        CattleDetail(String label) {
-            this.label = label;
+        CattleDetail(String bundleKey) {
+            this.bundleKey = bundleKey;
         }
 
         public String getLabel() {
-            return label;
+            try {
+                return MainApp.getBundle().getString(bundleKey);
+            } catch (Exception e) {
+                return name();
+            }
         }
 
-        public static CattleDetail fromLabel(String label) {
+        public static CattleDetail fromLabel(String input) {
+            if (input == null || input.trim().isEmpty()) return null;
+            String cleanInput = input.trim();
+
             for (CattleDetail type : values()) {
-                if (type.getLabel().equalsIgnoreCase(label)) {
+                if (type.getLabel().equalsIgnoreCase(cleanInput) ||
+                        type.name().equalsIgnoreCase(cleanInput) ||
+                        type.bundleKey.equalsIgnoreCase(cleanInput)) {
                     return type;
                 }
             }
-            return null; // or throw exception if you prefer strict handling
+            return null;
         }
 
         @Override
         public String toString() {
-            return label; // 🔥 this removes need for custom cell factory
+            return getLabel();
         }
     }
 
     public enum MaritalStatus {
 
-        NONE(MainApp.getBundle().getString("none")),
-        SINGLE(MainApp.getBundle().getString("single")),
-        MARRIED(MainApp.getBundle().getString("married")),
-        WIDOW(MainApp.getBundle().getString("widow")),
-        WIDOWER(MainApp.getBundle().getString("widower")),
-        DIVORCED(MainApp.getBundle().getString("divorced"));
+        NONE("none"),
+        SINGLE("single"),
+        MARRIED("married"),
+        WIDOW("widow"),
+        WIDOWER("widower"),
+        DIVORCED("divorced");
 
-        private final String label;
+        private final String bundleKey;
 
-        MaritalStatus(String label) {
-            this.label = label;
+        MaritalStatus(String bundleKey) {
+            this.bundleKey = bundleKey;
         }
 
         public String getLabel() {
-            return label;
+            try {
+                return MainApp.getBundle().getString(bundleKey);
+            } catch (Exception e) {
+                return name();
+            }
         }
 
-        public static MaritalStatus fromLabel(String label) {
+        public static MaritalStatus fromLabel(String input) {
+            if (input == null || input.trim().isEmpty()) return NONE;
+            String cleanInput = input.trim();
+
             for (MaritalStatus type : values()) {
-                if (type.getLabel().equalsIgnoreCase(label)) {
+                if (type.getLabel().equalsIgnoreCase(cleanInput) ||
+                        type.name().equalsIgnoreCase(cleanInput) ||
+                        type.bundleKey.equalsIgnoreCase(cleanInput)) {
                     return type;
                 }
             }
-            return null; // or throw exception if you prefer strict handling
+            return NONE;
         }
 
         @Override
         public String toString() {
-            return label; // 🔥 this removes need for custom cell factory
+            return getLabel();
         }
     }
 
     public enum Occupation {
 
-        NONE(MainApp.getBundle().getString("none")),
-        FARMER(MainApp.getBundle().getString("farmer")),
-        TRADER(MainApp.getBundle().getString("trader")),
-        STUDENT(MainApp.getBundle().getString("student")),
-        CATTLEKEEPER(MainApp.getBundle().getString("cattle.keeper")),
-        OTHER(MainApp.getBundle().getString("other"));
+        NONE("none"),
+        FARMER("farmer"),
+        TRADER("trader"),
+        STUDENT("student"),
+        CATTLEKEEPER("cattle.keeper"),
+        OTHER("other");
 
-        private final String label;
+        private final String bundleKey;
 
-        Occupation(String label) {
-            this.label = label;
+        Occupation(String bundleKey) {
+            this.bundleKey = bundleKey;
         }
 
         public String getLabel() {
-            return label;
+            try {
+                return MainApp.getBundle().getString(bundleKey);
+            } catch (Exception e) {
+                return name();
+            }
         }
 
-        public static Occupation fromLabel(String label) {
+        public static Occupation fromLabel(String input) {
+            if (input == null || input.trim().isEmpty()) return NONE;
+            String cleanInput = input.trim();
+
             for (Occupation type : values()) {
-                if (type.getLabel().equalsIgnoreCase(label)) {
+                if (type.getLabel().equalsIgnoreCase(cleanInput) ||
+                        type.name().equalsIgnoreCase(cleanInput) ||
+                        type.bundleKey.equalsIgnoreCase(cleanInput)) {
                     return type;
                 }
             }
-            return null; // or throw exception if you prefer strict handling
+            return NONE;
         }
 
         @Override
         public String toString() {
-            return label; // 🔥 this removes need for custom cell factory
+            return getLabel();
         }
     }
 
     public enum RationCardType {
 
-        NONE(MainApp.getBundle().getString("none")),
-        BPL(MainApp.getBundle().getString("bpl")),
-        APL(MainApp.getBundle().getString("apl"));
+        NONE("none"),
+        BPL("bpl"),
+        APL("apl");
 
-        private final String label;
+        private final String bundleKey;
 
-        RationCardType(String label) {
-            this.label = label;
+        RationCardType(String bundleKey) {
+            this.bundleKey = bundleKey;
         }
 
         public String getLabel() {
-            return label;
+            try {
+                return MainApp.getBundle().getString(bundleKey);
+            } catch (Exception e) {
+                return name();
+            }
         }
 
-        public static RationCardType fromLabel(String label) {
+        public static RationCardType fromLabel(String input) {
+            if (input == null || input.trim().isEmpty()) return NONE;
+            String cleanInput = input.trim();
+
             for (RationCardType type : values()) {
-                if (type.getLabel().equalsIgnoreCase(label)) {
+                if (type.getLabel().equalsIgnoreCase(cleanInput) ||
+                        type.name().equalsIgnoreCase(cleanInput) ||
+                        type.bundleKey.equalsIgnoreCase(cleanInput)) {
                     return type;
                 }
             }
-            return null; // or throw exception if you prefer strict handling
+            return NONE;
         }
 
         @Override
         public String toString() {
-            return label; // 🔥 this removes need for custom cell factory
+            return getLabel();
+        }
+    }
+
+    public static void changeLocalOfVariable() {
+        try {
+            DATE_FORMATTER_LOCALE = DateTimeFormatter.ofPattern("dd/MM/yyyy", getCurrentLocale());
+            DATE_TIME_FORMATTER_LOCALE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss", getCurrentLocale());
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
     }
 }

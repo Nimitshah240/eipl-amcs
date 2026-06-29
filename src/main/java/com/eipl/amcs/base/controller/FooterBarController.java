@@ -4,11 +4,11 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.auth.model.Permission;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_Label;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,7 +31,7 @@ public class FooterBarController implements MyInitialization, PopupCallback {
     @FXML
     AnchorPane root;
     @FXML
-    private Label lblFinancialYear, lblUserName, lbltiming, lblVersion, lblIp, lblNetConnection;
+    private E_Label lblFinancialYear, lblUserName, lbltiming, lblVersion, lblIp, lblNetConnection;
     private ResourceBundle resourceBundle;
     private List<Permission> permissions;
     private Map<Permission, Map<Permission, List<Permission>>> menu;

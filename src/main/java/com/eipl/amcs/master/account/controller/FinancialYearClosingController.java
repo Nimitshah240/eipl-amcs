@@ -7,8 +7,6 @@ import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
-import com.eipl.amcs.controls.cellfactory.LedgerBalanceCellFactory;
-import com.eipl.amcs.controls.cellfactory.RightAlignCellFactory;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
@@ -24,6 +22,7 @@ import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.report.task.*;
 import com.eipl.amcs.utils.NumberUtil;
 import com.eipl.amcs.utils.TableExportUtil;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -772,8 +771,10 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                 List<com.eipl.amcs.master.account.model.ProductStockValuation> list = stockValuationTask.get();
 
                 listStockValuation = new ArrayList<>();
-                for (com.eipl.amcs.master.account.model.ProductStockValuation psv : list) {
-                    listStockValuation.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                if (list != null) {
+                    for (com.eipl.amcs.master.account.model.ProductStockValuation psv : list) {
+                        listStockValuation.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                    }
                 }
 
                 tableStockValuation.setItems(FXCollections.observableArrayList(listStockValuation));
@@ -793,9 +794,9 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
         colStockValProductName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProductName()));
         colStockValProductUnit.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUnit()));
         colStockValProductStock.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getStock()));
-        colStockValProductStock.setCellFactory(new RightAlignCellFactory<>());
+        //   colStockValProductStock.setCellFactory(new RightAlignCellFactory<>());
         colStockValAmount.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getValuation()));
-        colStockValAmount.setCellFactory(new RightAlignCellFactory<>());
+        //    colStockValAmount.setCellFactory(new RightAlignCellFactory<>());
 
         // Trading
         colTradingLedgerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerCode()));
@@ -821,11 +822,11 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
             };
         });
         colTradingDebit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getDebit()));
-        colTradingDebit.setCellFactory(new RightAlignCellFactory<>());
+        //     colTradingDebit.setCellFactory(new RightAlignCellFactory<>());
         colTradingCredit.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getCredit()));
-        colTradingCredit.setCellFactory(new RightAlignCellFactory<>());
+        //     colTradingCredit.setCellFactory(new RightAlignCellFactory<>());
         colTradingBalance.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getBalance()));
-        colTradingBalance.setCellFactory(new LedgerBalanceCellFactory<>());
+        //   colTradingBalance.setCellFactory(new LedgerBalanceCellFactory<>());
 
         //ProfitLoss
         colPLLedgerIncome.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerName()));
@@ -846,7 +847,7 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
             };
         });
         colPLAmountIncome.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getBalance()));
-        colPLAmountIncome.setCellFactory(new RightAlignCellFactory<>());
+        //   colPLAmountIncome.setCellFactory(new RightAlignCellFactory<>());
         colPLLedgerExpense.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerName()));
         colPLLedgerExpense.setCellFactory(cell -> {
             return new TableCell<LedgerBalance, String>() {
@@ -865,7 +866,7 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
             };
         });
         colPLAmountExpense.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getBalance()));
-        colPLAmountExpense.setCellFactory(new RightAlignCellFactory<>());
+        // colPLAmountExpense.setCellFactory(new RightAlignCellFactory<>());
 
 
         // Balance Sheet
@@ -887,7 +888,7 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
             };
         });
         colBSLiabilityAmount.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getBalance()));
-        colBSLiabilityAmount.setCellFactory(new RightAlignCellFactory<>());
+        //     colBSLiabilityAmount.setCellFactory(new RightAlignCellFactory<>());
         colBSAssetLedgerName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerName()));
         colBSAssetLedgerName.setCellFactory(cell -> {
             return new TableCell<LedgerBalance, String>() {
@@ -906,7 +907,7 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
             };
         });
         colBSAssetAmount.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getBalance()));
-        colBSAssetAmount.setCellFactory(new RightAlignCellFactory<>());
+        //  colBSAssetAmount.setCellFactory(new RightAlignCellFactory<>());
 
         // Review
 //        colReviewLedgerCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLedgerCode()));
@@ -962,6 +963,15 @@ public class FinancialYearClosingController implements MyInitialization, PopupCa
                 .setCellValueFactory(data -> new SimpleDoubleProperty(Math.abs(data.getValue().getBalance())));
 
         propObjLedger.bind(tableReview.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableStockValuation);
+        TableLocalizationUtil.localizeTable(tableReview);
+        TableLocalizationUtil.localizeTable(tablePLIncome);
+        TableLocalizationUtil.localizeTable(tableReview1);
+        TableLocalizationUtil.localizeTable(tableBSAsset);
+        TableLocalizationUtil.localizeTable(tableBSLiability);
+        TableLocalizationUtil.localizeTable(tablePLExpense);
+        TableLocalizationUtil.localizeTable(tableTrading);
+
     }
 
     public void saveData() {

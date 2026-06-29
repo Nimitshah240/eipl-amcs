@@ -9,13 +9,13 @@ import com.eipl.amcs.base.dto.JarUpdate;
 import com.eipl.amcs.base.task.DownloadFileTask;
 import com.eipl.amcs.base.task.UpdaterCheckTask;
 import com.eipl.amcs.base.task.UpdaterLogTask;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_PasswordField;
 import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
-import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
 import com.eipl.amcs.master.account.task.FinancialYearLoadTask;
 import com.eipl.amcs.setting.model.GeneralConfig;
@@ -27,7 +27,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.eipl.amcs.MainApp.*;
 import static com.eipl.amcs.utils.AppConstant.baseUrlRealTime;
 import static com.eipl.amcs.utils.AppConstant.syncUrlRealTime;
 
@@ -58,9 +58,9 @@ public class LoginController implements MyInitialization {
     @FXML
     Button btnLogin;
     @FXML
-    private ComboBox<FinancialYear> cboxFinancialYear;
+    private AutoSearchTextField<FinancialYear> cboxFinancialYear;
     @FXML
-    private ComboBox<String> cboxLang;
+    private AutoSearchTextField<String> cboxLang;
     @FXML
     private E_TextField txtUsername;
     @FXML
@@ -124,14 +124,17 @@ public class LoginController implements MyInitialization {
         });
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxFinancialYear.setConverter(new FinancialYearConvertor(cboxFinancialYear));
-    }
-
+    /**
+     * Change History:
+     * Date          Author           Version     Description
+     * -----------   --------------   ---------   ---------------------------------
+     * 24/06/2026    Nimit             1.0.1      Added line to set Locale variable also.
+     */
     private void createAndSetLocale() {
         try {
-            Locale.setDefault(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
+            setCurrentLocale(new Locale(cboxLang.getValue().substring(0, 2).toLowerCase()));
+            updateLocaleFile(cboxLang.getValue().substring(0, 2).toLowerCase());
+            Locale.setDefault(getCurrentLocale());
             if (!"en".equalsIgnoreCase(cboxLang.getValue().substring(0, 2))) {
                 List<String> lines = Files.readAllLines(new File("gu".equalsIgnoreCase(cboxLang.getValue().substring(0, 2)) ? "resources/messages/guj" : "resources/messages/hi").toPath());
                 List<String> nwLines = new ArrayList<>();
@@ -150,7 +153,8 @@ public class LoginController implements MyInitialization {
                 MainApp.setBundle(ResourceBundle.getBundle("message", Locale.getDefault(), classLoader));
             } catch (Exception e) {
                 e.printStackTrace();
-                Locale.setDefault(new Locale("en"));
+                setCurrentLocale(new Locale("en"));
+                Locale.setDefault(getCurrentLocale());
                 MainApp.setBundle(ResourceBundle.getBundle("message", Locale.getDefault(), classLoader));
             }
         } catch (Exception e) {

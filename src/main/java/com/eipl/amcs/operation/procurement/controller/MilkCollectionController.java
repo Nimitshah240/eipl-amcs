@@ -3,21 +3,19 @@ package com.eipl.amcs.operation.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.alert.WarningAlert;
-import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
-import com.eipl.amcs.master.org.convertor.DockConvertor;
 import com.eipl.amcs.master.org.dto.DockMilkTypeDto;
 import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.task.DockLoadTask;
@@ -28,6 +26,7 @@ import com.eipl.amcs.operation.procurement.task.MilkCollectionListSaveTask;
 import com.eipl.amcs.operation.procurement.task.MilkCollectionLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -73,11 +72,11 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
     @FXML
     DatePicker dpFromDate, dpToDate;
     @FXML
-    ComboBox<Shift> cboxFromShift, cboxToShift;
+    AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
     Button btnSearch, btnClose, btnStartCollection, btnImport, btnExport, btnSync;
     @FXML
-    private ComboBox<Dock> cboxDock;
+    private AutoSearchTextField<Dock> cboxDock;
     private ResourceBundle resourceBundle;
     private List<Shift> shiftList;
     private List<MilkType> milkTypeList;
@@ -145,7 +144,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
         try {
             FileChooser fileDialog = new FileChooser();
             fileDialog.setTitle("Export Collection");
-            fileDialog.setInitialFileName("Milk_Collection_Report-" + dpFromDate.getValue() + "-" + cboxFromShift.getValue()+" To "+dpToDate.getValue() + "-" + cboxToShift.getValue()+ ".xls");
+            fileDialog.setInitialFileName("Milk_Collection_Report-" + dpFromDate.getValue() + "-" + cboxFromShift.getValue() + " To " + dpToDate.getValue() + "-" + cboxToShift.getValue() + ".xls");
             fileDialog.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel File(2003-2007)", "*.xls"));
             File file = fileDialog.showSaveDialog(MainApp.stage);
             if (file != null) {
@@ -369,7 +368,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                         cboxDock.setItems(FXCollections.observableList(listDock));
                         cboxDock.getSelectionModel().select(0);
                     } else {
-                        listDock.add(0, new Dock("All"));
+                        listDock.add(0, new Dock(resourceBundle.getString("all")));
                         cboxDock.setItems(FXCollections.observableList(listDock));
                     }
                 }
@@ -390,7 +389,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
         task.setOnSucceeded(e -> {
             try {
                 List<MilkCollection> list = task.get();
-                if (list == null) {
+                if (list == null || list.isEmpty()) {
                     tableCollection.setPlaceholder(new Label("No data..."));
                     return;
                 }
@@ -405,8 +404,8 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
 
     @Override
     public void setupComboBox() {
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
         dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -419,7 +418,7 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        cboxDock.setConverter(new DockConvertor(cboxDock));
+//        cboxDock.setConverter(new DockConvertor(cboxDock));
         cboxDock.getSelectionModel().select(0);
     }
 
@@ -435,9 +434,9 @@ public class MilkCollectionController implements MyInitialization, PopupCallback
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCollectionDate().toLocalDate()));
-            colDate.setCellFactory(new LocalDateCellFactory<>());
             colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkType()));
             colShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShift()));
+            TableLocalizationUtil.localizeTable(tableCollection);
         } catch (Exception e) {
             e.printStackTrace();
         }

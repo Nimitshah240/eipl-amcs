@@ -107,21 +107,25 @@ public class CashAdvanceServiceImpl implements CashAdvanceService {
             }
             installmentRepository.delete(productSaleInstallment);
         }
-        CashAdvance cashAdvance = cashAdvanceRepository.findById(cashAdvanceNo).get();
-        Optional<Voucher> voucher = voucherRepository.findById(cashAdvance.getVoucherNo());
-        if (voucher.isEmpty()) return;
-        List<VoucherTransaction> transactionList = voucherTxnRepository.findByVoucher(voucher.get());
-        if (transactionList != null && !transactionList.isEmpty()) {
-            for (VoucherTransaction voucherTransaction : transactionList) {
-                List<VoucherSubLedger> voucherSubLedgerList = voucherSubLedgerRepository.findByVoucherTransaction(voucherTransaction);
-                if (voucherSubLedgerList != null && voucherSubLedgerList.isEmpty()) {
-                    for (VoucherSubLedger voucherSubLedger : voucherSubLedgerList) {
-                        voucherSubLedgerRepository.delete(voucherSubLedger);
+        CashAdvance cashAdvance = cashAdvanceRepository.findById(cashAdvanceNo).orElse(null);
+        if (cashAdvance == null)
+            return;
+        if (cashAdvance.getVoucherNo() != null && !cashAdvance.getVoucherNo().isBlank()) {
+            Optional<Voucher> voucher = voucherRepository.findById(cashAdvance.getVoucherNo());
+            if (voucher.isEmpty()) return;
+            List<VoucherTransaction> transactionList = voucherTxnRepository.findByVoucher(voucher.get());
+            if (transactionList != null && !transactionList.isEmpty()) {
+                for (VoucherTransaction voucherTransaction : transactionList) {
+                    List<VoucherSubLedger> voucherSubLedgerList = voucherSubLedgerRepository.findByVoucherTransaction(voucherTransaction);
+                    if (voucherSubLedgerList != null && voucherSubLedgerList.isEmpty()) {
+                        for (VoucherSubLedger voucherSubLedger : voucherSubLedgerList) {
+                            voucherSubLedgerRepository.delete(voucherSubLedger);
+                        }
                     }
+                    voucherTxnRepository.delete(voucherTransaction);
                 }
-                voucherTxnRepository.delete(voucherTransaction);
+                voucherRepository.delete(voucher.get());
             }
-            voucherRepository.delete(voucher.get());
         }
         cashAdvanceRepository.deleteById(cashAdvanceNo);
     }

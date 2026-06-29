@@ -4,15 +4,10 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.E_ComboBox;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_NumericField;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.operation.inventory.model.DeadStock;
@@ -36,13 +31,15 @@ public class DeadStockAddEditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private E_TextField txtName, txtNameLocal;
+    private E_TextField txtName;
+    @FXML
+    private E_TextFieldLocal txtNameLocal;
     @FXML
     private E_NumericField txtQuantity, txtCode, txtAmount;
     @FXML
     private E_DatePicker dpPurchaseDate;
     @FXML
-    private E_ComboBox<Ledger> cboxLedger;
+    private AutoSearchTextField<Ledger> cboxLedger;
     @FXML
     private Button btnSaveUpdate, btnClose;
     private Stage stage;
@@ -94,12 +91,6 @@ public class DeadStockAddEditController implements MyInitialization {
         txtAmount.setText(dto.getAmount().toString());
         dpPurchaseDate.setValue(dto.getPurchaseDate());
         cboxLedger.getSelectionModel().select(dto.getLedger());
-    }
-
-    @Override
-    public void setupComboBox() {
-        cboxLedger.setConverter(new LedgerConvertor(cboxLedger));
-        new AutoCompleteComboBoxListener<>(cboxLedger);
     }
 
     @Override
@@ -223,11 +214,11 @@ public class DeadStockAddEditController implements MyInitialization {
     }
 
     private DeadStock setValuesInObject() {
-        dto.setCode(txtCode.getText());
+        dto.setCode(txtCode.getInputText());
         dto.setName(txtName.getText());
         dto.setNameLocal(txtNameLocal.getText());
-        dto.setQty(new BigDecimal(txtQuantity.getText()));
-        dto.setAmount(new BigDecimal(txtAmount.getText()));
+        dto.setQty(new BigDecimal(txtQuantity.getInputText()));
+        dto.setAmount(new BigDecimal(txtAmount.getInputText()));
         dto.setPurchaseDate(dpPurchaseDate.getValue());
         dto.setLedger(cboxLedger.getValue());
         dto.setSocietyCode(MainApp.identityDto.getSociety());
@@ -246,10 +237,10 @@ public class DeadStockAddEditController implements MyInitialization {
         if (txtName.getText() == null || txtName.getText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("name.cannot.be.null")).append("\n");
         }
-        if (txtQuantity.getText() == null || txtQuantity.getText().isEmpty()) {
+        if (txtQuantity.getInputText() == null || txtQuantity.getInputText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("qty.cannot.be.null")).append("\n");
         }
-        if (txtAmount.getText() == null || txtAmount.getText().isEmpty()) {
+        if (txtAmount.getInputText() == null || txtAmount.getInputText().isEmpty()) {
             errorMsg.append(resourceBundle.getString("amount.cannot.be.null")).append("\n");
         }
         if (dpPurchaseDate.getValue() == null) {

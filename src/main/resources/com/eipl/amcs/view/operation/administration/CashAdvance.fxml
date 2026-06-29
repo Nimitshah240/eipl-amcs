@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_TextField?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -13,71 +14,131 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 
-<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.administartion.controller.CashAdvanceController">
+
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_Label?>
+<StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.operation.administartion.controller.CashAdvanceController">
     <children>
-        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="550.0" spacing="5.0">
+        <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="500.0"
+              prefWidth="550.0" spacing="5.0">
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" styleClass="header-text" text="%cashadvance">
+                        <E_Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
+                                 styleClass="header-text" text="%cashadvance">
                             <HBox.margin>
-                                <Insets left="5.0" />
+                                <Insets left="5.0"/>
                             </HBox.margin>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS" />
-                        <HBox alignment="CENTER_RIGHT" spacing="5.0" />
+                        </E_Label>
+                        <E_Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308"
+                                 minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS"/>
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0"/>
                     </children>
                 </HBox>
-                    <GridPane fx:id="gridMaster" hgap="10.0">
-                        <columnConstraints>
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                            <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER" />
-                            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
-                        </rowConstraints>
-                        <children>
-                            <Label text="%name" GridPane.columnIndex="1" />
-                  <Label text="%code" />
-                  <Label text="%date" GridPane.columnIndex="4" />
-                  <DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                  <Label text="%amount" GridPane.columnIndex="2" />
-                  <Label text="%noofinstallment" GridPane.columnIndex="3" />
-                  <E_TextField fx:id="txtMemberCode" GridPane.rowIndex="1" />
-                  <E_TextField fx:id="txtMemberName" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <E_TextField fx:id="txtAmount" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <E_TextField fx:id="txtNoOfInstallment" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        </children>
-                    </GridPane>
+                <GridPane fx:id="gridMaster" hgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="35.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="26.0" prefHeight="26.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <E_Label text="%name" GridPane.columnIndex="1"/>
+                        <E_Label text="%code"/>
+                        <E_Label text="%date" GridPane.columnIndex="4"/>
+                        <E_DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4"
+                                      GridPane.rowIndex="1"/>
+                        <E_Label text="%amount" GridPane.columnIndex="2"/>
+                        <E_Label text="%noofinstallment" GridPane.columnIndex="3"/>
+                        <E_NumericField fx:id="txtMemberCode" GridPane.rowIndex="1"/>
+                        <E_TextField fx:id="txtMemberName" disable="true" GridPane.columnIndex="1"
+                                     GridPane.rowIndex="1"/>
+                        <E_NumericField fx:id="txtAmount" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <E_NumericField fx:id="txtNoOfInstallment" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    </children>
+                </GridPane>
                 <TableView fx:id="tableCashAdvance" focusTraversable="false" prefHeight="100.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="120.0" text="%code" />
-                        <TableColumn fx:id="colName" prefWidth="120.0" text="%name" />
-                        <TableColumn fx:id="colAmount" prefWidth="120.0" text="%amount" />
-                  <TableColumn fx:id="colNoOfInstallment" prefWidth="120.0" text="%noofinstallment" />
+                        <TableColumn fx:id="colCode" prefWidth="120.0" text="%code"/>
+                        <TableColumn fx:id="colName" prefWidth="120.0" text="%name"/>
+                        <TableColumn fx:id="colAmount" prefWidth="120.0" text="%amount"/>
+                        <TableColumn fx:id="colNoOfInstallment" prefWidth="120.0" text="%noofinstallment"/>
                     </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
                 </TableView>
-                <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">
+                <!--                <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="10.0">-->
+                <!--                    <children>-->
+                <!--                        <E_Button fx:id="btnSave" minWidth="75.0" text="%add"/>-->
+                <!--                        <E_Button fx:id="btnDelete" minWidth="75.0" text="%delete"/>-->
+                <!--                        <E_Button fx:id="btnClose" minWidth="75.0" text="%close"/>-->
+                <!--                        <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>-->
+                <!--                        <E_Button fx:id="btnView" disable="true" minWidth="75.0" text="%view"/>-->
+                <!--                    </children>-->
+                <!--                </HBox>-->
+
+
+                <HBox fx:id="btnMainPanel" prefWidth="200.0" spacing="15.0">
                     <children>
-                  <E_Button fx:id="btnSave" minWidth="75.0" text="%add" />
-                  <E_Button fx:id="btnDelete" minWidth="75.0" text="%delete" />
-                  <E_Button fx:id="btnClose" minWidth="75.0" text="%close" />
-                  <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                  <E_Button fx:id="btnView" disable="true" minWidth="75.0" text="%view" />
+                        <E_Button fx:id="btnSave" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                  prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <E_Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                  mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <E_Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                  prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
+                        <E_Button fx:id="btnView" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                  prefWidth="70.0" text="%view">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/search.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
                     </children>
+                    <padding>
+                        <Insets bottom="5.0"/>
+                    </padding>
                 </HBox>
             </children>
-         <padding>
-            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-         </padding>
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
+            </padding>
         </VBox>
     </children>
 </StackPane>

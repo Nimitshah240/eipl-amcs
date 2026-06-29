@@ -11,6 +11,7 @@ import com.eipl.amcs.master.operation.model.BillCriteria;
 import com.eipl.amcs.master.operation.task.BillCriteriaDeleteTask;
 import com.eipl.amcs.master.operation.task.BillCriteriaLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -102,6 +103,7 @@ public class BillCriteriaController implements MyInitialization, PopupCallback {
             colStartDate.setCellValueFactory(data -> new SimpleObjectProperty<LocalDate>(data.getValue().getStartDate()));
             colEndDate.setCellValueFactory(data -> new SimpleObjectProperty<LocalDate>(data.getValue().getEndDate()));
             propBillCriteriaDto.bind(tableBillCriteria.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableBillCriteria);
         } catch (Exception e) {
             System.out.println("BillCriteria setuptable Exception");
             e.printStackTrace();

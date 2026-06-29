@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefWidth="450.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.org.controller.UsersAddEditController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="">
@@ -44,7 +45,7 @@
                         <Label text="%password" GridPane.rowIndex="3" />
                         <PasswordField fx:id="txtPassword" promptText="Enter new password" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="%rolecode" GridPane.rowIndex="4" />
-                        <E_ComboBox fx:id="cboxRoleCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <AutoSearchTextField fx:id="cboxRoleCode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     </children>
                 </GridPane>
                 <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="15">

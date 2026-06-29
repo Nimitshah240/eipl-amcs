@@ -5,6 +5,8 @@ import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_NumericField;
+import com.eipl.amcs.controls.E_TextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -27,6 +29,7 @@ import com.eipl.amcs.operation.inventory.task.ProductSaleSaveTask;
 import com.eipl.amcs.operation.procurement.task.MemberTotalAmountLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -61,7 +64,9 @@ public class KapaatAddEditController implements MyInitialization {
     @FXML
     private AutoSearchTextField<SocietyPaymentCycle> cboxPaymentCycle;
     @FXML
-    private TextField txtCode, txtBalance, txtTotal, txtDue, txtName, txtAmount, txtMobileNo;
+    private E_TextField txtName;
+    @FXML
+    private E_NumericField txtCode, txtBalance, txtTotal, txtDue, txtAmount, txtMobileNo;
     @FXML
     private TableView<ProductSaleTransaction> tableData;
     @FXML
@@ -167,13 +172,13 @@ public class KapaatAddEditController implements MyInitialization {
     }
 
     private void fetchMemberDetails() {
-        memberCode = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtCode.getText()));
+        memberCode = MainApp.identityDto.getSociety().getCode() + String.format("%04d", CommonUtils.strToInteger(txtCode.getInputText()));
         var task = new MemberByIdLoadTask(memberCode);
         task.setOnSucceeded(e -> {
             try {
                 member = task.get();
                 if (member != null) {
-                    txtName.setText(member.getFirstName());
+                    txtName.setText(member.toMemberName());
                     txtMobileNo.setText(member.getMobileNo());
                     getBalance(memberCode);
                 } else {
@@ -238,6 +243,7 @@ public class KapaatAddEditController implements MyInitialization {
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct().toString()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmount() != null ? data.getValue().getAmount().toString() : "0"));
             propSaleTransaction.bind(tableData.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableData);
         } catch (Exception e1) {
             System.out.println("KapatAddEdit setuptable Exception");
             e1.printStackTrace();
@@ -248,7 +254,7 @@ public class KapaatAddEditController implements MyInitialization {
         if (productList == null)
             return;
         due = BigDecimal.ZERO;
-        netPayable = new BigDecimal(txtBalance.getText());
+        netPayable = new BigDecimal(txtBalance.getInputText());
         for (Product mb : productList) {
             if (mb.getxCol1() != null && !mb.getxCol1().equalsIgnoreCase("")) {
                 due = due.add(new BigDecimal(mb.getxCol1()));
@@ -426,7 +432,7 @@ public class KapaatAddEditController implements MyInitialization {
     private void addProduct() {
         try {
 
-            BigDecimal amt = new BigDecimal(txtAmount.getText());
+            BigDecimal amt = new BigDecimal(txtAmount.getInputText());
             if (amt.compareTo(BigDecimal.ZERO) <= 0) {
                 MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), resourceBundle.getString("invalid.amount"));
                 alert.createAlert();
@@ -547,7 +553,7 @@ public class KapaatAddEditController implements MyInitialization {
         if (dpDeductionDate.getValue() == null) {
             errorMsg.append(resourceBundle.getString("product.sale.validation.date.empty") + "\n");
         }
-        if (txtCode.getText().trim().equals("")) {
+        if (txtCode.getInputText().trim().equals("")) {
             errorMsg.append(resourceBundle.getString("product.sale.validation.consumer.code.empty") + "\n");
         }
         if (cboxPaymentCycle.getValue() == null) {

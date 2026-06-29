@@ -8,13 +8,12 @@ import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.operation.model.Vendor;
 import com.eipl.amcs.operation.inventory.model.ProductReceipt;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -65,13 +64,11 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -159,13 +156,11 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
     @Override
     public void setupTable() {
         try {
-            dpFromDate.setConverter(new LocalDateConvertor());
             dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) {
                     dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
                 }
             });
-            dpToDate.setConverter(new LocalDateConvertor());
             dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue) {
                     dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -174,13 +169,12 @@ public class ProductReceiptController implements MyInitialization, PopupCallback
 
             colGrnNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getGrnNo().replace(MainApp.identityDto.getSociety().getCode() + "/", "")));
             colGrnDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getGrnDate()));
-            colGrnDate.setCellFactory(new LocalDateCellFactory<>());
             colChallanNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getChallanNo()));
             colChallanDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getChallanDate()));
-            colChallanDate.setCellFactory(new LocalDateCellFactory<>());
             colParty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getVendor()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getNetAmount()));
             propProductReceiptDto.bind(tableProductReceipt.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable( tableProductReceipt);
 
         } catch (Exception e) {
             System.out.println("ProductReceipt setuptable Exception");

@@ -1,5 +1,6 @@
 package com.eipl.amcs.controls;
 
+import com.eipl.amcs.MainApp;
 import com.ibm.icu.text.Transliterator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,13 +14,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Popup;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.eipl.amcs.utils.FormatterFactory.convertEnglishToLocalizedDigits;
 
 /**
  * An optimized generic auto-searching autocomplete text field with dynamic transliteration context support.
@@ -49,6 +51,8 @@ public class AutoSearchTextField<T> extends TextField {
     //NIMIT | 03.06.2026 | Tracks objects selected before items are loaded
     private T deferredSelectedItem = null;
     private boolean openPopup = true;
+    // FIX: Maintain a single, permanent instance of your selection model
+    private final FakeSelectionModel selectionModelInstance = new FakeSelectionModel();
 
     /**
      * FXML Default Constructor. Required by FXMLLoader.
@@ -153,19 +157,35 @@ public class AutoSearchTextField<T> extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 08/06/2026    Nimit             1.0.0       To show popup on getting focus on textfield, and select item if any selected.
+     * 26/06/2026    Nimit             1.0.01      Change to open popup on mouse click after select item using mouse click.
      */
     private void focusedOnTextField() {
+        // 1. Keep this for Keyboard navigation (e.g., Tabbing into the field)
         focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                if (this.openPopup) {
-                    showPopup(masterList);
-                }
-                if (selectedItem != null)
-                    listView.getSelectionModel().select(selectedItem);
+                handlePopupTrigger();
             } else {
+                // Delay hide slightly if mouse clicking the popup needs to register first
                 hidePopup();
             }
         });
+
+        // 2. Add this for Mouse Clicks when the field is ALREADY focused
+        this.setOnMouseClicked(event -> {
+            if (this.isFocused()) {
+                handlePopupTrigger();
+            }
+        });
+    }
+
+    // Helper method to avoid duplicating the popup logic
+    private void handlePopupTrigger() {
+        if (this.openPopup) {
+            showPopup(masterList);
+        }
+        if (selectedItem != null) {
+            listView.getSelectionModel().select(selectedItem);
+        }
     }
 
     public void setupLocalTransliteration() {
@@ -198,8 +218,14 @@ public class AutoSearchTextField<T> extends TextField {
      * just click enter without changing data then it will take the pre-selected value.
      */
     private void wireKeyNavigation() {
-        addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER && popup.isShowing()) {
+                event.consume();
+            }
+        });
+
+        addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 //          Nimit | 03.06.2026 : WHEN POPUP IS NOT VISIBLE - KEY ACTIONS.
             if (!popup.isShowing()) {
                 this.openPopup = true;
@@ -270,13 +296,18 @@ public class AutoSearchTextField<T> extends TextField {
                 case ENTER:
                     T highlighted = listView.getSelectionModel().getSelectedItem();
                     if (highlighted != null) {
+                        // 1. Assign values completely synchronously
                         selectItem(highlighted);
+
+                        // 2. Fire the ActionEvent and handle focus shifts
                         this.fireEvent(new javafx.event.ActionEvent(this, null));
+                        Platform.runLater(() -> {
+                            this.fireEvent(new KeyEvent(
+                                    KeyEvent.KEY_PRESSED, "", "",
+                                    KeyCode.TAB, false, false, false, false
+                            ));
+                        });
                     }
-                    this.fireEvent(new KeyEvent(
-                            KeyEvent.KEY_PRESSED, "", "",
-                            KeyCode.TAB, false, false, false, false
-                    ));
                     event.consume();
                     break;
                 case ESCAPE:
@@ -319,13 +350,22 @@ public class AutoSearchTextField<T> extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 03/06/2026    Nimit             1.0.0       To handle mouse click selection
+     * 24/06/2026    Nimit             1.0.1       Change focus on mouse click on popup and also setOnAction work.
      */
     private void wireMouseSelection() {
         listView.setOnMouseClicked(event -> {
             T clicked = listView.getSelectionModel().getSelectedItem();
             if (clicked != null) {
                 selectItem(clicked);
+                this.fireEvent(new javafx.event.ActionEvent(this, null));
             }
+        });
+
+        Platform.runLater(() -> {
+            this.fireEvent(new KeyEvent(
+                    KeyEvent.KEY_PRESSED, "", "",
+                    KeyCode.TAB, false, false, false, false
+            ));
         });
     }
 
@@ -350,6 +390,7 @@ public class AutoSearchTextField<T> extends TextField {
      * -----------   --------------   ---------   ---------------------------------
      * 03/06/2026    Nimit             1.0.0       TO FILTER DATA BY SEARCH QUERY
      * 08/06/2026    Nimit             1.0.1       Extract showing popup to different method for multiple use.
+     * 24/06/2026    Nimit             1.0.2       Change method to filter data using local language also.
      */
     private void filterAndShow(String query) {
         String lower = query.toLowerCase();
@@ -357,7 +398,11 @@ public class AutoSearchTextField<T> extends TextField {
         List<T> results = masterList.stream()
                 .filter(item -> {
                     String text = textExtractor.apply(item);
-                    return text != null && text.toLowerCase().contains(lower);
+                    if (text == null) return false;
+
+                    String localizedText = convertEnglishToLocalizedDigits(text);
+                    return text.toLowerCase().contains(lower) ||
+                            (localizedText != null && localizedText.toLowerCase().contains(lower));
                 })
                 .limit(50)
                 .collect(Collectors.toList());
@@ -430,17 +475,21 @@ public class AutoSearchTextField<T> extends TextField {
      * 03/06/2026    Nimit             1.0.0       TO SELECT ITEM PROVIDED AND AVAILABLE IN THE LIST
      * 08/06/2026    Nimit             1.0.1       Solved bug - To get index of the selected item from the list.
      * And clear string which is written by user for searching
+     * 24/06/2026    Nimit             1.0.2       On selection number will also convert to local language.
      */
     private void selectItem(T item) {
         currentWord.setLength(0);
         previousGujaratiLength = 0;
+
+        selectionModelInstance.updateSelectedProperties(item);
         selectedItem = item;
         if (masterList != null && item != null) {
             selectedIndex = masterList.indexOf(item);
         }
         suppressFilter = true;
         String displayStr = textExtractor.apply(item);
-        setText(displayStr);
+        String localizedStr = convertEnglishToLocalizedDigits(displayStr);
+        setText(localizedStr);
         positionCaret(displayStr.length());
         suppressFilter = false;
         hidePopup();
@@ -458,6 +507,7 @@ public class AutoSearchTextField<T> extends TextField {
      */
     public void setValue(T item) {
         if (item == null) {
+            setText(null);
             return;
         }
         if (masterList != null) {
@@ -466,6 +516,7 @@ public class AutoSearchTextField<T> extends TextField {
         this.selectedItem = item;
         this.suppressFilter = true;
         String displayStr = textExtractor.apply(item);
+        displayStr = convertEnglishToLocalizedDigits(displayStr);
         this.setText(displayStr);
         this.positionCaret(displayStr.length());
         this.suppressFilter = false;
@@ -655,11 +706,21 @@ public class AutoSearchTextField<T> extends TextField {
     //                                      ~~~ FAKE COMBOX METHOD ~~~
 //----------------------------------------------------------------------------------------------------------------------
     public FakeSelectionModel getSelectionModel() {
-        return new FakeSelectionModel();
+        return this.selectionModelInstance;
     }
 
     public class FakeSelectionModel {
 
+        // Internal synchronizer to route global values cleanly down to property listeners
+        protected void updateSelectedProperties(T item) {
+            selectedItem = item;
+            if (masterList != null && item != null) {
+                selectedIndex = masterList.indexOf(item);
+            } else if (item == null) {
+                selectedIndex = -1;
+            }
+//            this.selectedItemProperty.set(item);
+        }
 
         /**
          * Change History:
@@ -812,6 +873,41 @@ public class AutoSearchTextField<T> extends TextField {
             hidePopup();
         }
 
+        public void selectFirst() {
+            try {
+                selectedIndex = 0;
+                if (masterList == null || masterList.isEmpty())
+                    return;
+                T item = masterList.get(0);
+                String text = textExtractor.apply(item);
+                String localizedStr = convertEnglishToLocalizedDigits(text);
+                setText(localizedStr);
+                listView.getSelectionModel().select(item);
+                deferredSelectedItem = item;
+                selectedItem = item;
+                setValue(item);
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void selectLast() {
+            try {
+                if (masterList == null || masterList.isEmpty())
+                    return;
+                selectedIndex = masterList.size() - 1;
+                T item = masterList.get(selectedIndex);
+                String text = textExtractor.apply(item);
+                String localizedStr = convertEnglishToLocalizedDigits(text);
+                setText(localizedStr);
+                listView.getSelectionModel().select(item);
+                deferredSelectedItem = item;
+                selectedItem = item;
+                setValue(item);
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -1021,6 +1117,7 @@ public class AutoSearchTextField<T> extends TextField {
      * Date          Author           Version     Description
      * -----------   --------------   ---------   ---------------------------------
      * 03/06/2026    Nimit             1.0.0      METHOD HELPS TO SKIP DIGITS TO TRANSLATE
+     * 24/06/2026    Nimit             1.0.1      Now number will also translate to local language.
      */
     private String transliteratePreservingDigits(String input) {
         String preprocessed = preprocess(input);
@@ -1029,15 +1126,15 @@ public class AutoSearchTextField<T> extends TextField {
 
         for (int i = 0; i < preprocessed.length(); i++) {
             char c = preprocessed.charAt(i);
-            if (Character.isDigit(c) || c == '.') {
-                if (segment.length() > 0) {
-                    result.append(transliterator.transliterate(segment.toString()));
-                    segment.setLength(0);
-                }
-                result.append(c);
-            } else {
-                segment.append(c);
-            }
+//            if (Character.isDigit(c) || c == '.') {
+//                if (segment.length() > 0) {
+//                    result.append(transliterator.transliterate(segment.toString()));
+//                    segment.setLength(0);
+//                }
+//                result.append(c);
+//            } else {
+            segment.append(c);
+//            }
         }
         if (segment.length() > 0) {
             result.append(transliterator.transliterate(segment.toString()));
@@ -1055,9 +1152,11 @@ public class AutoSearchTextField<T> extends TextField {
         private final VBox cellLayout = new VBox(mainLabel, subLabel);
 
         DynamicCell() {
-            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
+            mainLabel.setFont(javafx.scene.text.Font.font(MainApp.getProperty("slip.font", "System"), javafx.scene.text.FontWeight.BOLD, 14));
+            subLabel.setFont(javafx.scene.text.Font.font(MainApp.getProperty("slip.front", "System"), 14));
+//            mainLabel.setFont(Font.font("System", javafx.scene.text.FontWeight.BOLD, 13));
             mainLabel.setTextFill(Color.web("#2c3e50"));
-            subLabel.setFont(Font.font("System", 11));
+//            subLabel.setFont(Font.font("System", 11));
             subLabel.setTextFill(Color.web("#7f8c8d"));
 
             hoverProperty().addListener((obs, w, isHovered) -> updateBackground());
@@ -1068,6 +1167,12 @@ public class AutoSearchTextField<T> extends TextField {
             setStyle(isSelected() ? "-fx-background-color: #d6eaf8;" : "-fx-background-color: transparent;");
         }
 
+        /**
+         * Change History:
+         * Date          Author           Version     Description
+         * -----------   --------------   ---------   ---------------------------------
+         * 24/06/2026    Nimit             1.0.1      Now number will also translate to local language.
+         */
         @Override
         protected void updateItem(T item, boolean empty) {
             super.updateItem(item, empty);
@@ -1075,9 +1180,11 @@ public class AutoSearchTextField<T> extends TextField {
                 setGraphic(null);
                 setStyle("-fx-background-color: transparent;");
             } else {
-                mainLabel.setText(textExtractor.apply(item));
-                if (subTextExtractor != null) {
-                    subLabel.setText(subTextExtractor.apply(item));
+                String rawMainText = textExtractor.apply(item);
+                String rawSubText = (subTextExtractor != null) ? subTextExtractor.apply(item) : null;
+                mainLabel.setText(convertEnglishToLocalizedDigits(rawMainText));
+                if (rawSubText != null && !rawSubText.trim().isEmpty()) {
+                    subLabel.setText(convertEnglishToLocalizedDigits(rawSubText));
                     subLabel.setVisible(true);
                     subLabel.setManaged(true);
                     cellLayout.setSpacing(2);

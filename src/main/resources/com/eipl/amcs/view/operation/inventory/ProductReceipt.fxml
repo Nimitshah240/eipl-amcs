@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" prefHeight="600.0" prefWidth="800.0" styleClass="pane-center"
            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.operation.inventory.controller.ProductReceiptController">
@@ -22,13 +23,13 @@
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="10.0">
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                styleClass="header-text" text="%product.receipt" HBox.hgrow="ALWAYS"/>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                HBox.hgrow="ALWAYS"/>
                         <E_DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308"
                                     maxWidth="1.7976931348623157E308"/>
-                        <Label text="%to"/>
+                        <E_Label text="%to"/>
                         <E_DatePicker fx:id="dpToDate" maxHeight="1.7976931348623157E308"
                                     maxWidth="1.7976931348623157E308"/>
                         <E_Button fx:id="btnSearch" minHeight="35.0" minWidth="100.0" mnemonicParsing="false"

@@ -16,6 +16,7 @@ import com.eipl.amcs.report.task.BonusRegisterReportLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -184,6 +185,8 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
             colTotalAmt.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTotalMilkAmount()));
             colBonusAmt.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBonusCriteriaAmount()));
             propSummary.bind(tableBonusSummary.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableBonusSummary);
+
         } catch (Exception e) {
             System.out.println("BonusSummary setuptable Exception");
             e.printStackTrace();

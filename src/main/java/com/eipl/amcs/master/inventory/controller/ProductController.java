@@ -11,6 +11,7 @@ import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -127,6 +128,7 @@ public class ProductController implements MyInitialization, PopupCallback {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
             colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
             propProductDto.bind(tableProduct.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableProduct);
         } catch (Exception e) {
             System.out.println("Product setuptable Exception");
             e.printStackTrace();

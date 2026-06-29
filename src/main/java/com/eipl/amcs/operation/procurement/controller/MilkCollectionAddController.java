@@ -31,10 +31,7 @@ import com.eipl.amcs.operation.procurement.repository.MilkDispatchRepository;
 import com.eipl.amcs.operation.procurement.task.*;
 import com.eipl.amcs.setting.model.HardwareDeviceConfig;
 import com.eipl.amcs.setting.repository.AccountPostingRepository;
-import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
-import com.eipl.amcs.utils.FocusUtils;
-import com.eipl.amcs.utils.NumberUtil;
+import com.eipl.amcs.utils.*;
 import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -101,17 +98,17 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private StackPane root;
     @FXML
-    private Label lblTitle, lblSave;
+    private E_Label lblTitle, lblSave;
     @FXML
     private E_DatePicker dpDate;
     @FXML
-    private ComboBox<Shift> cboxShift;
+    private AutoSearchTextField<Shift> cboxShift;
     @FXML
     private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private E_ComboBox<MilkQualityType> cboxMilkQuality;
+    private AutoSearchTextField<MilkQualityType> cboxMilkQuality;
     @FXML
-    private E_ComboBox<String> cboxShortCut;
+    private AutoSearchTextField<String> cboxShortCut;
     @FXML
     private E_TextField txtName;
     @FXML
@@ -119,7 +116,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private E_Button btnSave, btnClose, btnStart, btnExport, btnDispatch, btnLocalMilkSale, btnSetting, btnShiftReport, btnRejectedMilk;
     @FXML
-    private Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate, lblManual, lblLocalTime, lblEdited;
+    private E_Label lblAvgFat, lblAvgSnf, lblAvgQty, lblShiftTime, lblStartTime, lblEndTime, lblKgFatRate, lblManual, lblLocalTime, lblEdited;
     @FXML
     private TableView<CollectionSummary> tableSummary;
     @FXML
@@ -143,7 +140,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @FXML
     private HBox hboxDataShift;
     @FXML
-    private Label lblShortcut;
+    private E_Label lblShortcut;
     @FXML
     private ToggleGroup tagMa;
     @FXML
@@ -165,7 +162,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private final ChangeListener<String> qtyRateChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
-            calculateAmount(txtRate.getText(), txtQty.getText());
+            calculateAmount(txtRate.getInputText(), txtQty.getInputText());
             if (MainApp.displaySerial != null)
                 MainApp.displaySerial.displayQuantity(getStringForDisplay("QTY"));
         }
@@ -173,8 +170,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     };
     private final ChangeListener<String> qualityParamChangeListener = (observableValue, oldVal, newVal) -> {
         if (!newVal.isEmpty()) {
-            fetchRate(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue());
-            calculateClr(txtFat.getText(), txtSnf.getText());
+            fetchRate(txtFat.getInputText(), txtSnf.getInputText(), cboxMilkType.getValue(), cboxMilkQuality.getValue());
+            calculateClr(txtFat.getInputText(), txtSnf.getInputText());
         }
 
         if (MainApp.displaySerial != null) {
@@ -363,15 +360,15 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 case 1: // EVEREST
                     switch (type) {
                         case "MCODE":
-                            return "(A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + ")";
+                            return "(A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + ")";
                         case "QTY":
-                            return "(S" + MainApp.displaySerial.getWgtDecimalFormat().format(Double.parseDouble(txtQty.getText() != null ? txtQty.getText().trim() : "0")) + ")";
+                            return "(S" + MainApp.displaySerial.getWgtDecimalFormat().format(Double.parseDouble(txtQty.getInputText() != null ? txtQty.getInputText().trim() : "0")) + ")";
                         case "QLTY":
-                            return "(F" + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtFat.getText() != null && txtFat.getText().trim().length() > 0 ? txtFat.getText().trim() : "00.0")) + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtSnf.getText() != null && txtSnf.getText().trim().length() > 0 ? txtSnf.getText().trim() : "00.0")) + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtWater.getText() != null && txtWater.getText().trim().length() > 0 ? txtWater.getText().trim() : "00.0")) + ")";
+                            return "(F" + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtFat.getInputText() != null && txtFat.getInputText().trim().length() > 0 ? txtFat.getInputText().trim() : "00.0")) + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtSnf.getInputText() != null && txtSnf.getInputText().trim().length() > 0 ? txtSnf.getInputText().trim() : "00.0")) + MainApp.displaySerial.getQtyDecimalFormat().format(Double.parseDouble(txtWater.getInputText() != null && txtWater.getInputText().trim().length() > 0 ? txtWater.getInputText().trim() : "00.0")) + ")";
                         case "RTPL":
-                            return "(J" + MainApp.displaySerial.getRateDecimalFormat().format(Double.parseDouble(txtRate.getText() != null ? txtRate.getText().trim() : "0")).replace(".", "") + ")";
+                            return "(J" + MainApp.displaySerial.getRateDecimalFormat().format(Double.parseDouble(txtRate.getInputText() != null ? txtRate.getInputText().trim() : "0")).replace(".", "") + ")";
                         case "AMT":
-                            return "(G" + MainApp.displaySerial.getWgtDecimalFormat().format(Double.parseDouble(txtAmount.getText() != null ? txtAmount.getText().trim() : "0")) + ")";
+                            return "(G" + MainApp.displaySerial.getWgtDecimalFormat().format(Double.parseDouble(txtAmount.getInputText() != null ? txtAmount.getInputText().trim() : "0")) + ")";
                         case "ANIMAL":
                             return "(D" + (cboxMilkType.getSelectionModel().getSelectedItem().getName().toUpperCase().startsWith("C") ? "c" : cboxMilkType.getSelectionModel().getSelectedItem().getName().toUpperCase().startsWith("B") ? "b" : "m") + ")";
 
@@ -389,28 +386,28 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     }
                     switch (verient) {
                         case 1:
-                            a = "A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%03d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtQty.getText().trim())).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtAmount.getText().trim())).replace(".", "") : "0")) + "B";
+                            a = "A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%03d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtQty.getInputText().trim())).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtAmount.getInputText().trim())).replace(".", "") : "0")) + "B";
                             break;
                         case 2:
-                            a = "A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%04d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtQty.getText().trim())).replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getText().trim())).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtAmount.getText().trim())).replace(".", "") : "0")) + "B";
+                            a = "A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%04d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtQty.getInputText().trim())).replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getInputText().trim())).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtAmount.getInputText().trim())).replace(".", "") : "0")) + "B";
                             break;
                         case 3:
-                            String amt = String.format("%06d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getText().trim())).replace(".", "") : "0"));
+                            String amt = String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getInputText().trim())).replace(".", "") : "0"));
                             amt = amt.substring(1) + amt.charAt(0);
-                            a = "$A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%04d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtQty.getText().trim())).replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getText().trim())).replace(".", "") : "0")) + amt + String.format("%04d", Integer.parseInt(txtSnf.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getText().trim())).replace(".", "") : "0")) + "B";
+                            a = "$A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%04d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtQty.getInputText().trim())).replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getInputText().trim())).replace(".", "") : "0")) + amt + String.format("%04d", Integer.parseInt(txtSnf.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getInputText().trim())).replace(".", "") : "0")) + "B";
                             break;
                         case 4:
-                            String amt1 = String.format("%06d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getText().trim())).replace(".", "") : "0"));
+                            String amt1 = String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getInputText().trim())).replace(".", "") : "0"));
                             amt1 = amt1.substring(1) + amt1.charAt(0);
-                            a = "$A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%05d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtFat.getText().trim())).replace(".", "") : "0")) + amt1 + String.format("%04d", Integer.parseInt(txtSnf.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getText().trim())).replace(".", "") : "0")) + "B";
+                            a = "$A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%05d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtFat.getInputText().trim())).replace(".", "") : "0")) + amt1 + String.format("%04d", Integer.parseInt(txtSnf.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getInputText().trim())).replace(".", "") : "0")) + "B";
                             break;
                         case 5:
-                            String qty5 = String.format("%04d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getText().trim())).replace(".", "") : "0"));
+                            String qty5 = String.format("%04d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getInputText().trim())).replace(".", "") : "0"));
                             qty5 = qty5.substring(1) + qty5.charAt(0);
-                            String amt5 = String.format("%06d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getText().trim())).replace(".", "") : "0"));
+                            String amt5 = String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getInputText().trim())).replace(".", "") : "0"));
                             amt5 = amt5.substring(1) + amt5.charAt(0);
 
-                            a = "$A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + qty5 + String.format("%03d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getText().trim())).replace(".", "") : "0")) + amt5 + String.format("%04d", Integer.parseInt(txtSnf.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getText().trim())).replace(".", "") : "0")) + "B";
+                            a = "$A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + qty5 + String.format("%03d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getInputText().trim())).replace(".", "") : "0")) + amt5 + String.format("%04d", Integer.parseInt(txtSnf.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getInputText().trim())).replace(".", "") : "0")) + "B";
                             break;
                         default:
                             break;
@@ -419,7 +416,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 case 3:
                     String c = "";
                     try {
-                        c = "$A" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%04d", Integer.parseInt(txtQty.getText() != null ? txtQty.getText().trim().replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getText() != null ? txtFat.getText().trim().replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getText() != null ? txtAmount.getText().trim().replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtSnf.getText() != null ? txtSnf.getText().trim().replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getText() != null ? txtRate.getText().trim().replace(".", "") : "0"));
+                        c = "$A" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%04d", Integer.parseInt(txtQty.getInputText() != null ? txtQty.getInputText().trim().replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getInputText() != null ? txtFat.getInputText().trim().replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null ? txtAmount.getInputText().trim().replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtSnf.getInputText() != null ? txtSnf.getInputText().trim().replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtRate.getInputText() != null ? txtRate.getInputText().trim().replace(".", "") : "0"));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -435,14 +432,14 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     switch (verientPrompt) {
                         case 1:
                             try {
-                                prompStr = "D" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%05d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getText() != null && !txtQty.getText().equalsIgnoreCase("") ? txtQty.getText().trim() : "0")).replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getText() != null && !txtFat.getText().equalsIgnoreCase("") ? txtFat.getText().trim() : "0")).replace(".", "") : "0")) + (cboxMilkType.getValue().getName().charAt(0) + "").toUpperCase() + String.format("%03d", Integer.parseInt(txtSnf.getText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtSnf.getText() != null && !txtSnf.getText().equalsIgnoreCase("") ? txtSnf.getText().trim() : "0")).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtRate.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getText() != null && !txtRate.getText().equalsIgnoreCase("") ? txtRate.getText().trim() : "0")).replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getText() != null && txtAmount.getText().equalsIgnoreCase("") ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getText() != null && !txtAmount.getText().equalsIgnoreCase("") ? txtAmount.getText().trim() : "0")).replace(".", "") : "0")) + "\r\n";
+                                prompStr = "D" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%05d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getInputText() != null && !txtQty.getInputText().equalsIgnoreCase("") ? txtQty.getInputText().trim() : "0")).replace(".", "") : "0")) + String.format("%03d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtFat.getInputText() != null && !txtFat.getInputText().equalsIgnoreCase("") ? txtFat.getInputText().trim() : "0")).replace(".", "") : "0")) + (cboxMilkType.getValue().getName().charAt(0) + "").toUpperCase() + String.format("%03d", Integer.parseInt(txtSnf.getInputText() != null ? MainApp.DECIMAL_FORMAT_1_DIGIT.format(Double.parseDouble(txtSnf.getInputText() != null && !txtSnf.getInputText().equalsIgnoreCase("") ? txtSnf.getInputText().trim() : "0")).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtRate.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getInputText() != null && !txtRate.getInputText().equalsIgnoreCase("") ? txtRate.getInputText().trim() : "0")).replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null && txtAmount.getInputText().equalsIgnoreCase("") ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getInputText() != null && !txtAmount.getInputText().equalsIgnoreCase("") ? txtAmount.getInputText().trim() : "0")).replace(".", "") : "0")) + "\r\n";
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             break;
                         case 2:
                             try {
-                                prompStr = "D" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + String.format("%05d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getText() != null && !txtQty.getText().equalsIgnoreCase("") ? txtQty.getText().trim() : "0")).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtFat.getText() != null && !txtFat.getText().equalsIgnoreCase("") ? txtFat.getText().trim() : "0")).replace(".", "") : "0")) + (cboxMilkType.getValue().getName().charAt(0) + "").toUpperCase() + String.format("%04d", Integer.parseInt(txtSnf.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getText() != null && !txtSnf.getText().equalsIgnoreCase("") ? txtSnf.getText().trim() : "0")).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtRate.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getText() != null && !txtRate.getText().equalsIgnoreCase("") ? txtRate.getText().trim() : "0")).replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getText() != null && !txtAmount.getText().equalsIgnoreCase("") ? txtAmount.getText().trim() : "0")).replace(".", "") : "0")) + "\r\n";
+                                prompStr = "D" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + String.format("%05d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getInputText() != null && !txtQty.getInputText().equalsIgnoreCase("") ? txtQty.getInputText().trim() : "0")).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtFat.getInputText() != null && !txtFat.getInputText().equalsIgnoreCase("") ? txtFat.getInputText().trim() : "0")).replace(".", "") : "0")) + (cboxMilkType.getValue().getName().charAt(0) + "").toUpperCase() + String.format("%04d", Integer.parseInt(txtSnf.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getInputText() != null && !txtSnf.getInputText().equalsIgnoreCase("") ? txtSnf.getInputText().trim() : "0")).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtRate.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getInputText() != null && !txtRate.getInputText().equalsIgnoreCase("") ? txtRate.getInputText().trim() : "0")).replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getInputText() != null && !txtAmount.getInputText().equalsIgnoreCase("") ? txtAmount.getInputText().trim() : "0")).replace(".", "") : "0")) + "\r\n";
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -453,7 +450,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                     return prompStr;
                 case 7:
                     String akashganga = "";
-                    akashganga = "$%" + String.format("%04d", Integer.parseInt(txtCode.getText().trim())) + "   " + (cboxMilkType.getValue().getName().charAt(0) + "").toUpperCase() + String.format("%05d", Integer.parseInt(txtQty.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtFat.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtFat.getText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtSnf.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getText().trim())).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtRate.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getText().trim())).replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getText().trim())).replace(".", "") : "0")) + "\\r";
+                    akashganga = "$%" + String.format("%04d", Integer.parseInt(txtCode.getInputText().trim())) + "   " + (cboxMilkType.getValue().getName().charAt(0) + "").toUpperCase() + String.format("%05d", Integer.parseInt(txtQty.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtQty.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtFat.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtFat.getInputText().trim())).replace(".", "") : "0")) + String.format("%04d", Integer.parseInt(txtSnf.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtSnf.getInputText().trim())).replace(".", "") : "0")) + String.format("%05d", Integer.parseInt(txtRate.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtRate.getInputText().trim())).replace(".", "") : "0")) + String.format("%06d", Integer.parseInt(txtAmount.getInputText() != null ? MainApp.DECIMAL_FORMAT_2_DIGIT.format(Double.parseDouble(txtAmount.getInputText().trim())).replace(".", "") : "0")) + "\\r";
                     return akashganga;
                 default:
                     break;
@@ -480,20 +477,20 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
         doubleDock = !MainApp.identityDto.getDock().getDockNo().substring(MainApp.identityDto.getSociety().getCode().length()).equals("01");
 
-        bindingFat1 = Bindings.createStringBinding(() -> txtFat1.getText(), txtFat1.textProperty());
+        bindingFat1 = Bindings.createStringBinding(() -> txtFat1.getInputText(), txtFat1.textProperty());
         bindingFat1.addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
             }
         });
-        bindingFat2 = Bindings.createStringBinding(() -> txtFat2.getText(), txtFat2.textProperty());
-        bindingFat3 = Bindings.createStringBinding(() -> txtFat3.getText(), txtFat3.textProperty());
-        bindingFat4 = Bindings.createStringBinding(() -> txtFat4.getText(), txtFat4.textProperty());
+        bindingFat2 = Bindings.createStringBinding(() -> txtFat2.getInputText(), txtFat2.textProperty());
+        bindingFat3 = Bindings.createStringBinding(() -> txtFat3.getInputText(), txtFat3.textProperty());
+        bindingFat4 = Bindings.createStringBinding(() -> txtFat4.getInputText(), txtFat4.textProperty());
 
-        bindingSnf1 = Bindings.createStringBinding(() -> txtSnf1.getText(), txtSnf1.textProperty());
-        bindingSnf2 = Bindings.createStringBinding(() -> txtSnf2.getText(), txtSnf2.textProperty());
-        bindingSnf3 = Bindings.createStringBinding(() -> txtSnf3.getText(), txtSnf3.textProperty());
-        bindingSnf4 = Bindings.createStringBinding(() -> txtSnf4.getText(), txtSnf4.textProperty());
+        bindingSnf1 = Bindings.createStringBinding(() -> txtSnf1.getInputText(), txtSnf1.textProperty());
+        bindingSnf2 = Bindings.createStringBinding(() -> txtSnf2.getInputText(), txtSnf2.textProperty());
+        bindingSnf3 = Bindings.createStringBinding(() -> txtSnf3.getInputText(), txtSnf3.textProperty());
+        bindingSnf4 = Bindings.createStringBinding(() -> txtSnf4.getInputText(), txtSnf4.textProperty());
 
         fatStringProp.addListener(new ChangeListener<String>() {
             @Override
@@ -587,12 +584,12 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         btnRejectedMilk.setDisable(true);
         btnRejectedMilk.setOnAction(e -> {
             isRejectedSaved = false;
-            String originalCode = txtCode.getText();
+            String originalCode = txtCode.getInputText();
             String originalName = txtName.getText();
             MilkType originalMilkType = cboxMilkType.getValue();
-            String originalQty = txtQty.getText();
-            String originalFat = txtFat.getText();
-            String originalSnf = txtSnf.getText();
+            String originalQty = txtQty.getInputText();
+            String originalFat = txtFat.getInputText();
+            String originalSnf = txtSnf.getInputText();
 
             RejectedMilkCollection rejectedMilk = new RejectedMilkCollection();
             rejectedMilk.setQty(CommonUtils.isNumeric(originalQty) ? new BigDecimal(originalQty.trim()) : BigDecimal.ZERO);
@@ -644,7 +641,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             if (!newVal) {
                 boolean milkTypeSetBySuffix = false;
                 if (MainApp.getProperty("code.milktype.parsing", "0").equalsIgnoreCase("1")) {
-                    String code = txtCode.getText();
+                    String code = txtCode.getInputText();
 //                    if (code != null && !code.isEmpty()) {
                     if (code != null && code.length() > 1) {
                         String lastDigit = code.substring(code.length() - 1);
@@ -677,14 +674,14 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
             }
         });
         cboxMilkType.setOnAction(e -> {
-            if (txtFat.getText() != null && txtSnf.getText() != null) {
+            if (txtFat.getInputText() != null && txtSnf.getInputText() != null) {
                 String status = String.valueOf((MainApp.getProperty("avg.param.capture", "0")));
                 if (status.equals("1")) {
                     setParams();
                 }
                 calculateAvgAndSet();
-                fetchRate(txtFat.getText(), txtSnf.getText(), cboxMilkType.getValue(), cboxMilkQuality.getValue());
-                calculateClr(txtFat.getText(), txtSnf.getText());
+                fetchRate(txtFat.getInputText(), txtSnf.getInputText(), cboxMilkType.getValue(), cboxMilkQuality.getValue());
+                calculateClr(txtFat.getInputText(), txtSnf.getInputText());
 
                 if (MainApp.displaySerial != null)
                     MainApp.displaySerial.displayQuantity(getStringForDisplay("ANIMAL"));
@@ -936,8 +933,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     }
 
     private void setParams() {
-        if (txtCode.getText().isEmpty()) return;
-        String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
+        if (txtCode.getInputText().isEmpty()) return;
+        String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getInputText());
         var task = new MemberAvgParametersLoadTask(code, MainApp.getProperty("avg.param.capture.shift.value", "5"), cboxMilkType.getValue().getName().equalsIgnoreCase("cow") ? "1" : "2", dpDate.getValue(), cboxShift.getValue().getCode());
         task.setOnSucceeded(e -> {
             try {
@@ -983,17 +980,22 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         tablePrevCollection.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         propCollection.bind(tableCollection.getSelectionModel().selectedItemProperty());
         propCollectionSummary.bind(tablePrevCollection.getSelectionModel().selectedItemProperty());
+
+        TableLocalizationUtil.localizeTable(tableCollection);
+        TableLocalizationUtil.localizeTable(tableSummary);
+        TableLocalizationUtil.localizeTable(tablePrevCollection);
+
     }
 
     private boolean isQtyVariationValid() {
         String variationProp = MainApp.getProperty("variation.qty", "20");
         double variationLimit = Double.parseDouble(variationProp);
         if (variationLimit > 0
-                && !lblAvgQty.getText().trim().isEmpty()
-                && Double.parseDouble(lblAvgQty.getText().trim()) > 0) {
+                && !lblAvgQty.getInputText().trim().isEmpty()
+                && Double.parseDouble(lblAvgQty.getInputText().trim()) > 0) {
 
-            double currentQty = Double.parseDouble(txtQty.getText().trim().isEmpty() ? "0" : txtQty.getText().trim());
-            double avgQty = Double.parseDouble(lblAvgQty.getText().trim());
+            double currentQty = Double.parseDouble(txtQty.getInputText().trim().isEmpty() ? "0" : txtQty.getInputText().trim());
+            double avgQty = Double.parseDouble(lblAvgQty.getInputText().trim());
             double variationPercentage = (currentQty * 100) / avgQty;
 
             return variationPercentage <= (100 + variationLimit);
@@ -1003,10 +1005,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private boolean isFatVariationValid() {
         double fatLimit = Double.parseDouble(MainApp.getProperty("variation.fat", "30"));
-        if (fatLimit > 0 && !lblAvgFat.getText().trim().isEmpty()) {
-            double avgFat = Double.parseDouble(lblAvgFat.getText().trim());
+        if (fatLimit > 0 && !lblAvgFat.getInputText().trim().isEmpty()) {
+            double avgFat = Double.parseDouble(lblAvgFat.getInputText().trim());
             if (avgFat > 0) {
-                double currentFat = Double.parseDouble(txtFat.getText().trim().isEmpty() ? "0" : txtFat.getText().trim());
+                double currentFat = Double.parseDouble(txtFat.getInputText().trim().isEmpty() ? "0" : txtFat.getInputText().trim());
                 return currentFat >= (avgFat - fatLimit) && currentFat <= (avgFat + fatLimit);
             }
         }
@@ -1015,10 +1017,10 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     private boolean isSnfVariationValid() {
         double snfLimit = Double.parseDouble(MainApp.getProperty("variation.snf", "30"));
-        if (snfLimit > 0 && !lblAvgSnf.getText().trim().isEmpty()) {
-            double avgSnf = Double.parseDouble(lblAvgSnf.getText().trim());
+        if (snfLimit > 0 && !lblAvgSnf.getInputText().trim().isEmpty()) {
+            double avgSnf = Double.parseDouble(lblAvgSnf.getInputText().trim());
             if (avgSnf > 0) {
-                double currentSnf = Double.parseDouble(txtSnf.getText().trim().isEmpty() ? "0" : txtSnf.getText().trim());
+                double currentSnf = Double.parseDouble(txtSnf.getInputText().trim().isEmpty() ? "0" : txtSnf.getInputText().trim());
                 return currentSnf >= (avgSnf - snfLimit) && currentSnf <= (avgSnf + snfLimit);
             }
         }
@@ -1104,7 +1106,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 //                    if (resp.isPresent() && resp.get() == ButtonType.YES) {
 //                        MainApp.isIncentive = true;
 //                        MainApp.incentiveValue = MainApp.timingList.get(0).getIncRate() <= 0 ? 1 : MainApp.timingList.get(0).getIncRate();
-//                        collection.setAmount(new BigDecimal(txtAmount.getText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(collection.getQty())));
+//                        collection.setAmount(new BigDecimal(txtAmount.getInputText()).add((BigDecimal.valueOf(MainApp.incentiveValue)).multiply(collection.getQty())));
 //                        collection.setxCol5(collection.getQty() + "#" + BigDecimal.valueOf(MainApp.incentiveValue).multiply(collection.getQty()));
 //                    }
 //
@@ -1461,17 +1463,17 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     private void setValuesInObjectUpdate() {
         collection = new MilkCollection();
         collection.setCollectionDate(collectionDate);
-        collection.setSampleNo(CommonUtils.strToInteger(txtSampleNo.getText()));
-        collection.setFat(new BigDecimal(txtFat.getText()));
-        collection.setSnf(new BigDecimal(txtSnf.getText()));
-        collection.setClr(new BigDecimal(txtClr.getText()));
-        collection.setWater(new BigDecimal(txtWater.getText()));
+        collection.setSampleNo(CommonUtils.strToInteger(txtSampleNo.getInputText()));
+        collection.setFat(new BigDecimal(txtFat.getInputText()));
+        collection.setSnf(new BigDecimal(txtSnf.getInputText()));
+        collection.setClr(new BigDecimal(txtClr.getInputText()));
+        collection.setWater(new BigDecimal(txtWater.getInputText()));
         collection.setDensity(new BigDecimal("0"));
         collection.setLectose(new BigDecimal("0"));
         collection.setProtein(new BigDecimal("0"));
-        collection.setQty(new BigDecimal(txtQty.getText()));
-        collection.setRtpl(new BigDecimal(txtRate.getText()));
-        collection.setAmount(new BigDecimal(txtAmount.getText()));
+        collection.setQty(new BigDecimal(txtQty.getInputText()));
+        collection.setRtpl(new BigDecimal(txtRate.getInputText()));
+        collection.setAmount(new BigDecimal(txtAmount.getInputText()));
         if (weightAuto) {
             collection.setWeightAuto(weightAuto);
             collection.setWeightAt(LocalDateTime.now());
@@ -1488,7 +1490,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
         collection.setUnionCode(MainApp.identityDto.getUnion().getCode());
         collection.setQtyMode(CommonUtils.strToInteger(MainApp.getProperty(AppConstant.Props.MEMBER_COLLECTION_QTY_MODE, "0")));
-        collection.setConvertedQty(CommonUtils.convertQty(AppConstant.CollectionType.MEMBER_COLL, txtQty.getText()));
+        collection.setConvertedQty(CommonUtils.convertQty(AppConstant.CollectionType.MEMBER_COLL, txtQty.getInputText()));
         collection.setConvertedQtyMode(collection.getQtyMode() == 0 ? 1 : 0);
         collection.setSocietyPaymentCycle(collectionPreReqDto.getPaymentCycle());
         collection.setMember(memberSocietyInfoDto.getMember());
@@ -1526,30 +1528,30 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         if (!isSnfVariationValid() && isSnfBlockEnabled) {
             errorMsg.append(resourceBundle.getString("milkcollection.error.snfvariation")).append("\n");
         }
-        if (txtSampleNo.getText() == null || txtSampleNo.getText().isEmpty())
+        if (txtSampleNo.getInputText() == null || txtSampleNo.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("sampleno.cannot.be.null") + "\n");
-        if (txtCode.getText() == null || txtCode.getText().isEmpty())
+        if (txtCode.getInputText() == null || txtCode.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("membercode.cannot.be.null") + "\n");
         if (memberSocietyInfoDto == null || memberSocietyInfoDto.getMember() == null) {
             errorMsg.append(resourceBundle.getString("members.not.available") + "\n");
         }
-        if (txtQty.getText() == null || txtQty.getText().isEmpty())
+        if (txtQty.getInputText() == null || txtQty.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("qty.cannot.be.null") + "\n");
-        if (txtFat.getText() == null || txtFat.getText().isEmpty())
+        if (txtFat.getInputText() == null || txtFat.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("fat.cannot.be.null") + "\n");
-        if (txtSnf.getText() == null || txtSnf.getText().isEmpty())
+        if (txtSnf.getInputText() == null || txtSnf.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("snf.cannot.be.null") + "\n");
-        if (txtRate.getText() == null || txtRate.getText().isEmpty())
+        if (txtRate.getInputText() == null || txtRate.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("rate.cannot.be.null") + "\n");
-        if (txtAmount.getText() == null || txtAmount.getText().isEmpty())
+        if (txtAmount.getInputText() == null || txtAmount.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("amount.cannot.be.null") + "\n");
-        if (!CommonUtils.isNumeric(txtFat.getText()) || Double.parseDouble(txtFat.getText()) <= 0)
+        if (!CommonUtils.isNumeric(txtFat.getInputText()) || Double.parseDouble(txtFat.getInputText()) <= 0)
             errorMsg.append(resourceBundle.getString("invalid.fat") + "\n");
-        if (!CommonUtils.isNumeric(txtQty.getText()) || Double.parseDouble(txtQty.getText()) <= 0)
+        if (!CommonUtils.isNumeric(txtQty.getInputText()) || Double.parseDouble(txtQty.getInputText()) <= 0)
             errorMsg.append(resourceBundle.getString("invalid.qty") + "\n");
-        if (!CommonUtils.isNumeric(txtRate.getText()) || Double.parseDouble(txtRate.getText()) <= 0)
+        if (!CommonUtils.isNumeric(txtRate.getInputText()) || Double.parseDouble(txtRate.getInputText()) <= 0)
             errorMsg.append(resourceBundle.getString("invalid.rate") + "\n");
-        if (!CommonUtils.isNumeric(txtAmount.getText()) || Double.parseDouble(txtAmount.getText()) <= 0)
+        if (!CommonUtils.isNumeric(txtAmount.getInputText()) || Double.parseDouble(txtAmount.getInputText()) <= 0)
             errorMsg.append(resourceBundle.getString("invalid.amount") + "\n");
 
         if ("0".equalsIgnoreCase(MainApp.getProperty(AppConstant.Props.ALLOW_MULTIENTRY_SAMEMILKTYPE, "0")) && memberSocietyInfoDto.getMemberCollection().stream().filter(p -> p.getMilkType().getCode() == cboxMilkType.getValue().getCode()).findAny().isPresent()) {
@@ -1564,8 +1566,8 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     //    private void fetchMemberSocietyDetails() {
     private void fetchMemberSocietyDetails(boolean milkTypeAlreadySet) {
-        if (txtCode.getText().isEmpty()) return;
-        String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getText());
+        if (txtCode.getInputText().isEmpty()) return;
+        String code = MainApp.identityDto.getSociety().getCode() + CommonUtils.getMemberShortCode(txtCode.getInputText());
         LOGGER.info("Fetch member info for {}", code);
 
         var task = new MemberSocietyInfoLoadTask(code, collectionDate);
@@ -2049,8 +2051,6 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
     @Override
     public void setupComboBox() {
         cboxMilkType.setOpenPopupOnFocus(false);
-        cboxMilkQuality.setConverter(new MilkQualityConvertor(cboxMilkQuality));
-        cboxShift.setConverter(new ShiftConvertor(cboxShift));
         dpDate.setConverter(new LocalDateConvertor());
         dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -2167,7 +2167,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getQty() {
-        return txtQty.getText() == null || txtQty.getText().isEmpty() ? "0" : txtQty.getText();
+        return txtQty.getInputText() == null || txtQty.getInputText().isEmpty() ? "0" : txtQty.getInputText();
     }
 
     @Override
@@ -2177,7 +2177,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getFat() {
-        return txtFat.getText() == null || txtFat.getText().isEmpty() ? "0" : txtFat.getText();
+        return txtFat.getInputText() == null || txtFat.getInputText().isEmpty() ? "0" : txtFat.getInputText();
     }
 
     @Override
@@ -2187,7 +2187,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getSnf() {
-        return txtSnf.getText() == null || txtSnf.getText().isEmpty() ? "0" : txtSnf.getText();
+        return txtSnf.getInputText() == null || txtSnf.getInputText().isEmpty() ? "0" : txtSnf.getInputText();
     }
 
     @Override
@@ -2201,7 +2201,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getWater() {
-        return txtWater.getText() == null || txtWater.getText().isEmpty() ? "0" : txtWater.getText();
+        return txtWater.getInputText() == null || txtWater.getInputText().isEmpty() ? "0" : txtWater.getInputText();
     }
 
     @Override
@@ -2211,7 +2211,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getClr() {
-        return txtClr.getText() == null || txtClr.getText().isEmpty() ? "0" : txtClr.getText();
+        return txtClr.getInputText() == null || txtClr.getInputText().isEmpty() ? "0" : txtClr.getInputText();
     }
 
     @Override
@@ -2231,7 +2231,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getSampleNo() {
-        return txtSampleNo.getText();
+        return txtSampleNo.getInputText();
     }
 
     @Override
@@ -2473,7 +2473,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getFat1() {
-        return txtFat1.getText() == null || txtFat1.getText().isEmpty() ? "0" : txtFat1.getText();
+        return txtFat1.getInputText() == null || txtFat1.getInputText().isEmpty() ? "0" : txtFat1.getInputText();
     }
 
     @Override
@@ -2483,7 +2483,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getSnf1() {
-        return txtSnf1.getText() == null || txtSnf1.getText().isEmpty() ? "0" : txtSnf1.getText();
+        return txtSnf1.getInputText() == null || txtSnf1.getInputText().isEmpty() ? "0" : txtSnf1.getInputText();
     }
 
     @Override
@@ -2503,7 +2503,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getFat2() {
-        return txtFat2.getText() == null || txtFat2.getText().isEmpty() ? "0" : txtFat2.getText();
+        return txtFat2.getInputText() == null || txtFat2.getInputText().isEmpty() ? "0" : txtFat2.getInputText();
     }
 
     @Override
@@ -2513,7 +2513,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getSnf2() {
-        return txtSnf2.getText() == null || txtSnf2.getText().isEmpty() ? "0" : txtSnf2.getText();
+        return txtSnf2.getInputText() == null || txtSnf2.getInputText().isEmpty() ? "0" : txtSnf2.getInputText();
     }
 
     @Override
@@ -2533,7 +2533,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getFat3() {
-        return txtFat3.getText() == null || txtFat3.getText().isEmpty() ? "0" : txtFat3.getText();
+        return txtFat3.getInputText() == null || txtFat3.getInputText().isEmpty() ? "0" : txtFat3.getInputText();
     }
 
     @Override
@@ -2543,7 +2543,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getSnf3() {
-        return txtSnf3.getText() == null || txtSnf3.getText().isEmpty() ? "0" : txtSnf3.getText();
+        return txtSnf3.getInputText() == null || txtSnf3.getInputText().isEmpty() ? "0" : txtSnf3.getInputText();
     }
 
     @Override
@@ -2563,7 +2563,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getFat4() {
-        return txtFat4.getText() == null || txtFat4.getText().isEmpty() ? "0" : txtFat4.getText();
+        return txtFat4.getInputText() == null || txtFat4.getInputText().isEmpty() ? "0" : txtFat4.getInputText();
     }
 
     @Override
@@ -2573,7 +2573,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
 
     @Override
     protected String getSnf4() {
-        return txtSnf4.getText() == null || txtSnf4.getText().isEmpty() ? "0" : txtSnf4.getText();
+        return txtSnf4.getInputText() == null || txtSnf4.getInputText().isEmpty() ? "0" : txtSnf4.getInputText();
     }
 
     @Override

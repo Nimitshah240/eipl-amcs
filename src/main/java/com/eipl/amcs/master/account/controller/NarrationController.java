@@ -9,6 +9,7 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.master.account.model.Narration;
 import com.eipl.amcs.master.account.task.NarrationDeleteTask;
 import com.eipl.amcs.master.account.task.NarrationLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -118,6 +119,7 @@ public class NarrationController implements MyInitialization, PopupCallback {
             colNarrationLocal.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarrationLocal()));
             colNarrationType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNarrationType().toString()));
             propNarrationDto.bind(tableNarration.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableNarration);
         } catch (Exception e) {
             System.out.println("Narration setuptable Exception");
             e.printStackTrace();

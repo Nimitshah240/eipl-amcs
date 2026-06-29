@@ -31,6 +31,7 @@ import com.eipl.amcs.operation.inventory.repository.ProductSaleInstallmentReposi
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.VoucherUtil;
 import com.udojava.evalex.Expression;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -45,6 +46,7 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class MemberBillServiceImpl implements MemberBillService {
 
@@ -158,8 +160,10 @@ public class MemberBillServiceImpl implements MemberBillService {
         List<Map<String, Object>> spResult = transactionRepository.findBillTransaction(paymentCycle.getCode(),
                 paymentCycle.getCode(), paymentCycle.getFromDate(), paymentCycle.getToDate(), 1, societyCode, "SYS", deductionFromDate, deductionToDate);
 
-        if (spResult == null || spResult.isEmpty())
+        if (spResult == null || spResult.isEmpty()) {
+            log.info("No Bill Data Found.");
             return null;
+        }
 
         List<Member> memberList = memberRepository.findAll();
         List<MemberDetail> memberDetailList = memberDetailRepository.findAll();

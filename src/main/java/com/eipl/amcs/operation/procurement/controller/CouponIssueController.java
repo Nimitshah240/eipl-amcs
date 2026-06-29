@@ -12,6 +12,7 @@ import com.eipl.amcs.operation.procurement.model.CouponIssue;
 import com.eipl.amcs.operation.procurement.task.CouponIssueDeleteTask;
 import com.eipl.amcs.operation.procurement.task.CouponIssueLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,7 +33,7 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
 
     private ObservableList<CouponIssue> listCouponIssue;
     @FXML
-    private Button btnCancel, btnAddSave, btnEditUpdate, btnDelete,btnView;
+    private Button btnCancel, btnAddSave, btnEditUpdate, btnDelete, btnView;
     @FXML
     private TableView<CouponIssue> tableIssueCoupon;
     @FXML
@@ -77,14 +78,41 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
         });
         btnEditUpdate.setOnAction(e -> {
             CouponIssue dto = propertyCouponIssue.get();
-            if (dto != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this, resourceBundle.getString("couponissue"));
+            editCoupon(dto);
         });
 
         btnDelete.setOnAction(e -> {
             deleteData();
         });
         FocusUtils.requestFocus(btnAddSave);
+
+
+        tableIssueCoupon.setRowFactory(tv -> {
+            TableRow<CouponIssue> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    CouponIssue data = row.getItem();
+                    editCoupon(data);
+                }
+            });
+            return row;
+        });
+
+        tableIssueCoupon.setOnKeyPressed(event -> {
+            CouponIssue dto = tableIssueCoupon.getSelectionModel().getSelectedItem();
+            if (dto == null)
+                return;
+            switch (event.getCode()) {
+                case DELETE:
+                    dto = propertyCouponIssue.get();
+                    if (dto != null)
+                        deleteData();
+                    break;
+                case ENTER:
+                    editCoupon(dto);
+                    break;
+            }
+        });
     }
 
 
@@ -110,10 +138,17 @@ public class CouponIssueController implements MyInitialization, PopupCallback {
             colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getConsumerName()));
             tableIssueCoupon.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             propertyCouponIssue.bind(tableIssueCoupon.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableIssueCoupon);
+
         } catch (Exception e) {
             System.out.println("LocalMilkSake setuptable Exception");
             e.printStackTrace();
         }
+    }
+
+    private void editCoupon(CouponIssue dto) {
+        if (dto != null)
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "CouponIssueAddEdit", dto, this, resourceBundle.getString("couponissue"));
     }
 
 

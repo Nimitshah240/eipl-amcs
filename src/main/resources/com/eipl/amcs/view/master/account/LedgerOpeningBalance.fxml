@@ -14,13 +14,13 @@
             <children>
                 <HBox alignment="CENTER_LEFT" focusTraversable="true">
                     <children>
-                        <Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
+                        <E_Label maxHeight="35.0" maxWidth="1.7976931348623157E308" minHeight="35.0" prefHeight="35.0"
                                styleClass="header-text" text="%ledgeropeningbalance">
                             <HBox.margin>
                                 <Insets left="5.0"/>
                             </HBox.margin>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308"
+                        </E_Label>
+                        <E_Label layoutX="10.0" layoutY="10.0" maxHeight="35.0" maxWidth="1.7976931348623157E308"
                                minHeight="35.0" prefHeight="35.0" HBox.hgrow="ALWAYS"/>
                         <HBox alignment="CENTER_RIGHT" spacing="5.0"/>
                     </children>
@@ -37,10 +37,10 @@
                         <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER"/>
                     </rowConstraints>
                     <children>
-                        <Label text="%ledger" GridPane.columnIndex="1"/>
-                        <Label text="%financialyear"/>
-                        <Label text="%type" GridPane.columnIndex="2"/>
-                        <Label text="%balance" GridPane.columnIndex="3"/>
+                        <E_Label text="%ledger" GridPane.columnIndex="1"/>
+                        <E_Label text="%financialyear"/>
+                        <E_Label text="%type" GridPane.columnIndex="2"/>
+                        <E_Label text="%balance" GridPane.columnIndex="3"/>
                         <AutoSearchTextField fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308"
                                              GridPane.rowIndex="1"/>
                         <AutoSearchTextField fx:id="cboxLedger" editable="true" maxWidth="1.7976931348623157E308"
@@ -92,7 +92,7 @@
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
                         <E_Button fx:id="btnImport" contentDisplay="TOP" minWidth="75.0" mnemonicParsing="true"
                                   text="%import">
                             <graphic>

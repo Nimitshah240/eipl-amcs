@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.NarrationAddEditController">
     <children>
         <VBox fx:id="vbox" focusTraversable="true" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="500.0" spacing="5.0">
@@ -37,7 +38,7 @@
                     <children>
                         <Label text="%narrationtype" GridPane.rowIndex="4" />
                         <Label text="%narrationname" />
-                        <E_ComboBox fx:id="cboxNarrationType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
+                        <AutoSearchTextField fx:id="cboxNarrationType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5" />
                         <E_TextField fx:id="txtNarrationName" GridPane.columnSpan="3" GridPane.rowIndex="1" />
                         <Label text="%narrationlocal" GridPane.rowIndex="2" />
                         <E_TextFieldLocal fx:id="txtNarrationNameLocal" GridPane.columnSpan="3" GridPane.rowIndex="3" />

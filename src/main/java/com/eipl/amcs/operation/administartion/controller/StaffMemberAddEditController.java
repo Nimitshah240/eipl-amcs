@@ -3,10 +3,7 @@ package com.eipl.amcs.operation.administartion.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.AutoSearchTextField;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_TextField;
-import com.eipl.amcs.controls.E_TextFieldLocal;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -30,8 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -64,7 +59,10 @@ public class StaffMemberAddEditController implements MyInitialization {
 
 
     @FXML
-    private E_TextField txtCode, txtNomineeName, txtRelation, txtGuarantorName, txtGuarantorMobileNo, txtPfLoanAmount, txtPfAmount, txtMobileNo, txtBloodGroup, txtName, txtQualification, txtSalary, txtFarmerCode, txtAddress, txtIfsc, txtAcNo;
+    private E_TextField txtNomineeName, txtRelation, txtGuarantorName, txtBloodGroup, txtName, txtQualification, txtAddress, txtIfsc;
+
+    @FXML
+    private E_NumericField txtCode, txtGuarantorMobileNo, txtPfLoanAmount, txtPfAmount, txtMobileNo, txtSalary, txtFarmerCode, txtAcNo;
     @FXML
     private E_TextFieldLocal txtNameLocal;
     @FXML
@@ -236,22 +234,22 @@ public class StaffMemberAddEditController implements MyInitialization {
 
     private void setValuesInObject() {
         dto = new StaffMember();
-        dto.setCode(txtCode.getText());
+        dto.setCode(txtCode.getInputText());
         dto.setSociety(MainApp.identityDto.getSociety());
-        dto.setMobileNo(txtMobileNo.getText());
+        dto.setMobileNo(txtMobileNo.getInputText());
         dto.setName(txtName.getText());
         dto.setNameLocal(txtNameLocal.getText());
         dto.setBloodGroup(txtBloodGroup.getText());
-        dto.setSalary(txtSalary.getText());
+        dto.setSalary(txtSalary.getInputText());
         dto.setAddress(txtAddress.getText());
-        dto.setMemberCode(txtFarmerCode.getText());
+        dto.setMemberCode(txtFarmerCode.getInputText());
         dto.setQualification(txtQualification.getText());
         dto.setDesignation(cboxDesignation.getValue());
         dto.setPaymentMode((rbtnBank.isSelected() ? 1 : 0));
         dto.setGender(cboxGender.getValue());
         dto.setBank(cboxBank.getValue());
         dto.setBranch(cboxBranch.getValue());
-        dto.setBankAccountNo(txtAcNo.getText());
+        dto.setBankAccountNo(txtAcNo.getInputText());
         dto.setIfsc(txtIfsc.getText());
         dto.setBirthDate(dpBirthDate.getValue());
         dto.setApprovedDate(dpApprovedDate.getValue());
@@ -265,16 +263,16 @@ public class StaffMemberAddEditController implements MyInitialization {
         dto.setNomineeName(txtNomineeName.getText());
         dto.setNomineeRelation(txtRelation.getText());
         dto.setGuarantorName(txtGuarantorName.getText());
-        dto.setGuarantorMobile(txtGuarantorMobileNo.getText());
-        dto.setPfLoanAmount(txtPfLoanAmount.getText().trim().isBlank() ? BigDecimal.ZERO : new BigDecimal(txtPfLoanAmount.getText()));
-        dto.setPfAmount(txtPfAmount.getText().trim().isBlank() ? BigDecimal.ZERO : new BigDecimal(txtPfAmount.getText()));
+        dto.setGuarantorMobile(txtGuarantorMobileNo.getInputText());
+        dto.setPfLoanAmount(txtPfLoanAmount.getInputText().trim().isBlank() ? BigDecimal.ZERO : new BigDecimal(txtPfLoanAmount.getInputText()));
+        dto.setPfAmount(txtPfAmount.getInputText().trim().isBlank() ? BigDecimal.ZERO : new BigDecimal(txtPfAmount.getInputText()));
 
     }
 
     private boolean validate() {
         errorMsg = new StringBuilder();
 
-        if (txtCode.getText() == null || txtCode.getText().isEmpty())
+        if (txtCode.getInputText() == null || txtCode.getInputText().isEmpty())
             errorMsg.append(resourceBundle.getString("codenullerror") + "\n");
 
         if (txtName.getText().trim() == null || txtName.getText().trim().isEmpty())
@@ -291,7 +289,7 @@ public class StaffMemberAddEditController implements MyInitialization {
                 errorMsg.append(resourceBundle.getString("banknullerror") + "\n");
 //            if (cboxBranch.getValue() == null)
 //                errorMsg.append(resourceBundle.getString("branchnullerror") + "\n");
-            if (txtAcNo.getText() == null || txtAcNo.getText().trim().isEmpty())
+            if (txtAcNo.getInputText() == null || txtAcNo.getInputText().trim().isEmpty())
                 errorMsg.append(resourceBundle.getString("acnonullerror") + "\n");
             if (txtIfsc.getText() == null || txtIfsc.getText().trim().isEmpty())
                 errorMsg.append(resourceBundle.getString("ifscnonullerror") + "\n");

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.eipl.amcs.controls.E_PasswordField?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -42,8 +43,8 @@
                                         <Label text="%password" GridPane.rowIndex="2" />
                                         <Label text="%financialyear" GridPane.rowIndex="3" />
                                         <Label text="%language" GridPane.rowIndex="4" />
-                                        <ComboBox fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                        <ComboBox fx:id="cboxLang" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                        <AutoSearchTextField fx:id="cboxFinancialYear" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        <AutoSearchTextField fx:id="cboxLang" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                     </children>
                                 </GridPane>
                             </children>

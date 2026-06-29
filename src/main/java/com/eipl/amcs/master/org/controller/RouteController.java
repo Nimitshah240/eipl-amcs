@@ -9,6 +9,7 @@ import com.eipl.amcs.master.org.model.Bmc;
 import com.eipl.amcs.master.org.model.Route;
 import com.eipl.amcs.master.org.task.RouteLoadTask;
 import com.eipl.amcs.master.org.task.RouteSaveTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -71,7 +72,7 @@ public class RouteController implements MyInitialization {
             colCodeEx.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCodeEx()));
             colBmc.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBmc()));
             colRefCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRefCode()));
-            colRefCode.setCellFactory(TextFieldTableCell.forTableColumn());
+            TableLocalizationUtil.localizeTable(tableRoute);
             colRefCode.setOnEditCommit(e -> {
                 Route r = e.getRowValue();
                 if (e.getNewValue() != null) {

@@ -4,17 +4,18 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.cellfactory.LocalDateCellFactory;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleDeleteTask;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadByDateTask;
 import com.eipl.amcs.master.procurement.task.SocietyPaymentCycleLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -53,7 +54,7 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
     @FXML
     E_Button btnSearch;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     private ResourceBundle resourceBundle;
 
     public SocietyPaymentCycleController() {
@@ -72,15 +73,11 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
 
         loadData();
         setupTable();
-//        dpFromDate.setValue(LocalDate.now());
-        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-//        dpToDate.setValue(LocalDate.now());
-        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -93,12 +90,12 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
                 throw new UnAuthorizedAccessException();
             SocietyPaymentCycle paymentCycle = propPaymentCycle.get();
             if (paymentCycle != null)
-                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleEdit", paymentCycle, this);
+                MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleEdit", paymentCycle, this, resourceBundle.getString("societypaymentcycle"));
         });
         btnGenerate.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_SOCIETY_PAYMENT_CYCLE_GENERATE"))
                 throw new UnAuthorizedAccessException();
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleGenerate", null, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "SocietyPaymentCycleGenerate", null, this, resourceBundle.getString("societypaymentcycle"));
         });
         btnDelete.setOnAction(e -> {
             if (!MainApp.user.getPermissions().contains("ACTION_SOCIETY_PAYMENT_CYCLE_DELETE"))
@@ -125,13 +122,12 @@ public class SocietyPaymentCycleController implements MyInitialization, PopupCal
             colFromShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromShift()));
             colToShift.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToShift()));
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate().toLocalDate()));
-            colFromDate.setCellFactory(new LocalDateCellFactory<>());
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate().toLocalDate()));
-            colToDate.setCellFactory(new LocalDateCellFactory<>());
-            colIsBilling.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? "YES" : "No"));
-            colLockBillingProcess.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLockBillingProcess() ? "YES" : "No"));
+            colIsBilling.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getBilling() ? resourceBundle.getString("yes") :resourceBundle.getString("no")));
+            colLockBillingProcess.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getLockBillingProcess() ? resourceBundle.getString("yes") :resourceBundle.getString("no")));
 
             propPaymentCycle.bind(tableSocietyPaymentCycles.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableSocietyPaymentCycles);
         } catch (Exception e) {
             System.out.println("SocietyPaymentCycle setuptable Exception");
             e.printStackTrace();

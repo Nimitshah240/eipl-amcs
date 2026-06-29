@@ -8,6 +8,7 @@ import com.eipl.amcs.master.account.dto.VoucherDto;
 import com.eipl.amcs.master.account.model.Voucher;
 import com.eipl.amcs.master.account.task.VoucherDeleteTask;
 import com.eipl.amcs.master.account.task.VoucherLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,7 +33,7 @@ public class VoucherController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<VoucherDto, String> colType, colVoucherDate, colVoucherNo, colRefNo, colRemarks;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnLedger, btnDayBook;
+    Button btnClose, btnDelete, btnLedger, btnDayBook;// btnAdd;
     private ResourceBundle resourceBundle;
 
     public VoucherController() {
@@ -53,11 +54,11 @@ public class VoucherController implements MyInitialization, PopupCallback {
         });
         setupTable();
         loadData();
-        btnAdd.setOnAction(e -> {
-            VoucherAddEditController controller = (VoucherAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherAddEdit.fxml"));
-            controller.setVoucher(null);
-            MainApp.getContentPane().setCenter(controller.getRoot());
-        });
+//        btnAdd.setOnAction(e -> {
+//            VoucherAddEditController controller = (VoucherAddEditController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/master/account/VoucherAddEdit.fxml"));
+//            controller.setVoucher(null);
+//            MainApp.getContentPane().setCenter(controller.getRoot());
+//        });
         btnClose.setOnAction(e -> {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
@@ -152,6 +153,8 @@ public class VoucherController implements MyInitialization, PopupCallback {
         colRefNo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getBillNo()));
         colRemarks.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getVoucher().getRemarks()));
         propVoucherDto.bind(tableVoucher.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableVoucher);
+
     }
 
     @Override

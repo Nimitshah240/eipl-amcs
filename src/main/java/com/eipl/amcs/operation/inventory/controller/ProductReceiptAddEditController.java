@@ -3,14 +3,10 @@ package com.eipl.amcs.operation.inventory.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
-import com.eipl.amcs.controls.AutoSearchTextField;
-import com.eipl.amcs.controls.E_Button;
-import com.eipl.amcs.controls.E_DatePicker;
-import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.controls.*;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
@@ -37,6 +33,7 @@ import com.eipl.amcs.operation.inventory.task.ProductReceiptSaveTask;
 import com.eipl.amcs.operation.inventory.task.ProductReceiptTransactionsByGrnNoLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -68,7 +65,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     @FXML
     private E_DatePicker dpChallanDate;
     @FXML
-    private E_TextField txtTotalTax, txtAmount, txtBillNo, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtGrnNo, txtChallanNo, txtDescription, txtDiscount, txtNetAmount, txtSaleRate;
+    private E_TextField txtBillNo, txtGrnNo, txtChallanNo, txtDescription;
+    @FXML
+    private E_NumericField txtTotalTax, txtAmount, txtProductTotalAmount, txtTaxAmount, txtTotalAmount, txtRate, txtQuantity, txtDiscount, txtNetAmount, txtSaleRate;
     @FXML
     private AutoSearchTextField<Vendor> cboxParty;
     @FXML
@@ -302,6 +301,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             colTax.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTaxAmount()));
             colProductSale.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getSaleRate()));
             propReceiptTxn.bind(tableProductReceiptTransaction.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableProductReceiptTransaction);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -325,9 +325,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
                     resourceBundle.getString("add.product"));
             alert.createAlert();
         } else {
-            productReceipt.setAmount(new BigDecimal(txtTotalAmount.getText()));
-            productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getText()));
-            productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getText()));
+            productReceipt.setAmount(new BigDecimal(txtTotalAmount.getInputText()));
+            productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getInputText()));
+            productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getInputText()));
             productReceipt.setDiscount(BigDecimal.ZERO);
 
             ProductReceiptDto productReceiptDto = new ProductReceiptDto();
@@ -376,9 +376,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
 
     @Override
     public void updateData() {
-        productReceipt.setAmount(new BigDecimal(txtTotalAmount.getText()));
-        productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getText()));
-        productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getText()));
+        productReceipt.setAmount(new BigDecimal(txtTotalAmount.getInputText()));
+        productReceipt.setTaxAmount(new BigDecimal(txtTotalTax.getInputText()));
+        productReceipt.setNetAmount(new BigDecimal(txtNetAmount.getInputText()));
         productReceipt.setDiscount(BigDecimal.ZERO);
 
         ProductReceiptDto productReceiptDto = new ProductReceiptDto();
@@ -420,9 +420,14 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
             }
         });
         task.setOnFailed(e -> {
-            MyAlert alert = new ErrorAlert(MainApp.getStage(), CommonUtils.getResourceString(resourceBundle, "product.receipt"),
-                    resourceBundle.getString("product.receipt.insert.failed"));
-            alert.createAlert();
+            Throwable t = task.getException();
+            String errorMessage = "error.occurred";
+            if (t.getMessage().contains("StockIsLessThanZero")) {
+                errorMessage = "stock.going.to.zero";
+            }
+            MyAlert alert1 = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("member"),
+                    resourceBundle.getString(errorMessage));
+            alert1.createAlert();
         });
         new Thread(task).start();
     }
@@ -450,17 +455,17 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     public void deleteData() {
-            ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
-            for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
-                if (receiptTxnTaxDto.getTransaction() == r) {
-                    removeReceiptTxnTaxDto = receiptTxnTaxDto;
-                    break;
-                }
+        ReceiptTxnTaxDto removeReceiptTxnTaxDto = null;
+        for (ReceiptTxnTaxDto receiptTxnTaxDto : receiptTxnTaxDtoList) {
+            if (receiptTxnTaxDto.getTransaction() == r) {
+                removeReceiptTxnTaxDto = receiptTxnTaxDto;
+                break;
             }
-            receiptTxnTaxDtoList.remove(removeReceiptTxnTaxDto);
-            listProductReceiptTransaction.remove(propReceiptTxn.get());
-            tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
-            calculateSummary();
+        }
+        receiptTxnTaxDtoList.remove(removeReceiptTxnTaxDto);
+        listProductReceiptTransaction.remove(propReceiptTxn.get());
+        tableProductReceiptTransaction.setItems(listProductReceiptTransaction);
+        calculateSummary();
     }
 
     private boolean validate() {
@@ -601,23 +606,23 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     private boolean validateProduct() {
         if (cboxProduct.getValue() == null)
             errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.product.empty") + "\n");
-        if (txtRate.getText() == null || txtRate.getText().isEmpty() || !CommonUtils.isNumeric(txtRate.getText()))
+        if (txtRate.getInputText() == null || txtRate.getInputText().isEmpty() || !CommonUtils.isNumeric(txtRate.getInputText()))
             errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.rate.empty") + "\n");
         else {
-            BigDecimal rate = new BigDecimal(txtRate.getText());
+            BigDecimal rate = new BigDecimal(txtRate.getInputText());
             if (rate.doubleValue() <= 0)
                 errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.rate.empty") + "\n");
         }
-        if (txtQuantity.getText() == null || txtQuantity.getText().isEmpty() || !CommonUtils.isNumeric(txtQuantity.getText()))
+        if (txtQuantity.getInputText() == null || txtQuantity.getInputText().isEmpty() || !CommonUtils.isNumeric(txtQuantity.getInputText()))
             errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
         else {
-            BigDecimal qty = new BigDecimal(txtQuantity.getText());
+            BigDecimal qty = new BigDecimal(txtQuantity.getInputText());
             if (qty.doubleValue() <= 0)
                 errorMsg.append(CommonUtils.getResourceString(resourceBundle, "productsale.transaction.validation.quantity.empty") + "\n");
         }
         if (txtSaleRate.isVisible()) {
-            BigDecimal salerate = new BigDecimal(txtSaleRate.getText());
-            BigDecimal purchaserate = new BigDecimal(txtRate.getText());
+            BigDecimal salerate = new BigDecimal(txtSaleRate.getInputText());
+            BigDecimal purchaserate = new BigDecimal(txtRate.getInputText());
 
             if (salerate.compareTo(BigDecimal.ZERO) <= 0 || salerate.compareTo(purchaserate) < 0) {
                 errorMsg.append(CommonUtils.getResourceString(resourceBundle, "entervalidsalerate") + "\n");
@@ -646,13 +651,13 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         ProductReceiptTransaction txn = new ProductReceiptTransaction();
         txn.setProduct(cboxProduct.getValue());
         txn.setUnit(txn.getProduct().getPrimaryUom());
-        txn.setRate(new BigDecimal(txtRate.getText()));
-        txn.setSaleRate(new BigDecimal(txtSaleRate.getText()));
-        txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getText()))));
-        txn.setAmount(new BigDecimal(txtAmount.getText()));
+        txn.setRate(new BigDecimal(txtRate.getInputText()));
+        txn.setSaleRate(new BigDecimal(txtSaleRate.getInputText()));
+        txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getInputText()))));
+        txn.setAmount(new BigDecimal(txtAmount.getInputText()));
         txn.setTax(cboxTax.getValue());
-        txn.setTaxAmount(new BigDecimal(txtTaxAmount.getText()));
-        txn.setNetAmount(new BigDecimal(txtProductTotalAmount.getText()));
+        txn.setTaxAmount(new BigDecimal(txtTaxAmount.getInputText()));
+        txn.setNetAmount(new BigDecimal(txtProductTotalAmount.getInputText()));
         txn.setUnionCode(MainApp.identityDto.getUnion().getCode());
         txn.setSocietyCode(MainApp.identityDto.getSociety().getCode());
         txn.setDiscount(BigDecimal.ZERO);
@@ -660,10 +665,10 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     private void calculateTaxAmount() {
-        if (!txtAmount.getText().isEmpty()) {
+        if (!txtAmount.getInputText().isEmpty()) {
             taxBifurcation = null;
             BigDecimal discount = BigDecimal.ZERO;
-            BigDecimal taxableAmt = new BigDecimal(txtAmount.getText()).subtract(discount).setScale(SCALE, RATE_ROUND);
+            BigDecimal taxableAmt = new BigDecimal(txtAmount.getInputText()).subtract(discount).setScale(SCALE, RATE_ROUND);
 
             BigDecimal taxAmount = BigDecimal.ZERO;
             if (!(cboxTax.getValue() == null) && !cboxTax.getValue().getName().equalsIgnoreCase("NIL")) {
@@ -682,9 +687,9 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
     }
 
     private void calculateAmount() {
-        if (!txtQuantity.getText().isEmpty() && !txtRate.getText().isEmpty()) {
-            BigDecimal qty = new BigDecimal(txtQuantity.getText());
-            BigDecimal rate = new BigDecimal(txtRate.getText());
+        if (!txtQuantity.getInputText().isEmpty() && !txtRate.getInputText().isEmpty()) {
+            BigDecimal qty = new BigDecimal(txtQuantity.getInputText());
+            BigDecimal rate = new BigDecimal(txtRate.getInputText());
             BigDecimal amt = qty.multiply(rate).setScale(0, RoundingMode.HALF_DOWN);
             txtAmount.setText(amt.toString());
             if (cboxTax.getSelectionModel().getSelectedItem() != null) {

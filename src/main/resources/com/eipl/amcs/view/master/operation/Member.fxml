@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.eipl.amcs.master.operation.controller.MemberController">
@@ -20,9 +21,9 @@
             <children>
                 <HBox alignment="TOP_RIGHT">
                     <children>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                               styleClass="header-text" text="%member" HBox.hgrow="ALWAYS"/>
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" "
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                                 styleClass="header-text" text="%member" HBox.hgrow="ALWAYS"/>
+                        <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text=" "
                                HBox.hgrow="ALWAYS"/>
                         <E_TextField fx:id="txtCode" maxHeight="1.7976931348623157E308"
                                      maxWidth="1.7976931348623157E308">
@@ -106,7 +107,7 @@
                                 </ImageView>
                             </graphic>
                         </Button>
-                        <Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER"
+                        <E_Label fx:id="lblStatus" alignment="CENTER" contentDisplay="CENTER"
                                maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                                HBox.hgrow="ALWAYS"/>
                         <Button fx:id="btnImport" contentDisplay="TOP" maxHeight="1.7976931348623157E308"

@@ -3,6 +3,7 @@ package com.eipl.amcs.master.account.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -15,6 +16,7 @@ import com.eipl.amcs.master.account.task.LedgerDeleteTask;
 import com.eipl.amcs.master.account.task.LedgerGroupLoadTask;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,7 +51,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<Ledger, LedgerGroup> colLedgerGroup;
     @FXML
-    ComboBox<LedgerGroup> cboxLedgerGroup;
+    AutoSearchTextField<LedgerGroup> cboxLedgerGroup;
     @FXML
     TextField txtSearch;
     @FXML
@@ -271,6 +273,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
         colName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getName()));
         colLocalName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNameLocal()));
         colLedgerGroup.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getLedgerGroup()));
+        TableLocalizationUtil.localizeTable(tableLedger);
 
         propLedger.bind(tableLedger.getSelectionModel().selectedItemProperty());
     }
@@ -292,7 +295,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
     }
 
     public void loadLedgerGroups() {
-        cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
+//        cboxLedgerGroup.setConverter(new LedgerGroupConvertor(cboxLedgerGroup));
         LedgerGroupLoadTask task = new LedgerGroupLoadTask();
         task.setOnSucceeded(e -> {
             try {

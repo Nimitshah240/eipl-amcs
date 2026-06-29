@@ -4,102 +4,117 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import com.eipl.amcs.controls.E_Label?>
 
-<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" style="-fx-background-color: #ebebeb; -fx-border-color: black;" styleClass="pane-navigation" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.base.controller.FooterBarController">
+
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="40.0"
+            prefHeight="40.0" style="-fx-background-color: #ebebeb; -fx-border-color: black;"
+            styleClass="pane-navigation" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.eipl.amcs.base.controller.FooterBarController">
     <children>
-        <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">            <children>
-                <Label HBox.hgrow="ALWAYS" />
-            <Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="%username">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblUserName" maxHeight="1.7976931348623157E308" text="%username">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblFinancialYear" maxHeight="1.7976931348623157E308" text="%financialyear">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" HBox.hgrow="ALWAYS">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lbltiming" maxHeight="1.7976931348623157E308" styleClass="header-text" text="%timing">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblVersion" alignment="CENTER" contentDisplay="BOTTOM" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="VR: 4.4" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblIp" alignment="CENTER" contentDisplay="BOTTOM" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%localhost" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblNetConnection" alignment="CENTER" contentDisplay="BOTTOM" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%internet" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
+        <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0"
+              style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <E_Label HBox.hgrow="ALWAYS"/>
+                <E_Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="%username">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label fx:id="lblUserName" maxHeight="1.7976931348623157E308" text="%username">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label fx:id="lblFinancialYear" maxHeight="1.7976931348623157E308" text="%financialyear">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text"
+                         HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label fx:id="lbltiming" maxHeight="1.7976931348623157E308" styleClass="header-text" text="%timing">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label fx:id="lblVersion" alignment="CENTER" contentDisplay="BOTTOM"
+                         maxHeight="1.7976931348623157E308"
+                         maxWidth="1.7976931348623157E308" text="VR: 4.4" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="16.0"/>
+                    </font>
+                </E_Label>
+                <E_Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label fx:id="lblIp" alignment="CENTER" contentDisplay="BOTTOM" maxHeight="1.7976931348623157E308"
+                         maxWidth="1.7976931348623157E308" styleClass="header-text" text="%localhost"
+                         textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="16.0"/>
+                    </font>
+                </E_Label>
+                <E_Label maxHeight="1.7976931348623157E308" styleClass="header-text" text="|">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </E_Label>
+                <E_Label fx:id="lblNetConnection" alignment="CENTER" contentDisplay="BOTTOM"
+                         maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%internet"
+                         textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold" size="16.0"/>
+                    </font>
+                </E_Label>
             </children>
         </HBox>
     </children>
-   <padding>
-      <Insets bottom="5.0" />
-   </padding>
+    <padding>
+        <Insets bottom="5.0"/>
+    </padding>
 </AnchorPane>

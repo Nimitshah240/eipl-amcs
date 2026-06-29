@@ -2,6 +2,7 @@
 
 <?import com.eipl.amcs.controls.E_Button?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <?import com.eipl.amcs.controls.E_TextField?>
 <?import com.eipl.amcs.controls.AutoSearchTextField?>
 <?import javafx.geometry.Insets?>
@@ -64,11 +65,11 @@
                                              GridPane.rowIndex="6"/>
                         <AutoSearchTextField fx:id="cboxTax" editable="true" maxWidth="1.7976931348623157E308"
                                              GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                        <E_TextField fx:id="txtQuantity" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
-                        <E_TextField fx:id="txtRate" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3"
+                        <E_NumericField fx:id="txtQuantity" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                        <E_NumericField fx:id="txtRate" maxWidth="1.7976931348623157E308" text="0" GridPane.columnIndex="3"
                                      GridPane.rowIndex="6"/>
-                        <E_TextField fx:id="txtAmount" disable="true" GridPane.rowIndex="8"/>
-                        <E_TextField fx:id="txtSaleRate" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
+                        <E_NumericField fx:id="txtAmount" disable="true" GridPane.rowIndex="8"/>
+                        <E_NumericField fx:id="txtSaleRate" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%productname"
                                GridPane.rowIndex="5"/>
 
@@ -114,9 +115,9 @@
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%rate"
                                GridPane.columnIndex="3" GridPane.rowIndex="5"/>
                         <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="4"/>
-                        <E_TextField fx:id="txtTaxAmount" disable="true" visible="false" GridPane.columnIndex="1"
+                        <E_NumericField fx:id="txtTaxAmount" disable="true" visible="false" GridPane.columnIndex="1"
                                      GridPane.rowIndex="8"/>
-                        <E_TextField fx:id="txtProductTotalAmount" disable="true" GridPane.columnIndex="1"
+                        <E_NumericField fx:id="txtProductTotalAmount" disable="true" GridPane.columnIndex="1"
                                      GridPane.rowIndex="8"/>
                         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="%totalamount"
                                GridPane.columnIndex="1" GridPane.rowIndex="7"/>
@@ -190,16 +191,16 @@
                                 <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308"
                                        maxWidth="1.7976931348623157E308" text="%netamount" GridPane.halignment="RIGHT"
                                        GridPane.rowIndex="2"/>
-                                <E_TextField fx:id="txtNetAmount" disable="true" GridPane.columnIndex="1"
+                                <E_NumericField fx:id="txtNetAmount" disable="true" GridPane.columnIndex="1"
                                              GridPane.rowIndex="2"/>
                                 <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308"
                                        maxWidth="1.7976931348623157E308" text="%tax" GridPane.halignment="RIGHT"
                                        GridPane.rowIndex="1"/>
-                                <E_TextField fx:id="txtTotalTax" disable="true" GridPane.columnIndex="1"
+                                <E_NumericField fx:id="txtTotalTax" disable="true" GridPane.columnIndex="1"
                                              GridPane.rowIndex="1"/>
                                 <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308"
                                        maxWidth="1.7976931348623157E308" text="%amount" GridPane.halignment="RIGHT"/>
-                                <E_TextField fx:id="txtTotalAmount" disable="true" GridPane.columnIndex="1"/>
+                                <E_NumericField fx:id="txtTotalAmount" disable="true" GridPane.columnIndex="1"/>
                             </children>
                         </GridPane>
                     </children>

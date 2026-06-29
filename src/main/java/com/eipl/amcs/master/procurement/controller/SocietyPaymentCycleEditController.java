@@ -3,6 +3,8 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -36,9 +38,9 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
     @FXML
     private Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
     private TextField txtPaymentCycleId;
     @FXML
@@ -87,15 +89,15 @@ public class SocietyPaymentCycleEditController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        dpFromDate.setConverter(new LocalDateConvertor());
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
-        dpToDate.setConverter(new LocalDateConvertor());
+//        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));

@@ -91,9 +91,9 @@ public class CouponIssueAddEditController implements MyInitialization {
             txtName.setText("");
         });
         cboxBankName.setDisable(true);
-        cboxPaymentType.getItems().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
+        cboxPaymentType.getSelectionModel().addAll(resourceBundle.getString("cash"), resourceBundle.getString("bank"));
         cboxPaymentType.setOnAction(e -> {
-            if (cboxPaymentType.getSelectionModel().getSelectedItem().equalsIgnoreCase("bank")) {
+            if (cboxPaymentType.getSelectionModel().getSelectedItem().equalsIgnoreCase(resourceBundle.getString("bank"))) {
                 cboxBankName.setDisable(false);
             } else {
                 cboxBankName.setDisable(true);
@@ -109,12 +109,12 @@ public class CouponIssueAddEditController implements MyInitialization {
         });
 
         txtCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
-            if (!newValue && txtCode.getText().length() > 0) {
+            if (!newValue && txtCode.getInputText().length() > 0) {
                 if (cboxType.getValue().getKey() < (short) 3) {
-                    String code = generateCode(txtCode.getText().trim());
+                    String code = generateCode(txtCode.getInputText().trim());
                     getNameFromMemberCode(code);
                 } else {
-                    String code = generateCode(txtCode.getText().trim());
+                    String code = generateCode(txtCode.getInputText().trim());
                     getNameFromCustomerCode(code);
                 }
             }
@@ -248,11 +248,11 @@ public class CouponIssueAddEditController implements MyInitialization {
     private void setValuesInObject() {
         dto.setUnion(MainApp.identityDto.getUnion());
         dto.setSociety(MainApp.identityDto.getSociety());
-        dto.setAmount(Double.parseDouble(txtAmount.getText().trim().isEmpty() ? "0" : txtAmount.getText().trim()));
-        dto.setConsumerCode(generateCode(txtCode.getText().trim()));
+        dto.setAmount(Double.parseDouble(txtAmount.getInputText().trim().isEmpty() ? "0" : txtAmount.getInputText().trim()));
+        dto.setConsumerCode(generateCode(txtCode.getInputText().trim()));
         dto.setConsumerType((int) cboxType.getSelectionModel().getSelectedItem().getKey());
         dto.setMilkType(cboxMilkType.getSelectionModel().getSelectedItem());
-        dto.setCode(txtIssueNumber.getText().trim());
+        dto.setCode(txtIssueNumber.getInputText().trim());
         dto.setActive(true);
         dto.setIsDelete(false);
         dto.setIssueDate(dpDate.getValue());
@@ -413,13 +413,13 @@ public class CouponIssueAddEditController implements MyInitialization {
     }
 
     private boolean validate() {
-        if (txtCode.getText() == null || Objects.equals(txtCode.getText(), "0"))
+        if (txtCode.getInputText() == null || Objects.equals(txtCode.getInputText(), "0"))
             errorMsg.append(resourceBundle.getString("consumernullerror") + "\n");
         if (txtName.getText() == null || txtName.getText().isEmpty())
             errorMsg.append(resourceBundle.getString("consumernamenullerror") + "\n");
         if (cboxMilkType.getValue() == null)
             errorMsg.append(resourceBundle.getString("milktypenullerror") + "\n");
-        if (txtAmount.getText() == null)
+        if (txtAmount.getInputText() == null)
             errorMsg.append(resourceBundle.getString("amount.cannot.be.null") + "\n");
 
         return errorMsg.length() == 0;

@@ -3,10 +3,10 @@ package com.eipl.amcs.operation.share.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
@@ -14,13 +14,17 @@ import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.operation.share.model.Share;
 import com.eipl.amcs.operation.share.task.ShareCancelledLoadTask;
 import com.eipl.amcs.operation.share.task.ShareIssueRevertTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 
 import java.math.BigDecimal;
@@ -44,7 +48,7 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
     @FXML
     private TableColumn<Share, LocalDate> colDate;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
     private TableColumn<Share, BigDecimal> colAmount;
     @FXML
@@ -76,14 +80,12 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
 
         btnSearch.setOnAction(e -> loadData());
         dpFromDate.setValue(LocalDate.now());
-        dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
             }
         });
         dpToDate.setValue(LocalDate.now());
-        dpToDate.setConverter(new LocalDateConvertor());
         dpToDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
@@ -160,7 +162,7 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
     @Override
     public void setupTable() {
         try {
-            colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode()));
+            colVoucherNo.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCode().substring(MainApp.identityDto.getSociety().getCode().length())));
             colDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getIssueDate()));
             colAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getShareAmount()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMember().toMemberName()));
@@ -168,6 +170,8 @@ public class ShareCancelledController implements MyInitialization, PopupCallback
             colNoOfShare.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNoOfShare().toString()));
             colCancelledDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getCancelDate() != null ? data.getValue().getCancelDate().toString() : ""));
             propShareIssue.bind(tableShareCancelled.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableShareCancelled);
+
         } catch (Exception e) {
             System.out.println("ShareCancelled setuptable Exception");
             e.printStackTrace();

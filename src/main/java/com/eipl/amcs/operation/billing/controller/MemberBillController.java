@@ -24,6 +24,7 @@ import com.eipl.amcs.operation.billing.task.MemberBillLoadTask;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -484,7 +485,6 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
 
     @Override
     public void setupComboBox() {
-        dpDisburseDate.setConverter(new LocalDateConvertor());
         dpDisburseDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpDisburseDate.setValue(dpDisburseDate.getConverter().fromString(dpDisburseDate.getEditor().getText()));
@@ -508,6 +508,8 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             colNetAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getNetAmount()));
             colPaymentMode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPaymnetMode() == (short) 0 ? "CASH" : "BANK"));
             propMemberBill.bind(tableBill.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableBill);
+
         } catch (Exception e) {
             System.out.println("MemberBill setuptable Exception");
             e.printStackTrace();

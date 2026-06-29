@@ -10,6 +10,7 @@ import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.account.model.LedgerType;
 import com.eipl.amcs.master.account.task.LedgerTypeDeleteTask;
 import com.eipl.amcs.master.account.task.LedgerTypeLoadTask;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -101,6 +102,7 @@ public class LedgerTypeController implements MyInitialization, PopupCallback {
         colBalanceSheet.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().isBalanceSheet() ?
                 resourceBundle.getString("yes") : resourceBundle.getString("no")));
         propLedgerType.bind(tableLedgerType.getSelectionModel().selectedItemProperty());
+        TableLocalizationUtil.localizeTable(tableLedgerType);
     }
 
     @Override

@@ -15,6 +15,7 @@
                 <TableView fx:id="tableStaffMember" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colMembername" minWidth="200.0" prefWidth="180.0" text="%staffname"/>
+                        <TableColumn fx:id="colMemberNameLocal" minWidth="200.0" prefWidth="180.0" text="%staffname.local"/>
                         <TableColumn fx:id="colDesignation" prefWidth="150.0" text="%designation"/>
                         <TableColumn fx:id="colTenureFromDate" minWidth="150.0" prefWidth="120.0"
                                      text="%tenurefromdate"/>
@@ -63,7 +64,7 @@
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
                         <E_Button fx:id="btnSalary" contentDisplay="TOP" maxHeight="1.7976931348623157E308"
                                   maxWidth="1.7976931348623157E308" mnemonicParsing="true" text="%staffsalary">
                             <graphic>

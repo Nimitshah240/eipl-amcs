@@ -14,6 +14,7 @@ import com.eipl.amcs.master.inventory.task.ProductPurchaseRateDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductPurchaseRateLoadTask;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -105,10 +106,10 @@ public class ProductPurchaseRateController implements MyInitialization, PopupCal
             colRate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getRate()));
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colWefDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getWefDate()));
-            colWefDate.setCellFactory(new LocalDateCellFactory<>());
 
             colProduct.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getProduct()));
             propPurchaseRateDto.bind(tableProductPurchaseRate.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableProductPurchaseRate);
 
         } catch (Exception e) {
             System.out.println("ProductPurchaseRate setuptable Exception");

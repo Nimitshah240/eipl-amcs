@@ -15,7 +15,7 @@ import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.operation.administartion.task.*;
 import com.eipl.amcs.utils.CommonUtils;
-import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,8 +25,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -56,7 +54,9 @@ public class CommitteeAddEditController implements MyInitialization {
     @FXML
     private AutoSearchTextField<Designation> cboxDesignation;
     @FXML
-    private E_TextField txtCommMemberCode, txtCommitteeCode, txtName, txtMemberName, txtCode, txtMemberCode;
+    private E_TextField  txtCommitteeCode, txtName, txtMemberName, txtCode;
+    @FXML
+    private E_NumericField txtCommMemberCode,txtMemberCode;
     @FXML
     private E_TextFieldLocal txtNameLocal;
     @FXML
@@ -148,15 +148,15 @@ public class CommitteeAddEditController implements MyInitialization {
             }
         });
         txtMemberCode.setOnAction(event -> {
-            if (txtMemberCode.getText().length() > 0) {
-                String code = generateCode(txtMemberCode.getText().trim());
+            if (txtMemberCode.getInputText().length() > 0) {
+                String code = generateCode(txtMemberCode.getInputText().trim());
                 getNameFromMemberCode(code);
             }
         });
 
         txtMemberCode.focusedProperty().addListener((ob, oldValue, newValue) -> {
-            if (!newValue && txtMemberCode.getText().length() > 0) {
-                String code = generateCode(txtMemberCode.getText().trim());
+            if (!newValue && txtMemberCode.getInputText().length() > 0) {
+                String code = generateCode(txtMemberCode.getInputText().trim());
                 getNameFromMemberCode(code);
             }
         });
@@ -167,10 +167,12 @@ public class CommitteeAddEditController implements MyInitialization {
         try {
             colCode.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCode()));
             colMemberName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMemberName()));
-            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().getName()));
+            colDesignation.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getDesignation().toString()));
             colJoiningDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getJoiningDate()));
             colRegistrationDate.setCellValueFactory(data -> new SimpleObjectProperty(data.getValue().getRegistrationDate()));
             propCommitteMembertDto.bind(tableCommitteeMembers.getSelectionModel().selectedItemProperty());
+            TableLocalizationUtil.localizeTable(tableCommitteeMembers);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -229,7 +231,7 @@ public class CommitteeAddEditController implements MyInitialization {
 
             CommitteeMembers member = new CommitteeMembers();
             member.setMemberName(txtMemberName.getText());
-            member.setMemberCode(txtCommMemberCode.getText());
+            member.setMemberCode(txtCommMemberCode.getInputText());
             member.setDesignation(cboxDesignation.getSelectionModel().getSelectedItem());
             member.setRegistrationDate(dpRegistrationdate.getValue());
             member.setJoiningDate(dpJoiningDate.getValue());

@@ -3,7 +3,9 @@ package com.eipl.amcs.master.procurement.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
@@ -41,11 +43,11 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
     @FXML
     private E_Button btnClose, btnSaveUpdate;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<MilkClass> cboxMilkClass;
+    private AutoSearchTextField<MilkClass> cboxMilkClass;
     @FXML
-    private DatePicker dpWefDate;
+    private E_DatePicker dpWefDate;
     @FXML
     private E_NumericField txtRate;
     private Stage stage;
@@ -82,8 +84,8 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
                 dpWefDate.setValue(dpWefDate.getConverter().fromString(dpWefDate.getEditor().getText()));
             }
         });
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxMilkClass.setConverter(new MilkClassConvertor(cboxMilkClass));
+//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//        cboxMilkClass.setConverter(new MilkClassConvertor(cboxMilkClass));
     }
 
     @Override
@@ -108,7 +110,7 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
     }
 
     private void setValuesInObject() {
-        BigDecimal b = new BigDecimal(txtRate.getText());
+        BigDecimal b = new BigDecimal(txtRate.getInputText());
         BigDecimal a = b.setScale(2, RoundingMode.HALF_EVEN);
         System.out.println(a);
         localMilkSaleRate.setRate(a);
@@ -123,7 +125,7 @@ public class LocalMilkSaleRateAddEditController implements MyInitialization {
         if (dpWefDate.getValue() == null)
             errorMsg.append(resourceBundle.getString("wefdatenullerror") + "\n");
         try {
-            if (Double.parseDouble(txtRate.getText()) <= 0 || Double.parseDouble(txtRate.getText()) >= 1000)
+            if (Double.parseDouble(txtRate.getInputText()) <= 0 || Double.parseDouble(txtRate.getInputText()) >= 1000)
                 errorMsg.append(resourceBundle.getString("entervalidrate") + "\n");
         } catch (NumberFormatException e) {
             errorMsg.append(resourceBundle.getString("localmilksaleratenullerror") + "\n");

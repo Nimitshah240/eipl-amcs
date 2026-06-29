@@ -12,11 +12,12 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.procurement.controller.MilkReceiptController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%milkreceipt" />
+                <E_Label styleClass="header-text" text="%milkreceipt" />
                 <TableView fx:id="tableMilkReceipt" prefHeight="402.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colChallanNo" prefWidth="230.0" styleClass="cell-center-aligned" text="%challanno" />

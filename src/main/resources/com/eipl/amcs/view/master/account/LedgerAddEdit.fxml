@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" minWidth="600.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.account.controller.LedgerAddEditController">
     <children>
         <VBox spacing="10.0">
@@ -41,8 +42,8 @@
                     <children>
                         <Label text="%name" GridPane.rowIndex="4" />
                         <Label text="%ledgergroup" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <ComboBox fx:id="cboxLedgerType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
-                        <ComboBox fx:id="cboxLedgerGroup" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <AutoSearchTextField fx:id="cboxLedgerType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+                        <AutoSearchTextField fx:id="cboxLedgerGroup" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <E_TextField fx:id="txtCode" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="116.0" GridPane.rowIndex="1" />
                         <E_TextField fx:id="txtName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                         <E_TextFieldLocal fx:id="txtLocalName" maxWidth="1.7976931348623157E308" GridPane.columnSpan="2" GridPane.rowIndex="7" />

@@ -11,11 +11,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_Label?>
 <StackPane prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.master.inventory.controller.ProductController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
             <children>
-                <Label styleClass="header-text" text="%product" />
+                <E_Label styleClass="header-text" text="%product" />
                 <TableView fx:id="tableProduct" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
                         <TableColumn fx:id="colCode" minWidth="150.0" prefWidth="150.0" visible="false" styleClass="cell-center-aligned" text="%code" />
