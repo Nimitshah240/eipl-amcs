@@ -44,9 +44,19 @@
                   <Label text="%language" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 						<DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2" />
 						<DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%generate" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                        <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%generatesubledger" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                             <graphic>
                                 <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                                    <image>
+                                        <Image url="@../../images/generate.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>1
+                        121
+                        <Button fx:id="btnGenerateSubLedger" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%ledger" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                            <graphic>
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                                     <image>
                                         <Image url="@../../images/generate.png" />
                                     </image>

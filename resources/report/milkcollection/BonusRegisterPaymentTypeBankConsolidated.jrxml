@@ -338,9 +338,9 @@ com.eipl.amcs.utils.UTFDigit.getUTFString($F{union_code}, $P{p_locale}) + " - " 
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 					<font fontName="Noto"/>
-					<paragraph leftIndent="0"/>
+					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
 			</textField>

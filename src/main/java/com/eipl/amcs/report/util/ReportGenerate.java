@@ -170,9 +170,9 @@ public class ReportGenerate {
             case AppConstant.ReportPath.PATRAK_ONE:
                 return "resources/report/milkcollection/PatrakOne.jasper";
             case AppConstant.ReportPath.RPT_LEDGER_BOOK:
-                return "//resources/report/milkcollection/LedgerBookSubLedger.jasper";
-            case AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER:
                 return "resources/report/milkcollection/LedgerBook.jasper";
+            case AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER:
+                return "resources/report/milkcollection/LedgerBookSubLedger.jasper";
             case AppConstant.ReportPath.RPT_LEDGER_BOOK_SUMMARY:
                 return "resources/report/milkcollection/LedgerBookSummary.jasper";
 

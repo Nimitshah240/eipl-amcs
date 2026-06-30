@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 public class RptLedgerBookController implements MyInitialization {
 
     @FXML
-    private Button btnGenerate, btnGenerate1, btnClose;
+    private Button btnGenerate, btnGenerate1, btnClose,btnGenerateSubLedger;
     @FXML
     private ComboBox<Ledger> cboxLedgerName;
     @FXML
@@ -55,6 +55,7 @@ public class RptLedgerBookController implements MyInitialization {
         loadData();
         setupComboBox();
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+        btnGenerateSubLedger.setOnAction(e -> validateAndGenerateReport2());
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
 
         btnClose.setOnAction(e -> {
@@ -101,6 +102,25 @@ public class RptLedgerBookController implements MyInitialization {
         JasperPrint print = null;
 
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER, params);
+        JasperViewer.viewReport(print, false);
+    }
+    private void validateAndGenerateReport2() {
+        Map<String, Object> params = new HashMap<>();
+        String localeStr = getLocaleString();
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        if (localeStr.equals("en")) {
+            params.put("p_society_name", MainApp.identityDto.getSociety().getName());
+        } else {
+            params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+        }
+        params.put("p_ledger_code", cboxLedgerName.getValue().getCode());
+        params.put("p_from_date", java.sql.Date.valueOf(dpFromDate.getValue()));
+        params.put("p_to_date", java.sql.Date.valueOf(dpToDate.getValue()));
+        params.put("p_locale", localeStr);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        JasperPrint print = null;
+
+        print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK, params);
         JasperViewer.viewReport(print, false);
     }
 
