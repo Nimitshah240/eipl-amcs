@@ -38,14 +38,21 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -142,7 +149,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        btnExport.setDisable(true);
+        btnExport.setDisable(false);
         bonusList = new ArrayList<>();
         criteriaList = new ArrayList<>();
         criteriaList.add(resourceBundle.getString("percentage"));
@@ -198,6 +205,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             saveData();
         });
 
+        btnExport.setOnAction(event -> exportToCsv());
+
         txtDebanture.setText("0");
         cboxType.textProperty().addListener(e -> {
             if (cboxType.getSelectionModel().getSelectedIndex() == 1) {
@@ -214,6 +223,158 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 colKapaat.setVisible(false);
             }
         });
+    }
+
+    private void exportToCsv() {
+        if (tableBonus.getItems() == null || tableBonus.getItems().isEmpty()) {
+            new InformationAlert(MainApp.getStage(), resourceBundle.getString("export"), resourceBundle.getString("no.data.to.export")).createAlert();
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(resourceBundle.getString("export"));
+        fileChooser.setInitialFileName("Bonus_Details.csv");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try (FileOutputStream fos = new FileOutputStream(file);
+                 OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
+
+                // Add UTF-8 BOM to ensure Excel reads special characters (like Gujarati) correctly.
+                fos.write(0xEF);
+                fos.write(0xBB);
+                fos.write(0xBF);
+
+                boolean isSocietyBonus = cboxType.getSelectionModel().getSelectedIndex() == 1;
+
+                // Custom Header
+                String societyName = MainApp.identityDto.getSociety().getName() + " (" + MainApp.identityDto.getSociety().getCode() + ")";
+                writer.append(societyName).append('\n');
+                writer.append("Bonus Details").append('\n');
+
+                // Export Date
+                String exportDate = "Export Date" + ": " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                writer.append(exportDate).append('\n');
+
+                // Blank line
+                writer.append('\n');
+
+                // Table Header
+                List<String> headers = new ArrayList<>(Arrays.asList(
+                        resourceBundle.getString("member.code"),
+                        resourceBundle.getString("member.name"),
+                        resourceBundle.getString("bankname"),
+                        resourceBundle.getString("acno"),
+                        resourceBundle.getString("ifsc"),
+                        resourceBundle.getString("status"),
+                        resourceBundle.getString("couponissue.create.type"),
+                        resourceBundle.getString("qty"),
+                        resourceBundle.getString("milkamount"),
+                        resourceBundle.getString("bonusamt")
+                ));
+
+                if (isSocietyBonus) {
+                    headers.add(resourceBundle.getString("kapaat"));
+
+                } else {
+                    headers.add(resourceBundle.getString("debanture.kapaat"));
+                }
+                headers.add(resourceBundle.getString("total"));
+                headers.add(resourceBundle.getString("remarks"));
+
+                writer.append(String.join(",", headers)).append('\n');
+
+                // Data and Summary Calculation
+                BigDecimal totalQty = BigDecimal.ZERO;
+                BigDecimal totalMilkAmount = BigDecimal.ZERO;
+                BigDecimal totalBonusAmount = BigDecimal.ZERO;
+                BigDecimal totalDeductionOrDebenture = BigDecimal.ZERO;
+                BigDecimal totalGrandTotal = BigDecimal.ZERO;
+
+                for (Bonus bonus : tableBonus.getItems()) {
+                    List<String> rowData = new ArrayList<>();
+                    rowData.add(escapeCsv(bonus.getMember().getCodeEx()));
+                    rowData.add(escapeCsv(bonus.getMember().toMemberName()));
+                    rowData.add(escapeCsv(bonus.getBankName()));
+                    rowData.add(escapeCsv(bonus.getAccountNo()));
+                    rowData.add(escapeCsv(bonus.getIfsc()));
+                    rowData.add(escapeCsv(bonus.getStatus() == 0 ? "PENDING" : "DONE"));
+                    rowData.add(escapeCsv(bonus.getType() == 0 ? "Union Bonus" : "Society Bonus"));
+
+                    BigDecimal milkQty = bonus.getMilkQty();
+                    BigDecimal milkAmount = bonus.getMilkAmount();
+                    BigDecimal bonusAmount = bonus.getBonusAmount();
+
+                    rowData.add(escapeCsv(milkQty.toPlainString()));
+                    rowData.add(escapeCsv(milkAmount.toPlainString()));
+                    rowData.add(escapeCsv(bonusAmount.toPlainString()));
+
+                    totalQty = totalQty.add(milkQty);
+                    totalMilkAmount = totalMilkAmount.add(milkAmount);
+                    totalBonusAmount = totalBonusAmount.add(bonusAmount);
+
+                    BigDecimal rowDeductionOrDebenture;
+                    if (isSocietyBonus) {
+                        String deductionValueStr = bonus.getxCol1() != null && !bonus.getxCol1().isBlank() ? bonus.getxCol1() : "0";
+                        try {
+                            rowDeductionOrDebenture = new BigDecimal(deductionValueStr);
+                        } catch (NumberFormatException ex) {
+                            rowDeductionOrDebenture = BigDecimal.ZERO;
+                        }
+                        rowData.add(escapeCsv(rowDeductionOrDebenture.toPlainString()));
+                    } else {
+                        rowDeductionOrDebenture = bonus.getDebantureAmount();
+                        rowData.add(escapeCsv(rowDeductionOrDebenture.toPlainString()));
+                    }
+
+                    BigDecimal rowTotal = bonusAmount.subtract(rowDeductionOrDebenture);
+                    rowData.add(escapeCsv(rowTotal.toPlainString()));
+                    rowData.add(escapeCsv(bonus.getxCol2()));
+
+                    totalDeductionOrDebenture = totalDeductionOrDebenture.add(rowDeductionOrDebenture);
+                    totalGrandTotal = totalGrandTotal.add(rowTotal);
+
+                    writer.append(String.join(",", rowData)).append('\n');
+                }
+
+                // Blank line before summary
+                writer.append('\n');
+
+                // Summary Row
+                List<String> summaryRowData = new ArrayList<>();
+                summaryRowData.add("Total");
+                summaryRowData.add(""); // For Member Name
+                summaryRowData.add(""); // For Bank Name
+                summaryRowData.add(""); // For Account No
+                summaryRowData.add(""); // For IFSC
+                summaryRowData.add(""); // For Status
+                summaryRowData.add(""); // For Type
+                summaryRowData.add(escapeCsv(totalQty.setScale(3, RoundingMode.HALF_DOWN).toPlainString()));
+                summaryRowData.add(escapeCsv(totalMilkAmount.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
+                summaryRowData.add(escapeCsv(totalBonusAmount.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
+                summaryRowData.add(escapeCsv(totalDeductionOrDebenture.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
+                summaryRowData.add(escapeCsv(totalGrandTotal.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
+                summaryRowData.add(""); // For Remarks
+
+                writer.append(String.join(",", summaryRowData)).append('\n');
+
+                new InformationAlert(MainApp.getStage(), resourceBundle.getString("export"), resourceBundle.getString("successful")).createAlert();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                new ErrorAlert(MainApp.getStage(), resourceBundle.getString("export"), resourceBundle.getString("failed")).createAlert();
+            }
+        }
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) return "";
+        String escaped = value.replace("\"", "\"\"");
+        if (escaped.contains(",") || escaped.contains("\"") || escaped.contains("\n")) {
+            return "\"" + escaped + "\"";
+        }
+        return escaped;
     }
 
     private void loadData(LocalDateTime value, LocalDateTime value1, String type, String criteria, String bonusValue, MilkType milkType) {
