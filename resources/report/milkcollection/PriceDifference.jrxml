@@ -125,8 +125,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $V{Avg_Fat}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Avg_Fat}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Avg_Fat}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="320" y="0" width="50" height="20" backcolor="#E4E4F5" uuid="79bc5fff-4f25-4694-b534-ab8b33a05faa">
@@ -146,8 +145,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Avg_Fat}.setScale(2, java.math.
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal($V{total_qty}).setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_qty}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_qty}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="585" y="0" width="80" height="20" backcolor="#E4E4F5" uuid="e7859771-e06a-48d6-bba8-0e803498cd00">
@@ -167,8 +165,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_qty}
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal($V{total_amount_1}).setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_amount_1}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_amount_1}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="530" y="0" width="55" height="20" backcolor="#E4E4F5" uuid="a2db8ecc-ef4d-46dd-aaaf-09c99b86c052">
@@ -188,8 +185,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_amou
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal($V{total_qty_1}).setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_qty_1}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_qty_1}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#########0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="450" y="0" width="40" height="20" backcolor="#E4E4F5" uuid="95a212c0-6fcf-49fc-a8b6-c2f8f4f50920">
@@ -209,8 +205,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_qty_
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $V{Avg_Fat_1}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Avg_Fat_1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Avg_Fat_1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.000" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="490" y="0" width="40" height="20" backcolor="#E4E4F5" uuid="c43dec3f-389a-4b11-981a-efaa4850e51a">
@@ -230,8 +225,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Avg_Fat_1}.setScale(2, java.mat
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $V{Snf_1}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Snf_1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Snf_1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="280" y="0" width="40" height="20" backcolor="#E4E4F5" uuid="98a4c44f-f049-4d5a-b2ff-773b14129b75">
@@ -251,8 +245,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Snf_1}.setScale(2, java.math.Ro
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $V{Snf}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Snf}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Snf}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="370" y="0" width="80" height="20" backcolor="#E4E4F5" uuid="ee86ccbf-202f-4777-b529-21af9830362d">
@@ -272,8 +265,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Snf}.setScale(2, java.math.Roun
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal($V{total_amount}).setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_amount}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_amount}).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="665" y="0" width="56" height="20" backcolor="#E4E4F5" uuid="fbff2fa1-0d19-4d81-8fa6-0e48cc30c633">
@@ -293,8 +285,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{total_amou
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal(Math.abs($V{total_qty} - $V{total_qty_1})).setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{total_qty} - $V{total_qty_1})).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{total_qty} - $V{total_qty_1})).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement key="b" style="noto" mode="Opaque" x="721" y="0" width="88" height="20" backcolor="#E4E4F5" uuid="29a28769-8410-4476-a35a-2588cb84b959">
@@ -314,8 +305,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{t
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal(Math.abs($V{total_amount} - $V{total_amount_1})).setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{total_amount} - $V{total_amount_1})).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{total_amount} - $V{total_amount_1})).setScale(2, java.math.RoundingMode.HALF_UP).doubleValue(), $P{p_locale})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -589,7 +579,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{t
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{diff_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{qty}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="721" y="5" width="88" height="20" backcolor="#E4E4F5" uuid="64d28cd2-abb0-43a4-8a66-3a09d887df78"/>
@@ -646,8 +636,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal(Math.abs($V{t
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{qty1}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="230" y="0" width="50" height="20" uuid="21c6e989-27f6-4fc2-9212-a7ca1d7e5e6e">
@@ -666,8 +655,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty1}.setScale(2, java.math.Rou
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{fat1}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{fat1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{fat1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="280" y="0" width="40" height="20" uuid="e7f714fd-f916-400f-ba6e-baaf29c301d1">
@@ -686,8 +674,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{fat1}.setScale(2, java.math.Rou
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{snf1}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{snf1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{snf1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="370" y="0" width="80" height="20" uuid="dba6da27-6205-47e2-a3a7-5edad25f66f4">
@@ -706,8 +693,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{snf1}.setScale(2, java.math.Rou
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{amount1}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount1}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="530" y="0" width="55" height="20" uuid="b8913313-d1fd-4d18-9100-e47143034ea6">
@@ -726,8 +712,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount1}.setScale(2, java.math.
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{qty2}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="585" y="0" width="80" height="20" uuid="d9a24f58-bbac-4ff4-8fad-aeee1893cce2">
@@ -746,8 +731,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty2}.setScale(2, java.math.Rou
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{amount2}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="490" y="0" width="40" height="20" uuid="625c6236-1227-45dc-bcdc-adfd4580d069">
@@ -766,8 +750,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount2}.setScale(2, java.math.
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{snf2}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{snf2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{snf2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="450" y="0" width="40" height="20" uuid="2b5a45d4-e94a-4221-8ded-693a0d0f89bf">
@@ -786,8 +769,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{snf2}.setScale(2, java.math.Rou
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{fat2}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{fat2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{fat2}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="665" y="0" width="56" height="20" uuid="f34c21d4-59a0-4a68-a148-5b239ed29e9f">
@@ -806,8 +788,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{fat2}.setScale(2, java.math.Rou
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 ($F{qty1}.subtract($F{qty2})).abs().setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($F{qty1}.subtract($F{qty2})).abs().setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($F{qty1}.subtract($F{qty2})).abs().setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="721" y="0" width="88" height="20" uuid="6ce0ee19-3a17-49ca-86cd-154792ee978d">
@@ -826,8 +807,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($F{qty1}.subtract($F{qty2})).abs(
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 ($F{amount1}.subtract($F{amount2})).abs().setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($F{amount1}.subtract($F{amount2})).abs().setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($F{amount1}.subtract($F{amount2})).abs().setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -837,43 +817,56 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($F{amount1}.subtract($F{amount2})
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="20" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField>
-				<reportElement style="noto" x="721" y="5" width="49" height="15" uuid="58de7d44-8882-44ce-a019-e646a90c9214">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{page}+ ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement style="noto" x="770" y="5" width="40" height="15" uuid="cfa158e9-2af7-41e1-8583-b54976fb1ca6">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{of} + ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yyyy hh:mm a&#xA;">
-				<reportElement key="" style="noto" positionType="Float" x="0" y="5" width="721" height="15" uuid="16b30c68-e6ba-46e0-8af4-b194d831fb9e">
+			<textField pattern="dd/MM/yyyy hh:mm a&#xA;" isBlankWhenNull="true">
+				<reportElement key="" style="noto" positionType="Float" x="0" y="8" width="640" height="15" uuid="2780374c-1ae1-47f7-a459-0530194bff6b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
+				<box leftPadding="0" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
-    new java.util.Date() : 
-    com.eipl.amcs.utils.UTFDigit.getUTFDate(new java.text.SimpleDateFormat("dd/MM/yy").format(new java.util.Date()), $P{p_locale})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="noto" x="725" y="8" width="83" height="15" uuid="f341f663-7242-4be9-a3bb-e5a0774e2b40">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{of}+ $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" x="670" y="8" width="55" height="15" uuid="b71dc596-5652-441c-920b-0550c629d0a6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{page} + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
