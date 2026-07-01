@@ -313,7 +313,7 @@ public class KapaatAddEditController implements MyInitialization {
                         return;
                     }
                     MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("kapaat"),
-                            resourceBundle.getString("save"));
+                            resourceBundle.getString("record.save.successful"));
                     alert.createAlert();
                     txtCode.setText("");
                     txtName.setText("");

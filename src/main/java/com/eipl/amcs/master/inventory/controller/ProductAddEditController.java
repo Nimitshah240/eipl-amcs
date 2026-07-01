@@ -104,7 +104,6 @@ public class ProductAddEditController implements MyInitialization {
         loadUnit();
         setupComboBox();
         loadData();
-        txtReferenceCode.setEditable(false);
         btnClose.setOnAction(e -> this.stage.close());
         btnSaveUpdate.setOnAction(e -> validateAndSave());
         chkIsMilk.selectedProperty().addListener((obs, oldVal, newVal) -> {

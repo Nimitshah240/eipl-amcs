@@ -7,7 +7,6 @@ import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.*;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.task.BankLoadTask;
@@ -112,11 +111,14 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/billing/MemberBillSummary.fxml"))));
         btnGenerate.setDisable(!(this.billSummary == null || billSummary.getStatus() < (short) 2));
         btnGenerate.setOnAction(e -> {
+            MainApp.paneDrop.setVisible(true);
+            MainApp.lblMessage.setText("Loading Data");
             LocalDateTime currentDate = LocalDateTime.of(LocalDate.now(), LocalTime.NOON);
             if (currentDate.isAfter(cboxPaymentCycle.getValue().getFromDate()) && currentDate.isBefore(cboxPaymentCycle.getValue().getToDate())) {
                 MyAlert alert = new WarningAlert(MainApp.stage, resourceBundle.getString("member.bill"),
                         resourceBundle.getString("billing.not.allowedfor.paymentcycle"));
                 alert.createAlert();
+                MainApp.paneDrop.setVisible(false);
                 return;
             }
 
@@ -522,6 +524,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
         var task = new MemberBillLoadTask(paymentCycle, society, deductionFromDate, deductionToDate, generate);
         task.setOnSucceeded(e -> {
             try {
+                MainApp.paneDrop.setVisible(false);
                 memberBillList = task.get();
                 if (memberBillList == null)
                     return;
@@ -538,6 +541,7 @@ public class MemberBillController extends SocietyPaymentCycleEditController impl
             }
         });
         task.setOnFailed(e -> {
+            MainApp.paneDrop.setVisible(false);
             Throwable t = task.getException();
             String errorMessage = "error.occurred";
             if (t.getMessage().contains("overlapping")) {

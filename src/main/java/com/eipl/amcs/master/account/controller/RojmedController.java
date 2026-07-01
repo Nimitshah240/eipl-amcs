@@ -721,17 +721,17 @@ public class RojmedController implements MyInitialization, PopupCallback {
                 for (Product product : map.keySet()) {
                     List<ProductReceiptTransaction> productReceiptTransactions1 = map.get(product);
                     BigDecimal amount = BigDecimal.ZERO;
-                    Integer qty = 0;
+                    BigDecimal qty = BigDecimal.ZERO;
                     for (ProductReceiptTransaction productReceiptTransaction1 : productReceiptTransactions1) {
                         amount = amount.add(productReceiptTransaction1.getAmount());
-                        qty += productReceiptTransaction1.getQuantity();
+                        qty = qty.add(productReceiptTransaction1.getQuantity());
                     }
                     tempCode++;
                     VoucherTransaction voucherTransaction = new VoucherTransaction();
                     voucherTransaction.setCode("temp" + tempCode);
                     voucherTransaction.setLedger(ledger);
                     voucherTransaction.setAmount(amount);
-                    voucherTransaction.setNarration(product.toString() + " - " + qty + " x " + amount.divide(new BigDecimal(qty), 2, RoundingMode.HALF_DOWN));
+                    voucherTransaction.setNarration(product.toString() + " - " + qty + " x " + amount.divide(qty, 2, RoundingMode.HALF_DOWN));
                     voucherTransaction.setCreditDebit(false);
                     updatedVoucherTxn.add(voucherTransaction);
                 }

@@ -300,10 +300,10 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
             oldVal = stockOld.getStock();
             if (operation.equals("CREATE"))
                 stockOld.setStock(stockOld.getStock()
-                        .add(BigDecimal.valueOf(transaction.getQuantity()).setScale(3, RoundingMode.HALF_UP)));
+                        .add((transaction.getQuantity()).setScale(3, RoundingMode.HALF_UP)));
             else if (operation.equals("DELETE"))
                 stockOld.setStock(stockOld.getStock()
-                        .subtract(BigDecimal.valueOf(transaction.getQuantity()).setScale(3, RoundingMode.HALF_UP)));
+                        .subtract((transaction.getQuantity()).setScale(3, RoundingMode.HALF_UP)));
             stockOld.setupdateData();
             stockOld.setProduct(Hibernate.unproxy(stockOld.getProduct(), Product.class));
             stockOld.setSaleRate(transaction.getSaleRate());
@@ -327,9 +327,9 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
 
 
             if (operation.equals("CREATE"))
-                stock.setStock(BigDecimal.valueOf(transaction.getQuantity()));
+                stock.setStock((transaction.getQuantity()));
             else if (operation.equals("DELETE"))
-                stock.setStock(BigDecimal.ZERO.subtract(BigDecimal.valueOf(transaction.getQuantity())));
+                stock.setStock(BigDecimal.ZERO.subtract((transaction.getQuantity())));
             stock.setUnionCode(transaction.getUnionCode());
             stock.setProduct(transaction.getProduct());
             stock.setSociety(society);
@@ -343,7 +343,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
         String txnCode = nextCodeRepository.getNextCode("ProductStockTransaction", "code", code + "T", 0);
         ProductStockTransaction txn = new ProductStockTransaction();
         txn.setCode(txnCode);
-        txn.setNewValue(BigDecimal.valueOf(transaction.getQuantity()));
+        txn.setNewValue((transaction.getQuantity()));
         txn.setOldValue(oldVal);
 
         txn.setBatchNo(MainApp.getProperty("fifo.process", "fifo").equalsIgnoreCase("FIFO") ? transaction.getBatchNo() : null);

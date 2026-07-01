@@ -472,7 +472,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
         dpDate.setValue(LocalDate.now());
         FocusUtils.requestFocus(btnStart);
 
-        cboxShortCut.getItems().addAll("ShortCut List", "M → MilkType", "Space → Weight Lock", "ESC → Exit", "F3 → Add Member", "F4 → Delete", "F5 / F6 → Refresh", "F7 / S → Setting", "F8 → Local Milk Sale", "F9 → Print", "F10 / P → Reprint", "F11 / T → Tare", "C → Farmer Code", "D → Milk Dispatch", "E → Edit");
+        cboxShortCut.getItems().addAll("ShortCut List", "M → MilkType", "W → Weight Lock", "ESC → Exit", "F3 → Add Member", "F4 → Delete", "F5 / F6 → Refresh", "F7 / S → Setting", "F8 → Local Milk Sale", "F9 → Print", "F10 / P → Reprint", "F11 / T → Tare", "C → Farmer Code", "D → Milk Dispatch", "E → Edit");
         cboxShortCut.getSelectionModel().select(0);
 
         doubleDock = !MainApp.identityDto.getDock().getDockNo().substring(MainApp.identityDto.getSociety().getCode().length()).equals("01");
@@ -673,7 +673,7 @@ public class MilkCollectionAddController extends MilkCollectionBaseController im
                 MainApp.displaySerial.displayQuantity(getStringForDisplay("AMT"));
             }
         });
-        cboxMilkType.setOnAction(e -> {
+        cboxMilkType.textProperty().addListener(e -> {
             if (txtFat.getInputText() != null && txtSnf.getInputText() != null) {
                 String status = String.valueOf((MainApp.getProperty("avg.param.capture", "0")));
                 if (status.equals("1")) {

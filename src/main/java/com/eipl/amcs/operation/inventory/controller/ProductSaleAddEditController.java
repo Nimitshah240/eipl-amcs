@@ -78,9 +78,9 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
     @FXML
     private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private E_TextField txtInvoiceNo, txtConsumerName,  txtBatch;
+    private E_TextField txtInvoiceNo, txtConsumerName, txtBatch;
     @FXML
-    private E_NumericField txtConsumerCode, txtCreditLimit,txtDifferance, txtQuantity, txtRate, txtAmount, txtNetAmount,
+    private E_NumericField txtConsumerCode, txtCreditLimit, txtDifferance, txtQuantity, txtRate, txtAmount, txtNetAmount,
             txtTotalAmount, txtNoOfInstallment, txtTotalDiscount, txtMilkAmount, txtDeductionAmount, txtTotalAmountTax, txtNetPayable;
     @FXML
     private E_DatePicker dpMilkFromDate, dpMilkToDate, dpDeductionToDate, dpDeductionFromDate, dpDate, dpDeductionStartDate;
@@ -663,7 +663,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                 if (productSale.getPaymentMode() == 1) {
                     rbtnCredit.setSelected(true);
                     rbtnCash.setSelected(false);
-                    txtNoOfInstallment.setDisable(false);
+                    txtNoOfInstallment.setDisable(true);
                     txtNoOfInstallment.setText(String.valueOf(productSale.getNoOfInstallments()));
                     dpDeductionStartDate.setValue(productSale.getDeductionStartDate());
                     dpDeductionStartDate.setDisable(false);
@@ -742,7 +742,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
         task.setOnSucceeded(e -> {
             try {
                 paymentCycleList = task.get();
-                if (paymentCycleList.size() >= Integer.parseInt(txtNoOfInstallment.getInputText())) {
+                if (paymentCycleList != null && paymentCycleList.size() >= Integer.parseInt(txtNoOfInstallment.getInputText())) {
                     if (from == (short) 0) {
                         prepareInstallment();
                         viewInstallmentPopup();
@@ -751,7 +751,7 @@ public class ProductSaleAddEditController implements MyInitialization, PopupCall
                         validateAndSave();
                     }
                 } else {
-                    MyAlert alert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
+                    MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("societypaymentcycle"),
                             resourceBundle.getString("societypaymentcycle.not.available"));
                     alert.createAlert();
                 }
