@@ -36,10 +36,10 @@
 	<group name="dateWiseGroupTitle" isStartNewPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{date}]]></groupExpression>
 		<groupHeader>
-			<band height="60">
+			<band height="81">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<textField isBlankWhenNull="true">
-					<reportElement style="noto" x="0" y="21" width="525" height="19" uuid="d0c435df-9748-4d08-9f12-caa6a84b3c93">
+				<textField isStretchWithOverflow="true" evaluationTime="Report" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="29" width="525" height="21" uuid="d0c435df-9748-4d08-9f12-caa6a84b3c93">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -54,8 +54,8 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$R{balance_grouping}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement style="noto" x="0" y="40" width="525" height="17" uuid="e8609409-dd09-43a1-a600-b5eac8f540e3">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="55" width="525" height="21" uuid="e8609409-dd09-43a1-a600-b5eac8f540e3">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<box>
@@ -67,10 +67,10 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Noto" size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{balance_sheet} + " " +$P{p_to_date}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{balance_sheet} + " " + java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format($P{p_to_date})]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement style="noto" x="0" y="0" width="525" height="21" uuid="57f9a3a4-846b-4722-83ab-a08066d54b62">
+					<reportElement style="noto" x="0" y="0" width="525" height="29" uuid="57f9a3a4-846b-4722-83ab-a08066d54b62">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -98,7 +98,7 @@
 		<groupHeader>
 			<band height="44">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="262" y="22" width="147" height="22" backcolor="#E4E4F5" uuid="05603c04-e925-4047-86fd-3531e015397c">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="262" y="22" width="138" height="22" backcolor="#E4E4F5" uuid="05603c04-e925-4047-86fd-3531e015397c">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -108,7 +108,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{account.debit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{assets_receivables}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="464" y="22" width="60" height="22" backcolor="#E4E4F5" uuid="17582160-a944-4974-a7c1-0675269cccad">
@@ -153,7 +153,7 @@
 					<textFieldExpression><![CDATA[$R{accounting.asset}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="147" y="22" width="55" height="22" backcolor="#E4E4F5" uuid="67e9104e-495a-4699-96c3-d838cbfda7b5">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="140" y="22" width="62" height="22" backcolor="#E4E4F5" uuid="67e9104e-495a-4699-96c3-d838cbfda7b5">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -168,7 +168,7 @@
 					<textFieldExpression><![CDATA[$R{sub_amt}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="409" y="22" width="55" height="22" backcolor="#E4E4F5" uuid="b9fcbf93-32f7-4957-9a43-593efd98bbe7">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="22" width="64" height="22" backcolor="#E4E4F5" uuid="b9fcbf93-32f7-4957-9a43-593efd98bbe7">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -196,7 +196,7 @@
 					<textFieldExpression><![CDATA[$R{amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="22" width="147" height="22" backcolor="#E4E4F5" uuid="d8b80d25-8fcd-4236-bcab-f82365746bfc">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="22" width="140" height="22" backcolor="#E4E4F5" uuid="d8b80d25-8fcd-4236-bcab-f82365746bfc">
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -207,7 +207,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{account.credit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{capital_liabilities}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -230,7 +230,7 @@
 						<font isBold="true"/>
 						<paragraph leftIndent="3"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{total_credit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,###,###,##0.00" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="262" y="0" width="202" height="18" backcolor="#EDEDFA" uuid="d69c6131-5b3c-4ad9-9ce2-4d74777dd003">
@@ -249,7 +249,7 @@
 						<font isBold="true"/>
 						<paragraph leftIndent="3"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{total_debit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="464" y="0" width="60" height="18" backcolor="#EDEDFA" uuid="c9bee180-a6fa-4e99-ac95-a6780b9d2302">
@@ -267,7 +267,7 @@
 						<font isBold="true"/>
 						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{total_debit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($V{total_credit}) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("0.00").format($V{total_credit}), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="202" y="0" width="60" height="18" backcolor="#EDEDFA" uuid="ddf84964-6ab0-4b6c-b7e4-f3b578f81315">
@@ -285,7 +285,7 @@
 						<font isBold="true"/>
 						<paragraph rightIndent="3"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{total_credit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($V{total_credit}) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("0.00").format($V{total_credit}), $P{p_locale})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -309,11 +309,10 @@
 					<font size="10"/>
 					<paragraph rightIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{creditAmount} == null ? $F{creditAmount} : (
-"<style isBold=\"true\"  forecolor=\"#000000\"  fontName=\"Noto\" size=\"10\" >"+" "+$F{creditAmount}+" "+"</style>")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{creditAmount} == null ? ($P{p_locale}.equals("en") ? "0.00" : com.eipl.amcs.utils.UTFDigit.getUTFString("0.00", $P{p_locale})) : ("<style isBold=\"true\" forecolor=\"#000000\" fontName=\"Noto\" size=\"10\"> " + ($P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($F{creditAmount}) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("0.00").format($F{creditAmount}), $P{p_locale})) + " </style>")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
-				<reportElement style="noto" stretchType="RelativeToTallestObject" x="409" y="0" width="55" height="19" uuid="f4f6ecbb-f3f6-4773-9528-e9e6e3098474">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="400" y="0" width="64" height="19" uuid="f4f6ecbb-f3f6-4773-9528-e9e6e3098474">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -325,10 +324,10 @@
 					<font size="10"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{debitSubAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{debitSubAmount}.toString() : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{debitSubAmount}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="noto" stretchType="RelativeToTallestObject" x="262" y="0" width="147" height="19" uuid="e98cec54-9b32-413b-b92c-e2551e9ac529">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="262" y="0" width="138" height="19" uuid="e98cec54-9b32-413b-b92c-e2551e9ac529">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -344,7 +343,7 @@
 "<style isBold=\"true\"  forecolor=\"#000000\"  fontName=\"Noto\" size=\"10\">"+" "+$F{debitLedger}+" "+"</style>")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
-				<reportElement style="noto" stretchType="RelativeToTallestObject" x="147" y="0" width="55" height="19" uuid="6bb588fc-00f4-4b33-8f61-25f4155c1654">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="140" y="0" width="62" height="19" uuid="6bb588fc-00f4-4b33-8f61-25f4155c1654">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -356,10 +355,10 @@
 					<font size="10"/>
 					<paragraph leftIndent="0" rightIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{creditSubAmount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{creditSubAmount}.toString() : com.eipl.amcs.utils.UTFDigit.getUTFDouble($F{creditSubAmount}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="0" width="147" height="19" uuid="63bd22f1-a19e-4464-9011-88a5ad4988bc">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="19" uuid="63bd22f1-a19e-4464-9011-88a5ad4988bc">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box topPadding="1" bottomPadding="1">
@@ -384,8 +383,7 @@
 					<font size="10"/>
 					<paragraph leftIndent="0" rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{debitAmount} == null ? $F{debitAmount} : (
-"<style isBold=\"true\"  forecolor=\"#000000\"  fontName=\"Noto\" size=\"10\" >"+" "+$F{debitAmount}+" "+"</style>")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{debitAmount} == null ? ($P{p_locale}.equals("en") ? "0.00" : com.eipl.amcs.utils.UTFDigit.getUTFString("0.00", $P{p_locale})) : ("<style isBold=\"true\" forecolor=\"#000000\" fontName=\"Noto\" size=\"10\"> " + ($P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($F{debitAmount}) : com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("0.00").format($F{debitAmount}), $P{p_locale})) + " </style>")]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
