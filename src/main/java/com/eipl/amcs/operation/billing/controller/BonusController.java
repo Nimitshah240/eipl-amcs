@@ -27,6 +27,7 @@ import com.eipl.amcs.operation.billing.task.BonusListLoadTask;
 import com.eipl.amcs.operation.billing.task.BonusLoadTask;
 import com.eipl.amcs.operation.billing.task.BonusSaveTask;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.FormatterFactory;
 import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -114,12 +115,14 @@ public class BonusController extends SocietyPaymentCycleEditController implement
         if (bonusSummary != null) {
             loadMilkType();
             loadShift();
+            txtDebanture.setDisable(!bonusSummary.isDebanture());
             dpFromDate.setValue(bonusSummary.getFromDate());
             dpToDate.setValue(bonusSummary.getToDate());
             cboxCriteria.getSelectionModel().select(bonusSummary.getBonusCriteria() == 0 ? 0 : bonusSummary.getBonusCriteria() == 1 ? 1 : 2);
             cboxType.getSelectionModel().select(bonusSummary.getType() == 0 ? 0 : bonusSummary.getType() == 1 ? 1 : 2);
             txtBonusValue.setText(String.valueOf(bonusSummary.getBonusCriteriaValue()));
             txtDebanture.setText(String.valueOf(bonusSummary.getDebantureAmount()));
+            chkDebanture.setSelected(bonusSummary.isDebanture());
             loadControls();
         }
     }
@@ -149,6 +152,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
+        txtDebanture.setDisable(true);
+        colKapaat.setVisible(false);
         btnExport.setDisable(false);
         bonusList = new ArrayList<>();
         criteriaList = new ArrayList<>();
@@ -223,6 +228,9 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 colKapaat.setVisible(false);
             }
         });
+        chkDebanture.setOnAction(e -> {
+            txtDebanture.setDisable(!chkDebanture.isSelected());
+        });
     }
 
     private void exportToCsv() {
@@ -294,21 +302,20 @@ public class BonusController extends SocietyPaymentCycleEditController implement
 
                 for (Bonus bonus : tableBonus.getItems()) {
                     List<String> rowData = new ArrayList<>();
-                    rowData.add(escapeCsv(bonus.getMember().getCodeEx()));
+                    rowData.add(escapeCsv(FormatterFactory.formatNumber(bonus.getMember().getCodeEx())));
                     rowData.add(escapeCsv(bonus.getMember().toMemberName()));
                     rowData.add(escapeCsv(bonus.getBankName()));
-                    rowData.add(escapeCsv(bonus.getAccountNo()));
+                    String formattedAcc = FormatterFactory.formatNumber(bonus.getAccountNo());
+                    rowData.add("=\"" + escapeCsv(formattedAcc) + "\"");
                     rowData.add(escapeCsv(bonus.getIfsc()));
                     rowData.add(escapeCsv(bonus.getStatus() == 0 ? "PENDING" : "DONE"));
-                    rowData.add(escapeCsv(bonus.getType() == 0 ? "Union Bonus" : "Society Bonus"));
-
+                    rowData.add(escapeCsv(bonus.getType() == 0 ? resourceBundle.getString("unionbonus") : resourceBundle.getString("societybonus")));
                     BigDecimal milkQty = bonus.getMilkQty();
                     BigDecimal milkAmount = bonus.getMilkAmount();
                     BigDecimal bonusAmount = bonus.getBonusAmount();
-
-                    rowData.add(escapeCsv(milkQty.toPlainString()));
-                    rowData.add(escapeCsv(milkAmount.toPlainString()));
-                    rowData.add(escapeCsv(bonusAmount.toPlainString()));
+                    rowData.add(escapeCsv(FormatterFactory.formatNumber(milkQty)));
+                    rowData.add(escapeCsv(FormatterFactory.formatNumber(milkAmount)));
+                    rowData.add(escapeCsv(FormatterFactory.formatNumber(bonusAmount)));
 
                     totalQty = totalQty.add(milkQty);
                     totalMilkAmount = totalMilkAmount.add(milkAmount);
@@ -322,14 +329,14 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                         } catch (NumberFormatException ex) {
                             rowDeductionOrDebenture = BigDecimal.ZERO;
                         }
-                        rowData.add(escapeCsv(rowDeductionOrDebenture.toPlainString()));
+                        rowData.add(escapeCsv(FormatterFactory.formatNumber(rowDeductionOrDebenture)));
                     } else {
                         rowDeductionOrDebenture = bonus.getDebantureAmount();
-                        rowData.add(escapeCsv(rowDeductionOrDebenture.toPlainString()));
+                        rowData.add(escapeCsv(FormatterFactory.formatNumber(rowDeductionOrDebenture)));
                     }
 
                     BigDecimal rowTotal = bonusAmount.subtract(rowDeductionOrDebenture);
-                    rowData.add(escapeCsv(rowTotal.toPlainString()));
+                    rowData.add(escapeCsv(FormatterFactory.formatNumber(rowTotal)));
                     rowData.add(escapeCsv(bonus.getxCol2()));
 
                     totalDeductionOrDebenture = totalDeductionOrDebenture.add(rowDeductionOrDebenture);
@@ -344,17 +351,17 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 // Summary Row
                 List<String> summaryRowData = new ArrayList<>();
                 summaryRowData.add("Total");
-                summaryRowData.add(""); // For Member Name
-                summaryRowData.add(""); // For Bank Name
-                summaryRowData.add(""); // For Account No
-                summaryRowData.add(""); // For IFSC
-                summaryRowData.add(""); // For Status
-                summaryRowData.add(""); // For Type
-                summaryRowData.add(escapeCsv(totalQty.setScale(3, RoundingMode.HALF_DOWN).toPlainString()));
-                summaryRowData.add(escapeCsv(totalMilkAmount.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
-                summaryRowData.add(escapeCsv(totalBonusAmount.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
-                summaryRowData.add(escapeCsv(totalDeductionOrDebenture.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
-                summaryRowData.add(escapeCsv(totalGrandTotal.setScale(2, RoundingMode.HALF_DOWN).toPlainString()));
+                summaryRowData.add("");
+                summaryRowData.add("");
+                summaryRowData.add("");
+                summaryRowData.add("");
+                summaryRowData.add("");
+                summaryRowData.add("");
+                summaryRowData.add(escapeCsv(FormatterFactory.formatNumber(totalQty.setScale(3, RoundingMode.HALF_DOWN))));
+                summaryRowData.add(escapeCsv(FormatterFactory.formatNumber(totalMilkAmount.setScale(2, RoundingMode.HALF_DOWN))));
+                summaryRowData.add(escapeCsv(FormatterFactory.formatNumber(totalBonusAmount.setScale(2, RoundingMode.HALF_DOWN))));
+                summaryRowData.add(escapeCsv(FormatterFactory.formatNumber(totalDeductionOrDebenture.setScale(2, RoundingMode.HALF_DOWN))));
+                summaryRowData.add(escapeCsv(FormatterFactory.formatNumber(totalGrandTotal.setScale(2, RoundingMode.HALF_DOWN))));
                 summaryRowData.add(""); // For Remarks
 
                 writer.append(String.join(",", summaryRowData)).append('\n');
@@ -468,8 +475,6 @@ public class BonusController extends SocietyPaymentCycleEditController implement
 //                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         }
-
-//        TODO NIMIT HERE NEED TO ADD DEBANTURE LOGIC
 
         // Sort list by Member Code before updating the table
         bonusList.sort(Comparator.comparing(b -> b.getMember().getCodeEx()));
@@ -585,6 +590,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             dto.getBonusSummary().setBonusCriteriaValue(new BigDecimal(txtBonusValue.getInputText()));
             dto.getBonusSummary().setFromDate(dpFromDate.getValue());
             dto.getBonusSummary().setToDate(dpToDate.getValue());
+            dto.getBonusSummary().setDebanture(chkDebanture.isSelected());
             for (Bonus b : bonusList) {
                 b.selectedProperty().setValue(true);
                 qty = qty.add(b.getMilkQty());
@@ -603,7 +609,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 dto.getBonusSummary().setBonusCriteriaAmount(bonus);
             }
 
-            dto.getBonusSummary().setDebantureAmount(new BigDecimal(txtDebanture.getInputText()));
+            dto.getBonusSummary().setDebantureAmount(txtDebanture.getInputText() != null ? new BigDecimal(txtDebanture.getInputText()) : BigDecimal.ZERO);
             dto.getBonusSummary().setxCol1(String.valueOf(cboxMilkType.getValue().getCode()));
             dto.getBonusSummary().setxCol2(kapaat.toString());
             var task = new BonusEditTask(dto);
@@ -640,6 +646,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             bs.setSociety(MainApp.identityDto.getSociety());
             bs.setUnion(MainApp.identityDto.getUnion());
             bs.setxCol1(String.valueOf(cboxMilkType.getValue().getCode()));
+            bs.setDebanture(chkDebanture.isSelected());
+
             for (Bonus b : bonusList) {
                 b.selectedProperty().setValue(true);
                 qty = qty.add(b.getMilkQty());
@@ -658,7 +666,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             } else {
                 bs.setBonusCriteriaAmount(bonus);
             }
-            bs.setDebantureAmount(totalDebantureAmt);
+            bs.setDebantureAmount(txtDebanture.getInputText() != null ? new BigDecimal(txtDebanture.getInputText()) : BigDecimal.ZERO);
             bs.setTotalMilkQty(qty);
             bs.setxCol2(String.valueOf(kapaat));
             bs.setTotalMilkAmount(amt);

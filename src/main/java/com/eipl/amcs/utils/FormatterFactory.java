@@ -64,7 +64,7 @@ public class FormatterFactory {
     }
 
     public static String formatNumber(String number) {
-        if (number == null)
+        if (number == null || number.trim().equalsIgnoreCase(""))
             return "";
 
         if (number.matches(".*[a-zA-Z/\\-_].*")) {

@@ -18,7 +18,7 @@
                 <E_Label styleClass="header-text" text="%bonus.summary" />
                 <TableView fx:id="tableBonusSummary" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-                  <TableColumn fx:id="colMilkType" prefWidth="120.0" text="%milktype" />
+<!--                  <TableColumn fx:id="colMilkType" prefWidth="120.0" text="%milktype" />-->
                         <TableColumn fx:id="colFromDate" prefWidth="120.0" text="%fromdate" />
                         <TableColumn fx:id="colToDate" prefWidth="120.0" text="%todate" />
                         <TableColumn fx:id="colTotalQty" prefWidth="120.0" styleClass="cell-right-aligned" text="%totalqty" />

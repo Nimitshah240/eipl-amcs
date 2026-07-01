@@ -49,7 +49,7 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
     @FXML
     private TableColumn<BonusSummary, Number> colTotalQty, colTotalAmt, colBonusAmt;
     @FXML
-    private TableColumn<BonusSummary, String> colStatus, colMilkType;
+    private TableColumn<BonusSummary, String> colStatus;
     @FXML
     private Button btnAdd, btnEdit, btnClose, btnDelete, btnDisburse, btnReport, btnGeneral;
     private ResourceBundle resourceBundle;
@@ -175,10 +175,10 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
     public void setupTable() {
         try {
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate()));
-            colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol1().equalsIgnoreCase("1") ?
-                    resourceBundle.getString("cow") : data.getValue().getxCol1().equalsIgnoreCase("2") ?
-                    resourceBundle.getString("buffalo") : data.getValue().getxCol1().equalsIgnoreCase("3") ? resourceBundle.getString("mix")
-                    : data.getValue().getxCol1().equalsIgnoreCase("4") ? resourceBundle.getString("A2_Cow") : resourceBundle.getString("all")));
+//            colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol1().equalsIgnoreCase("1") ?
+//                    resourceBundle.getString("cow") : data.getValue().getxCol1().equalsIgnoreCase("2") ?
+//                    resourceBundle.getString("buffalo") : data.getValue().getxCol1().equalsIgnoreCase("3") ? resourceBundle.getString("mix")
+//                    : data.getValue().getxCol1().equalsIgnoreCase("4") ? resourceBundle.getString("A2_Cow") : resourceBundle.getString("all")));
             colToDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getToDate()));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus() == 0 ? "PENDING" : "DONE"));
             colTotalQty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTotalMilkQty()));

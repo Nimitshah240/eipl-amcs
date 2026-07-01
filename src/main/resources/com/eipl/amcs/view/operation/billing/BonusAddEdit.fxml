@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_CheckBox?>
 <?import com.eipl.amcs.controls.E_DatePicker?>
 <?import com.eipl.amcs.controls.E_NumericField?>
-<?import com.eipl.amcs.controls.E_CheckBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -26,7 +28,7 @@
                 <VBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                     <children>
-                        <GridPane hgap="5.0">
+                        <GridPane hgap="5.0" vgap="10.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0"
                                                    prefWidth="100.0"/>
@@ -62,13 +64,29 @@
                                 <E_DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308"
                                               GridPane.columnIndex="3" GridPane.rowIndex="3"/>
                                 <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="5"/>
-                                <Button fx:id="btnGenerate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                        styleClass="button-primary" text="%generate" GridPane.columnIndex="4"
+                                <!--                                <Button fx:id="btnGenerate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"-->
+                                <!--                                        styleClass="button-primary" text="%generate" GridPane.columnIndex="4"-->
+                                <!--                                        GridPane.halignment="RIGHT" GridPane.rowIndex="6">-->
+                                <!--                                    <GridPane.margin>-->
+                                <!--                                        <Insets/>-->
+                                <!--                                    </GridPane.margin>-->
+                                <!--                                </Button>-->
+                                <Button fx:id="btnGenerate" graphicTextGap="5.0" minHeight="36.0" minWidth="100.0"
+                                        mnemonicParsing="true" text="%generate" GridPane.columnIndex="4"
                                         GridPane.halignment="RIGHT" GridPane.rowIndex="6">
-                                    <GridPane.margin>
-                                        <Insets/>
-                                    </GridPane.margin>
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/plus.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <padding>
+                                        <Insets right="1.0"/>
+                                    </padding>
                                 </Button>
+
                                 <Label text="%bonus.value" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
                                 <E_NumericField fx:id="txtBonusValue" maxWidth="1.7976931348623157E308"
                                                 GridPane.columnIndex="2" GridPane.rowIndex="5"/>
@@ -85,14 +103,14 @@
                                 <Label text="%toshift" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                                 <Label text="%fromshift" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
                                 <E_NumericField fx:id="txtDebanture" GridPane.columnIndex="4" GridPane.rowIndex="5"/>
-                                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0"
-                                      GridPane.columnIndex="3" GridPane.rowIndex="5" fx:id="hBoxDebanture">
+                                <HBox fx:id="hBoxDebanture" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                                      spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="5">
                                     <children>
                                         <E_CheckBox fx:id="chkDebanture"/>
                                         <Label text="%want.debanture.kapaat"/>
                                     </children>
                                 </HBox>
-                                <Label text="%debanture.kapaat" fx:id="lblDebantureKapaat" GridPane.columnIndex="4"
+                                <Label fx:id="lblDebantureKapaat" text="%debanture.kapaat" GridPane.columnIndex="4"
                                        GridPane.rowIndex="4"/>
                             </children>
                         </GridPane>
@@ -100,19 +118,19 @@
                             <columns>
                                 <TableColumn fx:id="colMemberCode" minWidth="100.0" prefWidth="100.0"
                                              styleClass="cell-center-aligned" text="%code"/>
-                                <TableColumn fx:id="colMemberName" text="%name" prefWidth="200.0"/>
+                                <TableColumn fx:id="colMemberName" prefWidth="200.0" text="%name"/>
                                 <TableColumn fx:id="colMilkQty" prefWidth="90.0" styleClass="cell-right-aligned"
                                              text="%milkqty"/>
                                 <TableColumn fx:id="colMilkAmount" prefWidth="114.0" styleClass="cell-right-aligned"
                                              text="%milkamt"/>
                                 <TableColumn fx:id="colBonusAmt" prefWidth="145.0" styleClass="cell-right-aligned"
                                              text="%bonusamt"/>
-                                <TableColumn fx:id="colDebanture" prefWidth="110.0" text="%debanture.kapaat"
-                                             styleClass="cell-right-aligned"/>
+                                <TableColumn fx:id="colDebanture" prefWidth="110.0" styleClass="cell-right-aligned"
+                                             text="%debanture.kapaat"/>
                                 <TableColumn fx:id="colKapaat" prefWidth="110.0" styleClass="cell-right-aligned"
                                              text="%kapaat"/>
-                                <TableColumn fx:id="colTotal" prefWidth="110.0" text="%total"
-                                             styleClass="cell-right-aligned"/>
+                                <TableColumn fx:id="colTotal" prefWidth="110.0" styleClass="cell-right-aligned"
+                                             text="%total"/>
                                 <TableColumn fx:id="colRemarks" prefWidth="200.0" styleClass="cell-right-aligned"
                                              text="%remark"/>
                                 <TableColumn fx:id="colType" prefWidth="120.0" text="%type"/>
@@ -124,13 +142,50 @@
                         </TableView>
                         <HBox spacing="15.0">
                             <children>
-                                <Button fx:id="btnSaveUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                        styleClass="button-primary" text="%save"/>
-                                <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                        text="%close"/>
+                                <!--                                <Button fx:id="btnSaveUpdate" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" styleClass="button-primary" text="%save" />-->
+                                <!--                                <Button fx:id="btnClose" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0" text="%close" />-->
+
+                                <Button fx:id="btnSaveUpdate" contentDisplay="TOP" graphicTextGap="5.0"
+                                        mnemonicParsing="true"
+                                        prefHeight="25.0" prefWidth="76.0" text="%save">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/save.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0"
+                                        mnemonicParsing="true"
+                                        prefHeight="30.0" prefWidth="80.0" text="%close">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/close.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
                                 <Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="btnExport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"
-                                        text="%export"/>
+                                <!--                                <Button fx:id="btnExport" mnemonicParsing="true" prefHeight="30.0" prefWidth="80.0"-->
+                                <!--                                        text="%export"/>-->
+
+                                <Button fx:id="btnExport" contentDisplay="TOP" graphicTextGap="5.0"
+                                        mnemonicParsing="true"
+                                        prefHeight="30.0" prefWidth="80.0" text="%export">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/excel.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+
                             </children>
                         </HBox>
                     </children>

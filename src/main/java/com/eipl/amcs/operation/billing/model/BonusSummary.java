@@ -64,6 +64,8 @@ public class BonusSummary extends BaseModelTxn {
     private BigDecimal kapaatAmount;
     @Column
     private BigDecimal totalAmount;
+    @Column(name = "is_debanture")
+    private boolean debanture;
 
     @Override
     public String getTableName() {
