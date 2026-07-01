@@ -59,7 +59,9 @@ public class TableLocalizationUtil {
                         setText(formatNumber((Number) item));
                     } else {
                         String stringValue = item.toString().trim();
-                        if (stringValue.matches("(?=.*[a-zA-Z])(?=.*\\d).*") || stringValue.contains(" ")) {                            // Directly convert english digits to local characters without breaking the format
+                        if (stringValue.matches("(?=.*[a-zA-Z])(?=.*\\d).*") || stringValue.contains(" ")) {
+                            setText(convertEnglishToLocalizedDigits(stringValue));
+                        } else if (stringValue.startsWith("0") && stringValue.length() > 1) {
                             setText(convertEnglishToLocalizedDigits(stringValue));
                         } else {
                             Matcher matcher = DIGIT_PATTERN.matcher(stringValue);
