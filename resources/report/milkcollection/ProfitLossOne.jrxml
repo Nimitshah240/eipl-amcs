@@ -81,7 +81,7 @@
 						<font size="10" isBold="true"/>
 						<paragraph leftIndent="3"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{total}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement style="noto" mode="Opaque" x="0" y="0" width="40" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="01bea2d6-2b68-4d38-8d87-a532a6c2e172">
@@ -249,7 +249,7 @@
 						<font size="10" isBold="true"/>
 						<paragraph leftIndent="3"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{Grand_Total}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{sub_total}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -288,10 +288,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{date} + " " + 
-($P{p_from_date}) + 
-" " + $R{to} + " " + 
-($P{p_to_date})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{date} + " " + java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format($P{p_from_date}) + " " + $R{to} + " " + java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format($P{p_to_date})
+]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="noto" x="0" y="0" width="525" height="21" uuid="58480113-fd36-4a23-8e6a-1b9b626bda0d">

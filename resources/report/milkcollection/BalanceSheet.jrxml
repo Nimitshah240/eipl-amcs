@@ -50,8 +50,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.text.DecimalFormat("#########.00").format($V{total_asset_balance}) : 
-com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########.00").format($V{total_asset_balance}), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########.00").format($V{total_asset_balance}), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="18" forecolor="#000000" backcolor="#E4E4F5" uuid="53263183-c399-4dad-b3c7-09afe9d05c7e">
@@ -123,8 +122,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFString(new java.text.DecimalFormat("#########
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.text.DecimalFormat("#########0.00").format(new java.math.BigDecimal($V{total_liability_balance}.toString())) : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{total_liability_balance}.toString()).setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{total_liability_balance}.toString()).setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -212,7 +210,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{total_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{accounting.liability}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{liability}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="0" width="90" height="22" backcolor="#E4E4F5" uuid="f6d1ecda-00a1-45e5-8158-f02d20733e87">
@@ -239,7 +237,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{total_
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{accounting.asset}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{asset}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="39" height="22" backcolor="#E4E4F5" uuid="967e7d21-8e66-4a64-81cf-a1ef9bc5c94a">
@@ -336,29 +334,18 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($F{liabilityB
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
-				<reportElement style="noto" x="435" y="5" width="49" height="15" uuid="438f1376-2d18-4ab6-acb5-b7af89522c50">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{page}+ ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
-			</textField>
 			<textField evaluationTime="Report">
-				<reportElement style="noto" x="484" y="5" width="40" height="15" uuid="2c1de456-8791-4dc1-9672-11c240e2da16">
+				<reportElement x="484" y="5" width="40" height="15" uuid="fed5a33d-c45b-4d65-b67f-73c5a4714881">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{of} + ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy hh:mm a&#xA;">
-				<reportElement key="" style="noto" positionType="Float" x="0" y="5" width="435" height="15" uuid="c4d423ed-7501-4078-9a5a-ea70693bd3d3">
+				<reportElement key="" style="noto" positionType="Float" x="0" y="5" width="424" height="15" uuid="cc83cbfc-34fe-430c-8a42-e60f8749e577">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
@@ -368,9 +355,18 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($F{liabilityB
 					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
-    new java.util.Date() : 
-    com.eipl.amcs.utils.UTFDigit.getUTFDate(new java.text.SimpleDateFormat("dd/MM/yy").format(new java.util.Date()), $P{p_locale})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="5" width="60" height="15" uuid="a5e57a4e-4244-4f68-a0d4-337eaf82a8f0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
