@@ -383,6 +383,8 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     milkDispatchSummaryDtoList = task.get();
                     if (milkDispatchSummaryDtoList != null)
                         tableMilkDispatchSummary.setItems(FXCollections.observableList(milkDispatchSummaryDtoList));
+                    else
+                        tableMilkDispatchSummary.getItems().clear();
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
@@ -610,6 +612,13 @@ public class MilkDispatchAddEditController extends MilkDispatchBaseController im
                     String msg = resourceBundle.getString("error.local.sale.required") + ":\n" + String.join("\n", missingShifts);
                     MyAlert alert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"), msg);
                     alert.createAlert();
+
+                    MyAlert alert1 = new ConfirmationAlert(MainApp.getStage(), resourceBundle.getString("milkdispatch"),
+                            resourceBundle.getString("open.localsale"));
+                    Optional<ButtonType> resp = alert1.createConfirmationAlert();
+                    if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/operation/procurement/LocalMilkSale.fxml")));
+                    }
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

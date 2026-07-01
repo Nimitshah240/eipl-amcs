@@ -1831,3 +1831,5 @@ vertical=खड़े
 stock.going.to.zero=त्रुटि: ऐसा करने से स्टॉक माइनस में चला जाएगा।
 save.confirmation.msg=क्या आप डेटा सहेजना (save) चाहते हैं? कटौती {0} से शुरू होगी।
 previous.bill.not.disbursed=पिछले बिल का भुगतान नहीं हुआ है।
+cannot.delete.last.transaction=अंतिम लेनदेन को हटाया नहीं जा सकता
+open.localsale=क्या आप स्थानीय दूध बिक्री खोलना चाहते हैं?

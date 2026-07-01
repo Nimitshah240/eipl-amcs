@@ -12,8 +12,6 @@ import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.account.converter.LedgerGroupConvertor;
-import com.eipl.amcs.master.account.converter.LedgerTypeConvertor;
 import com.eipl.amcs.master.account.dto.LedgerSubLedgerDto;
 import com.eipl.amcs.master.account.model.*;
 import com.eipl.amcs.master.account.task.*;
@@ -23,7 +21,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.StackPane;
@@ -91,6 +88,8 @@ public class LedgerAddEditController implements MyInitialization {
         loadLedgerType();
         if (ledger != null) {
             this.ledger = ledger;
+            cboxLedgerType.getSelectionModel().select(ledger.getLedgerGroup().getLedgerType());
+            cboxLedgerGroup.getSelectionModel().select(ledger.getLedgerGroup());
             btnSaveUpdate.setText(resourceBundle.getString("update"));
             loadLedgerGroup();
         } else {
@@ -148,7 +147,7 @@ public class LedgerAddEditController implements MyInitialization {
 //            }
 //        });
 
-       cboxLedgerType.textProperty().addListener(e -> {
+        cboxLedgerType.textProperty().addListener(e -> {
             if (cboxLedgerType.getValue() != null)
                 loadLedgerGroupByType();
         });
@@ -283,7 +282,7 @@ public class LedgerAddEditController implements MyInitialization {
                         resourceBundle.getString("ledger.insert.successful"));
                 alert.createAlert();
                 MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/master/account/Ledger.fxml")));
-
+                clearControls();
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -374,6 +373,19 @@ public class LedgerAddEditController implements MyInitialization {
         new Thread(task).start();
     }
 
+
+    @Override
+    public void clearControls() {
+        try {
+            getNextLedgerCode();
+            cboxLedgerGroup.clearSelection();
+            cboxLedgerType.clearSelection();
+            txtName.setText("");
+            txtLocalName.setText("");
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void loadLedgerGroupByType() {
         var task = new LedgerGroupByLegderTypeLoadTask(cboxLedgerType.getValue().getCode());

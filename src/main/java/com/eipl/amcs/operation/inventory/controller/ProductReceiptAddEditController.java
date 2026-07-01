@@ -653,7 +653,7 @@ public class ProductReceiptAddEditController implements MyInitialization, PopupC
         txn.setUnit(txn.getProduct().getPrimaryUom());
         txn.setRate(new BigDecimal(txtRate.getInputText()));
         txn.setSaleRate(new BigDecimal(txtSaleRate.getInputText()));
-        txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getInputText()))));
+        txn.setQuantity((new BigDecimal(txtQuantity.getInputText())));
         txn.setAmount(new BigDecimal(txtAmount.getInputText()));
         txn.setTax(cboxTax.getValue());
         txn.setTaxAmount(new BigDecimal(txtTaxAmount.getInputText()));

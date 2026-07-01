@@ -45,10 +45,12 @@ public class E_NumericField extends TextField {
      * -----------   --------------   ---------   ---------------------------------
      * 24/06/2026    Nimit             1.0.1      Added method to get locale number input in English in backend.
      * 26/06/2026    Nimit             1.0.2      Added Listener to change focus on Ctrl + Arrow Click.
+     * 30/06/2026    Nimit             1.0.3      Resolve bug of removing prefix zero.
      */
     public E_NumericField() {
         try {
-            TextFormatter<Number> txtInputFormatter = FormatterFactory.createNumericFormatter();
+//            TextFormatter<Number> txtInputFormatter = FormatterFactory.createNumericFormatter();
+            TextFormatter<String> txtInputFormatter = FormatterFactory.createNumericFormatter();
             setTextFormatter(txtInputFormatter);
             txtInputFormatter.setValue(null);
             this.clear();

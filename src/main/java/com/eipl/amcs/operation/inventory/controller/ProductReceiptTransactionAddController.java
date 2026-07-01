@@ -172,7 +172,7 @@ public class ProductReceiptTransactionAddController implements MyInitialization 
         txn.setProduct(cboxProduct.getValue());
         txn.setUnit(cboxUnit.getValue());
         txn.setRate(new BigDecimal(txtRate.getText()));
-        txn.setQuantity(Integer.valueOf(String.valueOf(new BigDecimal(txtQuantity.getText()))));
+        txn.setQuantity(new BigDecimal(txtQuantity.getText()));
         txn.setAmount(new BigDecimal(txtAmount.getText()));
         txn.setDiscount(new BigDecimal(txtDiscount.getText()));
         txn.setTax(cboxTax.getValue());

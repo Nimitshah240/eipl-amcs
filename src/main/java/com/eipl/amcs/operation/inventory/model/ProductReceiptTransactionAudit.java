@@ -38,7 +38,7 @@ public class ProductReceiptTransactionAudit extends BaseModelTxnAudit {
     private BigDecimal amount;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal discount;
-    private Integer quantity;
+    private BigDecimal quantity;
     @Digits(integer = 8, fraction = 2)
     private BigDecimal rate;
     @Digits(integer = 8, fraction = 2)

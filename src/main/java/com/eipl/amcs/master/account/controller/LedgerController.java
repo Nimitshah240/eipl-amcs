@@ -135,7 +135,7 @@ public class LedgerController implements MyInitialization, PopupCallback {
             txtSearch.setText("");
             if (cboxLedgerGroup.getValue() != null)
                 tableLedger.setItems(FXCollections.observableList(ledgerList.stream().filter(
-                                e1 -> e1.getLedgerGroup() != null && e1.getLedgerGroup().getCode() == cboxLedgerGroup.getValue().getCode()).
+                                e1 -> e1.getLedgerGroup() != null && Objects.equals(e1.getLedgerGroup().getCode(), cboxLedgerGroup.getValue().getCode())).
                         collect(Collectors.toList())));
         });
 

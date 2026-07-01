@@ -2,7 +2,6 @@ package com.eipl.amcs.utils;
 
 import com.eipl.amcs.MainApp;
 import javafx.scene.control.TextFormatter;
-import javafx.util.StringConverter;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,34 +20,23 @@ public class FormatterFactory {
     public static final String LOCALE_MR = "mr";
     public static final Locale currentLocale = getCurrentLocale();
 
-    public static TextFormatter<Number> createNumericFormatter() {
-        NumberFormat numberFormat = NumberFormat.getInstance(currentLocale);
-        numberFormat.setGroupingUsed(false);
-        StringConverter<Number> localizedConverter = new StringConverter<>() {
+    public static TextFormatter<String> createNumericFormatter() {
+
+        javafx.util.StringConverter<String> localizedConverter = new javafx.util.StringConverter<>() {
             @Override
-            public String toString(Number number) {
-                if (number == null)
-                    return null;
-                String formatted = numberFormat.format(number);
-                return convertEnglishToLocalizedDigits(formatted);
+            public String toString(String string) {
+                if (string == null) return "";
+                return convertEnglishToLocalizedDigits(string);
             }
 
             @Override
-            public Number fromString(String string) {
-                try {
-                    if (string == null || string.trim().isEmpty())
-                        return null;
-
-                    String cleanInput = convertEnglishToLocalizedDigits(string.trim());
-                    return numberFormat.parse(cleanInput);
-
-                } catch (ParseException e) {
-                    return null;
-                }
+            public String fromString(String string) {
+                if (string == null || string.trim().isEmpty()) return "";
+                return convertEnglishToLocalizedDigits(string.trim());
             }
         };
 
-        return new TextFormatter<>(localizedConverter, 0, change -> {
+        return new TextFormatter<>(localizedConverter, "", change -> {
             if (!change.isContentChange()) {
                 return change;
             }

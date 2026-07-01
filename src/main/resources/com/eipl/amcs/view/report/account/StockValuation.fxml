@@ -211,7 +211,7 @@
                                 </ImageView>
                             </graphic>
                         </E_Button>
-                        <Label text="Label" GridPane.columnIndex="4"/>
+                        <Label text="%language" GridPane.columnIndex="4"/>
 
                     </children>
                     <VBox.margin>

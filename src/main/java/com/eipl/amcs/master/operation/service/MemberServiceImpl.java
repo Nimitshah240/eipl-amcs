@@ -238,13 +238,15 @@ public class MemberServiceImpl implements MemberService {
             memberCattleDetail.setMember(dtoNew.getMember());
             memberCattleDetailRepository.save(memberCattleDetail);
         }
-        for (MemberFamilyDetail memberFamilyDetail : memberDto.getMemberFamilyDetailList()) {
-            if (memberFamilyDetail.getMemberFamilyDetailCode() == null || memberFamilyDetail.getMemberFamilyDetailCode().isBlank()) {
-                String code = nextCodeRepository.getNextCode("MemberFamilyDetail", "memberFamilyDetailCode", member.getSociety().getCode(), 0);
-                memberFamilyDetail.setMemberFamilyDetailCode(code);
+        if (memberDto.getMemberFamilyDetailList() != null) {
+            for (MemberFamilyDetail memberFamilyDetail : memberDto.getMemberFamilyDetailList()) {
+                if (memberFamilyDetail.getMemberFamilyDetailCode() == null || memberFamilyDetail.getMemberFamilyDetailCode().isBlank()) {
+                    String code = nextCodeRepository.getNextCode("MemberFamilyDetail", "memberFamilyDetailCode", member.getSociety().getCode(), 0);
+                    memberFamilyDetail.setMemberFamilyDetailCode(code);
+                }
+                memberFamilyDetail.setMember(dtoNew.getMember());
+                memberFamilyDetailRepository.save(memberFamilyDetail);
             }
-            memberFamilyDetail.setMember(dtoNew.getMember());
-            memberFamilyDetailRepository.save(memberFamilyDetail);
         }
 
         if (memberDto.getMappedMembers() != null) {
