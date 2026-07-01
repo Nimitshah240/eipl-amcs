@@ -866,6 +866,8 @@ public class MemberAddEditController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<Relationship> list = task.get();
+                if (list == null || list.isEmpty())
+                    return;
                 cboxRelation.setItems(FXCollections.observableList(list));
                 cboxRelation1.setItems(FXCollections.observableList(list));
 

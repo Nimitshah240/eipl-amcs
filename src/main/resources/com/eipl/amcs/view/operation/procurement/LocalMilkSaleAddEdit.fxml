@@ -83,7 +83,7 @@
                                     <graphic>
                                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
-                                                <Image url="@../../images/add.png" />
+                                                <Image url="@../../images/save.png" />
                                             </image>
                                         </ImageView>
                                     </graphic>
