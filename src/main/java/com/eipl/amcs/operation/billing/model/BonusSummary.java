@@ -58,6 +58,13 @@ public class BonusSummary extends BaseModelTxn {
     @JsonIgnoreProperties(value = {"bank", "branch", "state", "district", "subDistrict", "village", "hamlet"})
     private Union union;
 
+    @Column
+    private BigDecimal debantureAmount;
+    @Column
+    private BigDecimal kapaatAmount;
+    @Column
+    private BigDecimal totalAmount;
+
     @Override
     public String getTableName() {
         return "bonus_summary";

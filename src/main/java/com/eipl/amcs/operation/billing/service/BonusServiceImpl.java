@@ -2,6 +2,8 @@ package com.eipl.amcs.operation.billing.service;
 
 import com.eipl.amcs.base.service.NextCodeService;
 import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.model.MemberDetail;
+import com.eipl.amcs.master.operation.repository.MemberDetailRepository;
 import com.eipl.amcs.master.operation.repository.MemberRepository;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
@@ -32,6 +34,8 @@ public class BonusServiceImpl implements BonusService {
     BonusSummaryRepository bonusSummaryRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    MemberDetailRepository memberDetailRepository;
 
     @Autowired
     NextCodeService nextCodeService;
@@ -58,7 +62,15 @@ public class BonusServiceImpl implements BonusService {
             b.setMilkAmount((BigDecimal) map.get("amt"));
             b.setMilkQty((BigDecimal) map.get("qty"));
             Member m = memberRepository.findByCode((String) map.get("member_code"));
+            MemberDetail md = memberDetailRepository.findByMember(m).orElse(null);
             b.setMember(m);
+            b.setMemberName(m.getFirstName());
+            if (md != null) {
+                b.setBank(md.getBank());
+                b.setBankName(md.getBank().toString());
+                b.setAccountNo(md.getAccountNo());
+                b.setIfsc(md.getIfsc());
+            }
             b.setStatus((short) 0);
             list.add(b);
         }
