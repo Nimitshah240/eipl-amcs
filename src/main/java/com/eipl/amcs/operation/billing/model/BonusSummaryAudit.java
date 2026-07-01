@@ -56,6 +56,13 @@ public class BonusSummaryAudit extends BaseModelTxnAudit {
     @JoinColumn(name = "union_code", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Union union;
 
+    @Column
+    private BigDecimal debantureAmount;
+    @Column
+    private BigDecimal kapaatAmount;
+    @Column
+    private BigDecimal totalAmount;
+
     @Override
     public String getTableName() {
         return "bonus_summary_audit";

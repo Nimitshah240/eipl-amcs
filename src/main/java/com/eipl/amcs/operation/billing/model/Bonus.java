@@ -11,6 +11,7 @@ import com.eipl.amcs.json.serialize.MemberSerialize;
 import com.eipl.amcs.json.serialize.SocietySerialize;
 import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.org.model.Bank;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -67,6 +68,23 @@ public class Bonus extends BaseModelTxn {
     private Union union;
     @Transient
     private BooleanProperty selected;
+
+    @Column
+    private String memberName;
+    @Transient
+    private Bank bank;
+    @Column
+    private String bankName;
+    @Column
+    private String accountNo;
+    @Column
+    private String ifsc;
+    @Column
+    private BigDecimal debantureAmount;
+    @Column
+    private BigDecimal kapaatAmount;
+    @Column
+    private BigDecimal totalAmount;
 
     public Bonus() {
         selected = new SimpleBooleanProperty();

@@ -4,6 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_CheckBox;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
@@ -13,8 +14,6 @@ import com.eipl.amcs.controls.alert.MyAlert;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.exception.error.ApiError;
 import com.eipl.amcs.exception.error.ApiValidationError;
-import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -37,6 +36,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.converter.DefaultStringConverter;
@@ -46,11 +46,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class BonusController extends SocietyPaymentCycleEditController implements MyInitialization, PopupCallback {
@@ -72,15 +68,22 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     private AutoSearchTextField<MilkType> cboxMilkType;
     private Stage stage;
     @FXML
-    private E_NumericField txtBonusValue;
+    private E_NumericField txtBonusValue, txtDebanture;
+    @FXML
+    private E_CheckBox chkDebanture;
     @FXML
     private TableView<Bonus> tableBonus;
     @FXML
     private AutoSearchTextField<Shift> cboxToShift, cboxFromShift;
     @FXML
-    private TableColumn<Bonus, String> colMemberCode, colMemberName, colStatus, colType, colKapaat, colRemarks, colTotal;
+    private TableColumn<Bonus, String> colMemberCode, colMemberName, colStatus, colType, colKapaat, colRemarks, colBank, colAccount, colIfsc;
     @FXML
-    private TableColumn<Bonus, Number> colMilkQty, colMilkAmount, colBonusAmt;
+    private TableColumn<Bonus, Number> colMilkQty, colMilkAmount, colBonusAmt, colDebanture, colTotal;
+
+    @FXML
+    private Label lblDebantureKapaat;
+    @FXML
+    private HBox hBoxDebanture;
     private BonusSummary bonusSummary;
     private List<Bonus> bonusList;
     private ResourceBundle resourceBundle;
@@ -88,6 +91,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
     private List<String> criteriaList;
     private List<String> typeList;
     private BigDecimal totalAmt = BigDecimal.ZERO;
+    private BigDecimal totalDebantureAmt = BigDecimal.ZERO;
 
     public BonusController() {
         propBonus = new SimpleObjectProperty<>();
@@ -108,7 +112,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             cboxCriteria.getSelectionModel().select(bonusSummary.getBonusCriteria() == 0 ? 0 : bonusSummary.getBonusCriteria() == 1 ? 1 : 2);
             cboxType.getSelectionModel().select(bonusSummary.getType() == 0 ? 0 : bonusSummary.getType() == 1 ? 1 : 2);
             txtBonusValue.setText(String.valueOf(bonusSummary.getBonusCriteriaValue()));
-
+            txtDebanture.setText(String.valueOf(bonusSummary.getDebantureAmount()));
             loadControls();
         }
     }
@@ -193,6 +197,23 @@ public class BonusController extends SocietyPaymentCycleEditController implement
         btnSaveUpdate.setOnAction(event -> {
             saveData();
         });
+
+        txtDebanture.setText("0");
+        cboxType.textProperty().addListener(e -> {
+            if (cboxType.getSelectionModel().getSelectedIndex() == 1) {
+                colDebanture.setVisible(false);
+                txtDebanture.setVisible(false);
+                lblDebantureKapaat.setVisible(false);
+                hBoxDebanture.setVisible(false);
+                colKapaat.setVisible(true);
+            } else {
+                colDebanture.setVisible(true);
+                txtDebanture.setVisible(true);
+                lblDebantureKapaat.setVisible(true);
+                hBoxDebanture.setVisible(true);
+                colKapaat.setVisible(false);
+            }
+        });
     }
 
     private void loadData(LocalDateTime value, LocalDateTime value1, String type, String criteria, String bonusValue, MilkType milkType) {
@@ -214,6 +235,10 @@ public class BonusController extends SocietyPaymentCycleEditController implement
 
     private void getBonusValue(String type, String criteria, String bonusValue) {
         BigDecimal bonus;
+        BigDecimal debanture = new BigDecimal(txtDebanture.getInputText());
+        for (Bonus b1 : bonusList) {
+            totalAmt = totalAmt.add(b1.getMilkAmount());
+        }
         if (criteria.equalsIgnoreCase(resourceBundle.getString("percentage"))) {
             for (Bonus b : bonusList) {
                 bonus = b.getMilkAmount().multiply(new BigDecimal(bonusValue)).divide(BigDecimal.valueOf(100));
@@ -221,7 +246,20 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
-                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
+                if (chkDebanture.isSelected() && debanture.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal rawDebantureAmount = b.getMilkAmount()
+                            .multiply(debanture)
+                            .divide(totalAmt, 6, RoundingMode.HALF_UP);
+
+                    BigDecimal roundedAmount = rawDebantureAmount
+                            .divide(BigDecimal.TEN, 0, RoundingMode.DOWN)
+                            .multiply(BigDecimal.TEN);
+
+                    b.setDebantureAmount(roundedAmount);
+                } else {
+                    b.setDebantureAmount(BigDecimal.ZERO);
+                }
+                b.setTotalAmount(b.getBonusAmount().subtract(b.getDebantureAmount()));
             }
         } else if (criteria.equalsIgnoreCase(resourceBundle.getString("rs"))) {
             for (Bonus b : bonusList) {
@@ -230,22 +268,48 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
-                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
+                if (chkDebanture.isSelected() && debanture.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal rawDebantureAmount = b.getMilkAmount()
+                            .multiply(debanture)
+                            .divide(totalAmt, 6, RoundingMode.HALF_UP);
+
+                    BigDecimal roundedAmount = rawDebantureAmount
+                            .divide(BigDecimal.TEN, 0, RoundingMode.DOWN)
+                            .multiply(BigDecimal.TEN);
+
+                    b.setDebantureAmount(roundedAmount);
+                } else {
+                    b.setDebantureAmount(BigDecimal.ZERO);
+                }
+                b.setTotalAmount(b.getBonusAmount().subtract(b.getDebantureAmount()));
             }
         } else {
-
-            for (Bonus b1 : bonusList) {
-                totalAmt = totalAmt.add(b1.getMilkAmount());
-            }
             for (Bonus b : bonusList) {
                 bonus = new BigDecimal(bonusValue).divide(totalAmt, 25, RoundingMode.HALF_DOWN);
                 b.setBonusAmount(bonus.multiply(b.getMilkAmount()));
                 b.setType(cboxType.getValue().equalsIgnoreCase(resourceBundle.getString("unionbonus")) ? (short) 0 : (short) 1);
                 b.setSociety(MainApp.identityDto.getSociety());
                 b.setUnion(MainApp.identityDto.getUnion());
-                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
+                if (chkDebanture.isSelected() && debanture.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal rawDebantureAmount = b.getMilkAmount()
+                            .multiply(debanture)
+                            .divide(totalAmt, 6, RoundingMode.HALF_UP);
+
+                    BigDecimal roundedAmount = rawDebantureAmount
+                            .divide(BigDecimal.TEN, 0, RoundingMode.DOWN)
+                            .multiply(BigDecimal.TEN);
+
+                    b.setDebantureAmount(roundedAmount);
+                } else {
+                    b.setDebantureAmount(BigDecimal.ZERO);
+                }
+                b.setTotalAmount(b.getBonusAmount().subtract(b.getDebantureAmount()));
+//                b.setxCol3(String.valueOf(b.getBonusAmount().add(b.getMilkAmount())));
             }
         }
+
+//        TODO NIMIT HERE NEED TO ADD DEBANTURE LOGIC
+
         // Sort list by Member Code before updating the table
         bonusList.sort(Comparator.comparing(b -> b.getMember().getCodeEx()));
         tableBonus.setItems(FXCollections.observableArrayList(bonusList));
@@ -279,7 +343,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             colBonusAmt.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBonusAmount().setScale(2,
                     RoundingMode.HALF_DOWN)));
             colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus() == 0 ? "PENDING" : "DONE"));
-            colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getType() == 0 ? "Union Bonus" : "Society Bonus"));
+            colType.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getType() == 0 ? resourceBundle.getString("unionbonus") : resourceBundle.getString("societybonus")));
             tableBonus.setEditable(true);
             colKapaat.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getxCol1()));
             colKapaat.setCellFactory(column -> new TextFieldTableCell<Bonus, String>(new DefaultStringConverter()) {
@@ -326,9 +390,14 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 }
             });
 
-            colTotal.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol3()));
+            colTotal.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTotalAmount()));
             colMilkQty.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkQty()));
             colMilkAmount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getMilkAmount()));
+
+            colAccount.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAccountNo()));
+            colBank.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getBankName()));
+            colIfsc.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getIfsc()));
+            colDebanture.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDebantureAmount()));
             propBonus.bind(tableBonus.getSelectionModel().selectedItemProperty());
             TableLocalizationUtil.localizeTable(tableBonus);
 
@@ -361,6 +430,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 amt = amt.add(b.getMilkAmount());
                 kapaat = kapaat.add(new BigDecimal(b.getxCol1() != null ? b.getxCol1() : "0"));
                 bonus = bonus.add(b.getBonusAmount());
+                totalDebantureAmt = totalDebantureAmt.add(new BigDecimal(txtDebanture.getInputText()));
                 if (b.getxCol1() == null) {
                     b.setxCol1("0");
                     b.setxCol3("0");
@@ -372,6 +442,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 dto.getBonusSummary().setBonusCriteriaAmount(bonus);
             }
 
+            dto.getBonusSummary().setDebantureAmount(new BigDecimal(txtDebanture.getInputText()));
             dto.getBonusSummary().setxCol1(String.valueOf(cboxMilkType.getValue().getCode()));
             dto.getBonusSummary().setxCol2(kapaat.toString());
             var task = new BonusEditTask(dto);
@@ -414,6 +485,8 @@ public class BonusController extends SocietyPaymentCycleEditController implement
                 amt = amt.add(b.getMilkAmount());
                 bonus = bonus.add(b.getBonusAmount());
                 kapaat = kapaat.add(new BigDecimal(b.getxCol1() != null ? b.getxCol1() : "0"));
+                totalDebantureAmt = totalDebantureAmt.add(b.getDebantureAmount());
+
                 if (b.getxCol1() == null) {
                     b.setxCol1("0");
                     b.setxCol3("0");
@@ -424,6 +497,7 @@ public class BonusController extends SocietyPaymentCycleEditController implement
             } else {
                 bs.setBonusCriteriaAmount(bonus);
             }
+            bs.setDebantureAmount(totalDebantureAmt);
             bs.setTotalMilkQty(qty);
             bs.setxCol2(String.valueOf(kapaat));
             bs.setTotalMilkAmount(amt);
