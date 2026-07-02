@@ -160,9 +160,9 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="true"/>
-						<paragraph leftIndent="10"/>
+						<paragraph lineSpacing="Single" leftIndent="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{BulkCooler_Route_No}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{BulkCooler_Route_No}.trim() + ":"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="440" y="20" width="86" height="16" uuid="1fb3a045-78d5-4c63-af35-3d691c7cef22">
@@ -181,8 +181,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   ": " + ($F{society_code} == null || $F{society_code}.length() < 4 ? $F{society_code} : $F{society_code}.substring($F{society_code}.length() - 4)) : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFString(($F{society_code} == null || $F{society_code}.length() < 4 ? $F{society_code} : $F{society_code}.substring($F{society_code}.length() - 4)), $P{p_locale})
-]]></textFieldExpression>
+  ": " + com.eipl.amcs.utils.UTFDigit.getUTFString(($F{society_code} == null || $F{society_code}.length() < 4 ? $F{society_code} : $F{society_code}.substring($F{society_code}.length() - 4)), $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH:mm:ss a" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="120" y="90" width="160" height="15" uuid="07e02f81-b3fa-4e50-8474-833954233724">
@@ -197,17 +196,17 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph lineSpacing="Fixed"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   new SimpleDateFormat("hh:mm:ss a").format($F{vehicle_in_time}) : 
   com.eipl.amcs.utils.UTFDigit.getUTFString(new SimpleDateFormat("hh").format($F{vehicle_in_time}), $P{p_locale}) + ":" + 
   com.eipl.amcs.utils.UTFDigit.getUTFString(new SimpleDateFormat("mm").format($F{vehicle_in_time}), $P{p_locale}) + ":" + 
   com.eipl.amcs.utils.UTFDigit.getUTFString(new SimpleDateFormat("ss").format($F{vehicle_in_time}), $P{p_locale}) + 
-  ($F{vehicle_in_time}.getHours() < 12 ? " સવાર" : " સાંજ")
-]]></textFieldExpression>
+  ($F{vehicle_in_time}.getHours() < 12 ? " સવાર" : " સાંજ")]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH:mm:ss a" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" x="420" y="90" width="106" height="15" uuid="ee90197a-d3c2-4b6f-8a1e-c99b99c8c1c2">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="430" y="90" width="96" height="15" uuid="ee90197a-d3c2-4b6f-8a1e-c99b99c8c1c2">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -220,15 +219,14 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="false"/>
-						<paragraph leftIndent="5" rightIndent="0"/>
+						<paragraph lineSpacing="Single" leftIndent="5" rightIndent="0"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   new SimpleDateFormat("hh:mm:ss a").format($F{vehicle_out_time}) : 
   com.eipl.amcs.utils.UTFDigit.getUTFString(new SimpleDateFormat("hh").format($F{vehicle_out_time}), $P{p_locale}) + ":" + 
   com.eipl.amcs.utils.UTFDigit.getUTFString(new SimpleDateFormat("mm").format($F{vehicle_out_time}), $P{p_locale}) + ":" + 
   com.eipl.amcs.utils.UTFDigit.getUTFString(new SimpleDateFormat("ss").format($F{vehicle_out_time}), $P{p_locale}) + 
-  ($F{vehicle_out_time}.getHours() < 12 ? " સવાર" : " સાંજ")
-]]></textFieldExpression>
+  ($F{vehicle_out_time}.getHours() < 12 ? " સવાર" : " સાંજ")]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="36" width="526" height="18" uuid="267d2744-96d5-47fe-a3f3-86971af000ca">
@@ -247,7 +245,7 @@
 					<textFieldExpression><![CDATA[$F{s_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" x="280" y="90" width="140" height="15" uuid="5e3c8ee5-10c0-41ce-bdd3-f182ffe78faf">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="280" y="90" width="150" height="15" uuid="5e3c8ee5-10c0-41ce-bdd3-f182ffe78faf">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
@@ -259,8 +257,9 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph lineSpacing="Fixed" rightIndent="0"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{Tanker_Out_Time}+" : "]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Tanker_Out_Time}.trim() + " :"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="90" width="120" height="15" uuid="a402cde8-1ecd-4480-9719-b6fc3633da1b">
@@ -274,9 +273,9 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="true"/>
-						<paragraph leftIndent="10"/>
+						<paragraph lineSpacing="Single" leftIndent="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{Tanker_In_Time}+" : "]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Tanker_In_Time}.trim() +" : "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="120" y="69" width="160" height="21" uuid="06b397bc-db95-4f5f-8f11-1393fcb2a404">
@@ -291,14 +290,15 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
-  ": " + $F{route_no} : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFString($F{route_no}, $P{p_locale})
+  "" + $F{route_no} : 
+  com.eipl.amcs.utils.UTFDigit.getUTFString($F{route_no}, $P{p_locale})
 ]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" x="420" y="69" width="106" height="21" uuid="3fc123a3-2bba-40a4-b097-a9f0b06c1843">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="430" y="69" width="96" height="21" uuid="3fc123a3-2bba-40a4-b097-a9f0b06c1843">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -311,12 +311,11 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="false"/>
-						<paragraph leftIndent="5" rightIndent="0"/>
+						<paragraph lineSpacing="Single" leftIndent="5" rightIndent="0"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   $F{vehicle_no} : 
-  com.eipl.amcs.utils.UTFDigit.getUTFString($F{vehicle_no}, $P{p_locale})
-]]></textFieldExpression>
+  com.eipl.amcs.utils.UTFDigit.getUTFString($F{vehicle_no}, $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="54" width="526" height="15" uuid="bc2b5f04-1400-4d49-862e-90444c9fdb8f">
@@ -363,11 +362,12 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph lineSpacing="Single" lineSpacingSize="2.0"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{created_at}.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" stretchType="RelativeToTallestObject" x="280" y="69" width="140" height="21" uuid="8a198555-672d-4f51-b8a2-dfb35a9e7271">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="280" y="69" width="150" height="21" uuid="8a198555-672d-4f51-b8a2-dfb35a9e7271">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
@@ -379,11 +379,12 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph lineSpacing="Fixed" rightIndent="0"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{Tanker_No}+" : "]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Tanker_No}.trim() +" : "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="noto" x="0" y="20" width="60" height="16" printWhenGroupChanges="Total" uuid="79f6a15f-fb2c-4289-be49-a8c99ca3aaf1">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="16" printWhenGroupChanges="Total" uuid="79f6a15f-fb2c-4289-be49-a8c99ca3aaf1">
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
 					<box>
@@ -394,9 +395,9 @@
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 						<font fontName="Noto" isBold="true"/>
-						<paragraph leftIndent="10"/>
+						<paragraph lineSpacing="Single" leftIndent="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{date}+" :"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{date}.trim() +" :"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="1" width="526" height="19" uuid="55d6618b-c26f-4b7d-8a45-6529ae5261da">
@@ -585,8 +586,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   $F{fssai_code} : 
-  com.eipl.amcs.utils.UTFDigit.getUTFString($F{fssai_code}, $P{p_locale})
-]]></textFieldExpression>
+  com.eipl.amcs.utils.UTFDigit.getUTFString($F{fssai_code}, $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="0" width="220" height="26" uuid="fc83016d-07a3-4815-9dc7-7efbd5910cd4">
@@ -747,8 +747,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   ": " + $F{dispatch_liter} + " " + $R{ltr} : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{dispatch_liter}, $P{p_locale}) + " " + $R{ltr}
-]]></textFieldExpression>
+  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{dispatch_liter}, $P{p_locale}) + " " + $R{ltr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="100" y="68" width="180" height="15" uuid="3ba3193b-7821-46af-a2e1-39c21b822d89">
@@ -766,8 +765,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   ": " + $F{purchase_cow_liter}.add($F{purchase_buffalo_liter}) + "  " + $R{ltr} : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_cow_liter}.add($F{purchase_buffalo_liter}), $P{p_locale}) + "  " + $R{ltr}
-]]></textFieldExpression>
+  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_cow_liter}.add($F{purchase_buffalo_liter}), $P{p_locale}) + "  " + $R{ltr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="100" y="29" width="180" height="15" uuid="248a928f-e9fe-43ac-a443-03b033a7f7cf">
@@ -785,8 +783,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   ": " + $F{purchase_cow_liter} + "  " + $R{ltr} : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_cow_liter}, $P{p_locale}) + "  " + $R{ltr}
-]]></textFieldExpression>
+  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_cow_liter}, $P{p_locale}) + "  " + $R{ltr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="100" y="48" width="180" height="15" uuid="3389ec9d-ebd1-4ad1-8f2c-3f8c158d3b99">
@@ -804,8 +801,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   ": " + $F{purchase_buffalo_liter} + "  " + $R{ltr} : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_buffalo_liter}, $P{p_locale}) + "  " + $R{ltr}
-]]></textFieldExpression>
+  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_buffalo_liter}, $P{p_locale}) + "  " + $R{ltr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="450" y="29" width="76" height="15" uuid="4f9dfd95-5bdc-4183-af81-432a0795f65d">
@@ -934,8 +930,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   $F{purchase_total_fat} : 
-  com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_total_fat}, $P{p_locale})
-]]></textFieldExpression>
+  com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{purchase_total_fat}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="300" y="106" width="150" height="15" uuid="37bf9b61-df54-4640-b77f-2050f16a4720">
@@ -971,8 +966,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   $F{collection_avg_snf} : 
-  com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{collection_avg_snf}, $P{p_locale})
-]]></textFieldExpression>
+  com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{collection_avg_snf}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="100" y="87" width="180" height="15" uuid="bbc7ba0d-cf51-45f5-9185-7739987aa479">
@@ -990,8 +984,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
   ": " + $F{local_sale_total_liter} + "  " + $R{ltr} : 
-  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{local_sale_total_liter}, $P{p_locale}) + "  " + $R{ltr}
-]]></textFieldExpression>
+  ": " + com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{local_sale_total_liter}, $P{p_locale}) + "  " + $R{ltr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="87" width="100" height="15" uuid="879ab3d2-a4dd-42fb-9390-aa87eb770f8f">
