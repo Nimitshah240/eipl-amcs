@@ -133,9 +133,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{qty}).
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal($V{amount}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP) : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{amount}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP), $P{p_locale})
-
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{amount}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP), $P{p_locale})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -191,7 +189,8 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{amount
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none"/>
-				<textFieldExpression><![CDATA[$F{p_from_date} +" " +$R{to}+" " +$F{p_to_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format(java.time.LocalDate.parse($F{p_from_date}, java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))) + " " + $R{to} + " " + java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy").format(java.time.LocalDate.parse($F{p_to_date}, java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="0" y="40" width="262" height="15" uuid="38b666f0-bae8-41ea-9c26-b82079fe2b0c">
@@ -332,8 +331,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{amount
 					<font fontName="Noto" size="10" isBold="false"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{sr_no} : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{sr_no}, $P{p_locale})
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{sr_no} : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{sr_no}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="40" y="0" width="60" height="20" uuid="6257965d-330e-41c1-ae38-ae44df04785c">
@@ -394,8 +392,7 @@ com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{amount
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 $F{qty}.setScale(2, java.math.RoundingMode.HALF_UP).toString() : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty}.setScale(2, java.math.RoundingMode.HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="439" y="0" width="102" height="20" uuid="e7f714fd-f916-400f-ba6e-baaf29c301d1">
@@ -495,49 +492,63 @@ com.eipl.amcs.utils.UTFDigit.getUTFDouble(new java.math.BigDecimal($V{page_qty})
 				</textElement>
 				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
 new java.math.BigDecimal($V{page_amount}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP) : 
-com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{page_amount}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP), $P{p_locale})
-]]></textFieldExpression>
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal($V{page_amount}).setScale(2, java.math.BigDecimal.ROUND_HALF_UP), $P{p_locale})]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField pattern="dd/MM/yyyy hh:mm a&#xA;">
-				<reportElement key="" style="noto" positionType="Float" x="0" y="5" width="453" height="15" uuid="b7e42e09-ce00-4ced-90b0-d7b1c2899264">
+			<textField evaluationTime="Report">
+				<reportElement style="noto" x="490" y="5" width="52" height="15" uuid="6384aeb0-a707-47a9-a796-8131546d850f">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{of} + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" x="430" y="5" width="60" height="15" uuid="2aff0c23-99f8-421d-b37d-63c024ec9d62">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{page} + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm a&#xA;" isBlankWhenNull="true">
+				<reportElement key="" style="noto" positionType="Float" x="0" y="5" width="430" height="15" uuid="4f16c46c-4a95-43bd-80d6-bf129e65a900">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
-    new java.util.Date() : 
-    com.eipl.amcs.utils.UTFDigit.getUTFDate(new java.text.SimpleDateFormat("dd/MM/yy").format(new java.util.Date()), $P{p_locale})]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="453" y="5" width="49" height="15" uuid="98aa602e-b593-418a-b7a8-1c8b909878d2">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{page}+ ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement style="noto" x="502" y="5" width="40" height="15" uuid="48975871-b250-436c-a664-e267b5e913c6">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{of} + ($P{p_locale}.equals("en") ? String.valueOf($V{PAGE_NUMBER}) : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{PAGE_NUMBER}, $P{p_locale}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

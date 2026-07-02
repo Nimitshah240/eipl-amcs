@@ -154,7 +154,7 @@
 		<variableExpression><![CDATA[$F{kg_snf}]]></variableExpression>
 	</variable>
 	<variable name="Member_Snf" class="java.math.BigDecimal" resetType="Group" resetGroup="Member Group">
-		<variableExpression><![CDATA[$V{Member_Total_Qty}.compareTo(BigDecimal.ZERO)>0 ?$V{Member_Kg_Snf} .divide($V{Member_Total_Qty},18,2).multiply(new BigDecimal(100)) : 0.0]]></variableExpression>
+		<variableExpression><![CDATA[$V{Member_Total_Qty}.compareTo(BigDecimal.ZERO)>0 ?$V{Member_Kg_Snf} .divide($V{Member_Total_Qty},18,2).multiply(new BigDecimal(100)) : BigDecimal.ZERO]]></variableExpression>
 	</variable>
 	<variable name="Member_Kg_Clr" class="java.math.BigDecimal" resetType="Group" resetGroup="Member Group" calculation="Sum">
 		<variableExpression><![CDATA[$F{kg_clr}]]></variableExpression>
@@ -174,31 +174,16 @@
 	<variable name="Total_Qty_kg" class="java.math.BigDecimal">
 		<variableExpression><![CDATA[$P{p_ltr_kg} == 0 
 ? $V{Total_Qty}.multiply(new java.math.BigDecimal("1.03")) 
-: $V{Total_Qty}.divide(new java.math.BigDecimal("1.03"), 4, java.math.RoundingMode.HALF_UP)
-]]></variableExpression>
+: $V{Total_Qty}.divide(new java.math.BigDecimal("1.03"), 4, java.math.RoundingMode.HALF_UP)]]></variableExpression>
 	</variable>
-	<group name="TotalCalculation">
+	<group name="TotalCalculation" keepTogether="true">
 		<groupFooter>
 			<band height="33">
-				<textField isStretchWithOverflow="true" pattern="#########0.000">
-					<reportElement style="noto" mode="Opaque" x="315" y="0" width="75" height="15" backcolor="#E4E4F5" uuid="f7691994-b27b-4072-8db9-872327350c3f"/>
-					<box leftPadding="5" rightPadding="5">
-						<pen lineWidth="1.0" lineStyle="Solid"/>
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Noto" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_Qty}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="390" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="f7a746e4-7890-45c0-9e97-349ce214e8eb">
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<textField isStretchWithOverflow="true" pattern="#########0.000" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="0" width="75" height="15" backcolor="#E4E4F5" uuid="f7691994-b27b-4072-8db9-872327350c3f">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -207,15 +192,35 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Fat}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{Total_Qty}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Total_Qty}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="435" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="28c2decd-b505-4bb8-b6f9-0462de929787">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="390" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="f7a746e4-7890-45c0-9e97-349ce214e8eb">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="0">
+						<pen lineWidth="1.0" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($V{Fat}) : com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal(new java.text.DecimalFormat("0.00").format($V{Fat})), $P{p_locale})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="435" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="28c2decd-b505-4bb8-b6f9-0462de929787">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -224,14 +229,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Snf}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($V{Snf}) : com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal(new java.text.DecimalFormat("0.00").format($V{Snf})), $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="540" y="0" width="85" height="15" backcolor="#E4E4F5" uuid="ae4c8c6e-065a-4478-8680-5e3608b15d5d">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="540" y="0" width="85" height="15" backcolor="#E4E4F5" uuid="ae4c8c6e-065a-4478-8680-5e3608b15d5d">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -240,12 +247,15 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_Amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{Total_Amount}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Total_Amount}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="480" y="0" width="60" height="15" backcolor="#E4E4F5" uuid="f9d77ef2-05dc-4652-858d-65c7a38dbab2"/>
-					<box leftPadding="5" rightPadding="5">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="60" height="15" backcolor="#E4E4F5" uuid="f9d77ef2-05dc-4652-858d-65c7a38dbab2">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -254,14 +264,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="625" y="0" width="70" height="15" backcolor="#E4E4F5" uuid="b77e27f1-c305-4fd4-ac1c-ceff0ba1eb08">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="625" y="0" width="70" height="15" backcolor="#E4E4F5" uuid="b77e27f1-c305-4fd4-ac1c-ceff0ba1eb08">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -270,15 +282,17 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_Add_ded}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{Total_Add_ded}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Total_Add_ded}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="695" y="0" width="83" height="15" backcolor="#E4E4F5" uuid="d62ab8dd-4f97-4209-a90a-7f0968d2707f">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="695" y="0" width="83" height="15" backcolor="#E4E4F5" uuid="d62ab8dd-4f97-4209-a90a-7f0968d2707f">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -287,15 +301,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_Net_Payable}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{Total_Net_Payable}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Total_Net_Payable}, $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="noto" mode="Opaque" x="0" y="0" width="315" height="15" backcolor="#E4E4F5" uuid="140d7d0d-6510-4b46-b68f-810ee995a21c">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="315" height="15" backcolor="#E4E4F5" uuid="140d7d0d-6510-4b46-b68f-810ee995a21c">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -307,11 +322,12 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$R{total}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="390" y="18" width="45" height="15" backcolor="#E4E4F5" uuid="e6a4fef8-d772-4eeb-92a3-42bfd8ce5023">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="390" y="18" width="45" height="15" backcolor="#E4E4F5" uuid="e6a4fef8-d772-4eeb-92a3-42bfd8ce5023">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -320,15 +336,17 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="435" y="18" width="45" height="15" backcolor="#E4E4F5" uuid="4b4c1009-db90-4882-a7eb-e2ff7e10c8dd">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="435" y="18" width="45" height="15" backcolor="#E4E4F5" uuid="4b4c1009-db90-4882-a7eb-e2ff7e10c8dd">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -337,15 +355,17 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="695" y="18" width="83" height="15" backcolor="#E4E4F5" uuid="5bf139db-8f15-43bc-910d-8e5de68e0ef8">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="695" y="18" width="83" height="15" backcolor="#E4E4F5" uuid="5bf139db-8f15-43bc-910d-8e5de68e0ef8">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -354,15 +374,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="noto" mode="Opaque" x="0" y="18" width="315" height="15" backcolor="#E4E4F5" uuid="922eb8e0-fc20-458f-85c0-d7e24337a82e">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="18" width="315" height="15" backcolor="#E4E4F5" uuid="922eb8e0-fc20-458f-85c0-d7e24337a82e">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -374,12 +395,13 @@
 					</textElement>
 					<textFieldExpression><![CDATA[$P{p_ltr_kg} == 0 
 ? $R{Total_(Kg)}
-: $R{Total_(Lt)}
-]]></textFieldExpression>
+: $R{Total_(Lt)}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.000">
-					<reportElement style="noto" mode="Opaque" x="315" y="18" width="75" height="15" backcolor="#E4E4F5" uuid="4faa513d-f079-4611-85e1-d2ca9818327a"/>
-					<box leftPadding="5" rightPadding="5">
+				<textField isStretchWithOverflow="true" pattern="#########0.000" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="18" width="75" height="15" backcolor="#E4E4F5" uuid="4faa513d-f079-4611-85e1-d2ca9818327a">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -388,12 +410,15 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Total_Qty_kg}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? new java.text.DecimalFormat("0.00").format($V{Total_Qty_kg}) : com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(new java.math.BigDecimal(new java.text.DecimalFormat("0.00").format($V{Total_Qty_kg})), $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="480" y="18" width="60" height="15" backcolor="#E4E4F5" uuid="d75aaead-035c-4d09-be70-d1dcdbeaa752"/>
-					<box leftPadding="5" rightPadding="5">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="18" width="60" height="15" backcolor="#E4E4F5" uuid="d75aaead-035c-4d09-be70-d1dcdbeaa752">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -402,14 +427,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="625" y="18" width="70" height="15" backcolor="#E4E4F5" uuid="612636d9-f5f8-4589-8f82-0b931dbd8b27">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="625" y="18" width="70" height="15" backcolor="#E4E4F5" uuid="612636d9-f5f8-4589-8f82-0b931dbd8b27">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -418,14 +445,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="540" y="18" width="85" height="15" backcolor="#E4E4F5" uuid="ba1bb0c2-50fe-45bc-a81e-036300d43c7c">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="540" y="18" width="85" height="15" backcolor="#E4E4F5" uuid="ba1bb0c2-50fe-45bc-a81e-036300d43c7c">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -434,6 +463,7 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="true"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
@@ -444,25 +474,11 @@
 		<groupExpression><![CDATA[$F{member_code}]]></groupExpression>
 		<groupFooter>
 			<band height="21">
-				<textField isStretchWithOverflow="true" pattern="#########0.000">
-					<reportElement style="noto" mode="Opaque" x="315" y="0" width="75" height="15" backcolor="#E4E4F5" uuid="4b905d1f-646f-40b3-888c-8bbe8d7a336b"/>
-					<box leftPadding="5" rightPadding="5">
-						<pen lineWidth="1.0" lineStyle="Solid"/>
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Noto" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{Member_Total_Qty}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="390" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="178e06da-e573-4641-9f7d-3eee7e690c36">
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<textField isStretchWithOverflow="true" pattern="#########0.000" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="315" y="0" width="75" height="15" backcolor="#E4E4F5" uuid="4b905d1f-646f-40b3-888c-8bbe8d7a336b">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -471,15 +487,35 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Member_Fat}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $V{Member_Total_Qty}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Member_Total_Qty}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="435" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="266e0c21-b91e-4c01-9449-8ead02f03423">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="390" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="178e06da-e573-4641-9f7d-3eee7e690c36">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="0">
+						<pen lineWidth="1.0" lineStyle="Solid"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ?$V{Member_Fat}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Member_Fat}, $P{p_locale})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="435" y="0" width="45" height="15" backcolor="#E4E4F5" uuid="266e0c21-b91e-4c01-9449-8ead02f03423">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -488,14 +524,18 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Member_Snf}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? 
+($V{Member_Snf} != null ? $V{Member_Snf}.setScale(2, java.math.BigDecimal.ROUND_HALF_UP) : new java.math.BigDecimal("0.00")) : 
+com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal(($V{Member_Snf} != null ? $V{Member_Snf}.setScale(2, java.math.BigDecimal.ROUND_HALF_UP) : new java.math.BigDecimal("0.00")), $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="540" y="0" width="85" height="15" backcolor="#E4E4F5" uuid="1f6e0b26-0373-49a5-a24c-3cc2622f215f">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="540" y="0" width="85" height="15" backcolor="#E4E4F5" uuid="1f6e0b26-0373-49a5-a24c-3cc2622f215f">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -504,12 +544,15 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Member_Total_Amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ?$V{Member_Total_Amount}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Member_Total_Amount}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="480" y="0" width="60" height="15" backcolor="#E4E4F5" uuid="f9c25f2d-3338-4bd2-becb-2a1a964b47b9"/>
-					<box leftPadding="5" rightPadding="5">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="0" width="60" height="15" backcolor="#E4E4F5" uuid="f9c25f2d-3338-4bd2-becb-2a1a964b47b9">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -518,14 +561,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[""]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="625" y="0" width="70" height="15" backcolor="#E4E4F5" uuid="7445fd19-e7d0-4e64-8fd9-472936379f7b">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="625" y="0" width="70" height="15" backcolor="#E4E4F5" uuid="7445fd19-e7d0-4e64-8fd9-472936379f7b">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -534,15 +579,17 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Member_Total_Add_ded}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ?$V{Member_Total_Add_ded}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Member_Total_Add_ded}, $P{p_locale})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#########0.00">
-					<reportElement style="noto" mode="Opaque" x="695" y="0" width="83" height="15" backcolor="#E4E4F5" uuid="25226ccd-a976-45ee-931c-616c234095da">
+				<textField isStretchWithOverflow="true" pattern="#########0.00" isBlankWhenNull="true">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="695" y="0" width="83" height="15" backcolor="#E4E4F5" uuid="25226ccd-a976-45ee-931c-616c234095da">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -551,15 +598,16 @@
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Noto" isBold="false"/>
+						<paragraph rightIndent="2"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{Member_Total_Net_Payable}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ?$V{Member_Total_Net_Payable}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($V{Member_Total_Net_Payable}, $P{p_locale})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="noto" mode="Opaque" x="0" y="0" width="315" height="15" backcolor="#E4E4F5" uuid="99087045-1310-47b1-9788-14af3bfdea34">
+					<reportElement style="noto" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="315" height="15" backcolor="#E4E4F5" uuid="99087045-1310-47b1-9788-14af3bfdea34">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</reportElement>
-					<box leftPadding="5" rightPadding="5">
+					<box leftPadding="0" rightPadding="0">
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -578,72 +626,60 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="25" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
-				<reportElement style="noto" x="0" y="0" width="778" height="18" uuid="9e64af89-ef8a-4e5b-8dcd-d90cece4b71c">
+		<band height="71" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="noto" x="0" y="0" width="778" height="25" uuid="dccce663-e129-4819-9c26-fbcdc1204a0c">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<box>
-					<pen lineWidth="1.0" lineStyle="Solid"/>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Noto" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{society_name} + " - " + ($F{society_code} == null || $F{society_code}.trim().isEmpty() || $F{society_code}.length() < 4 ? String.valueOf($F{society_code}) : $F{society_code}.substring($F{society_code}.length() - 4))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="noto" x="0" y="25" width="778" height="25" uuid="14a02b02-1dea-4b9f-92fa-a103c56e2fb3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Noto" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{member_milk_collection_summary_report}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" x="0" y="50" width="778" height="17" uuid="eb939302-a672-4b17-8f44-7d55e4bb9d22">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{member_milk_collection_summary_report}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{date} + " " + new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateFormat("dd/MM/yyyy").parse($F{from_date})) + " " + $R{to} + " " + new java.text.SimpleDateFormat("dd-MM-yyyy").format(new java.text.SimpleDateFormat("dd/MM/yyyy").parse($F{to_date}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="75" splitType="Stretch">
-			<line>
-				<reportElement x="0" y="71" width="778" height="1" uuid="0aeb84db-03e2-40ed-a673-3c10ea459254">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-			</line>
+		<band height="22" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement style="noto" x="90" y="38" width="260" height="15" uuid="034ef523-2f98-4408-9659-4d0c71d457da">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<box leftPadding="0" rightPadding="0"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Noto"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{from_date} + " To " + $F{to_date}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="0" y="38" width="90" height="15" uuid="5b34af2c-0e36-4a84-8671-85a765bca98c">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{collection_date}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="624" y="0" width="73" height="15" uuid="a5e15611-f091-43b8-98be-90f66b4a9e67">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{print_date}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="0" y="53" width="90" height="15" uuid="4c0c8bea-c549-4a40-8361-982a509fb338">
+				<reportElement style="noto" x="0" y="5" width="90" height="15" uuid="4c0c8bea-c549-4a40-8361-982a509fb338">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -654,72 +690,17 @@
 				<textFieldExpression><![CDATA[$R{quantity_mode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="noto" x="90" y="53" width="91" height="15" uuid="094648f8-f7ca-41f4-91f3-d5836b9d6c33">
+				<reportElement style="noto" x="90" y="5" width="91" height="15" uuid="094648f8-f7ca-41f4-91f3-d5836b9d6c33">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{p_ltr_kg} == 0 ? $R{ltr} : $R{kg}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="697" y="0" width="81" height="15" uuid="01c35bb0-91cb-4c25-a6c2-ee1647abcadc">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<line>
-				<reportElement x="0" y="33" width="778" height="1" uuid="7b298667-201d-4d81-b5cb-195ba40992f2">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</line>
-			<textField>
-				<reportElement style="noto" x="60" y="0" width="390" height="15" uuid="ec7c25fe-9dd9-45da-a117-e1d8f0a622e2">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Noto" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{society_code} +" - "+$F{society_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="0" y="15" width="60" height="15" uuid="d303bdec-d4c6-4a6b-aac2-2452c142b59c">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{village}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="60" y="15" width="390" height="15" uuid="983015f4-13fe-43d0-a0eb-08cf72f87790">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Noto" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{village_code}+" - " +$F{village_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="noto" x="0" y="0" width="60" height="15" uuid="4c283ce7-08a5-4bc1-a6bd-650f9156a687">
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Noto" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{society}]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="35" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="noto" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="35" y="0" width="40" height="35" backcolor="#E4E4F5" uuid="47993366-3a90-43c4-a96f-d45a884d309e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -921,7 +902,7 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -931,15 +912,16 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en")? $V{REPORT_COUNT} : com.eipl.amcs.utils.UTFDigit.getUTFInteger($V{REPORT_COUNT}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="75" y="0" width="105" height="15" uuid="7fcbabb2-63c7-452b-b693-288642cb4dfe">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -948,6 +930,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="false"/>
+					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
 			</textField>
@@ -956,8 +939,9 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -966,34 +950,39 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{avg_fat}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{avg_fat} : com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{avg_fat}, $P{p_locale})]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="35" y="0" width="40" height="15" uuid="10eac7b2-ee2c-4104-b27c-3e0f8d82b0ce">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="false"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{member_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{member_code} : com.eipl.amcs.utils.UTFDigit.getUTFString($F{member_code}, $P{p_locale})
+]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="265" y="0" width="50" height="15" backcolor="#FFFFFF" uuid="cf202b75-f42a-42e5-8083-a600ed5d719e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1002,6 +991,7 @@
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="false"/>
+					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{milk_type}]]></textFieldExpression>
 			</textField>
@@ -1009,8 +999,9 @@
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="315" y="0" width="75" height="15" uuid="9468efef-8f7e-4000-90f1-b09cf233562f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1019,16 +1010,18 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="false"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{qty} : com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{qty}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="435" y="0" width="45" height="15" uuid="66e40fb1-cc1b-45bd-9289-3eced1e8a6a3">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1037,12 +1030,15 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{avg_snf}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{avg_snf} : com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{avg_snf}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
-				<reportElement style="noto" stretchType="RelativeToTallestObject" x="480" y="0" width="60" height="15" uuid="26667c16-1408-4e50-8ffd-9799f1a47001"/>
-				<box leftPadding="5" rightPadding="5">
+				<reportElement style="noto" stretchType="RelativeToTallestObject" x="480" y="0" width="60" height="15" uuid="26667c16-1408-4e50-8ffd-9799f1a47001">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1051,14 +1047,16 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{avg_rate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{avg_rate}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{avg_rate}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="540" y="0" width="85" height="15" uuid="a1a093ec-68bb-4c3d-82eb-d6707870cd03">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1067,14 +1065,16 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{amount}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{amount}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="625" y="0" width="70" height="15" uuid="4a57e4f8-932e-4e68-9350-7ca28a1a123b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1083,15 +1083,17 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deduction}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{deduction}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{deduction}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#########0.00">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="695" y="0" width="83" height="15" uuid="45bc44cc-647c-40b8-8bf4-24cf85d4be3b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1100,8 +1102,9 @@
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Noto"/>
+					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{netpayble}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{p_locale}.equals("en") ? $F{netpayble}: com.eipl.amcs.utils.UTFDigit.getUTFBigDecimal($F{netpayble}, $P{p_locale})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MM-YYYY">
 				<reportElement style="noto" stretchType="RelativeToTallestObject" x="180" y="0" width="85" height="15" backcolor="#FFFFFF" uuid="755a735f-e0d7-458d-9cba-84ca3ddfebef">
@@ -1109,14 +1112,14 @@
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<box leftPadding="5" rightPadding="5">
+				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Noto" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{collection_date}]]></textFieldExpression>
@@ -1127,28 +1130,10 @@
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="15" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<textField>
-				<reportElement style="noto" x="640" y="0" width="55" height="15" uuid="18dd2053-11ab-43e3-a3c5-db7176f98c02">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{page} + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
 			<textField evaluationTime="Report">
-				<reportElement style="noto" x="696" y="0" width="55" height="15" uuid="90b88b0c-1e83-489a-87eb-2de79a0f5d3e">
+				<reportElement style="noto" x="695" y="8" width="83" height="15" uuid="18930f86-8ced-4c84-9654-f6615887856a">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -1161,9 +1146,40 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="Noto" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{of}+ $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="noto" x="640" y="8" width="55" height="15" uuid="f4805935-3d0c-4bfb-af70-9f9027e7be4b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Noto" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{page} + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy hh:mm a&#xA;" isBlankWhenNull="true">
+				<reportElement key="" style="noto" positionType="Float" x="0" y="8" width="640" height="15" uuid="4946f133-338c-442d-842a-0736430f4cd0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
