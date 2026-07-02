@@ -4,7 +4,7 @@ import com.eipl.amcs.base.repository.BaseRepository;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.procurement.model.SocietyPaymentCycle;
 import com.eipl.amcs.operation.billing.model.MemberBill;
-import com.eipl.amcs.report.dto.PaymentForBank;
+import com.eipl.amcs.report.dto.PaymentForBankProjection;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,7 +25,7 @@ public interface MemberBillRepository extends BaseRepository<MemberBill, String>
     MemberBill findByMemberAndPaymentCycle(Member member, SocietyPaymentCycle paymentCycle);
 
     @Query(value = "CALL rpt_payment_register_bank_excel(:p_society_code,:p_society_payment_cycle_code,:p_payment_mode,:p_bank_code,:p_locale);", nativeQuery = true)
-    List<PaymentForBank> findPaymentRegisterReportExcel(@Param("p_society_code") String societyCode,
+    List<PaymentForBankProjection> findPaymentRegisterReportExcel(@Param("p_society_code") String societyCode,
                                                         @Param("p_society_payment_cycle_code") String societyPaymentCycleCode,
                                                         @Param("p_payment_mode") Integer paymentMode,
                                                         @Param("p_bank_code") String bankCode,
