@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ProductSaleController implements MyInitialization, PopupCallback {
     private final ObjectProperty<ProductSale> propProductSaleDto;
@@ -206,7 +207,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
         ProductSaleLoadTask task = new ProductSaleLoadTask(dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
-                List<ProductSale> list = task.get();
+                List<ProductSale> list = task.get().stream().filter(p -> !p.getXCol3().equalsIgnoreCase("kapaat")).collect(Collectors.toList());
                 if (list != null) tableProductSaleToMember.setItems(FXCollections.observableList(list));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
