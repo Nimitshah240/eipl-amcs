@@ -67,7 +67,7 @@ public class BonusServiceImpl implements BonusService {
             b.setMemberName(m.getFirstName());
             if (md != null) {
                 b.setBank(md.getBank());
-                b.setBankName(md.getBank().toString());
+                b.setBankName(md.getBank() == null ? null : md.getBank().toString());
                 b.setAccountNo(md.getAccountNo());
                 b.setIfsc(md.getIfsc());
             }
