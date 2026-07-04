@@ -152,7 +152,11 @@ public class MemberBillServiceImpl implements MemberBillService {
         long overLappingSummaryCount = summaryRepository.countByDeductionDateOverlap(deductionFromDate, deductionToDate, paymentCycle.getCode());
         if (overLappingSummaryCount > 0)
             throw new RuntimeException("overlapping.deduction.date");
-        List<MemberBillSummary> memberBillSummaryList = summaryRepository.findByStatusNot((short) 6);
+
+        String originalCode = paymentCycle.getCode();
+        long decrementedValue = Long.parseLong(originalCode) - 1;
+        String resultCode = String.format("%0" + originalCode.length() + "d", decrementedValue);
+        List<MemberBillSummary> memberBillSummaryList = summaryRepository.findByStatusNotAndPaymentCycle_Code((short) 6, resultCode);
         if (!memberBillSummaryList.isEmpty())
             throw new RuntimeException("previous.bill.not.disbursed");
 

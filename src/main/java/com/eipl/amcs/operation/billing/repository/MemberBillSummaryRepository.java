@@ -37,5 +37,5 @@ public interface MemberBillSummaryRepository extends BaseRepository<MemberBillSu
             @Param("paymentCycleCode") String paymentCycleCode
     );
 
-    List<MemberBillSummary> findByStatusNot(short status);
+    List<MemberBillSummary> findByStatusNotAndPaymentCycle_Code(short status, String previousPaymentCycle);
 }

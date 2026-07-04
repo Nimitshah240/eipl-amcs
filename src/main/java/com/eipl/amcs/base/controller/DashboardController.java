@@ -360,6 +360,7 @@ public class DashboardController implements MyInitialization, PopupCallback {
             record.setMonth(str[1]);
             record.setYear(CommonUtils.strToInteger(str[0]) - 2000);
             record.setTotalQty(CommonUtils.strToDouble(map.get("qty").toString()));
+            record.setMilkTypeCode(milkTypeCode);
             listRecords.add(record);
         }
         java.time.format.DateTimeFormatter monthLabelFormatter = java.time.format.DateTimeFormatter.ofPattern("MMM")
@@ -368,16 +369,18 @@ public class DashboardController implements MyInitialization, PopupCallback {
         Map<String, XYChart.Series<String, Number>> seriesMap = new HashMap<>();
         for (MilkRecord record : listRecords) {
             String localizedYearStr = convertEnglishToLocalizedDigits(String.valueOf(record.getYear()));
-            String seriesKey = record.getMilkType() + "-" + localizedYearStr;
-            String cssColor = getColorForYear(record.getYear());
+            String seriesKey = record.getMilkType() + " (" + localizedYearStr + ")|" + record.getMilkTypeCode();
+            String cssColor = getColorForYearAndType(record.getYear(), record.getMilkTypeCode());
 
             if (!seriesMap.containsKey(seriesKey)) {
                 XYChart.Series<String, Number> newSeries = new XYChart.Series<>();
-                newSeries.setName(seriesKey);
+                String displayName = seriesKey.split("\\|")[0];
+                newSeries.setName(displayName);
                 lineChart.getData().add(newSeries);
                 seriesMap.put(seriesKey, newSeries);
 
                 if (newSeries.getNode() != null) {
+                    newSeries.getNode().setUserData(seriesKey);
                     newSeries.getNode().setStyle("-fx-stroke: " + cssColor + ";");
                 }
             }
@@ -409,16 +412,27 @@ public class DashboardController implements MyInitialization, PopupCallback {
                 for (Node legendItem : legend.getChildrenUnmodifiable()) {
                     if (legendItem instanceof Label) {
                         Label label = (Label) legendItem;
-                        String seriesName = label.getText();
+                        String displayTitle = label.getText();
 
-                        try {
-                            String localizedYear = seriesName.split("-")[1];
-                            int year = Integer.parseInt(convertLocalizedToEnglishDigits(localizedYear));
-                            String targetColor = getColorForYear(year);
-                            if (label.getGraphic() != null) {
-                                label.getGraphic().setStyle("-fx-background-color: " + targetColor + ", white;");
+                        String matchingKey = seriesMap.keySet().stream()
+                                .filter(key -> key.startsWith(displayTitle))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (matchingKey != null) {
+                            try {
+                                String[] parts = matchingKey.split("\\|");
+                                int typeCode = Integer.parseInt(parts[1]);
+
+                                String cleanYear = convertLocalizedToEnglishDigits(displayTitle.replaceAll("[^0-9૦-૯]", ""));
+                                int year = Integer.parseInt(cleanYear);
+
+                                String targetColor = getColorForYearAndType(year, typeCode);
+                                if (label.getGraphic() != null) {
+                                    label.getGraphic().setStyle("-fx-background-color: " + targetColor + ", white;");
+                                }
+                            } catch (Exception ignored) {
                             }
-                        } catch (Exception ignored) {
                         }
                     }
                 }
@@ -901,11 +915,14 @@ public class DashboardController implements MyInitialization, PopupCallback {
         private String month;
         private int year;
         private double totalQty;
+        private int milkTypeCode;
     }
 
-    private String getColorForYear(int year) {
+    private String getColorForYearAndType(int year, int milkTypeCode) {
         int fullYear = (year < 100) ? 2000 + year : year;
-        double hue = (fullYear * 137.5) % 360;
+
+        int combinedHash = fullYear * 31 + milkTypeCode;
+        double hue = Math.abs(combinedHash * 137.5) % 360;
         double saturation = 0.85;
         double lightness = 0.50;
         return hslToHex(hue, saturation, lightness);

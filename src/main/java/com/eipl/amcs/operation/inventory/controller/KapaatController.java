@@ -7,7 +7,6 @@ import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ConfirmationAlert;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
-import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.task.ProductSaleDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleLoadTask;
@@ -21,7 +20,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -86,8 +88,8 @@ public class KapaatController implements MyInitialization, PopupCallback {
         btnDelete.setOnAction(e -> {
             deleteData();
         });
-        dpFromDate.setValue(LocalDate.now().withDayOfMonth(1));
-        dpToDate.setValue(LocalDate.now());
+        dpFromDate.setValue(MainApp.getFinancialYear().getStartDate());
+        dpToDate.setValue(MainApp.getFinancialYear().getEndDate());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpFromDate.setValue(dpFromDate.getConverter().fromString(dpFromDate.getEditor().getText()));
