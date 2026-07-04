@@ -122,6 +122,24 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
         loadMilkClass();
         getNextCode();
         fetchCouponBalance();
+        cboxConsumertype.setDisable(true);
+        cboxPaymentType.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) return;
+
+            if (newValue.equals(resourceBundle.getString("cash"))) {
+                cboxConsumertype.getSelectionModel().select(2); // Customer
+                txtConsumerCode.setText("1");
+                txtConsumerCode.setDisable(true);
+                cboxConsumertype.setDisable(true);
+                getNameFromCustomerCode(generateCode("1"), Integer.valueOf(cboxConsumertype.getSelectionModel().getSelectedItem().getKey()));
+            } else if (newValue.equals(resourceBundle.getString("credit")) || newValue.equals(resourceBundle.getString("coupon"))) {
+                cboxConsumertype.getSelectionModel().select(0); // Member
+                txtConsumerCode.clear();
+                txtConsumerName.clear();
+                txtConsumerCode.setDisable(false);
+            }
+        });
+
         cboxPaymentType.getSelectionModel().addAll(resourceBundle.getString("cash"), resourceBundle.getString("credit"), resourceBundle.getString("coupon"));
         cboxPaymentType.getSelectionModel().select(0);
         cboxPaymentType.setOnAction(e -> {
@@ -781,7 +799,7 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
                 txtConsumerCode.setText(dto.getConsumerCode().substring(MainApp.getUser().getSociety().getCode().length()));
             cboxPaymentType.getSelectionModel().select(dto.getPaymentMode() == 0 ? resourceBundle.getString("cash")
                     : dto.getPaymentMode() == 1 ? resourceBundle.getString("credit")
-                    : resourceBundle.getString("coupon"));
+                      : resourceBundle.getString("coupon"));
             cboxMilkType.getSelectionModel().select(dto.getMilkType());
             cboxClass.getSelectionModel().select(dto.getMilkClass());
             txtQuantity.setText(dto.getQuantity().toString());
@@ -795,12 +813,18 @@ public class LocalMilkSaleAddEditController implements MyInitialization {
 
     private void reloadPage() {
         try {
-            txtConsumerCode.setText("");
-            txtConsumerName.setText("");
             txtQuantity.setText("0");
             txtAmount.setText("0");
             txtRate.setText("0");
             txtCouponBalance.setText("0");
+
+            if (cboxPaymentType.getText().equals(resourceBundle.getString("cash"))) {
+                getNameFromCustomerCode(generateCode("1"), (int) cboxConsumertype.getSelectionModel().getSelectedItem().getKey());
+            } else {
+                txtConsumerCode.setText("");
+                txtConsumerName.setText("");
+                txtConsumerCode.setDisable(false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
