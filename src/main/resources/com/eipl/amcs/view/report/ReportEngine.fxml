@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<StackPane fx:id="root"
+           prefHeight="700.0"
+           styleClass="pane-center"
+           xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.reportengine.controller.ReportEngineController">
+
+    <children>
+
+        <VBox spacing="5">
+
+            <children>
+
+                <!-- Toolbar -->
+
+                <HBox fx:id="btnMainPanel"
+                      alignment="CENTER_LEFT"
+                      prefHeight="100"
+                      spacing="10">
+
+                    <children>
+
+                        <Button fx:id="btnPrint"
+                                text="%print"
+                                contentDisplay="TOP">
+
+                            <graphic>
+
+                                <ImageView fitHeight="40"
+                                           fitWidth="40">
+
+                                    <image>
+
+                                        <Image url="@../images/printer.png"/>
+
+                                    </image>
+
+                                </ImageView>
+
+                            </graphic>
+
+                        </Button>
+
+                        <Separator orientation="VERTICAL"/>
+
+                        <Button fx:id="btnExport"
+                                text="%export"
+                                contentDisplay="TOP">
+
+                            <graphic>
+
+                                <ImageView fitHeight="40"
+                                           fitWidth="40">
+
+                                    <image>
+
+                                        <Image url="@../images/excel.png"/>
+
+                                    </image>
+
+                                </ImageView>
+
+                            </graphic>
+
+                        </Button>
+
+                        <Separator orientation="VERTICAL"/>
+
+                        <Button fx:id="btnParameter"
+                                text="%parameter"
+                                contentDisplay="TOP">
+
+                            <graphic>
+
+                                <ImageView fitHeight="40"
+                                           fitWidth="40">
+
+                                    <image>
+
+                                        <Image url="@../images/filter.png"/>
+
+                                    </image>
+
+                                </ImageView>
+
+                            </graphic>
+
+                        </Button>
+
+                        <Separator orientation="VERTICAL"/>
+
+                        <Button fx:id="btnRefresh"
+                                text="%refresh"
+                                contentDisplay="TOP">
+
+                            <graphic>
+
+                                <ImageView fitHeight="40"
+                                           fitWidth="40">
+
+                                    <image>
+
+                                        <Image url="@../images/refresh.png"/>
+
+                                    </image>
+
+                                </ImageView>
+
+                            </graphic>
+
+                        </Button>
+
+                        <Separator orientation="VERTICAL"/>
+
+                        <Button fx:id="btnSetup"
+                                text="%setup"
+                                contentDisplay="TOP">
+
+                            <graphic>
+
+                                <ImageView fitHeight="40"
+                                           fitWidth="40">
+
+                                    <image>
+
+                                        <Image url="@../images/gear.png"/>
+
+                                    </image>
+
+                                </ImageView>
+
+                            </graphic>
+
+                        </Button>
+
+                        <Separator orientation="VERTICAL"/>
+
+                        <Button fx:id="btnClose"
+                                text="%close"
+                                contentDisplay="TOP">
+
+                            <graphic>
+
+                                <ImageView fitHeight="40"
+                                           fitWidth="40">
+
+                                    <image>
+
+                                        <Image url="@../images/close.png"/>
+
+                                    </image>
+
+                                </ImageView>
+
+                            </graphic>
+
+                        </Button>
+
+                    </children>
+
+                </HBox>
+
+                <Separator/>
+
+                <!-- Dynamic Area -->
+
+                <StackPane fx:id="parameterContainer"
+                           VBox.vgrow="ALWAYS"/>
+
+                <Separator/>
+
+            </children>
+
+            <padding>
+
+                <Insets top="15"
+                        left="15"
+                        right="15"
+                        bottom="15"/>
+
+            </padding>
+
+        </VBox>
+
+    </children>
+
+</StackPane>
