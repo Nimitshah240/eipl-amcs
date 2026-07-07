@@ -4,19 +4,18 @@ import com.eipl.amcs.reportengine.dto.ReportResult;
 import com.eipl.amcs.reportengine.model.RptDatasource;
 import com.eipl.amcs.reportengine.model.RptDatasourceParameter;
 import com.eipl.amcs.reportengine.model.RptParameterMaster;
+import com.eipl.amcs.reportengine.model.RptTableResult;
 import com.eipl.amcs.reportengine.repository.RptDatasourceParameterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
-import javax.persistence.PersistenceContext;
-import javax.persistence.StoredProcedureQuery;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class StoredProcedureExecutorImpl implements StoredProcedureExecutor {
@@ -59,24 +58,37 @@ public class StoredProcedureExecutorImpl implements StoredProcedureExecutor {
 
             index++;
         }
-
-        query.execute();
-
         @SuppressWarnings("unchecked")
         List<Object[]> resultList = query.getResultList();
-
         List<Map<String, Object>> rows = new ArrayList<>();
 
-        for (Object[] row : resultList) {
-
+        for (Object[] obj : resultList) {
             Map<String, Object> map = new LinkedHashMap<>();
-
-            for (int i = 0; i < row.length; i++) {
-
-                map.put("COLUMN_" + (i + 1), row[i]);
-
-            }
-
+            map.put("society_code",obj[0]);
+            map.put("society_name",obj[1]);
+            map.put("member_code", obj[2]);
+            map.put("member_name", obj[3]);
+            map.put("period", obj[4]);
+            map.put("cow_qty",obj[5]);
+            map.put("cow_fat",obj[6]);
+            map.put("cow_snf",obj[7]);
+            map.put("cow_amount", obj[8]);
+            map.put("buffalo_qty", obj[9]);
+            map.put("buffalo_fat", obj[10]);
+            map.put("buffalo_snf", obj[11]);
+            map.put("buffalo_amount",obj[12]);
+            map.put("milk_qty", obj[13]);
+            map.put("milk_fat", obj[14]);
+            map.put("milk_snf", obj[15]);
+            map.put("milk_amount", obj[16]);
+            map.put("addition_amount",obj[17]);
+            map.put("deduction_amount",obj[18]);
+            map.put("net_amount", obj[19]);
+            map.put("bank_name", obj[20]);
+            map.put("branch_name",obj[21]);
+            map.put("ifsc", obj[22]);
+            map.put("bank_acno",obj[23]);
+            map.put("mobile_no",obj[24]);
             rows.add(map);
         }
 

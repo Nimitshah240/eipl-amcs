@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<StackPane fx:id="root"
-           prefHeight="700.0"
-           styleClass="pane-center"
-           xmlns="http://javafx.com/javafx/25"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.eipl.amcs.reportengine.controller.ReportEngineController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="root" prefHeight="700.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.reportengine.controller.ReportEngineController">
 
     <children>
 
@@ -19,25 +23,19 @@
 
                 <!-- Toolbar -->
 
-                <HBox fx:id="btnMainPanel"
-                      alignment="CENTER_LEFT"
-                      prefHeight="100"
-                      spacing="10">
+                <HBox fx:id="btnMainPanel" alignment="CENTER_LEFT" prefHeight="100" spacing="10">
 
                     <children>
 
-                        <Button fx:id="btnPrint"
-                                text="%print"
-                                contentDisplay="TOP">
+                        <Button fx:id="btnPrint" contentDisplay="TOP" text="%print">
 
                             <graphic>
 
-                                <ImageView fitHeight="40"
-                                           fitWidth="40">
+                                <ImageView fitHeight="40" fitWidth="40">
 
                                     <image>
 
-                                        <Image url="@../images/printer.png"/>
+                                        <Image url="@../images/printer.png" />
 
                                     </image>
 
@@ -47,20 +45,17 @@
 
                         </Button>
 
-                        <Separator orientation="VERTICAL"/>
+                        <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="btnExport"
-                                text="%export"
-                                contentDisplay="TOP">
+                        <Button fx:id="btnExport" contentDisplay="TOP" text="%export">
 
                             <graphic>
 
-                                <ImageView fitHeight="40"
-                                           fitWidth="40">
+                                <ImageView fitHeight="40" fitWidth="40">
 
                                     <image>
 
-                                        <Image url="@../images/excel.png"/>
+                                        <Image url="@../images/excel.png" />
 
                                     </image>
 
@@ -70,20 +65,17 @@
 
                         </Button>
 
-                        <Separator orientation="VERTICAL"/>
+                        <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="btnParameter"
-                                text="%parameter"
-                                contentDisplay="TOP">
+                        <Button fx:id="btnParameter" contentDisplay="TOP" text="%parameter">
 
                             <graphic>
 
-                                <ImageView fitHeight="40"
-                                           fitWidth="40">
+                                <ImageView fitHeight="40" fitWidth="40">
 
                                     <image>
 
-                                        <Image url="@../images/filter.png"/>
+                                        <Image url="@../images/filter.png" />
 
                                     </image>
 
@@ -93,20 +85,17 @@
 
                         </Button>
 
-                        <Separator orientation="VERTICAL"/>
+                        <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="btnRefresh"
-                                text="%refresh"
-                                contentDisplay="TOP">
+                        <Button fx:id="btnRefresh" contentDisplay="TOP" text="%refresh">
 
                             <graphic>
 
-                                <ImageView fitHeight="40"
-                                           fitWidth="40">
+                                <ImageView fitHeight="40" fitWidth="40">
 
                                     <image>
 
-                                        <Image url="@../images/refresh.png"/>
+                                        <Image url="@../images/refresh.png" />
 
                                     </image>
 
@@ -116,20 +105,17 @@
 
                         </Button>
 
-                        <Separator orientation="VERTICAL"/>
+                        <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="btnSetup"
-                                text="%setup"
-                                contentDisplay="TOP">
+                        <Button fx:id="btnSetup" contentDisplay="TOP" text="%setup">
 
                             <graphic>
 
-                                <ImageView fitHeight="40"
-                                           fitWidth="40">
+                                <ImageView fitHeight="40" fitWidth="40">
 
                                     <image>
 
-                                        <Image url="@../images/gear.png"/>
+                                        <Image url="@../images/gear.png" />
 
                                     </image>
 
@@ -139,20 +125,17 @@
 
                         </Button>
 
-                        <Separator orientation="VERTICAL"/>
+                        <Separator orientation="VERTICAL" />
 
-                        <Button fx:id="btnClose"
-                                text="%close"
-                                contentDisplay="TOP">
+                        <Button fx:id="btnClose" contentDisplay="TOP" text="%close">
 
                             <graphic>
 
-                                <ImageView fitHeight="40"
-                                           fitWidth="40">
+                                <ImageView fitHeight="40" fitWidth="40">
 
                                     <image>
 
-                                        <Image url="@../images/close.png"/>
+                                        <Image url="@../images/close.png" />
 
                                     </image>
 
@@ -166,23 +149,31 @@
 
                 </HBox>
 
-                <Separator/>
+                <Separator />
+            <TabPane prefHeight="200.0" prefWidth="200.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+              <tabs>
+                <Tab text="Data">
+                  <content>
+                        <TableView fx:id="tblData" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" />
+                  </content>
+                </Tab>
+                <Tab text="Summary">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
 
-                <!-- Dynamic Area -->
+                
 
-                <StackPane fx:id="parameterContainer"
-                           VBox.vgrow="ALWAYS"/>
-
-                <Separator/>
+                <Separator />
 
             </children>
 
             <padding>
 
-                <Insets top="15"
-                        left="15"
-                        right="15"
-                        bottom="15"/>
+                <Insets bottom="15" left="15" right="15" top="15" />
 
             </padding>
 

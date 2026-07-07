@@ -90,7 +90,7 @@ public class DatasourceExecutorImpl
             }
 
             ReportResult reportResult = new ReportResult();
-            reportResult.setData((List<?>) result);
+//            reportResult.setData((List<?>) result);
 
             return reportResult;
 
