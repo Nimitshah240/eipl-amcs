@@ -45,7 +45,7 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
     @FXML
     private TableView<BonusSummary> tableBonusSummary;
     @FXML
-    private TableColumn<BonusSummary, LocalDate> colFromDate, colToDate;
+    private TableColumn<BonusSummary, LocalDate> colFromDate, colToDate,colTxnDate;
     @FXML
     private TableColumn<BonusSummary, Number> colTotalQty, colTotalAmt, colBonusAmt;
     @FXML
@@ -174,6 +174,8 @@ public class BonusSummaryController implements MyInitialization, PopupCallback {
     @Override
     public void setupTable() {
         try {
+            colTxnDate.setCellValueFactory(data -> new SimpleObjectProperty<>(
+                    data.getValue().getCreatedAt() != null ? data.getValue().getCreatedAt().toLocalDate() : null));
             colFromDate.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getFromDate()));
 //            colMilkType.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getxCol1().equalsIgnoreCase("1") ?
 //                    resourceBundle.getString("cow") : data.getValue().getxCol1().equalsIgnoreCase("2") ?

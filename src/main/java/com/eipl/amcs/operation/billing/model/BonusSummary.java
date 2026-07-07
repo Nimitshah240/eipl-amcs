@@ -63,6 +63,8 @@ public class BonusSummary extends BaseModelTxn {
     @Column
     private BigDecimal kapaatAmount;
     @Column
+    private BigDecimal societyAmount;
+    @Column
     private BigDecimal totalAmount;
     @Column(name = "is_debanture")
     private boolean debanture;
@@ -96,6 +98,7 @@ public class BonusSummary extends BaseModelTxn {
         audit.setDisbursedDate(this.getDisbursedDate());
         audit.setType(this.getType());
         audit.setSociety(this.getSociety());
+        audit.setSocietyAmount(this.getSocietyAmount());
 
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());
