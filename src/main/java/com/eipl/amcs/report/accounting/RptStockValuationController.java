@@ -1294,8 +1294,7 @@ public class RptStockValuationController implements MyInitialization {
     }
 
 
-    public List<RojmedDto> generateSideBySideRojmed
-            (Map<String, List<LedgerBalance>> assetGroupMap, Map<String, List<LedgerBalance>> liabilityGroupMap) {
+    public List<RojmedDto> generateSideBySideRojmed(Map<String, List<LedgerBalance>> assetGroupMap, Map<String, List<LedgerBalance>> liabilityGroupMap) {
         List<RojmedDto> reportRows = new ArrayList<>();
         List<RojmedDto> assetRows = flattenToSideRows(assetGroupMap, true);
         List<RojmedDto> liabilityRows = flattenToSideRows(liabilityGroupMap, false);

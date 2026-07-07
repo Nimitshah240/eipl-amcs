@@ -54,7 +54,7 @@
                         <TableColumn fx:id="colDate" prefWidth="125.0" text="%date"/>
                         <TableColumn fx:id="colConsumerType" prefWidth="150.0" text="%consumertype"/>
                         <TableColumn fx:id="colConsumerName" prefWidth="150.0" text="%consumername"/>
-<!--                        <TableColumn fx:id="colMobile" prefWidth="150.0" text="%consumername"/>-->
+                        <TableColumn fx:id="colMobileNo" prefWidth="150.0" text="%mobileno"/>
                         <TableColumn fx:id="colAmount" prefWidth="150.0" text="%amount"/>
                         <TableColumn fx:id="colNetPayable" prefWidth="125.0" text="%netpayable"/>
                         <!--                  <TableColumn fx:id="colNoOfInstallment" prefWidth="150.0" text="%noofinstallment" />-->
@@ -94,6 +94,15 @@
                             </graphic>
                         </E_Button>
                         <E_Label maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS"/>
+                        <E_Button fx:id="btnExport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%export">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/excel.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </E_Button>
                     </children>
                 </HBox>
             </children>

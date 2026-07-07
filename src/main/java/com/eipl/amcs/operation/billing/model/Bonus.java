@@ -84,6 +84,8 @@ public class Bonus extends BaseModelTxn {
     @Column
     private BigDecimal kapaatAmount;
     @Column
+    private BigDecimal societyAmount;
+    @Column
     private BigDecimal totalAmount;
 
     public Bonus() {
@@ -116,6 +118,9 @@ public class Bonus extends BaseModelTxn {
         audit.setStatus(this.getStatus());
         audit.setType(this.getType());
         audit.setSociety(this.getSociety());
+        audit.setSocietyAmount(this.getSocietyAmount());
+        audit.setKapaatAmount(this.getKapaatAmount());
+        audit.setDebantureAmount(this.getDebantureAmount());
 
         audit.setCreatedAt(this.getCreatedAt());
         audit.setCreatedBy(this.getCreatedBy());

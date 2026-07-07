@@ -34,12 +34,12 @@ public class PaymentRegisterController implements MyInitialization {
 
     @FXML
     private StackPane root;
-    @FXML
-    private Button btnGenerate, btnClose;
+//    @FXML
+//    private Button btnGenerate, btnClose;
     private Stage stage;
     private PopupCallback callback;
-    @FXML
-    private DatePicker dpFromDate, dpToDate;
+//    @FXML
+//    private DatePicker dpFromDate, dpToDate;
     @FXML
     private E_TextField txtSampleNo;
     @FXML
@@ -47,8 +47,8 @@ public class PaymentRegisterController implements MyInitialization {
 
     private ResourceBundle resourceBundle;
 
-    @FXML
-    private ComboBox<Shift> cboxfromshift, cboxtoshift;
+//    @FXML
+//    private ComboBox<Shift> cboxfromshift, cboxtoshift;
 
     @FXML
     private Button btnGenerate1, btnClose1;
@@ -80,10 +80,10 @@ public class PaymentRegisterController implements MyInitialization {
         this.resourceBundle = resourceBundle;
         loadData();
         setupComboBox();
-        dpFromDate.setValue(LocalDate.now());
-        dpToDate.setValue(LocalDate.now());
-        btnGenerate.setOnAction(e -> validateAndGenerateReport());
-        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+//        dpFromDate.setValue(LocalDate.now());
+//        dpToDate.setValue(LocalDate.now());
+//        btnGenerate.setOnAction(e -> validateAndGenerateReport());
+//        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
         cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
@@ -122,38 +122,38 @@ public class PaymentRegisterController implements MyInitialization {
         return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
-    private void validateAndGenerateReport() {
-        try {
-            if (txtSampleNo.getText() == null || txtSampleNo.getText().trim().equals("")) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(),
-                        resourceBundle.getString("paymentregister"),
-                        resourceBundle.getString("sampleno.cannot.be.null"));
-                alert.createAlert();
-                return;
-            }
-            if (txtSampleNo.getText().length() > 4) {
-                MyAlert alert = new ErrorAlert(MainApp.getStage(),
-                        resourceBundle.getString("paymentregister"),
-                        resourceBundle.getString("samplenovalidation"));
-                alert.createAlert();
-                return;
-            }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            Map<String, Object> params = new HashMap<>();
-            String localeStr = getLocaleString();
-            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-            params.put("p_locale", localeStr);
-            JasperPrint print = null;
-            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-            params.put("p_member_code", MainApp.identityDto.getSociety().getCode() + String.format("%04d", Integer.parseInt(txtSampleNo.getText().trim())));
-            params.put("p_from_date", dpFromDate.getValue().format(formatter) + " " + (cboxfromshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-            params.put("p_to_date", dpToDate.getValue().format(formatter) + " " + (cboxtoshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_WITH_DEDUCTION, params);
-            JasperViewer.viewReport(print, false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private void validateAndGenerateReport() {
+//        try {
+//            if (txtSampleNo.getText() == null || txtSampleNo.getText().trim().equals("")) {
+//                MyAlert alert = new ErrorAlert(MainApp.getStage(),
+//                        resourceBundle.getString("paymentregister"),
+//                        resourceBundle.getString("sampleno.cannot.be.null"));
+//                alert.createAlert();
+//                return;
+//            }
+//            if (txtSampleNo.getText().length() > 4) {
+//                MyAlert alert = new ErrorAlert(MainApp.getStage(),
+//                        resourceBundle.getString("paymentregister"),
+//                        resourceBundle.getString("samplenovalidation"));
+//                alert.createAlert();
+//                return;
+//            }
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            Map<String, Object> params = new HashMap<>();
+//            String localeStr = getLocaleString();
+//            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+//            params.put("p_locale", localeStr);
+//            JasperPrint print = null;
+//            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+//            params.put("p_member_code", MainApp.identityDto.getSociety().getCode() + String.format("%04d", Integer.parseInt(txtSampleNo.getText().trim())));
+//            params.put("p_from_date", dpFromDate.getValue().format(formatter) + " " + (cboxfromshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+//            params.put("p_to_date", dpToDate.getValue().format(formatter) + " " + (cboxtoshift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+//            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PAYMENT_REGISTER_WITH_DEDUCTION, params);
+//            JasperViewer.viewReport(print, false);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
     public void validateAndGenerateReport1() {
@@ -242,8 +242,8 @@ public class PaymentRegisterController implements MyInitialization {
     @Override
     public void setupComboBox() {
         try {
-            cboxfromshift.setConverter(new ShiftConvertor(cboxfromshift));
-            cboxtoshift.setConverter(new ShiftConvertor(cboxtoshift));
+//            cboxfromshift.setConverter(new ShiftConvertor(cboxfromshift));
+//            cboxtoshift.setConverter(new ShiftConvertor(cboxtoshift));
             cboxfromshift1.setConverter(new ShiftConvertor(cboxfromshift1));
             cboxtoshift1.setConverter(new ShiftConvertor(cboxtoshift1));
         } catch (Exception e) {
@@ -259,10 +259,10 @@ public class PaymentRegisterController implements MyInitialization {
             try {
                 List<Shift> list = task1.get();
                 if (list != null) {
-                    cboxfromshift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
-                    cboxfromshift.getSelectionModel().select(0);
-                    cboxtoshift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
-                    cboxtoshift.getSelectionModel().select(1);
+//                    cboxfromshift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+//                    cboxfromshift.getSelectionModel().select(0);
+//                    cboxtoshift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+//                    cboxtoshift.getSelectionModel().select(1);
                     cboxfromshift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
                     cboxfromshift1.getSelectionModel().select(0);
                     cboxtoshift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
