@@ -179,6 +179,7 @@ public class AppConstant {
         String Milk_Collection_Quarter_Wise = "MilkCollectionQuarterWise";
         String MILK_COLLECTION_AUDIT = "MilkCollectionAudit";
         String SHIFT_REPORT_MEMBERWISE = "ShiftReportMemberWise";
+        String SHIFT_REPORT_TIMEWISE = "ShiftReportTimeWise";
         String MILK_DISPATCH_CHALLAN = "MilkDispatchChallan";
         String MILK_DISPATCH_CHALLAN_FORMAT_TWO = "MilkDispatchChallanFormatTwo";
         String PAYMENT_REGISTER_CASH = "PaymentRegisterCash";
@@ -276,6 +277,7 @@ public class AppConstant {
         String SCHEME_RATE_SOCIETY_PURCHASE_MEMBER_WISE = "SchemeRateSocietyPurchaseMemberWise";
         String SCHEME_RATE_MEMBER_MILK_COLLECTION_SLIP = "SchemeRateMemberMilkCollectionSlip";
         String PURCHASE_REGISTER_MONTH_WISE = "PurchaseRegisterMonthWise";
+        String PURCHASE_REGISTER_MONTH_WISE2 = "PurchaseRegisterMonthWise2";
         String PAYMENT_REGISTER_WITH_DEDUCTION = "PaymentRegisterWithDeduction";
         String MILK_DISPATCH_CHALLAN_FORMAT_THREE = "DispatchFormatThree";
         String EDIT_COLLECTION_REPORT = "EditCollectionData";

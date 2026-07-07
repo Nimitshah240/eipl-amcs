@@ -4,9 +4,7 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
-import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
-import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.master.operation.model.Member;
 import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.master.org.convertor.DockConvertor;
@@ -15,7 +13,6 @@ import com.eipl.amcs.master.org.model.Dock;
 import com.eipl.amcs.master.org.task.DockLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -34,23 +31,18 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class ShiftReportCodeController implements MyInitialization {
+public class ManualCollectionController implements MyInitialization {
 
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose;
+    private Button btnGenerate21, btnClose21;
     @FXML
-    private DatePicker dpDate;
+    private DatePicker dpToDate11, dpFromDate11;
     @FXML
-    private ComboBox<Shift> cboxShift;
+    private ComboBox<Dock> cboxDock1;
     @FXML
-    private ComboBox<String> cboxReportType;
-    @FXML
-    private ComboBox<Dock> cboxDock;
-    @FXML
-    private ComboBox<String> cboxLanguage;
-
+    private ComboBox<String> cboxLanguage3;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -61,91 +53,66 @@ public class ShiftReportCodeController implements MyInitialization {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
-        dpDate.setValue(LocalDate.now());
-        dpDate.setConverter(new LocalDateConvertor());
-        dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        dpFromDate11.setValue(LocalDate.now());
+        dpToDate11.setValue(LocalDate.now());
+        dpFromDate11.setConverter(new LocalDateConvertor());
+        dpFromDate11.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                dpDate.setValue(dpDate.getConverter().fromString(dpDate.getEditor().getText()));
+                dpFromDate11.setValue(dpFromDate11.getConverter().fromString(dpFromDate11.getEditor().getText()));
             }
         });
+        dpToDate11.setConverter(new LocalDateConvertor());
+        dpToDate11.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate11.setValue(dpToDate11.getConverter().fromString(dpToDate11.getEditor().getText()));
+            }
+        });
+
+
         loadData();
         setupComboBox();
-        btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
-        btnGenerate.setOnAction(e -> validateAndGenerateReport());
-        cboxReportType.getItems().addAll(resourceBundle.getString("codewise"), resourceBundle.getString("memberwise"), resourceBundle.getString("timewise"));
-        cboxReportType.getSelectionModel().select(0);
-        dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                dpDate.setValue(dpDate.getConverter().fromString(dpDate.getEditor().getText()));
-            }
-        });
+        btnClose21.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnGenerate21.setOnAction(e -> validateAndGenerateReport3());
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
-        cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage3.setItems(FXCollections.observableList(Arrays.asList(arr)));
         if (MainApp.getLocale().equalsIgnoreCase("gu")) {
-            cboxLanguage.setValue("Gujarati");
-
+            cboxLanguage3.setValue("Gujarati");
         } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
-            cboxLanguage.setValue("Hindi");
+            cboxLanguage3.setValue("Hindi");
         } else {
-            cboxLanguage.setValue("English");
+            cboxLanguage3.setValue("English");
         }
     }
 
     @Override
     public void setupComboBox() {
-        cboxDock.setConverter(new DockConvertor(cboxDock));
+        cboxDock1.setConverter(new DockConvertor(cboxDock1));
     }
 
-
-    private void validateAndGenerateReport() {
+    private void validateAndGenerateReport3() {
         Map<String, Object> params = new HashMap<>();
-        String localeStr = getLocaleString();
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        params.put("p_collection_date", dpDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-        if (cboxDock.getValue().getDockNo().equals("All"))
+        if (cboxDock1.getValue().getDockNo().equals("All"))
             params.put("p_dock_no", "0");
         else
-            params.put("p_dock_no", cboxDock.getValue().getDockNo());
+            params.put("p_dock_no", cboxDock1.getValue().getDockNo());
+        params.put("p_from_date", dpFromDate11.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        params.put("p_to_date", dpToDate11.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        String localeStr = getLocaleString3();
         params.put("p_locale", localeStr);
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-        JasperPrint print = null;
-        switch (cboxReportType.getSelectionModel().getSelectedIndex() + 1) {
-            case 1:
-                print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SHIFT_REPORT_CODEWISE, params);
-                break;
-            case 2:
-                print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SHIFT_REPORT_MEMBERWISE, params);
-                break;
-            case 3:
-                print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.SHIFT_REPORT_TIMEWISE, params);
-                break;
-        }
+
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.MANUAL_COLLECTION_REPORT, params);
         JasperViewer.viewReport(print, false);
     }
 
-
-    private String getLocaleString() {
-        return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    private String getLocaleString3() {
+        return cboxLanguage3.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     @Override
     public void loadData() {
-        var task1 = new ShiftLoadTask();
-        task1.setOnSucceeded(e -> {
-            try {
-                List<Shift> list = task1.get();
-                if (list != null) {
-                    cboxShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
-                    cboxShift.getSelectionModel().select(0);
-                }
-            } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
-            }
-        });
-        new Thread(task1).start();
-
-
         var task2 = new DockLoadTask();
         task2.setOnSucceeded(e -> {
             try {
@@ -154,12 +121,12 @@ public class ShiftReportCodeController implements MyInitialization {
                     List<Dock> listDock = list.stream()
                             .map(m -> m.getDock()).collect(Collectors.toList());
                     if (listDock.size() == 1) {
-                        cboxDock.setItems(FXCollections.observableList(listDock));
-                        cboxDock.getSelectionModel().select(0);
+                        cboxDock1.setItems(FXCollections.observableList(listDock));
+                        cboxDock1.getSelectionModel().select(0);
                     } else {
                         listDock.add(0, new Dock("All"));
-                        cboxDock.setItems(FXCollections.observableList(listDock));
-                        cboxDock.getSelectionModel().select(0);
+                        cboxDock1.setItems(FXCollections.observableList(listDock));
+                        cboxDock1.getSelectionModel().select(0);
 
                     }
                 }
