@@ -30,6 +30,7 @@ import com.eipl.amcs.report.task.*;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.FormatterFactory;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -340,8 +341,30 @@ public class RptStockValuationController implements MyInitialization {
                 param.put("p_locale", localeStr);
                 param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 JasperPrint print = null;
-                listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
-                listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
+
+                list.sort(Comparator.comparing(
+                        LedgerBalance::getLedgerCode,
+                        (code1, code2) -> {
+                            boolean empty1 = (code1 == null || code1.trim().isEmpty());
+                            boolean empty2 = (code2 == null || code2.trim().isEmpty());
+
+                            if (empty1 && empty2) return 0;
+                            if (empty1) return 1;
+                            if (empty2) return -1;
+                            return code1.compareTo(code2);
+                        }
+                ));
+
+                listPLIncome = list.stream()
+                        .filter(p -> p != null && p.getIncomeExpense() == 1)
+                        .peek(p -> p.setLedgerCode(FormatterFactory.formatNumber(p.getLedgerCode())))
+                        .collect(Collectors.toList());
+
+                listPLExpense = list.stream()
+                        .filter(p -> p != null && p.getIncomeExpense() == 0)
+                        .peek(p -> p.setLedgerCode(FormatterFactory.formatNumber(p.getLedgerCode())))
+                        .collect(Collectors.toList());
+
                 double incomeTotal = listPLIncome != null
                         ? listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() : 0;
                 double expenseTotal = listPLExpense != null
@@ -464,23 +487,37 @@ public class RptStockValuationController implements MyInitialization {
                                 TradingTaskparams.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
 
                                 JasperPrint print = null;
+                                listtradingTask.sort(Comparator.comparing(
+                                        LedgerBalance::getLedgerCode,
+                                        (code1, code2) -> {
+                                            boolean empty1 = (code1 == null || code1.trim().isEmpty());
+                                            boolean empty2 = (code2 == null || code2.trim().isEmpty());
 
+                                            if (empty1 && empty2) return 0;
+                                            if (empty1) return 1;
+                                            if (empty2) return -1;
+                                            return code1.compareTo(code2);
+                                        }
+                                ));
                                 for (LedgerBalance cdtask : listtradingTask) {
                                     if (cdtask.getLedgerName().contains("stockvaluation as on") && localeStr.equals("gu")) {
                                         if (cdtask.getDebit() > 0)
-                                            cdtask.setLedgerName(resourceBundle.getString("opening.stock"));
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
                                         else if (cdtask.getCredit() > 0)
-                                            cdtask.setLedgerName(resourceBundle.getString("closing.stock"));
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
                                     } else if (cdtask.getLedgerName().contains("stockvaluation as on") && localeStr.equals("en")) {
-                                        if (cdtask.getDebit() > 0) cdtask.setLedgerName("Stock Valuation");
-                                        else if (cdtask.getCredit() > 0) cdtask.setLedgerName("Stock Valuation");
+                                        if (cdtask.getDebit() > 0)
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
+                                        else if (cdtask.getCredit() > 0)
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
                                     }
+                                    cdtask.setLedgerCode(FormatterFactory.formatNumber(cdtask.getLedgerCode()));
                                 }
+                                listtradingTask.add(0, new LedgerBalance("", resourceBundle.getString("mal.stock") + FormatterFactory.formatDate(dpFromDate1.getValue(), localeStr), Double.valueOf(String.valueOf(finalOpeningMalStock)), 0, -Math.abs(Double.valueOf(String.valueOf(finalOpeningMalStock)))));
 
                                 if (rbtVertical.isSelected()) {
                                     print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listtradingTask));
                                 } else {
-                                    listtradingTask.add(0, new LedgerBalance("", "Mal Stock as " + dpFromDate1.getValue().minusDays(1), Double.valueOf(String.valueOf(finalOpeningMalStock)), 0, -Math.abs(Double.valueOf(String.valueOf(finalOpeningMalStock)))));
 
                                     listBSAsset = listtradingTask.stream().filter(p -> p.getBalance() < 0).collect(Collectors.toList());
                                     listBSLiability = listtradingTask.stream().filter(p -> p.getBalance() > 0).collect(Collectors.toList());

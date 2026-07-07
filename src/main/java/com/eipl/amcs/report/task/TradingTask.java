@@ -1,11 +1,13 @@
 package com.eipl.amcs.report.task;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.master.account.repository.ProductStockValuationRepository;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.FormatterFactory;
 import javafx.concurrent.Task;
 
 import java.sql.Date;
@@ -60,14 +62,14 @@ public class TradingTask extends Task<List<LedgerBalance>> {
             List<Object[]> list = ledgerRepository.fetchTrading(societyCode, fromDate, toDate, locale);
             if (list == null || list.isEmpty()) {
                 List<LedgerBalance> listResp = new ArrayList<>();
-                listResp.add(new LedgerBalance("", "stockvaluation as on " + generatedDate, 0, stockValuation, stockValuation));
+                listResp.add(new LedgerBalance("", "stockvaluation as on " + FormatterFactory.formatDate(generatedDate, MainApp.getLocale()), 0, stockValuation, stockValuation));
                 return listResp;
             } else if (list != null && !list.isEmpty()) {
                 List<LedgerBalance> listResp = new ArrayList<>();
                 list.forEach(item -> {
                     listResp.add(new LedgerBalance((String) item[0], (String) item[1], Double.parseDouble(item[3].toString()), Double.parseDouble(item[2].toString()), Double.parseDouble(item[4].toString())));
                 });
-                listResp.add(new LedgerBalance("", "stockvaluation as on " + generatedDate, 0, stockValuation, stockValuation));
+                listResp.add(new LedgerBalance("", "stockvaluation as on " +  FormatterFactory.formatDate(generatedDate, MainApp.getLocale()), 0, stockValuation, stockValuation));
                 return listResp;
             }
 
