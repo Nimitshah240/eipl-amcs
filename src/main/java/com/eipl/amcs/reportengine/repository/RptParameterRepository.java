@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface RptParameterRepository extends JpaRepository<RptReportParameter, Long> {
 
-    @EntityGraph(attributePaths = {"parameterMaster"})
+    @EntityGraph(attributePaths = {"parameterMaster", "parameterMaster.lookup"})
     List<RptReportParameter> findByReportReportCodeOrderByDisplayOrderAsc(Long reportCode);}

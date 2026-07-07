@@ -99,11 +99,35 @@ public class FormatterFactory {
         }
     }
 
+    public static String formatDate(LocalDate date, String p_local) {
+        if (date == null)
+            return "";
+        String formattedDate = date.format(DATE_FORMATTER_LOCALE);
+        return p_local.equals("gu") ? convertEnglishToLocalizedDigits(Objects.requireNonNull(formattedDate)): date.toString();
+    }
+
+    public static String formatDate(String dateStr, String p_local) {
+        if (dateStr == null || dateStr.trim().isEmpty())
+            return "";
+        try {
+            return p_local.equals("gu") ? convertEnglishToLocalizedDigits(dateStr) : dateStr;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return dateStr;
+        }
+    }
+
     public static String formatDateTime(LocalDateTime dateTime) {
         if (dateTime == null)
             return "";
         String formattedDateTime = dateTime.format(DATE_TIME_FORMATTER_LOCALE);
         return convertEnglishToLocalizedDigits(Objects.requireNonNull(formattedDateTime));
+    }
+    public static String formatDateTime(LocalDateTime dateTime, String p_local) {
+        if (dateTime == null)
+            return "";
+        String formattedDateTime = dateTime.format(DATE_TIME_FORMATTER_LOCALE);
+        return "gu".equals(p_local) ? convertEnglishToLocalizedDigits(Objects.requireNonNull(formattedDateTime)) : formattedDateTime;
     }
 
     /**

@@ -76,6 +76,8 @@ public class BonusAudit extends BaseModelTxnAudit {
     @Column
     private BigDecimal kapaatAmount;
     @Column
+    private BigDecimal societyAmount;
+    @Column
     private BigDecimal totalAmount;
 
     @Override

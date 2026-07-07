@@ -75,6 +75,8 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/MilkSaleDispatchMonthWise.jasper";
             case AppConstant.ReportPath.SHIFT_REPORT_MEMBERWISE:
                 return "resources/report/milkcollection/ShiftReportMemberWise.jasper";
+            case AppConstant.ReportPath.SHIFT_REPORT_TIMEWISE:
+                return "resources/report/milkcollection/ShiftReportTimeWise.jasper";
             case AppConstant.ReportPath.MILK_DISPATCH_CHALLAN:
                 return "resources/report/milkcollection/MilkDispatchNote.jasper";
             case AppConstant.ReportPath.PAYMENT_REGISTER_CASH:
@@ -302,6 +304,8 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/SchemeRateMemberMilkCollectionSlip.jasper";
             case AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE:
                 return "resources/report/milkcollection/PurchaseRegisterMonthWise.jasper";
+            case AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE2:
+                return "resources/report/milkcollection/PurchaseRegisterMonthWise2.jasper";
             case AppConstant.ReportPath.PAYMENT_REGISTER_WITH_DEDUCTION:
                 return "resources/report/milkcollection/PaymentRegisterWithDeduction.jasper";
             case AppConstant.ReportPath.MILK_DISPATCH_CHALLAN_FORMAT_THREE:

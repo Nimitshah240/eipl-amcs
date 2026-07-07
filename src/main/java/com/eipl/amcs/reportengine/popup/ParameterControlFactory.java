@@ -4,17 +4,20 @@ import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.reportengine.model.RptLookup;
 import com.eipl.amcs.reportengine.model.RptParameterMaster;
 import com.eipl.amcs.reportengine.model.RptReportParameter;
 import com.eipl.amcs.reportengine.service.LookupService;
+import com.eipl.amcs.reportengine.util.ReflectionUtil;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Constructor;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -43,43 +46,81 @@ public class ParameterControlFactory {
                 return picker;
 
             case "AUTO_SEARCH":
-                AutoSearchTextField<T> control = new AutoSearchTextField<>();
 
-                if (pm.getLookup() != null) {
-                    control.getItems().setAll(
-                            lookupService.load(pm.getLookup().getLookupCode())
-                    );
-                }
-                if (rp.getDefaultValue() != null) {
-                    try {
-                        int index = Integer.parseInt(rp.getDefaultValue());
-                        control.getSelectionModel().select(index);
-                    } catch (NumberFormatException e) {
-                        control.getSelectionModel().select(0);
-                    }
-                }
-
-                return control;
+                return createAutoSearchControl(rp);
 
             case "TEXT":
 
                 E_TextField txt = new E_TextField();
                 if (rp.getDefaultValue() != null) {
-                    txt.setText(rp.getDefaultValue()); // text
+                    txt.setText(rp.getDefaultValue());
                 }
                 return txt;
             case "Numeric":
 
                 E_NumericField numericField = new E_NumericField();
                 if (rp.getDefaultValue() != null) {
-                    numericField.setText(rp.getDefaultValue()); // text
+                    numericField.setText(rp.getDefaultValue());
                 }
                 return numericField;
             default:
 
                 return new TextField();
         }
-
     }
 
+    @SuppressWarnings("unchecked")
+    private <T> AutoSearchTextField<T> createAutoSearchControl(RptReportParameter rp) {
+
+        AutoSearchTextField<T> control = new AutoSearchTextField<>();
+
+        RptParameterMaster pm = rp.getParameterMaster();
+
+        if (pm.getLookup() != null) {
+
+            List<T> items = lookupService.load(pm.getLookup().getLookupCode());
+
+            if (Boolean.TRUE.equals(rp.getRequiredAll()) && !items.isEmpty()) {
+
+                T allItem = createAllItem(items.get(0), pm.getLookup());
+
+                items.add(0, allItem);
+            }
+
+            control.getItems().setAll(items);
+        }
+
+        if (rp.getDefaultValue() != null) {
+
+            try {
+                control.getSelectionModel().select(Integer.parseInt(rp.getDefaultValue()));
+            } catch (Exception e) {
+                control.getSelectionModel().select(0);
+            }
+        }
+
+        return control;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T createAllItem(T sample, RptLookup lookup) {
+
+        try {
+
+            Class<?> clazz = sample.getClass();
+
+            Constructor<?> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+
+            Object instance = constructor.newInstance();
+
+            ReflectionUtil.setFieldValue(instance, lookup.getValueField(), "0");
+            ReflectionUtil.setFieldValue(instance, lookup.getDisplayField(), "All");
+
+            return (T) instance;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to create 'All' item for " + sample.getClass().getName(), e);
+        }
+    }
 }

@@ -42,4 +42,7 @@ public class RptReportParameter {
 
     @Column(name = "default_value", length = 200)
     private String defaultValue;
+
+    @Column(name = "required_all")
+    private Boolean requiredAll;
 }

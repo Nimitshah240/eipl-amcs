@@ -1,101 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
 <?import com.eipl.amcs.controls.E_Label?>
-<StackPane fx:id="root" prefHeight="400.0" prefWidth="700.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.billing.controller.BonusSummaryController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<StackPane fx:id="root" prefHeight="400.0" prefWidth="700.0" styleClass="pane-center"
+           xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.eipl.amcs.operation.billing.controller.BonusSummaryController">
     <children>
         <VBox spacing="15.0">
             <children>
-                <E_Label styleClass="header-text" text="%bonus.summary" />
+                <E_Label styleClass="header-text" text="%bonus.summary"/>
                 <TableView fx:id="tableBonusSummary" prefHeight="350.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
                     <columns>
-<!--                  <TableColumn fx:id="colMilkType" prefWidth="120.0" text="%milktype" />-->
-                        <TableColumn fx:id="colFromDate" prefWidth="120.0" text="%fromdate" />
-                        <TableColumn fx:id="colToDate" prefWidth="120.0" text="%todate" />
-                        <TableColumn fx:id="colTotalQty" prefWidth="120.0" styleClass="cell-right-aligned" text="%totalqty" />
-                        <TableColumn fx:id="colTotalAmt" prefWidth="120.0" styleClass="cell-right-aligned" text="%totalamt" />
-                        <TableColumn fx:id="colBonusAmt" prefWidth="120.0" styleClass="cell-right-aligned" text="%bonusamt" />
-                        <TableColumn fx:id="colStatus" prefWidth="120.0" styleClass="cell-center-aligned" text="%status" />
+                        <!--                  <TableColumn fx:id="colMilkType" prefWidth="120.0" text="%milktype" />-->
+                        <TableColumn fx:id="colTxnDate" prefWidth="120.0" text="%txn.date"/>
+                        <TableColumn fx:id="colFromDate" prefWidth="120.0" text="%fromdate"/>
+                        <TableColumn fx:id="colToDate" prefWidth="120.0" text="%todate"/>
+                        <TableColumn fx:id="colTotalQty" prefWidth="120.0" styleClass="cell-right-aligned"
+                                     text="%totalqty"/>
+                        <TableColumn fx:id="colTotalAmt" prefWidth="120.0" styleClass="cell-right-aligned"
+                                     text="%totalamt"/>
+                        <TableColumn fx:id="colBonusAmt" prefWidth="120.0" styleClass="cell-right-aligned"
+                                     text="%bonusamt"/>
+                        <TableColumn fx:id="colStatus" prefWidth="120.0" styleClass="cell-center-aligned"
+                                     text="%status"/>
                     </columns>
                 </TableView>
                 <HBox prefWidth="200.0" spacing="15.0">
                     <children>
-                  <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%add">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/add.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/edit.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0" mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/delete.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%close">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../images/close.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <HBox alignment="TOP_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Button fx:id="btnGeneral" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%generalreport">
-                           <graphic>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/generate.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
+                        <Button fx:id="btnAdd" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%add">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/add.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
                         </Button>
-                        <Button fx:id="btnReport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%bonusreport">
-                           <graphic>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/payment.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
+                        <Button fx:id="btnEdit" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%edit">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/edit.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
                         </Button>
-                        <Button fx:id="btnDisburse" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0" prefWidth="70.0" text="%disburse">
-                           <graphic>
-                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../images/journal.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
+                        <Button fx:id="btnDelete" contentDisplay="TOP" disable="true" graphicTextGap="5.0"
+                                mnemonicParsing="true" prefHeight="50.0" prefWidth="70.0" text="%delete">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
                         </Button>
-                     </children>
-                  </HBox>
+                        <Button fx:id="btnClose" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                prefWidth="70.0" text="%close">
+                            <graphic>
+                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../../images/close.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <HBox alignment="TOP_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Button fx:id="btnGeneral" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                        prefWidth="70.0" text="%generalreport">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/generate.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnReport" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                        prefWidth="70.0" text="%bonusreport">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/payment.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnDisburse" contentDisplay="TOP" graphicTextGap="5.0" prefHeight="50.0"
+                                        prefWidth="70.0" text="%disburse">
+                                    <graphic>
+                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/journal.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                            </children>
+                        </HBox>
                     </children>
                 </HBox>
             </children>
