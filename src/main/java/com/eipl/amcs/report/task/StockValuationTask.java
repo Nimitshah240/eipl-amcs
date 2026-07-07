@@ -57,7 +57,7 @@ public class StockValuationTask extends Task<List<ProductStockValuation>> {
         return null;
     }
 
-    private List<ProductStockValuation> fetchStockValuation(Date endDate, String societyCode, String locale) {
+    public List<ProductStockValuation> fetchStockValuation(Date endDate, String societyCode, String locale) {
         List<ProductStockValuation> list = new ArrayList<>();
         productStockValuationRepository.deleteByGeneratedAt(endDate.toLocalDate());
         List<Object[]> listCurrentStock = ledgerRepository.fetchCurrentStockByProduct(endDate, societyCode, locale);

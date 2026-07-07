@@ -4,7 +4,6 @@ import com.eipl.amcs.reportengine.dto.StaticLookupItem;
 import com.eipl.amcs.reportengine.model.RptLookup;
 import com.eipl.amcs.reportengine.repository.RptLookupRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -23,38 +22,39 @@ public class LookupServiceImpl implements LookupService {
     private EntityManager entityManager;
 
     @Override
-    public List<T> load(String lookupId) {
+    @SuppressWarnings("unchecked")
+    public <T> List<T> load(String lookupCode) {
 
-        RptLookup lookup = lookupRepository.findById(lookupId)
+        RptLookup lookup = lookupRepository.findById(lookupCode)
                 .orElseThrow(() ->
-                        new RuntimeException("Lookup not found : " + lookupId));
+                        new RuntimeException("Lookup not found : " + lookupCode));
 
         switch (lookup.getSourceType().toUpperCase()) {
 
             case "MODEL":
-                return loadModel(lookup);
+                return (List<T>) loadModel(lookup);
 
             case "STATIC":
                 return loadStatic(lookup);
 
             case "ENUM":
-                return loadEnum(lookup);
+                return (List<T>) loadEnum(lookup);
 
             case "SQL":
-                return loadSql(lookup);
+                return (List<T>) loadSql(lookup);
 
             case "SP":
-                return loadSp(lookup);
+                return (List<T>) loadSp(lookup);
 
             default:
                 return Collections.emptyList();
         }
     }
 
-    private List<T> loadModel(RptLookup lookup) {
+    private List<?> loadModel(RptLookup lookup) {
 
-        String entityName = lookup.getSourceValue();
-        String jpql = "FROM " + entityName;
+        String jpql = "FROM " + lookup.getSourceValue();
+
         if (lookup.getFilterClause() != null && !lookup.getFilterClause().isBlank()) {
             jpql += " WHERE " + lookup.getFilterClause();
         }
@@ -62,6 +62,7 @@ public class LookupServiceImpl implements LookupService {
         if (lookup.getOrderBy() != null && !lookup.getOrderBy().isBlank()) {
             jpql += " ORDER BY " + lookup.getOrderBy();
         }
+
         return entityManager.createQuery(jpql).getResultList();
     }
 
@@ -89,18 +90,15 @@ public class LookupServiceImpl implements LookupService {
         return (List<T>) items;
     }
 
-    private List<T> loadEnum(RptLookup lookup) {
-
+    private List<?> loadEnum(RptLookup lookup) {
         return new ArrayList<>();
     }
 
-    private List<T> loadSql(RptLookup lookup) {
-
+    private List<?> loadSql(RptLookup lookup) {
         return new ArrayList<>();
     }
 
-    private List<T> loadSp(RptLookup lookup) {
-
+    private List<?> loadSp(RptLookup lookup) {
         return new ArrayList<>();
     }
 }
