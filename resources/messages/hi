@@ -1856,3 +1856,6 @@ milkpurchase=दूध की खरीद
 milklist=सदस्यों की सूची
 societysetup=मंडली सेटअप
 accountmaster=खाता मास्टर
+
+opening.stock=प्रारंभिक स्टॉक
+closing.stock=अंतिम स्टॉक

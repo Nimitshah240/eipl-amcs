@@ -461,6 +461,16 @@ public class RptStockValuationController implements MyInitialization {
 
                         TradingTaskparams.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                         JasperPrint print = null;
+                        for (LedgerBalance cdtask:listtradingTask)
+                        {
+                            if (cdtask.getLedgerName().contains("stockvaluation as on") && localeStr.equals("gu")) {
+                                if (cdtask.getDebit() > 0) cdtask.setLedgerName(resourceBundle.getString("opening.stock"));
+                                else if (cdtask.getCredit() > 0) cdtask.setLedgerName(resourceBundle.getString("closing.stock"));
+                            } else if (cdtask.getLedgerName().contains("stockvaluation as on") && localeStr.equals("en")) {
+                                if (cdtask.getDebit() > 0) cdtask.setLedgerName("Stock Valuation");
+                                else if (cdtask.getCredit() > 0) cdtask.setLedgerName("Stock Valuation");
+                            }
+                        }
                         if (rbtVertical.isSelected()) {
                             print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listtradingTask));
                         } else {
