@@ -5,11 +5,12 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 public class ReportResult {
 
-    private List<?> data = new ArrayList<>();
+    private List<Map<String, Object>> data = new ArrayList<>();
 
 }
