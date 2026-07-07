@@ -31,6 +31,10 @@ public class ParameterValueExtractor {
     private Object extractValue(Control control) {
 
         if (control instanceof AutoSearchTextField<?>) {
+            Object value = ((AutoSearchTextField<?>) control).getValue();
+
+            System.out.println(value);
+            System.out.println(value == null ? null : value.getClass());
             return ((AutoSearchTextField<?>) control).getValue();
         }
 

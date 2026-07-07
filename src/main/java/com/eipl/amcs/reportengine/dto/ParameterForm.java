@@ -40,12 +40,17 @@ public class ParameterForm {
         Map<String, Object> values = new HashMap<>();
 
         controls.forEach((name, control) -> {
-            if (control instanceof TextField) {
-                values.put(name, ((TextField) control).getText());
-            } else if (control instanceof AutoSearchTextField) {
-                values.put(name, ((AutoSearchTextField<?>) control).getValue());
+
+            if (control instanceof AutoSearchTextField<?>) {
+
+                values.put(name, ((AutoSearchTextField<?>) control).getSelectionModel().getSelectedItem());
+
             } else if (control instanceof DatePicker) {
+
                 values.put(name, ((DatePicker) control).getValue());
+
+            } else if (control instanceof TextField) {
+                values.put(name, ((TextField) control).getText());
             }
         });
 

@@ -23,7 +23,7 @@ public class LookupServiceImpl implements LookupService {
     private EntityManager entityManager;
 
     @Override
-    public List<T> load(Long lookupId) {
+    public List<T> load(String lookupId) {
 
         RptLookup lookup = lookupRepository.findById(lookupId)
                 .orElseThrow(() ->

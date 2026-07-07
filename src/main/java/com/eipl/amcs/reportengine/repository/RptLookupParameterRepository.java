@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface RptLookupParameterRepository extends JpaRepository<RptLookupParameter, Long> {
-    List<RptLookupParameter> findByLookupLookupId(Long lookupId);
+    List<RptLookupParameter> findByLookupLookupCode(Long lookupId);
 }

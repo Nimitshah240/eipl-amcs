@@ -80,11 +80,11 @@ public class ParameterFormBuilder {
 
     private VBox createField(RptReportParameter rp, ParameterForm form) {
         RptParameterMaster parameter = rp.getParameterMaster();
-        Label label = new Label(parameter.getDisplayName());
+        Label label = new Label(rp.getDisplayName());
         label.setStyle("-fx-font-size:13px;");
         Control control = (Control) parameterControlFactory.createControl(rp);
-        control.setPrefWidth(rp.getWidth());
-        form.addControl(parameter.getParameterName(), control);
+//        control.setPrefWidth(rp.getWidth()
+        form.addControl(rp.getParameterMaster().getParameterMasterCode(), control);
         VBox box = new VBox(5);
         box.getChildren().addAll(label, control);
         return box;

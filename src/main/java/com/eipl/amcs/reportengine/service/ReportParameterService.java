@@ -14,6 +14,6 @@ public class ReportParameterService {
     private final RptParameterRepository reportParameterRepository;
 
     public List<RptReportParameter> getParameters(Long reportId) {
-        return reportParameterRepository.findByReportReportIdOrderByDisplayOrderAsc(reportId);
+        return reportParameterRepository.findByReportReportCodeOrderByDisplayOrderAsc(reportId);
     }
 }

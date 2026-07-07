@@ -3,7 +3,9 @@ package com.eipl.amcs.reportengine.controller;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.reportengine.dto.ParameterForm;
+import com.eipl.amcs.reportengine.dto.ReportResult;
 import com.eipl.amcs.reportengine.popup.ParameterFormBuilder;
+import com.eipl.amcs.reportengine.service.ReportExecutionService;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -28,6 +30,7 @@ public class ReportEngineController implements MyInitialization {
 
     ParameterForm currentForm;
     private ParameterPopup parameterPopup;
+    private ReportExecutionService reportExecutionService;
 
     @Override
     public Node getRoot() {
@@ -39,19 +42,12 @@ public class ReportEngineController implements MyInitialization {
 
         popupBuilder = EmcsAppContext.getContext().getBean(ParameterFormBuilder.class);
         parameterPopup = EmcsAppContext.getContext().getBean(ParameterPopup.class);
+        reportExecutionService = EmcsAppContext.getContext().getBean(ReportExecutionService.class);
         parameterContainer.setVisible(false);
         parameterContainer.setManaged(false);
 
-        btnParameter.setOnAction(e -> {
+        btnParameter.setOnAction(e -> onParameter());
 
-            Map<String, Object> values =
-                    parameterPopup.show(1L);
-
-            if (values != null) {
-                // Later call datasource
-            }
-
-        });
     }
 
     public void loadReport(Long reportId) {
@@ -61,7 +57,7 @@ public class ReportEngineController implements MyInitialization {
     }
 
     private void openParameterPanel() {
-        loadReport(1L);
+        loadReport(3L);
         if (currentForm == null) {
             return;
         }
@@ -73,6 +69,19 @@ public class ReportEngineController implements MyInitialization {
 
         parameterContainer.setVisible(false);
         parameterContainer.setManaged(false);
+    }
+
+    private void onParameter() {
+
+        Map<String, Object> values = parameterPopup.show(1L);
+
+        if (values == null) {
+            return;
+        }
+        ReportResult result = reportExecutionService.execute(1L, values);
+
+        System.out.println(result.getData());
+
     }
 
 }

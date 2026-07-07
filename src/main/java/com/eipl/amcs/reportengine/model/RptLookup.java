@@ -1,6 +1,7 @@
 package com.eipl.amcs.reportengine.model;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data
@@ -9,34 +10,32 @@ import javax.persistence.*;
 public class RptLookup {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "lookup_id")
-    private Long lookupId;
-
-    @Column(name = "lookup_code", nullable = false, unique = true, length = 50)
+    @Column(name = "lookup_code", length = 255)
     private String lookupCode;
 
-    @Column(name = "lookup_name", length = 100)
+    @Column(name = "lookup_name", nullable = false, length = 200)
     private String lookupName;
 
-    @Column(name = "source_type", nullable = false, length = 30)
-    private String sourceType; // MODEL, SQL, SP, STATIC, ENUM
+    @Column(name = "source_type", length = 50)
+    private String sourceType;
 
-    @Column(name = "source_value", length = 500)
+    @Lob
+    @Column(name = "source_value")
     private String sourceValue;
 
-    @Column(name = "value_field", length = 100)
-    private String valueField;
-
-    @Column(name = "display_field", length = 100)
-    private String displayField;
-
-    @Column(name = "filter_clause", length = 500)
+    @Lob
+    @Column(name = "filter_clause")
     private String filterClause;
 
     @Column(name = "order_by", length = 200)
     private String orderBy;
 
-    @Column(name = "active")
-    private Boolean active = true;
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @Column(name = "value_field")
+    private String valueField;
+
+    @Column(name = "display_field")
+    private String displayField;
 }

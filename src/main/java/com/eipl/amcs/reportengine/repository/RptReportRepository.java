@@ -9,10 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface RptReportRepository extends JpaRepository<RptReport, Long> {
-
-    @EntityGraph(attributePaths = {"datasource", "layout"})
-    Optional<RptReport> findByReportCode(Long reportCode);
-
-    @EntityGraph(attributePaths = {"datasource", "layout"})
-    Optional<RptReport> findById(Long reportCode);
+    @EntityGraph(attributePaths = {"datasource"})
+    Optional<RptReport> findById(Long reportId);
 }

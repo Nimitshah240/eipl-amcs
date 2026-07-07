@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 interface RptSectionRepository extends JpaRepository<RptSection, Long> {
-    List<RptSection> findByReportReportIdOrderByDisplayOrderAsc(Long reportId);
+    List<RptSection> findByReportReportCodeOrderByDisplayOrderAsc(Long reportId);
 }

@@ -1,6 +1,7 @@
 package com.eipl.amcs.reportengine.model;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data
@@ -10,32 +11,35 @@ public class RptReportParameter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "report_parameter_id")
-    private Long reportParameterId;
+    @Column(name = "report_parameter_code")
+    private Long reportParameterCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id", nullable = false)
+    @JoinColumn(name = "report_code", nullable = false)
     private RptReport report;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parameter_id", nullable = false)
+    @JoinColumn(name = "parameter_master_code", nullable = false)
     private RptParameterMaster parameterMaster;
 
     @Column(name = "row_no")
-    private Integer rowNo = 1;
+    private Integer rowNo;
 
     @Column(name = "column_no")
-    private Integer columnNo = 1;
-
-    @Column(name = "width")
-    private Integer width = 180;
+    private Integer columnNo;
 
     @Column(name = "display_order")
     private Integer displayOrder;
+
+    @Column(name = "display_name")
+    private String displayName;
 
     @Column(name = "required_flag")
     private Boolean requiredFlag = false;
 
     @Column(name = "visible_flag")
     private Boolean visibleFlag = true;
+
+    @Column(name = "default_value", length = 200)
+    private String defaultValue;
 }

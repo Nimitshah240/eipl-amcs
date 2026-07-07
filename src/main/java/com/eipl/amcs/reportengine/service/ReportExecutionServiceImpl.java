@@ -7,6 +7,8 @@ import com.eipl.amcs.reportengine.repository.RptReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class ReportExecutionServiceImpl implements ReportExecutionService {
@@ -21,5 +23,18 @@ public class ReportExecutionServiceImpl implements ReportExecutionService {
         RptReport report = reportRepository.findById(request.getReportId()).orElseThrow();
 
         return datasourceExecutor.execute(report.getDatasource(), request.getParameters());
+    }
+
+    @Override
+    public ReportResult execute(Long reportId, Map<String, Object> parameters) {
+
+        RptReport report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
+
+        if (report.getDatasource() == null) {
+            throw new RuntimeException("Datasource not configured.");
+        }
+
+        return datasourceExecutor.execute(report.getDatasource(), parameters);
     }
 }
