@@ -4,6 +4,7 @@ import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.E_TextField;
+import com.eipl.amcs.reportengine.dto.StaticLookupItem;
 import com.eipl.amcs.reportengine.model.RptLookup;
 import com.eipl.amcs.reportengine.model.RptParameterMaster;
 import com.eipl.amcs.reportengine.model.RptReportParameter;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -76,26 +78,21 @@ public class ParameterControlFactory {
 
         RptParameterMaster pm = rp.getParameterMaster();
 
+        List<T> items = Collections.emptyList();
+
         if (pm.getLookup() != null) {
-
-            List<T> items = lookupService.load(pm.getLookup().getLookupCode());
-
+            items = lookupService.load(pm.getLookup().getLookupCode());
             if (Boolean.TRUE.equals(rp.getRequiredAll()) && !items.isEmpty()) {
-
                 T allItem = createAllItem(items.get(0), pm.getLookup());
-
                 items.add(0, allItem);
             }
-
             control.getItems().setAll(items);
         }
 
-        if (rp.getDefaultValue() != null) {
-
-            try {
-                control.getSelectionModel().select(Integer.parseInt(rp.getDefaultValue()));
-            } catch (Exception e) {
-                control.getSelectionModel().select(0);
+        if (rp.getDefaultValue() != null && !rp.getDefaultValue().isBlank() && pm.getLookup() != null) {
+            T selectedItem = findItemByValue(items, pm.getLookup().getValueField(), rp.getDefaultValue());
+            if (selectedItem != null) {
+                control.setValue(selectedItem);
             }
         }
 
@@ -122,5 +119,37 @@ public class ParameterControlFactory {
         } catch (Exception e) {
             throw new RuntimeException("Unable to create 'All' item for " + sample.getClass().getName(), e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T findItemByValue(List<T> items,
+                                  String valueField,
+                                  String defaultValue) {
+
+        if (items == null || items.isEmpty()) {
+            return null;
+        }
+
+        for (T item : items) {
+
+            Object value;
+
+            if (item instanceof StaticLookupItem) {
+
+                value = ((StaticLookupItem) item).getValue();
+
+            } else {
+
+                value = ReflectionUtil.getFieldValue(item, valueField);
+            }
+
+            if (value != null &&
+                    String.valueOf(value).equalsIgnoreCase(defaultValue)) {
+
+                return item;
+            }
+        }
+
+        return null;
     }
 }

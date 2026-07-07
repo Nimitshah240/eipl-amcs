@@ -1,5 +1,7 @@
 package com.eipl.amcs.reportengine.popup;
 
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.controls.E_Button;
 import com.eipl.amcs.reportengine.dto.ParameterForm;
 import com.eipl.amcs.reportengine.dto.ReportRequest;
 import com.eipl.amcs.reportengine.dto.ReportResult;
@@ -9,7 +11,6 @@ import com.eipl.amcs.reportengine.service.ReportExecutionService;
 import com.eipl.amcs.reportengine.service.ReportParameterService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -27,6 +28,7 @@ public class ParameterFormBuilder {
     private final ReportParameterService reportParameterService;
     private final ParameterControlFactory parameterControlFactory;
     private final ParameterValueExtractor parameterValueExtractor;
+//    private final ReportParameterService reportParameterService;
 
     private final ReportExecutionService reportExecutionService;
 
@@ -55,12 +57,12 @@ public class ParameterFormBuilder {
         root.setCenter(grid);
         HBox buttonBar = new HBox(10);
 
-        Button btnGenerate = new Button("Generate");
+        E_Button btnGenerate = new E_Button();
+        btnGenerate.setText(MainApp.getBundle().getString("generate"));
         btnGenerate.setOnAction(e -> {
 
             Map<String, Object> values = parameterValueExtractor.extract(form);
-
-            // 2. Create request
+            reportParameterService.saveDefaults(reportId, values);
             ReportRequest request = new ReportRequest();
             request.setReportId(reportId);
             request.setParameters(values);
@@ -69,11 +71,16 @@ public class ParameterFormBuilder {
             ((Stage) btnGenerate.getScene().getWindow()).close();
 
         });
-        Button btnCancel = new Button("Cancel");
+        E_Button btnCancel = new E_Button();
+        btnCancel.setText(MainApp.getBundle().getString("cancel"));
         buttonBar.getChildren().addAll(btnGenerate, btnCancel);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
         root.setBottom(buttonBar);
         form.setRoot(root);
+
+        btnCancel.setOnAction(e -> {
+            ((Stage) btnCancel.getScene().getWindow()).close();
+        });
 
         return form;
     }
