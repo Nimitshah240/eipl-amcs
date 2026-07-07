@@ -34,7 +34,7 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
+    private Button btnGenerate, btnClose;
     private Stage stage;
     private PopupCallback callback;
     @FXML
@@ -44,9 +44,9 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     @FXML
     private ComboBox<String> cboxType;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private ComboBox<String> cboxLanguage;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -67,8 +67,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         this.resourceBundle = resourceBundle;
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
-        dpFromDate1.setValue(LocalDate.now());
-        dpToDate1.setValue(LocalDate.now());
         dpFromDate.setConverter(new LocalDateConvertor());
         dpFromDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -90,21 +88,15 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         setupComboBox();
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
-        btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
-        btnClose1.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
         cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
-        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
         if (MainApp.getLocale().equalsIgnoreCase("gu")) {
             cboxLanguage.setValue("Gujarati");
-            cboxLanguage1.setValue("Gujarati");
         } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
             cboxLanguage.setValue("Hindi");
-            cboxLanguage1.setValue("Hindi");
         } else {
             cboxLanguage.setValue("English");
-            cboxLanguage1.setValue("English");
         }
     }
 
@@ -117,10 +109,6 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     }
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
-    }
-
-    private String getLocaleString1() {
-        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     private void validateAndGenerateReport() {
@@ -203,20 +191,4 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
         new Thread(task).start();
     }
 
-    private void validateAndGenerateReport1() {
-        try {
-            Map<String, Object> params = new HashMap<>();
-            String localeStr = getLocaleString1();
-            params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-            params.put("p_locale", localeStr);
-            JasperPrint print = null;
-            params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-            params.put("p_from_collection_date", java.sql.Date.valueOf(dpFromDate1.getValue()) + " 06:00:00");
-            params.put("p_to_collection_date", java.sql.Date.valueOf(dpToDate1.getValue()) + " 18:00:00");
-            print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE, params);
-            JasperViewer.viewReport(print, false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

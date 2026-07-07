@@ -2,10 +2,18 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
+import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
+import com.eipl.amcs.master.operation.model.Member;
+import com.eipl.amcs.master.operation.task.MemberLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -31,31 +39,17 @@ public class MilkCollectionAuditController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private Button btnGenerate, btnClose;
+    private Button btnGenerate, btnClose, btnGenerate2, btnClose2;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private DatePicker dpFromDate, dpToDate,dpToDate1, dpFromDate1;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private ComboBox<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
+     @FXML
+    private ComboBox<Member> cboxMember1;
     @FXML
-    private ComboBox<String> cboxLanguage;
-
+    private ComboBox<MilkType> cboxMilkType1;
     @FXML
-    private Button btnGenerate1, btnClose1;
-    @FXML
-    private DatePicker dpPreviousDate, dpCompareDate;
-    @FXML
-    private ComboBox<Shift> cboxPreviousShift, cboxCompareShift;
-    @FXML
-    private ComboBox<String> cboxLanguage1;
-
-
-    @FXML
-    private Button btnGenerate12, btnClose12;
-    @FXML
-    private ComboBox<String> cboxReportType;
-    @FXML
-    private ComboBox<String> cboxLanguage12;
-
+    private ComboBox<String> cboxLanguage, cboxLanguage2;
 
     private ResourceBundle resourceBundle;
 
@@ -81,69 +75,59 @@ public class MilkCollectionAuditController implements MyInitialization {
                 dpToDate.setValue(dpToDate.getConverter().fromString(dpToDate.getEditor().getText()));
             }
         });
+        dpFromDate1.setValue(LocalDate.now());
+        dpToDate1.setValue(LocalDate.now());
+        dpFromDate1.setConverter(new LocalDateConvertor());
+        dpFromDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate1.setValue(dpFromDate1.getConverter().fromString(dpFromDate1.getEditor().getText()));
+            }
+        });
+        dpToDate1.setConverter(new LocalDateConvertor());
+        dpToDate1.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate1.setValue(dpToDate1.getConverter().fromString(dpToDate1.getEditor().getText()));
+            }
+        });
         loadData();
         loadShift();
         setupComboBox();
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
+        btnClose2.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
+        btnGenerate2.setOnAction(e -> validateAndGenerateReport2());
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
         cboxLanguage.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        cboxLanguage2.setItems(FXCollections.observableList(Arrays.asList(arr)));
         if (MainApp.getLocale().equalsIgnoreCase("gu")) {
             cboxLanguage.setValue("Gujarati");
+            cboxLanguage2.setValue("Gujarati");
         } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
             cboxLanguage.setValue("Hindi");
+            cboxLanguage2.setValue("Hindi");
+
         } else {
             cboxLanguage.setValue("English");
+            cboxLanguage2.setValue("English");
         }
 
-        dpPreviousDate.setValue(LocalDate.now());
-        dpCompareDate.setValue(LocalDate.now());
-        cboxLanguage1.setItems(FXCollections.observableList(Arrays.asList(arr)));
-        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
-            cboxLanguage1.setValue("Gujarati");
-        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
-            cboxLanguage1.setValue("Hindi");
-        } else {
-            cboxLanguage1.setValue("English");
-        }
-
-        btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
-        btnClose1.setOnAction(e -> onCloseFarmerPendingListReportClicked());
-
-        cboxReportType.setItems(FXCollections.observableArrayList("All", "Parent", "Child"));
-        cboxReportType.getSelectionModel().selectFirst();
-        cboxLanguage12.setItems(FXCollections.observableList(Arrays.asList(arr)));
-        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
-            cboxLanguage12.setValue("Gujarati");
-        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
-            cboxLanguage12.setValue("Hindi");
-        } else {
-            cboxLanguage12.setValue("English");
-        }
-
-        btnGenerate12.setOnAction(e -> validateAndGenerateReport2());
-        btnClose12.setOnAction(e -> onCloseMemberRegisterFarmerMappingReportClicked());
     }
 
     @Override
     public void setupComboBox() {
         cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
         cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxPreviousShift.setConverter(new ShiftConvertor(cboxPreviousShift));
-        cboxCompareShift.setConverter(new ShiftConvertor(cboxCompareShift));
+        cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+        cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
+        cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+        cboxMember1.setConverter(new MemberReportConvertor(cboxMember1));
+        cboxMember1.setCellFactory(new MemberCellFactory());
+
     }
 
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
-    }
-
-    private String getFarmerPendingListLocaleString() {
-        return cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
-    }
-
-    private String getMemberRegisterFarmerMappingLocaleString() {
-        return cboxLanguage12.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase(); // Corrected fx:id
     }
 
     private void validateAndGenerateReport() {
@@ -159,61 +143,21 @@ public class MilkCollectionAuditController implements MyInitialization {
         JasperViewer.viewReport(print, false);
     }
 
-    public void validateAndGenerateReport1() {
+    private void validateAndGenerateReport2() {
         Map<String, Object> params = new HashMap<>();
-        String localeStr = getFarmerPendingListLocaleString();
-        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        String localeStr = getLocaleString2();
+        params.put("p_member_code", cboxMember1.getValue().getCode());
+        params.put("p_from_date", dpFromDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_to_date", dpToDate1.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift1.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
+        params.put("p_milk_type_code", cboxMilkType1.getValue().getCode());
         params.put("p_locale", localeStr);
-        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-        java.time.LocalDateTime previousDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpPreviousDate.getValue(), cboxPreviousShift.getValue());
-        java.time.LocalDateTime compareDateTime = CommonUtils.getLocalDateTimeFromDateAndShift(dpCompareDate.getValue(), cboxCompareShift.getValue());
-        DateTimeFormatter dbDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        String formattedPreviousDate = "";
-        if (previousDateTime != null) {
-            formattedPreviousDate = previousDateTime.format(dbDateTimeFormatter);
-        }
-        params.put("p_previous_date", formattedPreviousDate);
-
-        String formattedCompareDate = "";
-        if (compareDateTime != null) {
-            formattedCompareDate = compareDateTime.format(dbDateTimeFormatter);
-        }
-        params.put("p_compare_date", formattedCompareDate);
-
-        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.FARMER_PENDING_LIST, params);
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.EDIT_COLLECTION_REPORT, params);
         JasperViewer.viewReport(print, false);
     }
 
-    public void onCloseFarmerPendingListReportClicked() {
-        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
-    }
-
-    public void validateAndGenerateReport2() {
-        Map<String, Object> params = new HashMap<>();
-        String localeStr = getMemberRegisterFarmerMappingLocaleString();
-        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-        params.put("p_locale", localeStr);
-        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-
-        int reportTypeInt;
-        switch (cboxReportType.getValue()) {
-            case "All":
-                reportTypeInt = 0;
-                break;
-            case "Parent":
-                reportTypeInt = 1;
-                break;
-            case "Child":
-                reportTypeInt = 2;
-                break;
-            default:
-                reportTypeInt = 0;
-        }
-        params.put("p_report_type", reportTypeInt);
-
-        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.Farmer_MAPPING, params);
-        JasperViewer.viewReport(print, false);
+    private String getLocaleString2() {
+        return cboxLanguage2.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
 
     public void onCloseMemberRegisterFarmerMappingReportClicked() {
@@ -230,14 +174,62 @@ public class MilkCollectionAuditController implements MyInitialization {
                 cboxToShift.setItems(FXCollections.observableList(list));
                 cboxToShift.getSelectionModel().select(1);
                 cboxFromShift.getSelectionModel().select(0);
-                cboxPreviousShift.setItems(FXCollections.observableList(list));
-                cboxCompareShift.setItems(FXCollections.observableList(list));
-                cboxPreviousShift.getSelectionModel().select(0);
-                cboxCompareShift.getSelectionModel().select(1);
+                cboxFromShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                cboxFromShift1.getSelectionModel().select(0);
+                cboxToShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                cboxToShift1.getSelectionModel().select(1);
+                cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+                cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
         });
         new Thread(task).start();
+
+        var task2 = new MilkTypeLoadTask();
+        task2.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task2.get();
+                if (list != null) {
+                    MilkType milkType = new MilkType();
+                    milkType.setCode(0);
+                    milkType.setName("All");
+                    List<MilkType> temp = new ArrayList<>();
+                    temp.add(0, milkType);
+                    temp.addAll(list);
+                    cboxMilkType1.setItems(FXCollections.observableList(temp));
+                    cboxMilkType1.getSelectionModel().select(0);
+                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+                    loadData1();
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task2).start();
+    }
+
+    public void loadData1() {
+        MemberLoadTask task4 = new MemberLoadTask();
+        task4.setOnSucceeded(e -> {
+            try {
+                List<Member> list = task4.get();
+                if (list != null) {
+                    List<Member> list2 = new ArrayList<>();
+                    Member m = new Member();
+                    m.setCode("0");
+                    m.setCodeEx("0");
+                    m.setFirstName("All");
+                    list2.add(m);
+                    list2.addAll(list);
+                    cboxMember1.setItems(FXCollections.observableList(list2));
+                    new AutoCompleteComboBoxListener<>(cboxMember1);
+                    cboxMember1.getSelectionModel().select(0);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task4).start();
     }
 }

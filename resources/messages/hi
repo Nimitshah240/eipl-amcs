@@ -1856,6 +1856,9 @@ milkpurchase=दूध की खरीद
 milklist=सदस्यों की सूची
 societysetup=मंडली सेटअप
 accountmaster=खाता मास्टर
-
+societypurchaseregistermemberwise: सदस्य-वार समाज खरीद रजिस्टर
+milkcollectionpendinglist: दुग्ध संग्रह बकाया सूची
+milkcollectionfarmermapping: दुग्ध संग्रह किसान मैपिंग
+timewise: समय अनुसार
 opening.stock=प्रारंभिक स्टॉक
 closing.stock=अंतिम स्टॉक

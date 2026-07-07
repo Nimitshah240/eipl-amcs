@@ -20,62 +20,6 @@
     <children>
         <VBox prefHeight="400.0" spacing="15.0">
             <children>
-                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%payment_register_with_deduction" />
-                <GridPane hgap="8.0">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="15.0" />
-                        <ColumnConstraints percentWidth="15.0" />
-                        <ColumnConstraints percentWidth="15.0" />
-                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-                        <ColumnConstraints percentWidth="15.0" />
-                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
-                        <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
-                            <children>
-                                <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%generate">
-                                    <graphic>
-                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../images/generate.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                                <Button fx:id="btnClose" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%close">
-                                    <graphic>
-                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../images/close.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                            </children>
-                        </HBox>
-                        <Label fx:id="lblMonth" text="%fromdate" />
-                        <ComboBox fx:id="cboxfromshift" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="%fromshift" GridPane.columnIndex="1" />
-                        <Label text="%todate" GridPane.columnIndex="2" />
-                        <ComboBox fx:id="cboxtoshift" editable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Label text="%toshift" GridPane.columnIndex="3" />
-                        <E_TextField fx:id="txtSampleNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-
-
-                        <Label text="%sampleno" GridPane.columnIndex="4" />
-                        <DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dpToDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label text="%language" GridPane.columnIndex="5" />
-                        <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                    </children>
-                </GridPane>
-                <Separator prefWidth="200.0" />
                 <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%farmer_register" />
                 <GridPane hgap="8.0">
                     <columnConstraints>
@@ -130,6 +74,62 @@
                         <ComboBox fx:id="cboxStatusType" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                         <ComboBox fx:id="cboxReportType" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Label text="%status" GridPane.columnIndex="5" />
+                    </children>
+                </GridPane>
+                <Separator prefWidth="200.0" visible="false" />
+                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="header-text" text="%payment_register_with_deduction" visible="false" />
+                <GridPane hgap="8.0" visible="false">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="15.0" />
+                        <ColumnConstraints percentWidth="15.0" />
+                        <ColumnConstraints percentWidth="15.0" />
+                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                        <ColumnConstraints percentWidth="15.0" />
+                        <ColumnConstraints minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <HBox alignment="CENTER_RIGHT" spacing="5.0" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                            <children>
+                                <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%generate">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../images/generate.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button fx:id="btnClose" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%close">
+                                    <graphic>
+                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../images/close.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                            </children>
+                        </HBox>
+                        <Label fx:id="lblMonth" text="%fromdate" />
+                        <ComboBox fx:id="cboxfromshift" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="%fromshift" GridPane.columnIndex="1" />
+                        <Label text="%todate" GridPane.columnIndex="2" />
+                        <ComboBox fx:id="cboxtoshift" editable="true" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="%toshift" GridPane.columnIndex="3" />
+                        <E_TextField fx:id="txtSampleNo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+
+
+                        <Label text="%sampleno" GridPane.columnIndex="4" />
+                        <DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <DatePicker fx:id="dpToDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label text="%language" GridPane.columnIndex="5" />
+                        <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
             </children>
