@@ -30,6 +30,7 @@ import com.eipl.amcs.report.task.*;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.FormatterFactory;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
@@ -340,8 +341,30 @@ public class RptStockValuationController implements MyInitialization {
                 param.put("p_locale", localeStr);
                 param.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
                 JasperPrint print = null;
-                listPLIncome = list.stream().filter(p -> p != null && p.getIncomeExpense() == 1).collect(Collectors.toList());
-                listPLExpense = list.stream().filter(p -> p != null && p.getIncomeExpense() == 0).collect(Collectors.toList());
+
+                list.sort(Comparator.comparing(
+                        LedgerBalance::getLedgerCode,
+                        (code1, code2) -> {
+                            boolean empty1 = (code1 == null || code1.trim().isEmpty());
+                            boolean empty2 = (code2 == null || code2.trim().isEmpty());
+
+                            if (empty1 && empty2) return 0;
+                            if (empty1) return 1;
+                            if (empty2) return -1;
+                            return code1.compareTo(code2);
+                        }
+                ));
+
+                listPLIncome = list.stream()
+                        .filter(p -> p != null && p.getIncomeExpense() == 1)
+                        .peek(p -> p.setLedgerCode(FormatterFactory.formatNumber(p.getLedgerCode())))
+                        .collect(Collectors.toList());
+
+                listPLExpense = list.stream()
+                        .filter(p -> p != null && p.getIncomeExpense() == 0)
+                        .peek(p -> p.setLedgerCode(FormatterFactory.formatNumber(p.getLedgerCode())))
+                        .collect(Collectors.toList());
+
                 double incomeTotal = listPLIncome != null
                         ? listPLIncome.stream().mapToDouble(m -> m != null ? m.getBalance() : 0).sum() : 0;
                 double expenseTotal = listPLExpense != null
@@ -429,72 +452,103 @@ public class RptStockValuationController implements MyInitialization {
         task.setOnSucceeded(e -> {
             try {
                 List<com.eipl.amcs.master.account.model.ProductStockValuation> listStockValuation = task.get();
-                List<ProductStockValuation> list = new ArrayList<>();
-                if (listStockValuation != null) {
-                    for (com.eipl.amcs.master.account.model.ProductStockValuation psv : listStockValuation) {
-                        list.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
-                    }
-                }
-
-                Map<String, Object> params = new HashMap<>();
-                params.put("p_society_code", MainApp.identityDto.getSociety().getCodeEx());
-                params.put("p_as_on_date", MainApp.getFinancialYear().getEndDate());
-                params.put("p_locale", localeStr);
-                params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-
-                double stockValuationTask = list.stream().mapToDouble(m -> m.getValuation()).sum();
-
-                TradingTask tradingTask = new TradingTask(MainApp.identityDto.getSociety().getCode(), dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
-                tradingTask.setOnSucceeded(ee -> {
+                StockValuationTask task2 = new StockValuationTask(MainApp.identityDto.getSociety().getCode(), dpFromDate1.getValue().minusDays(1), localeStr);
+                task2.setOnSucceeded(ez -> {
                     try {
-                        List<LedgerBalance> listtradingTask = tradingTask.get();
-                        Map<String, Object> TradingTaskparams = new HashMap<>();
-                        TradingTaskparams.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-                        if (localeStr.equals("en")) {
-                            TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getName());
-                        } else {
-                            TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
-                        }
-                        TradingTaskparams.put("p_from_date", dpFromDate1.getValue());
-                        TradingTaskparams.put("p_to_date", dpToDate1.getValue());
-                        TradingTaskparams.put("p_locale", localeStr);
-
-                        TradingTaskparams.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
-                        JasperPrint print = null;
-                        if (rbtVertical.isSelected()) {
-                            print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listtradingTask));
-                        } else {
-                            // (NIMIT | 15.03.2026): This code is used for horizontal report design.
-
-                            listBSAsset = listtradingTask.stream().filter(p -> p.getBalance() < 0).collect(Collectors.toList());
-                            listBSLiability = listtradingTask.stream().filter(p -> p.getBalance() > 0).collect(Collectors.toList());
-
-                            int maxRows = Math.max(
-                                    listBSLiability != null ? listBSLiability.size() : 0,
-                                    listBSAsset != null ? listBSAsset.size() : 0
-                            );
-
-                            List<BalanceSheetRow> listBSRows = new ArrayList<>();
-                            for (int i = 0; i < maxRows; i++) {
-                                LedgerBalance liability = (listBSLiability != null && i < listBSLiability.size())
-                                        ? listBSLiability.get(i) : null;
-                                LedgerBalance asset = (listBSAsset != null && i < listBSAsset.size())
-                                        ? listBSAsset.get(i) : null;
-                                listBSRows.add(new BalanceSheetRow(liability, asset));
+                        List<com.eipl.amcs.master.account.model.ProductStockValuation> lilst = task2.get();
+                        BigDecimal openingMalStock = BigDecimal.ZERO;
+                        if (lilst != null) {
+                            for (com.eipl.amcs.master.account.model.ProductStockValuation ps : lilst) {
+                                openingMalStock = openingMalStock.add(new BigDecimal(ps.getValuation()));
                             }
-
-                            // TODO(ANANT | 15.03.2026): HERE CHANGE YOUR REPORT PATH AND IN REPORT ADD THE COLUMN NAME SAME AS BALANCESHEETROW COLUMN NAME.
-                            print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.TradingReportOne, TradingTaskparams, new JRBeanCollectionDataSource(listBSRows));
                         }
-                        JasperViewer.viewReport(print, false);
+                        List<ProductStockValuation> list = new ArrayList<>();
+                        if (listStockValuation != null) {
+                            for (com.eipl.amcs.master.account.model.ProductStockValuation psv : listStockValuation) {
+                                list.add(new com.eipl.amcs.report.dto.ProductStockValuation(psv.getProductCode(), psv.getProductName(), psv.getStock(), psv.getValuation(), psv.getUnit()));
+                            }
+                        }
+
+                        TradingTask tradingTask = new TradingTask(MainApp.identityDto.getSociety().getCode(), dpFromDate1.getValue(), dpToDate1.getValue(), localeStr);
+                        BigDecimal finalOpeningMalStock = openingMalStock;
+                        tradingTask.setOnSucceeded(ee -> {
+                            try {
+                                List<LedgerBalance> listtradingTask = tradingTask.get();
+                                Map<String, Object> TradingTaskparams = new HashMap<>();
+                                TradingTaskparams.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+                                if (localeStr.equals("en")) {
+                                    TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getName());
+                                } else {
+                                    TradingTaskparams.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal() == null ? MainApp.identityDto.getSociety().getName() : MainApp.identityDto.getSociety().getNameLocal());
+                                }
+                                TradingTaskparams.put("p_from_date", dpFromDate1.getValue());
+                                TradingTaskparams.put("p_to_date", dpToDate1.getValue());
+                                TradingTaskparams.put("p_locale", localeStr);
+                                TradingTaskparams.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+
+                                JasperPrint print = null;
+                                listtradingTask.sort(Comparator.comparing(
+                                        LedgerBalance::getLedgerCode,
+                                        (code1, code2) -> {
+                                            boolean empty1 = (code1 == null || code1.trim().isEmpty());
+                                            boolean empty2 = (code2 == null || code2.trim().isEmpty());
+
+                                            if (empty1 && empty2) return 0;
+                                            if (empty1) return 1;
+                                            if (empty2) return -1;
+                                            return code1.compareTo(code2);
+                                        }
+                                ));
+                                for (LedgerBalance cdtask : listtradingTask) {
+                                    if (cdtask.getLedgerName().contains("stockvaluation as on") && localeStr.equals("gu")) {
+                                        if (cdtask.getDebit() > 0)
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
+                                        else if (cdtask.getCredit() > 0)
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
+                                    } else if (cdtask.getLedgerName().contains("stockvaluation as on") && localeStr.equals("en")) {
+                                        if (cdtask.getDebit() > 0)
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
+                                        else if (cdtask.getCredit() > 0)
+                                            cdtask.setLedgerName(cdtask.getLedgerName().replace("stockvaluation as on", resourceBundle.getString("mal.stock")));
+                                    }
+                                    cdtask.setLedgerCode(FormatterFactory.formatNumber(cdtask.getLedgerCode()));
+                                }
+                                listtradingTask.add(0, new LedgerBalance("", resourceBundle.getString("mal.stock") + FormatterFactory.formatDate(dpFromDate1.getValue(), localeStr), Double.valueOf(String.valueOf(finalOpeningMalStock)), 0, -Math.abs(Double.valueOf(String.valueOf(finalOpeningMalStock)))));
+
+                                if (rbtVertical.isSelected()) {
+                                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.RPT_TRADINGREPORT, TradingTaskparams, new JRBeanCollectionDataSource(listtradingTask));
+                                } else {
+
+                                    listBSAsset = listtradingTask.stream().filter(p -> p.getBalance() < 0).collect(Collectors.toList());
+                                    listBSLiability = listtradingTask.stream().filter(p -> p.getBalance() > 0).collect(Collectors.toList());
+
+                                    int maxRows = Math.max(
+                                            listBSLiability != null ? listBSLiability.size() : 0,
+                                            listBSAsset != null ? listBSAsset.size() : 0
+                                    );
+
+                                    List<BalanceSheetRow> listBSRows = new ArrayList<>();
+                                    for (int i = 0; i < maxRows; i++) {
+                                        LedgerBalance liability = (listBSLiability != null && i < listBSLiability.size()) ? listBSLiability.get(i) : null;
+                                        LedgerBalance asset = (listBSAsset != null && i < listBSAsset.size()) ? listBSAsset.get(i) : null;
+                                        listBSRows.add(new BalanceSheetRow(liability, asset));
+                                    }
+
+                                    print = ReportGenerate.getReportDataSourceViewer(AppConstant.ReportPath.TradingReportOne, TradingTaskparams, new JRBeanCollectionDataSource(listBSRows));
+                                }
+                                JasperViewer.viewReport(print, false);
+                            } catch (InterruptedException | ExecutionException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                        new Thread(tradingTask).start();
+
                     } catch (InterruptedException | ExecutionException ex) {
                         ex.printStackTrace();
                     }
                 });
-                new Thread(task).start();
-                new Thread(tradingTask).start();
-
-            } catch (InterruptedException | ExecutionException ex) {
+                new Thread(task2).start();
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });

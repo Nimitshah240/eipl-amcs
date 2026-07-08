@@ -1,0 +1,160 @@
+package com.eipl.amcs.report.controller;
+
+import com.eipl.amcs.MainApp;
+import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_NumericField;
+import com.eipl.amcs.controls.convertor.LocalDateConvertor;
+import com.eipl.amcs.master.global.convertor.GenderConvertor;
+import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
+import com.eipl.amcs.master.global.model.Gender;
+import com.eipl.amcs.master.global.model.MilkType;
+import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.task.GenderLoadTask;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
+import com.eipl.amcs.master.global.task.ShiftLoadTask;
+import com.eipl.amcs.report.util.ReportGenerate;
+import com.eipl.amcs.utils.AppConstant;
+import com.eipl.amcs.utils.CommonUtils;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+public class ElectionRegisterOneController implements MyInitialization {
+
+    @FXML
+    private StackPane root;
+    @FXML
+    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    @FXML
+    private DatePicker dpFromDate2, dpToDate2;
+    @FXML
+    private E_NumericField txtLimit2;
+    @FXML
+    private TextField txtqty;
+    @FXML
+    private ComboBox<String> cboxLanguage2;
+    @FXML
+    private Button btnGenerate2, btnClose2;
+
+    private ResourceBundle resourceBundle;
+    private List<MilkType> listMilkType;
+
+    @Override
+    public Node getRoot() {
+        return root;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
+
+        loadData();
+        setupComboBox();
+
+        String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
+        dpFromDate2.setValue(LocalDate.now());
+        dpFromDate2.setConverter(new LocalDateConvertor());
+        dpFromDate2.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpFromDate2.setValue(dpFromDate2.getConverter().fromString(dpFromDate2.getEditor().getText()));
+            }
+        });
+        dpToDate2.setValue(LocalDate.now());
+        dpToDate2.setConverter(new LocalDateConvertor());
+        dpToDate2.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                dpToDate2.setValue(dpToDate2.getConverter().fromString(dpToDate2.getEditor().getText()));
+            }
+        });
+        txtLimit2.setText("180");
+        txtqty.setText("700");
+        cboxLanguage2.setItems(FXCollections.observableList(Arrays.asList(arr)));
+        if (MainApp.getLocale().equalsIgnoreCase("gu")) {
+            cboxLanguage2.setValue("Gujarati");
+        } else if (MainApp.getLocale().equalsIgnoreCase("hi")) {
+            cboxLanguage2.setValue("Hindi");
+        } else {
+            cboxLanguage2.setValue("English");
+        }
+
+        btnGenerate2.setOnAction(e -> validateAndGenerateReport1());
+        btnClose2.setOnAction(e -> onCloseElectionRegister1ReportClicked());
+    }
+
+
+    private String getElectionRegister1LocaleString() {
+        return cboxLanguage2.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
+    }
+
+    public void validateAndGenerateReport1() {
+        Map<String, Object> params = new HashMap<>();
+        String localeStr = getElectionRegister1LocaleString();
+        params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
+        params.put("p_locale", localeStr);
+
+        params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
+        params.put("p_from_date", Timestamp.valueOf(dpFromDate2.getValue().atTime(
+            cboxFromShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
+        params.put("p_to_date", Timestamp.valueOf(dpToDate2.getValue().atTime(
+            cboxToShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
+        params.put("p_no_of_days", Integer.parseInt(txtLimit2.getInputText().trim()));
+        params.put("p_qty", Integer.parseInt(txtqty.getText().trim()));
+
+        JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER_ONE, params);
+        JasperViewer.viewReport(print, false);
+    }
+
+    public void onCloseElectionRegister1ReportClicked() {
+        MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
+    }
+
+
+    public void loadData() {
+        var task1 = new MilkTypeLoadTask();
+        task1.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task1.get();
+                if (list != null && !list.isEmpty()) {
+                    listMilkType = new ArrayList<>();
+                    listMilkType.add(0, new MilkType(0, MainApp.bundle.getString("all")));
+                    listMilkType.addAll(list);
+
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task1).start();
+
+        var task2 = new ShiftLoadTask();
+        task2.setOnSucceeded(e -> {
+
+            try {
+                List<Shift> list = task2.get();
+                if (list != null) {
+                    cboxFromShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxFromShift.getSelectionModel().select(0);
+                    cboxToShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
+                    cboxToShift.getSelectionModel().select(1);
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task2).start();
+    }
+}

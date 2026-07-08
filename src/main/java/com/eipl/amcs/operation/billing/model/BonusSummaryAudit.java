@@ -61,6 +61,8 @@ public class BonusSummaryAudit extends BaseModelTxnAudit {
     @Column
     private BigDecimal kapaatAmount;
     @Column
+    private BigDecimal societyAmount;
+    @Column
     private BigDecimal totalAmount;
     @Column(name = "is_debanture")
     private Boolean debanture;

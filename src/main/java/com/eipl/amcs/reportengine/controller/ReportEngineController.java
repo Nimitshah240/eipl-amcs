@@ -4,7 +4,6 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.config.EmcsAppContext;
-import com.eipl.amcs.master.account.controller.FinancialYearClosingController;
 import com.eipl.amcs.reportengine.dto.ParameterForm;
 import com.eipl.amcs.reportengine.dto.ReportResult;
 import com.eipl.amcs.reportengine.model.RptTableResult;
@@ -12,7 +11,6 @@ import com.eipl.amcs.reportengine.popup.ParameterFormBuilder;
 import com.eipl.amcs.reportengine.service.ReportExecutionService;
 import com.eipl.amcs.utils.TableExportUtil;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -26,8 +24,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import static java.util.Collections.sort;
 
 public class ReportEngineController implements MyInitialization, PopupCallback {
 
@@ -46,6 +42,9 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
     private ParameterPopup parameterPopup;
     private ReportExecutionService reportExecutionService;
 
+    private Long reportCode = 2L;
+    private ReportResult result;
+
     @Override
     public Node getRoot() {
         return root;
@@ -60,7 +59,7 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
 
         btnParameter.setOnAction(e -> onParameter());
         btnSetup.setOnAction(e -> {
-            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ReportSetup", 2L, this);
+            MainApp.getFxmlLoaderUtil().openMappingPopupStage(MainApp.class.getResource("view/MappingPopUp.fxml"), "ReportSetup", reportCode, this);
         });
         btnExport.setOnAction(event -> {
             TableExportUtil.exportDataFromTableView(tblData, tblData.getId(), null);
@@ -82,9 +81,6 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
 
     private void closeParameterPanel() {
     }
-
-    private Long reportCode = 2L;
-    private ReportResult result;
 
     private void onParameter() {
         tblData.getColumns().clear();
