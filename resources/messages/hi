@@ -1862,3 +1862,8 @@ milkcollectionfarmermapping: दुग्ध संग्रह किसान 
 timewise: समय अनुसार
 opening.stock=प्रारंभिक स्टॉक
 closing.stock=अंतिम स्टॉक
+mal.stock=माल स्टॉक खाते इस दिनांक तक
+vyapari.nafo=व्यापारि लाभ
+vyapari.nuksan=व्यापारि हानि
+parameter=पैरामीटर
+setup=सेटअप

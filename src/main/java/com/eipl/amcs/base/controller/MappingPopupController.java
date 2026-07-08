@@ -49,6 +49,7 @@ import com.eipl.amcs.operation.procurement.controller.*;
 import com.eipl.amcs.operation.procurement.dto.CollectionEditDelete;
 import com.eipl.amcs.operation.procurement.model.*;
 import com.eipl.amcs.operation.share.controller.*;
+import com.eipl.amcs.reportengine.controller.ReportSetupController;
 import com.eipl.amcs.setting.controller.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -665,6 +666,14 @@ public class MappingPopupController implements MyInitialization {
                     controller79.setStage(stage);
                     controller79.setCallback(callback);
                     root.setCenter(controller79.getRoot());
+                    break;
+                case "ReportSetup":
+                    var cntrlReportSetup = (ReportSetupController) MainApp.getFxmlLoaderUtil().loadAndSet(MainApp.class.getResource("view/report/ReportSetup.fxml"));
+                    cntrlReportSetup.setReportCode(object != null ? (Long) object : null);
+                    cntrlReportSetup.setStage(stage);
+                    cntrlReportSetup.setCallback(callback);
+                    root.setCenter(cntrlReportSetup.getRoot());
+                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
