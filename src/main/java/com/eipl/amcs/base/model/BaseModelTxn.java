@@ -1,5 +1,6 @@
 package com.eipl.amcs.base.model;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.JsonAndTableBuilder;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -33,13 +34,17 @@ public class BaseModelTxn implements Serializable, JsonAndTableBuilder {
     public void setInitData() {
         createdAt = LocalDateTime.now();
         if (createdBy == null || createdBy.isEmpty())
-            createdBy = "System";
+//            createdBy = "System";
+            createdBy = MainApp.getUser() != null ? MainApp.getUser().getCode() : "System";
+
     }
 
     public void setupdateData() {
         updatedAt = LocalDateTime.now();
         if (updatedBy == null || updatedBy.isEmpty() || updatedBy.equalsIgnoreCase("null"))
-            updatedBy = "System";
+//            updatedBy = "System";
+            updatedBy = MainApp.getUser() != null ? MainApp.getUser().getCode() : "System";
+
     }
 
     @Override

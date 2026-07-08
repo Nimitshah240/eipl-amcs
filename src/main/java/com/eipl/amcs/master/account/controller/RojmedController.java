@@ -30,6 +30,7 @@ import com.eipl.amcs.operation.inventory.repository.ProductReceiptRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductReceiptTransactionRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleRepository;
 import com.eipl.amcs.operation.inventory.repository.ProductSaleTransactionRepository;
+import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
 import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.application.Platform;
@@ -58,6 +59,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.eipl.amcs.utils.AppConstant.DATE_FORMATTER;
@@ -340,6 +342,7 @@ public class RojmedController implements MyInitialization, PopupCallback {
                             ));
                     voucherTransactionList = bifurcateProductReceiptTransaction(voucherTransactionList);
                     voucherTransactionList = bifurcateProductSaleTransaction(voucherTransactionList);
+                    voucherTransactionList = bifurcateDebitSideProductSaleTransaction(voucherTransactionList);
 
                     crVoucherTransactionList = voucherTransactionList.stream()
                             .filter(vt -> vt.getCreditDebit() == true)
@@ -809,6 +812,65 @@ public class RojmedController implements MyInitialization, PopupCallback {
             voucherTransactionList.removeAll(productSaleTransaction);
             updatedVoucherTxn.addAll(voucherTransactionList);
             return updatedVoucherTxn;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<VoucherTransaction> bifurcateDebitSideProductSaleTransaction(List<VoucherTransaction> voucherTransactionList) {
+        try {
+            List<VoucherTransaction> updatedVoucherTxn = new ArrayList<>();
+            List<VoucherTransaction> productSaleTransaction = new ArrayList<>();
+
+            productSaleTransaction = voucherTransactionList.stream()
+                    .filter(vt -> vt.getVoucher() != null && vt.getVoucher().getProcessName() != null &&
+                            vt.getVoucher().getProcessName().contains("tbl_product_sale")
+                            && vt.getCreditDebit() == false)
+                    .collect(Collectors.toList());
+
+            Set<Ledger> setLedger = productSaleTransaction.stream()
+                    .map(VoucherTransaction::getLedger).collect(Collectors.toSet());
+
+            AtomicInteger tempCode = new AtomicInteger();
+
+            Map<String, VoucherTransaction> mapVoucherTxn = new TreeMap<>();
+            Map<String, Double> mapVoucherTxnQty = new TreeMap<>();
+            List<VoucherTransaction> dontRemoveTransaction = new ArrayList<>();
+            for (Ledger ledger : setLedger) {
+                productSaleTransaction.stream()
+                        .filter(p -> p.getLedger().getCode().equalsIgnoreCase(ledger.getCode()))
+                        .forEach(txn -> {
+                            for (String narration : txn.getNarration().split("\n")) {
+                                String[] arr = narration.trim().split("#");
+                                if (arr.length == 5) {
+                                    String key = arr[0] + "#" + arr[1] + "#" + arr[2];
+                                    if (mapVoucherTxn.containsKey(key)) {
+                                        VoucherTransaction voucherTransaction = mapVoucherTxn.get(key);
+                                        voucherTransaction.setAmount(voucherTransaction.getAmount().add(new BigDecimal(arr[3])));
+                                        voucherTransaction.setNarration(arr[1] + "- " + (CommonUtils.strToDouble(arr[4]) + mapVoucherTxnQty.get(key)) + " x " + arr[2]);
+                                    } else {
+                                        VoucherTransaction voucherTransaction = new VoucherTransaction();
+                                        voucherTransaction.setCode("tempsale" + tempCode.get());
+                                        voucherTransaction.setLedger(ledger);
+                                        voucherTransaction.setAmount(new BigDecimal(arr[3]));
+                                        voucherTransaction.setNarration(arr[1] + "- " + arr[4] + " x " + arr[2]);
+                                        voucherTransaction.setCreditDebit(false);
+                                        tempCode.getAndIncrement();
+
+                                        mapVoucherTxnQty.put(key, CommonUtils.strToDouble(arr[4]));
+                                        mapVoucherTxn.put(key, voucherTransaction);
+                                    }
+                                } else {
+                                    dontRemoveTransaction.add(txn);
+                                }
+                            }
+                        });
+            }
+            productSaleTransaction.removeAll(dontRemoveTransaction);
+            voucherTransactionList.removeAll(productSaleTransaction);
+            voucherTransactionList.addAll(mapVoucherTxn.values());
+            return voucherTransactionList;
         } catch (RuntimeException e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ import com.eipl.amcs.master.account.repository.ProductStockValuationRepository;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.utils.CommonUtils;
+import com.eipl.amcs.utils.FormatterFactory;
 import javafx.concurrent.Task;
 
 import java.math.BigDecimal;
@@ -56,7 +57,7 @@ public class BalanceSheetTask extends Task<List<LedgerBalance>> {
             listObject.forEach(item -> {
                 listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue(), (String) item[3], (String) item[4]));
             });
-            listResp.add(new LedgerBalance("", MainApp.getBundle().getString("mal.stock") + stockValuationGeneratedDate, 0, stockValuation, stockValuation));
+            listResp.add(new LedgerBalance("", MainApp.getBundle().getString("mal.stock") + FormatterFactory.formatDate(stockValuationGeneratedDate, locale), 0, stockValuation, stockValuation));
 
             listResp.forEach(item -> item.setIncomeExpense(0));
             List<LedgerBalance> list = new ArrayList<>(listResp);

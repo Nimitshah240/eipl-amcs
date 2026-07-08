@@ -246,10 +246,15 @@ public class ProductSaleServiceImpl implements ProductSaleService {
                         obj = new ProductSaleAcUtil();
                         obj.setAmount(saleTxnTaxDto.getTransaction().getAmount().subtract(saleTxnTaxDto.getTransaction().getDiscount()));
                         obj.setLedger(saleTxnTaxDto.getTransaction().getProduct().getSaleLedger());
-                        obj.setNarration("Product sale: " + saleTxnTaxDto.getTransaction().getProduct().getCode());
+//                        obj.setNarration("Product sale: " + saleTxnTaxDto.getTransaction().getProduct().getCode());
+//                        NIMIT : 08.07.2026 - NEVER REMOVE THIS BELOW TRANSACTION.
+                        obj.setNarration(saleTxnTaxDto.getTransaction().getProduct().getCode() + "#" + (MainApp.getLocale().equalsIgnoreCase("en") ? saleTxnTaxDto.getTransaction().getProduct().getName() : saleTxnTaxDto.getTransaction().getProduct().getNameLocal()) + "#" + saleTxnTaxDto.getTransaction().getRate() + "#" + saleTxnTaxDto.getTransaction().getAmount() + "#" + saleTxnTaxDto.getTransaction().getQuantity());
+//                                saleTxnTaxDto.getTransaction().getProduct().getCode());
                         list.add(obj);
                     } else {
                         BigDecimal amt = saleTxnTaxDto.getTransaction().getAmount().subtract(saleTxnTaxDto.getTransaction().getDiscount());
+                        obj.setNarration(obj.getNarration() + "\n" +
+                                saleTxnTaxDto.getTransaction().getProduct().getCode() + "#" + (MainApp.getLocale().equalsIgnoreCase("en") ? saleTxnTaxDto.getTransaction().getProduct().getName() : saleTxnTaxDto.getTransaction().getProduct().getNameLocal()) + "#" + saleTxnTaxDto.getTransaction().getRate() + "#" + saleTxnTaxDto.getTransaction().getAmount() + "#" + saleTxnTaxDto.getTransaction().getQuantity());
                         obj.setAmount(obj.getAmount().add(amt));
                     }
 
@@ -275,10 +280,14 @@ public class ProductSaleServiceImpl implements ProductSaleService {
 
                 //Debit Txn
                 BigDecimal amt = BigDecimal.ZERO;
+                StringBuilder sb = new StringBuilder();
                 for (ProductSaleAcUtil a : list) {
                     amt = amt.add(a.getAmount());
+//                    NEVER REMOVE BELOW LINE.
+                    sb.append(a.getNarration() + "\n");
                 }
-                VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amt, false, eventsList.get(0).getDebitLedger(), "Product Sale On Credit To " + productSaleDto.getProductSale().getConsumerType() + ": " + productSaleDto.getProductSale().getConsumerCode(), "1");
+//                VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amt, false, eventsList.get(0).getDebitLedger(), "Product Sale On Credit To " + productSaleDto.getProductSale().getConsumerType() + ": " + productSaleDto.getProductSale().getConsumerCode(), "1");
+                VoucherTransaction debitTxn = VoucherUtil.getVoucherTxn(voucher, amt, false, eventsList.get(0).getDebitLedger(), sb.toString().trim(), "1");
                 voucher.setProcessName("tbl_product_sale");
                 voucher.setProcessReference(productSaleDto.getProductSale().getInvoiceNo());
                 voucher.getVoucherTransactions().add(debitTxn);
