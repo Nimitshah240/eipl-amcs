@@ -111,6 +111,11 @@ public class Member extends BaseModel {
         return audit;
     }
 
+    @Override
+    public String toString() {
+        return toMemberName();
+    }
+
     public String toMemberName() {
         if (middleName == null) {
             middleName = "";

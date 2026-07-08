@@ -1,5 +1,6 @@
 package com.eipl.amcs.report.task;
 
+import com.eipl.amcs.MainApp;
 import com.eipl.amcs.config.EmcsAppContext;
 import com.eipl.amcs.master.account.repository.LedgerRepository;
 import com.eipl.amcs.master.account.repository.ProductStockValuationRepository;
@@ -70,14 +71,14 @@ public class ProfitLossTask extends Task<List<LedgerBalance>> {
                     listResp.add(new LedgerBalance((String) item[0], (String) item[1], 0, 0, ((BigDecimal) item[2]).doubleValue()));
                 });
                 if (incomeExpense == 1 && tradingProfit > 0)
-                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                    listResp.add(new LedgerBalance("", MainApp.getBundle().getString("vyapari.nafo"), 0, 0, tradingProfit));
                 else if (incomeExpense == 0 && tradingProfit < 0)
-                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                    listResp.add(new LedgerBalance("", MainApp.getBundle().getString("vyapari.nuksan"), 0, 0, tradingProfit));
             } else {
                 if (incomeExpense == 1 && tradingProfit > 0) {
-                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                    listResp.add(new LedgerBalance("", MainApp.getBundle().getString("vyapari.nafo"), 0, 0, tradingProfit));
                 } else if (incomeExpense == 0 && tradingProfit < 0) {
-                    listResp.add(new LedgerBalance("", "trading", 0, 0, tradingProfit));
+                    listResp.add(new LedgerBalance("", MainApp.getBundle().getString("vyapari.nuksan"), 0, 0, tradingProfit));
                 }
             }
             return listResp;
