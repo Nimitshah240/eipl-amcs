@@ -26,6 +26,8 @@ public class RptTableResult implements Serializable {
     @Column(name = "is_visible")
     private Boolean visible;
     private Integer width;
+    private Integer reportOrientation; // 1-Portrait, 2-Landscape
+    private Integer cellAlignment; // 1-Left, 2-Right, 3-Center
 
     @Transient
     private transient BooleanProperty selected;
