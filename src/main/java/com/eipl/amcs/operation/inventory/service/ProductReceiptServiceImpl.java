@@ -189,7 +189,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                         if (product.getPurchaseLedger() != null) {
                             obj.setLedger(product.getPurchaseLedger());
                         }
-                        obj.setNarration("Product receipt: " + receiptTxnTaxDto.getTransaction().getProduct().getCode());
+                        obj.setNarration(MainApp.getBundle().getString("billno") + " : " + receiptTxnTaxDto.getTransaction().getProduct().getCode());
                         list.add(obj);
                     } else {
                         BigDecimal amt = receiptTxnTaxDto.getTransaction().getAmount()
@@ -228,7 +228,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                     amt = amt.add(a.getAmount());
                 }
                 VoucherTransaction creditTxn = VoucherUtil.getVoucherTxn(voucher, amt, true, dto.getProductReceipt().getVendor().getLedger() == null ? eventsList.get(0).getCreditLedger() : dto.getProductReceipt().getVendor().getLedger(),
-                        "Product receipt " + dto.getProductReceipt().getGrnNo(), "1");
+                        MainApp.getBundle().getString("billno") + " : " + dto.getProductReceipt().getBillNo(), "1");
                 creditTxn.setAutoPostedScreen(false);
                 voucher.getVoucherTransactions().add(creditTxn);
                 if (eventsList.get(0).getCreditSubLedger()) {
@@ -237,7 +237,7 @@ public class ProductReceiptServiceImpl implements ProductReceiptService {
                     if (subLedger.isPresent()) {
                         creditTxn.setVoucherSubLedgers(new ArrayList<>());
                         voucherSubLedger = VoucherUtil.getVoucherSubLedger(voucher, creditTxn, "1", amt, true,
-                                "Product receipt " + dto.getProductReceipt().getGrnNo(), subLedger.get());
+                                "Product receipt " + dto.getProductReceipt().getBillNo(), subLedger.get());
                         if (voucherSubLedger != null)
                             creditTxn.getVoucherSubLedgers().add(voucherSubLedger);
                     }

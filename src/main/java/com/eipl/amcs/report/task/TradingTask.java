@@ -69,7 +69,7 @@ public class TradingTask extends Task<List<LedgerBalance>> {
                 list.forEach(item -> {
                     listResp.add(new LedgerBalance((String) item[0], (String) item[1], Double.parseDouble(item[3].toString()), Double.parseDouble(item[2].toString()), Double.parseDouble(item[4].toString())));
                 });
-                listResp.add(new LedgerBalance("", "stockvaluation as on " +  FormatterFactory.formatDate(generatedDate, MainApp.getLocale()), 0, stockValuation, stockValuation));
+                listResp.add(new LedgerBalance("", "stockvaluation as on " + FormatterFactory.formatDate(generatedDate, MainApp.getLocale()), 0, stockValuation, stockValuation));
                 return listResp;
             }
 

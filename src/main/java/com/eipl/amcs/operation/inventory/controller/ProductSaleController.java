@@ -207,7 +207,7 @@ public class ProductSaleController implements MyInitialization, PopupCallback {
         ProductSaleLoadTask task = new ProductSaleLoadTask(dpFromDate.getValue(), dpToDate.getValue());
         task.setOnSucceeded(e -> {
             try {
-                List<ProductSale> list = task.get().stream().filter(p -> !p.getXCol3().equalsIgnoreCase("kapaat")).collect(Collectors.toList());
+                List<ProductSale> list = task.get().stream().filter(p -> p.getXCol3() != null && !p.getXCol3().equalsIgnoreCase("kapaat")).collect(Collectors.toList());
                 if (list != null) tableProductSaleToMember.setItems(FXCollections.observableList(list));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
