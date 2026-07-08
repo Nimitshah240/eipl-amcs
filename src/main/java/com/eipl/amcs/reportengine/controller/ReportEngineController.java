@@ -9,6 +9,7 @@ import com.eipl.amcs.reportengine.dto.ReportResult;
 import com.eipl.amcs.reportengine.model.RptTableResult;
 import com.eipl.amcs.reportengine.popup.ParameterFormBuilder;
 import com.eipl.amcs.reportengine.service.ReportExecutionService;
+import com.eipl.amcs.reportengine.service.RptTableResultService;
 import com.eipl.amcs.utils.TableExportUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -41,6 +42,7 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
     ParameterForm currentForm;
     private ParameterPopup parameterPopup;
     private ReportExecutionService reportExecutionService;
+    private RptTableResultService rptTableResultService;
 
     private Long reportCode = 2L;
     private ReportResult result;
@@ -56,6 +58,7 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
         popupBuilder = EmcsAppContext.getContext().getBean(ParameterFormBuilder.class);
         parameterPopup = EmcsAppContext.getContext().getBean(ParameterPopup.class);
         reportExecutionService = EmcsAppContext.getContext().getBean(ReportExecutionService.class);
+        rptTableResultService = EmcsAppContext.getContext().getBean(RptTableResultService.class);
 
         btnParameter.setOnAction(e -> onParameter());
         btnSetup.setOnAction(e -> {
@@ -92,16 +95,16 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
         }
         result = reportExecutionService.execute(reportCode, values);
 
-        List<RptTableResult> list = RptTableResult.buildForMilkCollectionReport(reportCode);
+        List<RptTableResult> list = rptTableResultService.findByReportCode(reportCode);
         list.sort(Comparator.comparing(RptTableResult::getDispSeq));
-        list.stream()
-                .forEach(row -> {
-                    if (row.getVisible()) {
-                        TableColumn<Map, Object> col = new TableColumn<>(row.getRespDispName());
-                        col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().get(row.getRespFieldName())));
-                        tblData.getColumns().add(col);
-                    }
-                });
+        list.forEach(row -> {
+            if (row.getVisible()) {
+                TableColumn<Map, Object> col = new TableColumn<>(row.getRespDispName());
+                col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().get(row.getRespFieldName())));
+                col.setMinWidth(row.getWidth());
+                tblData.getColumns().add(col);
+            }
+        });
         tblData.setItems(FXCollections.observableArrayList(result.getData()));
     }
 
@@ -110,16 +113,15 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
         if (flag) {
             if (result != null) {
                 tblData.getColumns().clear();
-                List<RptTableResult> list = RptTableResult.buildForMilkCollectionReport(reportCode);
+                List<RptTableResult> list = rptTableResultService.findByReportCode(reportCode);
                 list.sort(Comparator.comparing(RptTableResult::getDispSeq));
-                list.stream()
-                        .forEach(row -> {
-                            if (row.getVisible()) {
-                                TableColumn<Map, Object> col = new TableColumn<>(row.getRespDispName());
-                                col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().get(row.getRespFieldName())));
-                                tblData.getColumns().add(col);
-                            }
-                        });
+                list.forEach(row -> {
+                    if (row.getVisible()) {
+                        TableColumn<Map, Object> col = new TableColumn<>(row.getRespDispName());
+                        col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().get(row.getRespFieldName())));
+                        tblData.getColumns().add(col);
+                    }
+                });
                 tblData.setItems(FXCollections.observableArrayList(result.getData()));
             }
         }
