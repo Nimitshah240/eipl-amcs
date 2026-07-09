@@ -750,7 +750,11 @@ public class RptStockValuationController implements MyInitialization {
             Map<String, Object> params = new HashMap<>();
             String localeStr = cboxLanguage1.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
             params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
-            params.put("p_society_name", MainApp.identityDto.getSociety().getName());
+            if ("gu".equals(localeStr)) {
+                params.put("p_society_name", MainApp.identityDto.getSociety().getNameLocal());
+            } else {
+                params.put("p_society_name", MainApp.identityDto.getSociety().getName());
+            }
             params.put("p_financial_year", MainApp.getFinancialYear().getCode());
             params.put("p_locale", localeStr);
             params.put("p_from_date", dpFromDate1.getValue());
