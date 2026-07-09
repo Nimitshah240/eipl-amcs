@@ -29,7 +29,6 @@ public class RptTableResultResultServiceImpl implements RptTableResultService {
 
     @Override
     public List<RptTableResult> save(List<RptTableResult> rptTableResultList) {
-        rptTableResultList.forEach(item -> item.setVisible(item.isSelected()));
         return rptTableResultRepository.saveAll(rptTableResultList);
     }
 }

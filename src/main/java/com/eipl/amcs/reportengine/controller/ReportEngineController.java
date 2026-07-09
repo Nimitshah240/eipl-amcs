@@ -4,13 +4,17 @@ import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
 import com.eipl.amcs.config.EmcsAppContext;
+import com.eipl.amcs.controls.alert.MyAlert;
+import com.eipl.amcs.controls.alert.WarningAlert;
 import com.eipl.amcs.reportengine.dto.ParameterForm;
 import com.eipl.amcs.reportengine.dto.ReportResult;
 import com.eipl.amcs.reportengine.model.RptTableResult;
 import com.eipl.amcs.reportengine.popup.ParameterFormBuilder;
 import com.eipl.amcs.reportengine.service.ReportExecutionService;
 import com.eipl.amcs.reportengine.service.RptTableResultService;
+import com.eipl.amcs.reportengine.util.PdfExportUtil;
 import com.eipl.amcs.utils.TableExportUtil;
+import com.lowagie.text.PageSize;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -20,6 +24,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
@@ -46,6 +51,7 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
 
     private Long reportCode = 2L;
     private ReportResult result;
+    private List<RptTableResult> listRptTableResult = null;
 
     @Override
     public Node getRoot() {
@@ -67,12 +73,31 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
         btnExport.setOnAction(event -> {
             TableExportUtil.exportDataFromTableView(tblData, tblData.getId(), null);
         });
+        btnPrint.setOnAction(event -> {
+            if (listRptTableResult == null) {
+                return;
+            }
+            double totalWidth = listRptTableResult.stream().filter(RptTableResult::getVisible)
+                    .mapToDouble(RptTableResult::getWidth).sum();
+            double allowedWidth = 0;
+            if (listRptTableResult.get(0).getReportOrientation() == 1) {
+                allowedWidth = PageSize.A4.getWidth() - 52;
+            } else {
+                allowedWidth = PageSize.A4.rotate().getWidth() - 52;
+            }
+            if (totalWidth > allowedWidth) {
+                MyAlert alert = new WarningAlert(MainApp.getStage(), "Report Page Setup", "Page setup A4 width exceed! Please re-arrange column visibility and width in setup option.");
+                alert.createAlert();
+                return;
+            }
+            PdfExportUtil.exportTableToPdf(tblData, new File("resources/report_pdf_" + reportCode + ".pdf").getAbsolutePath(),listRptTableResult);
+        });
+        btnRefresh.setOnAction(event -> renderTableData(false));
     }
 
     public void loadReport(Long reportId) {
         this.currentReportId = reportId;
         currentForm = popupBuilder.build(reportId);
-
     }
 
     private void openParameterPanel() {
@@ -86,22 +111,37 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
     }
 
     private void onParameter() {
-        tblData.getColumns().clear();
-
         Map<String, Object> values = parameterPopup.show(reportCode);
-
         if (values == null) {
             return;
         }
         result = reportExecutionService.execute(reportCode, values);
+        renderTableData(false);
+    }
 
-        List<RptTableResult> list = rptTableResultService.findByReportCode(reportCode);
-        list.sort(Comparator.comparing(RptTableResult::getDispSeq));
-        list.forEach(row -> {
+    private void renderTableData(boolean refresh) {
+        tblData.getColumns().clear();
+        if (refresh || listRptTableResult == null || listRptTableResult.isEmpty())
+            listRptTableResult = rptTableResultService.findByReportCode(reportCode);
+        listRptTableResult.sort(Comparator.comparing(RptTableResult::getDispSeq));
+        listRptTableResult.forEach(row -> {
             if (row.getVisible()) {
                 TableColumn<Map, Object> col = new TableColumn<>(row.getRespDispName());
                 col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().get(row.getRespFieldName())));
                 col.setMinWidth(row.getWidth());
+                String styleClass = "";
+                switch (row.getCellAlignment()) {
+                    case 1:
+                        break;
+                    case 2:
+                        styleClass = "cell-right-aligned";
+                        break;
+                    default:
+                        styleClass = "cell-center-aligned";
+                        break;
+                }
+                if (!styleClass.isEmpty())
+                    col.getStyleClass().add(styleClass);
                 tblData.getColumns().add(col);
             }
         });
@@ -112,17 +152,7 @@ public class ReportEngineController implements MyInitialization, PopupCallback {
     public void reloadData(boolean flag) {
         if (flag) {
             if (result != null) {
-                tblData.getColumns().clear();
-                List<RptTableResult> list = rptTableResultService.findByReportCode(reportCode);
-                list.sort(Comparator.comparing(RptTableResult::getDispSeq));
-                list.forEach(row -> {
-                    if (row.getVisible()) {
-                        TableColumn<Map, Object> col = new TableColumn<>(row.getRespDispName());
-                        col.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().get(row.getRespFieldName())));
-                        tblData.getColumns().add(col);
-                    }
-                });
-                tblData.setItems(FXCollections.observableArrayList(result.getData()));
+                renderTableData(true);
             }
         }
     }

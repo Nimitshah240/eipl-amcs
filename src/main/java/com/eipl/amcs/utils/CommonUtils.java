@@ -84,6 +84,10 @@ public class CommonUtils {
         return local;
     }
 
+    public static String getLocalString(LocalDate date) {
+        return date.format(DATE_FORMATTER);
+    }
+
     public static LocalDateTime getLocalDateTimeFromDateAndShift(LocalDate date, Shift shift) {
         if (date == null || shift == null)
             return null;
