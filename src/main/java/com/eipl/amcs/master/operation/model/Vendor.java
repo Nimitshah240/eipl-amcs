@@ -93,7 +93,7 @@ public class Vendor extends BaseModel {
 
     @Override
     public String toString() {
-        return this.vendorCode +" "+ CommonUtils.getLocalString(this.vendorName, this.vendorNameLocal);
+        return (this.vendorCode != null ? this.vendorCode : "") + " " + CommonUtils.getLocalString(this.vendorName, this.vendorNameLocal);
     }
 
     @Override
