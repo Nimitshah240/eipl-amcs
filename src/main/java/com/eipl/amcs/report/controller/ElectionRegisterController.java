@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
@@ -41,16 +43,16 @@ public class ElectionRegisterController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpToDate, dpFromDate;
+    private E_DatePicker dpToDate, dpFromDate;
     @FXML
-    private ComboBox<MilkType> cboxReportType;
+    private AutoSearchTextField<MilkType> cboxReportType;
     @FXML
-    private ComboBox<Gender> cboxGender;
+    private AutoSearchTextField<Gender> cboxGender;
     private List<Gender> genderList;
     @FXML
-    private ComboBox<String> cboxQtyAmount, cboxLanguage;
+    private AutoSearchTextField<String> cboxQtyAmount, cboxLanguage;
     @FXML
-    private ComboBox<Shift> cboxFromShift1, cboxToShift1;
+    private AutoSearchTextField<Shift> cboxFromShift1, cboxToShift1;
     @FXML
     private E_NumericField txtLimit;
 
@@ -100,8 +102,8 @@ public class ElectionRegisterController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxReportType.setConverter(new MilkTypeConvertor(cboxReportType));
-        cboxGender.setConverter(new GenderConvertor(cboxGender));
+//        cboxReportType.setConverter(new MilkTypeConvertor(cboxReportType));
+//        cboxGender.setConverter(new GenderConvertor(cboxGender));
     }
 
     private String getLocaleString() {

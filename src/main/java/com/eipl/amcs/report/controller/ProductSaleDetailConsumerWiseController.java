@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.inventory.convertor.ProductCellFactory;
@@ -36,11 +38,11 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
     @FXML
     private Button btnGenerate;
     @FXML
-    private DatePicker dpToDate, dpFromDate;
+    private E_DatePicker dpToDate, dpFromDate;
     @FXML
-    private ComboBox<Product> cboxProductCode;
+    private AutoSearchTextField<Product> cboxProductCode;
     @FXML
-    private ComboBox<String> cboxFormat,cboxLanguage;
+    private AutoSearchTextField<String> cboxFormat,cboxLanguage;
 
     private ResourceBundle resourceBundle;
     private List<Product> listProduct;
@@ -104,13 +106,9 @@ public class ProductSaleDetailConsumerWiseController implements MyInitialization
 
     @Override
     public void setupComboBox() {
-        cboxProductCode.setConverter(new ProductConvertor(cboxProductCode));
-        if (MainApp.locale.equalsIgnoreCase("gu")) {
-            cboxProductCode.setCellFactory(new ProductLocalCellFactory());
-        } else {
-            cboxProductCode.setCellFactory(new ProductCellFactory());
-        }
-        new AutoCompleteComboBoxListener<>(cboxProductCode);
+//        cboxProductCode.setConverter(new ProductConvertor(cboxProductCode));
+
+//        new AutoCompleteComboBoxListener<>(cboxProductCode);
     }
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();

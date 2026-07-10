@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
@@ -35,13 +37,13 @@ public class PatrakOneController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpToDate, dpFromDate;
+    private E_DatePicker dpToDate, dpFromDate;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -86,8 +88,8 @@ public class PatrakOneController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-    }
+//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+  }
 
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();

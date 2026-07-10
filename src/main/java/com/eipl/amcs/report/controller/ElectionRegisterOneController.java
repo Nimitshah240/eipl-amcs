@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.GenderConvertor;
@@ -38,15 +40,15 @@ public class ElectionRegisterOneController implements MyInitialization {
     @FXML
     private StackPane root;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private DatePicker dpFromDate2, dpToDate2;
+    private E_DatePicker dpFromDate2, dpToDate2;
     @FXML
     private E_NumericField txtLimit2;
     @FXML
-    private TextField txtqty;
+    private E_NumericField txtqty;
     @FXML
-    private ComboBox<String> cboxLanguage2;
+    private AutoSearchTextField<String> cboxLanguage2;
     @FXML
     private Button btnGenerate2, btnClose2;
 
@@ -112,7 +114,7 @@ public class ElectionRegisterOneController implements MyInitialization {
         params.put("p_to_date", Timestamp.valueOf(dpToDate2.getValue().atTime(
             cboxToShift.getValue().getName().equals("Morning") ? 6 : 18, 0)));
         params.put("p_no_of_days", Integer.parseInt(txtLimit2.getInputText().trim()));
-        params.put("p_qty", Integer.parseInt(txtqty.getText().trim()));
+        params.put("p_qty", Integer.parseInt(txtqty.getInputText().trim()));
 
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.ELECTION_REGISTER_ONE, params);
         JasperViewer.viewReport(print, false);

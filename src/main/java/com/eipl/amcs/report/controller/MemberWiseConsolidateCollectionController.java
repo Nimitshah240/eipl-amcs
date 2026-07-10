@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -36,21 +38,21 @@ import java.util.concurrent.ExecutionException;
 public class MemberWiseConsolidateCollectionController implements MyInitialization {
 
     @FXML
-    ComboBox<String> cboxType, cboxType1;
+    AutoSearchTextField<String> cboxType, cboxType1;
     @FXML
     private StackPane root;
     @FXML
     private Button btnGenerate, btnGenerate1;
     @FXML
-    private ComboBox<Member> cboxMemberCode, cboxMemberCode1;
+    private AutoSearchTextField<Member> cboxMemberCode, cboxMemberCode1;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private E_DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
-    private ComboBox<MilkType> cboxMilkType, cboxMilkType1;
+    private AutoSearchTextField<MilkType> cboxMilkType, cboxMilkType1;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage1;
     private List<MilkType> listMilkType;
     private ResourceBundle resourceBundle;
 
@@ -100,20 +102,20 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
 
     @Override
     public void setupComboBox() {
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
+//        cboxMemberCode.setCellFactory(new MemberCellFactory());
+//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxMemberCode1.setConverter(new MemberReportConvertor(cboxMemberCode1));
-        cboxMemberCode1.setCellFactory(new MemberCellFactory());
-        cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxMemberCode1.setConverter(new MemberReportConvertor(cboxMemberCode1));
+//        cboxMemberCode1.setCellFactory(new MemberCellFactory());
+//        cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
         dpFromDate1.setValue(LocalDate.now());
         dpToDate1.setValue(LocalDate.now());
-        cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
-        cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
+//        cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+//        cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
     }
 
     private String getLocaleString() {
@@ -205,10 +207,10 @@ public class MemberWiseConsolidateCollectionController implements MyInitializati
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
                     cboxMemberCode.getSelectionModel().select(0);
                     cboxMemberCode1.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode1);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode1);
                     cboxMemberCode1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

@@ -3,6 +3,7 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -49,9 +50,9 @@ public class BonusReportController implements MyInitialization {
     private Button btnGenerate, btnClose;
     private Stage stage;
     @FXML
-    private ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
-    private ComboBox<String> cboxReportType;
+    private AutoSearchTextField<String> cboxReportType;
 
 
     private ResourceBundle resourceBundle;
@@ -93,7 +94,7 @@ public class BonusReportController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxBank.setConverter(new BankConvertor(cboxBank));
+//        cboxBank.setConverter(new BankConvertor(cboxBank));
         cboxBank.getSelectionModel().select(0);
     }
 

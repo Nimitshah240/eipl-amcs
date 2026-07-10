@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_NumericField;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
 import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
@@ -48,13 +50,13 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnPrint;
     @FXML
-    private ComboBox<Member> cboxMemberCode;
+    private AutoSearchTextField<Member> cboxMemberCode;
     @FXML
-    private TextField txtRange;
+    private E_NumericField txtRange;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
     @FXML
-    private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
+    private AutoSearchTextField<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
     private List<SocietyPaymentCycle> paymentCycleList = new ArrayList<>();
     private ResourceBundle resourceBundle;
     private File slipFile = null;
@@ -86,10 +88,10 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
         loadHardware();
         slipLanguage = MainApp.getProperty("slip.language", "English");
         btnPrint.setOnAction(e -> {
-            if (txtRange.getText().equalsIgnoreCase("0") || txtRange.getText() == null || txtRange.getText().equalsIgnoreCase(""))
+            if (txtRange.getInputText().equalsIgnoreCase("0") || txtRange.getInputText() == null || txtRange.getInputText().equalsIgnoreCase(""))
                 loadTextFile();
             else {
-                String[] arr = txtRange.getText().split("-");
+                String[] arr = txtRange.getInputText().split("-");
                 for (int i = Integer.parseInt(arr[0]); i <= Integer.parseInt(arr[1]); i++) {
                     String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", i);
                     loadTextFilePartTwo(code);
@@ -97,10 +99,10 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
             }
         });
         btnGenerate.setOnAction(e -> {
-            if (txtRange.getText().equalsIgnoreCase("0") || txtRange.getText() == null || txtRange.getText().equalsIgnoreCase(""))
+            if (txtRange.getInputText().equalsIgnoreCase("0") || txtRange.getInputText() == null || txtRange.getInputText().equalsIgnoreCase(""))
                 validateAndGenerateReport();
             else {
-                String[] arr = txtRange.getText().split("-");
+                String[] arr = txtRange.getInputText().split("-");
                 for (int i = Integer.parseInt(arr[0]); i <= Integer.parseInt(arr[1]); i++) {
                     String code = MainApp.identityDto.getSociety().getCode() + String.format("%04d", i);
                     validateAndGenerateReport2(code);
@@ -148,9 +150,9 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
-        cboxSocietyPaymentCycleCode.setConverter(new SocietyPaymentCycleConvertor(cboxSocietyPaymentCycleCode));
+//        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
+//        cboxMemberCode.setCellFactory(new MemberCellFactory());
+//        cboxSocietyPaymentCycleCode.setConverter(new SocietyPaymentCycleConvertor(cboxSocietyPaymentCycleCode));
     }
 
     private String getLocaleString() {
@@ -446,7 +448,7 @@ public class MemberMilkCollectionSlipController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
                     cboxMemberCode.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

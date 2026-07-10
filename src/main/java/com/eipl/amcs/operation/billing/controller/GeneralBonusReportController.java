@@ -3,6 +3,8 @@ package com.eipl.amcs.operation.billing.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.alert.ErrorAlert;
 import com.eipl.amcs.controls.alert.InformationAlert;
 import com.eipl.amcs.controls.alert.MyAlert;
@@ -91,15 +93,15 @@ public class GeneralBonusReportController implements MyInitialization {
     private Button btnGenerate, btnClose;
     private Stage stage;
     @FXML
-    private ComboBox<Bank> cboxBank;
+    private AutoSearchTextField<Bank> cboxBank;
     @FXML
-    private ComboBox<Member> cboxMember;
+    private AutoSearchTextField<Member> cboxMember;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<String> cboxReportType, cboxType;
+    private AutoSearchTextField<String> cboxReportType, cboxType;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     private PrinterHelper printerHelper;
     private ResourceBundle resourceBundle;
     private BonusSummary dto = null;
@@ -177,10 +179,10 @@ public class GeneralBonusReportController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxBank.setConverter(new BankConvertor(cboxBank));
+//        cboxBank.setConverter(new BankConvertor(cboxBank));
         cboxBank.getSelectionModel().select(0);
-        cboxMember.setConverter(new MemberReportConvertor(cboxMember));
-        cboxMember.setCellFactory(new MemberCellFactory());
+//        cboxMember.setConverter(new MemberReportConvertor(cboxMember));
+//        cboxMember.setCellFactory(new MemberCellFactory());
     }
 
     private void validateAndGenerateReport() {
@@ -999,7 +1001,7 @@ public class GeneralBonusReportController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMember.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMember);
+//                    new AutoCompleteComboBoxListener<>(cboxMember);
                     cboxMember.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -1019,7 +1021,7 @@ public class GeneralBonusReportController implements MyInitialization {
                     listMilkType.addAll(list);
                     cboxMilkType.setItems(FXCollections.observableList(listMilkType));
                     cboxMilkType.getSelectionModel().select(0);
-                    cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//                    cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

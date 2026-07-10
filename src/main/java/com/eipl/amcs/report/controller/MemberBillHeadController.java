@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.operation.convertor.BillHeadCellFactory;
@@ -37,13 +39,13 @@ public class MemberBillHeadController implements MyInitialization {
     @FXML
     private Button btnGenerate;
     @FXML
-    private DatePicker dpToDate, dpFromDate;
+    private E_DatePicker dpToDate, dpFromDate;
     @FXML
-    private ComboBox<Member> cboxMemberCode;
+    private AutoSearchTextField<Member> cboxMemberCode;
     @FXML
-    private ComboBox<BillHead> cboxHeadType;
+    private AutoSearchTextField<BillHead> cboxHeadType;
     @FXML
-    private ComboBox<String> cboxReportType, cboxLanguage;
+    private AutoSearchTextField<String> cboxReportType, cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -93,12 +95,12 @@ public class MemberBillHeadController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
+//        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
+//        cboxMemberCode.setCellFactory(new MemberCellFactory());
         cboxMemberCode.getSelectionModel().select(0);
 
-        cboxHeadType.setConverter(new BillHeadConvertor(cboxHeadType));
-        cboxHeadType.setCellFactory(new BillHeadCellFactory());
+//        cboxHeadType.setConverter(new BillHeadConvertor(cboxHeadType));
+//        cboxHeadType.setCellFactory(new BillHeadCellFactory());
 
 
         cboxReportType.getItems().addAll("Summary", "Consolidate");
@@ -143,7 +145,7 @@ public class MemberBillHeadController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
                     cboxMemberCode.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -164,7 +166,7 @@ public class MemberBillHeadController implements MyInitialization {
                         list1.add(billHead);
                     }
                     cboxHeadType.setItems(FXCollections.observableList(list1));
-                    new AutoCompleteComboBoxListener<>(cboxHeadType);
+//                    new AutoCompleteComboBoxListener<>(cboxHeadType);
                     cboxHeadType.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
