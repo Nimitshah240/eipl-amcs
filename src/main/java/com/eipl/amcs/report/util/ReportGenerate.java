@@ -346,6 +346,10 @@ public class ReportGenerate {
                 return "resources/report/milkcollection/ProductStockLedgerSummary.jasper";
             case AppConstant.ReportPath.BalanceSheetGrouping:
                 return "resources/report/milkcollection/BalanceSheetGrouping.jasper";
+            case AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE_DCS:
+                return "resources/report/milkcollection/PurchaseRegisterMonthWiseDCS.jasper";
+            case AppConstant.ReportPath.PURCHASE_REGISTER_MONTH_WISE2_DCS:
+                return "resources/report/milkcollection/PurchaseRegisterMonthWise15-Dcs.jasper";
         }
         return null;
     }
