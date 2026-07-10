@@ -6,8 +6,8 @@ import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.operation.model.Customer;
-import com.eipl.amcs.master.operation.task.CustomerLoadTask;
+import com.eipl.amcs.master.operation.model.Vendor;
+import com.eipl.amcs.master.operation.task.VendorLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -32,7 +32,7 @@ public class ItemReportController implements MyInitialization {
     @FXML
     private AutoSearchTextField<Ledger> cboxLedgerName, cboxLedgerName1;
     @FXML
-    private AutoSearchTextField<Customer> cboxCustomer;
+    private AutoSearchTextField<Vendor> cboxCustomer;
     @FXML
     private AutoSearchTextField<String> cboxSaleType;
     @FXML
@@ -44,6 +44,8 @@ public class ItemReportController implements MyInitialization {
     @FXML
     private AutoSearchTextField<String> cboxLanguage, cboxLanguage1;
 
+    private ResourceBundle resourceBundle;
+
     @Override
     public Node getRoot() {
         return root;
@@ -51,6 +53,7 @@ public class ItemReportController implements MyInitialization {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        resourceBundle = resources;
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         dpFromDate1.setValue(LocalDate.now());
@@ -64,7 +67,7 @@ public class ItemReportController implements MyInitialization {
             MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml")));
         });
         List<String> saleType = new ArrayList<>();
-        saleType.add("All");
+        saleType.add(resourceBundle.getString("all"));
         saleType.add("Cash");
         saleType.add("Credit");
         cboxSaleType.setItems(FXCollections.observableList(saleType));
@@ -142,7 +145,7 @@ public class ItemReportController implements MyInitialization {
                     List<Ledger> list2 = new ArrayList<>();
                     Ledger m = new Ledger();
                     m.setCode("0");
-                    m.setName("All");
+                    m.setName(resourceBundle.getString("all"));
                     list2.add(m);
                     list2.addAll(list);
                     cboxLedgerName.setItems(FXCollections.observableList(list2));
@@ -158,15 +161,16 @@ public class ItemReportController implements MyInitialization {
         });
         new Thread(task).start();
 
-        CustomerLoadTask task1 = new CustomerLoadTask();
+        VendorLoadTask task1 = new VendorLoadTask();
         task1.setOnSucceeded(e -> {
             try {
-                List<Customer> list = task1.get();
+                List<Vendor> list = task1.get();
                 if (list != null) {
-                    List<Customer> list2 = new ArrayList<>();
-                    Customer m = new Customer();
+                    List<Vendor> list2 = new ArrayList<>();
+                    Vendor m = new Vendor();
                     m.setCode("0");
-                    m.setName("All");
+                    m.setVendorName("All");
+                    m.setVendorNameLocal(resourceBundle.getString("all"));
                     list2.add(m);
                     list2.addAll(list);
                     cboxCustomer.setItems(FXCollections.observableList(list2));
