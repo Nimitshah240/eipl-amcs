@@ -2,6 +2,7 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
 import com.eipl.amcs.master.operation.convertor.MemberReportConvertor;
@@ -33,11 +34,11 @@ public class MemberBillingHeadController implements MyInitialization {
     @FXML
     private Button btnGenerate;
     @FXML
-    private ComboBox<Member> cboxMemberCode;
+    private AutoSearchTextField<Member> cboxMemberCode;
     @FXML
-    private ComboBox<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
+    private AutoSearchTextField<SocietyPaymentCycle> cboxSocietyPaymentCycleCode;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -67,9 +68,9 @@ public class MemberBillingHeadController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
-        cboxSocietyPaymentCycleCode.setConverter(new SocietyPaymentCycleConvertor(cboxSocietyPaymentCycleCode));
+//        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
+//        cboxMemberCode.setCellFactory(new MemberCellFactory());
+//        cboxSocietyPaymentCycleCode.setConverter(new SocietyPaymentCycleConvertor(cboxSocietyPaymentCycleCode));
         cboxSocietyPaymentCycleCode.getSelectionModel().select(0);
     }
     private String getLocaleString() {
@@ -107,7 +108,7 @@ public class MemberBillingHeadController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
                     cboxMemberCode.getSelectionModel().select(0);
 
                 }
@@ -124,7 +125,7 @@ public class MemberBillingHeadController implements MyInitialization {
                 List<SocietyPaymentCycle> list = task1.get();
                 if (list != null) {
                     cboxSocietyPaymentCycleCode.setItems(FXCollections.observableList(list));
-                    new AutoCompleteComboBoxListener<>(cboxSocietyPaymentCycleCode);
+//                    new AutoCompleteComboBoxListener<>(cboxSocietyPaymentCycleCode);
                     cboxSocietyPaymentCycleCode.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

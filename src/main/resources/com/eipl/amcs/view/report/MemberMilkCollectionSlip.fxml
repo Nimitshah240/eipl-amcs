@@ -5,6 +5,8 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_NumericField?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MemberMilkCollectionSlipController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -25,7 +27,7 @@
                     <children>
 
                         <Label text="%member" />
-                        <ComboBox fx:id="cboxMemberCode" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxMemberCode" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                   <HBox alignment="TOP_RIGHT" spacing="10.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                      <children>
                          <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
@@ -43,11 +45,11 @@
                      </children>
                   </HBox>
                   <Label text="%societypaymentcycle" GridPane.columnIndex="1" />
-                  <ComboBox fx:id="cboxSocietyPaymentCycleCode" editable="true" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="127.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtRange" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxSocietyPaymentCycleCode" editable="true" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="127.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <E_NumericField fx:id="txtRange" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="%memberrange" GridPane.columnIndex="2" />
                   <Label text="%language" GridPane.columnIndex="3" />
-                  <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
 
                     </children>

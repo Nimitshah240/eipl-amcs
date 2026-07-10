@@ -5,6 +5,8 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.ProductSaleDetailConsumerWiseController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -26,11 +28,11 @@
                     <children>
 
                         <Label text="%product" />
-                        <ComboBox fx:id="cboxProductCode" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxProductCode" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <Label text="%fromdate" GridPane.columnIndex="1" />
-                        <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+                        <E_DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                         <Label text="%todate" GridPane.columnIndex="2" />
-                        <DatePicker fx:id="dpToDate" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+                        <E_DatePicker fx:id="dpToDate" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
                         <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
                                 text="%generate" GridPane.columnIndex="5" GridPane.rowIndex="1">
                             <graphic>
@@ -43,9 +45,9 @@
                             </graphic>
                         </Button>
                   <Label text="%format" GridPane.columnIndex="3" />
-                  <ComboBox fx:id="cboxFormat" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxFormat" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                   <Label text="%language" GridPane.columnIndex="4" />
-                  <ComboBox fx:id="cboxLanguage" editable="true" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage" editable="true" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
 
                     </children>

@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
@@ -33,11 +35,11 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
     @FXML
     private Button btnGenerate;
     @FXML
-    private DatePicker dpToDate, dpFromDate;
+    private E_DatePicker dpToDate, dpFromDate;
     @FXML
-    private ComboBox<Member> cboxMemberCode;
+    private AutoSearchTextField<Member> cboxMemberCode;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -86,8 +88,8 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
 
     @Override
     public void setupComboBox() {
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
+//        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
+//        cboxMemberCode.setCellFactory(new MemberCellFactory());
         cboxMemberCode.getSelectionModel().select(0);
     }
 
@@ -123,7 +125,7 @@ public class ConsumerWiseProductSaleDetailController implements MyInitialization
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
                     cboxMemberCode.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

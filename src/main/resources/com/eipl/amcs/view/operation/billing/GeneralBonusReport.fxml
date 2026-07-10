@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefHeight="300.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.operation.billing.controller.GeneralBonusReportController">
     <children>
         <VBox maxHeight="300.0" maxWidth="722.0" minHeight="300.0" minWidth="722.0" prefHeight="300.0" prefWidth="722.0" spacing="15.0" styleClass="">
@@ -42,16 +43,16 @@
                   <Label text="%bank" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <E_DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                   <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cboxReportType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="cboxBank" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <AutoSearchTextField fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxReportType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="3" />
+                  <AutoSearchTextField fx:id="cboxBank" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="%fromdate" />
                   <Label text="%todate" GridPane.columnIndex="1" />
-                  <ComboBox fx:id="cboxMember" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                  <AutoSearchTextField fx:id="cboxMember" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <Label text="%member" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Label text="%type" GridPane.columnIndex="2" />
                   <Label text="%milktype" GridPane.columnIndex="3" />
-                  <ComboBox fx:id="cboxMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxMilkType" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
 
                     </children>
