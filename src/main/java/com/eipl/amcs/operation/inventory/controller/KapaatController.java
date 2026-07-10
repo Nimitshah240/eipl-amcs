@@ -13,10 +13,7 @@ import com.eipl.amcs.master.operation.task.MemberByIdLoadTask;
 import com.eipl.amcs.operation.inventory.model.ProductSale;
 import com.eipl.amcs.operation.inventory.task.ProductSaleDeleteTask;
 import com.eipl.amcs.operation.inventory.task.ProductSaleLoadTask;
-import com.eipl.amcs.utils.AppConstant;
-import com.eipl.amcs.utils.CommonUtils;
-import com.eipl.amcs.utils.FocusUtils;
-import com.eipl.amcs.utils.TableLocalizationUtil;
+import com.eipl.amcs.utils.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,20 +29,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -232,6 +220,19 @@ public class KapaatController implements MyInitialization, PopupCallback {
         loadData();
     }
 
+    private String getLocalizedConsumerType(short consumerType) {
+        String type = CommonUtils.getCustomerTypeString(consumerType);
+        String key = "non-member";
+        if (type.equalsIgnoreCase("M")) {
+            key = "member";
+        }
+        try {
+            return resourceBundle.getString(key);
+        } catch (MissingResourceException e) {
+            return type; // Fallback to the original type if the key is not found
+        }
+    }
+
     private void exportToCsv() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save as CSV");
@@ -243,11 +244,11 @@ public class KapaatController implements MyInitialization, PopupCallback {
             try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
                 writer.write('\uFEFF'); // Add BOM for UTF-8
                 // File Header
-                writer.append(String.format("\"%s (%s)\"", MainApp.identityDto.getSociety().getName(), MainApp.identityDto.getSociety().getCode()));
+                writer.append(String.format("\"%s (%s)\"", MainApp.identityDto.getSociety().toString(), FormatterFactory.formatNumber(MainApp.identityDto.getSociety().getCodeEx())));
                 writer.newLine();
-                writer.append("\"Kapaat Details\"");
+                writer.append("\"" + resourceBundle.getString("kapaat.details.excel") + "\"");
                 writer.newLine();
-                writer.append("\"Export Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\"");
+                writer.append("\"" + resourceBundle.getString("export.date") + ": " + FormatterFactory.formatDate(LocalDate.now()) + "\"");
                 writer.newLine();
                 writer.newLine();
 
@@ -263,17 +264,17 @@ public class KapaatController implements MyInitialization, PopupCallback {
 
                 // Data
                 for (ProductSale sale : tableData.getItems()) {
-                    writer.append(escapeCsv(sale.getInvoiceDate() != null ? sale.getInvoiceDate().format(AppConstant.Formatter3) : "")).append(',');
-                    writer.append(escapeCsv(CommonUtils.getCustomerTypeString(sale.getConsumerType()))).append(',');
-                    writer.append(escapeCsv(sale.getConsumerCode() != null ? sale.getConsumerCode().replace(MainApp.identityDto.getSociety().getCode(), "") : "")).append(',');
-                    writer.append(escapeCsv(memberMobileNumbers.getOrDefault(sale.getConsumerCode(), ""))).append(',');
-                    writer.append(escapeCsv(sale.getAmount() != null ? sale.getAmount().toPlainString() : "")).append(',');
-                    writer.append(escapeCsv(sale.getNetAmount() != null ? sale.getNetAmount().toPlainString() : "")).append(',');
-                    writer.append(escapeCsv(sale.getDeductionStartDate() != null ? sale.getDeductionStartDate().format(AppConstant.Formatter3) : "")).append('\n');
+                    writer.append(escapeCsv(FormatterFactory.formatDate(sale.getInvoiceDate()))).append(',');
+                    writer.append(escapeCsv(getLocalizedConsumerType(sale.getConsumerType()))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(sale.getConsumerCode() != null ? sale.getConsumerCode().replace(MainApp.identityDto.getSociety().getCode(), "") : ""))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(memberMobileNumbers.getOrDefault(sale.getConsumerCode(), "")))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(sale.getAmount()))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(sale.getNetAmount()))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatDate(sale.getDeductionStartDate()))).append('\n');
                 }
                 MyAlert infoAlert = new InformationAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), "Data exported successfully to " + file.getName());
                 infoAlert.createAlert();
-            } catch (IOException ex) {
+            } catch (IOException | MissingResourceException ex) {
                 MyAlert errorAlert = new ErrorAlert(MainApp.getStage(), resourceBundle.getString("kapaat"), "Error exporting data: " + ex.getMessage());
                 errorAlert.createAlert();
                 ex.printStackTrace();

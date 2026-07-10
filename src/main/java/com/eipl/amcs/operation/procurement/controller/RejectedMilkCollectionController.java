@@ -19,6 +19,7 @@ import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadByFilt
 import com.eipl.amcs.operation.procurement.task.RejectedMilkCollectionLoadTask;
 import com.eipl.amcs.utils.CommonUtils;
 import com.eipl.amcs.utils.FocusUtils;
+import com.eipl.amcs.utils.FormatterFactory;
 import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,15 +34,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -263,29 +260,41 @@ public class RejectedMilkCollectionController implements MyInitialization, Popup
     private void exportToCsv() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save as CSV");
+        fileChooser.setInitialFileName("RejectedMilkDetails.csv");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
         File file = fileChooser.showSaveDialog(MainApp.getStage());
 
         if (file != null) {
-            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
+                writer.write('\uFEFF'); // Add BOM for UTF-8
                 // Custom Header
-                writer.append(MainApp.identityDto.getSociety().getName() + " - " + MainApp.identityDto.getSociety().getCode()).append('\n');
-                writer.append("Rejected Milk Collection").append('\n');
-                writer.append("Export Date: ").append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))).append('\n');
+                writer.append(String.format("\"%s (%s)\"", MainApp.identityDto.getSociety().toString(), FormatterFactory.formatNumber(MainApp.identityDto.getSociety().getCodeEx())));
+                writer.newLine();
+                writer.append("\"" + resourceBundle.getString("rejectedmilkcollection") + "\"").append('\n');
+                writer.append("\"" + resourceBundle.getString("export.date") + ": ").append(FormatterFactory.formatDate(LocalDate.now())).append("\"\n");
                 writer.append('\n'); // Blank line
 
                 // CSV Header
-                writer.append("Date,Shift,Member,Milk Type,Fat,SNF,Qty,Remark\n");
+                writer.append(escapeCsv(colDate.getText())).append(',');
+                writer.append(escapeCsv(colShift.getText())).append(',');
+                writer.append(escapeCsv(colMemberName.getText())).append(',');
+                writer.append(escapeCsv(colMilkType.getText())).append(',');
+                writer.append(escapeCsv(colFat.getText())).append(',');
+                writer.append(escapeCsv(colSnf.getText())).append(',');
+                writer.append(escapeCsv(colQty.getText())).append(',');
+                writer.append(escapeCsv(colRemark.getText())).append('\n');
 
                 // Data
                 for (RejectedMilkCollection item : tableCollection.getItems()) {
-                    writer.append(escapeCsv(item.getDate().toLocalDate().toString())).append(',');
-                    writer.append(escapeCsv(item.getShift().getName())).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatDate(item.getDate().toLocalDate()))).append(',');
+//                    writer.append(escapeCsv(item.getShift().getName())).append(',');
+                    writer.append(escapeCsv(resourceBundle.getString(item.getShift().getName()))).append(',');
                     writer.append(escapeCsv(item.getMember().toMemberName())).append(',');
-                    writer.append(escapeCsv(item.getMilkType().getName())).append(',');
-                    writer.append(escapeCsv(item.getFat().toPlainString())).append(',');
-                    writer.append(escapeCsv(item.getSnf().toPlainString())).append(',');
-                    writer.append(escapeCsv(item.getQty().toPlainString())).append(',');
+                    //writer.append(escapeCsv(item.getMilkType().getName())).append(',');
+                    writer.append(escapeCsv(resourceBundle.getString(item.getMilkType().getName().toLowerCase()))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(item.getFat()))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(item.getSnf()))).append(',');
+                    writer.append(escapeCsv(FormatterFactory.formatNumber(item.getQty()))).append(',');
                     writer.append(escapeCsv(item.getRemark())).append('\n');
                 }
                 new InformationAlert(MainApp.getStage(), "Export Success", "Data exported successfully.").createAlert();
