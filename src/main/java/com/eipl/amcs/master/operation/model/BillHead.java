@@ -11,6 +11,7 @@ import com.eipl.amcs.json.serialize.UnionSerialize;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.org.model.Society;
 import com.eipl.amcs.master.org.model.Union;
+import com.eipl.amcs.utils.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -121,5 +122,10 @@ public class BillHead extends BaseModel {
         audit.setSequenceNo(this.getSequenceNo());
         audit.setMilkType(this.getMilkType());
         return audit;
+    }
+
+    @Override
+    public String toString() {
+        return CommonUtils.getLocalString(this.name, this.nameLocal);
     }
 }
