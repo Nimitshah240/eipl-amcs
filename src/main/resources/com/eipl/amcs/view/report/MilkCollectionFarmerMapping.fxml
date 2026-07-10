@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MilkCollectionFarmerMappingController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
@@ -50,10 +51,10 @@
                         </Button>
                      </children>
                   </HBox>
-                  <ComboBox fx:id="cboxReportType" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="85.0" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxReportType" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="85.0" GridPane.rowIndex="1" />
                   <Label text="%reporttype" />
                   <Label text="%language" GridPane.columnIndex="1" />
-                  <ComboBox fx:id="cboxLanguage12" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage12" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             </children>

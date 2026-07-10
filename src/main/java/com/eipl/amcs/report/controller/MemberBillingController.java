@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -34,20 +36,20 @@ import net.sf.jasperreports.engine.JRParameter;
 public class MemberBillingController implements MyInitialization {
 
     @FXML
-    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
+    AutoSearchTextField<Shift> cboxShiftFrom, cboxShiftTo;
     @FXML
     private StackPane root;
     @FXML
     private Button btnGenerate, btnSummary;
     @FXML
-    private DatePicker dpToDate, dpFromDate, dpToDateSummary, dpFromDateSummary;
+    private E_DatePicker dpToDate, dpFromDate, dpToDateSummary, dpFromDateSummary;
     @FXML
-    private ComboBox<Member> cboxMemberCode, cboxMemberCodeSummary;
+    private AutoSearchTextField<Member> cboxMemberCode, cboxMemberCodeSummary;
     @FXML
-    private ComboBox<String> cboxType;
+    private AutoSearchTextField<String> cboxType;
     private ResourceBundle resourceBundle;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage1;
 
     @Override
     public Node getRoot() {
@@ -120,10 +122,10 @@ public class MemberBillingController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
-        cboxMemberCodeSummary.setConverter(new MemberReportConvertor(cboxMemberCodeSummary));
-        cboxMemberCodeSummary.setCellFactory(new MemberCellFactory());
+//        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
+//        cboxMemberCode.setCellFactory(new MemberCellFactory());
+//        cboxMemberCodeSummary.setConverter(new MemberReportConvertor(cboxMemberCodeSummary));
+//        cboxMemberCodeSummary.setCellFactory(new MemberCellFactory());
         cboxType.getItems().addAll("Month & Year", "Payment Cycle Wise", "Consolidate");
         cboxMemberCode.getSelectionModel().select(0);
         cboxMemberCodeSummary.getSelectionModel().select(0);
@@ -189,10 +191,10 @@ public class MemberBillingController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
                     cboxMemberCode.getSelectionModel().select(0);
                     cboxMemberCodeSummary.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCodeSummary);
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCodeSummary);
                     cboxMemberCodeSummary.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -215,8 +217,8 @@ public class MemberBillingController implements MyInitialization {
                     cboxShiftTo.setItems(FXCollections.observableList(list1));
                     cboxShiftFrom.getSelectionModel().select(0);
                     cboxShiftTo.getSelectionModel().select(list1.size() - 1);
-                    cboxShiftFrom.setConverter(new ShiftConvertor(cboxShiftFrom));
-                    cboxShiftTo.setConverter(new ShiftConvertor(cboxShiftTo));
+//                    cboxShiftFrom.setConverter(new ShiftConvertor(cboxShiftFrom));
+//                    cboxShiftTo.setConverter(new ShiftConvertor(cboxShiftTo));
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

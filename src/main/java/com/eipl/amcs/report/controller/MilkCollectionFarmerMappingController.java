@@ -2,6 +2,7 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
@@ -33,9 +34,9 @@ public class MilkCollectionFarmerMappingController implements MyInitialization {
     @FXML
     private Button btnGenerate12, btnClose12;
     @FXML
-    private ComboBox<String> cboxReportType;
+    private AutoSearchTextField<String> cboxReportType;
     @FXML
-    private ComboBox<String> cboxLanguage12;
+    private AutoSearchTextField<String> cboxLanguage12;
 
     private ResourceBundle resourceBundle;
 

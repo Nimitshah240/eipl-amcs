@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -38,11 +40,11 @@ public class ManualCollectionController implements MyInitialization {
     @FXML
     private Button btnGenerate21, btnClose21;
     @FXML
-    private DatePicker dpToDate11, dpFromDate11;
+    private E_DatePicker dpToDate11, dpFromDate11;
     @FXML
-    private ComboBox<Dock> cboxDock1;
+    private AutoSearchTextField<Dock> cboxDock1;
     @FXML
-    private ComboBox<String> cboxLanguage3;
+    private AutoSearchTextField<String> cboxLanguage3;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -83,11 +85,6 @@ public class ManualCollectionController implements MyInitialization {
         } else {
             cboxLanguage3.setValue("English");
         }
-    }
-
-    @Override
-    public void setupComboBox() {
-        cboxDock1.setConverter(new DockConvertor(cboxDock1));
     }
 
     private void validateAndGenerateReport3() {

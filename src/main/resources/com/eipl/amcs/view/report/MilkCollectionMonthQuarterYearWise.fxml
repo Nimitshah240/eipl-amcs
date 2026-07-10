@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <StackPane fx:id="root" prefHeight="250.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MilkCollectionMonthQuarterYearWiseReportController">
     <children>
         <VBox prefHeight="400.0" spacing="15.0">
@@ -61,13 +63,13 @@
                   </HBox>
                   <Label fx:id="lblMonth" text="%fromdate" GridPane.columnIndex="1" />
                   <Label text="%todate" GridPane.columnIndex="2" />
-                  <ComboBox fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxType" editable="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                   <Label text="%type" />
-                        <ComboBox fx:id="cboxStaff" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxStaff" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <E_DatePicker fx:id="dpFromDate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="language" GridPane.columnIndex="4" />
-                  <ComboBox fx:id="cboxLanguage" editable="true" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage" editable="true" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
             </children>

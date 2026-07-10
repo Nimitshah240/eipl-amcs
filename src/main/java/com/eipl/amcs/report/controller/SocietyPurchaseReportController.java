@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -38,14 +40,14 @@ public class SocietyPurchaseReportController implements MyInitialization {
     @FXML
     private Button btnGenerate1, btnClose1;
     @FXML
-    private DatePicker dpFromDate1, dpToDate1;
+    private E_DatePicker dpFromDate1, dpToDate1;
     @FXML
-    private ComboBox<Shift> cboxFromShift1, cboxToShift1;
+    private AutoSearchTextField<Shift> cboxFromShift1, cboxToShift1;
     @FXML
-    private ComboBox<MilkType> cboxMilkType1;
+    private AutoSearchTextField<MilkType> cboxMilkType1;
 
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -131,8 +133,8 @@ public class SocietyPurchaseReportController implements MyInitialization {
                     cboxFromShift1.getSelectionModel().select(0);
                     cboxToShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
                     cboxToShift1.getSelectionModel().select(1);
-                    cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
-                    cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
+//                    cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+//                    cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
 
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -154,7 +156,7 @@ public class SocietyPurchaseReportController implements MyInitialization {
                     temp.addAll(list);
                     cboxMilkType1.setItems(FXCollections.observableList(temp));
                     cboxMilkType1.getSelectionModel().select(0);
-                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+//                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
                     loadData1();
                 }
             } catch (InterruptedException | ExecutionException ex) {

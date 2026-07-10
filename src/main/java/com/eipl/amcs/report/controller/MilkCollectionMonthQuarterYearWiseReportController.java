@@ -3,6 +3,8 @@ package com.eipl.amcs.report.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.operation.convertor.MemberCellFactory;
@@ -38,15 +40,15 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
     private Stage stage;
     private PopupCallback callback;
     @FXML
-    private ComboBox<Member> cboxStaff;
+    private AutoSearchTextField<Member> cboxStaff;
     @FXML
     private Label lblMonth;
     @FXML
-    private ComboBox<String> cboxType;
+    private AutoSearchTextField<String> cboxType;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -102,10 +104,10 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
 
     @Override
     public void setupComboBox() {
-        cboxStaff.setConverter(new MemberReportConvertor(cboxStaff));
-        cboxStaff.setCellFactory(new MemberCellFactory());
+//        cboxStaff.setConverter(new MemberReportConvertor(cboxStaff));
+//        cboxStaff.setCellFactory(new MemberCellFactory());
         cboxStaff.getSelectionModel().select(0);
-        new AutoCompleteComboBoxListener<>(cboxStaff);
+//        new AutoCompleteComboBoxListener<>(cboxStaff);
     }
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
@@ -180,7 +182,7 @@ public class MilkCollectionMonthQuarterYearWiseReportController implements MyIni
                     list2.add(m);
                     list2.addAll(list);
                     cboxStaff.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxStaff);
+//                    new AutoCompleteComboBoxListener<>(cboxStaff);
                     cboxStaff.getSelectionModel().select(0);
                 }
 

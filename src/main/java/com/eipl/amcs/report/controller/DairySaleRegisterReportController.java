@@ -2,9 +2,12 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
-import com.eipl.amcs.master.global.convertor.ShiftConvertor;
+import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
+import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
 import com.eipl.amcs.master.global.task.ShiftLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
@@ -13,9 +16,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
+import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -24,7 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
-import net.sf.jasperreports.engine.JRParameter;
+import java.util.stream.Collectors;
 
 public class DairySaleRegisterReportController implements MyInitialization {
 
@@ -33,13 +35,13 @@ public class DairySaleRegisterReportController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox cboxmilkType;
+    private AutoSearchTextField<MilkType> cboxmilkType;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
 
     private ResourceBundle resourceBundle;
 
@@ -70,12 +72,13 @@ public class DairySaleRegisterReportController implements MyInitialization {
         loadData();
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
-        List<String> list = new ArrayList<>();
-        list.add("Cow");
-        list.add("Buffalo");
-        list.add("Mix");
-        list.add("A2 Cow");
-        cboxmilkType.setItems(FXCollections.observableList(list));
+//        List<String> list = new ArrayList<>();
+//        list.add("Cow");
+//        list.add("Buffalo");
+//        list.add("Mix");
+//        list.add("A2 Cow");
+//        cboxmilkType.setItems(FXCollections.observableList(list));
+        loadMilkType();
         cboxmilkType.getSelectionModel().select(0);
 
         String[] arr = MainApp.getProperty(AppConstant.Props.APP_LANGUAGE, "Gujarati,Hindi,English").split(",");
@@ -99,7 +102,7 @@ public class DairySaleRegisterReportController implements MyInitialization {
         params.put("p_society_code", MainApp.identityDto.getSociety().getCode());
         params.put("p_from_date", dpFromDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxFromShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
         params.put("p_to_date", dpToDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + " " + (cboxToShift.getValue().getName().equals("Morning") ? "06:00:00" : "18:00:00"));
-        params.put("p_milk_type", cboxmilkType.getSelectionModel().getSelectedIndex() + 1);
+        params.put("p_milk_type", cboxmilkType.getSelectionModel().getSelectedItem().getCode());
         params.put("p_locale", localeStr);
         params.put(JRParameter.REPORT_LOCALE, new Locale(localeStr));
         JasperPrint print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.DAIRY_SALE_REGISTER, params);
@@ -117,8 +120,31 @@ public class DairySaleRegisterReportController implements MyInitialization {
                     cboxFromShift.getSelectionModel().select(0);
                     cboxToShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
                     cboxToShift.getSelectionModel().select(1);
-                    cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-                    cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//                    cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//                    cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+                }
+            } catch (InterruptedException | ExecutionException ex) {
+                ex.printStackTrace();
+            }
+        });
+        new Thread(task1).start();
+    }
+
+    private void loadMilkType() {
+        var task1 = new MilkTypeLoadTask();
+        task1.setOnSucceeded(e -> {
+            try {
+                List<MilkType> list = task1.get();
+                list = list.stream().filter(mt -> mt.getCode() != 3).collect(Collectors.toList());
+                if (list != null) {
+                    List<MilkType> comboList = new ArrayList<>();
+                    MilkType milkType = new MilkType();
+                    milkType.setCode(0);
+                    milkType.setName(resourceBundle.getString("all"));
+                    comboList.add(0, milkType);
+                    comboList.addAll(list);
+                    cboxmilkType.setItems(FXCollections.observableList(comboList));
+                    cboxmilkType.getSelectionModel().selectFirst();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
