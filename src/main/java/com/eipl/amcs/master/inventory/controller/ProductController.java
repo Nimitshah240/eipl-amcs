@@ -11,6 +11,7 @@ import com.eipl.amcs.exception.UnAuthorizedAccessException;
 import com.eipl.amcs.master.inventory.model.Product;
 import com.eipl.amcs.master.inventory.task.ProductDeleteTask;
 import com.eipl.amcs.master.inventory.task.ProductLoadTask;
+import com.eipl.amcs.reportengine.util.PdfExportUtil;
 import com.eipl.amcs.utils.TableLocalizationUtil;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,7 +21,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +39,7 @@ public class ProductController implements MyInitialization, PopupCallback {
     @FXML
     TableColumn<Product, String> colCode, colName, colLocalName, colReferenceCode;
     @FXML
-    Button btnClose, btnAdd, btnDelete, btnEdit;
+    Button btnClose, btnAdd, btnDelete, btnEdit, btnPrint;
     private ResourceBundle resourceBundle;
 
     public ProductController() {
@@ -103,6 +106,22 @@ public class ProductController implements MyInitialization, PopupCallback {
                 case ENTER:
                     editProduct(dto);
                     break;
+            }
+        });
+
+        btnPrint.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save PDF");
+
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+
+            fileChooser.setInitialFileName("Product.pdf");
+
+            File file = fileChooser.showSaveDialog(btnPrint.getScene().getWindow());
+
+            if (file != null) {
+                PdfExportUtil.exportTableToPdf(tableProduct, file.getAbsolutePath());
             }
         });
     }
