@@ -277,7 +277,9 @@ public class AppConstant {
         String SCHEME_RATE_SOCIETY_PURCHASE_MEMBER_WISE = "SchemeRateSocietyPurchaseMemberWise";
         String SCHEME_RATE_MEMBER_MILK_COLLECTION_SLIP = "SchemeRateMemberMilkCollectionSlip";
         String PURCHASE_REGISTER_MONTH_WISE = "PurchaseRegisterMonthWise";
+        String PURCHASE_REGISTER_MONTH_WISE_DCS = "PurchaseRegisterMonthWiseDcs";
         String PURCHASE_REGISTER_MONTH_WISE2 = "PurchaseRegisterMonthWise2";
+        String PURCHASE_REGISTER_MONTH_WISE2_DCS = "PurchaseRegisterMonthWise2DCS";
         String PAYMENT_REGISTER_WITH_DEDUCTION = "PaymentRegisterWithDeduction";
         String MILK_DISPATCH_CHALLAN_FORMAT_THREE = "DispatchFormatThree";
         String EDIT_COLLECTION_REPORT = "EditCollectionData";
