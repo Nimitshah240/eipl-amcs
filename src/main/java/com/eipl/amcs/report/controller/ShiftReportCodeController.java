@@ -73,7 +73,7 @@ public class ShiftReportCodeController implements MyInitialization {
         btnClose.setOnAction(e -> MainApp.getContentPane().setCenter(MainApp.getFxmlLoaderUtil().load(MainApp.class.getResource("view/dashboard/Dashboard.fxml"))));
         btnGenerate.setOnAction(e -> validateAndGenerateReport());
         cboxReportType.getItems().addAll(resourceBundle.getString("codewise"), resourceBundle.getString("memberwise"), resourceBundle.getString("timewise"));
-        cboxReportType.getSelectionModel().select(0);
+        cboxReportType.getSelectionModel().select(2);
         dpDate.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 dpDate.setValue(dpDate.getConverter().fromString(dpDate.getEditor().getText()));
