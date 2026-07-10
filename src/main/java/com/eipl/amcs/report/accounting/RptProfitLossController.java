@@ -2,6 +2,8 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.report.dto.BalanceSheetRow;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.task.ProfitLossTask;
@@ -12,8 +14,6 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -34,10 +34,10 @@ public class RptProfitLossController implements MyInitialization {
     private Button btnGenerate;
 
     @FXML
-    private DatePicker dpFromDate;
+    private E_DatePicker dpFromDate;
 
     @FXML
-    private DatePicker dpToDate;
+    private E_DatePicker dpToDate;
 
     @FXML
     private SwingNode reportNode;
@@ -45,7 +45,7 @@ public class RptProfitLossController implements MyInitialization {
     @FXML
     private AnchorPane root;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private List<LedgerBalance> listPLExpense, listPLIncome;
 

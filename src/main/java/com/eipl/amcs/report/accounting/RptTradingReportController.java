@@ -2,6 +2,8 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.report.dto.LedgerBalance;
 import com.eipl.amcs.report.dto.ProductStockValuation;
 import com.eipl.amcs.report.task.LoadStockValuationTask;
@@ -13,8 +15,6 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -34,7 +34,7 @@ public class RptTradingReportController implements MyInitialization {
     private Button btnGenerate;
 
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
 
     @FXML
     private SwingNode reportNode;
@@ -42,7 +42,7 @@ public class RptTradingReportController implements MyInitialization {
     @FXML
     private AnchorPane root;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     @Override
     public Node getRoot() {

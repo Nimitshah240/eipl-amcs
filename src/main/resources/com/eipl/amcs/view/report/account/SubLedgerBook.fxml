@@ -7,6 +7,8 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <AnchorPane fx:id="root" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.accounting.RptSubLedgerBookController">
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -32,16 +34,16 @@
 					<children>
 						<Label text="%fromdate" />
 						<Label text="%todate" GridPane.columnIndex="1" />
-						<ComboBox fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-						<ComboBox fx:id="cboxSubLedgerName" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-						<ComboBox fx:id="cboxReportType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+						<AutoSearchTextField fx:id="cboxType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+						<AutoSearchTextField fx:id="cboxSubLedgerName" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+						<AutoSearchTextField fx:id="cboxReportType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 						<Label text="%subledgertype" GridPane.columnIndex="2" />
 
 
 						<Label text="%subledger" GridPane.columnIndex="3" />
 						<Label text="%type" GridPane.columnIndex="4" />
-                  <DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
-                  <DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <E_DatePicker fx:id="dpFromDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                  <E_DatePicker fx:id="dpToDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Button fx:id="btnGenerate" minHeight="35.0" minWidth="100.0" mnemonicParsing="true"
                                 text="%generate" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                             <graphic>
@@ -54,7 +56,7 @@
                             </graphic>
                         </Button>
                   <Label text="%language" GridPane.columnIndex="5" />
-                  <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
 
 					</children>
 					<VBox.margin>

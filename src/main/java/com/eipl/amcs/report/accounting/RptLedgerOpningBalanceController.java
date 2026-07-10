@@ -2,6 +2,7 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.account.converter.FinancialYearConvertor;
 import com.eipl.amcs.master.account.model.FinancialYear;
@@ -32,9 +33,9 @@ public class RptLedgerOpningBalanceController implements MyInitialization {
     private Button btnGenerate, btnClose;
 
     @FXML
-    private ComboBox<FinancialYear> cboxFinancialYear;
+    private AutoSearchTextField<FinancialYear> cboxFinancialYear;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     @Override
     public Node getRoot() {
@@ -67,7 +68,7 @@ public class RptLedgerOpningBalanceController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxFinancialYear.setConverter(new FinancialYearConvertor(cboxFinancialYear));
+//        cboxFinancialYear.setConverter(new FinancialYearConvertor(cboxFinancialYear));
         cboxFinancialYear.getSelectionModel().select(0);
     }
 
@@ -94,7 +95,7 @@ public class RptLedgerOpningBalanceController implements MyInitialization {
                 if (list != null) {
                     cboxFinancialYear.getItems().addAll(FXCollections.observableList(list));
                     cboxFinancialYear.getSelectionModel().select(0);
-                    new AutoCompleteComboBoxListener<>(cboxFinancialYear);
+//                    new AutoCompleteComboBoxListener<>(cboxFinancialYear);
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();

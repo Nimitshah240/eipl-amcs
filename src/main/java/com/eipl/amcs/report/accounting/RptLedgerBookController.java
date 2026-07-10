@@ -2,11 +2,10 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.operation.convertor.LedgerCellFactory;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.collections.FXCollections;
@@ -14,8 +13,6 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -29,17 +26,17 @@ import java.util.concurrent.ExecutionException;
 public class RptLedgerBookController implements MyInitialization {
 
     @FXML
-    private Button btnGenerate, btnGenerate1, btnClose,btnGenerateSubLedger;
+    private Button btnGenerate, btnGenerate1, btnClose, btnGenerateSubLedger;
     @FXML
-    private ComboBox<Ledger> cboxLedgerName;
+    private AutoSearchTextField<Ledger> cboxLedgerName;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private E_DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private SwingNode reportNode;
     @FXML
     private AnchorPane root;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage1;
 
     @Override
     public Node getRoot() {
@@ -104,6 +101,7 @@ public class RptLedgerBookController implements MyInitialization {
         print = ReportGenerate.getReportDataSourceJasperPrint(AppConstant.ReportPath.RPT_LEDGER_BOOK_SUB_LEDGER, params);
         JasperViewer.viewReport(print, false);
     }
+
     private void validateAndGenerateReport2() {
         Map<String, Object> params = new HashMap<>();
         String localeStr = getLocaleString();
@@ -140,8 +138,8 @@ public class RptLedgerBookController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
-        cboxLedgerName.setCellFactory(new LedgerCellFactory());
+//        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
+//        cboxLedgerName.setCellFactory(new LedgerCellFactory());
         cboxLedgerName.getSelectionModel().select(0);
     }
 
@@ -159,7 +157,7 @@ public class RptLedgerBookController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxLedgerName.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxLedgerName);
+//                    new AutoCompleteComboBoxListener<>(cboxLedgerName);
                     cboxLedgerName.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

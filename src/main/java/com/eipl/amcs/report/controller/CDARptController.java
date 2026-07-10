@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
 import com.eipl.amcs.master.global.task.MilkTypeLoadTask;
@@ -14,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -28,20 +29,20 @@ import java.util.concurrent.ExecutionException;
 
 public class CDARptController implements MyInitialization {
     @FXML
-    ComboBox<Shift> cboxShiftFrom, cboxShiftTo;
+    AutoSearchTextField<Shift> cboxShiftFrom, cboxShiftTo;
     @FXML
     private Button btnClose;
     @FXML
     private Button btnGenerate;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     private List<MilkType> listMilkType;
     @FXML
-    private ComboBox cboxQuantityMode;
+    private AutoSearchTextField cboxQuantityMode;
     @FXML
-    private ComboBox<String> cboxType1, cboxMode, cboxType2, cboxLanguage;
+    private AutoSearchTextField<String> cboxType1, cboxMode, cboxType2, cboxLanguage;
 
     @FXML
     private StackPane root;

@@ -2,6 +2,8 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.inventory.convertor.ProductCellFactory;
 import com.eipl.amcs.master.inventory.convertor.ProductConvertor;
@@ -31,15 +33,15 @@ public class StockReportController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnGenerate1, btnClose,btnGenerate11;
     @FXML
-    private ComboBox<Product> cboxProduct, cboxProduct1;
+    private AutoSearchTextField<Product> cboxProduct, cboxProduct1;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1,dpFromDate11,dpToDate11;
+    private E_DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1,dpFromDate11,dpToDate11;
     @FXML
     private SwingNode reportNode;
     @FXML
     private AnchorPane root;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1,cboxLanguage11;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage1,cboxLanguage11;
 
     @Override
     public Node getRoot() {
@@ -48,11 +50,11 @@ public class StockReportController implements MyInitialization {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
-        cboxProduct1.setConverter(new ProductConvertor(cboxProduct1));
-
-        cboxProduct.setCellFactory(new ProductCellFactory());
-        cboxProduct1.setCellFactory(new ProductCellFactory());
+//        cboxProduct.setConverter(new ProductConvertor(cboxProduct));
+//        cboxProduct1.setConverter(new ProductConvertor(cboxProduct1));
+//
+//        cboxProduct.setCellFactory(new ProductCellFactory());
+//        cboxProduct1.setCellFactory(new ProductCellFactory());
         dpFromDate.setValue(LocalDate.now());
         dpToDate.setValue(LocalDate.now());
         dpFromDate1.setValue(LocalDate.now());
@@ -156,10 +158,10 @@ public class StockReportController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxProduct.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxProduct);
+//                    new AutoCompleteComboBoxListener<>(cboxProduct);
                     cboxProduct.getSelectionModel().select(0);
                     cboxProduct1.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxProduct1);
+//                    new AutoCompleteComboBoxListener<>(cboxProduct1);
                     cboxProduct1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
