@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
@@ -39,17 +41,17 @@ public class MemberCollectionReportController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose, btnGenerate1, btnClose1;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private E_DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private TextField txtsocietyCode;
     @FXML
-    private ComboBox<Member> cboxMemberCode;
+    private AutoSearchTextField<Member> cboxMemberCode;
     @FXML
-    private ComboBox<Shift> cboxfromshift, cboxtoshift, cboxfromshift1, cboxtoshift1;
+    private AutoSearchTextField<Shift> cboxfromshift, cboxtoshift, cboxfromshift1, cboxtoshift1;
     @FXML
-    private ComboBox cboxqty, cboxqty1;
+    private AutoSearchTextField cboxqty, cboxqty1;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage1;
 
     private ResourceBundle resourceBundle;
 
@@ -95,16 +97,6 @@ public class MemberCollectionReportController implements MyInitialization {
             cboxLanguage.setValue("English");
             cboxLanguage1.setValue("English");
         }
-    }
-
-    @Override
-    public void setupComboBox() {
-        cboxfromshift.setConverter(new ShiftConvertor(cboxfromshift));
-        cboxtoshift.setConverter(new ShiftConvertor(cboxtoshift));
-        cboxfromshift1.setConverter(new ShiftConvertor(cboxfromshift1));
-        cboxtoshift1.setConverter(new ShiftConvertor(cboxtoshift1));
-        cboxMemberCode.setConverter(new MemberReportConvertor(cboxMemberCode));
-        cboxMemberCode.setCellFactory(new MemberCellFactory());
     }
 
     private String getLocaleString() {
@@ -184,8 +176,8 @@ public class MemberCollectionReportController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMemberCode.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
-                    cboxMemberCode.setConverter(new MemberConvertor(cboxMemberCode));
+//                    new AutoCompleteComboBoxListener<>(cboxMemberCode);
+//                    cboxMemberCode.setConverter(new MemberConvertor(cboxMemberCode));
                     cboxMemberCode.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

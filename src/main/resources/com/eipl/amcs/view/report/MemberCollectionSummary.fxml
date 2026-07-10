@@ -16,6 +16,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
+<?import com.eipl.amcs.controls.E_DatePicker?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MemberCollectionReportController">
     <children>
         <VBox prefHeight="400.0" prefWidth="622.0" spacing="15.0">
@@ -38,24 +40,24 @@
                <children>
                   <Label text="%fromdate" />
                   <Label text="%societycode" GridPane.columnIndex="4" />
-                  <DatePicker fx:id="dpFromDate" GridPane.rowIndex="1">
+                  <E_DatePicker fx:id="dpFromDate" GridPane.rowIndex="1">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <GridPane.margin>
                         <Insets left="2.0" />
-                     </GridPane.margin></DatePicker>
+                     </GridPane.margin></E_DatePicker>
                   <TextField fx:id="txtsocietyCode" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cboxfromshift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxfromshift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="%fromshift" GridPane.columnIndex="1" />
-                  <DatePicker fx:id="dpToDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <E_DatePicker fx:id="dpToDate" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="%todate" GridPane.columnIndex="2" />
-                  <ComboBox fx:id="cboxtoshift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxtoshift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                   <Label text="%toshift" GridPane.columnIndex="3" />
                   <Label text="%qty" GridPane.columnIndex="5" />
-                  <ComboBox fx:id="cboxqty" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxqty" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                   <Label text="%language" GridPane.columnIndex="6" />
-                  <ComboBox fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <HBox alignment="TOP_RIGHT" spacing="10.0">
@@ -101,26 +103,26 @@
                </rowConstraints>
                <children>
                   <Label text="%fromdate" />
-                  <DatePicker fx:id="dpFromDate1" GridPane.rowIndex="1">
+                  <E_DatePicker fx:id="dpFromDate1" GridPane.rowIndex="1">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <GridPane.margin>
                         <Insets left="2.0" />
                      </GridPane.margin>
-                  </DatePicker>
-                  <ComboBox fx:id="cboxfromshift1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  </E_DatePicker>
+                  <AutoSearchTextField fx:id="cboxfromshift1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="%fromshift" GridPane.columnIndex="1" />
-                  <DatePicker fx:id="dpToDate1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <E_DatePicker fx:id="dpToDate1" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <Label text="%todate" GridPane.columnIndex="2" />
-                  <ComboBox fx:id="cboxtoshift1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxtoshift1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                   <Label text="%toshift" GridPane.columnIndex="3" />
                   <Label text="%qty" GridPane.columnIndex="4" />
-                  <ComboBox fx:id="cboxqty1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="cboxMemberCode" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxqty1" maxWidth="1.7976931348623157E308" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxMemberCode" editable="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                   <Label text="%membercode" GridPane.columnIndex="5" />
                   <Label text="%language" GridPane.columnIndex="6" />
-                  <ComboBox fx:id="cboxLanguage1" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                  <AutoSearchTextField fx:id="cboxLanguage1" prefWidth="150.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <HBox alignment="TOP_RIGHT" spacing="10.0">

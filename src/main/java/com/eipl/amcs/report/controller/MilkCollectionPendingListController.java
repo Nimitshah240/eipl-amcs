@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
 import com.eipl.amcs.master.global.model.Shift;
@@ -33,11 +35,11 @@ public class MilkCollectionPendingListController implements MyInitialization {
     @FXML
     private Button btnGenerate1, btnClose1;
     @FXML
-    private DatePicker dpPreviousDate, dpCompareDate;
+    private E_DatePicker dpPreviousDate, dpCompareDate;
     @FXML
-    private ComboBox<Shift> cboxPreviousShift, cboxCompareShift;
+    private AutoSearchTextField<Shift> cboxPreviousShift, cboxCompareShift;
     @FXML
-    private ComboBox<String> cboxLanguage1;
+    private AutoSearchTextField<String> cboxLanguage1;
 
     private ResourceBundle resourceBundle;
 
@@ -69,13 +71,6 @@ public class MilkCollectionPendingListController implements MyInitialization {
         btnGenerate1.setOnAction(e -> validateAndGenerateReport1());
         btnClose1.setOnAction(e -> onCloseFarmerPendingListReportClicked());
 
-    }
-
-    @Override
-    public void setupComboBox() {
-
-        cboxPreviousShift.setConverter(new ShiftConvertor(cboxPreviousShift));
-        cboxCompareShift.setConverter(new ShiftConvertor(cboxCompareShift));
     }
 
     private String getFarmerPendingListLocaleString() {

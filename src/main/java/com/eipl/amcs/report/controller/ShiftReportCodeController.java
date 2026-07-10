@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -21,7 +23,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -41,15 +42,15 @@ public class ShiftReportCodeController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpDate;
+    private E_DatePicker dpDate;
     @FXML
-    private ComboBox<Shift> cboxShift;
+    private AutoSearchTextField<Shift> cboxShift;
     @FXML
-    private ComboBox<String> cboxReportType;
+    private AutoSearchTextField<String> cboxReportType;
     @FXML
-    private ComboBox<Dock> cboxDock;
+    private AutoSearchTextField<Dock> cboxDock;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 
@@ -90,11 +91,6 @@ public class ShiftReportCodeController implements MyInitialization {
         } else {
             cboxLanguage.setValue("English");
         }
-    }
-
-    @Override
-    public void setupComboBox() {
-        cboxDock.setConverter(new DockConvertor(cboxDock));
     }
 
 

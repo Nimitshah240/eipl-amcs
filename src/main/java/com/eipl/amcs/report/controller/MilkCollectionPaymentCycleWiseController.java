@@ -3,6 +3,7 @@ package com.eipl.amcs.report.controller;
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
 import com.eipl.amcs.base.PopupCallback;
+import com.eipl.amcs.controls.AutoSearchTextField;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
 import com.eipl.amcs.master.global.convertor.ShiftConvertor;
@@ -49,11 +50,11 @@ public class MilkCollectionPaymentCycleWiseController implements MyInitializatio
     @FXML
     private DatePicker dpFromDate1, dpToDate1, dpFromDate11, dpToDate11;
     @FXML
-    private ComboBox<Member> cboxMember;
+    private AutoSearchTextField<Member> cboxMember;
     @FXML
-    private ComboBox<String> cboxPeriod, cboxPeriod1;
+    private AutoSearchTextField<String> cboxPeriod, cboxPeriod1;
     @FXML
-    private ComboBox<String> cboxLanguage1, cboxLanguage11;
+    private AutoSearchTextField<String> cboxLanguage1, cboxLanguage11;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -162,8 +163,8 @@ public class MilkCollectionPaymentCycleWiseController implements MyInitializatio
                     list2.add(m);
                     list2.addAll(list);
                     cboxMember.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMember);
-                    cboxMember.setConverter(new MemberConvertor(cboxMember));
+//                    new AutoCompleteComboBoxListener<>(cboxMember);
+//                    cboxMember.setConverter(new MemberConvertor(cboxMember));
                     cboxMember.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -171,11 +172,6 @@ public class MilkCollectionPaymentCycleWiseController implements MyInitializatio
             }
         });
         new Thread(task).start();
-    }
-    @Override
-    public void setupComboBox() {
-        cboxMember.setConverter(new MemberReportConvertor(cboxMember));
-        cboxMember.setCellFactory(new MemberCellFactory());
     }
 //    private void validateAndGenerateReport1() {
 //        try {

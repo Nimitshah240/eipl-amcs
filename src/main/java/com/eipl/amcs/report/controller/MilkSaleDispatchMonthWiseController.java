@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MilkType;
 import com.eipl.amcs.master.global.model.Shift;
@@ -34,13 +36,13 @@ public class MilkSaleDispatchMonthWiseController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<String> cboxLanguage;
+    private AutoSearchTextField<String> cboxLanguage;
 
     private ResourceBundle resourceBundle;
 

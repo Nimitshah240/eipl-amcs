@@ -13,6 +13,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import com.eipl.amcs.controls.E_DatePicker?>
+<?import com.eipl.amcs.controls.AutoSearchTextField?>
 <StackPane fx:id="root" prefHeight="400.0" prefWidth="600.0" styleClass="pane-center" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eipl.amcs.report.controller.MilkCollectionPendingListController">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
@@ -33,7 +35,7 @@
                     </rowConstraints>
                     <children>
                         <Label text="%previousdate" />
-                        <DatePicker fx:id="dpPreviousDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpPreviousDate" maxWidth="1.7976931348623157E308" GridPane.rowIndex="1" />
                         <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
                             <children>
                                 <Button fx:id="btnGenerate1" minHeight="35.0" minWidth="100.0" mnemonicParsing="true" text="%generate">
@@ -56,14 +58,14 @@
                                 </Button>
                             </children>
                         </HBox>
-                        <DatePicker fx:id="dpCompareDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <E_DatePicker fx:id="dpCompareDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Label maxWidth="1.7976931348623157E308" text="%comparedate" GridPane.columnIndex="2" />
-                        <ComboBox fx:id="cboxPreviousShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboxCompareShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxPreviousShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxCompareShift" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Label text="%previousshift" GridPane.columnIndex="1" />
                         <Label text="%compareshift" GridPane.columnIndex="3" />
                         <Label text="%language" GridPane.columnIndex="4" />
-                        <ComboBox fx:id="cboxLanguage1" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <AutoSearchTextField fx:id="cboxLanguage1" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
             </children>

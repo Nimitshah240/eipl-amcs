@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
@@ -41,15 +43,15 @@ public class MilkCollectionAuditController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose, btnGenerate2, btnClose2;
     @FXML
-    private DatePicker dpFromDate, dpToDate,dpToDate1, dpFromDate1;
+    private E_DatePicker dpFromDate, dpToDate,dpToDate1, dpFromDate1;
     @FXML
-    private ComboBox<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
+    private AutoSearchTextField<Shift> cboxFromShift, cboxToShift, cboxFromShift1, cboxToShift1;
      @FXML
-    private ComboBox<Member> cboxMember1;
+    private AutoSearchTextField<Member> cboxMember1;
     @FXML
-    private ComboBox<MilkType> cboxMilkType1;
+    private AutoSearchTextField<MilkType> cboxMilkType1;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage2;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage2;
 
     private ResourceBundle resourceBundle;
 
@@ -114,18 +116,6 @@ public class MilkCollectionAuditController implements MyInitialization {
 
     }
 
-    @Override
-    public void setupComboBox() {
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
-        cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
-        cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
-        cboxMember1.setConverter(new MemberReportConvertor(cboxMember1));
-        cboxMember1.setCellFactory(new MemberCellFactory());
-
-    }
-
     private String getLocaleString() {
         return cboxLanguage.getSelectionModel().getSelectedItem().substring(0, 2).toLowerCase();
     }
@@ -178,8 +168,8 @@ public class MilkCollectionAuditController implements MyInitialization {
                 cboxFromShift1.getSelectionModel().select(0);
                 cboxToShift1.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
                 cboxToShift1.getSelectionModel().select(1);
-                cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
-                cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
+//                cboxFromShift1.setConverter(new ShiftConvertor(cboxFromShift1));
+//                cboxToShift1.setConverter(new ShiftConvertor(cboxToShift1));
             } catch (InterruptedException | ExecutionException ex) {
                 ex.printStackTrace();
             }
@@ -199,7 +189,7 @@ public class MilkCollectionAuditController implements MyInitialization {
                     temp.addAll(list);
                     cboxMilkType1.setItems(FXCollections.observableList(temp));
                     cboxMilkType1.getSelectionModel().select(0);
-                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
+//                    cboxMilkType1.setConverter(new MilkTypeConvertor(cboxMilkType1));
                     loadData1();
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -223,7 +213,7 @@ public class MilkCollectionAuditController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMember1.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMember1);
+//                    new AutoCompleteComboBoxListener<>(cboxMember1);
                     cboxMember1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

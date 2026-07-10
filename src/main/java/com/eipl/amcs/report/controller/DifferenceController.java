@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.convertor.MilkTypeConvertor;
@@ -46,15 +48,15 @@ public class DifferenceController implements MyInitialization {
     @FXML
     private Button  btnGenerate1, btnClose1;
     @FXML
-    private DatePicker dpToDate, dpFromDate;
+    private E_DatePicker dpToDate, dpFromDate;
     @FXML
-    private ComboBox<Shift>  cboxFromShift, cboxToShift;
+    private AutoSearchTextField<Shift>  cboxFromShift, cboxToShift;
     @FXML
-    private ComboBox<Member> cboxMember;
+    private AutoSearchTextField<Member> cboxMember;
     @FXML
-    private ComboBox<MilkType> cboxMilkType;
+    private AutoSearchTextField<MilkType> cboxMilkType;
     @FXML
-    private ComboBox<String>  cboxLanguage1;
+    private AutoSearchTextField<String>  cboxLanguage1;
     private ResourceBundle resourceBundle;
 
     @Override
@@ -98,11 +100,11 @@ public class DifferenceController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
-        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
-        cboxMember.setConverter(new MemberReportConvertor(cboxMember));
-        cboxMember.setCellFactory(new MemberCellFactory());
+//        cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//        cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//        cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//        cboxMember.setConverter(new MemberReportConvertor(cboxMember));
+//        cboxMember.setCellFactory(new MemberCellFactory());
 
     }
 
@@ -136,8 +138,8 @@ public class DifferenceController implements MyInitialization {
                     cboxFromShift.getSelectionModel().select(0);
                     cboxToShift.setItems(FXCollections.observableList(CommonUtils.removeAllShift(list)));
                     cboxToShift.getSelectionModel().select(1);
-                    cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
-                    cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
+//                    cboxFromShift.setConverter(new ShiftConvertor(cboxFromShift));
+//                    cboxToShift.setConverter(new ShiftConvertor(cboxToShift));
 
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -160,7 +162,7 @@ public class DifferenceController implements MyInitialization {
                     temp.addAll(list);
                     cboxMilkType.setItems(FXCollections.observableList(temp));
                     cboxMilkType.getSelectionModel().select(0);
-                    cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
+//                    cboxMilkType.setConverter(new MilkTypeConvertor(cboxMilkType));
                     loadData1();
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -184,7 +186,7 @@ public class DifferenceController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxMember.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxMember);
+//                    new AutoCompleteComboBoxListener<>(cboxMember);
                     cboxMember.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
