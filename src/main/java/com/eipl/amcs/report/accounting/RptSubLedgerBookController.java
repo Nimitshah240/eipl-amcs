@@ -2,10 +2,10 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.master.account.converter.SubLedgerConvertor;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.master.account.model.SubLedger;
 import com.eipl.amcs.master.account.task.SubLedgerLoadTask;
-import com.eipl.amcs.master.operation.convertor.SubLedgerCellFactory;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import com.eipl.amcs.utils.CommonUtils;
@@ -15,8 +15,6 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -35,14 +33,14 @@ public class RptSubLedgerBookController implements MyInitialization {
     private Button btnGenerate, btnClose;
 
     @FXML
-    private ComboBox<CustomerTypeKeyValDto> cboxType;
+    private AutoSearchTextField<CustomerTypeKeyValDto> cboxType;
     @FXML
-    private ComboBox<String> cboxReportType, cboxLanguage;
+    private AutoSearchTextField<String> cboxReportType, cboxLanguage;
     @FXML
-    private ComboBox<SubLedger> cboxSubLedgerName;
+    private AutoSearchTextField<SubLedger> cboxSubLedgerName;
 
     @FXML
-    private DatePicker dpFromDate, dpToDate;
+    private E_DatePicker dpFromDate, dpToDate;
 
     @FXML
     private SwingNode reportNode;
@@ -123,8 +121,8 @@ public class RptSubLedgerBookController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxSubLedgerName.setConverter(new SubLedgerConvertor(cboxSubLedgerName));
-        cboxSubLedgerName.setCellFactory(new SubLedgerCellFactory());
+//        cboxSubLedgerName.setConverter(new SubLedgerConvertor(cboxSubLedgerName));
+//        cboxSubLedgerName.setCellFactory(new SubLedgerCellFactory());
         cboxSubLedgerName.getSelectionModel().select(0);
     }
 

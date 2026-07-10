@@ -2,12 +2,10 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
-import com.eipl.amcs.controls.combobox.AutoCompleteComboBoxListener;
-import com.eipl.amcs.master.account.converter.LedgerConvertor;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.master.account.model.Ledger;
 import com.eipl.amcs.master.account.task.LedgerLoadTask;
-import com.eipl.amcs.master.operation.convertor.CustomerConvertor;
-import com.eipl.amcs.master.operation.convertor.LedgerCellFactory;
 import com.eipl.amcs.master.operation.model.Customer;
 import com.eipl.amcs.master.operation.task.CustomerLoadTask;
 import com.eipl.amcs.report.util.ReportGenerate;
@@ -17,8 +15,6 @@ import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -34,19 +30,19 @@ public class ItemReportController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnGenerate1, btnClose;
     @FXML
-    private ComboBox<Ledger> cboxLedgerName, cboxLedgerName1;
+    private AutoSearchTextField<Ledger> cboxLedgerName, cboxLedgerName1;
     @FXML
-    private ComboBox<Customer> cboxCustomer;
+    private AutoSearchTextField<Customer> cboxCustomer;
     @FXML
-    private ComboBox<String> cboxSaleType;
+    private AutoSearchTextField<String> cboxSaleType;
     @FXML
-    private DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
+    private E_DatePicker dpFromDate, dpToDate, dpFromDate1, dpToDate1;
     @FXML
     private SwingNode reportNode;
     @FXML
     private AnchorPane root;
     @FXML
-    private ComboBox<String> cboxLanguage, cboxLanguage1;
+    private AutoSearchTextField<String> cboxLanguage, cboxLanguage1;
 
     @Override
     public Node getRoot() {
@@ -88,9 +84,9 @@ public class ItemReportController implements MyInitialization {
             cboxLanguage1.setValue("English");
         }
 
-        cboxLedgerName1.setConverter(new LedgerConvertor(cboxLedgerName1));
-        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
-        cboxCustomer.setConverter(new CustomerConvertor(cboxCustomer));
+//        cboxLedgerName1.setConverter(new LedgerConvertor(cboxLedgerName1));
+//        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
+//        cboxCustomer.setConverter(new CustomerConvertor(cboxCustomer));
 
     }
 
@@ -131,8 +127,8 @@ public class ItemReportController implements MyInitialization {
 
     @Override
     public void setupComboBox() {
-        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
-        cboxLedgerName.setCellFactory(new LedgerCellFactory());
+//        cboxLedgerName.setConverter(new LedgerConvertor(cboxLedgerName));
+//        cboxLedgerName.setCellFactory(new LedgerCellFactory());
         cboxLedgerName.getSelectionModel().select(0);
     }
 
@@ -150,10 +146,10 @@ public class ItemReportController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxLedgerName.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxLedgerName);
+//                    new AutoCompleteComboBoxListener<>(cboxLedgerName);
                     cboxLedgerName.getSelectionModel().select(0);
                     cboxLedgerName1.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxLedgerName1);
+//                    new AutoCompleteComboBoxListener<>(cboxLedgerName1);
                     cboxLedgerName1.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {
@@ -174,7 +170,7 @@ public class ItemReportController implements MyInitialization {
                     list2.add(m);
                     list2.addAll(list);
                     cboxCustomer.setItems(FXCollections.observableList(list2));
-                    new AutoCompleteComboBoxListener<>(cboxCustomer);
+//                    new AutoCompleteComboBoxListener<>(cboxCustomer);
                     cboxCustomer.getSelectionModel().select(0);
                 }
             } catch (InterruptedException | ExecutionException ex) {

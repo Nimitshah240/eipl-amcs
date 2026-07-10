@@ -2,6 +2,8 @@ package com.eipl.amcs.report.controller;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.AutoSearchTextField;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.controls.convertor.LocalDateConvertor;
 import com.eipl.amcs.master.global.model.MemberType;
 import com.eipl.amcs.master.operation.task.MemberTypeLoadTask;
@@ -11,8 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import net.sf.jasperreports.engine.JRParameter;
@@ -22,12 +22,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class MemberRegisterController implements MyInitialization {
@@ -37,11 +32,11 @@ public class MemberRegisterController implements MyInitialization {
     @FXML
     private Button btnGenerate, btnClose;
     @FXML
-    private DatePicker dpfromDate;
+    private E_DatePicker dpfromDate;
     @FXML
-    private ComboBox<String> cboxFormat, cboxLanguage;
+    private AutoSearchTextField<String> cboxFormat, cboxLanguage;
     @FXML
-    private ComboBox<MemberType> cboxMember;
+    private AutoSearchTextField<MemberType> cboxMember;
     @FXML
     private TextField txtSocietyCode;
     private ResourceBundle resourceBundle;

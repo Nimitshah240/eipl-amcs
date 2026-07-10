@@ -2,6 +2,7 @@ package com.eipl.amcs.report.accounting;
 
 import com.eipl.amcs.MainApp;
 import com.eipl.amcs.base.MyInitialization;
+import com.eipl.amcs.controls.E_DatePicker;
 import com.eipl.amcs.report.util.ReportGenerate;
 import com.eipl.amcs.utils.AppConstant;
 import javafx.embed.swing.SwingNode;
@@ -27,7 +28,7 @@ public class RptSocietyFinancialDetailsController implements MyInitialization {
     private Button btnGenerate;
 
     @FXML
-    private DatePicker dpAsOnDate;
+    private E_DatePicker dpAsOnDate;
 
     @FXML
     private SwingNode reportNode;
